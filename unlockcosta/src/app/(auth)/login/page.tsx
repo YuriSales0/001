@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Building2, LogIn } from "lucide-react";
 
@@ -15,18 +16,18 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const { signIn } = await import("next-auth/react");
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
+      callbackUrl: "/dashboard",
     });
 
     if (result?.error) {
       setError("Invalid credentials. Use password: dev");
       setLoading(false);
-    } else {
-      window.location.href = "/dashboard";
+    } else if (result?.url) {
+      window.location.href = result.url;
     }
   };
 
