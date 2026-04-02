@@ -1,6 +1,5 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
 
 const devUsers = [
   {
@@ -30,12 +29,9 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
-        // Match dev users with password "dev"
         if (credentials.password === 'dev') {
           const devUser = devUsers.find(u => u.email === credentials.email)
           if (devUser) return devUser
-
-          // Any email with password "dev" gets owner access
           return {
             id: 'dev-user',
             name: credentials.email.split('@')[0],
@@ -45,18 +41,9 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
-        // TODO: Add real password verification with bcrypt when DB is connected
         return null
       },
     }),
-    ...(process.env.GOOGLE_CLIENT_ID
-      ? [
-          GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-          }),
-        ]
-      : []),
   ],
   callbacks: {
     async jwt({ token, user }) {

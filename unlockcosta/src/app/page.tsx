@@ -84,7 +84,7 @@ export default function LandingPage() {
               Sign In
             </Link>
             <Link
-              href="/register"
+              href="/login"
               className="text-sm bg-navy-900 text-white px-4 py-2 rounded-lg hover:bg-navy-800 transition-colors"
             >
               Get Started
@@ -109,7 +109,7 @@ export default function LandingPage() {
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link
-              href="/register"
+              href="/login"
               className="inline-flex items-center gap-2 bg-navy-900 text-white px-6 py-3 rounded-lg text-base font-medium hover:bg-navy-800 transition-colors"
             >
               Start Free Trial <ArrowRight className="h-4 w-4" />
@@ -213,7 +213,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/register"
+                  href="/login"
                   className={`mt-8 block text-center py-3 rounded-lg font-medium transition-colors ${
                     plan.popular
                       ? "bg-gold-400 text-navy-900 hover:bg-gold-300"
