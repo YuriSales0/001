@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Building2, LogIn } from "lucide-react";
 
@@ -16,18 +15,39 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-      callbackUrl: "/dashboard",
-    });
+    try {
+      // 1. Get CSRF token
+      const csrfRes = await fetch("/api/auth/csrf");
+      const { csrfToken } = await csrfRes.json();
 
-    if (result?.error) {
+      // 2. Call credentials callback directly
+      const res = await fetch("/api/auth/callback/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          csrfToken,
+          email,
+          password,
+          json: "true",
+        }),
+      });
+
+      if (res.ok) {
+        // 3. Verify session was created
+        const sessionRes = await fetch("/api/auth/session");
+        const session = await sessionRes.json();
+
+        if (session?.user) {
+          window.location.href = "/dashboard";
+          return;
+        }
+      }
+
       setError("Invalid credentials. Use password: dev");
+    } catch {
+      setError("Login failed. Please try again.");
+    } finally {
       setLoading(false);
-    } else if (result?.url) {
-      window.location.href = result.url;
     }
   };
 
