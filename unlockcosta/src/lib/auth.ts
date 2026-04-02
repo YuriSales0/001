@@ -2,8 +2,6 @@ import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
-const isDev = process.env.NODE_ENV === 'development'
-
 const devUsers = [
   {
     id: 'owner-1',
@@ -23,21 +21,21 @@ const devUsers = [
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    // Dev credentials provider — no database or email needed
     CredentialsProvider({
-      name: 'Dev Login',
+      name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'owner@unlockcosta.com' },
-        password: { label: 'Password', type: 'password', placeholder: 'dev' },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email) return null
+        if (!credentials?.email || !credentials?.password) return null
 
-        // In dev mode, accept any password
-        if (isDev) {
+        // Match dev users with password "dev"
+        if (credentials.password === 'dev') {
           const devUser = devUsers.find(u => u.email === credentials.email)
           if (devUser) return devUser
-          // Allow any email in dev
+
+          // Any email with password "dev" gets owner access
           return {
             id: 'dev-user',
             name: credentials.email.split('@')[0],
@@ -47,6 +45,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
+        // TODO: Add real password verification with bcrypt when DB is connected
         return null
       },
     }),
