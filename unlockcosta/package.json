@@ -31,7 +31,7 @@
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^1.7.0",
-    "next": "14.2.35",
+    "next": "14.2.15",
     "next-auth": "^4.24.13",
     "next-intl": "^4.9.0",
     "prisma": "^5.22.0",
@@ -47,7 +47,7 @@
     "@types/react-dom": "^18",
     "dotenv": "^17.3.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.35",
+    "eslint-config-next": "14.2.15",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
