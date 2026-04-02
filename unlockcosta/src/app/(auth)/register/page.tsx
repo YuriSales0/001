@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Building2, Globe, Mail } from "lucide-react";
+import { Building2, Globe, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,14 +11,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
     const { signIn } = await import("next-auth/react");
-    await signIn("email", { email, callbackUrl: "/onboarding" });
-    setLoading(false);
+    const result = await signIn("credentials", {
+      email,
+      password: password || "dev",
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Registration failed. Try again.");
+      setLoading(false);
+    } else {
+      window.location.href = "/onboarding";
+    }
   };
 
   const handleGoogleRegister = async () => {
@@ -83,15 +96,36 @@ export default function RegisterPage() {
                   required
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Create a password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {error && (
+                <p className="text-sm text-red-500 text-center">{error}</p>
+              )}
+
               <Button
                 type="submit"
                 className="w-full h-11 bg-navy-900 hover:bg-navy-800"
                 disabled={loading}
               >
-                <Mail className="h-4 w-4 mr-2" />
-                {loading ? "Sending link..." : "Create Account"}
+                <UserPlus className="h-4 w-4 mr-2" />
+                {loading ? "Creating account..." : "Create Account"}
               </Button>
             </form>
+
+            {/* Dev hint */}
+            <div className="rounded-lg bg-blue-50 p-3 text-xs text-blue-700">
+              <p><span className="font-semibold">Dev mode:</span> Use password <code>dev</code> to create an account instantly.</p>
+            </div>
 
             <p className="text-center text-sm text-gray-600">
               Already have an account?{" "}
