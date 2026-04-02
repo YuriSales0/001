@@ -5,6 +5,7 @@ import { FileText, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
+import { generateMonthlyReportPDF } from "@/lib/pdf";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -42,7 +43,25 @@ export default function ReportsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-navy-900">Financial Reports</h1>
-        <Button className="gap-2 bg-navy-900 hover:bg-navy-800">
+        <Button
+          className="gap-2 bg-navy-900 hover:bg-navy-800"
+          onClick={() => {
+            const doc = generateMonthlyReportPDF({
+              propertyName: "Villa Sunshine",
+              ownerName: "Thomas Weber",
+              month: mockReport.month,
+              year: mockReport.year,
+              reservations: mockReport.reservations,
+              expenses: mockReport.expenses,
+              grossRevenue: mockReport.grossRevenue,
+              totalExpenses: mockReport.totalExpenses,
+              commissionRate: mockReport.commissionRate,
+              commission,
+              ownerPayout,
+            });
+            doc.save(`UnlockCosta-Report-${mockReport.month}-${mockReport.year}.pdf`);
+          }}
+        >
           <Download className="h-4 w-4" /> Download PDF
         </Button>
       </div>

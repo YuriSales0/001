@@ -7,6 +7,7 @@ import { Home, Calendar, FileText, Menu, X, LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import { LanguageSwitcher } from "@/components/language-switcher"
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
@@ -61,6 +62,7 @@ export default function OwnerLayout({ children }: OwnerLayoutProps) {
 
           {/* Right side: Avatar + Mobile Menu Button */}
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             {/* User Avatar Dropdown */}
             <div className="relative">
               <button
