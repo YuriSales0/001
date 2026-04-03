@@ -9,7 +9,8 @@ export function middleware(request: NextRequest) {
   if (
     publicPaths.some(p => pathname === p) ||
     pathname.startsWith('/api/') ||
-    pathname.startsWith('/_next')
+    pathname.startsWith('/_next') ||
+    pathname.includes('.')
   ) {
     return NextResponse.next();
   }
@@ -20,14 +21,12 @@ export function middleware(request: NextRequest) {
     request.cookies.get('__Secure-next-auth.session-token')?.value;
 
   if (!token) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('callbackUrl', pathname);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|fonts/).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
