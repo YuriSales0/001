@@ -37,7 +37,7 @@ export default function OnboardingPage() {
       <div className="bg-white border-b">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-2">
           <Building2 className="h-6 w-6 text-navy-900" />
-          <span className="font-bold text-navy-900">UnlockCosta</span>
+          <span className="font-bold text-navy-900">Hostmaster</span>
           <span className="text-gray-400 ml-2">/ Onboarding</span>
         </div>
       </div>

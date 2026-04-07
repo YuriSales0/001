@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Building2, LogIn } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("owner@unlockcosta.com");
+  const [email, setEmail] = useState("owner@hostmaster.com");
   const [password, setPassword] = useState("dev");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -57,7 +57,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             <Building2 className="h-8 w-8 text-[#1e3a5f]" />
-            <span className="text-2xl font-bold text-[#1e3a5f]">UnlockCosta</span>
+            <span className="text-2xl font-bold text-[#1e3a5f]">Hostmaster</span>
           </Link>
         </div>
 
@@ -105,8 +105,8 @@ export default function LoginPage() {
 
           <div className="mt-5 rounded-lg bg-blue-50 p-3 text-xs text-blue-700 space-y-1">
             <p className="font-semibold">Dev accounts:</p>
-            <p><code>owner@unlockcosta.com</code> / <code>dev</code> — Owner</p>
-            <p><code>manager@unlockcosta.com</code> / <code>dev</code> — Manager</p>
+            <p><code>owner@hostmaster.com</code> / <code>dev</code> — Owner</p>
+            <p><code>manager@hostmaster.com</code> / <code>dev</code> — Manager</p>
           </div>
         </div>
       </div>

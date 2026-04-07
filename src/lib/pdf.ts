@@ -36,7 +36,7 @@ export function generateMonthlyReportPDF(data: ReportData): jsPDF {
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(24)
   doc.setFont('helvetica', 'bold')
-  doc.text('UnlockCosta', 15, 20)
+  doc.text('Hostmaster', 15, 20)
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
   doc.text('Property Management Report', 15, 28)
@@ -158,7 +158,7 @@ export function generateMonthlyReportPDF(data: ReportData): jsPDF {
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(8)
   doc.setFont('helvetica', 'normal')
-  doc.text('UnlockCosta — Property Management for Coastal Spain', 105, pageHeight - 6, { align: 'center' })
+  doc.text('Hostmaster — Property Management for Coastal Spain', 105, pageHeight - 6, { align: 'center' })
 
   return doc
 }

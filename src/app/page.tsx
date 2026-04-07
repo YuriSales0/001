@@ -73,7 +73,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Building2 className="h-8 w-8 text-navy-900" />
             <span className="text-xl font-bold text-navy-900">
-              UnlockCosta
+              Hostmaster
             </span>
           </div>
           <div className="flex items-center gap-4">
@@ -103,7 +103,7 @@ export default function LandingPage() {
             Managed with Care
           </h1>
           <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
-            UnlockCosta is the premium property management platform for
+            Hostmaster is the premium property management platform for
             short-term rental owners. Track earnings, view bookings, and
             download reports — all in one place.
           </p>
@@ -233,10 +233,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Building2 className="h-5 w-5 text-navy-900" />
-            <span className="font-semibold text-navy-900">UnlockCosta</span>
+            <span className="font-semibold text-navy-900">Hostmaster</span>
           </div>
           <p className="text-sm text-gray-500">
-            &copy; 2026 UnlockCosta. Property management for coastal Spain.
+            &copy; 2026 Hostmaster. Property management for coastal Spain.
           </p>
         </div>
       </footer>

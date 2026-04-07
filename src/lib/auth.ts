@@ -5,14 +5,14 @@ const devUsers = [
   {
     id: 'owner-1',
     name: 'Thomas Weber',
-    email: 'owner@unlockcosta.com',
+    email: 'admin@hostmaster.es',
     role: 'OWNER' as const,
     language: 'en',
   },
   {
     id: 'manager-1',
     name: 'Carlos Manager',
-    email: 'manager@unlockcosta.com',
+    email: 'manager@hostmaster.es',
     role: 'MANAGER' as const,
     language: 'en',
   },
@@ -69,5 +69,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET || 'dev-secret-unlockcosta-2026',
+  secret: process.env.NEXTAUTH_SECRET || 'dev-secret-hostmaster-2026',
 }

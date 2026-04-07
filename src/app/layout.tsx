@@ -15,9 +15,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "UnlockCosta — Property Management for Coastal Spain",
+  title: "Hostmaster — Costa Tropical Property Management",
   description:
-    "Premium property management platform for short-term rental managers in coastal Spain. Manage bookings, finances, and maintenance effortlessly.",
+    "Professional short-term rental management on the Costa Tropical. Mastering your coastal stay — bookings, finances, maintenance and 24/7 care for international owners.",
 };
 
 export default function RootLayout({

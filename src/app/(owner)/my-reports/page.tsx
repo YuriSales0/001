@@ -59,7 +59,7 @@ export default function ReportsPage() {
               commission,
               ownerPayout,
             });
-            doc.save(`UnlockCosta-Report-${mockReport.month}-${mockReport.year}.pdf`);
+            doc.save(`Hostmaster-Report-${mockReport.month}-${mockReport.year}.pdf`);
           }}
         >
           <Download className="h-4 w-4" /> Download PDF
