@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function GET(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW', 'CLIENT'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { searchParams } = new URL(request.url)
     const propertyId = searchParams.get('propertyId')
@@ -12,6 +16,8 @@ export async function GET(request: NextRequest) {
     if (propertyId) where.propertyId = propertyId
     if (status) where.status = status
     if (type) where.type = type
+    if (me.role === 'CLIENT') where.property = { ownerId: me.id }
+    else if (me.role === 'MANAGER') where.property = { owner: { managerId: me.id } }
 
     const tasks = await prisma.task.findMany({
       where,
@@ -20,6 +26,8 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             name: true,
+            address: true,
+            city: true,
           },
         },
         assignee: {
