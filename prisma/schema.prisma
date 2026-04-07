@@ -8,8 +8,10 @@ datasource db {
 }
 
 enum Role {
+  ADMIN
   MANAGER
-  OWNER
+  CREW
+  CLIENT
 }
 
 enum PropertyStatus {
@@ -20,8 +22,11 @@ enum PropertyStatus {
 
 enum TaskType {
   CLEANING
-  MAINTENANCE
+  MAINTENANCE_PREVENTIVE
+  MAINTENANCE_CORRECTIVE
   INSPECTION
+  CHECK_IN
+  CHECK_OUT
 }
 
 enum TaskStatus {
@@ -35,6 +40,7 @@ enum ReservationStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+  AWAITING_REPORT
 }
 
 enum SupplierType {
@@ -46,29 +52,59 @@ enum SupplierType {
 
 enum SubscriptionPlan {
   BASIC
+  MID
   PREMIUM
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          Role      @default(OWNER)
-  phone         String?
-  language      String    @default("en")
-  stripeCustomerId String?
-  subscriptionPlan SubscriptionPlan?
-  subscriptionStatus String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  LOST
+}
 
+enum LeadSource {
+  WEBSITE
+  EMAIL
+  WHATSAPP
+  REFERRAL
+  OTHER
+}
+
+enum PayoutStatus {
+  SCHEDULED
+  PAID
+  CANCELLED
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String    @unique
+  emailVerified      DateTime?
+  image              String?
+  password           String?
+  role               Role      @default(CLIENT)
+  phone              String?
+  language           String    @default("en")
+  birthday           DateTime?
+  stripeCustomerId   String?
+  subscriptionPlan   SubscriptionPlan?
+  subscriptionStatus String?
+  managerId          String?
+  satisfactionScore  Float?
+  ltv                Float?    @default(0)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  manager       User?      @relation("ManagerClients", fields: [managerId], references: [id])
+  clients       User[]     @relation("ManagerClients")
   accounts      Account[]
   sessions      Session[]
   properties    Property[]
   tasks         Task[]     @relation("AssignedTasks")
+  leads         Lead[]     @relation("LeadOwner")
 }
 
 model Account {
@@ -107,30 +143,35 @@ model VerificationToken {
 }
 
 model Property {
-  id              String         @id @default(cuid())
-  name            String
-  address         String
-  city            String
-  postalCode      String?
-  description     String?        @db.Text
-  photos          String[]
-  contractUrl     String?
-  smartLockId     String?
-  airbnbConnected Boolean        @default(false)
-  bookingConnected Boolean       @default(false)
-  status          PropertyStatus @default(ACTIVE)
-  commissionRate  Float          @default(18.0)
-  ownerId         String
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id               String         @id @default(cuid())
+  name             String
+  address          String
+  city             String
+  postalCode       String?
+  description      String?        @db.Text
+  photos           String[]
+  contractUrl      String?
+  smartLockId      String?
+  bedrooms         Int?
+  sizeSqm          Int?
+  airbnbConnected  Boolean        @default(false)
+  bookingConnected Boolean        @default(false)
+  airbnbIcalUrl    String?
+  bookingIcalUrl   String?
+  status           PropertyStatus @default(ACTIVE)
+  commissionRate   Float          @default(18.0)
+  ownerId          String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
-  owner           User           @relation(fields: [ownerId], references: [id])
-  reservations    Reservation[]
-  expenses        Expense[]
-  monthlyReports  MonthlyReport[]
-  tasks           Task[]
-  suppliers       SupplierProperty[]
-  blockedDates    BlockedDate[]
+  owner          User              @relation(fields: [ownerId], references: [id])
+  reservations   Reservation[]
+  expenses       Expense[]
+  monthlyReports MonthlyReport[]
+  tasks          Task[]
+  suppliers      SupplierProperty[]
+  blockedDates   BlockedDate[]
+  payouts        Payout[]
 }
 
 model Reservation {
@@ -142,14 +183,37 @@ model Reservation {
   checkIn       DateTime
   checkOut      DateTime
   amount        Float
+  currency      String            @default("EUR")
   platform      String?
+  externalId    String?
   status        ReservationStatus @default(UPCOMING)
   notes         String?           @db.Text
+  crewReport    String?           @db.Text
+  crewReportAt  DateTime?
+  crewReportBy  String?
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
-  property      Property          @relation(fields: [propertyId], references: [id])
-  expenses      Expense[]
+  property Property  @relation(fields: [propertyId], references: [id])
+  expenses Expense[]
+  payouts  Payout[]
+}
+
+model Payout {
+  id            String       @id @default(cuid())
+  propertyId    String
+  reservationId String
+  grossAmount   Float
+  commission    Float
+  netAmount     Float
+  scheduledFor  DateTime
+  paidAt        DateTime?
+  status        PayoutStatus @default(SCHEDULED)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  property    Property    @relation(fields: [propertyId], references: [id])
+  reservation Reservation @relation(fields: [reservationId], references: [id])
 }
 
 model Expense {
@@ -164,12 +228,12 @@ model Expense {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  property      Property    @relation(fields: [propertyId], references: [id])
-  reservation   Reservation? @relation(fields: [reservationId], references: [id])
+  property    Property     @relation(fields: [propertyId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
 }
 
 model MonthlyReport {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   propertyId    String
   month         Int
   year          Int
@@ -179,9 +243,9 @@ model MonthlyReport {
   ownerPayout   Float
   pdfUrl        String?
   sentAt        DateTime?
-  createdAt     DateTime @default(now())
+  createdAt     DateTime  @default(now())
 
-  property      Property @relation(fields: [propertyId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
 
   @@unique([propertyId, month, year])
 }
@@ -198,30 +262,30 @@ model Task {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  property    Property   @relation(fields: [propertyId], references: [id])
-  assignee    User?      @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+  assignee User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
 }
 
 model Supplier {
-  id        String           @id @default(cuid())
+  id        String       @id @default(cuid())
   name      String
   type      SupplierType
   phone     String
   email     String?
-  notes     String?          @db.Text
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  notes     String?      @db.Text
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   properties SupplierProperty[]
 }
 
 model SupplierProperty {
-  id         String   @id @default(cuid())
+  id         String @id @default(cuid())
   supplierId String
   propertyId String
 
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
-  property   Property @relation(fields: [propertyId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
 
   @@unique([supplierId, propertyId])
 }
@@ -234,5 +298,21 @@ model BlockedDate {
   reason     String?
   createdAt  DateTime @default(now())
 
-  property   Property @relation(fields: [propertyId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  source    LeadSource @default(WEBSITE)
+  status    LeadStatus @default(NEW)
+  message   String?    @db.Text
+  ownerId   String?
+  convertedUserId String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  owner User? @relation("LeadOwner", fields: [ownerId], references: [id])
 }
