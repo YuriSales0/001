@@ -167,6 +167,8 @@ model Property {
   bookingConnected Boolean        @default(false)
   airbnbIcalUrl    String?
   bookingIcalUrl   String?
+  lastCleaningAt   DateTime?
+  lastInspectionAt DateTime?
   status           PropertyStatus @default(ACTIVE)
   commissionRate   Float          @default(18.0)
   ownerId          String
@@ -287,6 +289,8 @@ model Task {
   status      TaskStatus @default(PENDING)
   title       String
   description String?    @db.Text
+  notes       String?    @db.Text
+  checklist   Json?
   dueDate     DateTime
   assigneeId  String?
   createdAt   DateTime   @default(now())

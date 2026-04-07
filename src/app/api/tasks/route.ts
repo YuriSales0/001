@@ -52,9 +52,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'CREW'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const body = await request.json()
-    const { propertyId, type, title, description, dueDate, assigneeId } = body
+    const { propertyId, type, title, description, notes, dueDate } = body
+    let { assigneeId } = body
 
     if (!propertyId || !type || !title || !dueDate) {
       return NextResponse.json(
@@ -63,14 +66,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!assigneeId) {
+      const { pickLeastBusyCrew } = await import('@/lib/crew')
+      assigneeId = await pickLeastBusyCrew()
+    }
+    if (!assigneeId) {
+      return NextResponse.json({ error: 'No crew available to assign task' }, { status: 400 })
+    }
+
+    const { buildChecklist } = await import('@/lib/crew')
     const task = await prisma.task.create({
       data: {
         propertyId,
         type,
         title,
         description,
+        notes: notes ?? '',
+        checklist: buildChecklist(type),
         dueDate: new Date(dueDate),
-        assigneeId: assigneeId || null,
+        assigneeId,
       },
       include: {
         property: {

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { calcCommission, payoutDateFrom } from '@/lib/finance'
+import { pickLeastBusyCrew, buildChecklist } from '@/lib/crew'
+import { notifyAdmin } from '@/lib/notify'
 
 export async function GET(request: NextRequest) {
   try {
@@ -49,6 +51,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const checkInDate = new Date(checkIn)
     const checkOutDate = new Date(checkOut)
     const { commission, net } = calcCommission(amount)
 
@@ -58,7 +61,7 @@ export async function POST(request: NextRequest) {
         guestName,
         guestEmail,
         guestPhone,
-        checkIn: new Date(checkIn),
+        checkIn: checkInDate,
         checkOut: checkOutDate,
         amount,
         platform,
@@ -77,6 +80,35 @@ export async function POST(request: NextRequest) {
         payouts: true,
       },
     })
+
+    // Auto-create ops tasks (check-in, check-out, post-checkout cleaning)
+    const assigneeId = await pickLeastBusyCrew()
+    const baseTasks = [
+      { type: 'CHECK_IN' as const, title: `Check-in · ${guestName}`, dueDate: checkInDate },
+      { type: 'CHECK_OUT' as const, title: `Check-out · ${guestName}`, dueDate: checkOutDate },
+      { type: 'CLEANING' as const, title: `Post-checkout cleaning`, dueDate: checkOutDate },
+    ]
+    await prisma.task.createMany({
+      data: baseTasks.map(t => ({
+        propertyId,
+        type: t.type,
+        title: t.title,
+        dueDate: t.dueDate,
+        assigneeId: assigneeId ?? null,
+        checklist: buildChecklist(t.type),
+        notes: '',
+      })),
+    })
+
+    if (!assigneeId) {
+      await notifyAdmin({
+        subject: '⚠️ Reservation created without crew assignment',
+        message:
+          `A new reservation for ${guestName} was created but no CREW user is available to assign the tasks.\n\n` +
+          `Reservation ID: ${reservation.id}\nProperty ID: ${propertyId}\nCheck-in: ${checkInDate.toISOString()}\n\n` +
+          `Create a crew member or assign the tasks manually.`,
+      })
+    }
 
     return NextResponse.json(reservation, { status: 201 })
   } catch (error) {
