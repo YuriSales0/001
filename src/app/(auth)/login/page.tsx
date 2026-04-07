@@ -38,7 +38,7 @@ export default function LoginPage() {
         const session = await sessionRes.json();
 
         if (session?.user) {
-          window.location.href = "/dashboard";
+          window.location.href = "/me";
           return;
         }
       }

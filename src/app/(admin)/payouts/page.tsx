@@ -21,6 +21,9 @@ export default function PayoutsPage() {
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
   const [clientFilter, setClientFilter] = useState("")
+  const [showInvoiceForm, setShowInvoiceForm] = useState(false)
+  const [invoiceForm, setInvoiceForm] = useState({ clientId: "", propertyId: "", description: "", amount: "", dueDate: "" })
+  const [invoiceMsg, setInvoiceMsg] = useState("")
 
   const load = async (filter = "") => {
     setLoading(true)
@@ -59,12 +62,59 @@ export default function PayoutsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-navy-900">Payouts</h1>
-        <p className="text-sm text-gray-600">
-          Owner payouts auto-scheduled D+7 after check-out · 18% commission
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-navy-900">Payouts</h1>
+          <p className="text-sm text-gray-600">
+            Owner payouts auto-scheduled D+7 after check-out · 18% commission
+          </p>
+        </div>
+        <button
+          onClick={() => setShowInvoiceForm(s => !s)}
+          className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800"
+        >
+          {showInvoiceForm ? 'Close' : '+ Create custom invoice'}
+        </button>
       </div>
+
+      {showInvoiceForm && (
+        <form
+          onSubmit={async e => {
+            e.preventDefault()
+            setInvoiceMsg("")
+            const res = await fetch('/api/invoices', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                ...invoiceForm,
+                amount: Number(invoiceForm.amount),
+                dueDate: invoiceForm.dueDate || null,
+                propertyId: invoiceForm.propertyId || null,
+              }),
+            })
+            if (res.ok) {
+              setInvoiceMsg("Invoice created ✓")
+              setInvoiceForm({ clientId: "", propertyId: "", description: "", amount: "", dueDate: "" })
+            } else {
+              const d = await res.json()
+              setInvoiceMsg(d.error || "Failed")
+            }
+          }}
+          className="rounded-xl border bg-white p-6 space-y-3"
+        >
+          <div className="font-semibold text-navy-900">New invoice (corrective maintenance / pre-agreed service)</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <input required placeholder="Client ID" value={invoiceForm.clientId} onChange={e => setInvoiceForm({ ...invoiceForm, clientId: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
+            <input placeholder="Property ID (optional)" value={invoiceForm.propertyId} onChange={e => setInvoiceForm({ ...invoiceForm, propertyId: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
+            <input required placeholder="Description (e.g. Plumbing repair)" value={invoiceForm.description} onChange={e => setInvoiceForm({ ...invoiceForm, description: e.target.value })} className="rounded-md border px-3 py-2 text-sm md:col-span-2" />
+            <input required type="number" step="0.01" placeholder="Amount (EUR)" value={invoiceForm.amount} onChange={e => setInvoiceForm({ ...invoiceForm, amount: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
+            <input type="date" placeholder="Due date" value={invoiceForm.dueDate} onChange={e => setInvoiceForm({ ...invoiceForm, dueDate: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
+          </div>
+          <p className="text-xs text-gray-500">Tip: get client/property IDs from the Team and Properties pages.</p>
+          {invoiceMsg && <p className="text-sm text-navy-900">{invoiceMsg}</p>}
+          <button type="submit" className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800">Send invoice</button>
+        </form>
+      )}
 
       <form
         onSubmit={e => { e.preventDefault(); load(clientFilter) }}

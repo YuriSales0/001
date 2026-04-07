@@ -78,6 +78,13 @@ enum PayoutStatus {
   CANCELLED
 }
 
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  CANCELLED
+}
+
 model User {
   id                 String    @id @default(cuid())
   name               String?
@@ -105,6 +112,8 @@ model User {
   properties    Property[]
   tasks         Task[]     @relation("AssignedTasks")
   leads         Lead[]     @relation("LeadOwner")
+  invoicesReceived Invoice[] @relation("ClientInvoices")
+  invoicesIssued   Invoice[] @relation("CreatedInvoices")
 }
 
 model Account {
@@ -172,6 +181,27 @@ model Property {
   suppliers      SupplierProperty[]
   blockedDates   BlockedDate[]
   payouts        Payout[]
+  invoices       Invoice[]
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  clientId    String
+  propertyId  String?
+  createdById String
+  description String        @db.Text
+  amount      Float
+  currency    String        @default("EUR")
+  status      InvoiceStatus @default(SENT)
+  dueDate     DateTime?
+  paidAt      DateTime?
+  notes       String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client    User      @relation("ClientInvoices", fields: [clientId], references: [id])
+  property  Property? @relation(fields: [propertyId], references: [id])
+  createdBy User      @relation("CreatedInvoices", fields: [createdById], references: [id])
 }
 
 model Reservation {
