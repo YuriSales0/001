@@ -1,161 +1,111 @@
-"use client";
+"use client"
 
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import {
-  Euro,
-  CalendarDays,
-  ClipboardCheck,
-  TrendingUp,
-  MessageCircle,
-  Lock,
-  FileText,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { formatCurrency, formatDate } from "@/lib/utils";
-import Link from "next/link";
+  Building2, Users, CalendarDays, Euro, Wallet, AlertTriangle, FileText, UserPlus,
+} from "lucide-react"
 
-const mockBookings = [
-  { id: "1", guest: "Hans Mueller", checkIn: "2026-04-10", checkOut: "2026-04-17", amount: 1890, status: "UPCOMING" },
-  { id: "2", guest: "Anna Svensson", checkIn: "2026-04-20", checkOut: "2026-04-27", amount: 2100, status: "UPCOMING" },
-  { id: "3", guest: "Pierre Dupont", checkIn: "2026-03-15", checkOut: "2026-03-22", amount: 1750, status: "COMPLETED" },
-  { id: "4", guest: "Maria Garcia", checkIn: "2026-03-01", checkOut: "2026-03-08", amount: 1600, status: "COMPLETED" },
-];
+type Stats = {
+  propertiesCount: number
+  clientsCount: number
+  activeReservations: number
+  monthRevenue: number
+  monthCommission: number
+  openPayouts: { count: number; net: number; commission: number }
+  overdueTasks: number
+  leadsOpen: number
+  pendingInvoices: { count: number; total: number }
+  upcomingCheckIns: { id: string; guestName: string; checkIn: string; property: { name: string; city: string } }[]
+  upcomingCheckOuts: { id: string; guestName: string; checkOut: string; property: { name: string; city: string } }[]
+}
 
-const statusColor: Record<string, string> = {
-  UPCOMING: "bg-blue-100 text-blue-700",
-  ACTIVE: "bg-green-100 text-green-700",
-  COMPLETED: "bg-gray-100 text-gray-700",
-};
+const fmtEUR = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
+const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB')
 
-export default function OwnerDashboard() {
+export default function AdminDashboard() {
+  const [stats, setStats] = useState<Stats | null>(null)
+
+  useEffect(() => {
+    fetch('/api/admin/stats').then(r => r.ok ? r.json() : null).then(setStats)
+  }, [])
+
+  if (!stats) return <div className="p-6 text-gray-500">Loading…</div>
+
+  const cards = [
+    { label: 'Properties', value: stats.propertiesCount, icon: Building2 },
+    { label: 'Clients', value: stats.clientsCount, icon: Users },
+    { label: 'Active reservations', value: stats.activeReservations, icon: CalendarDays },
+    { label: 'Revenue this month', value: fmtEUR(stats.monthRevenue), icon: Euro, sub: `Commission ${fmtEUR(stats.monthCommission)}` },
+    { label: 'Open payouts', value: fmtEUR(stats.openPayouts.net), icon: Wallet, sub: `${stats.openPayouts.count} scheduled` },
+    { label: 'Pending invoices', value: fmtEUR(stats.pendingInvoices.total), icon: FileText, sub: `${stats.pendingInvoices.count} sent` },
+    { label: 'Overdue tasks', value: stats.overdueTasks, icon: AlertTriangle, danger: stats.overdueTasks > 0 },
+    { label: 'Open leads', value: stats.leadsOpen, icon: UserPlus },
+  ]
+
   return (
-    <div className="space-y-8">
-      {/* Welcome */}
+    <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-navy-900">Welcome back, Thomas</h1>
-        <p className="text-gray-500 mt-1">Here&apos;s how your property is performing</p>
+        <h1 className="text-3xl font-bold text-navy-900">Admin Dashboard</h1>
+        <p className="text-sm text-gray-600">Operational overview across all properties and clients.</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border-0 shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Monthly Earnings</p>
-                <p className="text-2xl font-bold text-navy-900 mt-1">{formatCurrency(3890)}</p>
-                <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3" /> +12% vs last month
-                </p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {cards.map(c => {
+          const Icon = c.icon
+          return (
+            <div key={c.label} className={`rounded-xl border bg-white p-4 ${c.danger ? 'border-red-200' : ''}`}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase text-gray-500">{c.label}</span>
+                <Icon className={`h-4 w-4 ${c.danger ? 'text-red-500' : 'text-navy-400'}`} />
               </div>
-              <div className="h-12 w-12 rounded-xl bg-gold-50 flex items-center justify-center">
-                <Euro className="h-6 w-6 text-gold-400" />
-              </div>
+              <div className={`text-2xl font-semibold mt-2 ${c.danger ? 'text-red-600' : 'text-navy-900'}`}>{c.value}</div>
+              {c.sub && <div className="text-xs text-gray-500 mt-1">{c.sub}</div>}
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Next Booking</p>
-                <p className="text-lg font-bold text-navy-900 mt-1">Hans Mueller</p>
-                <p className="text-xs text-gray-500 mt-1">Apr 10 - Apr 17</p>
-              </div>
-              <div className="h-12 w-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                <CalendarDays className="h-6 w-6 text-blue-500" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Last Inspection</p>
-                <p className="text-lg font-bold text-navy-900 mt-1">Mar 22, 2026</p>
-                <p className="text-xs text-green-600 mt-1">All clear</p>
-              </div>
-              <div className="h-12 w-12 rounded-xl bg-green-50 flex items-center justify-center">
-                <ClipboardCheck className="h-6 w-6 text-green-500" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Occupancy Rate</p>
-                <p className="text-2xl font-bold text-navy-900 mt-1">78%</p>
-                <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3" /> Above avg
-                </p>
-              </div>
-              <div className="h-12 w-12 rounded-xl bg-purple-50 flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-purple-500" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          )
+        })}
       </div>
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-3">
-        <Link href="/calendar">
-          <Button variant="outline" className="gap-2">
-            <Lock className="h-4 w-4" /> Block Dates
-          </Button>
-        </Link>
-        <Link href="/my-reports">
-          <Button variant="outline" className="gap-2">
-            <FileText className="h-4 w-4" /> View Reports
-          </Button>
-        </Link>
-        <Button className="gap-2 bg-green-600 hover:bg-green-700 text-white">
-          <MessageCircle className="h-4 w-4" /> Contact Your Manager
-        </Button>
-      </div>
-
-      {/* Recent Bookings */}
-      <Card className="border-0 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-navy-900">Recent Bookings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="pb-3 font-medium text-gray-500">Guest</th>
-                  <th className="pb-3 font-medium text-gray-500">Check-in</th>
-                  <th className="pb-3 font-medium text-gray-500">Check-out</th>
-                  <th className="pb-3 font-medium text-gray-500">Amount</th>
-                  <th className="pb-3 font-medium text-gray-500">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockBookings.map((b) => (
-                  <tr key={b.id} className="border-b last:border-0">
-                    <td className="py-3 font-medium text-navy-900">{b.guest}</td>
-                    <td className="py-3 text-gray-600">{formatDate(b.checkIn)}</td>
-                    <td className="py-3 text-gray-600">{formatDate(b.checkOut)}</td>
-                    <td className="py-3 font-medium">{formatCurrency(b.amount)}</td>
-                    <td className="py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor[b.status]}`}>
-                        {b.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="rounded-xl border bg-white">
+          <div className="px-4 py-3 border-b font-semibold text-navy-900">Upcoming check-ins (7 days)</div>
+          <div className="divide-y">
+            {stats.upcomingCheckIns.length === 0 && <div className="p-4 text-sm text-gray-500">None</div>}
+            {stats.upcomingCheckIns.map(r => (
+              <div key={r.id} className="p-4 flex items-center justify-between text-sm">
+                <div>
+                  <div className="font-medium">{r.guestName}</div>
+                  <div className="text-xs text-gray-500">{r.property.name} · {r.property.city}</div>
+                </div>
+                <div className="text-xs text-gray-500">{fmtDate(r.checkIn)}</div>
+              </div>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        <div className="rounded-xl border bg-white">
+          <div className="px-4 py-3 border-b font-semibold text-navy-900">Upcoming check-outs (7 days)</div>
+          <div className="divide-y">
+            {stats.upcomingCheckOuts.length === 0 && <div className="p-4 text-sm text-gray-500">None</div>}
+            {stats.upcomingCheckOuts.map(r => (
+              <div key={r.id} className="p-4 flex items-center justify-between text-sm">
+                <div>
+                  <div className="font-medium">{r.guestName}</div>
+                  <div className="text-xs text-gray-500">{r.property.name} · {r.property.city}</div>
+                </div>
+                <div className="text-xs text-gray-500">{fmtDate(r.checkOut)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <Link href="/calendar" className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Calendar</Link>
+        <Link href="/payouts" className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Payouts</Link>
+        <Link href="/team" className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Team & Users</Link>
+        <Link href="/my-properties" className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Properties</Link>
+      </div>
     </div>
-  );
+  )
 }

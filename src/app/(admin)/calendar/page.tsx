@@ -1,171 +1,135 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useEffect, useMemo, useState } from "react"
+import { CalendarDays, LogIn, LogOut, Wrench, Lock, Wallet, Cake } from "lucide-react"
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
-
-const mockReservations = [
-  { id: "1", guest: "Hans Mueller", checkIn: new Date(2026, 3, 10), checkOut: new Date(2026, 3, 17), color: "bg-blue-200 text-blue-800" },
-  { id: "2", guest: "Anna Svensson", checkIn: new Date(2026, 3, 20), checkOut: new Date(2026, 3, 27), color: "bg-green-200 text-green-800" },
-  { id: "3", guest: "Pierre Dupont", checkIn: new Date(2026, 4, 5), checkOut: new Date(2026, 4, 12), color: "bg-blue-200 text-blue-800" },
-];
-
-const mockBlocked = [
-  { id: "b1", startDate: new Date(2026, 3, 1), endDate: new Date(2026, 3, 5), reason: "Personal use" },
-];
-
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate();
+type Event = {
+  id: string
+  type: 'CHECK_IN' | 'CHECK_OUT' | 'BLOCKED' | 'TASK' | 'PAYOUT' | 'BIRTHDAY'
+  title: string
+  date: string
+  endDate?: string
+  property?: { id: string; name: string }
 }
 
-function getFirstDayOfMonth(year: number, month: number) {
-  const day = new Date(year, month, 1).getDay();
-  return day === 0 ? 6 : day - 1; // Monday=0
+const ICONS: Record<Event['type'], React.ElementType> = {
+  CHECK_IN: LogIn,
+  CHECK_OUT: LogOut,
+  BLOCKED: Lock,
+  TASK: Wrench,
+  PAYOUT: Wallet,
+  BIRTHDAY: Cake,
 }
 
-export default function CalendarPage() {
-  const [currentMonth, setCurrentMonth] = useState(3); // April
-  const [currentYear, setCurrentYear] = useState(2026);
-  const [blockOpen, setBlockOpen] = useState(false);
+const COLORS: Record<Event['type'], string> = {
+  CHECK_IN: 'bg-green-100 text-green-700',
+  CHECK_OUT: 'bg-orange-100 text-orange-700',
+  BLOCKED: 'bg-gray-200 text-gray-700',
+  TASK: 'bg-blue-100 text-blue-700',
+  PAYOUT: 'bg-purple-100 text-purple-700',
+  BIRTHDAY: 'bg-pink-100 text-pink-700',
+}
 
-  const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-  const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+const TYPES: Event['type'][] = ['CHECK_IN', 'CHECK_OUT', 'BLOCKED', 'TASK', 'PAYOUT', 'BIRTHDAY']
 
-  const prev = () => {
-    if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(currentYear - 1); }
-    else setCurrentMonth(currentMonth - 1);
-  };
+const dayKey = (d: Date) => d.toISOString().slice(0, 10)
+const fmtDay = (k: string) => new Date(k + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short' })
 
-  const next = () => {
-    if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(currentYear + 1); }
-    else setCurrentMonth(currentMonth + 1);
-  };
+export default function AdminCalendar() {
+  const [events, setEvents] = useState<Event[]>([])
+  const [loading, setLoading] = useState(true)
+  const [filters, setFilters] = useState<Record<Event['type'], boolean>>({
+    CHECK_IN: true, CHECK_OUT: true, BLOCKED: true, TASK: true, PAYOUT: true, BIRTHDAY: true,
+  })
+  const [monthOffset, setMonthOffset] = useState(0)
 
-  const getDateStatus = (day: number) => {
-    const date = new Date(currentYear, currentMonth, day);
-    for (const r of mockReservations) {
-      if (date >= r.checkIn && date < r.checkOut) {
-        return { type: "reservation", label: r.guest, color: r.color };
-      }
+  useEffect(() => {
+    const now = new Date()
+    const from = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1)
+    const to = new Date(now.getFullYear(), now.getMonth() + monthOffset + 1, 0)
+    setLoading(true)
+    fetch(`/api/admin/calendar?from=${from.toISOString()}&to=${to.toISOString()}`)
+      .then(r => r.ok ? r.json() : [])
+      .then(d => { setEvents(d); setLoading(false) })
+  }, [monthOffset])
+
+  const grouped = useMemo(() => {
+    const filtered = events.filter(e => filters[e.type])
+    const map: Record<string, Event[]> = {}
+    for (const e of filtered) {
+      const k = dayKey(new Date(e.date))
+      ;(map[k] ||= []).push(e)
     }
-    for (const b of mockBlocked) {
-      if (date >= b.startDate && date <= b.endDate) {
-        return { type: "blocked", label: "Blocked", color: "bg-gray-200 text-gray-600" };
-      }
-    }
-    return null;
-  };
+    return Object.entries(map).sort(([a], [b]) => a.localeCompare(b))
+  }, [events, filters])
+
+  const monthLabel = new Date(new Date().getFullYear(), new Date().getMonth() + monthOffset, 1)
+    .toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-navy-900">Booking Calendar</h1>
-        <Dialog open={blockOpen} onOpenChange={setBlockOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2 bg-navy-900 hover:bg-navy-800">
-              <Lock className="h-4 w-4" /> Block Dates
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Block Dates for Personal Use</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 pt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Start Date</Label>
-                  <Input type="date" />
-                </div>
-                <div className="space-y-2">
-                  <Label>End Date</Label>
-                  <Input type="date" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Reason (optional)</Label>
-                <Input placeholder="Personal use, family visit..." />
-              </div>
-              <Button className="w-full bg-navy-900 hover:bg-navy-800" onClick={() => setBlockOpen(false)}>
-                Block Dates
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+    <div className="p-6 space-y-6">
+      <div className="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-navy-900">Calendar</h1>
+          <p className="text-sm text-gray-600">All check-ins, check-outs, blocks, tasks, payouts and birthdays.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setMonthOffset(o => o - 1)} className="rounded-md border px-3 py-1 text-sm hover:bg-gray-50">‹</button>
+          <span className="text-sm font-medium text-navy-900 min-w-[140px] text-center">{monthLabel}</span>
+          <button onClick={() => setMonthOffset(o => o + 1)} className="rounded-md border px-3 py-1 text-sm hover:bg-gray-50">›</button>
+          <button onClick={() => setMonthOffset(0)} className="rounded-md border px-3 py-1 text-sm hover:bg-gray-50">Today</button>
+        </div>
       </div>
 
-      <Card className="border-0 shadow-sm">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" size="icon" onClick={prev}>
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <CardTitle className="text-navy-900">
-              {MONTHS[currentMonth]} {currentYear}
-            </CardTitle>
-            <Button variant="ghost" size="icon" onClick={next}>
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-px bg-gray-100 rounded-lg overflow-hidden">
-            {DAYS.map((d) => (
-              <div key={d} className="bg-gray-50 p-2 text-center text-xs font-medium text-gray-500">
-                {d}
-              </div>
-            ))}
-            {Array.from({ length: firstDay }).map((_, i) => (
-              <div key={`empty-${i}`} className="bg-white p-2 min-h-[80px]" />
-            ))}
-            {Array.from({ length: daysInMonth }).map((_, i) => {
-              const day = i + 1;
-              const status = getDateStatus(day);
-              const isToday = day === 1 && currentMonth === 3 && currentYear === 2026;
-              return (
-                <div key={day} className="bg-white p-2 min-h-[80px] border-t">
-                  <span className={`text-sm ${isToday ? "bg-navy-900 text-white rounded-full w-6 h-6 flex items-center justify-center" : "text-gray-700"}`}>
-                    {day}
-                  </span>
-                  {status && (
-                    <div className={`mt-1 text-xs px-1.5 py-0.5 rounded truncate ${status.color}`}>
-                      {status.label}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex flex-wrap gap-2">
+        {TYPES.map(t => {
+          const Icon = ICONS[t]
+          return (
+            <button
+              key={t}
+              onClick={() => setFilters(f => ({ ...f, [t]: !f[t] }))}
+              className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs ${
+                filters[t] ? COLORS[t] : 'bg-gray-50 text-gray-400 line-through'
+              }`}
+            >
+              <Icon className="h-3 w-3" />
+              {t.replace('_', ' ')}
+            </button>
+          )
+        })}
+      </div>
 
-      {/* Legend */}
-      <div className="flex flex-wrap gap-4 text-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-blue-200" /> Confirmed booking
+      {loading && <p className="text-gray-500 text-sm">Loading…</p>}
+      {!loading && grouped.length === 0 && (
+        <div className="rounded-xl border bg-white p-12 text-center text-gray-500">
+          <CalendarDays className="h-12 w-12 mx-auto text-gray-300 mb-2" />
+          No events this month
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-green-200" /> Upcoming booking
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded bg-gray-200" /> Blocked dates
-        </div>
+      )}
+
+      <div className="space-y-4">
+        {grouped.map(([day, items]) => (
+          <div key={day} className="rounded-xl border bg-white overflow-hidden">
+            <div className="px-4 py-2 bg-gray-50 text-xs uppercase font-semibold text-gray-600">{fmtDay(day)}</div>
+            <div className="divide-y">
+              {items.map(e => {
+                const Icon = ICONS[e.type]
+                return (
+                  <div key={e.id} className="px-4 py-3 flex items-center gap-3 text-sm">
+                    <span className={`inline-flex items-center justify-center h-7 w-7 rounded-full ${COLORS[e.type]}`}>
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <div className="flex-1">
+                      <div className="font-medium text-navy-900">{e.title}</div>
+                      {e.property && <div className="text-xs text-gray-500">{e.property.name}</div>}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  );
+  )
 }
