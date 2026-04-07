@@ -15,7 +15,7 @@ const devUsers: Array<{
 }> = [
   { id: 'admin-1', name: 'Hostmaster Admin', email: 'admin@hostmaster.es', role: 'ADMIN', language: 'en' },
   { id: 'manager-1', name: 'Carlos Manager', email: 'manager@hostmaster.es', role: 'MANAGER', language: 'en' },
-  { id: 'crew-1', name: 'Coastal Crew', email: 'crew@hostmaster.es', role: 'CREW', language: 'en' },
+  { id: 'crew-1', name: 'Crew', email: 'crew@hostmaster.es', role: 'CREW', language: 'en' },
   { id: 'client-1', name: 'Thomas Weber', email: 'client@hostmaster.es', role: 'CLIENT', language: 'en' },
 ]
 

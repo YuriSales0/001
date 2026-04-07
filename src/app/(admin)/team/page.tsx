@@ -76,7 +76,7 @@ export default function TeamPage() {
           <input placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
           <select value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="rounded-md border px-3 py-2 text-sm">
             <option value="MANAGER">Manager (Customer Success)</option>
-            <option value="CREW">Coastal Crew (operations)</option>
+            <option value="CREW">Crew (operations)</option>
             <option value="CLIENT">Client (property owner)</option>
             <option value="ADMIN">Admin</option>
           </select>
@@ -99,7 +99,7 @@ export default function TeamPage() {
         (['ADMIN', 'MANAGER', 'CREW', 'CLIENT'] as const).map(role => (
           <div key={role} className="rounded-xl border bg-white overflow-hidden">
             <div className="px-4 py-2 bg-gray-50 text-xs uppercase font-semibold text-gray-600">
-              {role === 'CREW' ? 'Coastal Crew' : role} ({grouped[role].length})
+              {role} ({grouped[role].length})
             </div>
             <table className="w-full text-sm">
               <tbody>
