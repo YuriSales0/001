@@ -1,17 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
+  const { error, status, user } = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
+  if (error) return NextResponse.json({ error }, { status })
+
   try {
     const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status')
+    const statusParam = searchParams.get('status')
     const propertyId = searchParams.get('propertyId')
+    const clientQuery = searchParams.get('client') // name/email/id (admin only)
 
     const where: Record<string, unknown> = {}
-    if (status) where.status = status
+    if (statusParam) where.status = statusParam
     if (propertyId) where.propertyId = propertyId
+
+    if (user!.role === 'CLIENT') {
+      where.property = { ownerId: user!.id }
+    } else if (user!.role === 'MANAGER') {
+      where.property = { owner: { managerId: user!.id } }
+    } else if (user!.role === 'ADMIN' && clientQuery) {
+      where.property = {
+        owner: {
+          OR: [
+            { id: clientQuery },
+            { email: { contains: clientQuery, mode: 'insensitive' } },
+            { name: { contains: clientQuery, mode: 'insensitive' } },
+          ],
+        },
+      }
+    }
 
     const payouts = await prisma.payout.findMany({
       where,
@@ -23,8 +44,8 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json(payouts)
-  } catch (error) {
-    console.error('Error fetching payouts:', error)
+  } catch (e) {
+    console.error('Error fetching payouts:', e)
     return NextResponse.json({ error: 'Failed to fetch payouts' }, { status: 500 })
   }
 }

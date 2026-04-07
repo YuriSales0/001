@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+  const guard = await requireRole(['ADMIN'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const body = await request.json()
     const { status } = body as { status?: 'SCHEDULED' | 'PAID' | 'CANCELLED' }

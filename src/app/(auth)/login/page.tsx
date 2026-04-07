@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Building2, LogIn } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("owner@hostmaster.com");
-  const [password, setPassword] = useState("dev");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -103,11 +103,9 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-5 rounded-lg bg-blue-50 p-3 text-xs text-blue-700 space-y-1">
-            <p className="font-semibold">Dev accounts:</p>
-            <p><code>owner@hostmaster.com</code> / <code>dev</code> — Owner</p>
-            <p><code>manager@hostmaster.com</code> / <code>dev</code> — Manager</p>
-          </div>
+          <p className="text-sm text-gray-600 mt-4 text-center">
+            New owner? <Link href="/register" className="text-navy-900 font-semibold">Create account</Link>
+          </p>
         </div>
       </div>
     </div>

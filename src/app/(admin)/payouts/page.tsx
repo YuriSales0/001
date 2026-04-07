@@ -20,11 +20,13 @@ const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB')
 export default function PayoutsPage() {
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
+  const [clientFilter, setClientFilter] = useState("")
 
-  const load = async () => {
+  const load = async (filter = "") => {
     setLoading(true)
     try {
-      const res = await fetch('/api/payouts')
+      const url = filter ? `/api/payouts?client=${encodeURIComponent(filter)}` : '/api/payouts'
+      const res = await fetch(url)
       if (res.ok) setPayouts(await res.json())
     } finally {
       setLoading(false)
@@ -63,6 +65,22 @@ export default function PayoutsPage() {
           Owner payouts auto-scheduled D+7 after check-out · 18% commission
         </p>
       </div>
+
+      <form
+        onSubmit={e => { e.preventDefault(); load(clientFilter) }}
+        className="flex gap-2"
+      >
+        <input
+          placeholder="Filter by client name, email or ID…"
+          value={clientFilter}
+          onChange={e => setClientFilter(e.target.value)}
+          className="flex-1 rounded-md border px-3 py-2 text-sm"
+        />
+        <button type="submit" className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800">Filter</button>
+        {clientFilter && (
+          <button type="button" onClick={() => { setClientFilter(""); load("") }} className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Clear</button>
+        )}
+      </form>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="rounded-xl border bg-white p-4">

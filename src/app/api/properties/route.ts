@@ -1,13 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function GET(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const user = guard.user!
   try {
     const { searchParams } = new URL(request.url)
     const ownerId = searchParams.get('ownerId')
 
+    const where: Record<string, unknown> = {}
+    if (user.role === 'CLIENT') where.ownerId = user.id
+    else if (user.role === 'MANAGER') where.owner = { managerId: user.id }
+    else if (ownerId) where.ownerId = ownerId
+
     const properties = await prisma.property.findMany({
-      where: ownerId ? { ownerId } : undefined,
+      where,
       include: {
         owner: {
           select: {
@@ -32,9 +41,14 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'CLIENT'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const body = await request.json()
-    const { name, address, city, postalCode, description, photos, ownerId, commissionRate } = body
+    let { ownerId } = body
+    const { name, address, city, postalCode, description, photos, commissionRate } = body
+    if (me.role === 'CLIENT') ownerId = me.id
 
     if (!name || !address || !city || !ownerId) {
       return NextResponse.json(
