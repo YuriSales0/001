@@ -118,7 +118,7 @@ export default function LandingPage() {
               href="/login"
               className="inline-flex items-center gap-2 border border-gray-300 text-navy-900 px-6 py-3 rounded-lg text-base font-medium hover:bg-gray-50 transition-colors"
             >
-              Owner Login
+              Sign In
             </Link>
           </div>
         </div>
