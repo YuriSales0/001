@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { calcCommission, payoutDateFrom } from '@/lib/finance'
 
 export async function GET(request: NextRequest) {
   try {
@@ -48,6 +49,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const checkOutDate = new Date(checkOut)
+    const { commission, net } = calcCommission(amount)
+
     const reservation = await prisma.reservation.create({
       data: {
         propertyId,
@@ -55,17 +59,22 @@ export async function POST(request: NextRequest) {
         guestEmail,
         guestPhone,
         checkIn: new Date(checkIn),
-        checkOut: new Date(checkOut),
+        checkOut: checkOutDate,
         amount,
         platform,
-      },
-      include: {
-        property: {
-          select: {
-            id: true,
-            name: true,
+        payouts: {
+          create: {
+            propertyId,
+            grossAmount: amount,
+            commission,
+            netAmount: net,
+            scheduledFor: payoutDateFrom(checkOutDate),
           },
         },
+      },
+      include: {
+        property: { select: { id: true, name: true } },
+        payouts: true,
       },
     })
 

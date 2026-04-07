@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Calendar, FileText, Menu, X, LogOut, User } from "lucide-react"
+import { Home, Calendar, FileText, Menu, X, LogOut, User, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/my-reports", label: "Reports", icon: FileText },
   { href: "/my-properties", label: "Properties", icon: Home },
+  { href: "/payouts", label: "Payouts", icon: Wallet },
 ]
 
 interface OwnerLayoutProps {
