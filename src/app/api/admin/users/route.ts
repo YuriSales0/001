@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     where: role ? { role: role as 'ADMIN' | 'MANAGER' | 'CREW' | 'CLIENT' } : undefined,
     select: {
       id: true, name: true, email: true, role: true, phone: true, language: true,
-      managerId: true, createdAt: true,
+      managerId: true, subscriptionPlan: true, createdAt: true,
       manager: { select: { id: true, name: true, email: true } },
     },
     orderBy: { createdAt: 'desc' },

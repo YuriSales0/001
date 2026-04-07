@@ -1,14 +1,19 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { UserPlus } from "lucide-react"
+import { UserPlus, Trash2, Save } from "lucide-react"
+
+type Role = 'ADMIN' | 'MANAGER' | 'CREW' | 'CLIENT'
+type Plan = 'BASIC' | 'MID' | 'PREMIUM' | null
 
 type User = {
   id: string
   name: string | null
   email: string
-  role: 'ADMIN' | 'MANAGER' | 'CREW' | 'CLIENT'
+  role: Role
   phone: string | null
+  managerId: string | null
+  subscriptionPlan: Plan
   manager: { id: string; name: string | null; email: string } | null
 }
 
@@ -18,6 +23,7 @@ export default function TeamPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "", phone: "", role: "MANAGER", managerId: "" })
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState("")
+  const [edits, setEdits] = useState<Record<string, Partial<User>>>({})
 
   const load = async () => {
     setLoading(true)
@@ -50,8 +56,43 @@ export default function TeamPage() {
     }
   }
 
+  const setEdit = (id: string, patch: Partial<User>) => {
+    setEdits(s => ({ ...s, [id]: { ...s[id], ...patch } }))
+  }
+
+  const save = async (id: string) => {
+    const patch = edits[id]
+    if (!patch) return
+    const res = await fetch(`/api/admin/users/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    })
+    if (res.ok) {
+      setEdits(s => {
+        const c = { ...s }
+        delete c[id]
+        return c
+      })
+      load()
+    } else {
+      const d = await res.json()
+      alert(d.error || 'Failed')
+    }
+  }
+
+  const remove = async (id: string, label: string) => {
+    if (!confirm(`Delete ${label}? This cannot be undone.`)) return
+    const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' })
+    if (res.ok) load()
+    else {
+      const d = await res.json()
+      alert(d.error || 'Failed')
+    }
+  }
+
   const managers = users.filter(u => u.role === 'MANAGER')
-  const grouped = {
+  const grouped: Record<Role, User[]> = {
     ADMIN: users.filter(u => u.role === 'ADMIN'),
     MANAGER: users.filter(u => u.role === 'MANAGER'),
     CREW: users.filter(u => u.role === 'CREW'),
@@ -62,7 +103,7 @@ export default function TeamPage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-navy-900">Team & Users</h1>
-        <p className="text-sm text-gray-600">Create staff accounts and assign clients to managers.</p>
+        <p className="text-sm text-gray-600">Create, edit role/plan/manager, or delete any user.</p>
       </div>
 
       <form onSubmit={submit} className="rounded-xl border bg-white p-6 space-y-3">
@@ -102,17 +143,84 @@ export default function TeamPage() {
               {role} ({grouped[role].length})
             </div>
             <table className="w-full text-sm">
+              <thead className="text-xs text-gray-500">
+                <tr>
+                  <th className="px-4 py-2 text-left font-normal">Name / Email</th>
+                  <th className="px-4 py-2 text-left font-normal">Role</th>
+                  {role === 'CLIENT' && <th className="px-4 py-2 text-left font-normal">Plan</th>}
+                  {role === 'CLIENT' && <th className="px-4 py-2 text-left font-normal">Manager</th>}
+                  <th className="px-4 py-2"></th>
+                </tr>
+              </thead>
               <tbody>
-                {grouped[role].map(u => (
-                  <tr key={u.id} className="border-t">
-                    <td className="px-4 py-2">{u.name || '—'}</td>
-                    <td className="px-4 py-2 text-gray-500">{u.email}</td>
-                    <td className="px-4 py-2 text-gray-500">{u.phone || ''}</td>
-                    <td className="px-4 py-2 text-gray-500">{u.manager ? `Manager: ${u.manager.name || u.manager.email}` : ''}</td>
-                  </tr>
-                ))}
+                {grouped[role].map(u => {
+                  const e = edits[u.id] || {}
+                  const dirty = Object.keys(e).length > 0
+                  const currentRole = (e.role ?? u.role) as Role
+                  const currentPlan = (e.subscriptionPlan ?? u.subscriptionPlan) as Plan
+                  const currentManager = (e.managerId ?? u.managerId) ?? ''
+                  return (
+                    <tr key={u.id} className="border-t">
+                      <td className="px-4 py-2">
+                        <div>{u.name || '—'}</div>
+                        <div className="text-xs text-gray-500">{u.email}</div>
+                      </td>
+                      <td className="px-4 py-2">
+                        <select
+                          value={currentRole}
+                          onChange={ev => setEdit(u.id, { role: ev.target.value as Role })}
+                          className="rounded-md border px-2 py-1 text-xs"
+                        >
+                          <option value="ADMIN">ADMIN</option>
+                          <option value="MANAGER">MANAGER</option>
+                          <option value="CREW">CREW</option>
+                          <option value="CLIENT">CLIENT</option>
+                        </select>
+                      </td>
+                      {role === 'CLIENT' && (
+                        <td className="px-4 py-2">
+                          <select
+                            value={currentPlan || ''}
+                            onChange={ev => setEdit(u.id, { subscriptionPlan: (ev.target.value || null) as Plan })}
+                            className="rounded-md border px-2 py-1 text-xs"
+                          >
+                            <option value="">— none —</option>
+                            <option value="BASIC">BASIC</option>
+                            <option value="MID">MID</option>
+                            <option value="PREMIUM">PREMIUM</option>
+                          </select>
+                        </td>
+                      )}
+                      {role === 'CLIENT' && (
+                        <td className="px-4 py-2">
+                          <select
+                            value={currentManager}
+                            onChange={ev => setEdit(u.id, { managerId: ev.target.value || null })}
+                            className="rounded-md border px-2 py-1 text-xs"
+                          >
+                            <option value="">— unassigned —</option>
+                            {managers.map(m => <option key={m.id} value={m.id}>{m.name || m.email}</option>)}
+                          </select>
+                        </td>
+                      )}
+                      <td className="px-4 py-2 text-right space-x-2 whitespace-nowrap">
+                        {dirty && (
+                          <button onClick={() => save(u.id)} className="inline-flex items-center gap-1 rounded-md bg-navy-900 text-white px-2 py-1 text-xs hover:bg-navy-800">
+                            <Save className="h-3 w-3" /> Save
+                          </button>
+                        )}
+                        <button
+                          onClick={() => remove(u.id, u.name || u.email)}
+                          className="inline-flex items-center gap-1 rounded-md border border-red-200 text-red-600 px-2 py-1 text-xs hover:bg-red-50"
+                        >
+                          <Trash2 className="h-3 w-3" /> Delete
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })}
                 {grouped[role].length === 0 && (
-                  <tr><td colSpan={4} className="px-4 py-3 text-center text-gray-400">none</td></tr>
+                  <tr><td colSpan={role === 'CLIENT' ? 5 : 3} className="px-4 py-3 text-center text-gray-400">none</td></tr>
                 )}
               </tbody>
             </table>
