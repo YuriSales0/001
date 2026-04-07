@@ -51,8 +51,8 @@ export const authOptions: NextAuthOptions = {
           // fall through to dev fallback
         }
 
-        // Dev fallback
-        if (credentials.password === 'dev') {
+        // Dev fallback — only when not in production
+        if (process.env.NODE_ENV !== 'production' && credentials.password === 'dev') {
           const devUser = devUsers.find(u => u.email === email)
           if (devUser) return devUser
         }
