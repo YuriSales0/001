@@ -126,6 +126,8 @@ model User {
   managerId          String?
   satisfactionScore  Float?
   ltv                Float?    @default(0)
+  bio                String?
+  commissionRate     Float?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 

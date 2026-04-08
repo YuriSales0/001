@@ -2,7 +2,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser } from '@/lib/session'
 import {
-  Home, TrendingUp, CalendarDays, Star, MessageCircle, LogOut, Building2, Wrench,
+  Home, TrendingUp, CalendarDays, Star, MessageCircle, Building2,
+  Wrench, User, LogOut, Menu, X, ChevronRight,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -21,99 +22,128 @@ export default async function ClientLayout({ children }: { children: React.React
   if (!user) redirect('/login')
   if (user.role !== 'CLIENT') redirect('/me')
 
+  const initials = user.name
+    ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
+    : 'CL'
+
   return (
-    <div className="min-h-screen" style={{ background: 'var(--hm-ivory)' }}>
-      {/* Top header */}
-      <header
-        className="sticky top-0 z-50 border-b"
-        style={{
-          background: 'var(--hm-black)',
-          borderColor: 'rgba(201,168,76,0.3)',
-        }}
+    <div className="flex min-h-screen" style={{ background: 'var(--hm-ivory)' }}>
+      {/* Sidebar — client-side toggle handled via CSS peer trick */}
+      <input type="checkbox" id="sidebar-toggle" className="peer hidden" />
+
+      {/* Mobile overlay */}
+      <label
+        htmlFor="sidebar-toggle"
+        className="fixed inset-0 z-40 bg-black/50 hidden peer-checked:block lg:hidden"
+      />
+
+      {/* Sidebar */}
+      <aside
+        className="fixed inset-y-0 left-0 z-50 flex w-60 flex-col -translate-x-full transition-transform duration-200 peer-checked:translate-x-0 lg:static lg:translate-x-0"
+        style={{ background: 'var(--hm-black)' }}
       >
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <Link href="/client/dashboard" className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full"
-                   style={{ background: 'var(--hm-gold)' }}>
-                <Building2 className="h-4 w-4 text-[var(--hm-black)]" />
-              </div>
-              <div>
-                <span className="font-serif font-bold text-white text-lg leading-none">
-                  Host<span style={{ color: 'var(--hm-gold)' }}>Masters</span>
-                </span>
-              </div>
-            </Link>
-
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map(link => {
-                const Icon = link.icon
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 font-sans text-sm text-white/75 hover:text-white hover:bg-white/10 transition-colors"
-                  >
-                    <Icon className="h-4 w-4" />
-                    {link.label}
-                  </Link>
-                )
-              })}
-            </nav>
-
-            {/* Right side */}
-            <div className="flex items-center gap-3">
-              <span className="hidden sm:block font-sans text-sm text-white/50">{user.email}</span>
-              <Link
-                href="/api/auth/signout"
-                className="flex items-center gap-1.5 rounded-lg px-3 py-2 font-sans text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <LogOut className="h-4 w-4" />
-              </Link>
+        {/* Logo */}
+        <div className="flex h-14 items-center justify-between border-b px-4"
+             style={{ borderColor: 'rgba(201,168,76,0.2)' }}>
+          <Link href="/client/dashboard" className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
+                 style={{ background: 'var(--hm-gold)' }}>
+              <Building2 className="h-4 w-4" style={{ color: 'var(--hm-black)' }} />
             </div>
-          </div>
+            <span className="font-bold text-white text-sm">
+              Host<span style={{ color: 'var(--hm-gold)' }}>Masters</span>
+            </span>
+          </Link>
+          <label htmlFor="sidebar-toggle" className="lg:hidden cursor-pointer text-white/50 hover:text-white">
+            <X className="h-4 w-4" />
+          </label>
+        </div>
 
-          {/* Mobile nav */}
-          <div className="flex md:hidden overflow-x-auto pb-2 gap-1 -mx-1 px-1">
-            {navLinks.map(link => {
-              const Icon = link.icon
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="flex-shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-sans text-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-                >
-                  <Icon className="h-4 w-4" />
-                  {link.label}
-                </Link>
-              )
-            })}
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
+          {navLinks.map(link => {
+            const Icon = link.icon
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors"
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {link.label}
+              </Link>
+            )
+          })}
+        </nav>
+
+        {/* Profile + user */}
+        <div className="border-t p-3 space-y-1" style={{ borderColor: 'rgba(201,168,76,0.2)' }}>
+          <Link
+            href="/client/profile"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors"
+          >
+            <User className="h-4 w-4 shrink-0" />
+            My Profile
+          </Link>
+          <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
+            {user.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={user.image} alt="" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
+            ) : (
+              <div className="flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 text-[11px] font-bold"
+                   style={{ background: 'var(--hm-gold)', color: 'var(--hm-black)' }}>
+                {initials}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-white truncate">{user.name ?? 'Client'}</p>
+              <p className="text-[10px] text-white/40 truncate">{user.email}</p>
+            </div>
+            <Link href="/api/auth/signout" title="Sign out" className="text-white/30 hover:text-white/70 transition-colors">
+              <LogOut className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
-      </header>
+      </aside>
 
-      {/* Page content */}
-      <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-12">
-        {children}
-      </main>
+      {/* Main */}
+      <div className="flex flex-1 flex-col min-w-0">
+        {/* Topbar */}
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-white px-4 sm:px-6">
+          <label htmlFor="sidebar-toggle" className="lg:hidden cursor-pointer rounded-md p-1.5 hover:bg-gray-100">
+            <Menu className="h-5 w-5 text-gray-600" />
+          </label>
+          <div className="flex items-center gap-1.5 text-sm text-gray-500">
+            <span className="font-medium text-gray-800">HostMasters</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span>Client Portal</span>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Link href="/client/profile"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
+              {user.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.image} alt="" className="h-6 w-6 rounded-full object-cover" />
+              ) : (
+                <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
+                     style={{ background: 'var(--hm-gold)', color: 'var(--hm-black)' }}>
+                  {initials}
+                </div>
+              )}
+              <span className="hidden sm:block">{user.name ?? 'My Profile'}</span>
+            </Link>
+          </div>
+        </header>
 
-      {/* Footer */}
-      <footer className="mt-16 border-t py-8 text-center font-sans text-sm"
-              style={{ borderColor: 'var(--hm-border)', color: 'var(--hm-slate)', opacity: 0.7 }}>
-        <p>HostMasters · Costa Tropical, Spain</p>
-        <p className="mt-1">
-          Questions? Call us or{' '}
-          <a
-            href="https://wa.me/34600000000"
-            className="underline hover:opacity-100"
-            style={{ color: 'var(--hm-gold-dk)' }}
-          >
-            WhatsApp us
-          </a>
-        </p>
-      </footer>
+        <main className="flex-1 px-4 sm:px-6 py-6">
+          {children}
+        </main>
+
+        <footer className="border-t py-6 text-center text-xs text-gray-400"
+                style={{ borderColor: 'var(--hm-border)' }}>
+          HostMasters · Costa Tropical, Spain
+        </footer>
+      </div>
     </div>
   )
 }

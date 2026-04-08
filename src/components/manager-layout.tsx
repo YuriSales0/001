@@ -5,10 +5,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, Building2, CalendarDays, ClipboardList, Users,
-  TrendingUp, FileBarChart, Bell, Search, Menu, MessageCircle, Wrench,
+  TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 
 const sidebarLinks = [
@@ -24,20 +22,21 @@ const sidebarLinks = [
 
 interface ManagerLayoutProps {
   children: React.ReactNode
+  user?: { name?: string | null; email?: string | null; image?: string | null }
 }
 
-export default function ManagerLayout({ children }: ManagerLayoutProps) {
+export default function ManagerLayout({ children, user }: ManagerLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const initials = user?.name
+    ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
+    : "MG"
 
   return (
-    <div className="flex min-h-screen" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="flex min-h-screen bg-gray-50">
       {/* Mobile Overlay */}
       {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
@@ -49,14 +48,19 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
         style={{ background: '#111827' }}
       >
         {/* Sidebar Header */}
-        <div className="flex h-14 items-center gap-2 border-b border-white/10 px-4">
-          <Link href="/manager/dashboard" className="text-base font-bold tracking-tight">
-            Host<span style={{ color: '#C9A84C' }}>Masters</span>
+        <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
+          <Link href="/manager/dashboard" className="flex items-center gap-2">
+            <span className="text-base font-bold tracking-tight text-white">
+              Host<span style={{ color: '#C9A84C' }}>Masters</span>
+            </span>
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
+                  style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
+              Manager
+            </span>
           </Link>
-          <span className="ml-auto rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-                style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
-            Manager
-          </span>
+          <button className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
+            <X className="h-4 w-4" />
+          </button>
         </div>
 
         {/* Sidebar Navigation */}
@@ -85,18 +89,39 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
           })}
         </nav>
 
-        {/* Manager info */}
-        <div className="border-t border-white/10 p-3">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-7 w-7">
-              <AvatarFallback style={{ background: '#C9A84C', color: '#1e3a5f', fontSize: '11px', fontWeight: 700 }}>
-                MA
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="text-xs font-semibold text-white">Manoela</div>
-              <div className="text-[10px] text-gray-400">Operations Manager</div>
+        {/* Profile link + user info */}
+        <div className="border-t border-white/10 p-3 space-y-1">
+          <Link
+            href="/manager/profile"
+            onClick={() => setSidebarOpen(false)}
+            className={cn(
+              "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              pathname === "/manager/profile"
+                ? "text-white"
+                : "text-white/60 hover:bg-white/5 hover:text-white"
+            )}
+            style={pathname === "/manager/profile" ? { background: 'rgba(201,168,76,0.15)', color: '#C9A84C' } : {}}
+          >
+            <User className="h-4 w-4 shrink-0" />
+            My Profile
+          </Link>
+          <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
+            {user?.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={user.image} alt="" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
+            ) : (
+              <div className="flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 text-[11px] font-bold"
+                   style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                {initials}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-white truncate">{user?.name ?? "Manager"}</p>
+              <p className="text-[10px] text-gray-400 truncate">{user?.email ?? ""}</p>
             </div>
+            <Link href="/api/auth/signout" title="Sign out" className="text-white/30 hover:text-white/70 transition-colors">
+              <LogOut className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
       </aside>
@@ -105,30 +130,31 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
       <div className="flex flex-1 flex-col min-w-0">
         {/* Top Bar */}
         <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-white px-4 sm:px-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0 lg:hidden h-8 w-8"
+          <button
+            className="lg:hidden rounded-md p-1.5 hover:bg-gray-100"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="h-5 w-5" />
-          </Button>
-
-          {/* Search */}
-          <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search…"
-              className="h-8 w-full rounded-lg border bg-gray-50 pl-8 pr-3 text-sm placeholder:text-gray-400 focus:border-navy-400 focus:outline-none focus:ring-1 focus:ring-navy-400"
-            />
+            <Menu className="h-5 w-5 text-gray-600" />
+          </button>
+          <div className="flex items-center gap-1.5 text-sm text-gray-500">
+            <span className="font-medium text-gray-800">HostMasters</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span className="capitalize">{pathname.split("/").filter(Boolean).pop() || "dashboard"}</span>
           </div>
-
-          <div className="ml-auto flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="relative h-8 w-8">
-              <Bell className="h-4 w-4 text-gray-500" />
-              <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-red-500" />
-            </Button>
+          <div className="ml-auto">
+            <Link href="/manager/profile"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
+              {user?.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.image} alt="" className="h-6 w-6 rounded-full object-cover" />
+              ) : (
+                <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
+                     style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                  {initials}
+                </div>
+              )}
+              <span className="hidden sm:block">{user?.name ?? "Manager"}</span>
+            </Link>
           </div>
         </header>
 

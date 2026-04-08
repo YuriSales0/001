@@ -11,6 +11,8 @@ export async function getCurrentUser() {
     email: session.user.email || '',
     role: session.user.role as AppRole,
     language: session.user.language,
+    name: (session.user as { name?: string | null }).name ?? null,
+    image: (session.user as { image?: string | null }).image ?? null,
   }
 }
 
