@@ -207,7 +207,9 @@ export default function ClientTasksPage() {
             <div className="p-5 space-y-4">
               {/* Property */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">Propriedade</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                  Propriedade
+                </label>
                 <select
                   value={form.propertyId}
                   onChange={e => setForm(f => ({ ...f, propertyId: e.target.value }))}
@@ -217,63 +219,88 @@ export default function ClientTasksPage() {
                 </select>
               </div>
 
-              {/* Type */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-2">Tipo de tarefa</label>
-                <div className="grid grid-cols-1 gap-2">
-                  {MANUAL_TYPES.map(t => {
-                    const Icon = t.icon
-                    return (
+              {/* Type (left) + Notes (right) — two columns */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Left: task type selector */}
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                    Tipo de tarefa
+                  </label>
+                  <div className="space-y-1.5">
+                    {MANUAL_TYPES.map(t => (
                       <button
                         key={t.value}
                         onClick={() => setForm(f => ({ ...f, type: t.value }))}
-                        className={`flex items-start gap-3 rounded-lg border p-3 text-left transition-colors ${
-                          form.type === t.value ? 'border-navy-900 bg-navy-50' : 'hover:bg-gray-50'
+                        className={`w-full text-left rounded-lg border px-3 py-2.5 transition-colors ${
+                          form.type === t.value
+                            ? 'border-navy-900 bg-navy-50 text-navy-900'
+                            : 'border-gray-100 bg-white text-gray-500 hover:bg-gray-50'
                         }`}
                       >
-                        <Icon className="h-4 w-4 mt-0.5 shrink-0 text-navy-900" />
-                        <div>
-                          <div className="text-sm font-medium text-navy-900">{t.label}</div>
-                          <div className="text-xs text-gray-500">{t.desc}</div>
-                        </div>
+                        <div className="text-sm font-medium">{t.label}</div>
+                        <div className="text-xs opacity-60 mt-0.5">{t.desc}</div>
                       </button>
-                    )
-                  })}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Title */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">Descrição</label>
-                <input
-                  value={form.title}
-                  onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                  placeholder="Ex: Torneira da cozinha a pingar"
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-                />
-              </div>
+                {/* Right: title + notes + date */}
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                      Título / Descrição
+                    </label>
+                    <input
+                      value={form.title}
+                      onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
+                      placeholder={
+                        form.type === 'MAINTENANCE_CORRECTIVE' ? 'Ex: Torneira da cozinha a pingar' :
+                        form.type === 'CLEANING'               ? 'Ex: Limpeza extra antes da chegada' :
+                        form.type === 'SHOPPING'               ? 'Ex: Compras para família de 4' :
+                        form.type === 'TRANSFER'               ? 'Ex: Transfer voo TP1234' :
+                        'Descreve a tarefa…'
+                      }
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                    />
+                  </div>
 
-              {/* Details */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">Detalhes adicionais</label>
-                <textarea
-                  rows={2}
-                  value={form.description}
-                  onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                  placeholder="Informações adicionais para o técnico…"
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-                />
-              </div>
+                  <div className="flex-1 flex flex-col">
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                      Notas para a crew
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={form.description}
+                      onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                      placeholder="Detalhes, localização de chaves, códigos de acesso, observações…"
+                      className="flex-1 w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-navy-900"
+                    />
+                  </div>
 
-              {/* Due date */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">Data pretendida</label>
-                <input
-                  type="date"
-                  value={form.dueDate}
-                  onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-                />
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                      Data pretendida
+                    </label>
+                    <input
+                      type="date"
+                      value={form.dueDate}
+                      onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                    />
+                  </div>
+
+                  {/* Warning for corrective/premium types */}
+                  {form.type === 'MAINTENANCE_CORRECTIVE' && (
+                    <div className="rounded-lg bg-amber-50 border border-amber-100 px-3 py-2 text-xs text-amber-700">
+                      Cobrada à parte. Aprovação necessária acima de €50.
+                    </div>
+                  )}
+                  {(form.type === 'SHOPPING' || form.type === 'TRANSFER') && (
+                    <div className="rounded-lg bg-sky-50 border border-sky-100 px-3 py-2 text-xs text-sky-700">
+                      Incluído no plano PREMIUM. Noutros planos cobrado à parte.
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
