@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { type TaskType } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { calcCommission, payoutDateFrom } from '@/lib/finance'
-import { pickLeastBusyCrew, buildChecklist } from '@/lib/crew'
+import { pickLeastBusyCrew, buildChecklist, autoTasksForPlan } from '@/lib/crew'
 import { notifyAdmin } from '@/lib/notify'
 
 export async function GET(request: NextRequest) {
@@ -95,15 +96,49 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Auto-create ops tasks (check-in, check-out, post-checkout cleaning)
+    // ── Auto-tasks ──────────────────────────────────────────────────────────
     const assigneeId = await pickLeastBusyCrew()
-    const baseTasks = [
-      { type: 'CHECK_IN' as const, title: `Check-in · ${guestName}`, dueDate: checkInDate },
-      { type: 'CHECK_OUT' as const, title: `Check-out · ${guestName}`, dueDate: checkOutDate },
-      { type: 'CLEANING' as const, title: `Post-checkout cleaning`, dueDate: checkOutDate },
+    const plan = ownerPlan ?? 'STARTER'
+
+    // 1 day before check-in for pre-stay inspection / shopping
+    const dayBeforeCheckIn = new Date(checkInDate)
+    dayBeforeCheckIn.setDate(dayBeforeCheckIn.getDate() - 1)
+
+    // Base tasks — all plans
+    type TaskRow = { type: TaskType; title: string; dueDate: Date }
+    const autoTasks: TaskRow[] = [
+      { type: 'CHECK_IN',  title: `Check-in · ${guestName}`,     dueDate: checkInDate  },
+      { type: 'CHECK_OUT', title: `Check-out · ${guestName}`,    dueDate: checkOutDate },
+      { type: 'CLEANING',  title: `Limpeza pós-checkout`,         dueDate: checkOutDate },
     ]
+
+    // Plan-aware extra tasks
+    const planExtras = autoTasksForPlan(plan)
+
+    if (planExtras.includes('INSPECTION')) {
+      autoTasks.push(
+        { type: 'INSPECTION', title: `Inspecção pré-estadia · ${guestName}`, dueDate: dayBeforeCheckIn },
+        { type: 'INSPECTION', title: `Inspecção pós-estadia · ${guestName}`, dueDate: checkOutDate     },
+      )
+    }
+    if (planExtras.includes('SHOPPING')) {
+      autoTasks.push(
+        { type: 'SHOPPING', title: `Compras pré-chegada · ${guestName}`, dueDate: dayBeforeCheckIn },
+      )
+    }
+    if (planExtras.includes('TRANSFER')) {
+      autoTasks.push(
+        { type: 'TRANSFER', title: `Transfer aeroporto · ${guestName}`, dueDate: checkInDate },
+      )
+    }
+    if (planExtras.includes('LAUNDRY')) {
+      autoTasks.push(
+        { type: 'LAUNDRY', title: `Lavandaria pós-checkout · ${guestName}`, dueDate: checkOutDate },
+      )
+    }
+
     await prisma.task.createMany({
-      data: baseTasks.map(t => ({
+      data: autoTasks.map(t => ({
         propertyId,
         type: t.type,
         title: t.title,

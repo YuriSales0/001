@@ -52,8 +52,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const body = await request.json()
     const { propertyId, type, title, description, notes, dueDate } = body
@@ -66,11 +67,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // CLIENT can only create tasks for their own properties
+    if (me.role === 'CLIENT') {
+      const prop = await import('@/lib/prisma').then(m =>
+        m.prisma.property.findUnique({ where: { id: propertyId }, select: { ownerId: true } })
+      )
+      if (prop?.ownerId !== me.id) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+
     if (!assigneeId) {
       const { pickLeastBusyCrew } = await import('@/lib/crew')
       assigneeId = await pickLeastBusyCrew()
     }
-    if (!assigneeId) {
+    // CLIENT-created tasks don't require crew assignment immediately
+    if (!assigneeId && me.role !== 'CLIENT') {
       return NextResponse.json({ error: 'No crew available to assign task' }, { status: 400 })
     }
 

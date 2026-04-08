@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser } from '@/lib/session'
-import { Building2, LogOut, MessageCircle } from 'lucide-react'
+import { Building2, LogOut, MessageCircle, ClipboardList } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,6 +21,10 @@ export default async function ClientLayout({ children }: { children: React.React
           <nav className="flex items-center gap-4 text-sm">
             <Link href="/client/payouts" className="text-gray-700 hover:text-navy-900">Payouts</Link>
             <Link href="/client/properties" className="text-gray-700 hover:text-navy-900">Properties</Link>
+            <Link href="/client/tasks" className="inline-flex items-center gap-1 text-gray-700 hover:text-navy-900">
+              <ClipboardList className="h-4 w-4" />
+              Tarefas
+            </Link>
             <Link href="/client/messages" className="inline-flex items-center gap-1 text-navy-900 font-medium hover:text-navy-700">
               <MessageCircle className="h-4 w-4" />
               Contactar gestor
