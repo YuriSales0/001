@@ -15,13 +15,19 @@ export async function GET(_req: NextRequest) {
   const me = guard.user!
 
   if (me.role === 'CLIENT') {
-    if (!me.managerId) {
+    // Fetch managerId from DB (not in session type)
+    const dbUser = await prisma.user.findUnique({
+      where: { id: me.id },
+      select: { managerId: true },
+    })
+    if (!dbUser?.managerId) {
       return NextResponse.json({ error: 'No manager assigned' }, { status: 400 })
     }
+    const managerId = dbUser.managerId
     // Upsert conversation
     const conv = await prisma.conversation.upsert({
-      where: { clientId_managerId: { clientId: me.id, managerId: me.managerId } },
-      create: { clientId: me.id, managerId: me.managerId },
+      where: { clientId_managerId: { clientId: me.id, managerId } },
+      create: { clientId: me.id, managerId },
       update: {},
       include: {
         manager: { select: { id: true, name: true, email: true } },

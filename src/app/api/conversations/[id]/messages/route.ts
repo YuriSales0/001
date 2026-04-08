@@ -16,13 +16,11 @@ export async function GET(
   const conv = await prisma.conversation.findUnique({ where: { id: params.id } })
   if (!conv) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  // Access check
-  if (
-    me.role === 'CLIENT'  && conv.clientId  !== me.id ||
-    me.role === 'MANAGER' && conv.managerId !== me.id && me.role !== 'ADMIN'
-  ) {
-    // Read-only access for managers viewing other's conversations — still allow GET
+  // CLIENT can only see their own conversation
+  if (me.role === 'CLIENT' && conv.clientId !== me.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
+  // MANAGER: own conversations are writable, others are read-only (both allowed for GET)
 
   const messages = await prisma.message.findMany({
     where: { conversationId: params.id },
