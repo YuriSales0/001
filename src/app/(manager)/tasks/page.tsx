@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import {
-  Plus, CheckCircle2, Clock, AlertCircle, ArrowRight, X, MapPin, User,
+  Plus, CheckCircle2, Clock, AlertCircle, ArrowRight, X, MapPin, User, FileDown,
 } from "lucide-react"
 
 type TaskStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED"
@@ -66,6 +66,11 @@ const STATUS_CONFIG: Record<TaskStatus, { label: string; icon: typeof Clock; col
 
 const fmtDateTime = (s: string) =>
   new Date(s).toLocaleString("en-GB", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
+
+const downloadDoc = async () => {
+  const { generateAutoTasksPDF } = await import("@/lib/docs/auto-tasks-pdf")
+  generateAutoTasksPDF()
+}
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -162,12 +167,21 @@ export default function TasksPage() {
             Dispatch and track cleaning, maintenance and inspection visits.
           </p>
         </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
-        >
-          <Plus className="h-4 w-4" /> New task
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={downloadDoc}
+            title="Download Auto-Task documentation (PDF)"
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white text-gray-700 px-4 py-2.5 text-sm font-medium hover:bg-gray-50"
+          >
+            <FileDown className="h-4 w-4" /> Auto-task docs
+          </button>
+          <button
+            onClick={() => setShowCreate(true)}
+            className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+          >
+            <Plus className="h-4 w-4" /> New task
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-3">
