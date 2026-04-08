@@ -30,10 +30,10 @@ export async function GET(_req: NextRequest) {
       create: { clientId: me.id, managerId },
       update: {},
       include: {
-        manager: { select: { id: true, name: true, email: true } },
+        manager: { select: { id: true, name: true, email: true, image: true } },
         messages: {
           orderBy: { createdAt: 'asc' },
-          include: { sender: { select: { id: true, name: true, role: true } } },
+          include: { sender: { select: { id: true, name: true, role: true, image: true } } },
         },
       },
     })
@@ -43,12 +43,12 @@ export async function GET(_req: NextRequest) {
   if (me.role === 'MANAGER') {
     const convs = await prisma.conversation.findMany({
       include: {
-        client:  { select: { id: true, name: true, email: true } },
-        manager: { select: { id: true, name: true, email: true } },
+        client:  { select: { id: true, name: true, email: true, image: true } },
+        manager: { select: { id: true, name: true, email: true, image: true } },
         messages: {
           orderBy: { createdAt: 'desc' },
           take: 1,
-          include: { sender: { select: { id: true, name: true, role: true } } },
+          include: { sender: { select: { id: true, name: true, role: true, image: true } } },
         },
         _count: { select: { messages: true } },
       },
@@ -79,8 +79,8 @@ export async function GET(_req: NextRequest) {
   // ADMIN — all conversations, all read-only
   const convs = await prisma.conversation.findMany({
     include: {
-      client:  { select: { id: true, name: true, email: true } },
-      manager: { select: { id: true, name: true, email: true } },
+      client:  { select: { id: true, name: true, email: true, image: true } },
+      manager: { select: { id: true, name: true, email: true, image: true } },
       messages: {
         orderBy: { createdAt: 'desc' },
         take: 1,

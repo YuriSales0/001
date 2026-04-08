@@ -1,10 +1,9 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import Link from "next/link"
 import {
-  Plus, X, Phone, Mail, Globe, MessageCircle, Share2, Tag, Search,
-  Filter, Clock, ChevronRight, Newspaper, UserPlus,
+  Plus, X, Phone, Mail, Search, Clock, Copy, Check,
+  Webhook, Code2, QrCode, MessageSquare, Zap, ChevronDown,
 } from "lucide-react"
 
 type LeadStage =
@@ -70,6 +69,7 @@ export default function CRMPage() {
   const [searchQ, setSearchQ] = useState("")
   const [langFilter, setLangFilter] = useState<"ALL" | "EN" | "DE">("ALL")
   const [addOpen, setAddOpen] = useState(false)
+  const [intOpen, setIntOpen] = useState(false)
   const dragRef = useRef<string | null>(null)
   const [draggingOver, setDraggingOver] = useState<LeadStage | null>(null)
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
@@ -186,6 +186,13 @@ export default function CRMPage() {
           </div>
 
           <button
+            onClick={() => setIntOpen(true)}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
+          >
+            <Zap className="h-4 w-4 text-amber-500" />
+            Integrations
+          </button>
+          <button
             onClick={() => setAddOpen(true)}
             className="flex items-center gap-1.5 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 transition-colors"
           >
@@ -194,6 +201,9 @@ export default function CRMPage() {
           </button>
         </div>
       </div>
+
+      {/* Integrations modal */}
+      {intOpen && <IntegrationsModal onClose={() => setIntOpen(false)} />}
 
       {/* Add lead modal */}
       {addOpen && (
@@ -484,6 +494,247 @@ export default function CRMPage() {
                     <div className="text-center py-8 text-xs text-gray-300">Drop here</div>
                   )}
                 </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Integrations Modal ────────────────────────────────────────────────────────
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false)
+  return (
+    <button
+      onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000) }}
+      className="flex items-center gap-1 rounded px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 transition-colors shrink-0"
+    >
+      {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3 text-gray-500" />}
+      {copied ? "Copied" : "Copy"}
+    </button>
+  )
+}
+
+function CodeBlock({ code }: { code: string }) {
+  return (
+    <div className="relative rounded-lg bg-gray-900 p-3 text-xs text-gray-100 font-mono overflow-x-auto">
+      <div className="absolute top-2 right-2"><CopyButton text={code} /></div>
+      <pre className="pr-16 whitespace-pre-wrap break-all">{code}</pre>
+    </div>
+  )
+}
+
+function IntegrationsModal({ onClose }: { onClose: () => void }) {
+  const [open, setOpen] = useState<string | null>("webhook")
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://your-domain.com"
+  const webhookUrl = `${baseUrl}/api/leads/public`
+  const token = process.env.NEXT_PUBLIC_INTEGRATION_SECRET ?? "YOUR_TOKEN"
+
+  const embedForm = `<!-- HostMasters Lead Form -->
+<form id="hm-lead-form">
+  <input name="name" placeholder="Your name" required />
+  <input name="email" type="email" placeholder="Email" />
+  <input name="phone" placeholder="Phone" />
+  <button type="submit">Request info</button>
+</form>
+<script>
+document.getElementById('hm-lead-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  await fetch('${webhookUrl}', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...data, source: 'WEBSITE' })
+  });
+  e.target.innerHTML = '<p>Thank you! We will contact you shortly.</p>';
+});
+</script>`
+
+  const metaWebhook = `{
+  "object": "page",
+  "entry": [{
+    "changes": [{
+      "value": {
+        "leadgen_id": "{{lead.id}}",
+        "field_data": [
+          { "name": "full_name", "values": ["{{lead.full_name}}"] },
+          { "name": "email", "values": ["{{lead.email}}"] },
+          { "name": "phone_number", "values": ["{{lead.phone}}"] }
+        ]
+      }
+    }]
+  }]
+}`
+
+  const zapierBody = `{
+  "name": "{{Full Name}}",
+  "email": "{{Email}}",
+  "phone": "{{Phone}}",
+  "source": "ONLINE",
+  "language": "EN",
+  "notes": "Via Zapier / Make"
+}`
+
+  const sections = [
+    {
+      id: "webhook",
+      icon: Webhook,
+      title: "API Webhook",
+      desc: "POST leads directly from any tool",
+      content: (
+        <div className="space-y-3">
+          <p className="text-xs text-gray-600">Send a POST request to this URL to create a lead:</p>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 text-xs bg-gray-100 rounded px-2 py-1.5 truncate">{webhookUrl}</code>
+            <CopyButton text={webhookUrl} />
+          </div>
+          <p className="text-xs font-semibold text-gray-700 mt-2">Payload (JSON)</p>
+          <CodeBlock code={`POST ${webhookUrl}
+Content-Type: application/json
+x-integration-token: ${token}
+
+{
+  "name": "John Smith",       // required
+  "email": "john@example.com",
+  "phone": "+34 600 000 000",
+  "source": "ONLINE",         // ONLINE | REFERRAL | WHATSAPP | ...
+  "language": "EN",           // EN | DE
+  "notes": "Interested in 3-bed villa"
+}`} />
+          <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
+            Set <code className="font-mono">INTEGRATION_SECRET</code> in your Vercel environment variables to secure the endpoint.
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "embed",
+      icon: Code2,
+      title: "Website Embed",
+      desc: "Drop a lead form on any website",
+      content: (
+        <div className="space-y-3">
+          <p className="text-xs text-gray-600">Copy and paste this snippet into any HTML page:</p>
+          <CodeBlock code={embedForm} />
+          <p className="text-xs text-gray-500">The form submits directly to HostMasters. Customize the fields and styling to match your brand.</p>
+        </div>
+      ),
+    },
+    {
+      id: "meta",
+      icon: QrCode,
+      title: "Meta Lead Ads",
+      desc: "Facebook / Instagram lead forms",
+      content: (
+        <div className="space-y-3">
+          <div className="text-xs text-gray-600 space-y-2">
+            <p><strong>Step 1:</strong> In Meta Business Manager → Leads Center → Integrations → CRM Integration</p>
+            <p><strong>Step 2:</strong> Choose "Webhook" as connection type</p>
+            <p><strong>Step 3:</strong> Enter the webhook URL:</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 text-xs bg-gray-100 rounded px-2 py-1.5 truncate">{webhookUrl}</code>
+            <CopyButton text={webhookUrl} />
+          </div>
+          <p className="text-xs text-gray-600"><strong>Step 4:</strong> Verification token (for GET challenge):</p>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 text-xs bg-gray-100 rounded px-2 py-1.5">hostmasters</code>
+            <CopyButton text="hostmasters" />
+          </div>
+          <p className="text-xs font-semibold text-gray-700 mt-2">Expected payload from Meta:</p>
+          <CodeBlock code={metaWebhook} />
+          <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 text-xs text-blue-800">
+            Meta sends the lead data in a different format. Use a middleware (Zapier/Make) to map the fields to HostMasters format if needed.
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "whatsapp",
+      icon: MessageSquare,
+      title: "WhatsApp",
+      desc: "Click-to-chat lead capture",
+      content: (
+        <div className="space-y-3">
+          <p className="text-xs text-gray-600">Add a WhatsApp click-to-chat button to your website or ads. When a prospect messages you, manually create the lead in the CRM.</p>
+          <p className="text-xs font-semibold text-gray-700">Generate a click-to-chat link:</p>
+          <CodeBlock code={`https://wa.me/34XXXXXXXXX?text=Hi%20HostMasters%2C%20I%27m%20interested%20in%20property%20management`} />
+          <p className="text-xs text-gray-600"><strong>Tip:</strong> Add UTM parameters to your ad links to track which campaign generated the lead, then note it in the lead source.</p>
+          <p className="text-xs font-semibold text-gray-700 mt-2">HTML button:</p>
+          <CodeBlock code={`<a href="https://wa.me/34XXXXXXXXX?text=Hi%20HostMasters" 
+   target="_blank"
+   style="background:#25D366;color:white;padding:12px 24px;border-radius:8px;text-decoration:none">
+  💬 Chat on WhatsApp
+</a>`} />
+        </div>
+      ),
+    },
+    {
+      id: "zapier",
+      icon: Zap,
+      title: "Zapier / Make",
+      desc: "Automate from any source",
+      content: (
+        <div className="space-y-3">
+          <p className="text-xs text-gray-600">Use Zapier or Make (formerly Integromat) to push leads from any source — Google Forms, Typeform, Mailchimp, HubSpot, etc.</p>
+          <p className="text-xs font-semibold text-gray-700">Action: HTTP POST to</p>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 text-xs bg-gray-100 rounded px-2 py-1.5 truncate">{webhookUrl}</code>
+            <CopyButton text={webhookUrl} />
+          </div>
+          <p className="text-xs font-semibold text-gray-700">Body template:</p>
+          <CodeBlock code={zapierBody} />
+          <p className="text-xs text-gray-500">Map the fields from your trigger (e.g. Google Form fields) to the JSON keys above.</p>
+        </div>
+      ),
+    },
+  ]
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-end bg-black/40" onClick={onClose}>
+      <div
+        className="w-full max-w-lg h-full bg-white shadow-2xl flex flex-col overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b">
+          <div>
+            <h2 className="font-bold text-navy-900">Lead Integrations</h2>
+            <p className="text-xs text-gray-500 mt-0.5">Capture leads from digital marketing channels</p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Sections */}
+        <div className="flex-1 overflow-y-auto divide-y">
+          {sections.map(sec => {
+            const Icon = sec.icon
+            const isOpen = open === sec.id
+            return (
+              <div key={sec.id}>
+                <button
+                  className="w-full flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors text-left"
+                  onClick={() => setOpen(isOpen ? null : sec.id)}
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 shrink-0">
+                    <Icon className="h-4 w-4 text-amber-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-navy-900">{sec.title}</p>
+                    <p className="text-xs text-gray-500">{sec.desc}</p>
+                  </div>
+                  <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                </button>
+                {isOpen && (
+                  <div className="px-5 pb-4 bg-gray-50 border-t">
+                    <div className="pt-4">{sec.content}</div>
+                  </div>
+                )}
               </div>
             )
           })}
