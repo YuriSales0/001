@@ -19,7 +19,7 @@ type CalEvent = {
   property?: { id: string; name: string }
   meta?: Record<string, unknown> & Partial<TaskMeta>
 }
-type Property = { id: string; name: string; owner: { id: string; name: string | null; email: string } }
+type Property = { id: string; name: string; owner?: { id: string; name: string | null; email: string } }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const MANUAL_TASK_TYPES = [
@@ -79,26 +79,22 @@ function CreateTaskModal({
 }: {
   date: string; properties: Property[]; onClose: ()=>void; onCreated: ()=>void
 }) {
-  const owners = Array.from(new Map(properties.map(p=>[p.owner.id,p.owner])).values())
-  const [ownerId, setOwnerId] = useState(owners[0]?.id??'')
   const [type, setType] = useState<string>(MANUAL_TASK_TYPES[0])
-  const [propertyId, setPropertyId] = useState('')
+  const [propertyId, setPropertyId] = useState(properties[0]?.id??'')
+  const [propSearch, setPropSearch] = useState('')
   const [title, setTitle] = useState('')
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const ownerProps = properties.filter(p=>p.owner.id===ownerId)
 
-  const handleOwnerChange = (id:string) => {
-    setOwnerId(id)
-    setPropertyId(properties.find(p=>p.owner.id===id)?.id??'')
-  }
+  const filteredProps = propSearch.trim()
+    ? properties.filter(p => p.name.toLowerCase().includes(propSearch.toLowerCase()))
+    : properties
 
   const submit = async () => {
-    const pid = propertyId || ownerProps[0]?.id
-    if (!title||!pid) return
+    if (!title||!propertyId) return
     setSubmitting(true)
     await fetch('/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({propertyId:pid,type,title,description:notes,dueDate:date})})
+      body:JSON.stringify({propertyId,type,title,description:notes,dueDate:date})})
     setSubmitting(false)
     onCreated()
   }
@@ -114,23 +110,25 @@ function CreateTaskModal({
           <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-4 w-4"/></button>
         </div>
         <div className="p-6 space-y-5">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Proprietário</label>
-              <select value={ownerId} onChange={e=>handleOwnerChange(e.target.value)}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
-                {owners.map(o=><option key={o.id} value={o.id}>{o.name??o.email}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Propriedade</label>
-              <select value={propertyId||ownerProps[0]?.id} onChange={e=>setPropertyId(e.target.value)}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-                disabled={ownerProps.length===0}>
-                {ownerProps.length===0?<option>— sem propriedades —</option>
-                  :ownerProps.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
-            </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Propriedade</label>
+            <input
+              value={propSearch}
+              onChange={e=>setPropSearch(e.target.value)}
+              placeholder="Pesquisa por nome de propriedade…"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 mb-2"
+            />
+            <select value={propertyId} onChange={e=>setPropertyId(e.target.value)}
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+              {filteredProps.length===0
+                ? <option value="">— sem resultados —</option>
+                : filteredProps.map(p=>(
+                    <option key={p.id} value={p.id}>
+                      {p.name}{p.owner?.name ? ` · ${p.owner.name}` : p.owner?.email ? ` · ${p.owner.email}` : ''}
+                    </option>
+                  ))
+              }
+            </select>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -167,7 +165,7 @@ function CreateTaskModal({
         </div>
         <div className="flex gap-3 px-6 py-4 border-t">
           <button onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm hover:bg-gray-50">Cancelar</button>
-          <button onClick={submit} disabled={submitting||!title||ownerProps.length===0}
+          <button onClick={submit} disabled={submitting||!title||!propertyId}
             className="flex-1 rounded-lg bg-gray-900 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50">
             {submitting?'A criar…':'Criar tarefa'}
           </button>

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   Home, Calendar, FileText, Menu, LogOut, Wallet, Users,
-  MessageCircle, BarChart3, Wrench, ClipboardList,
+  MessageCircle, BarChart3, Wrench, CalendarDays,
   Building2, X, User, ChevronRight,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -14,10 +14,9 @@ const navLinks = [
   { href: "/dashboard",     label: "Dashboard",    icon: Home },
   { href: "/crm",           label: "CRM",          icon: BarChart3 },
   { href: "/calendar",      label: "Calendar",     icon: Calendar },
-  { href: "/reservations",  label: "Reservations", icon: ClipboardList },
-  { href: "/tasks",         label: "Tasks",        icon: ClipboardList },
-  { href: "/setup",         label: "Setup",        icon: FileText },
+  { href: "/reservations",  label: "Reservations", icon: CalendarDays },
   { href: "/maintenance",   label: "Maintenance",  icon: Wrench },
+  { href: "/setup",         label: "Setup",        icon: FileText },
   { href: "/my-properties", label: "Properties",   icon: Building2 },
   { href: "/payouts",       label: "Payouts",      icon: Wallet },
   { href: "/team",          label: "Team",         icon: Users },
