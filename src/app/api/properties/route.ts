@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const guard = await requireRole(['ADMIN', 'CLIENT'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
   try {
@@ -49,6 +49,13 @@ export async function POST(request: NextRequest) {
     let { ownerId } = body
     const { name, address, city, postalCode, description, photos, commissionRate } = body
     if (me.role === 'CLIENT') ownerId = me.id
+    // MANAGER creates for one of their clients — ownerId must be provided and be one of their clients
+    if (me.role === 'MANAGER' && ownerId) {
+      const owner = await prisma.user.findUnique({ where: { id: ownerId }, select: { managerId: true } })
+      if (owner?.managerId !== me.id) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
 
     if (!name || !address || !city || !ownerId) {
       return NextResponse.json(
@@ -56,6 +63,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Admin creates directly as ACTIVE; others need approval
+    const status = me.role === 'ADMIN' ? 'ACTIVE' : 'PENDING_APPROVAL'
 
     const property = await prisma.property.create({
       data: {
@@ -67,6 +77,8 @@ export async function POST(request: NextRequest) {
         photos: photos || [],
         ownerId,
         commissionRate: commissionRate ?? 18.0,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        status: status as any,
       },
       include: {
         owner: {
