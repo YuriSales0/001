@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { id } = params
 
@@ -17,6 +21,7 @@ export async function GET(
             name: true,
             email: true,
             phone: true,
+            managerId: true,
           },
         },
         reservations: {
@@ -47,6 +52,21 @@ export async function GET(
       )
     }
 
+    // Scope checks
+    if (me.role === 'CLIENT' && property.ownerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (me.role === 'MANAGER' && property.owner.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (me.role === 'CREW') {
+      const hasTask = await prisma.task.findFirst({
+        where: { propertyId: id, assigneeId: me.id },
+        select: { id: true },
+      })
+      if (!hasTask) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     return NextResponse.json(property)
   } catch (error) {
     console.error('Error fetching property:', error)
@@ -61,10 +81,23 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { id } = params
-    const body = await request.json()
 
+    if (me.role === 'MANAGER') {
+      const owned = await prisma.property.findUnique({
+        where: { id },
+        select: { owner: { select: { managerId: true } } },
+      })
+      if (owned?.owner.managerId !== me.id) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+
+    const body = await request.json()
     const property = await prisma.property.update({
       where: { id },
       data: body,
@@ -90,9 +123,11 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const guard = await requireRole(['ADMIN'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const { id } = params
 

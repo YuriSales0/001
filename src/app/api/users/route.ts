@@ -13,9 +13,12 @@ export async function GET(req: NextRequest) {
 
   const where: Record<string, unknown> = {}
   if (role) where.role = role
+  // MANAGER restrictions: only see their own clients; CREW are global so any role-filtered fetch is allowed
   if (me.role === 'MANAGER') {
-    where.role = 'CLIENT'
-    where.managerId = me.id
+    if (role === 'CLIENT' || !role) {
+      where.role = 'CLIENT'
+      where.managerId = me.id
+    }
   }
 
   const users = await prisma.user.findMany({

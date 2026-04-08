@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function GET(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { searchParams } = new URL(request.url)
     const propertyId = searchParams.get('propertyId')
 
-    const where: Record<string, string> = {}
+    const where: Record<string, unknown> = {}
     if (propertyId) where.propertyId = propertyId
+    if (me.role === 'CLIENT') where.property = { ownerId: me.id }
+    else if (me.role === 'MANAGER') where.property = { owner: { managerId: me.id } }
 
     const blockedDates = await prisma.blockedDate.findMany({
       where,
@@ -23,15 +29,38 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const body = await request.json()
-    const { propertyId, startDate, endDate, reason } = body
+    let { propertyId } = body
+    const { startDate, endDate, reason } = body
+
+    // CLIENT may omit propertyId — auto-pick their property if they have only one
+    if (me.role === 'CLIENT' && !propertyId) {
+      const props = await prisma.property.findMany({ where: { ownerId: me.id }, select: { id: true } })
+      if (props.length === 1) propertyId = props[0].id
+    }
 
     if (!propertyId || !startDate || !endDate) {
       return NextResponse.json(
         { error: 'Missing required fields: propertyId, startDate, endDate' },
         { status: 400 }
       )
+    }
+
+    // Verify ownership
+    const prop = await prisma.property.findUnique({
+      where: { id: propertyId },
+      select: { ownerId: true, owner: { select: { managerId: true } } },
+    })
+    if (!prop) return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+    if (me.role === 'CLIENT' && prop.ownerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (me.role === 'MANAGER' && prop.owner.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     // Check for overlapping reservations
@@ -69,12 +98,28 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
     if (!id) {
       return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 })
+    }
+
+    // Scope check
+    const block = await prisma.blockedDate.findUnique({
+      where: { id },
+      select: { property: { select: { ownerId: true, owner: { select: { managerId: true } } } } },
+    })
+    if (!block) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    if (me.role === 'CLIENT' && block.property.ownerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (me.role === 'MANAGER' && block.property.owner.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     await prisma.blockedDate.delete({ where: { id } })

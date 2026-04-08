@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import {
-  CalendarDays, MessageCircle, FileText, Lock, Wifi,
-  CheckCircle2, TrendingUp, Phone
+  CalendarDays, MessageCircle, FileText, Lock, Wifi, Wrench,
+  CheckCircle2, TrendingUp, Phone, ArrowRight, Sparkles, ShieldCheck, AlertTriangle,
 } from "lucide-react"
 import { PlanBadge } from "@/components/hm/plan-badge"
 
@@ -32,6 +32,16 @@ type DashboardData = {
     checkIn: string
     checkOut: string
   } | null
+  recentVisits: {
+    id: string
+    title: string
+    type: string
+    dueDate: string
+    propertyName: string
+    flagged: boolean
+  }[]
+  upcomingVisits: number
+  flaggedIssues: number
   manager?: {
     name: string
     phone?: string
@@ -56,14 +66,16 @@ export default function OwnerDashboard() {
   useEffect(() => {
     async function load() {
       try {
-        const [propRes, payRes, resRes] = await Promise.all([
+        const [propRes, payRes, resRes, taskRes] = await Promise.all([
           fetch("/api/properties"),
           fetch("/api/payouts"),
           fetch("/api/reservations"),
+          fetch("/api/tasks"),
         ])
         const properties = propRes.ok ? await propRes.json() : []
         const payouts    = payRes.ok  ? await payRes.json()  : []
         const reservations = resRes.ok ? await resRes.json() : []
+        const allTasks = taskRes.ok ? await taskRes.json() : []
 
         const property = properties[0] ?? null
         const now = new Date()
@@ -93,6 +105,31 @@ export default function OwnerDashboard() {
           .reduce((s: number, r: any) => s + (r.nights ?? 0), 0)
         const occupancyPct = Math.min(Math.round((bookedNights / daysInMonth) * 100), 100)
 
+        // Task summary for the care section
+        const upcomingVisits = allTasks.filter((t: any) => t.status !== "COMPLETED").length
+        const recentVisits = allTasks
+          .filter((t: any) => t.status === "COMPLETED")
+          .sort((a: any, b: any) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime())
+          .slice(0, 3)
+          .map((t: any) => {
+            let flagged = false
+            try {
+              if (t.notes) {
+                const parsed = JSON.parse(t.notes)
+                if (parsed?.condition === "minor" || parsed?.condition === "major") flagged = true
+              }
+            } catch { /* not a report */ }
+            return {
+              id: t.id,
+              title: t.title,
+              type: t.type,
+              dueDate: t.dueDate,
+              propertyName: t.property?.name ?? "",
+              flagged,
+            }
+          })
+        const flaggedIssues = recentVisits.filter((v: { flagged: boolean }) => v.flagged).length
+
         setData({
           property: property
             ? {
@@ -109,6 +146,9 @@ export default function OwnerDashboard() {
             : null,
           earnings: { thisMonth, occupancyPct },
           nextBooking,
+          recentVisits,
+          upcomingVisits,
+          flaggedIssues,
           manager: undefined,
         })
       } finally {
@@ -216,10 +256,19 @@ export default function OwnerDashboard() {
                 <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-2">
                   Property condition
                 </p>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-hm-green" />
-                  <span className="font-serif font-semibold text-hm-green">All good</span>
-                </div>
+                {(data?.flaggedIssues ?? 0) > 0 ? (
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5 text-hm-red" />
+                    <span className="font-serif font-semibold text-hm-red">
+                      {data?.flaggedIssues} issue{data?.flaggedIssues === 1 ? "" : "s"} flagged
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-hm-green" />
+                    <span className="font-serif font-semibold text-hm-green">All good</span>
+                  </div>
+                )}
                 {prop.lastInspectionAt && (
                   <p className="font-sans text-sm text-hm-slate/60 mt-1">
                     Last inspected {fmtDate(prop.lastInspectionAt)}
@@ -227,6 +276,58 @@ export default function OwnerDashboard() {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Care snapshot */}
+          <div className="rounded-hm border border-hm-border overflow-hidden"
+               style={{ background: 'var(--hm-sand)' }}>
+            <div className="px-6 py-4 border-b border-hm-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Wrench className="h-5 w-5 text-hm-gold-dk" />
+                <h2 className="font-serif font-bold text-hm-black text-lg">Care & maintenance</h2>
+              </div>
+              <Link
+                href="/client/care"
+                className="inline-flex items-center gap-1 font-sans text-sm text-hm-gold-dk hover:opacity-80"
+              >
+                See all <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-hm-border">
+              <div className="px-6 py-4">
+                <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-1">
+                  Upcoming visits
+                </p>
+                <p className="font-serif text-2xl font-bold text-hm-black">{data?.upcomingVisits ?? 0}</p>
+              </div>
+              <div className="px-6 py-4">
+                <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-1">
+                  Open issues
+                </p>
+                <p className={`font-serif text-2xl font-bold ${(data?.flaggedIssues ?? 0) > 0 ? "text-hm-red" : "text-hm-black"}`}>
+                  {data?.flaggedIssues ?? 0}
+                </p>
+              </div>
+            </div>
+            {(data?.recentVisits?.length ?? 0) > 0 && (
+              <div className="border-t border-hm-border divide-y divide-hm-border">
+                {data?.recentVisits.map(v => {
+                  const Icon = v.type === "CLEANING" ? Sparkles
+                    : v.type === "MAINTENANCE_CORRECTIVE" ? Wrench
+                    : ShieldCheck
+                  return (
+                    <div key={v.id} className="px-6 py-3 flex items-center gap-3">
+                      <Icon className={`h-4 w-4 shrink-0 ${v.flagged ? "text-hm-red" : "text-hm-green"}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-sans text-sm font-semibold text-hm-black truncate">{v.title}</p>
+                        <p className="font-sans text-xs text-hm-slate/60">{v.propertyName}</p>
+                      </div>
+                      <span className="font-sans text-xs text-hm-slate/60 shrink-0">{fmtDate(v.dueDate)}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
 
           {/* Quick actions */}
@@ -249,17 +350,17 @@ export default function OwnerDashboard() {
               </Link>
 
               <Link
-                href="/client/messages"
+                href="/client/care"
                 className="flex items-center gap-4 rounded-hm border border-hm-border p-5 hover:border-hm-gold/50 hover:shadow-sm transition-all"
                 style={{ background: 'var(--hm-sand)' }}
               >
                 <div className="h-12 w-12 rounded-full flex items-center justify-center"
                      style={{ background: 'var(--hm-green)' }}>
-                  <MessageCircle className="h-6 w-6 text-white" />
+                  <Wrench className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-serif font-bold text-hm-black">Contact your manager</p>
-                  <p className="font-sans text-sm text-hm-slate/70">We reply within hours</p>
+                  <p className="font-serif font-bold text-hm-black">Request a visit</p>
+                  <p className="font-sans text-sm text-hm-slate/70">Cleaning, repairs or check</p>
                 </div>
               </Link>
 

@@ -5,8 +5,11 @@ import {
   checkoutReminderEmail,
   monthlyReportEmail,
 } from '@/lib/email'
+import { requireRole } from '@/lib/session'
 
 export async function POST(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const body = await request.json()
     const { type, data } = body

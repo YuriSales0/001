@@ -2,17 +2,18 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser } from '@/lib/session'
 import {
-  Home, TrendingUp, CalendarDays, Star, MessageCircle, LogOut, Building2
+  Home, TrendingUp, CalendarDays, Star, MessageCircle, LogOut, Building2, Wrench,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 const navLinks = [
-  { href: '/client/dashboard',  label: 'My Home',      icon: Home },
-  { href: '/client/financials', label: 'My Earnings',   icon: TrendingUp },
-  { href: '/client/bookings',   label: 'My Bookings',   icon: CalendarDays },
-  { href: '/client/plan',       label: 'My Plan',       icon: Star },
-  { href: '/client/messages',   label: 'Contact us',    icon: MessageCircle },
+  { href: '/client/dashboard',  label: 'My Home',     icon: Home },
+  { href: '/client/financials', label: 'My Earnings', icon: TrendingUp },
+  { href: '/client/bookings',   label: 'My Bookings', icon: CalendarDays },
+  { href: '/client/care',       label: 'Care',        icon: Wrench },
+  { href: '/client/plan',       label: 'My Plan',     icon: Star },
+  { href: '/client/messages',   label: 'Contact us',  icon: MessageCircle },
 ]
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {

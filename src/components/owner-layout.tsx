@@ -17,6 +17,7 @@ const navLinks = [
   { href: "/crm",          label: "CRM",          icon: BarChart3 },
   { href: "/calendar",     label: "Calendar",     icon: Calendar },
   { href: "/operations",   label: "Operations",   icon: Activity },
+  { href: "/tasks",        label: "Tasks",        icon: ClipboardList },
   { href: "/setup",        label: "Setup",        icon: ClipboardList },
   { href: "/maintenance",  label: "Maintenance",  icon: Wrench },
   { href: "/my-properties",label: "Properties",   icon: Building2 },

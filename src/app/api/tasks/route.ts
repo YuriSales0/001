@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
     if (type) where.type = type
     if (me.role === 'CLIENT') where.property = { ownerId: me.id }
     else if (me.role === 'MANAGER') where.property = { owner: { managerId: me.id } }
+    else if (me.role === 'CREW') where.assigneeId = me.id
 
     const tasks = await prisma.task.findMany({
       where,

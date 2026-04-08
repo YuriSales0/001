@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { parseIcal } from '@/lib/ical'
+import { requireRole } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,8 +12,18 @@ async function fetchAndParse(url: string) {
 }
 
 export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
-  const property = await prisma.property.findUnique({ where: { id: params.id } })
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  const property = await prisma.property.findUnique({
+    where: { id: params.id },
+    include: { owner: { select: { managerId: true } } },
+  })
   if (!property) return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+  if (me.role === 'MANAGER' && property.owner.managerId !== me.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
 
   const sources: Array<{ name: string; url: string | null }> = [
     { name: 'airbnb', url: property.airbnbIcalUrl },
