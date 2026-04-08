@@ -15,8 +15,22 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (body.description !== undefined) data.description = body.description
     if (body.notes !== undefined) data.notes = body.notes
     if (body.checklist !== undefined) data.checklist = body.checklist
+    // dueDate: ADMIN/MANAGER can change freely; CREW only via drag-drop (dueDate-only update)
     if (body.dueDate) data.dueDate = new Date(body.dueDate)
-    if (body.type) data.type = body.type
+    if (body.type && (me.role === 'ADMIN' || me.role === 'MANAGER')) data.type = body.type
+    // Checkout report fields
+    if (body.checkoutCondition !== undefined) {
+      const report = JSON.stringify({
+        condition: body.checkoutCondition,
+        issues: body.checkoutIssues ?? '',
+        damages: body.checkoutDamages ?? '',
+        notes: body.checkoutNotes ?? '',
+        submittedAt: new Date().toISOString(),
+        submittedBy: me.id,
+      })
+      data.notes = report
+      data.status = 'COMPLETED'
+    }
 
     const task = await prisma.task.update({
       where: { id: params.id },

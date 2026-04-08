@@ -3,49 +3,114 @@ import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
-const COMMISSION_RATE = 0.18
+/** Commission rates per plan */
+const PLAN_COMMISSION: Record<string, number> = {
+  STARTER: 0.20,
+  BASIC:   0.20,
+  MID:     0.18,
+  PREMIUM: 0.15,
+}
+const DEFAULT_COMMISSION = 0.18
 const PAYOUT_DELAY_DAYS = 7
 
 async function main() {
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@hostmaster.es'
+  // ── Admin ──────────────────────────────────────────────────────────────────
+  const adminEmail    = process.env.ADMIN_EMAIL    || 'admin@hostmaster.es'
   const adminPassword = process.env.ADMIN_PASSWORD || 'changeme123'
-  const hash = await bcrypt.hash(adminPassword, 10)
 
   await prisma.user.upsert({
     where: { email: adminEmail },
-    update: { role: 'ADMIN', password: hash },
+    update: { role: 'ADMIN', password: await bcrypt.hash(adminPassword, 10) },
     create: {
       email: adminEmail,
       name: 'Hostmaster Admin',
       role: 'ADMIN',
-      password: hash,
+      password: await bcrypt.hash(adminPassword, 10),
       language: 'en',
     },
   })
+  console.log(`✓ admin:   ${adminEmail} / ${adminPassword}`)
 
-  console.log(`Seeded admin: ${adminEmail}`)
+  // ── Demo Manager ──────────────────────────────────────────────────────────
+  const manager = await prisma.user.upsert({
+    where: { email: 'manager@hostmaster.es' },
+    update: {},
+    create: {
+      email: 'manager@hostmaster.es',
+      name: 'Ana García',
+      role: 'MANAGER',
+      password: await bcrypt.hash('manager123', 10),
+      language: 'es',
+      subscriptionPlan: 'MID',
+      subscriptionStatus: 'active',
+    },
+  })
+  console.log('✓ manager: manager@hostmaster.es / manager123')
 
-  // Backfill payouts for any existing reservation that lacks one
-  const reservations = await prisma.reservation.findMany({ include: { payouts: true } })
+  // ── Demo Crew ─────────────────────────────────────────────────────────────
+  await prisma.user.upsert({
+    where: { email: 'crew@hostmaster.es' },
+    update: {},
+    create: {
+      email: 'crew@hostmaster.es',
+      name: 'Carlos Limpio',
+      role: 'CREW',
+      password: await bcrypt.hash('crew123', 10),
+      language: 'es',
+    },
+  })
+  console.log('✓ crew:    crew@hostmaster.es / crew123')
+
+  // ── Demo Client ───────────────────────────────────────────────────────────
+  await prisma.user.upsert({
+    where: { email: 'client@hostmaster.es' },
+    update: {},
+    create: {
+      email: 'client@hostmaster.es',
+      name: 'María Propietaria',
+      role: 'CLIENT',
+      password: await bcrypt.hash('client123', 10),
+      language: 'es',
+      managerId: manager.id,
+      subscriptionPlan: 'BASIC',
+      subscriptionStatus: 'active',
+    },
+  })
+  console.log('✓ client:  client@hostmaster.es / client123')
+
+  // ── Backfill payouts ──────────────────────────────────────────────────────
+  const reservations = await prisma.reservation.findMany({
+    include: {
+      payouts: true,
+      property: { include: { owner: true } },
+    },
+  })
+
   for (const r of reservations) {
     if (r.payouts.length === 0) {
-      const commission = +(r.amount * COMMISSION_RATE).toFixed(2)
-      const net = +(r.amount - commission).toFixed(2)
+      const plan = r.property.owner.subscriptionPlan ?? 'MID'
+      const rate = PLAN_COMMISSION[plan] ?? DEFAULT_COMMISSION
+      const commission = +(r.amount * rate).toFixed(2)
+      const net        = +(r.amount - commission).toFixed(2)
       const scheduledFor = new Date(r.checkOut)
       scheduledFor.setDate(scheduledFor.getDate() + PAYOUT_DELAY_DAYS)
+
       await prisma.payout.create({
         data: {
           reservationId: r.id,
-          propertyId: r.propertyId,
-          grossAmount: r.amount,
+          propertyId:    r.propertyId,
+          grossAmount:   r.amount,
           commission,
-          netAmount: net,
+          commissionRate: +(rate * 100).toFixed(1),
+          netAmount:     net,
           scheduledFor,
+          platform:      r.platform ?? undefined,
         },
       })
     }
   }
 
+  // ── Clean up legacy default admin if email changed ────────────────────────
   if (adminEmail !== 'admin@hostmaster.es') {
     const stale = await prisma.user.findUnique({ where: { email: 'admin@hostmaster.es' } })
     if (stale) {
@@ -56,10 +121,5 @@ async function main() {
 }
 
 main()
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
+  .catch(e => { console.error(e); process.exit(1) })
+  .finally(() => prisma.$disconnect())

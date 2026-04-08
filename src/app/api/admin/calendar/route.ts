@@ -15,35 +15,61 @@ export type CalendarEvent = {
 }
 
 export async function GET(req: NextRequest) {
-  const guard = await requireRole(['ADMIN'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   const { searchParams } = new URL(req.url)
   const fromStr = searchParams.get('from')
   const toStr = searchParams.get('to')
   const from = fromStr ? new Date(fromStr) : new Date(new Date().setDate(1))
   const to = toStr ? new Date(toStr) : new Date(from.getFullYear(), from.getMonth() + 2, 0)
 
+  // Build property filter for non-admin roles
+  const propFilter = me.role === 'MANAGER'
+    ? { owner: { managerId: me.id } }
+    : me.role === 'CREW'
+    ? { tasks: { some: { assigneeId: me.id } } }
+    : undefined
+
+  const taskWhere: Record<string, unknown> = { dueDate: { gte: from, lte: to } }
+  if (me.role === 'MANAGER') taskWhere.property = { owner: { managerId: me.id } }
+  else if (me.role === 'CREW') taskWhere.assigneeId = me.id
+
   const [reservations, blocks, tasks, payouts, birthdays] = await Promise.all([
     prisma.reservation.findMany({
-      where: { OR: [{ checkIn: { gte: from, lte: to } }, { checkOut: { gte: from, lte: to } }] },
+      where: {
+        OR: [{ checkIn: { gte: from, lte: to } }, { checkOut: { gte: from, lte: to } }],
+        ...(propFilter ? { property: propFilter } : {}),
+      },
       include: { property: { select: { id: true, name: true } } },
     }),
     prisma.blockedDate.findMany({
-      where: { startDate: { gte: from, lte: to } },
+      where: {
+        startDate: { gte: from, lte: to },
+        ...(propFilter ? { property: propFilter } : {}),
+      },
       include: { property: { select: { id: true, name: true } } },
     }),
     prisma.task.findMany({
-      where: { dueDate: { gte: from, lte: to } },
-      include: { property: { select: { id: true, name: true } } },
+      where: taskWhere,
+      include: {
+        property: { select: { id: true, name: true } },
+        assignee: { select: { id: true, name: true } },
+      },
     }),
     prisma.payout.findMany({
-      where: { scheduledFor: { gte: from, lte: to } },
+      where: {
+        scheduledFor: { gte: from, lte: to },
+        ...(propFilter ? { property: propFilter } : {}),
+      },
       include: { property: { select: { id: true, name: true } } },
     }),
-    prisma.user.findMany({
-      where: { birthday: { not: null }, role: 'CLIENT' },
-      select: { id: true, name: true, email: true, birthday: true },
-    }),
+    me.role === 'ADMIN'
+      ? prisma.user.findMany({
+          where: { birthday: { not: null }, role: 'CLIENT' },
+          select: { id: true, name: true, email: true, birthday: true },
+        })
+      : Promise.resolve([]),
   ])
 
   const events: CalendarEvent[] = []
@@ -78,14 +104,22 @@ export async function GET(req: NextRequest) {
       property: b.property,
     })
   }
+  const now = new Date()
   for (const t of tasks) {
+    const isOverdue = t.status !== 'COMPLETED' && t.dueDate < now
     events.push({
       id: `tk-${t.id}`,
       type: 'TASK',
       title: `${t.type.replace(/_/g, ' ')} · ${t.title}`,
       date: t.dueDate.toISOString(),
       property: t.property,
-      meta: { status: t.status },
+      meta: {
+        taskId: t.id,
+        taskType: t.type,
+        taskStatus: t.status,
+        isOverdue,
+        assignee: t.assignee,
+      },
     })
   }
   for (const p of payouts) {

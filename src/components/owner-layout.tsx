@@ -3,11 +3,12 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Calendar, FileText, Menu, X, LogOut, User, Wallet, Users } from "lucide-react"
+import { Home, Calendar, FileText, Menu, X, LogOut, User, Wallet, Users, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { LanguageSwitcher } from "@/components/language-switcher"
+import { CurrencySelector } from "@/components/currency-selector"
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
@@ -16,6 +17,7 @@ const navLinks = [
   { href: "/my-properties", label: "Properties", icon: Home },
   { href: "/payouts", label: "Payouts", icon: Wallet },
   { href: "/team", label: "Team", icon: Users },
+  { href: "/messages", label: "Messages", icon: MessageCircle },
 ]
 
 interface OwnerLayoutProps {
@@ -64,6 +66,7 @@ export default function OwnerLayout({ children }: OwnerLayoutProps) {
 
           {/* Right side: Avatar + Mobile Menu Button */}
           <div className="flex items-center gap-3">
+            <CurrencySelector />
             <LanguageSwitcher />
             {/* User Avatar Dropdown */}
             <div className="relative">

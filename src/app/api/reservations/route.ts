@@ -53,7 +53,19 @@ export async function POST(request: NextRequest) {
 
     const checkInDate = new Date(checkIn)
     const checkOutDate = new Date(checkOut)
-    const { commission, net } = calcCommission(amount)
+
+    // Get owner's plan to calculate correct commission rate
+    const property = await prisma.property.findUnique({
+      where: { id: propertyId },
+      include: { owner: { select: { subscriptionPlan: true } } },
+    })
+    const ownerPlan = property?.owner?.subscriptionPlan ?? null
+    const { commission, commissionRate, net } = calcCommission(amount, ownerPlan)
+
+    const platformEnum = (platform as string | undefined)?.toUpperCase() as
+      | 'AIRBNB' | 'BOOKING' | 'DIRECT' | 'OTHER' | undefined
+    const validPlatforms = ['AIRBNB', 'BOOKING', 'DIRECT', 'OTHER']
+    const platformValue = platformEnum && validPlatforms.includes(platformEnum) ? platformEnum : undefined
 
     const reservation = await prisma.reservation.create({
       data: {
@@ -64,14 +76,16 @@ export async function POST(request: NextRequest) {
         checkIn: checkInDate,
         checkOut: checkOutDate,
         amount,
-        platform,
+        platform: platformValue,
         payouts: {
           create: {
             propertyId,
             grossAmount: amount,
             commission,
+            commissionRate,
             netAmount: net,
-            scheduledFor: payoutDateFrom(checkOutDate),
+            scheduledFor: payoutDateFrom(checkOutDate, platformValue),
+            platform: platformValue,
           },
         },
       },
