@@ -21,7 +21,7 @@ type Event = {
   meta?: Record<string, unknown> & Partial<TaskMeta>
 }
 
-type Property = { id: string; name: string }
+type Property = { id: string; name: string; owner: { id: string; name: string | null; email: string } }
 
 const MANUAL_TASK_TYPES = [
   'MAINTENANCE_CORRECTIVE',
@@ -185,6 +185,16 @@ function CheckoutReportModal({
   )
 }
 
+const TASK_TYPE_COLORS: Record<string, string> = {
+  MAINTENANCE_CORRECTIVE: 'border-red-200 bg-red-50 text-red-700',
+  MAINTENANCE_PREVENTIVE: 'border-yellow-200 bg-yellow-50 text-yellow-700',
+  CLEANING:               'border-blue-200 bg-blue-50 text-blue-700',
+  INSPECTION:             'border-purple-200 bg-purple-50 text-purple-700',
+  TRANSFER:               'border-sky-200 bg-sky-50 text-sky-700',
+  SHOPPING:               'border-emerald-200 bg-emerald-50 text-emerald-700',
+  LAUNDRY:                'border-pink-200 bg-pink-50 text-pink-700',
+}
+
 // ── Create Task Modal ────────────────────────────────────────────────────────
 function CreateTaskModal({
   date,
@@ -197,81 +207,184 @@ function CreateTaskModal({
   onClose: () => void
   onCreated: () => void
 }) {
-  const [type, setType] = useState<string>(MANUAL_TASK_TYPES[0])
-  const [propertyId, setPropertyId] = useState(properties[0]?.id ?? '')
-  const [title, setTitle] = useState('')
+  // Deduplicate owners from the properties list
+  const owners = Array.from(
+    new Map(properties.map(p => [p.owner.id, p.owner])).values()
+  )
+
+  const [ownerId, setOwnerId]     = useState(owners[0]?.id ?? '')
+  const [type, setType]           = useState<string>(MANUAL_TASK_TYPES[0])
+  const [propertyId, setPropertyId] = useState('')
+  const [title, setTitle]         = useState('')
+  const [notes, setNotes]         = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  // Properties filtered by selected owner
+  const ownerProps = properties.filter(p => p.owner.id === ownerId)
+
+  // Auto-select first property when owner changes
+  const handleOwnerChange = (id: string) => {
+    setOwnerId(id)
+    const first = properties.find(p => p.owner.id === id)
+    setPropertyId(first?.id ?? '')
+  }
+
+  // Init property on mount
+  useState(() => {
+    if (!propertyId && ownerProps.length > 0) setPropertyId(ownerProps[0].id)
+  })
+
   const submit = async () => {
-    if (!title || !propertyId) return
+    const pid = propertyId || ownerProps[0]?.id
+    if (!title || !pid) return
     setSubmitting(true)
     await fetch('/api/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ propertyId, type, title, dueDate: date }),
+      body: JSON.stringify({ propertyId: pid, type, title, description: notes, dueDate: date }),
     })
     setSubmitting(false)
     onCreated()
   }
 
+  const activeColor = TASK_TYPE_COLORS[type] ?? 'border-gray-200 bg-gray-50 text-gray-700'
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-base font-bold text-navy-900">Nova tarefa — {date}</h2>
+      <div className="w-full max-w-2xl rounded-2xl bg-white shadow-xl">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b">
+          <div>
+            <h2 className="text-base font-bold text-navy-900">Nova tarefa</h2>
+            <p className="text-xs text-gray-500 mt-0.5">{date}</p>
+          </div>
           <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100">
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="p-5 space-y-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Tipo</label>
-            <select
-              value={type}
-              onChange={e => setType(e.target.value)}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-            >
-              {MANUAL_TASK_TYPES.map(t => (
-                <option key={t} value={t}>{TASK_TYPE_LABELS[t] ?? t.replace(/_/g, ' ')}</option>
-              ))}
-            </select>
+        <div className="p-6 space-y-5">
+          {/* Row 1: Owner → Property */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                Proprietário
+              </label>
+              <select
+                value={ownerId}
+                onChange={e => handleOwnerChange(e.target.value)}
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+              >
+                {owners.map(o => (
+                  <option key={o.id} value={o.id}>
+                    {o.name ?? o.email}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                Propriedade
+              </label>
+              <select
+                value={propertyId || ownerProps[0]?.id}
+                onChange={e => setPropertyId(e.target.value)}
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                disabled={ownerProps.length === 0}
+              >
+                {ownerProps.length === 0
+                  ? <option>— sem propriedades —</option>
+                  : ownerProps.map(p => <option key={p.id} value={p.id}>{p.name}</option>)
+                }
+              </select>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Propriedade</label>
-            <select
-              value={propertyId}
-              onChange={e => setPropertyId(e.target.value)}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-            >
-              {properties.map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
+          {/* Row 2: Type (left) + Notes (right) */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Task type — pill buttons */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                Tipo de tarefa
+              </label>
+              <div className="space-y-1.5">
+                {MANUAL_TASK_TYPES.map(t => {
+                  const isActive = type === t
+                  const color = TASK_TYPE_COLORS[t] ?? 'border-gray-200 bg-gray-50 text-gray-700'
+                  return (
+                    <button
+                      key={t}
+                      onClick={() => setType(t)}
+                      className={`w-full text-left rounded-lg border px-3 py-2 text-sm font-medium transition-all ${
+                        isActive ? color + ' ring-1 ring-offset-0' : 'border-gray-100 bg-white text-gray-500 hover:bg-gray-50'
+                      }`}
+                    >
+                      {TASK_TYPE_LABELS[t]}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
 
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Título</label>
-            <input
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="Descrição da tarefa…"
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-            />
+            {/* Right column: title + notes */}
+            <div className="flex flex-col gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                  Título da tarefa
+                </label>
+                <input
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  placeholder={`Ex: ${
+                    type === 'MAINTENANCE_CORRECTIVE' ? 'Torneira da cozinha a pingar' :
+                    type === 'CLEANING'               ? 'Limpeza extra antes da chegada' :
+                    type === 'SHOPPING'               ? 'Compras para chegada em família' :
+                    type === 'TRANSFER'               ? 'Transfer voo TAP TP1234' :
+                    type === 'LAUNDRY'                ? 'Lavandaria pós-checkout' :
+                    'Descrição da tarefa'
+                  }`}
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                />
+              </div>
+
+              <div className="flex-1 flex flex-col">
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                  Notas para a crew
+                </label>
+                <textarea
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  placeholder="Instruções, detalhes, localização de chaves, códigos de acesso…"
+                  className="flex-1 min-h-[120px] w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-navy-900"
+                />
+              </div>
+
+              {/* Selected type preview */}
+              {type && (
+                <div className={`rounded-lg border px-3 py-2 text-xs ${activeColor}`}>
+                  <span className="font-semibold">{TASK_TYPE_LABELS[type]}</span>
+                  {type === 'MAINTENANCE_CORRECTIVE' && (
+                    <span className="ml-1 text-xs opacity-75">— cobrada à parte, aprovação {'>'} €50</span>
+                  )}
+                  {(type === 'SHOPPING' || type === 'TRANSFER') && (
+                    <span className="ml-1 text-xs opacity-75">— incluído no plano PREMIUM</span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="flex gap-3 p-5 border-t">
-          <button onClick={onClose} className="flex-1 rounded-lg border py-2 text-sm hover:bg-gray-50">
+        <div className="flex gap-3 px-6 py-4 border-t">
+          <button onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm hover:bg-gray-50">
             Cancelar
           </button>
           <button
             onClick={submit}
-            disabled={submitting || !title || !propertyId}
-            className="flex-1 rounded-lg bg-navy-900 py-2 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50"
+            disabled={submitting || !title || (ownerProps.length === 0)}
+            className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50"
           >
-            {submitting ? 'A criar…' : 'Criar'}
+            {submitting ? 'A criar…' : 'Criar tarefa'}
           </button>
         </div>
       </div>
@@ -305,7 +418,10 @@ export default function AdminCalendar() {
   useEffect(() => { load() }, [monthOffset])
 
   useEffect(() => {
-    fetch('/api/properties').then(r => r.ok ? r.json() : []).then(setProperties)
+    // Fetch with owner data for the CreateTaskModal owner filter
+    fetch('/api/properties')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: Property[]) => setProperties(data))
   }, [])
 
   const completeTask = async (event: Event) => {
@@ -357,14 +473,28 @@ export default function AdminCalendar() {
     load()
   }
 
-  const grouped = useMemo(() => {
+  // All days of the displayed month (always shown even if empty)
+  const allDaysOfMonth = useMemo(() => {
+    const now = new Date()
+    const year  = now.getFullYear()
+    const month = now.getMonth() + monthOffset
+    const first = new Date(year, month, 1)
+    const last  = new Date(year, month + 1, 0)
+    const days: string[] = []
+    for (let d = new Date(first); d <= last; d.setDate(d.getDate() + 1)) {
+      days.push(dayKey(new Date(d)))
+    }
+    return days
+  }, [monthOffset])
+
+  const eventsByDay = useMemo(() => {
     const filtered = events.filter(e => filters[e.type])
     const map: Record<string, Event[]> = {}
     for (const e of filtered) {
       const k = dayKey(new Date(e.date))
       ;(map[k] ||= []).push(e)
     }
-    return Object.entries(map).sort(([a], [b]) => a.localeCompare(b))
+    return map
   }, [events, filters])
 
   const monthLabel = new Date(new Date().getFullYear(), new Date().getMonth() + monthOffset, 1)
@@ -406,121 +536,108 @@ export default function AdminCalendar() {
       </div>
 
       {loading && <p className="text-gray-500 text-sm">A carregar…</p>}
-      {!loading && grouped.length === 0 && (
-        <div className="rounded-xl border bg-white p-12 text-center text-gray-500">
-          <CalendarDays className="h-12 w-12 mx-auto text-gray-300 mb-2" />
-          Sem eventos este mês
-        </div>
-      )}
 
-      <div className="space-y-4">
-        {grouped.map(([day, items]) => (
-          <div
-            key={day}
-            className="rounded-xl border bg-white overflow-hidden"
-            onDragOver={e => e.preventDefault()}
-            onDrop={e => handleDrop(day, e)}
-          >
-            {/* Day header with + button */}
-            <div className="px-4 py-2 bg-gray-50 flex items-center justify-between">
-              <span className="text-xs uppercase font-semibold text-gray-600">{fmtDay(day)}</span>
-              <button
-                onClick={() => setCreateTaskDate(day)}
-                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-gray-500 hover:bg-gray-200 hover:text-gray-700"
-                title="Criar tarefa neste dia"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Tarefa
-              </button>
-            </div>
+      <div className="space-y-2">
+        {allDaysOfMonth.map(day => {
+          const items = eventsByDay[day] ?? []
+          const isToday = day === dayKey(new Date())
+          const isPast  = day < dayKey(new Date())
 
-            <div className="divide-y">
-              {items.map(e => {
-                const Icon = ICONS[e.type]
-                const meta = e.meta as TaskMeta | undefined
-                const isOverdue = meta?.isOverdue
-                const isTask = e.type === 'TASK'
-                const isCompleted = meta?.taskStatus === 'COMPLETED'
+          return (
+            <div
+              key={day}
+              className={`rounded-xl border bg-white overflow-hidden transition-shadow hover:shadow-sm ${
+                isToday ? 'ring-2 ring-navy-900/20' : ''
+              }`}
+              onDragOver={e => e.preventDefault()}
+              onDrop={e => handleDrop(day, e)}
+            >
+              {/* Day header */}
+              <div className={`px-4 py-2 flex items-center justify-between ${
+                isToday ? 'bg-navy-900' : isPast && items.length === 0 ? 'bg-gray-50/50' : 'bg-gray-50'
+              }`}>
+                <span className={`text-xs font-semibold uppercase tracking-wide ${
+                  isToday ? 'text-white' : isPast ? 'text-gray-400' : 'text-gray-600'
+                }`}>
+                  {fmtDay(day)}
+                  {isToday && <span className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-white text-xs">hoje</span>}
+                </span>
+                <button
+                  onClick={() => setCreateTaskDate(day)}
+                  className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors ${
+                    isToday
+                      ? 'text-white/70 hover:bg-white/10 hover:text-white'
+                      : 'text-gray-400 hover:bg-gray-200 hover:text-gray-700'
+                  }`}
+                  title="Criar tarefa neste dia"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Tarefa
+                </button>
+              </div>
 
-                return (
-                  <div
-                    key={e.id}
-                    draggable={isTask && !isCompleted}
-                    onDragStart={() => { draggedId.current = e.id }}
-                    onDragEnd={() => { draggedId.current = null }}
-                    className={`px-4 py-3 flex items-center gap-3 text-sm ${
-                      isTask && !isCompleted ? 'cursor-grab active:cursor-grabbing' : ''
-                    }`}
-                  >
-                    {/* Icon with overdue ring */}
-                    <span
-                      className={`inline-flex items-center justify-center h-7 w-7 rounded-full shrink-0 ${
-                        isOverdue
-                          ? 'ring-2 ring-red-500 ' + COLORS[e.type]
-                          : COLORS[e.type]
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </span>
+              {/* Events */}
+              {items.length > 0 && (
+                <div className="divide-y">
+                  {items.map(e => {
+                    const Icon = ICONS[e.type]
+                    const meta = e.meta as TaskMeta | undefined
+                    const isOverdue   = meta?.isOverdue
+                    const isTask      = e.type === 'TASK'
+                    const isCompleted = meta?.taskStatus === 'COMPLETED'
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`font-medium text-navy-900 truncate ${isCompleted ? 'line-through text-gray-400' : ''}`}>
-                          {e.title}
+                    return (
+                      <div
+                        key={e.id}
+                        draggable={isTask && !isCompleted}
+                        onDragStart={() => { draggedId.current = e.id }}
+                        onDragEnd={() => { draggedId.current = null }}
+                        className={`px-4 py-3 flex items-center gap-3 text-sm ${
+                          isTask && !isCompleted ? 'cursor-grab active:cursor-grabbing' : ''
+                        }`}
+                      >
+                        <span className={`inline-flex items-center justify-center h-7 w-7 rounded-full shrink-0 ${
+                          isOverdue ? 'ring-2 ring-red-500 ' + COLORS[e.type] : COLORS[e.type]
+                        }`}>
+                          <Icon className="h-4 w-4" />
                         </span>
-                        {isOverdue && (
-                          <span className="inline-flex items-center gap-0.5 rounded-full bg-red-100 text-red-600 px-2 py-0.5 text-xs font-semibold shrink-0">
-                            <AlertCircle className="h-3 w-3" />
-                            Atrasada
-                          </span>
-                        )}
-                        {isCompleted && (
-                          <span className="inline-flex items-center gap-0.5 rounded-full bg-green-100 text-green-700 px-2 py-0.5 text-xs shrink-0">
-                            <CheckCircle2 className="h-3 w-3" />
-                            Concluída
-                          </span>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className={`font-medium text-navy-900 truncate ${isCompleted ? 'line-through text-gray-400' : ''}`}>
+                              {e.title}
+                            </span>
+                            {isOverdue && (
+                              <span className="inline-flex items-center gap-0.5 rounded-full bg-red-100 text-red-600 px-2 py-0.5 text-xs font-semibold shrink-0">
+                                <AlertCircle className="h-3 w-3" /> Atrasada
+                              </span>
+                            )}
+                            {isCompleted && (
+                              <span className="inline-flex items-center gap-0.5 rounded-full bg-green-100 text-green-700 px-2 py-0.5 text-xs shrink-0">
+                                <CheckCircle2 className="h-3 w-3" /> Concluída
+                              </span>
+                            )}
+                          </div>
+                          {e.property && <div className="text-xs text-gray-500 truncate">{e.property.name}</div>}
+                          {meta?.assignee && <div className="text-xs text-gray-400">{meta.assignee.name}</div>}
+                        </div>
+
+                        {isTask && !isCompleted && (
+                          <button
+                            onClick={() => completeTask(e)}
+                            className="shrink-0 rounded-md border px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-300"
+                          >
+                            ✓
+                          </button>
                         )}
                       </div>
-                      {e.property && (
-                        <div className="text-xs text-gray-500 truncate">{e.property.name}</div>
-                      )}
-                      {meta?.assignee && (
-                        <div className="text-xs text-gray-400">{meta.assignee.name}</div>
-                      )}
-                    </div>
-
-                    {/* Complete button for tasks */}
-                    {isTask && !isCompleted && (
-                      <button
-                        onClick={() => completeTask(e)}
-                        className="shrink-0 rounded-md border px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 hover:border-gray-300"
-                      >
-                        ✓
-                      </button>
-                    )}
-                  </div>
-                )
-              })}
+                    )
+                  })}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
-
-        {/* Days with no events yet — show "+" button for all days in month */}
-        {!loading && (
-          <div className="text-center">
-            <button
-              onClick={() => {
-                const now = new Date()
-                const today = new Date(now.getFullYear(), now.getMonth() + monthOffset, now.getDate())
-                setCreateTaskDate(dayKey(today))
-              }}
-              className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
-            >
-              <Plus className="h-4 w-4" />
-              Criar tarefa neste mês
-            </button>
-          </div>
-        )}
+          )
+        })}
       </div>
 
       {/* Create Task Modal */}

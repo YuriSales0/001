@@ -1,0 +1,23 @@
+-- Extend LeadSource enum
+ALTER TYPE "LeadSource" ADD VALUE IF NOT EXISTS 'CADASTRO';
+ALTER TYPE "LeadSource" ADD VALUE IF NOT EXISTS 'NEWSLETTER';
+ALTER TYPE "LeadSource" ADD VALUE IF NOT EXISTS 'ONLINE';
+ALTER TYPE "LeadSource" ADD VALUE IF NOT EXISTS 'PHONE';
+
+-- Extend LeadStatus enum
+ALTER TYPE "LeadStatus" ADD VALUE IF NOT EXISTS 'RETAINED';
+ALTER TYPE "LeadStatus" ADD VALUE IF NOT EXISTS 'REMARKETING';
+
+-- Add new columns to Lead
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "notes"              TEXT;
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "budget"             DOUBLE PRECISION;
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "propertyType"       TEXT;
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "followUpDate"       TIMESTAMP(3);
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "assignedManagerId"  TEXT;
+
+-- Foreign key for assigned manager
+ALTER TABLE "Lead"
+  ADD CONSTRAINT "Lead_assignedManagerId_fkey"
+  FOREIGN KEY ("assignedManagerId")
+  REFERENCES "User"("id")
+  ON DELETE SET NULL ON UPDATE CASCADE;

@@ -6,6 +6,11 @@ import { pickLeastBusyCrew, buildChecklist, autoTasksForPlan } from '@/lib/crew'
 import { notifyAdmin } from '@/lib/notify'
 
 export async function GET(request: NextRequest) {
+  const { requireRole } = await import('@/lib/session')
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
   try {
     const { searchParams } = new URL(request.url)
     const propertyId = searchParams.get('propertyId')
@@ -14,6 +19,8 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {}
     if (propertyId) where.propertyId = propertyId
     if (status) where.status = status
+    if (me.role === 'CLIENT') where.property = { ownerId: me.id }
+    else if (me.role === 'MANAGER') where.property = { owner: { managerId: me.id } }
 
     const reservations = await prisma.reservation.findMany({
       where,

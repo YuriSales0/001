@@ -15,6 +15,7 @@ enum Role {
 }
 
 enum PropertyStatus {
+  PENDING_APPROVAL
   ACTIVE
   INACTIVE
   MAINTENANCE
@@ -77,13 +78,19 @@ enum LeadStatus {
   CONTACTED
   QUALIFIED
   CONVERTED
+  RETAINED
   LOST
+  REMARKETING
 }
 
 enum LeadSource {
+  CADASTRO
+  NEWSLETTER
+  ONLINE
+  PHONE
+  WHATSAPP
   WEBSITE
   EMAIL
-  WHATSAPP
   REFERRAL
   OTHER
 }
@@ -128,6 +135,7 @@ model User {
   properties    Property[]
   tasks         Task[]     @relation("AssignedTasks")
   leads         Lead[]     @relation("LeadOwner")
+  assignedLeads Lead[]     @relation("AssignedLeads")
   invoicesReceived   Invoice[]      @relation("ClientInvoices")
   invoicesIssued     Invoice[]      @relation("CreatedInvoices")
   clientConversations  Conversation[] @relation("ClientConversations")
@@ -182,13 +190,15 @@ model Property {
   smartLockId      String?
   bedrooms         Int?
   sizeSqm          Int?
-  airbnbConnected  Boolean        @default(false)
-  bookingConnected Boolean        @default(false)
-  airbnbIcalUrl    String?
-  bookingIcalUrl   String?
+  airbnbConnected   Boolean        @default(false)
+  bookingConnected  Boolean        @default(false)
+  airbnbIcalUrl     String?
+  airbnbListingId   String?
+  bookingIcalUrl    String?
+  bookingPropertyId String?
   lastCleaningAt   DateTime?
   lastInspectionAt DateTime?
-  status           PropertyStatus @default(ACTIVE)
+  status           PropertyStatus @default(PENDING_APPROVAL)
   commissionRate   Float          @default(18.0)
   ownerId          String
   createdAt        DateTime       @default(now())
@@ -357,19 +367,25 @@ model BlockedDate {
 }
 
 model Lead {
-  id        String     @id @default(cuid())
-  name      String
-  email     String?
-  phone     String?
-  source    LeadSource @default(WEBSITE)
-  status    LeadStatus @default(NEW)
-  message   String?    @db.Text
-  ownerId   String?
-  convertedUserId String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id                String     @id @default(cuid())
+  name              String
+  email             String?
+  phone             String?
+  source            LeadSource @default(WEBSITE)
+  status            LeadStatus @default(NEW)
+  message           String?    @db.Text
+  notes             String?    @db.Text
+  budget            Float?
+  propertyType      String?
+  followUpDate      DateTime?
+  ownerId           String?
+  assignedManagerId String?
+  convertedUserId   String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
-  owner User? @relation("LeadOwner", fields: [ownerId], references: [id])
+  owner           User? @relation("LeadOwner", fields: [ownerId], references: [id])
+  assignedManager User? @relation("AssignedLeads", fields: [assignedManagerId], references: [id])
 }
 
 model Conversation {
