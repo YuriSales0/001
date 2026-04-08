@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       id: true, name: true, email: true, role: true, phone: true, language: true,
       managerId: true, subscriptionPlan: true, createdAt: true,
       manager: { select: { id: true, name: true, email: true } },
-    },
+    } as never,
     orderBy: { createdAt: 'desc' },
   })
   return NextResponse.json(users)
@@ -34,6 +34,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'invalid role' }, { status: 400 })
     }
     const hash = await bcrypt.hash(password, 10)
+
+    // Auto-generate clientCode for CLIENT role: CLI-NNNN
+    let clientCode: string | null = null
+    if (role === 'CLIENT') {
+      const count = await prisma.user.count({ where: { role: 'CLIENT' } })
+      clientCode = `CLI-${String(count + 1).padStart(4, '0')}`
+    }
+
     const user = await prisma.user.create({
       data: {
         email: email.toLowerCase(),
@@ -42,9 +50,10 @@ export async function POST(req: NextRequest) {
         phone: phone || null,
         role,
         managerId: role === 'CLIENT' ? managerId || null : null,
-      },
+        clientCode,
+      } as never,
     })
-    return NextResponse.json({ ok: true, id: user.id })
+    return NextResponse.json({ ok: true, id: user.id, clientCode })
   } catch (e) {
     console.error(e)
     return NextResponse.json({ error: 'Failed to create user' }, { status: 500 })

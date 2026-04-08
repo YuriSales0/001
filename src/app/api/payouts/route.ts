@@ -27,11 +27,12 @@ export async function GET(request: NextRequest) {
         owner: {
           OR: [
             { id: clientQuery },
+            { clientCode: { contains: clientQuery, mode: 'insensitive' } },
             { email: { contains: clientQuery, mode: 'insensitive' } },
             { name: { contains: clientQuery, mode: 'insensitive' } },
           ],
         },
-      }
+      } as never
     }
 
     const payouts = await prisma.payout.findMany({

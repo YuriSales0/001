@@ -111,6 +111,7 @@ enum InvoiceStatus {
 
 model User {
   id                 String    @id @default(cuid())
+  clientCode         String?   @unique
   name               String?
   email              String    @unique
   emailVerified      DateTime?
@@ -217,19 +218,22 @@ model Property {
 }
 
 model Invoice {
-  id          String        @id @default(cuid())
-  clientId    String
-  propertyId  String?
-  createdById String
-  description String        @db.Text
-  amount      Float
-  currency    String        @default("EUR")
-  status      InvoiceStatus @default(SENT)
-  dueDate     DateTime?
-  paidAt      DateTime?
-  notes       String?       @db.Text
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id              String        @id @default(cuid())
+  clientId        String
+  propertyId      String?
+  createdById     String
+  description     String        @db.Text
+  amount          Float
+  currency        String        @default("EUR")
+  status          InvoiceStatus @default(SENT)
+  dueDate         DateTime?
+  paidAt          DateTime?
+  notes           String?       @db.Text
+  invoiceNumber   String?
+  invoiceType     String        @default("SERVICE")
+  stripeSessionId String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   client    User      @relation("ClientInvoices", fields: [clientId], references: [id])
   property  Property? @relation(fields: [propertyId], references: [id])

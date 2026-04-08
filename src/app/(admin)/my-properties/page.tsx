@@ -17,10 +17,10 @@ type Property = {
   bookingIcalUrl: string | null
   airbnbConnected: boolean
   bookingConnected: boolean
-  owner: { id: string; name: string | null; email: string }
+  owner: { id: string; clientCode: string | null; name: string | null; email: string }
 }
 
-type Client = { id: string; name: string | null; email: string }
+type Client = { id: string; clientCode: string | null; name: string | null; email: string }
 
 type SyncResult = {
   ok: boolean
@@ -65,6 +65,7 @@ export default function PropertiesPage() {
   const [addLoading, setAddLoading] = useState(false)
   const [addError, setAddError]     = useState('')
   const [approveState, setApproveState] = useState<ApproveState | null>(null)
+  const [clientSearch, setClientSearch] = useState('')
 
   const load = async () => {
     setLoading(true)
@@ -167,6 +168,19 @@ export default function PropertiesPage() {
   const pendingApproval = properties.filter(p => p.status === 'PENDING_APPROVAL')
   const pending = [...pendingClient, ...pendingApproval]
 
+  const filteredProperties = clientSearch
+    ? properties.filter(p => {
+        const q = clientSearch.toLowerCase()
+        return (
+          (p.owner.clientCode?.toLowerCase().includes(q)) ||
+          (p.owner.name?.toLowerCase().includes(q)) ||
+          (p.owner.email.toLowerCase().includes(q)) ||
+          p.name.toLowerCase().includes(q) ||
+          p.city.toLowerCase().includes(q)
+        )
+      })
+    : properties
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -201,16 +215,27 @@ export default function PropertiesPage() {
         </div>
       )}
 
+      {/* Search filter */}
+      {!loading && properties.length > 0 && (
+        <input
+          type="text"
+          placeholder="Filtrar por ID cliente (CLI-…), nome, email ou cidade…"
+          value={clientSearch}
+          onChange={e => setClientSearch(e.target.value)}
+          className="w-full rounded-xl border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+        />
+      )}
+
       {loading ? (
         <p className="text-sm text-gray-400">A carregar…</p>
-      ) : properties.length === 0 ? (
+      ) : filteredProperties.length === 0 ? (
         <div className="flex flex-col items-center py-20 text-center">
           <Building2 className="h-16 w-16 text-gray-300 mb-4" />
-          <p className="text-gray-500">Nenhuma propriedade. Cria a primeira com o botão acima.</p>
+          <p className="text-gray-500">{clientSearch ? 'Nenhuma propriedade corresponde à pesquisa.' : 'Nenhuma propriedade. Cria a primeira com o botão acima.'}</p>
         </div>
       ) : (
         <div className="space-y-6">
-          {properties.map(p => {
+          {filteredProperties.map(p => {
             const draft = drafts[p.id] ?? { airbnb: '', booking: '' }
             const result = lastSync[p.id]
             const isPendingClient   = p.status === 'PENDING_CLIENT'
@@ -225,7 +250,14 @@ export default function PropertiesPage() {
                     <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
                       <MapPin className="h-4 w-4" /> {p.address}, {p.city}
                     </p>
-                    <p className="text-xs text-gray-400 mt-0.5">Proprietário: {p.owner.name ?? p.owner.email}</p>
+                    <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-2">
+                      Proprietário: {p.owner.name ?? p.owner.email}
+                      {p.owner.clientCode && (
+                        <span className="rounded-full bg-navy-100 text-navy-700 px-2 py-0.5 text-[10px] font-bold tracking-wide">
+                          {p.owner.clientCode}
+                        </span>
+                      )}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_BADGE[p.status] ?? 'bg-gray-100 text-gray-600'}`}>

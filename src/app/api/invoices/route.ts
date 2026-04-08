@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   if (error) return NextResponse.json({ error }, { status })
   const me = user!
   try {
-    const { clientId, propertyId, description, amount, dueDate, notes } = await req.json()
+    const { clientId, propertyId, description, amount, dueDate, notes, invoiceType } = await req.json()
     if (!clientId || !description || amount == null) {
       return NextResponse.json({ error: 'clientId, description and amount required' }, { status: 400 })
     }
@@ -46,6 +46,13 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Auto-generate invoice number HM-YYYY-NNNN
+    const year = new Date().getFullYear()
+    const countThisYear = await prisma.invoice.count({
+      where: { invoiceNumber: { startsWith: `HM-${year}-` } } as never,
+    })
+    const invoiceNumber = `HM-${year}-${String(countThisYear + 1).padStart(4, '0')}`
+
     const invoice = await prisma.invoice.create({
       data: {
         clientId,
@@ -55,6 +62,13 @@ export async function POST(req: NextRequest) {
         amount: Number(amount),
         dueDate: dueDate ? new Date(dueDate) : null,
         notes: notes || null,
+        invoiceNumber,
+        invoiceType: invoiceType || 'SERVICE',
+      } as never,
+      include: {
+        client: { select: { id: true, name: true, email: true } },
+        property: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, name: true, email: true } },
       },
     })
     return NextResponse.json(invoice, { status: 201 })
