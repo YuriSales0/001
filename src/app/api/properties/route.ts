@@ -64,8 +64,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Admin creates directly as ACTIVE; others need approval
-    const status = me.role === 'ADMIN' ? 'ACTIVE' : 'PENDING_APPROVAL'
+    // Admin → ACTIVE immediately
+    // Manager → PENDING_CLIENT (client must confirm the property details first)
+    // Client → PENDING_APPROVAL (their own property, admin sets up OTA + activates)
+    const status = me.role === 'ADMIN' ? 'ACTIVE'
+      : me.role === 'MANAGER' ? 'PENDING_CLIENT'
+      : 'PENDING_APPROVAL'
 
     const property = await prisma.property.create({
       data: {

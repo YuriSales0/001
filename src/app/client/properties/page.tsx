@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Building2, MapPin, Check, AlertCircle, Plus, X, Clock } from 'lucide-react'
+import { Building2, MapPin, Check, AlertCircle, Plus, X, Clock, CheckCircle2, Settings } from 'lucide-react'
 
 type Property = {
   id: string
@@ -15,10 +15,11 @@ type Property = {
 }
 
 const STATUS_BADGE: Record<string, { cls: string; label: string }> = {
-  PENDING_APPROVAL: { cls: 'bg-amber-100 text-amber-700', label: 'Aguarda aprovação' },
-  ACTIVE:           { cls: 'bg-green-100 text-green-700', label: 'Ativa' },
-  INACTIVE:         { cls: 'bg-gray-100 text-gray-500',   label: 'Inativa' },
-  MAINTENANCE:      { cls: 'bg-orange-100 text-orange-600', label: 'Em manutenção' },
+  PENDING_CLIENT:   { cls: 'bg-violet-100 text-violet-700', label: 'Aguarda confirmação' },
+  PENDING_APPROVAL: { cls: 'bg-amber-100 text-amber-700',  label: 'Aguarda configuração' },
+  ACTIVE:           { cls: 'bg-green-100 text-green-700',  label: 'Ativa' },
+  INACTIVE:         { cls: 'bg-gray-100 text-gray-500',    label: 'Inativa' },
+  MAINTENANCE:      { cls: 'bg-orange-100 text-orange-600',label: 'Em manutenção' },
 }
 
 export default function ClientProperties() {
@@ -29,6 +30,7 @@ export default function ClientProperties() {
   const [addLoading, setAddLoading] = useState(false)
   const [addError, setAddError] = useState('')
   const [addSuccess, setAddSuccess] = useState(false)
+  const [confirming, setConfirming] = useState<string | null>(null)
 
   const load = () =>
     fetch('/api/properties')
@@ -37,7 +39,15 @@ export default function ClientProperties() {
 
   useEffect(() => { load() }, [])
 
-  const pending = properties.filter(p => p.status === 'PENDING_APPROVAL')
+  const pendingClient = properties.filter(p => p.status === 'PENDING_CLIENT')
+  const pendingApproval = properties.filter(p => p.status === 'PENDING_APPROVAL')
+
+  const confirmProperty = async (id: string) => {
+    setConfirming(id)
+    const res = await fetch(`/api/properties/${id}/client-confirm`, { method: 'POST' })
+    if (res.ok) await load()
+    setConfirming(null)
+  }
 
   const submitRequest = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,7 +81,7 @@ export default function ClientProperties() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-navy-900">As Minhas Propriedades</h1>
-          <p className="text-sm text-gray-500">Acompanha o estado das tuas propriedades.</p>
+          <p className="text-sm text-gray-500">Acompanha e confirma as tuas propriedades.</p>
         </div>
         <button
           onClick={() => setShowAdd(true)}
@@ -81,15 +91,32 @@ export default function ClientProperties() {
         </button>
       </div>
 
-      {/* Pending banner */}
-      {pending.length > 0 && (
+      {/* Banner: needs client confirmation */}
+      {pendingClient.length > 0 && (
+        <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 flex items-start gap-3">
+          <CheckCircle2 className="h-5 w-5 text-violet-600 shrink-0 mt-0.5" />
+          <div className="text-sm text-violet-800">
+            <p className="font-semibold mb-0.5">
+              {pendingClient.length === 1
+                ? '1 propriedade adicionada pelo gestor aguarda a tua confirmação'
+                : `${pendingClient.length} propriedades aguardam a tua confirmação`}
+            </p>
+            <p className="text-xs">Confirma que os dados estão corretos. Após confirmação o gestor configurará as integrações.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Banner: pending OTA setup by admin */}
+      {pendingApproval.length > 0 && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
-          <Clock className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <Settings className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800">
             <p className="font-semibold mb-0.5">
-              {pending.length === 1 ? '1 propriedade aguarda aprovação' : `${pending.length} propriedades aguardam aprovação`}
+              {pendingApproval.length === 1
+                ? '1 propriedade aguarda configuração de integrações'
+                : `${pendingApproval.length} propriedades aguardam configuração`}
             </p>
-            <p className="text-xs">O teu gestor irá rever, conectar os calendários e ativar em breve.</p>
+            <p className="text-xs">O gestor está a configurar os calendários Airbnb e Booking.com. Ficará ativa em breve.</p>
           </div>
         </div>
       )}
@@ -107,8 +134,13 @@ export default function ClientProperties() {
       <div className="space-y-4">
         {properties.map(p => {
           const badge = STATUS_BADGE[p.status] ?? { cls: 'bg-gray-100 text-gray-600', label: p.status }
+          const isPendingClient = p.status === 'PENDING_CLIENT'
+          const isPendingApproval = p.status === 'PENDING_APPROVAL'
+
           return (
-            <div key={p.id} className={`rounded-xl border bg-white p-5 ${p.status === 'PENDING_APPROVAL' ? 'border-amber-200' : ''}`}>
+            <div key={p.id} className={`rounded-xl border bg-white p-5 ${
+              isPendingClient ? 'border-violet-200' : isPendingApproval ? 'border-amber-200' : ''
+            }`}>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -132,12 +164,29 @@ export default function ClientProperties() {
                     </div>
                   )}
 
-                  {p.status === 'PENDING_APPROVAL' && (
+                  {isPendingClient && (
+                    <p className="text-xs text-violet-600 mt-2">
+                      Adicionada pelo teu gestor — confirma que os dados estão corretos.
+                    </p>
+                  )}
+                  {isPendingApproval && (
                     <p className="text-xs text-amber-600 mt-2">
-                      A aguardar que o gestor reveja e ative a propriedade.
+                      Confirmada — o gestor está a configurar as integrações Airbnb e Booking.com.
                     </p>
                   )}
                 </div>
+
+                {/* Confirm button for PENDING_CLIENT */}
+                {isPendingClient && (
+                  <button
+                    onClick={() => confirmProperty(p.id)}
+                    disabled={confirming === p.id}
+                    className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-violet-600 text-white px-3 py-2 text-sm font-semibold hover:bg-violet-700 disabled:opacity-50"
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    {confirming === p.id ? 'A confirmar…' : 'Confirmar'}
+                  </button>
+                )}
               </div>
             </div>
           )
@@ -151,7 +200,7 @@ export default function ClientProperties() {
             <div className="flex items-center justify-between p-5 border-b">
               <div>
                 <h2 className="text-base font-bold text-navy-900">Solicitar Propriedade</h2>
-                <p className="text-xs text-gray-500 mt-0.5">O gestor irá rever e ativar a propriedade.</p>
+                <p className="text-xs text-gray-500 mt-0.5">O gestor irá configurar as integrações e ativar.</p>
               </div>
               <button onClick={() => setShowAdd(false)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
@@ -160,7 +209,7 @@ export default function ClientProperties() {
               {addError && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{addError}</div>}
               {addSuccess && (
                 <div className="rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm px-3 py-2 flex items-center gap-2">
-                  <Check className="h-4 w-4" /> Solicitação enviada! O gestor irá rever em breve.
+                  <Check className="h-4 w-4" /> Solicitação enviada! O gestor irá configurar em breve.
                 </div>
               )}
 
@@ -192,7 +241,7 @@ export default function ClientProperties() {
               </div>
 
               <div className="rounded-lg bg-gray-50 border p-3 text-xs text-gray-500">
-                Após o envio, o teu gestor irá rever os dados, conectar os calendários Airbnb e Booking.com e ativar a propriedade.
+                Após o envio, o gestor irá conectar os calendários Airbnb e Booking.com e ativar a propriedade.
               </div>
 
               <div className="flex justify-end gap-2 pt-1">
