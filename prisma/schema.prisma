@@ -15,6 +15,7 @@ enum Role {
 }
 
 enum PropertyStatus {
+  PENDING_APPROVAL
   ACTIVE
   INACTIVE
   MAINTENANCE
@@ -182,13 +183,15 @@ model Property {
   smartLockId      String?
   bedrooms         Int?
   sizeSqm          Int?
-  airbnbConnected  Boolean        @default(false)
-  bookingConnected Boolean        @default(false)
-  airbnbIcalUrl    String?
-  bookingIcalUrl   String?
+  airbnbConnected   Boolean        @default(false)
+  bookingConnected  Boolean        @default(false)
+  airbnbIcalUrl     String?
+  airbnbListingId   String?
+  bookingIcalUrl    String?
+  bookingPropertyId String?
   lastCleaningAt   DateTime?
   lastInspectionAt DateTime?
-  status           PropertyStatus @default(ACTIVE)
+  status           PropertyStatus @default(PENDING_APPROVAL)
   commissionRate   Float          @default(18.0)
   ownerId          String
   createdAt        DateTime       @default(now())
