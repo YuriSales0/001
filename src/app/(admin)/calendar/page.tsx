@@ -24,11 +24,26 @@ type Event = {
 type Property = { id: string; name: string }
 
 const MANUAL_TASK_TYPES = [
-  'CLEANING',
   'MAINTENANCE_CORRECTIVE',
   'MAINTENANCE_PREVENTIVE',
+  'CLEANING',
   'INSPECTION',
+  'TRANSFER',
+  'SHOPPING',
+  'LAUNDRY',
 ] as const
+
+const TASK_TYPE_LABELS: Record<string, string> = {
+  MAINTENANCE_CORRECTIVE: 'Manutenção Correctiva',
+  MAINTENANCE_PREVENTIVE: 'Manutenção Preventiva',
+  CLEANING:               'Limpeza',
+  INSPECTION:             'Inspecção',
+  TRANSFER:               'Transfer Aeroporto',
+  SHOPPING:               'Compras Pré-chegada',
+  LAUNDRY:                'Lavandaria',
+  CHECK_IN:               'Check-in',
+  CHECK_OUT:              'Check-out',
+}
 
 const ICONS: Record<Event['type'], React.ElementType> = {
   CHECK_IN: LogIn,
@@ -218,7 +233,7 @@ function CreateTaskModal({
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
             >
               {MANUAL_TASK_TYPES.map(t => (
-                <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>
+                <option key={t} value={t}>{TASK_TYPE_LABELS[t] ?? t.replace(/_/g, ' ')}</option>
               ))}
             </select>
           </div>

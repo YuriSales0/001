@@ -27,6 +27,9 @@ enum TaskType {
   INSPECTION
   CHECK_IN
   CHECK_OUT
+  TRANSFER
+  SHOPPING
+  LAUNDRY
 }
 
 enum TaskStatus {

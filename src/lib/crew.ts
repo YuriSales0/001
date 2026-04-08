@@ -2,56 +2,81 @@ import { prisma } from './prisma'
 
 export const CHECKLISTS: Record<string, string[]> = {
   CHECK_IN: [
-    'Contact guest 2h before arrival',
-    'Verify cleanliness of entry areas',
-    'Hand over keys or confirm smart lock code',
-    'Walkthrough: WiFi, appliances, amenities',
-    'Collect guest ID and registration',
-    'Explain house rules and emergency contacts',
-    'Confirm guest count matches reservation',
+    'Contactar hóspede 2h antes da chegada',
+    'Verificar limpeza das áreas de entrada',
+    'Entregar chaves ou confirmar código de fechadura inteligente',
+    'Walkthrough: WiFi, electrodomésticos, comodidades',
+    'Recolher ID do hóspede e registo',
+    'Explicar regras da casa e contactos de emergência',
+    'Confirmar número de hóspedes com a reserva',
   ],
   CHECK_OUT: [
-    'Collect keys / confirm smart lock disabled',
-    'Inspect general state of the property',
-    'Check for damages (photo evidence)',
-    'Verify inventory (towels, linens, kitchenware)',
-    'Secure doors, windows and outdoor areas',
-    'Report any issue to admin immediately',
+    'Recolher chaves / confirmar fechadura inteligente desactivada',
+    'Inspeccionar estado geral do imóvel',
+    'Verificar danos (evidência fotográfica)',
+    'Verificar inventário (toalhas, roupa de cama, cozinha)',
+    'Fechar portas, janelas e áreas exteriores',
+    'Reportar qualquer problema ao admin imediatamente',
   ],
   CLEANING: [
-    'Strip beds and start laundry',
-    'Clean and disinfect bathrooms',
-    'Kitchen: dishes, counters, appliances, fridge',
-    'Vacuum and mop all rooms',
-    'Restock amenities (toiletries, coffee, paper)',
-    'Fresh towels and linens',
-    'Trash out, check outdoor',
-    'Final walkthrough and photos',
+    'Tirar roupa de cama e iniciar lavandaria',
+    'Limpar e desinfectar casas de banho',
+    'Cozinha: loiça, bancadas, electrodomésticos, frigorífico',
+    'Aspirar e esfregar todos os quartos',
+    'Repor comodidades (artigos de higiene, café, papel)',
+    'Toalhas e roupa de cama lavadas',
+    'Lixo, verificar exterior',
+    'Walkthrough final e fotos',
   ],
   MAINTENANCE_PREVENTIVE: [
-    'Test smoke and CO detectors',
-    'Check HVAC filters and operation',
-    'Inspect plumbing for leaks',
-    'Test all light fixtures',
-    'Verify door and window locks',
-    'Test WiFi speed and router reboot',
-    'Inspect outdoor areas and drainage',
-    'Check appliance function (AC, heater, water heater)',
+    'Testar detectores de fumo e CO',
+    'Verificar filtros e funcionamento HVAC',
+    'Inspeccionar canalização para fugas',
+    'Testar todas as luminárias',
+    'Verificar fechaduras de portas e janelas',
+    'Testar velocidade WiFi e reiniciar router',
+    'Inspeccionar áreas exteriores e drenagem',
+    'Verificar funcionamento de electrodomésticos (AC, aquecedor, esquentador)',
   ],
   MAINTENANCE_CORRECTIVE: [
-    'Document reported issue with photos',
-    'Identify root cause',
-    'Perform repair or engage specialist',
-    'Test fix thoroughly',
-    'Document result with photos',
-    'Notify admin and client when resolved',
+    'Documentar problema reportado com fotos',
+    'Identificar causa raiz',
+    'Executar reparação ou contactar especialista',
+    'Testar solução exaustivamente',
+    'Documentar resultado com fotos',
+    'Notificar admin e cliente quando resolvido',
+    'Emitir nota fiscal se > €50',
   ],
   INSPECTION: [
-    'Full walkthrough with checklist',
-    'Photograph each room',
-    'Note wear and tear',
-    'Verify safety equipment',
-    'Report findings to admin',
+    'Walkthrough completo com checklist',
+    'Fotografar cada divisão',
+    'Anotar desgaste e problemas',
+    'Verificar equipamento de segurança',
+    'Reportar conclusões ao admin',
+  ],
+  TRANSFER: [
+    'Confirmar voo/chegada com hóspede',
+    'Verificar hora e terminal de chegada',
+    'Preparar sinalização com nome do hóspede',
+    'Ajudar com bagagem',
+    'Informar tempo estimado até ao imóvel',
+    'Entregar chaves / apresentar propriedade no destino',
+  ],
+  SHOPPING: [
+    'Confirmar lista de compras com o owner',
+    'Verificar restrições alimentares do hóspede',
+    'Comprar produtos essenciais (leite, café, água, pão)',
+    'Comprar itens específicos solicitados',
+    'Colocar compras no frigorífico / despensa',
+    'Deixar nota de boas-vindas com itens disponíveis',
+  ],
+  LAUNDRY: [
+    'Recolher toda a roupa de cama e toalhas',
+    'Separar por cores e tipo de tecido',
+    'Lavar a 60°C (roupa de cama) e 40°C (toalhas)',
+    'Secar e dobrar correctamente',
+    'Repor no imóvel com apresentação premium',
+    'Verificar estado — reportar peças danificadas',
   ],
 }
 
@@ -61,8 +86,23 @@ export function buildChecklist(type: string) {
 }
 
 /**
- * Load-balance: returns the CREW user with the fewest open (non-completed) tasks.
- * Returns null if no crew exists — callers must decide fallback behaviour.
+ * Tipos de task que cada plano gera automaticamente por reserva.
+ * Acumulativo: MID inclui tudo do BASIC, PREMIUM inclui tudo do MID.
+ */
+export const PLAN_AUTO_TASKS: Record<string, string[]> = {
+  STARTER:  [],
+  BASIC:    ['INSPECTION'],           // Inspecção pré e pós-estadia
+  MID:      ['INSPECTION'],
+  PREMIUM:  ['INSPECTION', 'SHOPPING', 'TRANSFER', 'LAUNDRY'],
+}
+
+export function autoTasksForPlan(plan: string | null | undefined): string[] {
+  return PLAN_AUTO_TASKS[plan ?? 'STARTER'] ?? []
+}
+
+/**
+ * Load-balance: devolve o utilizador CREW com menos tasks abertas.
+ * Devolve null se não existir nenhum crew.
  */
 export async function pickLeastBusyCrew(): Promise<string | null> {
   if (!prisma) return null
