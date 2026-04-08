@@ -1,0 +1,318 @@
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
+import { TrendingUp, Home, CalendarDays, Euro, BarChart3 } from 'lucide-react'
+
+type Reservation = {
+  id: string
+  guestName: string
+  checkIn: string
+  checkOut: string
+  amount: number
+  platform: string | null
+  status: string
+  property: { id: string; name: string }
+}
+
+type Payout = {
+  id: string
+  grossAmount: number
+  commission: number
+  commissionRate: number
+  netAmount: number
+  status: string
+  scheduledFor: string
+  paidAt: string | null
+  property: { id: string; name: string }
+  reservation: { id: string; guestName: string; checkIn: string; checkOut: string }
+}
+
+type Property = { id: string; name: string }
+
+const fmt = (n: number) =>
+  new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(n)
+
+const fmtPct = (n: number) => `${Math.round(n)}%`
+
+function nightsBetween(a: string, b: string) {
+  return Math.max(0, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86_400_000))
+}
+
+function monthKey(d: string) {
+  return d.slice(0, 7) // "YYYY-MM"
+}
+
+function monthLabel(key: string) {
+  const [y, m] = key.split('-')
+  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' })
+}
+
+// Days in a month for occupancy
+function daysInMonth(key: string) {
+  const [y, m] = key.split('-').map(Number)
+  return new Date(y, m, 0).getDate()
+}
+
+export default function ClientReportsPage() {
+  const [reservations, setReservations] = useState<Reservation[]>([])
+  const [payouts, setPayouts] = useState<Payout[]>([])
+  const [properties, setProperties] = useState<Property[]>([])
+  const [loading, setLoading] = useState(true)
+  const [propFilter, setPropFilter] = useState('ALL')
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/reservations').then(r => r.ok ? r.json() : []),
+      fetch('/api/payouts').then(r => r.ok ? r.json() : []),
+      fetch('/api/properties').then(r => r.ok ? r.json() : []),
+    ]).then(([res, pay, props]) => {
+      setReservations(res)
+      setPayouts(pay)
+      setProperties(props)
+      setLoading(false)
+    })
+  }, [])
+
+  const filteredRes = useMemo(
+    () => propFilter === 'ALL' ? reservations : reservations.filter(r => r.property.id === propFilter),
+    [reservations, propFilter]
+  )
+
+  const filteredPay = useMemo(
+    () => propFilter === 'ALL' ? payouts : payouts.filter(p => p.property.id === propFilter),
+    [payouts, propFilter]
+  )
+
+  // KPIs — all time
+  const totalGross = filteredPay.reduce((s, p) => s + p.grossAmount, 0)
+  const totalCommission = filteredPay.reduce((s, p) => s + p.commission, 0)
+  const totalNet = filteredPay.reduce((s, p) => s + p.netAmount, 0)
+  const totalNights = filteredRes.reduce((s, r) => s + nightsBetween(r.checkIn, r.checkOut), 0)
+  const avgNightly = totalNights > 0 ? totalGross / totalNights : 0
+
+  // Monthly breakdown — last 12 months
+  const monthlyData = useMemo(() => {
+    const map: Record<string, { gross: number; commission: number; net: number; nights: number; reservations: number }> = {}
+
+    filteredPay.forEach(p => {
+      const k = monthKey(p.reservation.checkOut)
+      if (!map[k]) map[k] = { gross: 0, commission: 0, net: 0, nights: 0, reservations: 0 }
+      map[k].gross += p.grossAmount
+      map[k].commission += p.commission
+      map[k].net += p.netAmount
+    })
+
+    filteredRes.forEach(r => {
+      const k = monthKey(r.checkOut)
+      if (!map[k]) map[k] = { gross: 0, commission: 0, net: 0, nights: 0, reservations: 0 }
+      map[k].nights += nightsBetween(r.checkIn, r.checkOut)
+      map[k].reservations += 1
+    })
+
+    return Object.entries(map)
+      .sort(([a], [b]) => b.localeCompare(a))
+      .slice(0, 12)
+  }, [filteredPay, filteredRes])
+
+  // Occupancy per property (based on all reservations)
+  const occupancyByProperty = useMemo(() => {
+    const today = new Date()
+    const thisYear = today.getFullYear()
+
+    const byProp: Record<string, { name: string; nights: number }> = {}
+    reservations.forEach(r => {
+      const checkIn = new Date(r.checkIn)
+      if (checkIn.getFullYear() !== thisYear) return
+      if (!byProp[r.property.id]) byProp[r.property.id] = { name: r.property.name, nights: 0 }
+      byProp[r.property.id].nights += nightsBetween(r.checkIn, r.checkOut)
+    })
+
+    const daysSoFar = Math.min(
+      Math.ceil((today.getTime() - new Date(thisYear, 0, 1).getTime()) / 86_400_000),
+      365
+    )
+
+    return Object.entries(byProp).map(([id, d]) => ({
+      id,
+      name: d.name,
+      nights: d.nights,
+      occupancy: (d.nights / daysSoFar) * 100,
+    }))
+  }, [reservations])
+
+  // Top months for bar chart (net)
+  const maxNet = Math.max(...monthlyData.map(([, d]) => d.net), 1)
+
+  if (loading) return <div className="p-6 text-sm text-gray-400">A carregar…</div>
+
+  return (
+    <div className="p-6 space-y-8">
+      {/* Header */}
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-navy-900">Relatórios</h1>
+          <p className="text-sm text-gray-500">Resumo financeiro e de ocupação das tuas propriedades</p>
+        </div>
+        <select
+          value={propFilter}
+          onChange={e => setPropFilter(e.target.value)}
+          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+        >
+          <option value="ALL">Todas as propriedades</option>
+          {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+        </select>
+      </div>
+
+      {/* KPI cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="rounded-xl border bg-white p-4">
+          <div className="flex items-center gap-2 mb-2 text-gray-500">
+            <Euro className="h-4 w-4" />
+            <span className="text-xs uppercase tracking-wide font-medium">Receita Bruta</span>
+          </div>
+          <div className="text-2xl font-bold text-navy-900">{fmt(totalGross)}</div>
+          <div className="text-xs text-gray-400 mt-0.5">total acumulado</div>
+        </div>
+
+        <div className="rounded-xl border bg-white p-4">
+          <div className="flex items-center gap-2 mb-2 text-gray-500">
+            <TrendingUp className="h-4 w-4" />
+            <span className="text-xs uppercase tracking-wide font-medium">Receita Líquida</span>
+          </div>
+          <div className="text-2xl font-bold text-green-700">{fmt(totalNet)}</div>
+          <div className="text-xs text-gray-400 mt-0.5">após comissão</div>
+        </div>
+
+        <div className="rounded-xl border bg-white p-4">
+          <div className="flex items-center gap-2 mb-2 text-gray-500">
+            <CalendarDays className="h-4 w-4" />
+            <span className="text-xs uppercase tracking-wide font-medium">Noites Reservadas</span>
+          </div>
+          <div className="text-2xl font-bold text-navy-900">{totalNights}</div>
+          <div className="text-xs text-gray-400 mt-0.5">total</div>
+        </div>
+
+        <div className="rounded-xl border bg-white p-4">
+          <div className="flex items-center gap-2 mb-2 text-gray-500">
+            <BarChart3 className="h-4 w-4" />
+            <span className="text-xs uppercase tracking-wide font-medium">Preço Médio/Noite</span>
+          </div>
+          <div className="text-2xl font-bold text-navy-900">{fmt(avgNightly)}</div>
+          <div className="text-xs text-gray-400 mt-0.5">gross / noite</div>
+        </div>
+      </div>
+
+      {/* Occupancy by property */}
+      {occupancyByProperty.length > 0 && (
+        <section>
+          <h2 className="text-base font-semibold text-navy-900 mb-3 flex items-center gap-2">
+            <Home className="h-4 w-4" />
+            Ocupação este ano (por propriedade)
+          </h2>
+          <div className="space-y-3">
+            {occupancyByProperty.map(p => (
+              <div key={p.id} className="rounded-xl border bg-white p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-navy-900">{p.name}</span>
+                  <span className="text-sm font-bold text-navy-900">{fmtPct(p.occupancy)}</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-gray-100">
+                  <div
+                    className="h-2 rounded-full bg-navy-900 transition-all"
+                    style={{ width: `${Math.min(p.occupancy, 100)}%` }}
+                  />
+                </div>
+                <div className="text-xs text-gray-400 mt-1">{p.nights} noites reservadas</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Monthly breakdown */}
+      <section>
+        <h2 className="text-base font-semibold text-navy-900 mb-3 flex items-center gap-2">
+          <BarChart3 className="h-4 w-4" />
+          Desempenho mensal (últimos 12 meses)
+        </h2>
+
+        {monthlyData.length === 0 ? (
+          <div className="rounded-xl border bg-white p-8 text-center text-gray-400 text-sm">
+            Sem dados de reservas ainda.
+          </div>
+        ) : (
+          <>
+            {/* Mini bar chart */}
+            <div className="rounded-xl border bg-white p-4 mb-4">
+              <div className="flex items-end gap-1 h-24">
+                {[...monthlyData].reverse().map(([key, d]) => (
+                  <div key={key} className="flex-1 flex flex-col items-center gap-1 group relative">
+                    <div
+                      className="w-full rounded-t bg-navy-900 min-h-[2px] transition-all"
+                      style={{ height: `${(d.net / maxNet) * 88}px` }}
+                    />
+                    <span className="text-[9px] text-gray-400 rotate-45 origin-left whitespace-nowrap mt-1">
+                      {monthLabel(key)}
+                    </span>
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-navy-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                      {monthLabel(key)}: {fmt(d.net)} líq.
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="rounded-xl border bg-white overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500 border-b">
+                  <tr>
+                    <th className="px-4 py-3">Mês</th>
+                    <th className="px-4 py-3 text-center">Reservas</th>
+                    <th className="px-4 py-3 text-center">Noites</th>
+                    <th className="px-4 py-3 text-right">Gross</th>
+                    <th className="px-4 py-3 text-right">Comissão</th>
+                    <th className="px-4 py-3 text-right font-semibold">Líquido</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {monthlyData.map(([key, d]) => (
+                    <tr key={key} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3 font-medium text-navy-900 capitalize">{monthLabel(key)}</td>
+                      <td className="px-4 py-3 text-center text-gray-600">{d.reservations}</td>
+                      <td className="px-4 py-3 text-center text-gray-600">{d.nights}</td>
+                      <td className="px-4 py-3 text-right text-gray-600">{fmt(d.gross)}</td>
+                      <td className="px-4 py-3 text-right text-orange-600">{fmt(d.commission)}</td>
+                      <td className="px-4 py-3 text-right font-semibold text-green-700">{fmt(d.net)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="border-t bg-gray-50">
+                  <tr>
+                    <td className="px-4 py-3 font-semibold text-navy-900">Total</td>
+                    <td className="px-4 py-3 text-center font-semibold">
+                      {monthlyData.reduce((s, [, d]) => s + d.reservations, 0)}
+                    </td>
+                    <td className="px-4 py-3 text-center font-semibold">
+                      {monthlyData.reduce((s, [, d]) => s + d.nights, 0)}
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold">
+                      {fmt(monthlyData.reduce((s, [, d]) => s + d.gross, 0))}
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold text-orange-600">
+                      {fmt(monthlyData.reduce((s, [, d]) => s + d.commission, 0))}
+                    </td>
+                    <td className="px-4 py-3 text-right font-bold text-green-700">
+                      {fmt(monthlyData.reduce((s, [, d]) => s + d.net, 0))}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </>
+        )}
+      </section>
+    </div>
+  )
+}
