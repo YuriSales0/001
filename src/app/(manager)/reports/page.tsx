@@ -1,352 +1,284 @@
 "use client"
 
-import { useState } from "react"
-import {
-  FileBarChart,
-  Download,
-  Eye,
-  Calendar,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { cn, formatCurrency, formatDate } from "@/lib/utils"
+import { useEffect, useState } from "react"
+import { FileBarChart, Download, Calendar, Building2, ChevronRight } from "lucide-react"
 
-interface Report {
+interface Reservation {
   id: string
-  property: string
-  month: string
-  year: number
-  generatedAt: string
-  revenue: number
-  expenses: number
-  occupancy: number
-  reservations: number
-  status: "ready" | "generating"
+  amount: number
+  checkIn: string
+  checkOut: string
+  property: { id: string; name: string; city: string }
 }
 
-const mockReports: Report[] = [
-  {
-    id: "RPT001",
-    property: "Villa Mar Azul",
-    month: "March",
-    year: 2026,
-    generatedAt: "2026-04-01",
-    revenue: 5250,
-    expenses: 620,
-    occupancy: 77,
-    reservations: 4,
-    status: "ready",
-  },
-  {
-    id: "RPT002",
-    property: "Casa Tropical",
-    month: "March",
-    year: 2026,
-    generatedAt: "2026-04-01",
-    revenue: 7100,
-    expenses: 830,
-    occupancy: 90,
-    reservations: 5,
-    status: "ready",
-  },
-  {
-    id: "RPT003",
-    property: "Penthouse Sunset",
-    month: "February",
-    year: 2026,
-    generatedAt: "2026-03-01",
-    revenue: 9800,
-    expenses: 1150,
-    occupancy: 86,
-    reservations: 4,
-    status: "ready",
-  },
-  {
-    id: "RPT004",
-    property: "Villa Mar Azul",
-    month: "February",
-    year: 2026,
-    generatedAt: "2026-03-01",
-    revenue: 5800,
-    expenses: 650,
-    occupancy: 89,
-    reservations: 5,
-    status: "ready",
-  },
+interface Property {
+  id: string
+  name: string
+  city: string
+}
+
+interface ReportSummary {
+  propertyId: string
+  propertyName: string
+  month: string
+  revenue: number
+  reservations: number
+  nights: number
+}
+
+const MONTHS = [
+  { value: "01", label: "January" }, { value: "02", label: "February" },
+  { value: "03", label: "March" },   { value: "04", label: "April" },
+  { value: "05", label: "May" },     { value: "06", label: "June" },
+  { value: "07", label: "July" },    { value: "08", label: "August" },
+  { value: "09", label: "September"},{ value: "10", label: "October" },
+  { value: "11", label: "November" },{ value: "12", label: "December" },
 ]
 
-const properties = [
-  "Villa Mar Azul",
-  "Casa Tropical",
-  "Penthouse Sunset",
-  "Studio Playa Blanca",
-  "Apartamento Oceano",
-]
-
-const monthOptions = [
-  { value: "01", label: "January" },
-  { value: "02", label: "February" },
-  { value: "03", label: "March" },
-  { value: "04", label: "April" },
-  { value: "05", label: "May" },
-  { value: "06", label: "June" },
-  { value: "07", label: "July" },
-  { value: "08", label: "August" },
-  { value: "09", label: "September" },
-  { value: "10", label: "October" },
-  { value: "11", label: "November" },
-  { value: "12", label: "December" },
-]
-
-const yearOptions = ["2024", "2025", "2026"]
+const fmtMoney = (n: number) =>
+  new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n)
 
 export default function ReportsPage() {
+  const [reservations, setReservations] = useState<Reservation[]>([])
+  const [properties, setProperties] = useState<Property[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedProperty, setSelectedProperty] = useState("")
   const [selectedMonth, setSelectedMonth] = useState("")
   const [selectedYear, setSelectedYear] = useState("2026")
-  const [previewReport, setPreviewReport] = useState<Report | null>(null)
+  const [selected, setSelected] = useState<ReportSummary | null>(null)
+  const [generating, setGenerating] = useState(false)
 
-  function handleGenerate() {
-    // In a real app this would trigger an API call
-    alert(
-      `Generating report for ${selectedProperty} - ${
-        monthOptions.find((m) => m.value === selectedMonth)?.label
-      } ${selectedYear}`
-    )
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      const [rRes, pRes] = await Promise.all([
+        fetch("/api/reservations"),
+        fetch("/api/properties"),
+      ])
+      if (rRes.ok) setReservations(await rRes.json())
+      if (pRes.ok) setProperties(await pRes.json())
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  // Build past-month summaries from real reservations
+  const summaries: ReportSummary[] = []
+  const seen = new Set<string>()
+  reservations.forEach(r => {
+    const d = new Date(r.checkOut)
+    const key = `${r.property.id}-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
+    if (seen.has(key)) {
+      const s = summaries.find(s => s.propertyId === r.property.id &&
+        s.month === `${MONTHS[d.getMonth()].label} ${d.getFullYear()}`)
+      if (s) { s.revenue += r.amount; s.reservations += 1 }
+    } else {
+      seen.add(key)
+      const nights = Math.round((new Date(r.checkOut).getTime() - new Date(r.checkIn).getTime()) / 86400000)
+      summaries.push({
+        propertyId: r.property.id,
+        propertyName: r.property.name,
+        month: `${MONTHS[d.getMonth()].label} ${d.getFullYear()}`,
+        revenue: r.amount,
+        reservations: 1,
+        nights,
+      })
+    }
+  })
+
+  const handleGenerate = async () => {
+    if (!selectedProperty || !selectedMonth || !selectedYear) return
+    setGenerating(true)
+    const propName = properties.find(p => p.id === selectedProperty)?.name ?? ""
+    const monthLabel = MONTHS.find(m => m.value === selectedMonth)?.label ?? ""
+
+    // Compute summary from reservations
+    const filtered = reservations.filter(r => {
+      const d = new Date(r.checkOut)
+      return r.property.id === selectedProperty &&
+        d.getFullYear() === parseInt(selectedYear) &&
+        String(d.getMonth() + 1).padStart(2, "0") === selectedMonth
+    })
+
+    const revenue = filtered.reduce((s, r) => s + r.amount, 0)
+    const nights  = filtered.reduce((s, r) =>
+      s + Math.round((new Date(r.checkOut).getTime() - new Date(r.checkIn).getTime()) / 86400000), 0)
+
+    setSelected({
+      propertyId: selectedProperty,
+      propertyName: propName,
+      month: `${monthLabel} ${selectedYear}`,
+      revenue,
+      reservations: filtered.length,
+      nights,
+    })
+    setGenerating(false)
+  }
+
+  const handleDownload = async (summary: ReportSummary) => {
+    const { jsPDF } = await import("jspdf")
+    const { default: autoTable } = await import("jspdf-autotable")
+    const doc = new jsPDF()
+
+    doc.setFontSize(20)
+    doc.setFont("helvetica", "bold")
+    doc.text("HostMasters", 20, 20)
+    doc.setFontSize(12)
+    doc.setFont("helvetica", "normal")
+    doc.text(`Property Report — ${summary.month}`, 20, 30)
+
+    autoTable(doc, {
+      startY: 40,
+      head: [["Metric", "Value"]],
+      body: [
+        ["Property", summary.propertyName],
+        ["Period", summary.month],
+        ["Reservations", String(summary.reservations)],
+        ["Total Nights", String(summary.nights)],
+        ["Gross Revenue", fmtMoney(summary.revenue)],
+        ["Commission (18%)", fmtMoney(summary.revenue * 0.18)],
+        ["Net to Owner", fmtMoney(summary.revenue * 0.82)],
+      ],
+    })
+    doc.save(`report-${summary.propertyName.replace(/\s+/g, "-")}-${summary.month.replace(/\s+/g, "-")}.pdf`)
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
-        <p className="text-sm text-muted-foreground">
-          Generate and download property performance reports
-        </p>
+        <h1 className="text-2xl font-bold text-navy-900">Reports</h1>
+        <p className="text-sm text-gray-500">Generate and download property performance reports.</p>
       </div>
 
-      {/* Generate Report */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Generate New Report</CardTitle>
-          <CardDescription>
-            Select a property and time period to generate a report.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-            <div className="grid gap-2 flex-1">
-              <Label>Property</Label>
-              <Select value={selectedProperty} onValueChange={setSelectedProperty}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select property" />
-                </SelectTrigger>
-                <SelectContent>
-                  {properties.map((p) => (
-                    <SelectItem key={p} value={p}>
-                      {p}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2 w-[160px]">
-              <Label>Month</Label>
-              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Month" />
-                </SelectTrigger>
-                <SelectContent>
-                  {monthOptions.map((m) => (
-                    <SelectItem key={m.value} value={m.value}>
-                      {m.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2 w-[120px]">
-              <Label>Year</Label>
-              <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {yearOptions.map((y) => (
-                    <SelectItem key={y} value={y}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              onClick={handleGenerate}
-              disabled={!selectedProperty || !selectedMonth}
+      {/* Generate panel */}
+      <div className="rounded-xl border bg-white p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <FileBarChart className="h-4 w-4 text-gray-400" />
+          <span className="text-sm font-semibold text-navy-900">Generate new report</span>
+        </div>
+        <div className="flex flex-wrap gap-3 items-end">
+          <div className="flex-1 min-w-[160px]">
+            <label className="block text-xs font-semibold text-gray-700 mb-1">Property *</label>
+            <select
+              value={selectedProperty}
+              onChange={e => setSelectedProperty(e.target.value)}
+              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
             >
-              <FileBarChart className="mr-2 h-4 w-4" />
-              Generate Report
-            </Button>
+              <option value="">Select a property…</option>
+              {properties.map(p => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
           </div>
-        </CardContent>
-      </Card>
+          <div className="w-[140px]">
+            <label className="block text-xs font-semibold text-gray-700 mb-1">Month *</label>
+            <select
+              value={selectedMonth}
+              onChange={e => setSelectedMonth(e.target.value)}
+              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+            >
+              <option value="">Month…</option>
+              {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+            </select>
+          </div>
+          <div className="w-[100px]">
+            <label className="block text-xs font-semibold text-gray-700 mb-1">Year</label>
+            <select
+              value={selectedYear}
+              onChange={e => setSelectedYear(e.target.value)}
+              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+            >
+              {["2024", "2025", "2026"].map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
+          <button
+            onClick={handleGenerate}
+            disabled={generating || !selectedProperty || !selectedMonth}
+            className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50"
+          >
+            <FileBarChart className="h-4 w-4" />
+            {generating ? "Generating…" : "Generate"}
+          </button>
+        </div>
+      </div>
 
+      {/* Two-pane: list + preview */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Report List */}
-        <div className="lg:col-span-2 space-y-4">
-          <h2 className="font-semibold text-lg">Previous Reports</h2>
-          <div className="space-y-3">
-            {mockReports.map((report) => (
-              <Card
-                key={report.id}
-                className={cn(
-                  "transition-shadow hover:shadow-md cursor-pointer",
-                  previewReport?.id === report.id && "ring-2 ring-primary"
-                )}
-                onClick={() => setPreviewReport(report)}
-              >
-                <CardContent className="flex items-center gap-4 p-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <FileBarChart className="h-5 w-5 text-primary" />
+        {/* List */}
+        <div className="lg:col-span-2 space-y-3">
+          <p className="text-sm font-semibold text-navy-900">Generated reports</p>
+          {loading && <div className="py-8 text-center text-sm text-gray-400">Loading…</div>}
+          {!loading && summaries.length === 0 && (
+            <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+              No reports yet. Generate one above.
+            </div>
+          )}
+          {summaries.map((s, i) => (
+            <div
+              key={i}
+              onClick={() => setSelected(s)}
+              className={`rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow cursor-pointer ${
+                selected?.propertyId === s.propertyId && selected?.month === s.month ? "ring-2 ring-navy-900" : ""
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                  <FileBarChart className="h-4 w-4 text-gray-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-navy-900 truncate">{s.propertyName}</p>
+                  <div className="flex items-center gap-3 text-xs text-gray-500 mt-0.5">
+                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{s.month}</span>
+                    <span>{s.reservations} reservations</span>
+                    <span className="font-medium text-emerald-700">{fmtMoney(s.revenue)}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{report.property}</p>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {report.month} {report.year}
-                      </span>
-                      <span>Generated: {formatDate(report.generatedAt)}</span>
-                    </div>
-                  </div>
-                  <Badge
-                    className={cn(
-                      report.status === "ready"
-                        ? "bg-green-100 text-green-800 border-green-200"
-                        : "bg-yellow-100 text-yellow-800 border-yellow-200"
-                    )}
-                  >
-                    {report.status === "ready" ? "Ready" : "Generating"}
-                  </Badge>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setPreviewReport(report)
-                      }}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-gray-300 shrink-0" />
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Preview Card */}
-        <div className="space-y-4">
-          <h2 className="font-semibold text-lg">Report Preview</h2>
-          {previewReport ? (
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">
-                  {previewReport.property}
-                </CardTitle>
-                <CardDescription>
-                  {previewReport.month} {previewReport.year}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground">Revenue</p>
-                    <p className="text-lg font-bold text-emerald-700">
-                      {formatCurrency(previewReport.revenue)}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground">Expenses</p>
-                    <p className="text-lg font-bold">
-                      {formatCurrency(previewReport.expenses)}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground">Occupancy</p>
-                    <div className="flex items-center gap-2">
-                      <p className="text-lg font-bold">{previewReport.occupancy}%</p>
-                      <div className="h-2 flex-1 rounded-full bg-muted">
-                        <div
-                          className="h-2 rounded-full bg-emerald-500"
-                          style={{ width: `${previewReport.occupancy}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground">Reservations</p>
-                    <p className="text-lg font-bold">
-                      {previewReport.reservations}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="border-t pt-4 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Net Income</span>
-                    <span className="font-semibold">
-                      {formatCurrency(previewReport.revenue - previewReport.expenses)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Profit Margin</span>
-                    <span className="font-semibold">
-                      {Math.round(
-                        ((previewReport.revenue - previewReport.expenses) /
-                          previewReport.revenue) *
-                          100
-                      )}
-                      %
-                    </span>
-                  </div>
-                </div>
-
-                <Button className="w-full" variant="outline">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download PDF
-                </Button>
-              </CardContent>
-            </Card>
+        {/* Preview */}
+        <div className="space-y-3">
+          <p className="text-sm font-semibold text-navy-900">Preview</p>
+          {!selected ? (
+            <div className="rounded-xl border bg-white py-16 flex flex-col items-center justify-center text-center text-gray-400">
+              <FileBarChart className="h-8 w-8 mb-2" />
+              <p className="text-sm">Select a report to preview.</p>
+            </div>
           ) : (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
-                <FileBarChart className="mb-3 h-10 w-10" />
-                <p className="text-sm">
-                  Select a report from the list to preview its summary.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="rounded-xl border bg-white p-5 space-y-4">
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <Building2 className="h-4 w-4 text-gray-400" />
+                  <span className="font-bold text-navy-900">{selected.propertyName}</span>
+                </div>
+                <p className="text-xs text-gray-500">{selected.month}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: "Revenue",      value: fmtMoney(selected.revenue),                      color: "text-emerald-700" },
+                  { label: "Commission",   value: fmtMoney(selected.revenue * 0.18),               color: "text-gray-700" },
+                  { label: "Net to owner", value: fmtMoney(selected.revenue * 0.82),               color: "text-navy-900" },
+                  { label: "Reservations", value: String(selected.reservations),                    color: "text-navy-900" },
+                  { label: "Nights",       value: String(selected.nights),                          color: "text-navy-900" },
+                  { label: "ADR",          value: selected.nights ? fmtMoney(selected.revenue / selected.nights) : "—", color: "text-navy-900" },
+                ].map(({ label, value, color }) => (
+                  <div key={label} className="rounded-lg bg-gray-50 p-3">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">{label}</p>
+                    <p className={`text-base font-bold ${color}`}>{value}</p>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => handleDownload(selected)}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white text-gray-700 px-4 py-2.5 text-sm font-medium hover:bg-gray-50"
+              >
+                <Download className="h-4 w-4" /> Download PDF
+              </button>
+            </div>
           )}
         </div>
       </div>

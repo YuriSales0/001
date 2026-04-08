@@ -1,386 +1,228 @@
 "use client"
 
-import { useState } from "react"
-import {
-  DollarSign,
-  TrendingUp,
-  Percent,
-  BarChart3,
-} from "lucide-react"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { cn, formatCurrency, calculateOwnerPayout, getOccupancyRate, calculateADR, calculateRevPAR } from "@/lib/utils"
+import { useEffect, useState } from "react"
+import { DollarSign, TrendingUp, Percent, BarChart3, Building2 } from "lucide-react"
 
-interface PropertyRevenue {
-  property: string
-  revenue: number
-  expenses: number
-  commissionRate: number
-  bookedNights: number
-  totalNights: number
+interface Reservation {
+  id: string
+  amount: number
+  checkIn: string
+  checkOut: string
+  property: { id: string; name: string; city: string }
 }
 
-const months = [
+interface Payout {
+  id: string
+  grossAmount: number
+  commission: number
+  commissionRate: number
+  netAmount: number
+  scheduledFor: string | null
+  status: string
+  property: { id: string; name: string }
+}
+
+interface PropertyRevRow {
+  propertyId: string
+  name: string
+  revenue: number
+  commission: number
+  net: number
+  reservations: number
+}
+
+const fmtMoney = (n: number) =>
+  new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n)
+
+const MONTHS = [
   { value: "2026-01", label: "January 2026" },
   { value: "2026-02", label: "February 2026" },
   { value: "2026-03", label: "March 2026" },
   { value: "2026-04", label: "April 2026" },
-]
-
-const mockData: Record<string, PropertyRevenue[]> = {
-  "2026-03": [
-    {
-      property: "Villa Mar Azul",
-      revenue: 5250,
-      expenses: 620,
-      commissionRate: 18,
-      bookedNights: 24,
-      totalNights: 31,
-    },
-    {
-      property: "Casa Tropical",
-      revenue: 7100,
-      expenses: 830,
-      commissionRate: 18,
-      bookedNights: 28,
-      totalNights: 31,
-    },
-    {
-      property: "Penthouse Sunset",
-      revenue: 9400,
-      expenses: 1100,
-      commissionRate: 15,
-      bookedNights: 22,
-      totalNights: 31,
-    },
-    {
-      property: "Studio Playa Blanca",
-      revenue: 2800,
-      expenses: 310,
-      commissionRate: 18,
-      bookedNights: 20,
-      totalNights: 31,
-    },
-  ],
-  "2026-04": [
-    {
-      property: "Villa Mar Azul",
-      revenue: 4800,
-      expenses: 580,
-      commissionRate: 18,
-      bookedNights: 20,
-      totalNights: 30,
-    },
-    {
-      property: "Casa Tropical",
-      revenue: 6500,
-      expenses: 750,
-      commissionRate: 18,
-      bookedNights: 25,
-      totalNights: 30,
-    },
-    {
-      property: "Penthouse Sunset",
-      revenue: 8200,
-      expenses: 950,
-      commissionRate: 15,
-      bookedNights: 18,
-      totalNights: 30,
-    },
-    {
-      property: "Studio Playa Blanca",
-      revenue: 2400,
-      expenses: 280,
-      commissionRate: 18,
-      bookedNights: 16,
-      totalNights: 30,
-    },
-  ],
-}
-
-// Also provide data for Jan/Feb
-mockData["2026-01"] = [
-  {
-    property: "Villa Mar Azul",
-    revenue: 6100,
-    expenses: 700,
-    commissionRate: 18,
-    bookedNights: 27,
-    totalNights: 31,
-  },
-  {
-    property: "Casa Tropical",
-    revenue: 8200,
-    expenses: 900,
-    commissionRate: 18,
-    bookedNights: 30,
-    totalNights: 31,
-  },
-  {
-    property: "Penthouse Sunset",
-    revenue: 10500,
-    expenses: 1200,
-    commissionRate: 15,
-    bookedNights: 26,
-    totalNights: 31,
-  },
-  {
-    property: "Studio Playa Blanca",
-    revenue: 3100,
-    expenses: 350,
-    commissionRate: 18,
-    bookedNights: 22,
-    totalNights: 31,
-  },
-]
-mockData["2026-02"] = [
-  {
-    property: "Villa Mar Azul",
-    revenue: 5800,
-    expenses: 650,
-    commissionRate: 18,
-    bookedNights: 25,
-    totalNights: 28,
-  },
-  {
-    property: "Casa Tropical",
-    revenue: 7500,
-    expenses: 860,
-    commissionRate: 18,
-    bookedNights: 26,
-    totalNights: 28,
-  },
-  {
-    property: "Penthouse Sunset",
-    revenue: 9800,
-    expenses: 1150,
-    commissionRate: 15,
-    bookedNights: 24,
-    totalNights: 28,
-  },
-  {
-    property: "Studio Playa Blanca",
-    revenue: 2900,
-    expenses: 330,
-    commissionRate: 18,
-    bookedNights: 21,
-    totalNights: 28,
-  },
+  { value: "2026-05", label: "May 2026" },
+  { value: "2026-06", label: "June 2026" },
 ]
 
 export default function RevenuePage() {
-  const [selectedMonth, setSelectedMonth] = useState("2026-03")
+  const [reservations, setReservations] = useState<Reservation[]>([])
+  const [payouts, setPayouts] = useState<Payout[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
+  })
 
-  const data = mockData[selectedMonth] ?? []
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      const [rRes, pRes] = await Promise.all([
+        fetch("/api/reservations"),
+        fetch("/api/payouts").catch(() => null),
+      ])
+      if (rRes.ok) setReservations(await rRes.json())
+      if (pRes?.ok) setPayouts(await pRes.json())
+      setLoading(false)
+    }
+    load()
+  }, [])
 
-  const totalRevenue = data.reduce((s, d) => s + d.revenue, 0)
-  const totalExpenses = data.reduce((s, d) => s + d.expenses, 0)
-  const totalBookedNights = data.reduce((s, d) => s + d.bookedNights, 0)
-  const totalNights = data.reduce((s, d) => s + d.totalNights, 0)
+  // Filter by selected month
+  const monthRes = reservations.filter(r => r.checkOut.startsWith(selectedMonth))
+  const monthPayouts = payouts.filter(p => p.scheduledFor?.startsWith(selectedMonth))
 
-  const avgADR = calculateADR(totalRevenue, totalBookedNights)
-  const occupancyRate = getOccupancyRate(totalBookedNights, totalNights)
-  const revPAR = calculateRevPAR(totalRevenue, totalNights)
+  // Aggregate by property
+  const byProperty = new Map<string, PropertyRevRow>()
+  monthPayouts.forEach(p => {
+    const existing = byProperty.get(p.property.id)
+    if (existing) {
+      existing.revenue    += p.grossAmount
+      existing.commission += p.commission
+      existing.net        += p.netAmount
+      existing.reservations += 1
+    } else {
+      byProperty.set(p.property.id, {
+        propertyId: p.property.id,
+        name: p.property.name,
+        revenue: p.grossAmount,
+        commission: p.commission,
+        net: p.netAmount,
+        reservations: 1,
+      })
+    }
+  })
+
+  // Fallback: if no payouts, use reservations
+  if (byProperty.size === 0) {
+    monthRes.forEach(r => {
+      const existing = byProperty.get(r.property.id)
+      const commissionRate = 0.18
+      const commission = r.amount * commissionRate
+      const net = r.amount - commission
+      if (existing) {
+        existing.revenue += r.amount
+        existing.commission += commission
+        existing.net += net
+        existing.reservations += 1
+      } else {
+        byProperty.set(r.property.id, {
+          propertyId: r.property.id,
+          name: r.property.name,
+          revenue: r.amount,
+          commission,
+          net,
+          reservations: 1,
+        })
+      }
+    })
+  }
+
+  const rows = Array.from(byProperty.values())
+  const totalRevenue    = rows.reduce((s, r) => s + r.revenue, 0)
+  const totalCommission = rows.reduce((s, r) => s + r.commission, 0)
+  const totalNet        = rows.reduce((s, r) => s + r.net, 0)
+  const totalRes        = rows.reduce((s, r) => s + r.reservations, 0)
+  const avgCommRate     = totalRevenue > 0 ? Math.round((totalCommission / totalRevenue) * 100) : 0
 
   const statCards = [
-    {
-      label: "Total Revenue",
-      value: formatCurrency(totalRevenue),
-      icon: DollarSign,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
-    },
-    {
-      label: "Avg ADR",
-      value: formatCurrency(avgADR),
-      icon: TrendingUp,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
-    },
-    {
-      label: "Occupancy Rate",
-      value: `${occupancyRate}%`,
-      icon: Percent,
-      color: "text-violet-600",
-      bg: "bg-violet-50",
-    },
-    {
-      label: "RevPAR",
-      value: formatCurrency(revPAR),
-      icon: BarChart3,
-      color: "text-amber-600",
-      bg: "bg-amber-50",
-    },
+    { label: "Gross Revenue",  value: fmtMoney(totalRevenue),    icon: DollarSign, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "Net to Owners",  value: fmtMoney(totalNet),        icon: TrendingUp, color: "text-blue-600",    bg: "bg-blue-50" },
+    { label: "Commission",     value: fmtMoney(totalCommission), icon: Percent,    color: "text-violet-600",  bg: "bg-violet-50" },
+    { label: "Reservations",   value: String(totalRes),          icon: BarChart3,  color: "text-amber-600",   bg: "bg-amber-50" },
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Revenue</h1>
-          <p className="text-sm text-muted-foreground">
-            Financial overview and property performance
-          </p>
+          <h1 className="text-2xl font-bold text-navy-900">Revenue</h1>
+          <p className="text-sm text-gray-500">Financial overview and property performance.</p>
         </div>
-        <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {months.map((m) => (
-              <SelectItem key={m.value} value={m.value}>
-                {m.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <select
+          value={selectedMonth}
+          onChange={e => setSelectedMonth(e.target.value)}
+          className="rounded-lg border bg-white px-3 py-2 text-sm"
+        >
+          {MONTHS.map(m => (
+            <option key={m.value} value={m.value}>{m.label}</option>
+          ))}
+        </select>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <Card key={stat.label}>
-              <CardContent className="flex items-center gap-4 p-4">
-                <div
-                  className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-lg",
-                    stat.bg
-                  )}
-                >
-                  <Icon className={cn("h-5 w-5", stat.color)} />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className="text-xl font-bold">{stat.value}</p>
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
+      {/* Stat strip */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {statCards.map(({ label, value, icon: Icon, color, bg }) => (
+          <div key={label} className="rounded-xl border bg-white p-4 flex items-center gap-3">
+            <div className={`rounded-lg p-2 ${bg}`}>
+              <Icon className={`h-5 w-5 ${color}`} />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">{label}</p>
+              <p className="text-lg font-bold text-navy-900">{value}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Revenue by Property Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Revenue by Property</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
+      {/* Table */}
+      {loading ? (
+        <div className="py-8 text-center text-sm text-gray-400">Loading…</div>
+      ) : rows.length === 0 ? (
+        <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+          No revenue data for this period.
+        </div>
+      ) : (
+        <div className="rounded-xl border bg-white overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3 border-b">
+            <BarChart3 className="h-4 w-4 text-gray-400" />
+            <span className="text-sm font-semibold text-navy-900">Revenue by property</span>
+            <span className="text-xs text-gray-400 ml-auto">{avgCommRate}% avg commission</span>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                    Property
-                  </th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                    Revenue
-                  </th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                    Expenses
-                  </th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                    Commission
-                  </th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                    Payout
-                  </th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                    Occupancy
-                  </th>
+                <tr className="border-b bg-gray-50">
+                  {["Property", "Gross", "Commission", "Net to owner", "Reservations"].map(h => (
+                    <th key={h} className={`px-4 py-2.5 text-xs font-semibold text-gray-500 ${h === "Property" ? "text-left" : "text-right"}`}>
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {data.map((row) => {
-                  const { commission, payout } = calculateOwnerPayout(
-                    row.revenue,
-                    row.expenses,
-                    row.commissionRate
-                  )
-                  const occ = getOccupancyRate(row.bookedNights, row.totalNights)
-                  return (
-                    <tr
-                      key={row.property}
-                      className="border-b transition-colors hover:bg-muted/30"
-                    >
-                      <td className="px-4 py-3 font-medium">{row.property}</td>
-                      <td className="px-4 py-3 text-right">
-                        {formatCurrency(row.revenue)}
-                      </td>
-                      <td className="px-4 py-3 text-right text-muted-foreground">
-                        {formatCurrency(row.expenses)}
-                      </td>
-                      <td className="px-4 py-3 text-right text-muted-foreground">
-                        {formatCurrency(commission)}
-                        <span className="ml-1 text-xs">({row.commissionRate}%)</span>
-                      </td>
-                      <td className="px-4 py-3 text-right font-semibold text-emerald-700">
-                        {formatCurrency(payout)}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <div className="h-2 w-16 rounded-full bg-muted">
-                            <div
-                              className="h-2 rounded-full bg-emerald-500"
-                              style={{ width: `${occ}%` }}
-                            />
-                          </div>
-                          <span className="text-xs font-medium">{occ}%</span>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
+                {rows.map(r => (
+                  <tr key={r.propertyId} className="border-b hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="h-3.5 w-3.5 text-gray-400" />
+                        <span className="font-medium text-navy-900">{r.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">{fmtMoney(r.revenue)}</td>
+                    <td className="px-4 py-3 text-right text-gray-500">
+                      {fmtMoney(r.commission)}
+                      <span className="ml-1 text-[10px] text-gray-400">
+                        ({r.revenue > 0 ? Math.round((r.commission / r.revenue) * 100) : 0}%)
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold text-emerald-700">{fmtMoney(r.net)}</td>
+                    <td className="px-4 py-3 text-right">{r.reservations}</td>
+                  </tr>
+                ))}
               </tbody>
               <tfoot>
-                <tr className="bg-muted/30 font-semibold">
-                  <td className="px-4 py-3">Total</td>
-                  <td className="px-4 py-3 text-right">
-                    {formatCurrency(totalRevenue)}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    {formatCurrency(totalExpenses)}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    {formatCurrency(
-                      data.reduce(
-                        (s, d) =>
-                          s + calculateOwnerPayout(d.revenue, d.expenses, d.commissionRate).commission,
-                        0
-                      )
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right text-emerald-700">
-                    {formatCurrency(
-                      data.reduce(
-                        (s, d) =>
-                          s + calculateOwnerPayout(d.revenue, d.expenses, d.commissionRate).payout,
-                        0
-                      )
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right text-xs">
-                    {occupancyRate}% avg
-                  </td>
+                <tr className="bg-gray-50 font-semibold">
+                  <td className="px-4 py-3 text-navy-900">Total</td>
+                  <td className="px-4 py-3 text-right">{fmtMoney(totalRevenue)}</td>
+                  <td className="px-4 py-3 text-right text-gray-600">{fmtMoney(totalCommission)}</td>
+                  <td className="px-4 py-3 text-right text-emerald-700">{fmtMoney(totalNet)}</td>
+                  <td className="px-4 py-3 text-right">{totalRes}</td>
                 </tr>
               </tfoot>
             </table>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      )}
     </div>
   )
 }

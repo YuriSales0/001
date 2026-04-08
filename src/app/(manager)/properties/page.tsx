@@ -1,262 +1,188 @@
 "use client"
 
-import { useState } from "react"
-import Link from "next/link"
-import {
-  Building2,
-  Plus,
-  Search,
-  Eye,
-  Pencil,
-  Trash2,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react"
+import { Plus, X, Building2, MapPin, User, Bed, Bath, TrendingUp } from "lucide-react"
 
-type PropertyStatus = "active" | "inactive" | "maintenance"
+type PropertyStatus = "ACTIVE" | "INACTIVE" | "MAINTENANCE" | "PENDING"
 
 interface Property {
   id: string
   name: string
   address: string
-  owner: string
+  city: string
+  country: string | null
+  bedrooms: number | null
+  bathrooms: number | null
   status: PropertyStatus
-  occupancy: number
-  bedrooms: number
-  bathrooms: number
+  owner: { id: string; name: string | null; email: string }
 }
 
-const mockProperties: Property[] = [
-  {
-    id: "1",
-    name: "Villa Mar Azul",
-    address: "Calle del Sol 12, Tamarindo",
-    owner: "Carlos Mendez",
-    status: "active",
-    occupancy: 78,
-    bedrooms: 3,
-    bathrooms: 2,
-  },
-  {
-    id: "2",
-    name: "Casa Tropical",
-    address: "Avenida Playa 45, Manuel Antonio",
-    owner: "Sofia Ramirez",
-    status: "active",
-    occupancy: 92,
-    bedrooms: 4,
-    bathrooms: 3,
-  },
-  {
-    id: "3",
-    name: "Apartamento Oceano",
-    address: "Calle Marina 8, Jacó",
-    owner: "Diego Vargas",
-    status: "maintenance",
-    occupancy: 0,
-    bedrooms: 2,
-    bathrooms: 1,
-  },
-  {
-    id: "4",
-    name: "Penthouse Sunset",
-    address: "Boulevard Pacífico 3, Flamingo",
-    owner: "Maria Lopez",
-    status: "active",
-    occupancy: 65,
-    bedrooms: 5,
-    bathrooms: 4,
-  },
-  {
-    id: "5",
-    name: "Studio Playa Blanca",
-    address: "Calle Coral 21, Santa Teresa",
-    owner: "Jorge Castillo",
-    status: "inactive",
-    occupancy: 0,
-    bedrooms: 1,
-    bathrooms: 1,
-  },
-]
-
-const statusColors: Record<PropertyStatus, string> = {
-  active: "bg-green-100 text-green-800 border-green-200",
-  inactive: "bg-gray-100 text-gray-800 border-gray-200",
-  maintenance: "bg-yellow-100 text-yellow-800 border-yellow-200",
+const STATUS_COLOR: Record<PropertyStatus, string> = {
+  ACTIVE:      "bg-emerald-100 text-emerald-800",
+  INACTIVE:    "bg-gray-100 text-gray-700",
+  MAINTENANCE: "bg-amber-100 text-amber-800",
+  PENDING:     "bg-blue-100 text-blue-800",
 }
 
 export default function PropertiesPage() {
+  const [properties, setProperties] = useState<Property[]>([])
+  const [loading, setLoading] = useState(true)
+  const [filterStatus, setFilterStatus] = useState("all")
   const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
 
-  const filtered = mockProperties.filter((p) => {
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase())
-    const matchesStatus = statusFilter === "all" || p.status === statusFilter
-    return matchesSearch && matchesStatus
+  const [showCreate, setShowCreate] = useState(false)
+
+  const load = async () => {
+    setLoading(true)
+    const res = await fetch("/api/properties")
+    if (res.ok) setProperties(await res.json())
+    setLoading(false)
+  }
+  useEffect(() => { load() }, [])
+
+  const filtered = properties.filter(p => {
+    if (filterStatus !== "all" && p.status !== filterStatus) return false
+    if (search && !p.name.toLowerCase().includes(search.toLowerCase()) &&
+        !p.city.toLowerCase().includes(search.toLowerCase())) return false
+    return true
   })
 
+  const counts = {
+    ACTIVE:      properties.filter(p => p.status === "ACTIVE").length,
+    INACTIVE:    properties.filter(p => p.status === "INACTIVE").length,
+    MAINTENANCE: properties.filter(p => p.status === "MAINTENANCE").length,
+    PENDING:     properties.filter(p => p.status === "PENDING").length,
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Properties</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage all your rental properties
-          </p>
+          <h1 className="text-2xl font-bold text-navy-900">Properties</h1>
+          <p className="text-sm text-gray-500">Manage and monitor all rental properties.</p>
         </div>
-        <Button asChild>
-          <Link href="/onboarding">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Property
-          </Link>
-        </Button>
+        <button
+          onClick={() => setShowCreate(true)}
+          className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+        >
+          <Plus className="h-4 w-4" /> Add property
+        </button>
       </div>
 
-      {/* Search + Filter */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search by property name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-      </div>
-
-      <Tabs value={statusFilter} onValueChange={setStatusFilter}>
-        <TabsList>
-          <TabsTrigger value="all">
-            All ({mockProperties.length})
-          </TabsTrigger>
-          <TabsTrigger value="active">
-            Active ({mockProperties.filter((p) => p.status === "active").length})
-          </TabsTrigger>
-          <TabsTrigger value="inactive">
-            Inactive ({mockProperties.filter((p) => p.status === "inactive").length})
-          </TabsTrigger>
-          <TabsTrigger value="maintenance">
-            Maintenance ({mockProperties.filter((p) => p.status === "maintenance").length})
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Table for all tabs - same content, filtered */}
-        {["all", "active", "inactive", "maintenance"].map((tab) => (
-          <TabsContent key={tab} value={tab}>
-            <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b bg-muted/50">
-                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                          Name
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                          Address
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                          Owner
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                          Status
-                        </th>
-                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                          Occupancy
-                        </th>
-                        <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filtered.map((property) => (
-                        <tr
-                          key={property.id}
-                          className="border-b transition-colors hover:bg-muted/30"
-                        >
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10">
-                                <Building2 className="h-4 w-4 text-primary" />
-                              </div>
-                              <div>
-                                <p className="font-medium">{property.name}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  {property.bedrooms}BD / {property.bathrooms}BA
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 text-muted-foreground">
-                            {property.address}
-                          </td>
-                          <td className="px-4 py-3">{property.owner}</td>
-                          <td className="px-4 py-3">
-                            <Badge
-                              className={cn(
-                                "capitalize",
-                                statusColors[property.status]
-                              )}
-                            >
-                              {property.status}
-                            </Badge>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <div className="h-2 w-20 rounded-full bg-muted">
-                                <div
-                                  className="h-2 rounded-full bg-emerald-500"
-                                  style={{ width: `${property.occupancy}%` }}
-                                />
-                              </div>
-                              <span className="text-xs font-medium">
-                                {property.occupancy}%
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center justify-end gap-1">
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                      {filtered.length === 0 && (
-                        <tr>
-                          <td
-                            colSpan={6}
-                            className="px-4 py-8 text-center text-muted-foreground"
-                          >
-                            No properties found.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+      {/* Summary strip */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {(["ACTIVE", "INACTIVE", "MAINTENANCE", "PENDING"] as PropertyStatus[]).map(s => (
+          <button
+            key={s}
+            onClick={() => setFilterStatus(filterStatus === s ? "all" : s)}
+            className={`rounded-xl border p-4 text-left transition-all hover:shadow-sm ${
+              filterStatus === s ? "ring-2 ring-navy-900" : "bg-white"
+            }`}
+          >
+            <p className={`text-[10px] font-bold rounded px-1.5 py-0.5 inline-block mb-2 ${STATUS_COLOR[s]}`}>{s}</p>
+            <p className="text-2xl font-bold text-navy-900">{counts[s]}</p>
+          </button>
         ))}
-      </Tabs>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3">
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by name or city…"
+          className="rounded-lg border bg-white px-3 py-2 text-sm flex-1 min-w-[180px] max-w-xs focus:outline-none focus:ring-2 focus:ring-navy-900"
+        />
+        <select
+          value={filterStatus}
+          onChange={e => setFilterStatus(e.target.value)}
+          className="rounded-lg border bg-white px-3 py-2 text-sm"
+        >
+          <option value="all">All statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+          <option value="MAINTENANCE">Maintenance</option>
+          <option value="PENDING">Pending</option>
+        </select>
+      </div>
+
+      {/* List */}
+      <div className="space-y-3">
+        {loading && <div className="py-8 text-center text-sm text-gray-400">Loading…</div>}
+        {!loading && filtered.length === 0 && (
+          <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+            No properties match your filters.
+          </div>
+        )}
+        {filtered.map(p => (
+          <div key={p.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3 flex-1 min-w-0">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                  <Building2 className="h-4 w-4 text-gray-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-navy-900">{p.name}</span>
+                    <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${STATUS_COLOR[p.status]}`}>
+                      {p.status}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 mt-1">
+                    <span className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3" /> {p.city}{p.country ? `, ${p.country}` : ""}
+                    </span>
+                    {p.bedrooms != null && (
+                      <span className="flex items-center gap-1">
+                        <Bed className="h-3 w-3" /> {p.bedrooms}BD
+                      </span>
+                    )}
+                    {p.bathrooms != null && (
+                      <span className="flex items-center gap-1">
+                        <Bath className="h-3 w-3" /> {p.bathrooms}BA
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <User className="h-3 w-3" /> {p.owner.name ?? p.owner.email}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={`/properties/${p.id}`}
+                  className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50"
+                >
+                  <TrendingUp className="h-3 w-3" /> View
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Add property — redirect to onboarding */}
+      {showCreate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowCreate(false)}>
+          <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl p-6 text-center" onClick={e => e.stopPropagation()}>
+            <Building2 className="mx-auto h-10 w-10 text-gray-400 mb-3" />
+            <h2 className="text-base font-bold text-navy-900 mb-1">Add a property</h2>
+            <p className="text-sm text-gray-500 mb-5">
+              Use the full onboarding flow to register a new property with all details and OTA configuration.
+            </p>
+            <div className="flex justify-center gap-3">
+              <button onClick={() => setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">
+                Cancel
+              </button>
+              <a href="/onboarding" className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800">
+                Go to onboarding
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
