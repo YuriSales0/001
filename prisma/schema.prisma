@@ -15,6 +15,7 @@ enum Role {
 }
 
 enum PropertyStatus {
+  PENDING_CLIENT
   PENDING_APPROVAL
   ACTIVE
   INACTIVE

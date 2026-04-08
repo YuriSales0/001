@@ -38,13 +38,15 @@ type ApproveState = {
 }
 
 const STATUS_BADGE: Record<string, string> = {
+  PENDING_CLIENT:   'bg-violet-100 text-violet-700',
   PENDING_APPROVAL: 'bg-amber-100 text-amber-700',
   ACTIVE:           'bg-green-100 text-green-700',
   INACTIVE:         'bg-gray-100 text-gray-500',
   MAINTENANCE:      'bg-orange-100 text-orange-600',
 }
 const STATUS_LABEL: Record<string, string> = {
-  PENDING_APPROVAL: 'Aguarda aprovação',
+  PENDING_CLIENT:   'Aguarda confirmação do cliente',
+  PENDING_APPROVAL: 'Aguarda configuração OTA',
   ACTIVE:           'Ativa',
   INACTIVE:         'Inativa',
   MAINTENANCE:      'Em manutenção',
@@ -161,7 +163,9 @@ export default function PropertiesPage() {
     await load()
   }
 
-  const pending = properties.filter(p => p.status === 'PENDING_APPROVAL')
+  const pendingClient   = properties.filter(p => p.status === 'PENDING_CLIENT')
+  const pendingApproval = properties.filter(p => p.status === 'PENDING_APPROVAL')
+  const pending = [...pendingClient, ...pendingApproval]
 
   return (
     <div className="p-6 space-y-6">
@@ -179,12 +183,20 @@ export default function PropertiesPage() {
         </button>
       </div>
 
-      {/* Pending banner */}
-      {pending.length > 0 && (
+      {/* Pending banners */}
+      {pendingClient.length > 0 && (
+        <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 flex items-center gap-3">
+          <Clock className="h-5 w-5 text-violet-600 shrink-0" />
+          <div className="text-sm text-violet-800">
+            <span className="font-semibold">{pendingClient.length} propriedade{pendingClient.length > 1 ? 's' : ''}</span> aguardam confirmação do cliente — o cliente deve confirmar os dados antes de prosseguir.
+          </div>
+        </div>
+      )}
+      {pendingApproval.length > 0 && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-center gap-3">
           <Clock className="h-5 w-5 text-amber-600 shrink-0" />
           <div className="text-sm text-amber-800">
-            <span className="font-semibold">{pending.length} propriedade{pending.length > 1 ? 's' : ''}</span> aguardam a tua aprovação — revê, conecta os calendários OTA e ativa.
+            <span className="font-semibold">{pendingApproval.length} propriedade{pendingApproval.length > 1 ? 's' : ''}</span> prontas para configurar — conecta os calendários OTA e ativa.
           </div>
         </div>
       )}
@@ -201,7 +213,9 @@ export default function PropertiesPage() {
           {properties.map(p => {
             const draft = drafts[p.id] ?? { airbnb: '', booking: '' }
             const result = lastSync[p.id]
-            const isPending = p.status === 'PENDING_APPROVAL'
+            const isPendingClient   = p.status === 'PENDING_CLIENT'
+            const isPendingApproval = p.status === 'PENDING_APPROVAL'
+            const isPending = isPendingClient || isPendingApproval
 
             return (
               <div key={p.id} className={`rounded-xl border bg-white overflow-hidden ${isPending ? 'border-amber-300' : ''}`}>
@@ -217,12 +231,15 @@ export default function PropertiesPage() {
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_BADGE[p.status] ?? 'bg-gray-100 text-gray-600'}`}>
                       {STATUS_LABEL[p.status] ?? p.status}
                     </span>
-                    {isPending && (
+                    {isPendingClient && (
+                      <span className="text-xs text-violet-600 font-medium">Aguarda cliente</span>
+                    )}
+                    {isPendingApproval && (
                       <button
                         onClick={() => openApprove(p)}
                         className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 text-white px-3 py-1.5 text-sm font-semibold hover:bg-amber-600"
                       >
-                        <CheckCircle2 className="h-4 w-4" /> Aprovar
+                        <CheckCircle2 className="h-4 w-4" /> Configurar e Aprovar
                       </button>
                     )}
                   </div>
