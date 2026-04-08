@@ -10,9 +10,9 @@ export default async function Me() {
     case 'ADMIN':
       redirect('/dashboard')
     case 'CLIENT':
-      redirect('/client/payouts')
+      redirect('/client/dashboard')
     case 'MANAGER':
-      redirect('/manager/payouts')
+      redirect('/manager/dashboard')
     case 'CREW':
       redirect('/crew')
     default:

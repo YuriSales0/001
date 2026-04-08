@@ -2,25 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ──────────────────────────────────────────
+   HostMasters Brand Tokens
+   ────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --hm-black:   #1A1A1A;
+  --hm-gold:    #C9A84C;
+  --hm-gold-dk: #B8922A;
+  --hm-ivory:   #FDFCF8;
+  --hm-sand:    #F0EDE5;
+  --hm-border:  #E8E3D8;
+  --hm-slate:   #444444;
+  --hm-green:   #2A7A4F;
+  --hm-red:     #A32D2D;
+  --hm-blue:    #1B4F8A;
+
+  --background: var(--hm-ivory);
+  --foreground: var(--hm-black);
+}
+
+/* ──────────────────────────────────────────
+   Base Typography
+   ────────────────────────────────────────── */
+html {
+  font-size: 17px;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--hm-slate);
+  background: var(--hm-ivory);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--hm-black);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+/* Internal pages can override to tighter layout */
+.ui-dense body,
+.ui-dense {
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 @layer base {
   * {
-    @apply border-gray-200;
+    border-color: var(--hm-border);
+  }
+
+  button {
+    min-height: 44px;
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* HM colour utilities */
+  .bg-hm-ivory   { background-color: var(--hm-ivory); }
+  .bg-hm-sand    { background-color: var(--hm-sand); }
+  .bg-hm-gold    { background-color: var(--hm-gold); }
+  .bg-hm-black   { background-color: var(--hm-black); }
+  .text-hm-gold     { color: var(--hm-gold); }
+  .text-hm-gold-dk  { color: var(--hm-gold-dk); }
+  .text-hm-black    { color: var(--hm-black); }
+  .text-hm-slate    { color: var(--hm-slate); }
+  .text-hm-green    { color: var(--hm-green); }
+  .text-hm-red      { color: var(--hm-red); }
+  .text-hm-blue     { color: var(--hm-blue); }
+  .border-hm        { border-color: var(--hm-border); }
+
+  /* HM card surface */
+  .hm-card {
+    background: var(--hm-sand);
+    border: 1px solid var(--hm-border);
+    border-radius: 12px;
+  }
+
+  /* Gold gradient */
+  .hm-gold-gradient {
+    background: linear-gradient(135deg, #C9A84C 0%, #E8C96A 50%, #B8922A 100%);
   }
 }
