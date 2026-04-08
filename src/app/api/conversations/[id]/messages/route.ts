@@ -25,7 +25,7 @@ export async function GET(
   const messages = await prisma.message.findMany({
     where: { conversationId: params.id },
     orderBy: { createdAt: 'asc' },
-    include: { sender: { select: { id: true, name: true, role: true } } },
+    include: { sender: { select: { id: true, name: true, role: true, image: true } } },
   })
 
   // Mark unread messages as read (only messages NOT from me)
@@ -69,7 +69,7 @@ export async function POST(
       senderId: me.id,
       body: body.trim(),
     },
-    include: { sender: { select: { id: true, name: true, role: true } } },
+    include: { sender: { select: { id: true, name: true, role: true, image: true } } },
   })
 
   // Bump conversation updatedAt
