@@ -1,13 +1,14 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser } from '@/lib/session'
-import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight } from 'lucide-react'
+import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 const navLinks = [
-  { href: '/crew',         label: 'My Tasks',  icon: ClipboardList },
-  { href: '/crew/profile', label: 'My Profile', icon: User },
+  { href: '/crew',          label: 'My Tasks',  icon: ClipboardList },
+  { href: '/crew/calendar', label: 'Calendar',  icon: Calendar },
+  { href: '/crew/profile',  label: 'My Profile', icon: User },
 ]
 
 export default async function CrewLayout({ children }: { children: React.ReactNode }) {

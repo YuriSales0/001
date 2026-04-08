@@ -4,17 +4,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, Plus, X, Clock, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 type Task = {
-  id: string
-  type: string
-  title: string
-  status: string
-  dueDate: string
-  description: string | null
-  notes: string | null
+  id: string; type: string; title: string; status: string
+  dueDate: string; description: string | null; notes: string | null
   property: { id: string; name: string }
   assignee: { id: string; name: string | null } | null
 }
-
 type Property = { id: string; name: string }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -28,269 +22,287 @@ const TYPE_COLORS: Record<string, string> = {
   SHOPPING:               'bg-emerald-100 text-emerald-700 border-emerald-200',
   LAUNDRY:                'bg-pink-100 text-pink-700 border-pink-200',
 }
-
 const TYPE_LABELS: Record<string, string> = {
-  CHECK_IN:               'Check-in',
-  CHECK_OUT:              'Check-out',
-  CLEANING:               'Limpeza',
-  MAINTENANCE_PREVENTIVE: 'Manutenção Prev.',
-  MAINTENANCE_CORRECTIVE: 'Manutenção Cor.',
-  INSPECTION:             'Inspecção',
-  TRANSFER:               'Transfer',
-  SHOPPING:               'Compras',
-  LAUNDRY:                'Lavandaria',
+  CHECK_IN: 'Check-in', CHECK_OUT: 'Check-out', CLEANING: 'Limpeza',
+  MAINTENANCE_PREVENTIVE: 'Manutenção Prev.', MAINTENANCE_CORRECTIVE: 'Manutenção Cor.',
+  INSPECTION: 'Inspecção', TRANSFER: 'Transfer', SHOPPING: 'Compras', LAUNDRY: 'Lavandaria',
+}
+const WEEKDAY_SHORT = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']
+
+const dayKey = (d: Date) => d.toISOString().slice(0,10)
+
+function getWeekStart(ref: Date): Date {
+  const d = new Date(ref)
+  const dow = (d.getDay()+6)%7
+  d.setDate(d.getDate()-dow)
+  d.setHours(0,0,0,0)
+  return d
+}
+function getWeekDays(start: Date): Date[] {
+  return Array.from({length:7},(_,i)=>{
+    const d = new Date(start); d.setDate(start.getDate()+i); return d
+  })
 }
 
-const WEEKDAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
-
 const fmtDate = (s: string) =>
-  new Date(s).toLocaleDateString('pt-PT', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })
+  new Date(s).toLocaleDateString('pt-PT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
 
-const dayKey = (d: Date) => d.toISOString().slice(0, 10)
+// ── Day Panel ─────────────────────────────────────────────────────────────────
+function DayPanel({
+  day, tasks, onClose, onSelect,
+}: {
+  day: Date; tasks: Task[]; onClose: ()=>void; onSelect: (t:Task)=>void
+}) {
+  const today = new Date()
+  const label = day.toLocaleDateString('pt-PT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
+  return (
+    <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
+        <div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
+          <p className="text-sm font-bold text-gray-900">{tasks.length} tarefa{tasks.length!==1?'s':''}</p>
+        </div>
+        <button onClick={onClose} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
+          <X className="h-4 w-4"/>
+        </button>
+      </div>
+      {tasks.length===0 ? (
+        <div className="px-5 py-8 text-center text-sm text-gray-400">Nenhuma tarefa neste dia</div>
+      ) : (
+        <div className="divide-y max-h-80 overflow-y-auto">
+          {tasks.map(t=>{
+            const isOverdue = t.status!=='COMPLETED'&&new Date(t.dueDate)<today
+            const colorClass = TYPE_COLORS[t.type]??'bg-gray-100 text-gray-600 border-gray-200'
+            return (
+              <button key={t.id} onClick={()=>onSelect(t)}
+                className="w-full flex items-center gap-3 px-5 py-3 text-sm text-left hover:bg-gray-50">
+                <span className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${colorClass}`}>
+                  {(TYPE_LABELS[t.type]??t.type).slice(0,2).toUpperCase()}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className={`font-medium truncate ${t.status==='COMPLETED'?'line-through text-gray-400':''}`}>{t.title}</p>
+                  <p className="text-xs text-gray-500">{t.property.name}</p>
+                </div>
+                {isOverdue&&<AlertCircle className="h-4 w-4 shrink-0 text-red-500"/>}
+                {t.status==='COMPLETED'&&<CheckCircle2 className="h-4 w-4 shrink-0 text-green-500"/>}
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
 
+// ── Task Detail Modal ─────────────────────────────────────────────────────────
+function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
+  const today = new Date()
+  const isOverdue = task.status!=='COMPLETED'&&new Date(task.dueDate)<today
+  const colorClass = TYPE_COLORS[task.type]??'bg-gray-100 text-gray-600 border-gray-200'
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl" onClick={e=>e.stopPropagation()}>
+        <div className="flex items-start justify-between p-5 border-b">
+          <div>
+            <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-semibold mb-1 ${colorClass}`}>
+              {TYPE_LABELS[task.type]??task.type}
+            </span>
+            <h2 className={`text-base font-bold text-gray-900 ${task.status==='COMPLETED'?'line-through text-gray-400':''}`}>
+              {task.title}
+            </h2>
+          </div>
+          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5"/></button>
+        </div>
+        <div className="p-5 space-y-3 text-sm">
+          <div className="flex items-center gap-2 text-gray-600">
+            <Clock className="h-4 w-4 shrink-0"/>
+            <span>{fmtDate(task.dueDate)}</span>
+          </div>
+          <div className="text-gray-600"><span className="font-medium text-gray-700">Propriedade:</span> {task.property.name}</div>
+          {task.assignee&&<div className="text-gray-600"><span className="font-medium text-gray-700">Crew:</span> {task.assignee.name??'Não atribuído'}</div>}
+          {task.description&&(
+            <div className="text-gray-600">
+              <span className="font-medium text-gray-700 block mb-0.5">Descrição:</span>
+              {task.description}
+            </div>
+          )}
+          <div className="pt-1">
+            {task.status==='COMPLETED'?(
+              <span className="inline-flex items-center gap-1 rounded-full bg-green-100 text-green-700 px-3 py-1 text-xs font-semibold">
+                <CheckCircle2 className="h-3.5 w-3.5"/>Concluída
+              </span>
+            ):isOverdue?(
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-100 text-red-600 px-3 py-1 text-xs font-semibold">
+                <AlertCircle className="h-3.5 w-3.5"/>Em atraso
+              </span>
+            ):(
+              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-600 px-3 py-1 text-xs font-semibold">
+                <Clock className="h-3.5 w-3.5"/>Pendente
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
 export default function ClientCalendarPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [propertyFilter, setPropertyFilter] = useState('ALL')
-  const [selected, setSelected] = useState<Task | null>(null)
+  const [selected, setSelected] = useState<Task|null>(null)
 
-  const today = useMemo(() => new Date(), [])
-  const [year, setYear] = useState(today.getFullYear())
-  const [month, setMonth] = useState(today.getMonth()) // 0-indexed
+  const today = useMemo(()=>new Date(),[])
+  const [weekStart, setWeekStart] = useState(()=>getWeekStart(new Date()))
+  const weekDays = useMemo(()=>getWeekDays(weekStart),[weekStart])
+  const [expandedDay, setExpandedDay] = useState<string|null>(null)
 
-  useEffect(() => {
+  useEffect(()=>{
     Promise.all([
-      fetch('/api/tasks').then(r => r.ok ? r.json() : []),
-      fetch('/api/properties').then(r => r.ok ? r.json() : []),
-    ]).then(([t, p]) => {
-      setTasks(t)
-      setProperties(p)
-      setLoading(false)
-    })
-  }, [])
+      fetch('/api/tasks').then(r=>r.ok?r.json():[]),
+      fetch('/api/properties').then(r=>r.ok?r.json():[]),
+    ]).then(([t,p])=>{setTasks(t);setProperties(p);setLoading(false)})
+  },[])
 
-  const prevMonth = () => {
-    if (month === 0) { setMonth(11); setYear(y => y - 1) }
-    else setMonth(m => m - 1)
-  }
-  const nextMonth = () => {
-    if (month === 11) { setMonth(0); setYear(y => y + 1) }
-    else setMonth(m => m + 1)
-  }
+  const prevWeek = () => setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()-7);return d})
+  const nextWeek = () => setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()+7);return d})
 
-  // All days in current month
-  const allDays = useMemo(() => {
-    const days: Date[] = []
-    const d = new Date(year, month, 1)
-    while (d.getMonth() === month) {
-      days.push(new Date(d))
-      d.setDate(d.getDate() + 1)
-    }
-    return days
-  }, [year, month])
-
-  // Padding before first day (Mon=0)
-  const firstDow = useMemo(() => {
-    const d = (new Date(year, month, 1).getDay() + 6) % 7 // Mon-based
-    return d
-  }, [year, month])
-
-  // Tasks grouped by day key, filtered by property
-  const byDay = useMemo(() => {
-    const map: Record<string, Task[]> = {}
+  const byDay = useMemo(()=>{
+    const map:Record<string,Task[]> = {}
     tasks
-      .filter(t => propertyFilter === 'ALL' || t.property.id === propertyFilter)
-      .forEach(t => {
-        const k = t.dueDate.slice(0, 10)
-        if (!map[k]) map[k] = []
+      .filter(t=>propertyFilter==='ALL'||t.property.id===propertyFilter)
+      .forEach(t=>{
+        const k = t.dueDate.slice(0,10)
+        if (!map[k]) map[k]=[]
         map[k].push(t)
       })
     return map
-  }, [tasks, propertyFilter])
+  },[tasks,propertyFilter])
 
-  const monthLabel = new Date(year, month, 1).toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' })
+  const todayKey = dayKey(today)
+  const weekLabel = (() => {
+    const end = new Date(weekStart); end.setDate(weekStart.getDate()+6)
+    const s = weekStart.toLocaleDateString('pt-PT',{day:'2-digit',month:'short'})
+    const f = end.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'})
+    return `${s} – ${f}`
+  })()
+
+  const toggleDay = (key:string) => setExpandedDay(d=>d===key?null:key)
+  const MAX = 3
 
   return (
     <div className="p-6 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Calendário</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Calendário</h1>
           <p className="text-sm text-gray-500">Todas as tarefas agendadas para as tuas propriedades</p>
         </div>
-        {/* Property filter */}
-        <select
-          value={propertyFilter}
-          onChange={e => setPropertyFilter(e.target.value)}
-          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-        >
+        <select value={propertyFilter} onChange={e=>setPropertyFilter(e.target.value)}
+          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
           <option value="ALL">Todas as propriedades</option>
-          {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          {properties.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
       </div>
 
-      {/* Month navigation */}
-      <div className="flex items-center gap-3">
-        <button onClick={prevMonth} className="rounded-lg border p-2 hover:bg-gray-50">
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <h2 className="text-base font-semibold text-navy-900 capitalize min-w-[180px] text-center">{monthLabel}</h2>
-        <button onClick={nextMonth} className="rounded-lg border p-2 hover:bg-gray-50">
-          <ChevronRight className="h-4 w-4" />
-        </button>
-        <button
-          onClick={() => { setMonth(today.getMonth()); setYear(today.getFullYear()) }}
-          className="ml-2 rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50"
-        >
-          Hoje
-        </button>
+      {/* Week navigation */}
+      <div className="flex items-center gap-2">
+        <button onClick={prevWeek} className="rounded-lg border p-2 hover:bg-gray-50"><ChevronLeft className="h-4 w-4"/></button>
+        <span className="text-sm font-medium min-w-[200px] text-center">{weekLabel}</span>
+        <button onClick={nextWeek} className="rounded-lg border p-2 hover:bg-gray-50"><ChevronRight className="h-4 w-4"/></button>
+        <button onClick={()=>setWeekStart(getWeekStart(new Date()))}
+          className="ml-2 rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">Hoje</button>
       </div>
 
       {loading ? (
         <p className="text-sm text-gray-400">A carregar…</p>
       ) : (
-        <div className="rounded-xl border bg-white overflow-hidden">
-          {/* Weekday headers */}
-          <div className="grid grid-cols-7 border-b">
-            {WEEKDAYS.map(d => (
-              <div key={d} className="py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                {d}
-              </div>
-            ))}
-          </div>
+        <>
+          {/* Week grid */}
+          <div className="overflow-x-auto -mx-6 px-6">
+            <div className="grid grid-cols-7 gap-3 min-w-[700px]">
+              {weekDays.map((day,i) => {
+                const key = dayKey(day)
+                const items = byDay[key]??[]
+                const isToday = key===todayKey
+                const isExpanded = expandedDay===key
 
-          {/* Grid */}
-          <div className="grid grid-cols-7">
-            {/* Leading empty cells */}
-            {Array.from({ length: firstDow }).map((_, i) => (
-              <div key={`pad-${i}`} className="min-h-[90px] border-b border-r bg-gray-50/50" />
-            ))}
+                return (
+                  <div key={key} className="flex flex-col">
+                    {/* Day header */}
+                    <button onClick={()=>toggleDay(key)}
+                      className={`flex flex-col items-center rounded-xl border px-2 py-3 transition-all mb-2 ${
+                        isExpanded?'bg-gray-900 text-white border-gray-900'
+                        :isToday?'bg-blue-50 border-blue-200'
+                        :'bg-white border-gray-100 hover:border-gray-300'}`}>
+                      <span className={`text-[10px] font-semibold uppercase tracking-wider ${isExpanded?'text-white/60':isToday?'text-blue-500':'text-gray-500'}`}>
+                        {WEEKDAY_SHORT[i]}
+                      </span>
+                      <span className={`text-xl font-bold mt-0.5 ${isExpanded?'text-white':isToday?'text-blue-700':'text-gray-900'}`}>
+                        {day.getDate()}
+                      </span>
+                      <span className={`text-[10px] mt-0.5 ${isExpanded?'text-white/60':isToday?'text-blue-500':'text-gray-400'}`}>
+                        {day.toLocaleDateString('pt-PT',{month:'short'})}
+                      </span>
+                      {items.length>0&&(
+                        <span className={`mt-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                          isExpanded?'bg-white/20 text-white':isToday?'bg-blue-200 text-blue-700':'bg-gray-100 text-gray-500'}`}>
+                          {items.length}
+                        </span>
+                      )}
+                    </button>
 
-            {allDays.map(day => {
-              const key = dayKey(day)
-              const dayTasks = byDay[key] ?? []
-              const isToday = key === dayKey(today)
-              const isPast = day < today && !isToday
-
-              return (
-                <div
-                  key={key}
-                  className={`min-h-[90px] border-b border-r p-1.5 ${isPast && dayTasks.length === 0 ? 'bg-gray-50/40' : ''}`}
-                >
-                  <div className={`mb-1 flex items-center justify-center h-6 w-6 rounded-full text-xs font-semibold
-                    ${isToday ? 'bg-navy-900 text-white' : isPast ? 'text-gray-300' : 'text-gray-700'}`}
-                  >
-                    {day.getDate()}
-                  </div>
-                  <div className="space-y-0.5">
-                    {dayTasks.slice(0, 3).map(t => {
-                      const isOverdue = t.status !== 'COMPLETED' && new Date(t.dueDate) < today
-                      const colorClass = TYPE_COLORS[t.type] ?? 'bg-gray-100 text-gray-600 border-gray-200'
-                      return (
-                        <button
-                          key={t.id}
-                          onClick={() => setSelected(t)}
-                          className={`w-full text-left rounded px-1.5 py-0.5 text-[10px] font-medium border truncate
-                            ${t.status === 'COMPLETED' ? 'opacity-50 line-through' : ''}
-                            ${isOverdue ? 'ring-1 ring-red-400' : ''}
-                            ${colorClass}`}
-                        >
-                          {TYPE_LABELS[t.type] ?? t.type}
+                    {/* Event pills */}
+                    <div className="flex-1 space-y-1 rounded-xl border bg-white p-2 min-h-[100px]">
+                      {items.slice(0,MAX).map(t=>{
+                        const isOverdue = t.status!=='COMPLETED'&&new Date(t.dueDate)<today
+                        const colorClass = TYPE_COLORS[t.type]??'bg-gray-100 text-gray-600 border-gray-200'
+                        return (
+                          <button key={t.id} onClick={()=>{setSelected(t)}}
+                            className={`w-full flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[11px] font-medium text-left hover:opacity-80 ${colorClass} ${
+                              t.status==='COMPLETED'?'opacity-40':''} ${isOverdue?'ring-1 ring-red-400':''}`}>
+                            <span className="truncate">{TYPE_LABELS[t.type]??t.type}</span>
+                          </button>
+                        )
+                      })}
+                      {items.length>MAX&&(
+                        <button onClick={()=>toggleDay(key)}
+                          className="w-full rounded-lg px-2 py-1 text-[11px] text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-left">
+                          +{items.length-MAX} mais…
                         </button>
-                      )
-                    })}
-                    {dayTasks.length > 3 && (
-                      <span className="block text-[10px] text-gray-400 pl-1">+{dayTasks.length - 3} mais</span>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-
-            {/* Trailing empty cells to complete last row */}
-            {(() => {
-              const totalCells = firstDow + allDays.length
-              const remainder = totalCells % 7
-              if (remainder === 0) return null
-              return Array.from({ length: 7 - remainder }).map((_, i) => (
-                <div key={`trail-${i}`} className="min-h-[90px] border-b border-r bg-gray-50/50" />
-              ))
-            })()}
+                )
+              })}
+            </div>
           </div>
-        </div>
+
+          {/* Expanded day panel */}
+          {expandedDay&&(
+            <DayPanel
+              day={weekDays.find(d=>dayKey(d)===expandedDay)??new Date(expandedDay+'T00:00:00')}
+              tasks={byDay[expandedDay]??[]}
+              onClose={()=>setExpandedDay(null)}
+              onSelect={t=>{setSelected(t)}}
+            />
+          )}
+        </>
       )}
 
       {/* Legend */}
       <div className="flex flex-wrap gap-2">
-        {Object.entries(TYPE_LABELS).map(([type, label]) => (
-          <span key={type} className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium ${TYPE_COLORS[type] ?? 'bg-gray-100 text-gray-600 border-gray-200'}`}>
+        {Object.entries(TYPE_LABELS).map(([type,label])=>(
+          <span key={type} className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium ${TYPE_COLORS[type]??'bg-gray-100 text-gray-600 border-gray-200'}`}>
             {label}
           </span>
         ))}
       </div>
 
-      {/* Task detail modal */}
-      {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setSelected(null)}>
-          <div className="w-full max-w-md rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
-            <div className="flex items-start justify-between p-5 border-b">
-              <div>
-                <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-semibold mb-1 ${TYPE_COLORS[selected.type] ?? 'bg-gray-100 text-gray-600 border-gray-200'}`}>
-                  {TYPE_LABELS[selected.type] ?? selected.type}
-                </span>
-                <h2 className={`text-base font-bold text-navy-900 ${selected.status === 'COMPLETED' ? 'line-through text-gray-400' : ''}`}>
-                  {selected.title}
-                </h2>
-              </div>
-              <button onClick={() => setSelected(null)} className="rounded-md p-1 hover:bg-gray-100">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="p-5 space-y-3 text-sm">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Clock className="h-4 w-4 shrink-0" />
-                <span>{fmtDate(selected.dueDate)}</span>
-              </div>
-              <div className="text-gray-600">
-                <span className="font-medium text-gray-700">Propriedade:</span> {selected.property.name}
-              </div>
-              {selected.assignee && (
-                <div className="text-gray-600">
-                  <span className="font-medium text-gray-700">Crew:</span> {selected.assignee.name ?? 'Não atribuído'}
-                </div>
-              )}
-              {selected.description && (
-                <div className="text-gray-600">
-                  <span className="font-medium text-gray-700 block mb-0.5">Descrição:</span>
-                  {selected.description}
-                </div>
-              )}
-              {selected.notes && (
-                <div className="text-gray-600">
-                  <span className="font-medium text-gray-700 block mb-0.5">Notas:</span>
-                  {selected.notes}
-                </div>
-              )}
-              <div className="pt-1">
-                {selected.status === 'COMPLETED' ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-green-100 text-green-700 px-3 py-1 text-xs font-semibold">
-                    <CheckCircle2 className="h-3.5 w-3.5" /> Concluída
-                  </span>
-                ) : new Date(selected.dueDate) < today ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-red-100 text-red-600 px-3 py-1 text-xs font-semibold">
-                    <AlertCircle className="h-3.5 w-3.5" /> Em atraso
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-600 px-3 py-1 text-xs font-semibold">
-                    <Clock className="h-3.5 w-3.5" /> Pendente
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {selected&&<TaskModal task={selected} onClose={()=>setSelected(null)}/>}
     </div>
   )
 }

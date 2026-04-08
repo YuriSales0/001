@@ -6,13 +6,14 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, Building2, CalendarDays, ClipboardList, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight,
-  BarChart3, FileText,
+  BarChart3, FileText, Calendar,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const sidebarLinks = [
   { href: "/manager/dashboard", label: "Dashboard",    icon: LayoutDashboard },
   { href: "/crm",               label: "CRM",          icon: BarChart3 },
+  { href: "/calendar",          label: "Calendar",     icon: Calendar },
   { href: "/properties",        label: "Properties",   icon: Building2 },
   { href: "/reservations",      label: "Reservations", icon: CalendarDays },
   { href: "/tasks",             label: "Tasks",        icon: ClipboardList },
