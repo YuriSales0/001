@@ -13,10 +13,12 @@ import {
   Bell,
   Search,
   Menu,
+  MessageCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import { CurrencySelector } from "@/components/currency-selector"
 
 const sidebarLinks = [
   { href: "/properties", label: "Properties", icon: Building2 },
@@ -25,6 +27,7 @@ const sidebarLinks = [
   { href: "/suppliers", label: "Suppliers", icon: Users },
   { href: "/revenue", label: "Revenue", icon: TrendingUp },
   { href: "/reports", label: "Reports", icon: FileBarChart },
+  { href: "/manager/messages", label: "Messages", icon: MessageCircle },
 ]
 
 interface ManagerLayoutProps {
@@ -114,6 +117,7 @@ export default function ManagerLayout({ children }: ManagerLayoutProps) {
           </div>
 
           <div className="ml-auto flex items-center gap-3">
+            <CurrencySelector />
             {/* Notifications */}
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5 text-gray-500" />

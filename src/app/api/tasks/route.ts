@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const guard = await requireRole(['ADMIN', 'CREW'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const body = await request.json()

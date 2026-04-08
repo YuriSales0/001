@@ -51,9 +51,22 @@ enum SupplierType {
 }
 
 enum SubscriptionPlan {
+  STARTER
   BASIC
   MID
   PREMIUM
+}
+
+enum Platform {
+  AIRBNB
+  BOOKING
+  DIRECT
+  OTHER
+}
+
+enum ConversationStatus {
+  OPEN
+  CLOSED
 }
 
 enum LeadStatus {
@@ -112,8 +125,11 @@ model User {
   properties    Property[]
   tasks         Task[]     @relation("AssignedTasks")
   leads         Lead[]     @relation("LeadOwner")
-  invoicesReceived Invoice[] @relation("ClientInvoices")
-  invoicesIssued   Invoice[] @relation("CreatedInvoices")
+  invoicesReceived   Invoice[]      @relation("ClientInvoices")
+  invoicesIssued     Invoice[]      @relation("CreatedInvoices")
+  clientConversations  Conversation[] @relation("ClientConversations")
+  managerConversations Conversation[] @relation("ManagerConversations")
+  sentMessages         Message[]      @relation("SentMessages")
 }
 
 model Account {
@@ -216,7 +232,7 @@ model Reservation {
   checkOut      DateTime
   amount        Float
   currency      String            @default("EUR")
-  platform      String?
+  platform      Platform?
   externalId    String?
   status        ReservationStatus @default(UPCOMING)
   notes         String?           @db.Text
@@ -237,8 +253,10 @@ model Payout {
   reservationId String
   grossAmount   Float
   commission    Float
+  commissionRate Float       @default(18.0)
   netAmount     Float
   scheduledFor  DateTime
+  platform      Platform?
   paidAt        DateTime?
   status        PayoutStatus @default(SCHEDULED)
   createdAt     DateTime     @default(now())
@@ -349,4 +367,31 @@ model Lead {
   updatedAt DateTime   @updatedAt
 
   owner User? @relation("LeadOwner", fields: [ownerId], references: [id])
+}
+
+model Conversation {
+  id        String             @id @default(cuid())
+  clientId  String
+  managerId String
+  status    ConversationStatus @default(OPEN)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  client   User      @relation("ClientConversations", fields: [clientId], references: [id])
+  manager  User      @relation("ManagerConversations", fields: [managerId], references: [id])
+  messages Message[]
+
+  @@unique([clientId, managerId])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  body           String   @db.Text
+  readAt         DateTime?
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id])
 }
