@@ -334,6 +334,7 @@ export default function AdminCalendar() {
   const [loading, setLoading]       = useState(true)
   const [properties, setProperties] = useState<Property[]>([])
   const [propFilter, setPropFilter] = useState('ALL')
+  const [ownerFilter, setOwnerFilter] = useState('ALL')
   const [typeFilters, setTypeFilters] = useState<Record<string, boolean>>({
     CHECK_IN: true, CHECK_OUT: true, BLOCKED: true, TASK: true, PAYOUT: true, BIRTHDAY: true,
   })
@@ -375,6 +376,7 @@ export default function AdminCalendar() {
     const map: Record<string, CalEvent[]> = {}
     events
       .filter(e => typeFilters[e.type])
+      .filter(e => ownerFilter === 'ALL' || (e.property && properties.find(p => p.id === e.property!.id)?.owner.id === ownerFilter))
       .filter(e => propFilter === 'ALL' || e.property?.id === propFilter)
       .forEach(e => {
         const k = e.date.slice(0, 10)
@@ -434,10 +436,28 @@ export default function AdminCalendar() {
           <p className="text-sm text-gray-500">Check-ins, check-outs, tarefas e pagamentos.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          {/* Owner/client filter */}
+          {(() => {
+            const owners = Array.from(new Map(properties.map(p => [p.owner.id, p.owner])).values())
+            return owners.length > 0 ? (
+              <select
+                value={ownerFilter}
+                onChange={e => { setOwnerFilter(e.target.value); setPropFilter('ALL') }}
+                className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+              >
+                <option value="ALL">Todos os clientes</option>
+                {owners.map(o => (
+                  <option key={o.id} value={o.id}>{o.name ?? o.email}</option>
+                ))}
+              </select>
+            ) : null
+          })()}
+          {/* Property filter (scoped by owner if selected) */}
           <select value={propFilter} onChange={e => setPropFilter(e.target.value)}
             className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900">
             <option value="ALL">Todas as propriedades</option>
-            {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+            {(ownerFilter === 'ALL' ? properties : properties.filter(p => p.owner.id === ownerFilter))
+              .map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </div>
       </div>

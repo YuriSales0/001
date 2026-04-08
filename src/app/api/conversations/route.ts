@@ -43,7 +43,7 @@ export async function GET(_req: NextRequest) {
   if (me.role === 'MANAGER') {
     const convs = await prisma.conversation.findMany({
       include: {
-        client:  { select: { id: true, name: true, email: true } },
+        client:  { select: { id: true, clientCode: true, name: true, email: true } as never },
         manager: { select: { id: true, name: true, email: true } },
         messages: {
           orderBy: { createdAt: 'desc' },
@@ -79,7 +79,7 @@ export async function GET(_req: NextRequest) {
   // ADMIN — all conversations, all read-only
   const convs = await prisma.conversation.findMany({
     include: {
-      client:  { select: { id: true, name: true, email: true } },
+      client:  { select: { id: true, clientCode: true, name: true, email: true } as never },
       manager: { select: { id: true, name: true, email: true } },
       messages: {
         orderBy: { createdAt: 'desc' },

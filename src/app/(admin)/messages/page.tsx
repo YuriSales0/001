@@ -7,7 +7,7 @@ type Sender = { id: string; name: string | null; role: string }
 type Message = { id: string; body: string; createdAt: string; sender: Sender }
 type ConvSummary = {
   id: string
-  client: { id: string; name: string | null; email: string }
+  client: { id: string; clientCode?: string | null; name: string | null; email: string }
   manager: { id: string; name: string | null; email: string }
   messages: Message[]
   _count: { messages: number }
@@ -45,11 +45,16 @@ export default function AdminMessagesPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const filtered = convs.filter(c =>
-    !search ||
-    (c.client.name ?? c.client.email).toLowerCase().includes(search.toLowerCase()) ||
-    (c.manager.name ?? c.manager.email).toLowerCase().includes(search.toLowerCase()),
-  )
+  const filtered = convs.filter(c => {
+    if (!search) return true
+    const q = search.toLowerCase()
+    return (
+      (c.client.clientCode?.toLowerCase().includes(q)) ||
+      (c.client.name ?? c.client.email).toLowerCase().includes(q) ||
+      c.client.email.toLowerCase().includes(q) ||
+      (c.manager.name ?? c.manager.email).toLowerCase().includes(q)
+    )
+  })
 
   return (
     <div className="p-6">
@@ -84,8 +89,15 @@ export default function AdminMessagesPage() {
                   active?.id === c.id ? 'bg-navy-50 border-l-2 border-l-navy-900' : ''
                 }`}
               >
-                <div className="text-sm font-medium text-navy-900 truncate">
-                  {c.client.name ?? c.client.email}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-sm font-medium text-navy-900 truncate">
+                    {c.client.name ?? c.client.email}
+                  </span>
+                  {c.client.clientCode && (
+                    <span className="shrink-0 rounded-full bg-navy-100 text-navy-700 px-1.5 py-0.5 text-[9px] font-bold">
+                      {c.client.clientCode}
+                    </span>
+                  )}
                 </div>
                 <div className="text-xs text-gray-500 truncate">
                   Gestor: {c.manager.name ?? c.manager.email}

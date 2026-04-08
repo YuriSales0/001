@@ -1,18 +1,25 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const guard = await requireRole(['ADMIN'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+
+  const { searchParams } = new URL(req.url)
+  const clientId = searchParams.get('clientId') || undefined
 
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1)
   const in7 = new Date(now)
   in7.setDate(in7.getDate() + 7)
+
+  // Scope queries by client if requested
+  const propOwnerWhere = clientId ? { ownerId: clientId } : {}
+  const propRelWhere = clientId ? { property: { ownerId: clientId } } : {}
 
   const [
     propertiesCount,
@@ -26,38 +33,48 @@ export async function GET() {
     leadsOpen,
     pendingInvoicesAgg,
   ] = await Promise.all([
-    prisma.property.count(),
-    prisma.user.count({ where: { role: 'CLIENT' } }),
-    prisma.reservation.count({ where: { status: { in: ['UPCOMING', 'ACTIVE'] } } }),
+    prisma.property.count({ where: propOwnerWhere }),
+    clientId
+      ? Promise.resolve(1)
+      : prisma.user.count({ where: { role: 'CLIENT' } }),
+    prisma.reservation.count({
+      where: { status: { in: ['UPCOMING', 'ACTIVE'] }, ...propRelWhere },
+    }),
     prisma.reservation.aggregate({
       _sum: { amount: true },
-      where: { checkIn: { gte: monthStart, lt: monthEnd } },
+      where: { checkIn: { gte: monthStart, lt: monthEnd }, ...propRelWhere },
     }),
     prisma.payout.aggregate({
       _sum: { netAmount: true, commission: true },
       _count: true,
-      where: { status: 'SCHEDULED' },
+      where: { status: 'SCHEDULED', ...propRelWhere },
     }),
     prisma.task.count({
-      where: { status: { not: 'COMPLETED' }, dueDate: { lt: now } },
+      where: {
+        status: { not: 'COMPLETED' },
+        dueDate: { lt: now },
+        ...(clientId ? { property: { ownerId: clientId } } : {}),
+      },
     }),
     prisma.reservation.findMany({
-      where: { checkIn: { gte: now, lt: in7 } },
+      where: { checkIn: { gte: now, lt: in7 }, ...propRelWhere },
       include: { property: { select: { name: true, city: true } } },
       orderBy: { checkIn: 'asc' },
       take: 10,
     }),
     prisma.reservation.findMany({
-      where: { checkOut: { gte: now, lt: in7 } },
+      where: { checkOut: { gte: now, lt: in7 }, ...propRelWhere },
       include: { property: { select: { name: true, city: true } } },
       orderBy: { checkOut: 'asc' },
       take: 10,
     }),
-    prisma.lead.count({ where: { status: { in: ['NEW', 'CONTACTED', 'QUALIFIED'] } } }),
+    clientId
+      ? Promise.resolve(0)
+      : prisma.lead.count({ where: { status: { in: ['NEW', 'CONTACTED', 'QUALIFIED'] } } }),
     prisma.invoice.aggregate({
       _sum: { amount: true },
       _count: true,
-      where: { status: 'SENT' },
+      where: { status: 'SENT', ...(clientId ? { clientId } : {}) },
     }),
   ])
 

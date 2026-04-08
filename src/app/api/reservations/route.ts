@@ -15,10 +15,18 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const propertyId = searchParams.get('propertyId')
     const status = searchParams.get('status')
+    const from = searchParams.get('from')
+    const to = searchParams.get('to')
 
     const where: Record<string, unknown> = {}
     if (propertyId) where.propertyId = propertyId
     if (status) where.status = status
+    if (from || to) {
+      where.checkIn = {
+        ...(from ? { gte: new Date(from) } : {}),
+        ...(to ? { lte: new Date(to) } : {}),
+      }
+    }
     if (me.role === 'CLIENT') where.property = { ownerId: me.id }
     else if (me.role === 'MANAGER') where.property = { owner: { managerId: me.id } }
 
@@ -31,6 +39,7 @@ export async function GET(request: NextRequest) {
             name: true,
             address: true,
             city: true,
+            ownerId: true,
           },
         },
       },
