@@ -30,7 +30,7 @@ const PLATFORMS = ['AIRBNB', 'BOOKING', 'VRBO', 'DIRECT', 'OTHER']
 function HowItWorksModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
+      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <h2 className="text-lg font-bold text-navy-900">Como funciona — Payouts</h2>
           <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100">
@@ -38,6 +38,30 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
         <div className="p-5 space-y-4 text-sm text-gray-700">
+
+          {/* Fluxo automático */}
+          <div className="rounded-lg border p-4 space-y-2">
+            <h3 className="font-semibold text-navy-900 mb-3">Fluxo de pagamento</h3>
+            {[
+              { label: 'Hóspede paga Airbnb / Booking', status: 'auto', note: 'Payout agendado automaticamente ao criar reserva' },
+              { label: 'Dinheiro chega ao banco', status: 'manual', note: 'Admin clica "Mark paid" — futuro: Open Banking detecta automaticamente' },
+              { label: 'Invoice ao proprietário', status: 'auto', note: 'Gerado automaticamente quando payout é marcado pago' },
+              { label: 'Invoice de subscrição', status: 'manual', note: 'Manual por agora — futuro: Stripe webhook cria automaticamente' },
+            ].map(row => (
+              <div key={row.label} className="flex items-start gap-3 py-2 border-b last:border-0">
+                <span className={`mt-0.5 shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                  row.status === 'auto' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+                }`}>
+                  {row.status === 'auto' ? 'Auto' : 'Manual'}
+                </span>
+                <div>
+                  <div className="font-medium text-navy-900 text-xs">{row.label}</div>
+                  <div className="text-gray-500 text-xs">{row.note}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="rounded-lg border p-4 space-y-2">
             <h3 className="font-semibold text-navy-900">Data de pagamento por plataforma</h3>
             {Object.entries(PLATFORM_RULES).map(([platform, rule]) => (
