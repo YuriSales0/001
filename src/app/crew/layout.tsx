@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser } from '@/lib/session'
 import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar } from 'lucide-react'
+import { AiChat } from '@/components/hm/ai-chat'
 
 export const dynamic = 'force-dynamic'
 
@@ -122,6 +123,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
         </header>
         <main className="flex-1">{children}</main>
       </div>
+      <AiChat role="CREW" />
     </div>
   )
 }

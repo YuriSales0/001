@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight,
-  BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark,
+  BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
 } from "lucide-react"
+import { AiChat } from "@/components/hm/ai-chat"
 import { cn } from "@/lib/utils"
 
 const managerLinks = [
@@ -39,6 +40,7 @@ const adminLinks = [
   { href: "/ai",           label: "AI Pricing",   icon: Sparkles },
   { href: "/marketing",    label: "Marketing",    icon: Megaphone },
   { href: "/integrations", label: "Integrations", icon: Landmark },
+  { href: "/ai-monitor",   label: "AI Monitor",   icon: Activity },
   { href: "/messages",          label: "Messages",     icon: MessageCircle },
 ]
 
@@ -184,6 +186,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
           {children}
         </main>
       </div>
+      <AiChat role={role} />
     </div>
   )
 }
