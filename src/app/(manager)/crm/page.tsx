@@ -624,15 +624,22 @@ function BantPanel({ lead, onUpdate }: {
     if (answeredCount === 0) return
     setSaving(true)
     const score = calcScore(answers)
-    await fetch(`/api/leads/${lead.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ score, bantData: answers }),
-    })
-    setSaving(false)
-    setSaved(true)
-    onUpdate({ score, bantData: answers })
-    setTimeout(() => setSaved(false), 3000)
+    try {
+      const res = await fetch(`/api/leads/${lead.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ score, bantData: answers }),
+      })
+      if (!res.ok) throw new Error(await res.text())
+      setSaved(true)
+      onUpdate({ id: lead.id, score, bantData: answers })
+      setTimeout(() => setSaved(false), 3000)
+    } catch (e) {
+      console.error("Failed to save score:", e)
+      alert("Failed to save — check console")
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
