@@ -30,9 +30,10 @@ export async function GET() {
     prisma.property.count(),
     prisma.user.count({ where: { role: 'CLIENT' } }),
     prisma.reservation.count({ where: { status: { in: ['UPCOMING', 'ACTIVE'] } } }),
-    prisma.reservation.aggregate({
-      _sum: { amount: true },
-      where: { checkIn: { gte: monthStart, lt: monthEnd } },
+    // Gross from payouts paid this month (same source as commission — consistent)
+    prisma.payout.aggregate({
+      _sum: { grossAmount: true },
+      where: { status: 'PAID', paidAt: { gte: monthStart, lt: monthEnd } },
     }),
     prisma.payout.aggregate({
       _sum: { netAmount: true, commission: true },
@@ -67,8 +68,8 @@ export async function GET() {
     }),
   ])
 
-  const monthRevenue = monthRevenueAgg._sum.amount ?? 0
-  // Use actual commission from paid payouts (respects per-plan rates); fall back to 0 if no payouts paid yet
+  // Both gross and commission come from PAID payouts this month — consistent source
+  const monthRevenue = monthRevenueAgg._sum.grossAmount ?? 0
   const monthCommission = paidPayoutsAgg._sum.commission ?? 0
 
   return NextResponse.json({
