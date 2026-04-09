@@ -47,7 +47,10 @@ export async function GET() {
       where: {
         status: 'PAID',
         paidAt: { gte: monthStart, lt: monthEnd },
-        NOT: { notes: { startsWith: 'Auto-generated from payout' } },
+        OR: [
+          { notes: null },
+          { notes: { not: { startsWith: 'Auto-generated from payout' } } },
+        ],
       },
     }),
     prisma.task.count({
