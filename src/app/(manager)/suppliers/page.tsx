@@ -1,42 +1,54 @@
 "use client"
 
-import { useState } from "react"
-import { Plus, Phone, Mail, Building2, Search, X } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Plus, Phone, Mail, Building2, Search, X, Trash2 } from "lucide-react"
 
-type SupplierType = "cleaner" | "plumber" | "electrician" | "general"
+type SupplierType = "CLEANER" | "PLUMBER" | "ELECTRICIAN" | "GENERAL"
 
 interface Supplier {
   id: string
   name: string
   type: SupplierType
   phone: string
-  email: string
-  propertiesCount: number
-  notes: string
+  email: string | null
+  notes: string | null
+  properties: { property: { id: string; name: string; city: string } }[]
 }
 
-const mockSuppliers: Supplier[] = [
-  { id: "S001", name: "Maria Cleaning Co.",  type: "cleaner",      phone: "+506 8812-3456", email: "maria@cleaningcr.com",     propertiesCount: 4, notes: "Reliable, available on weekends" },
-  { id: "S002", name: "Pedro Plumbing",       type: "plumber",      phone: "+506 8834-7890", email: "pedro@plumbingcr.com",     propertiesCount: 3, notes: "Emergency calls available 24/7" },
-  { id: "S003", name: "TechCool Services",    type: "electrician",  phone: "+506 8856-1234", email: "info@techcool.cr",         propertiesCount: 5, notes: "Specialized in AC and electrical systems" },
-  { id: "S004", name: "Costa HandyPro",       type: "general",      phone: "+506 8878-5678", email: "hello@costahandypro.com",  propertiesCount: 2, notes: "General maintenance and repairs" },
-  { id: "S005", name: "Sparkle Cleaners",     type: "cleaner",      phone: "+506 8890-9012", email: "team@sparklecr.com",       propertiesCount: 3, notes: "Eco-friendly products, premium service" },
-]
+const TYPE_LABELS: Record<SupplierType, string> = {
+  CLEANER:     "Cleaner",
+  PLUMBER:     "Plumber",
+  ELECTRICIAN: "Electrician",
+  GENERAL:     "General",
+}
 
 const TYPE_COLOR: Record<SupplierType, string> = {
-  cleaner:     "bg-sky-100 text-sky-800",
-  plumber:     "bg-blue-100 text-blue-800",
-  electrician: "bg-amber-100 text-amber-800",
-  general:     "bg-gray-100 text-gray-700",
+  CLEANER:     "bg-sky-100 text-sky-800",
+  PLUMBER:     "bg-blue-100 text-blue-800",
+  ELECTRICIAN: "bg-amber-100 text-amber-800",
+  GENERAL:     "bg-gray-100 text-gray-700",
 }
 
+const TYPES: SupplierType[] = ["CLEANER", "PLUMBER", "ELECTRICIAN", "GENERAL"]
+
 export default function SuppliersPage() {
-  const [suppliers, setSuppliers] = useState<Supplier[]>(mockSuppliers)
+  const [suppliers, setSuppliers]   = useState<Supplier[]>([])
+  const [loading, setLoading]       = useState(true)
   const [filterType, setFilterType] = useState("all")
-  const [search, setSearch] = useState("")
+  const [search, setSearch]         = useState("")
   const [showCreate, setShowCreate] = useState(false)
-  const [form, setForm] = useState({ name: "", type: "cleaner" as SupplierType, phone: "", email: "", notes: "" })
-  const [formError, setFormError] = useState("")
+  const [deleting, setDeleting]     = useState<string | null>(null)
+  const [form, setForm]             = useState({ name: "", type: "CLEANER" as SupplierType, phone: "", email: "", notes: "" })
+  const [formError, setFormError]   = useState("")
+  const [saving, setSaving]         = useState(false)
+
+  const load = async () => {
+    setLoading(true)
+    const res = await fetch("/api/suppliers")
+    if (res.ok) setSuppliers(await res.json())
+    setLoading(false)
+  }
+  useEffect(() => { load() }, [])
 
   const filtered = suppliers.filter(s => {
     if (filterType !== "all" && s.type !== filterType) return false
@@ -44,19 +56,42 @@ export default function SuppliersPage() {
     return true
   })
 
-  const submitCreate = (e: React.FormEvent) => {
+  const submitCreate = async (e: React.FormEvent) => {
     e.preventDefault()
     setFormError("")
-    if (!form.name || !form.phone || !form.email) {
-      setFormError("Name, phone and email are required.")
+    if (!form.name || !form.phone) {
+      setFormError("Name and phone are required.")
       return
     }
-    setSuppliers(prev => [
-      ...prev,
-      { id: `S${Date.now()}`, ...form, propertiesCount: 0 },
-    ])
+    setSaving(true)
+    const res = await fetch("/api/suppliers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name:  form.name,
+        type:  form.type,
+        phone: form.phone,
+        email: form.email || null,
+        notes: form.notes || null,
+      }),
+    })
+    setSaving(false)
+    if (!res.ok) {
+      const err = await res.json()
+      setFormError(err.error ?? "Failed to create supplier.")
+      return
+    }
     setShowCreate(false)
-    setForm({ name: "", type: "cleaner", phone: "", email: "", notes: "" })
+    setForm({ name: "", type: "CLEANER", phone: "", email: "", notes: "" })
+    load()
+  }
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
+    setDeleting(id)
+    await fetch(`/api/suppliers/${id}`, { method: "DELETE" })
+    setDeleting(null)
+    load()
   }
 
   return (
@@ -93,58 +128,76 @@ export default function SuppliersPage() {
           className="rounded-lg border bg-white px-3 py-2 text-sm"
         >
           <option value="all">All types</option>
-          <option value="cleaner">Cleaner</option>
-          <option value="plumber">Plumber</option>
-          <option value="electrician">Electrician</option>
-          <option value="general">General</option>
+          {TYPES.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
         </select>
       </div>
 
+      {/* Loading skeleton */}
+      {loading && (
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-20 rounded-xl bg-gray-100 animate-pulse" />
+          ))}
+        </div>
+      )}
+
       {/* List */}
-      <div className="space-y-3">
-        {filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
-            No suppliers found.
-          </div>
-        )}
-        {filtered.map(s => (
-          <div key={s.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3 flex-1 min-w-0">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
-                  <Building2 className="h-4 w-4 text-gray-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-navy-900">{s.name}</span>
-                    <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 capitalize ${TYPE_COLOR[s.type]}`}>
-                      {s.type}
-                    </span>
+      {!loading && (
+        <div className="space-y-3">
+          {filtered.length === 0 && (
+            <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+              {suppliers.length === 0 ? "No suppliers yet. Add the first one." : "No suppliers match your search."}
+            </div>
+          )}
+          {filtered.map(s => (
+            <div key={s.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                    <Building2 className="h-4 w-4 text-gray-500" />
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 mt-1">
-                    <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{s.phone}</span>
-                    <span className="flex items-center gap-1"><Mail className="h-3 w-3" />{s.email}</span>
-                    <span className="flex items-center gap-1">
-                      <Building2 className="h-3 w-3" />{s.propertiesCount} propert{s.propertiesCount === 1 ? "y" : "ies"}
-                    </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-navy-900">{s.name}</span>
+                      <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${TYPE_COLOR[s.type]}`}>
+                        {TYPE_LABELS[s.type]}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 mt-1">
+                      <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{s.phone}</span>
+                      {s.email && <span className="flex items-center gap-1"><Mail className="h-3 w-3" />{s.email}</span>}
+                      <span className="flex items-center gap-1">
+                        <Building2 className="h-3 w-3" />
+                        {s.properties.length} propert{s.properties.length === 1 ? "y" : "ies"}
+                      </span>
+                    </div>
+                    {s.notes && <p className="text-xs text-gray-400 mt-0.5 italic">{s.notes}</p>}
                   </div>
-                  {s.notes && <p className="text-xs text-gray-400 mt-0.5 italic">{s.notes}</p>}
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <a href={`tel:${s.phone}`}
-                  className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50">
-                  <Phone className="h-3 w-3" /> Call
-                </a>
-                <a href={`mailto:${s.email}`}
-                  className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50">
-                  <Mail className="h-3 w-3" /> Email
-                </a>
+                <div className="flex items-center gap-2">
+                  <a href={`tel:${s.phone}`}
+                    className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50">
+                    <Phone className="h-3 w-3" /> Call
+                  </a>
+                  {s.email && (
+                    <a href={`mailto:${s.email}`}
+                      className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50">
+                      <Mail className="h-3 w-3" /> Email
+                    </a>
+                  )}
+                  <button
+                    onClick={() => handleDelete(s.id, s.name)}
+                    disabled={deleting === s.id}
+                    className="rounded-lg border px-2.5 py-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-colors disabled:opacity-40"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Create modal */}
       {showCreate && (
@@ -173,10 +226,7 @@ export default function SuppliersPage() {
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Type</label>
                 <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value as SupplierType }))}
                   className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900">
-                  <option value="cleaner">Cleaner</option>
-                  <option value="plumber">Plumber</option>
-                  <option value="electrician">Electrician</option>
-                  <option value="general">General</option>
+                  {TYPES.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -184,10 +234,10 @@ export default function SuppliersPage() {
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Phone *</label>
                   <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-                    placeholder="+506 xxxx-xxxx" />
+                    placeholder="+34 6xx xxx xxx" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Email *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Email</label>
                   <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
                     placeholder="email@example.com" />
@@ -201,8 +251,8 @@ export default function SuppliersPage() {
               </div>
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={() => setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
-                <button type="submit" className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800">
-                  Add supplier
+                <button type="submit" disabled={saving} className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
+                  {saving ? "Saving…" : "Add supplier"}
                 </button>
               </div>
             </form>

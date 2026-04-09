@@ -1,83 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  try {
-    const suppliers = await prisma.supplier.findMany({
-      include: {
-        properties: {
-          include: {
-            property: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: { name: 'asc' },
-    })
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-    return NextResponse.json(suppliers)
-  } catch (error) {
-    console.error('Error fetching suppliers:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch suppliers' },
-      { status: 500 }
-    )
-  }
+  const suppliers = await prisma.supplier.findMany({
+    include: {
+      properties: {
+        include: { property: { select: { id: true, name: true, city: true } } },
+      },
+    },
+    orderBy: { name: 'asc' },
+  })
+  return NextResponse.json(suppliers)
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-    const { name, type, phone, email, notes, propertyIds } = body
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-    if (!name || !type || !phone) {
-      return NextResponse.json(
-        { error: 'Missing required fields: name, type, phone' },
-        { status: 400 }
-      )
-    }
+  const body = await request.json()
+  const { name, type, phone, email, notes, propertyIds } = body
 
-    const supplier = await prisma.supplier.create({
-      data: {
-        name,
-        type,
-        phone,
-        email,
-        notes,
-        properties: propertyIds?.length
-          ? {
-              create: propertyIds.map((propertyId: string) => ({
-                propertyId,
-              })),
-            }
-          : undefined,
-      },
-      include: {
-        properties: {
-          include: {
-            property: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-              },
-            },
-          },
-        },
-      },
-    })
-
-    return NextResponse.json(supplier, { status: 201 })
-  } catch (error) {
-    console.error('Error creating supplier:', error)
-    return NextResponse.json(
-      { error: 'Failed to create supplier' },
-      { status: 500 }
-    )
+  if (!name || !type || !phone) {
+    return NextResponse.json({ error: 'name, type and phone are required' }, { status: 400 })
   }
+
+  const supplier = await prisma.supplier.create({
+    data: {
+      name,
+      type,
+      phone,
+      email:  email || null,
+      notes:  notes || null,
+      properties: propertyIds?.length
+        ? { create: propertyIds.map((propertyId: string) => ({ propertyId })) }
+        : undefined,
+    },
+    include: {
+      properties: {
+        include: { property: { select: { id: true, name: true, city: true } } },
+      },
+    },
+  })
+  return NextResponse.json(supplier, { status: 201 })
 }
