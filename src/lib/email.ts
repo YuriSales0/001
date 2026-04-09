@@ -85,6 +85,51 @@ export function monthlyReportEmail(propertyName: string, month: string, year: nu
   `
 }
 
+export function monthlyStatementEmail(opts: {
+  ownerName: string
+  propertyName: string
+  month: string
+  year: number
+  grossRevenue: number
+  totalExpenses: number
+  commissionRate: number
+  commission: number
+  ownerPayout: number
+  reservationCount: number
+  dashboardUrl?: string
+}) {
+  const name = opts.ownerName.split(' ')[0] || opts.ownerName
+  const fmt = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(n)
+  const body = `
+    <h2 style="margin:0 0 4px;font-size:22px;color:#111827;">Monthly Statement</h2>
+    <p style="margin:0 0 24px;font-size:13px;color:#999;">${opts.month} ${opts.year} · ${opts.propertyName}</p>
+    <p style="font-size:15px;color:#555;margin:0 0 24px;">Dear ${name},<br><br>Here is your financial summary for <strong>${opts.propertyName}</strong> in <strong>${opts.month} ${opts.year}</strong>.</p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
+      <tr style="background:#f9f9f7;">
+        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Monthly Summary</td>
+      </tr>
+      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">Reservations</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;">${opts.reservationCount}</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:14px;color:#444;">Gross rental income</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;font-weight:600;">${fmt(opts.grossRevenue)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">Expenses</td><td style="padding:10px 16px;font-size:14px;color:#c0392b;text-align:right;">− ${fmt(opts.totalExpenses)}</td></tr>
+      <tr style="background:#fff8f0;"><td style="padding:10px 16px;font-size:14px;color:#92681a;">HostMasters commission (${opts.commissionRate}%)</td><td style="padding:10px 16px;font-size:14px;color:#92681a;text-align:right;">− ${fmt(opts.commission)}</td></tr>
+      <tr style="background:#f0fdf4;border-top:2px solid #bbf7d0;">
+        <td style="padding:14px 16px;font-size:15px;font-weight:700;color:#111827;">Net payout to you</td>
+        <td style="padding:14px 16px;font-size:20px;font-weight:700;color:#16a34a;text-align:right;">${fmt(opts.ownerPayout)}</td>
+      </tr>
+    </table>
+
+    ${opts.grossRevenue === 0
+      ? `<p style="font-size:14px;color:#888;text-align:center;padding:16px;background:#fafafa;border-radius:6px;">No reservations recorded for this period.</p>`
+      : ''
+    }
+
+    ${opts.dashboardUrl ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View full report in portal</a></p>` : ''}
+    <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for trusting us with your property.<br>— The HostMasters Team</p>
+  `
+  return baseWrapper(body)
+}
+
 // ─── Finance emails ────────────────────────────────────────────────────────────
 
 function baseWrapper(content: string) {
