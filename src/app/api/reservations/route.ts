@@ -166,6 +166,47 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // ── PricingDataPoint — collect one row per night ─────────────────────────
+    const nights: {
+      propertyId: string; reservationId: string; date: Date
+      priceCharged: number; platform: typeof platformValue
+      leadTimeDays: number; stayLength: number
+      dayOfWeek: number; monthOfYear: number
+      isWeekend: boolean
+    }[] = []
+
+    const stayLength = Math.max(
+      1,
+      Math.round((checkOutDate.getTime() - checkInDate.getTime()) / 86400000),
+    )
+    const pricePerNight = amount / stayLength
+    const leadTimeDays = Math.max(
+      0,
+      Math.round((checkInDate.getTime() - Date.now()) / 86400000),
+    )
+
+    for (let i = 0; i < stayLength; i++) {
+      const night = new Date(checkInDate)
+      night.setDate(night.getDate() + i)
+      const dow = night.getDay() // 0=Sun … 6=Sat
+      nights.push({
+        propertyId,
+        reservationId: reservation.id,
+        date: night,
+        priceCharged: +pricePerNight.toFixed(2),
+        platform: platformValue,
+        leadTimeDays,
+        stayLength,
+        dayOfWeek: dow === 0 ? 6 : dow - 1, // normalize to 0=Mon
+        monthOfYear: night.getMonth() + 1,
+        isWeekend: dow === 0 || dow === 6,
+      })
+    }
+
+    await prisma.pricingDataPoint.createMany({ data: nights }).catch(e =>
+      console.error('PricingDataPoint collection error:', e),
+    )
+
     return NextResponse.json(reservation, { status: 201 })
   } catch (error) {
     console.error('Error creating reservation:', error)

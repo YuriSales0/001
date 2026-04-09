@@ -1,14 +1,15 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser } from '@/lib/session'
+import { prisma } from '@/lib/prisma'
 import {
   Home, TrendingUp, CalendarDays, Star, MessageCircle, Building2,
-  Wrench, User, LogOut, Menu, X, ChevronRight,
+  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
-const navLinks = [
+const baseLinks = [
   { href: '/client/dashboard',  label: 'My Home',     icon: Home },
   { href: '/client/financials', label: 'My Earnings', icon: TrendingUp },
   { href: '/client/bookings',   label: 'My Bookings', icon: CalendarDays },
@@ -16,6 +17,8 @@ const navLinks = [
   { href: '/client/plan',       label: 'My Plan',     icon: Star },
   { href: '/client/messages',   label: 'Contact us',  icon: MessageCircle },
 ]
+
+const AI_PLANS = ['MID', 'PREMIUM']
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
@@ -25,6 +28,12 @@ export default async function ClientLayout({ children }: { children: React.React
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
     : 'CL'
+
+  const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { subscriptionPlan: true } })
+  const hasAI = AI_PLANS.includes(dbUser?.subscriptionPlan ?? '')
+  const navLinks = hasAI
+    ? [...baseLinks, { href: '/client/ai', label: 'AI Pricing', icon: Sparkles }]
+    : baseLinks
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--hm-ivory)' }}>

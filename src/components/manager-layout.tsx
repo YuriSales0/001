@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight,
-  BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt,
+  BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -36,6 +36,9 @@ const adminLinks = [
   { href: "/my-properties",     label: "Properties",   icon: Building2 },
   { href: "/payouts",           label: "Payouts",      icon: Wallet },
   { href: "/team",              label: "Team",         icon: Users },
+  { href: "/ai",           label: "AI Pricing",   icon: Sparkles },
+  { href: "/marketing",    label: "Marketing",    icon: Megaphone },
+  { href: "/integrations", label: "Integrations", icon: Landmark },
   { href: "/messages",          label: "Messages",     icon: MessageCircle },
 ]
 

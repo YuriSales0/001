@@ -139,11 +139,12 @@ model User {
   tasks         Task[]     @relation("AssignedTasks")
   leads         Lead[]     @relation("LeadOwner")
   assignedLeads Lead[]     @relation("AssignedLeads")
-  invoicesReceived   Invoice[]      @relation("ClientInvoices")
-  invoicesIssued     Invoice[]      @relation("CreatedInvoices")
+  invoicesReceived     Invoice[]      @relation("ClientInvoices")
+  invoicesIssued       Invoice[]      @relation("CreatedInvoices")
   clientConversations  Conversation[] @relation("ClientConversations")
   managerConversations Conversation[] @relation("ManagerConversations")
   sentMessages         Message[]      @relation("SentMessages")
+  campaigns            Campaign[]     @relation("CampaignCreator")
 }
 
 model Account {
@@ -207,7 +208,7 @@ model Property {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
-  owner          User              @relation(fields: [ownerId], references: [id])
+  owner          User               @relation(fields: [ownerId], references: [id])
   reservations   Reservation[]
   expenses       Expense[]
   monthlyReports MonthlyReport[]
@@ -216,6 +217,7 @@ model Property {
   blockedDates   BlockedDate[]
   payouts        Payout[]
   invoices       Invoice[]
+  pricingPoints  PricingDataPoint[]
 }
 
 model Invoice {
@@ -258,9 +260,10 @@ model Reservation {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
-  property Property  @relation(fields: [propertyId], references: [id])
-  expenses Expense[]
-  payouts  Payout[]
+  property      Property           @relation(fields: [propertyId], references: [id])
+  expenses      Expense[]
+  payouts       Payout[]
+  pricingPoints PricingDataPoint[]
 }
 
 model Payout {
@@ -419,4 +422,110 @@ model Message {
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender       User         @relation("SentMessages", fields: [senderId], references: [id])
+}
+
+// ─── Pricing Intelligence ────────────────────────────────────────────────────
+
+model PricingDataPoint {
+  id                    String   @id @default(cuid())
+  propertyId            String
+  date                  DateTime // specific night
+  priceCharged          Float
+  platform              Platform?
+  suggestedPrice        Float?   // what external API suggested (if available)
+  suggestedSource       String?  // "PRICELABS" | "OWN_MODEL" | null
+  acceptedSuggestion    Boolean?
+  leadTimeDays          Int?     // days between booking and check-in
+  stayLength            Int?     // nights
+  dayOfWeek             Int      // 0=Mon … 6=Sun
+  monthOfYear           Int      // 1–12
+  isWeekend             Boolean  @default(false)
+  isHoliday             Boolean  @default(false)
+  isLocalEvent          Boolean  @default(false)
+  occupancyNearbyPct    Float?   // % occupancy in area (from external API)
+  reservationId         String?
+  createdAt             DateTime @default(now())
+
+  property    Property     @relation(fields: [propertyId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+
+  @@index([propertyId, date])
+  @@index([date])
+}
+
+// ─── Marketing ───────────────────────────────────────────────────────────────
+
+enum MarketingChannelType {
+  GOOGLE_ADS
+  META
+  LINKEDIN
+  EMAIL
+  SEO
+  CONTENT
+  EVENT
+  PRINT
+  PARTNERSHIP
+  SIGNAGE
+  REFERRAL
+  OTHER
+}
+
+enum CampaignStatus {
+  PLANNING
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum CampaignType {
+  DIGITAL
+  PHYSICAL
+  EMAIL
+  EVENT
+  PRINT
+}
+
+model Campaign {
+  id               String               @id @default(cuid())
+  name             String
+  channel          MarketingChannelType
+  type             CampaignType
+  status           CampaignStatus       @default(PLANNING)
+  budgetAllocated  Float                @default(0)
+  budgetSpent      Float                @default(0)
+  startDate        DateTime?
+  endDate          DateTime?
+  targetAudience   String?
+  description      String?              @db.Text
+  notes            String?              @db.Text
+  createdById      String
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  createdBy        User                 @relation("CampaignCreator", fields: [createdById], references: [id])
+  spends           CampaignSpend[]
+  leadAttributions LeadAttribution[]
+}
+
+model CampaignSpend {
+  id          String   @id @default(cuid())
+  campaignId  String
+  amount      Float
+  date        DateTime
+  description String?
+  receiptUrl  String?
+  createdAt   DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model LeadAttribution {
+  id           String   @id @default(cuid())
+  leadId       String
+  campaignId   String
+  attributedAt DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([leadId, campaignId])
 }
