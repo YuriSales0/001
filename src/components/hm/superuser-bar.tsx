@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 
 type UserEntry = {
   id: string
@@ -105,27 +104,6 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
             </>
           )}
         </span>
-
-        {/* Divider */}
-        <div className="h-4 w-px bg-white/20 shrink-0" />
-
-        {/* Portal nav */}
-        <div className="flex items-center gap-1 shrink-0">
-          {[
-            { label: 'Admin', href: '/' },
-            { label: 'Manager', href: '/manager' },
-            { label: 'Crew', href: '/crew' },
-            { label: 'Client', href: '/client' },
-          ].map(p => (
-            <Link
-              key={p.href}
-              href={p.href}
-              className="rounded px-2 py-0.5 text-[11px] font-medium text-white/60 hover:bg-white/10 hover:text-white transition-colors"
-            >
-              {p.label}
-            </Link>
-          ))}
-        </div>
 
         {/* Divider */}
         <div className="h-4 w-px bg-white/20 shrink-0" />
