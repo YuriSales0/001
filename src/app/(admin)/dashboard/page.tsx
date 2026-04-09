@@ -14,7 +14,7 @@ type Stats = {
   activeReservations: number
   rentalVolume: number
   rentalCommission: number
-  subscriptionRevenue: number
+  invoiceRevenue: number
   totalHMRevenue: number
   openPayouts: { count: number; net: number; commission: number }
   overdueTasks: number
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
     {
       label: "HM revenue this month",
       value: fmtEUR(stats.totalHMRevenue),
-      sub: `Alugueis ${fmtEUR(stats.rentalCommission)} · Sub ${fmtEUR(stats.subscriptionRevenue)}`,
+      sub: `Alugueis ${fmtEUR(stats.rentalCommission)} · Invoices ${fmtEUR(stats.invoiceRevenue)}`,
       icon: Euro,
       href: "/my-reports",
       color: "text-navy-700",
@@ -249,8 +249,8 @@ export default function AdminDashboard() {
             <div className="text-xs text-gray-400 mt-0.5">Comissão alugueis</div>
           </div>
           <div className="rounded-lg bg-blue-50 p-3">
-            <div className="text-xl font-bold text-blue-600">{fmtEUR(stats.subscriptionRevenue)}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Subscrições pagas</div>
+            <div className="text-xl font-bold text-blue-600">{fmtEUR(stats.invoiceRevenue)}</div>
+            <div className="text-xs text-gray-400 mt-0.5">Invoices pagos</div>
           </div>
           <div className="rounded-lg bg-green-50 p-3 border border-green-200">
             <div className="text-xl font-bold text-green-600">{fmtEUR(stats.totalHMRevenue)}</div>

@@ -40,11 +40,15 @@ export async function GET() {
       _sum: { grossAmount: true, commission: true },
       where: { status: 'PAID', paidAt: { gte: monthStart, lt: monthEnd } },
     }),
-    // Subscription invoices paid this month (platform fees from owners)
+    // All manually-created invoices paid this month (excludes auto-generated payout records)
     prisma.invoice.aggregate({
       _sum: { amount: true },
       _count: true,
-      where: { type: 'SUBSCRIPTION', status: 'PAID', paidAt: { gte: monthStart, lt: monthEnd } },
+      where: {
+        status: 'PAID',
+        paidAt: { gte: monthStart, lt: monthEnd },
+        NOT: { notes: { startsWith: 'Auto-generated from payout' } },
+      },
     }),
     prisma.task.count({
       where: { status: { not: 'COMPLETED' }, dueDate: { lt: now } },
@@ -69,10 +73,10 @@ export async function GET() {
     }),
   ])
 
-  const rentalVolume    = paidPayoutsAgg._sum.grossAmount ?? 0   // total arrendamento gerido
-  const rentalCommission = paidPayoutsAgg._sum.commission ?? 0   // comissão s/ alugueis
-  const subscriptionRevenue = paidSubscriptionsAgg._sum.amount ?? 0  // subscrições pagas
-  const totalHMRevenue = rentalCommission + subscriptionRevenue   // receita total HostMasters
+  const rentalVolume     = paidPayoutsAgg._sum.grossAmount ?? 0
+  const rentalCommission = paidPayoutsAgg._sum.commission ?? 0
+  const invoiceRevenue   = paidSubscriptionsAgg._sum.amount ?? 0  // subscrições + outros invoices manuais
+  const totalHMRevenue   = rentalCommission + invoiceRevenue
 
   return NextResponse.json({
     propertiesCount,
@@ -80,7 +84,7 @@ export async function GET() {
     activeReservations: activeRes,
     rentalVolume,
     rentalCommission,
-    subscriptionRevenue,
+    invoiceRevenue,
     totalHMRevenue,
     openPayouts: {
       count: openPayoutsAgg._count,
