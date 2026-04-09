@@ -83,13 +83,25 @@ function CreateModal({
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0,10))
+  const [assigneeId, setAssigneeId] = useState('')
+  const [crew, setCrew] = useState<{id:string;name:string|null;email:string}[]>([])
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/users?role=CREW')
+      .then(r => r.ok ? r.json() : [])
+      .then(setCrew)
+  }, [])
 
   const submit = async () => {
     if (!propertyId||!title||!dueDate) return
     setSaving(true)
     await fetch('/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({propertyId,type,title,description,dueDate:new Date(dueDate).toISOString()})})
+      body:JSON.stringify({
+        propertyId, type, title, description,
+        dueDate: new Date(dueDate).toISOString(),
+        assigneeId: assigneeId || undefined,
+      })})
     setSaving(false)
     onCreated()
   }
@@ -125,6 +137,21 @@ function CreateModal({
             </select>
           </div>
           <div>
+            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">
+              Técnico responsável
+            </label>
+            <select value={assigneeId} onChange={e=>setAssigneeId(e.target.value)}
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+              <option value="">— Atribuir automaticamente —</option>
+              {crew.map(c=>(
+                <option key={c.id} value={c.id}>{c.name || c.email}</option>
+              ))}
+            </select>
+            {crew.length === 0 && (
+              <p className="text-xs text-gray-400 mt-1">Nenhum técnico disponível. Será atribuído automaticamente.</p>
+            )}
+          </div>
+          <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Título / motivo</label>
             <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="Ex: Revisão trimestral — ar condicionado"
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
@@ -133,7 +160,7 @@ function CreateModal({
             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Descrição (opcional)</label>
             <textarea rows={3} value={description} onChange={e=>setDescription(e.target.value)}
               placeholder="Detalhes, instrução especial para o técnico…"
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none"/>
           </div>
         </div>
         <div className="flex gap-3 px-6 py-4 border-t">
