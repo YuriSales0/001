@@ -2,45 +2,112 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { redirect } from 'next/navigation'
 import { SystemMonitor } from '@/components/hm/system-monitor'
-import { ShieldCheck, AlertTriangle, Info, Clock } from 'lucide-react'
+import { ShieldCheck, AlertTriangle, Info, Clock, CalendarDays, Wallet, BarChart3 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
-const CHECKS = [
+const CHECKS_BY_SECTION = [
   {
-    type: 'INVOICE_PAID_NO_PAIDAT',
-    severity: 'HIGH',
-    label: 'Invoice PAID sem data',
-    desc: 'Invoices com status=PAID mas sem paidAt ficam invisíveis no dashboard de receita.',
-    fix: 'Editar o invoice e definir a data de pagamento manualmente.',
+    section: 'Alugueis',
+    icon: CalendarDays,
+    checks: [
+      {
+        type: 'RESERVATION_PAST_CHECKIN',
+        severity: 'HIGH',
+        label: 'Check-in passado com estado UPCOMING',
+        desc: 'Reservas com estado UPCOMING cujo check-in já aconteceu — o estado está desactualizado e afecta o dashboard de operações.',
+        fix: 'Marcar manualmente como ACTIVE ou COMPLETED conforme o estado real da reserva.',
+      },
+      {
+        type: 'CHECKIN_NO_TASK',
+        severity: 'MEDIUM',
+        label: 'Check-in em <7 dias sem tarefa',
+        desc: 'Reservas com check-in nos próximos 7 dias sem tarefa CHECK_IN criada para a equipa.',
+        fix: 'Criar tarefa CHECK_IN no calendário e atribuir ao Crew.',
+      },
+      {
+        type: 'CHECKOUT_NO_TASK',
+        severity: 'MEDIUM',
+        label: 'Check-out em <7 dias sem tarefa',
+        desc: 'Reservas com check-out nos próximos 7 dias sem tarefa CHECK_OUT ou CLEANING criada.',
+        fix: 'Criar tarefa CHECK_OUT ou CLEANING no calendário e atribuir ao Crew.',
+      },
+      {
+        type: 'CHECKOUT_NO_CREW_REPORT',
+        severity: 'LOW',
+        label: 'Check-out sem relatório de Crew',
+        desc: 'Reservas concluídas nos últimos 3 dias sem relatório de checkout submetido pelo Crew.',
+        fix: 'Solicitar ao Crew que submeta o relatório da reserva.',
+      },
+      {
+        type: 'RESERVATION_ZERO_AMOUNT',
+        severity: 'MEDIUM',
+        label: 'Reserva com valor €0',
+        desc: 'Reservas activas com valor €0 — possível erro de entrada de dados.',
+        fix: 'Verificar e corrigir o valor da reserva.',
+      },
+    ],
   },
   {
-    type: 'PAYOUT_NO_INVOICE',
-    severity: 'HIGH',
-    label: 'Payout pago sem invoice',
-    desc: 'Cada payout marcado como PAID deve gerar automaticamente um invoice ao proprietário. Mismatch indica falha na criação.',
-    fix: 'Verificar o log de erros do servidor. Criar o invoice manualmente se necessário.',
+    section: 'Payouts',
+    icon: Wallet,
+    checks: [
+      {
+        type: 'PAYOUT_NO_INVOICE',
+        severity: 'HIGH',
+        label: 'Payout pago sem invoice',
+        desc: 'Cada payout marcado como PAID deve gerar automaticamente um invoice ao proprietário. Mismatch indica falha na criação.',
+        fix: 'Verificar o log de erros do servidor. Criar o invoice manualmente se necessário.',
+      },
+      {
+        type: 'PAYOUT_OVERDUE',
+        severity: 'HIGH',
+        label: 'Payout agendado em atraso',
+        desc: 'Payouts com data scheduledFor já passada sem serem marcados como pagos.',
+        fix: 'Processar o pagamento e marcar o payout como PAID, ou reagendar se ainda não processado.',
+      },
+      {
+        type: 'COMMISSION_MISMATCH',
+        severity: 'MEDIUM',
+        label: 'Taxa de comissão desactualizada',
+        desc: 'Payouts agendados com taxa diferente do plano actual do proprietário (pode ter mudado de plano após o payout ser criado).',
+        fix: 'Editar o payout e recriar com a taxa correcta antes de marcar como pago.',
+      },
+      {
+        type: 'INVOICE_PAID_NO_PAIDAT',
+        severity: 'HIGH',
+        label: 'Invoice PAID sem data de pagamento',
+        desc: 'Invoices com status=PAID mas sem paidAt ficam invisíveis no dashboard de receita.',
+        fix: 'Editar o invoice e definir a data de pagamento manualmente.',
+      },
+    ],
   },
   {
-    type: 'CHECKIN_NO_TASK',
-    severity: 'MEDIUM',
-    label: 'Check-in sem tarefa atribuída',
-    desc: 'Reservas com check-in nos próximos 7 dias sem tarefa CHECK_IN criada para a equipa.',
-    fix: 'Criar tarefa CHECK_IN no calendário e atribuir ao Crew.',
-  },
-  {
-    type: 'COMMISSION_MISMATCH',
-    severity: 'MEDIUM',
-    label: 'Taxa de comissão desactualizada',
-    desc: 'Payouts agendados com taxa diferente do plano actual do proprietário (pode ter mudado de plano após o payout ser criado).',
-    fix: 'Editar o payout e recriar com a taxa correcta antes de marcar como pago.',
-  },
-  {
-    type: 'PROPERTY_STALE',
-    severity: 'LOW',
-    label: 'Propriedade sem actividade (90 dias)',
-    desc: 'Propriedades activas sem nenhuma reserva nos últimos 90 dias — podem estar inactivas ou com listagem desactualizada.',
-    fix: 'Verificar com o proprietário se a propriedade está disponível para arrendamento.',
+    section: 'Relatórios',
+    icon: BarChart3,
+    checks: [
+      {
+        type: 'REPORT_MISSING',
+        severity: 'MEDIUM',
+        label: 'Propriedade com actividade sem relatório mensal',
+        desc: 'Propriedades com reservas no mês anterior sem relatório mensal gerado para o proprietário.',
+        fix: 'Gerar o relatório mensal em My Reports.',
+      },
+      {
+        type: 'REPORT_NOT_SENT',
+        severity: 'LOW',
+        label: 'Relatório gerado mas não enviado',
+        desc: 'Relatórios mensais do mês anterior gerados mas não enviados ao proprietário.',
+        fix: 'Aceder a My Reports e enviar os relatórios pendentes.',
+      },
+      {
+        type: 'PROPERTY_STALE',
+        severity: 'LOW',
+        label: 'Propriedade sem actividade (90 dias)',
+        desc: 'Propriedades activas sem nenhuma reserva nos últimos 90 dias — podem estar inactivas ou com listagem desactualizada.',
+        fix: 'Verificar com o proprietário se a propriedade está disponível para arrendamento.',
+      },
+    ],
   },
 ]
 
@@ -60,7 +127,6 @@ export default async function AiMonitorPage() {
   const guard = await requireRole(['ADMIN'])
   if (guard.error) redirect('/dashboard')
 
-  // Histórico de alertas persistidos (ficará populado quando o cron for activado)
   const history = await prisma.systemAlert.findMany({
     orderBy: { createdAt: 'desc' },
     take: 50,
@@ -90,27 +156,43 @@ export default async function AiMonitorPage() {
         <SystemMonitor />
       </div>
 
-      {/* Check catalogue */}
+      {/* Check catalogue — grouped by section */}
       <div>
         <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">O que é verificado</p>
-        <div className="space-y-2">
-          {CHECKS.map(c => (
-            <div key={c.type} className="rounded-xl border bg-white p-4">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5 shrink-0">{SEVERITY_ICON[c.severity as keyof typeof SEVERITY_ICON]}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-semibold text-gray-900">{c.label}</span>
-                    <span className={`text-[10px] font-bold uppercase rounded px-1.5 py-0.5 ${SEVERITY_BADGE[c.severity]}`}>
-                      {c.severity}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500">{c.desc}</p>
-                  <p className="text-xs text-gray-400 mt-1"><span className="font-medium text-gray-500">Resolução:</span> {c.fix}</p>
+        <div className="space-y-4">
+          {CHECKS_BY_SECTION.map(group => {
+            const SectionIcon = group.icon
+            return (
+              <div key={group.section} className="rounded-xl border bg-white overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b">
+                  <SectionIcon className="h-4 w-4 text-gray-500" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-gray-500">{group.section}</span>
+                  <span className="ml-auto text-[10px] text-gray-400">{group.checks.length} verificações</span>
+                </div>
+                <div className="divide-y">
+                  {group.checks.map(c => (
+                    <div key={c.type} className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-0.5 shrink-0">{SEVERITY_ICON[c.severity as keyof typeof SEVERITY_ICON]}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-semibold text-gray-900">{c.label}</span>
+                            <span className={`text-[10px] font-bold uppercase rounded px-1.5 py-0.5 ${SEVERITY_BADGE[c.severity]}`}>
+                              {c.severity}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500">{c.desc}</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            <span className="font-medium text-gray-500">Resolução:</span> {c.fix}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
