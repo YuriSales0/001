@@ -103,6 +103,9 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
   )
 }
 
+const fmtEUR = (n: number) =>
+  new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(n)
+
 function CreatePayoutModal({
   properties,
   onClose,
@@ -112,7 +115,6 @@ function CreatePayoutModal({
   onClose: () => void
   onCreated: () => void
 }) {
-  const { fmt } = useCurrency()
   const [propertyId, setPropertyId] = useState('')
   const [grossAmount, setGrossAmount] = useState('')
   const [platform, setPlatform] = useState('')
@@ -200,7 +202,7 @@ function CreatePayoutModal({
             <div className="rounded-lg bg-gray-50 border divide-y text-sm">
               <div className="flex justify-between px-3 py-2">
                 <span className="text-gray-500">Recebido da plataforma</span>
-                <span className="font-medium">{fmt(gross)}</span>
+                <span className="font-medium">{fmtEUR(gross)}</span>
               </div>
               <div className="flex justify-between px-3 py-2 text-orange-600">
                 <span>
@@ -210,11 +212,11 @@ function CreatePayoutModal({
                     : <span className="ml-1 text-xs text-gray-400">(plano padrão · {rateLabel})</span>
                   }
                 </span>
-                <span>− {fmt(commission)}</span>
+                <span>− {fmtEUR(commission)}</span>
               </div>
               <div className="flex justify-between px-3 py-2.5 font-semibold border-t-2">
                 <span>Valor a receber pelo proprietário</span>
-                <span className="text-green-600">{fmt(net)}</span>
+                <span className="text-green-600">{fmtEUR(net)}</span>
               </div>
             </div>
           )}
