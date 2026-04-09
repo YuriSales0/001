@@ -60,7 +60,7 @@ export async function GET() {
     select: { id: true, propertyId: true, guestName: true },
   })
 
-  const reservationPropertyIds = [...new Set(upcomingReservations.map(r => r.propertyId))]
+  const reservationPropertyIds = Array.from(new Set(upcomingReservations.map(r => r.propertyId)))
 
   const checkinTasks = reservationPropertyIds.length > 0
     ? await prisma.task.findMany({
