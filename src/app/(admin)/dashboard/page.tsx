@@ -31,9 +31,19 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null)
 
   useEffect(() => {
-    fetch("/api/admin/stats")
-      .then(r => r.ok ? r.json() : null)
-      .then(setStats)
+    const load = () =>
+      fetch("/api/admin/stats")
+        .then(r => r.ok ? r.json() : null)
+        .then(setStats)
+
+    load()
+    const interval = setInterval(load, 60_000)
+    const onFocus = () => load()
+    window.addEventListener('focus', onFocus)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('focus', onFocus)
+    }
   }, [])
 
   if (!stats) {

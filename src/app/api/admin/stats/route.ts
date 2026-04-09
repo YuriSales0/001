@@ -20,6 +20,7 @@ export async function GET() {
     activeRes,
     monthRevenueAgg,
     openPayoutsAgg,
+    paidPayoutsAgg,
     overdueTasks,
     upcomingCheckIns,
     upcomingCheckOuts,
@@ -37,6 +38,11 @@ export async function GET() {
       _sum: { netAmount: true, commission: true },
       _count: true,
       where: { status: 'SCHEDULED' },
+    }),
+    // Commission from payouts actually paid this month (accurate, plan-aware)
+    prisma.payout.aggregate({
+      _sum: { grossAmount: true, commission: true },
+      where: { status: 'PAID', paidAt: { gte: monthStart, lt: monthEnd } },
     }),
     prisma.task.count({
       where: { status: { not: 'COMPLETED' }, dueDate: { lt: now } },
@@ -62,7 +68,8 @@ export async function GET() {
   ])
 
   const monthRevenue = monthRevenueAgg._sum.amount ?? 0
-  const monthCommission = +(monthRevenue * 0.18).toFixed(2)
+  // Use actual commission from paid payouts (respects per-plan rates); fall back to 0 if no payouts paid yet
+  const monthCommission = paidPayoutsAgg._sum.commission ?? 0
 
   return NextResponse.json({
     propertiesCount,
