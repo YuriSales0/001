@@ -31,6 +31,7 @@ export async function PATCH(
   const {
     status, notes, followUpDate, assignedManagerId,
     budget, propertyType, name, email, phone, source, message,
+    score, bantData,
   } = body
 
   // Only ADMIN can reassign managers
@@ -52,6 +53,8 @@ export async function PATCH(
       ...(phone !== undefined && { phone: phone || null }),
       ...(source !== undefined && { source }),
       ...(message !== undefined && { message: message || null }),
+      ...(score !== undefined && { score: Number(score) }),
+      ...(bantData !== undefined && { bantData }),
       ...managerUpdate,
     },
     include: LEAD_INCLUDE,

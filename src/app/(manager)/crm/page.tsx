@@ -10,6 +10,14 @@ type LeadStage =
   | "NEW_LEAD" | "FIRST_CONTACT" | "CALL_SCHEDULED" | "QUALIFIED"
   | "PROPOSAL_SENT" | "CONTRACT_SIGNED" | "ACTIVE_OWNER"
 
+type BantAnswers = {
+  location?: string
+  availability?: string
+  authority?: string
+  property?: string
+  timeline?: string
+}
+
 type Lead = {
   id: string
   name: string
@@ -25,8 +33,101 @@ type Lead = {
   language?: "EN" | "DE"
   followUpDate: string | null
   assignedManager: { id: string; name: string | null } | null
+  score: number | null
+  bantData: BantAnswers | null
   createdAt: string
   updatedAt?: string
+}
+
+// ── BANT Scoring engine ──────────────────────────────────────────────────────
+
+const BANT_QUESTIONS: {
+  id: keyof BantAnswers
+  label: string
+  icon: string
+  options: { value: string; label: string; pts: number }[]
+}[] = [
+  {
+    id: "location",
+    label: "Property location",
+    icon: "📍",
+    options: [
+      { value: "in_zone",  label: "Costa Tropical — Motril to Nerja", pts: 20 },
+      { value: "nearby",   label: "Málaga province, nearby area",     pts: 8  },
+      { value: "unknown",  label: "Location not confirmed yet",        pts: 4  },
+      { value: "outside",  label: "Outside our operating zone",        pts: 0  },
+    ],
+  },
+  {
+    id: "availability",
+    label: "Annual availability",
+    icon: "📅",
+    options: [
+      { value: "8plus",  label: "8+ months/year available",   pts: 20 },
+      { value: "5to7",   label: "5–7 months/year",            pts: 14 },
+      { value: "3to4",   label: "3–4 months/year",            pts: 8  },
+      { value: "under3", label: "Less than 3 months/year",    pts: 2  },
+    ],
+  },
+  {
+    id: "authority",
+    label: "Decision authority",
+    icon: "👤",
+    options: [
+      { value: "sole_owner", label: "Direct sole owner",        pts: 20 },
+      { value: "co_owner",   label: "Co-owner (joint decision)", pts: 14 },
+      { value: "poa",        label: "Power of attorney",         pts: 10 },
+      { value: "other",      label: "Tenant / third party",      pts: 0  },
+    ],
+  },
+  {
+    id: "property",
+    label: "Property size",
+    icon: "🏠",
+    options: [
+      { value: "3plus",  label: "3+ bedrooms (villa / large apt)", pts: 20 },
+      { value: "2bed",   label: "2 bedrooms",                      pts: 15 },
+      { value: "1bed",   label: "1 bedroom",                       pts: 8  },
+      { value: "studio", label: "Studio / 0 bedrooms",             pts: 4  },
+    ],
+  },
+  {
+    id: "timeline",
+    label: "Start timeline",
+    icon: "⏱️",
+    options: [
+      { value: "now",    label: "Ready now — within 1 month",  pts: 20 },
+      { value: "soon",   label: "1–3 months",                  pts: 14 },
+      { value: "medium", label: "3–6 months",                  pts: 8  },
+      { value: "long",   label: "6+ months or unsure",         pts: 3  },
+    ],
+  },
+]
+
+function calcScore(bant: BantAnswers): number {
+  return BANT_QUESTIONS.reduce((sum, q) => {
+    const ans = bant[q.id]
+    const opt = q.options.find(o => o.value === ans)
+    return sum + (opt?.pts ?? 0)
+  }, 0)
+}
+
+function scoreBand(score: number): { label: string; color: string; bg: string; dot: string } {
+  if (score >= 80) return { label: "Hot",  color: "text-red-700",    bg: "bg-red-50 border-red-200",    dot: "bg-red-500"    }
+  if (score >= 60) return { label: "Warm", color: "text-orange-700", bg: "bg-orange-50 border-orange-200", dot: "bg-orange-400" }
+  if (score >= 40) return { label: "Cool", color: "text-yellow-700", bg: "bg-yellow-50 border-yellow-200", dot: "bg-yellow-400" }
+  return               { label: "Cold", color: "text-gray-500",    bg: "bg-gray-100 border-gray-200",   dot: "bg-gray-400"   }
+}
+
+function ScorePill({ score }: { score: number | null }) {
+  if (score === null) return null
+  const band = scoreBand(score)
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${band.bg} ${band.color}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${band.dot}`} />
+      {score} · {band.label}
+    </span>
+  )
 }
 
 const STAGES: { id: LeadStage; label: string; color: string; header: string }[] = [
@@ -89,6 +190,8 @@ export default function CRMPage() {
           status: (STATUS_TO_STAGE[l.status] ?? "NEW_LEAD") as LeadStage,
           language: (l.language?.toUpperCase() === "DE" ? "DE" : "EN") as "EN" | "DE",
           nationality: l.nationality ?? undefined,
+          score: l.score ?? null,
+          bantData: (l.bantData as BantAnswers) ?? null,
         }))
         setLeads(mapped)
       })
@@ -367,23 +470,11 @@ export default function CRMPage() {
                 </div>
               </div>
 
-              {/* BANT */}
-              <div>
-                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">BANT Qualification</h3>
-                <div className="space-y-2">
-                  {[
-                    "Property in Costa Tropical (Motril–Nerja)?",
-                    "Available more than 5 months/year?",
-                    "Direct owner or power of attorney?",
-                    "Motivated to rent?",
-                  ].map(q => (
-                    <label key={q} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                      <input type="checkbox" className="rounded" />
-                      {q}
-                    </label>
-                  ))}
-                </div>
-              </div>
+              {/* BANT Qualification */}
+              <BantPanel lead={selectedLead} onUpdate={updated => {
+                setLeads(prev => prev.map(l => l.id === updated.id ? { ...l, ...updated } : l))
+                setSelectedLead(l => l ? { ...l, ...updated } : l)
+              }} />
 
               {/* Notes */}
               <div>
@@ -487,6 +578,11 @@ export default function CRMPage() {
                           {SOURCE_LABEL[lead.source] ?? lead.source}
                         </span>
                       </div>
+                      {lead.score !== null && (
+                        <div className="mt-2">
+                          <ScorePill score={lead.score} />
+                        </div>
+                      )}
                     </div>
                   ))}
 
@@ -498,6 +594,124 @@ export default function CRMPage() {
             )
           })}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ── BANT Panel ────────────────────────────────────────────────────────────────
+
+function BantPanel({ lead, onUpdate }: {
+  lead: Lead
+  onUpdate: (updated: Partial<Lead>) => void
+}) {
+  const [answers, setAnswers] = useState<BantAnswers>(lead.bantData ?? {})
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  // Sync if lead changes (e.g. navigating between leads)
+  useEffect(() => { setAnswers(lead.bantData ?? {}); setSaved(false) }, [lead.id, lead.bantData])
+
+  const answeredCount = BANT_QUESTIONS.filter(q => answers[q.id]).length
+  const currentScore = answeredCount > 0 ? calcScore(answers) : null
+
+  const handleAnswer = (qid: keyof BantAnswers, value: string) => {
+    setAnswers(prev => ({ ...prev, [qid]: value }))
+    setSaved(false)
+  }
+
+  const save = async () => {
+    if (answeredCount === 0) return
+    setSaving(true)
+    const score = calcScore(answers)
+    await fetch(`/api/leads/${lead.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ score, bantData: answers }),
+    })
+    setSaving(false)
+    setSaved(true)
+    onUpdate({ score, bantData: answers })
+    setTimeout(() => setSaved(false), 3000)
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-xs uppercase tracking-wider text-gray-400">Lead Qualification</h3>
+        {currentScore !== null && (
+          <ScorePill score={currentScore} />
+        )}
+      </div>
+
+      {/* Score bar */}
+      {currentScore !== null && (
+        <div className="mb-4">
+          <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+            <span>{answeredCount}/{BANT_QUESTIONS.length} answered</span>
+            <span className="font-semibold">{currentScore}/100</span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${
+                currentScore >= 80 ? "bg-red-500" :
+                currentScore >= 60 ? "bg-orange-400" :
+                currentScore >= 40 ? "bg-yellow-400" : "bg-gray-300"
+              }`}
+              style={{ width: `${currentScore}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        {BANT_QUESTIONS.map(q => (
+          <div key={q.id}>
+            <p className="text-xs font-medium text-gray-600 mb-1.5">
+              <span className="mr-1">{q.icon}</span>{q.label}
+            </p>
+            <div className="grid grid-cols-1 gap-1">
+              {q.options.map(opt => {
+                const selected = answers[q.id] === opt.value
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => handleAnswer(q.id, opt.value)}
+                    className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs text-left transition-all ${
+                      selected
+                        ? "border-gray-900 bg-gray-900 text-white"
+                        : "border-gray-200 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
+                    }`}
+                  >
+                    <span>{opt.label}</span>
+                    <span className={`font-bold shrink-0 ml-2 ${selected ? "text-yellow-400" : "text-gray-300"}`}>
+                      +{opt.pts}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 flex items-center gap-2">
+        <button
+          onClick={save}
+          disabled={saving || answeredCount === 0}
+          className="flex-1 rounded-lg bg-gray-900 text-white py-2 text-sm font-semibold hover:bg-gray-700 disabled:opacity-40 transition-colors"
+        >
+          {saving ? "Saving…" : saved ? "✓ Score saved" : "Save qualification"}
+        </button>
+        {answers && Object.keys(answers).length > 0 && (
+          <button
+            onClick={() => { setAnswers({}); setSaved(false) }}
+            className="rounded-lg border px-3 py-2 text-xs text-gray-500 hover:bg-gray-50"
+            title="Clear answers"
+          >
+            Clear
+          </button>
+        )}
       </div>
     </div>
   )
