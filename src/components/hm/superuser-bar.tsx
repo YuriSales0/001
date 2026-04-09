@@ -9,6 +9,13 @@ type UserEntry = {
   role: string
 }
 
+const ROLE_HOME: Record<string, string> = {
+  ADMIN:   '/dashboard',
+  MANAGER: '/manager/dashboard',
+  CREW:    '/crew',
+  CLIENT:  '/client/dashboard',
+}
+
 type GroupedUsers = Record<string, UserEntry[]>
 
 type Props = {
@@ -27,7 +34,7 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
       .catch(() => {})
   }, [])
 
-  async function handleImpersonate(userId: string) {
+  async function handleImpersonate(userId: string, role: string) {
     if (!userId) return
     setLoading(true)
     try {
@@ -36,7 +43,7 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId }),
       })
-      window.location.reload()
+      window.location.href = ROLE_HOME[role] ?? '/dashboard'
     } catch {
       setLoading(false)
     }
@@ -46,7 +53,7 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
     setLoading(true)
     try {
       await fetch('/api/superuser/impersonate', { method: 'DELETE' })
-      window.location.reload()
+      window.location.href = '/dashboard'
     } catch {
       setLoading(false)
     }
@@ -115,7 +122,11 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
           onChange={e => {
             const val = e.target.value
             if (!val) return
-            handleImpersonate(val)
+            // find the role for this user across all role groups
+            const role = Object.keys(users).find(r =>
+              users[r].some(u => u.id === val)
+            ) ?? 'ADMIN'
+            handleImpersonate(val, role)
           }}
           className="h-6 rounded border border-white/20 bg-white/10 px-2 text-[11px] text-white focus:outline-none focus:border-purple-400 disabled:opacity-50 max-w-[220px]"
         >

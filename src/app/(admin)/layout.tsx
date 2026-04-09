@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation'
 import ManagerLayout from "@/components/manager-layout"
-import { getCurrentUser } from "@/lib/session"
+import { getCurrentUser, resolveEffectiveUser } from "@/lib/session"
 
 export const dynamic = 'force-dynamic'
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/login')
-  if (!user.isSuperUser && user.role !== 'ADMIN') redirect('/login')
-  return <ManagerLayout user={{ name: user.name, email: user.email, image: user.image }} role="ADMIN">{children}</ManagerLayout>
+  const realUser = await getCurrentUser()
+  if (!realUser) redirect('/login')
+  if (!realUser.isSuperUser && realUser.role !== 'ADMIN') redirect('/login')
+  const effectiveUser = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
+  return <ManagerLayout user={{ name: effectiveUser.name, email: effectiveUser.email, image: effectiveUser.image }} role="ADMIN">{children}</ManagerLayout>
 }

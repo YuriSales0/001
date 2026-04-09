@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, ChevronDown } from 'lucide-react'
+import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check } from 'lucide-react'
+import { QRCodeSVG } from 'qrcode.react'
 
 type Campaign = {
   id: string
@@ -9,6 +10,7 @@ type Campaign = {
   channel: string
   type: string
   status: 'PLANNING' | 'ACTIVE' | 'PAUSED' | 'COMPLETED'
+  trackingCode: string | null
   budgetAllocated: number
   budgetSpent: number
   startDate: string | null
@@ -230,6 +232,73 @@ function SpendModal({ campaign, onClose, onSaved }: { campaign: Campaign; onClos
   )
 }
 
+// ─── QR Code Modal ───────────────────────────────────────────────────────────
+function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => void }) {
+  const [copied, setCopied] = useState(false)
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+  const url = `${baseUrl}/leads/new?ref=${campaign.trackingCode}`
+
+  const copyUrl = () => {
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl">
+        <div className="flex items-center justify-between p-5 border-b">
+          <div>
+            <h2 className="text-lg font-bold text-navy-900">QR Code</h2>
+            <p className="text-xs text-gray-500 mt-0.5">{campaign.name}</p>
+          </div>
+          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+        </div>
+        <div className="p-6 flex flex-col items-center gap-4">
+          <div className="rounded-xl border p-3 bg-white shadow-sm">
+            <QRCodeSVG value={url} size={200} level="M" includeMargin />
+          </div>
+          <div className="w-full">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Lead capture URL</p>
+            <div className="flex items-center gap-2 rounded-lg border bg-gray-50 px-3 py-2">
+              <span className="flex-1 text-xs text-gray-600 truncate font-mono">{url}</span>
+              <button
+                onClick={copyUrl}
+                className="shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
+                title="Copy URL"
+              >
+                {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+              </button>
+            </div>
+          </div>
+          <p className="text-[10px] text-gray-400 text-center">
+            Scan to open lead form · Leads são atribuídos a esta campanha automaticamente
+          </p>
+          <button
+            onClick={() => {
+              const svg = document.querySelector('#qr-print-area svg') as SVGElement | null
+              if (!svg) return
+              const blob = new Blob([svg.outerHTML], { type: 'image/svg+xml' })
+              const a = document.createElement('a')
+              a.href = URL.createObjectURL(blob)
+              a.download = `qr-${campaign.trackingCode}.svg`
+              a.click()
+            }}
+            className="w-full rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50"
+          >
+            Download SVG
+          </button>
+        </div>
+        {/* Hidden element for download targeting */}
+        <div id="qr-print-area" className="hidden">
+          <QRCodeSVG value={url} size={400} level="H" includeMargin />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function MarketingPage() {
   const [campaigns, setCampaigns]   = useState<Campaign[]>([])
@@ -238,6 +307,7 @@ export default function MarketingPage() {
   const [editing, setEditing]       = useState<Campaign | null>(null)
   const [spending, setSpending]     = useState<Campaign | null>(null)
   const [deleting, setDeleting]     = useState<string | null>(null)
+  const [qrCampaign, setQrCampaign] = useState<Campaign | null>(null)
 
   const load = async () => {
     setLoading(true)
@@ -374,6 +444,15 @@ export default function MarketingPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1 justify-end">
+                      {c.trackingCode && (
+                        <button
+                          onClick={() => setQrCampaign(c)}
+                          title="QR Code"
+                          className="rounded p-1.5 text-amber-500 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+                        >
+                          <QrCode className="h-3.5 w-3.5" />
+                        </button>
+                      )}
                       <button
                         onClick={() => setSpending(c)}
                         title="Log spend"
@@ -405,9 +484,10 @@ export default function MarketingPage() {
         </table>
       </div>
 
-      {showCreate && <CampaignModal campaign={null} onClose={() => setShowCreate(false)} onSaved={load} />}
-      {editing    && <CampaignModal campaign={editing} onClose={() => setEditing(null)} onSaved={load} />}
-      {spending   && <SpendModal campaign={spending} onClose={() => setSpending(null)} onSaved={load} />}
+      {showCreate  && <CampaignModal campaign={null} onClose={() => setShowCreate(false)} onSaved={load} />}
+      {editing     && <CampaignModal campaign={editing} onClose={() => setEditing(null)} onSaved={load} />}
+      {spending    && <SpendModal campaign={spending} onClose={() => setSpending(null)} onSaved={load} />}
+      {qrCampaign  && <QrModal campaign={qrCampaign} onClose={() => setQrCampaign(null)} />}
     </div>
   )
 }

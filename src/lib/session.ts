@@ -30,7 +30,7 @@ export async function getCurrentUser(): Promise<EffectiveUser | null> {
 }
 
 /** Returns the effective user: impersonated user if SUPERUSER is impersonating, otherwise real user */
-async function resolveEffectiveUser(realUser: EffectiveUser): Promise<EffectiveUser> {
+export async function resolveEffectiveUser(realUser: EffectiveUser): Promise<EffectiveUser> {
   if (!realUser.isSuperUser) return realUser
 
   const cookieStore = cookies()

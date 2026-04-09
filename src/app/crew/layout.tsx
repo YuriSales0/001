@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { getCurrentUser } from '@/lib/session'
+import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar } from 'lucide-react'
 import { AiChat } from '@/components/hm/ai-chat'
 
@@ -13,9 +13,10 @@ const navLinks = [
 ]
 
 export default async function CrewLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/login')
-  if (!user.isSuperUser && user.role !== 'CREW') redirect('/me')
+  const realUser = await getCurrentUser()
+  if (!realUser) redirect('/login')
+  if (!realUser.isSuperUser && realUser.role !== 'CREW') redirect('/me')
+  const user = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()

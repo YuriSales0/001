@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { getCurrentUser } from '@/lib/session'
+import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import {
   Home, TrendingUp, CalendarDays, Star, MessageCircle, Building2,
@@ -21,9 +21,10 @@ const baseLinks = [
 const AI_PLANS = ['MID', 'PREMIUM']
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/login')
-  if (!user.isSuperUser && user.role !== 'CLIENT') redirect('/me')
+  const realUser = await getCurrentUser()
+  if (!realUser) redirect('/login')
+  if (!realUser.isSuperUser && realUser.role !== 'CLIENT') redirect('/me')
+  const user = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()

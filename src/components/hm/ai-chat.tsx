@@ -71,7 +71,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
       {/* Floating button */}
       <button
         onClick={() => setOpen(v => !v)}
-        className={`fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all ${
+        className={`fixed bottom-14 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all ${
           open ? 'bg-gray-800 rotate-90' : 'bg-navy-900 hover:bg-navy-800'
         }`}
         title="Assistente HostMasters"
@@ -89,7 +89,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
       {/* Chat panel */}
       {open && (
         <div
-          className="fixed bottom-20 right-6 z-40 flex flex-col rounded-2xl border bg-white shadow-2xl"
+          className="fixed bottom-28 right-6 z-40 flex flex-col rounded-2xl border bg-white shadow-2xl"
           style={{ width: 340, height: 480 }}
         >
           {/* Header */}

@@ -527,6 +527,7 @@ model Campaign {
   channel          MarketingChannelType
   type             CampaignType
   status           CampaignStatus       @default(PLANNING)
+  trackingCode     String?              @unique
   budgetAllocated  Float                @default(0)
   budgetSpent      Float                @default(0)
   startDate        DateTime?

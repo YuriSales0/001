@@ -27,11 +27,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'name, channel and type required' }, { status: 400 })
   }
 
+  // Auto-generate a short tracking code for physical/print campaigns
+  const needsCode = ['PHYSICAL', 'PRINT'].includes(type)
+  let trackingCode: string | null = null
+  if (needsCode) {
+    // Generate unique 6-char code, retry on collision
+    for (let i = 0; i < 10; i++) {
+      const candidate = Math.random().toString(36).slice(2, 8).toUpperCase()
+      const exists = await prisma.campaign.findUnique({ where: { trackingCode: candidate } })
+      if (!exists) { trackingCode = candidate; break }
+    }
+  }
+
   const campaign = await prisma.campaign.create({
     data: {
       name,
       channel,
       type,
+      trackingCode,
       budgetAllocated: Number(budgetAllocated) || 0,
       startDate: startDate ? new Date(startDate) : null,
       endDate: endDate ? new Date(endDate) : null,
