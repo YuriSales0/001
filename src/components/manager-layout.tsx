@@ -91,7 +91,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
           </button>
         </div>
 
-        <nav className="flex-1 space-y-0.5 px-2 py-3">
+        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
           {sidebarLinks.map((link) => {
             const Icon = link.icon
             const isActive =
