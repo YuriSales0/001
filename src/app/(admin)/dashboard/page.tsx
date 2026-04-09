@@ -109,7 +109,7 @@ export default function AdminDashboard() {
       label: "Overdue tasks",
       value: stats.overdueTasks,
       icon: AlertTriangle,
-      href: "#",
+      href: "/maintenance",
       color: stats.overdueTasks > 0 ? "text-red-600" : "text-navy-700",
       danger: stats.overdueTasks > 0,
     },

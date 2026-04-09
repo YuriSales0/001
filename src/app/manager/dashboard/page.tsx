@@ -93,7 +93,7 @@ export default function ManagerDashboard() {
               label: "Overdue tasks",
               value: stats.overdueTasks,
               icon: AlertTriangle,
-              href: "#",
+              href: "/tasks",
               color: stats.overdueTasks > 0 ? "text-red-600" : "text-gray-400",
               danger: stats.overdueTasks > 0,
             },

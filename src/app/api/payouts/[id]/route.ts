@@ -12,8 +12,35 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
   try {
     const body = await request.json()
-    const { status } = body as { status?: 'SCHEDULED' | 'PAID' | 'CANCELLED' }
-    if (!status) return NextResponse.json({ error: 'status required' }, { status: 400 })
+    const { status, scheduledFor, platform, description, grossAmount } = body as {
+      status?: 'SCHEDULED' | 'PAID' | 'CANCELLED'
+      scheduledFor?: string
+      platform?: string
+      description?: string
+      grossAmount?: number
+    }
+
+    // General edit (only SCHEDULED payouts)
+    if (!status) {
+      const existing = await prisma.payout.findUnique({ where: { id: params.id }, select: { status: true, commissionRate: true } })
+      if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      if (existing.status !== 'SCHEDULED') return NextResponse.json({ error: 'Only SCHEDULED payouts can be edited' }, { status: 400 })
+
+      const editData: Record<string, unknown> = {}
+      if (scheduledFor) editData.scheduledFor = new Date(scheduledFor)
+      if (platform !== undefined) editData.platform = platform || null
+      if (description !== undefined) editData.description = description || null
+      if (grossAmount !== undefined && grossAmount > 0) {
+        const rate = existing.commissionRate / 100
+        const commission = +(grossAmount * rate).toFixed(2)
+        editData.grossAmount = grossAmount
+        editData.commission = commission
+        editData.netAmount = +(grossAmount - commission).toFixed(2)
+      }
+
+      const updated = await prisma.payout.update({ where: { id: params.id }, data: editData })
+      return NextResponse.json(updated)
+    }
 
     const data: Record<string, unknown> = { status }
     if (status === 'PAID') data.paidAt = new Date()
@@ -108,5 +135,22 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   } catch (error) {
     console.error('Error updating payout:', error)
     return NextResponse.json({ error: 'Failed to update payout' }, { status: 500 })
+  }
+}
+
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+  const guard = await requireRole(['ADMIN'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+
+  try {
+    const payout = await prisma.payout.findUnique({ where: { id: params.id }, select: { status: true } })
+    if (!payout) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    if (payout.status === 'PAID') return NextResponse.json({ error: 'Cannot delete a paid payout' }, { status: 400 })
+
+    await prisma.payout.delete({ where: { id: params.id } })
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    console.error('Error deleting payout:', error)
+    return NextResponse.json({ error: 'Failed to delete payout' }, { status: 500 })
   }
 }

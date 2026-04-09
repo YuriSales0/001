@@ -186,6 +186,7 @@ export default function MaintenancePage() {
   const [showCreate, setShowCreate] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState<string | null>(null)
+  const [showCompleted, setShowCompleted] = useState(false)
 
   const load = async () => {
     setLoading(true)
@@ -268,17 +269,26 @@ export default function MaintenancePage() {
         <div className="px-4 py-3 border-b bg-gray-50 flex items-center justify-between">
           <div>
             <h2 className="font-bold text-gray-900 text-sm">Manutenção</h2>
-            <p className="text-xs text-gray-400 mt-0.5">{tasks.length} visita{tasks.length!==1?'s':''}</p>
+            <p className="text-xs text-gray-400 mt-0.5">{tasks.filter(t=>showCompleted||t.status!=='COMPLETED').length} visita{tasks.length!==1?'s':''}</p>
           </div>
-          <button onClick={()=>setShowCreate(true)}
-            className="rounded-lg bg-gray-900 text-white p-1.5 hover:bg-gray-800" title="Nova visita">
-            <Plus className="h-4 w-4"/>
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={()=>setShowCompleted(v=>!v)}
+              className={`rounded-lg px-2 py-1 text-[10px] font-semibold transition-colors ${showCompleted?'bg-green-100 text-green-700':'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+              title={showCompleted?'Ocultar concluídas':'Mostrar concluídas'}
+            >
+              {showCompleted?'✓ Todas':'Activas'}
+            </button>
+            <button onClick={()=>setShowCreate(true)}
+              className="rounded-lg bg-gray-900 text-white p-1.5 hover:bg-gray-800" title="Nova visita">
+              <Plus className="h-4 w-4"/>
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto divide-y">
           {loading&&<div className="p-4 text-center text-sm text-gray-400">A carregar…</div>}
-          {!loading&&tasks.length===0&&(
+          {!loading&&tasks.filter(t=>showCompleted||t.status!=='COMPLETED').length===0&&(
             <div className="p-6 text-center text-sm text-gray-400">
               Sem visitas de manutenção.
               <button onClick={()=>setShowCreate(true)} className="mt-2 block w-full rounded-lg border py-2 text-xs hover:bg-gray-50">
@@ -286,7 +296,7 @@ export default function MaintenancePage() {
               </button>
             </div>
           )}
-          {tasks.map(t=>{
+          {tasks.filter(t=>showCompleted||t.status!=='COMPLETED').map(t=>{
             const isSelected = selected?.id===t.id
             return (
               <button key={t.id} onClick={()=>selectTask(t)}

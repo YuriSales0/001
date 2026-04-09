@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Info, X, AlertCircle, Receipt, Plus } from 'lucide-react'
+import { Info, X, AlertCircle, Receipt, Plus, Pencil, Trash2 } from 'lucide-react'
 import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES, PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from '@/lib/finance'
 
@@ -75,10 +75,10 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
             <h3 className="font-semibold text-navy-900">Comissão por plano</h3>
             <div className="grid grid-cols-2 gap-1 text-xs">
               {[
-                { plan: 'STARTER', rate: '20%', price: 'Grátis' },
+                { plan: 'STARTER', rate: '22%', price: 'Grátis' },
                 { plan: 'BASIC',   rate: '20%', price: '€89/mês' },
-                { plan: 'MID',     rate: '18%', price: '€139/mês' },
-                { plan: 'PREMIUM', rate: '15%', price: '€199/mês' },
+                { plan: 'MID',     rate: '17%', price: '€159/mês' },
+                { plan: 'PREMIUM', rate: '13%', price: '€269/mês' },
               ].map(r => (
                 <div key={r.plan} className="rounded-md bg-gray-50 px-3 py-2">
                   <div className="font-semibold text-navy-900">{r.plan}</div>
@@ -232,6 +232,102 @@ function CreatePayoutModal({
   )
 }
 
+function EditPayoutModal({ payout, onClose, onSaved }: {
+  payout: Payout
+  onClose: () => void
+  onSaved: () => void
+}) {
+  const [grossAmount, setGrossAmount] = useState(String(payout.grossAmount))
+  const [scheduledFor, setScheduledFor] = useState(payout.scheduledFor.slice(0, 10))
+  const [platform, setPlatform] = useState(payout.platform ?? '')
+  const [description, setDescription] = useState(payout.description ?? '')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+
+  const gross = parseFloat(grossAmount) || payout.grossAmount
+  const rate = payout.commissionRate / 100
+  const commission = +(gross * rate).toFixed(2)
+  const net = +(gross - commission).toFixed(2)
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setError('')
+    const res = await fetch(`/api/payouts/${payout.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        grossAmount: gross,
+        scheduledFor,
+        platform: platform || null,
+        description: description || null,
+      }),
+    })
+    setSaving(false)
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      setError((data as { error?: string }).error || 'Erro ao guardar.')
+      return
+    }
+    onSaved()
+    onClose()
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
+        <div className="flex items-center justify-between p-5 border-b">
+          <h2 className="text-lg font-bold text-navy-900">Editar payout</h2>
+          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+        </div>
+        <form onSubmit={submit} className="p-5 space-y-4">
+          {error && <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Valor bruto (€)</label>
+            <input type="number" step="0.01" min="0" value={grossAmount} onChange={e => setGrossAmount(e.target.value)}
+              className="w-full rounded-md border px-3 py-2 text-sm" required />
+            {gross > 0 && (
+              <div className="mt-2 rounded-lg bg-gray-50 border divide-y text-sm">
+                <div className="flex justify-between px-3 py-2 text-orange-600">
+                  <span>Comissão ({payout.commissionRate}%)</span>
+                  <span>− {fmtEUR(commission)}</span>
+                </div>
+                <div className="flex justify-between px-3 py-2 font-semibold">
+                  <span>Líquido</span>
+                  <span className="text-green-600">{fmtEUR(net)}</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada</label>
+            <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)}
+              className="w-full rounded-md border px-3 py-2 text-sm" required />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
+            <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <option value="">— Nenhuma —</option>
+              {PLATFORMS.map(p => <option key={p} value={p}>{PLATFORM_LABELS[p] ?? p}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
+            <input value={description} onChange={e => setDescription(e.target.value)} placeholder="Opcional"
+              className="w-full rounded-md border px-3 py-2 text-sm" />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
+            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50">
+              {saving ? 'A guardar...' : 'Guardar'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function PayoutsPage() {
   const { fmt } = useCurrency()
   const [payouts, setPayouts] = useState<Payout[]>([])
@@ -267,6 +363,13 @@ export default function PayoutsPage() {
   useEffect(() => { load(); loadProperties() }, [])
 
   const [paying, setPaying] = useState<string | null>(null)
+  const [editingPayout, setEditingPayout] = useState<Payout | null>(null)
+
+  const deletePayout = async (id: string, label: string) => {
+    if (!confirm(`Eliminar payout de ${label}?\n\nEsta acção não pode ser desfeita.`)) return
+    await fetch(`/api/payouts/${id}`, { method: 'DELETE' })
+    load(clientFilter)
+  }
 
   const markPaid = async (id: string, ownerName: string, amount: number) => {
     if (!confirm(`Confirm payout to ${ownerName} of ${fmt(amount)}?\n\nThis will:\n- Mark payout as paid\n- Generate invoice automatically\n- Send Owner Statement by email`)) return
@@ -415,15 +518,33 @@ export default function PayoutsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {p.status === 'SCHEDULED' && (
-                      <button
-                        onClick={() => markPaid(p.id, p.property.owner.name || p.property.owner.email, p.netAmount)}
-                        disabled={paying === p.id}
-                        className="inline-flex items-center gap-1.5 text-xs rounded-lg bg-green-600 text-white px-3 py-1.5 hover:bg-green-700 disabled:opacity-50 font-medium transition-colors"
-                      >
-                        {paying === p.id ? '...' : 'Mark paid'}
-                      </button>
-                    )}
+                    <div className="flex items-center justify-end gap-1.5">
+                      {p.status === 'SCHEDULED' && (
+                        <>
+                          <button
+                            onClick={() => markPaid(p.id, p.property.owner.name || p.property.owner.email, p.netAmount)}
+                            disabled={paying === p.id}
+                            className="inline-flex items-center gap-1.5 text-xs rounded-lg bg-green-600 text-white px-3 py-1.5 hover:bg-green-700 disabled:opacity-50 font-medium transition-colors"
+                          >
+                            {paying === p.id ? '...' : 'Mark paid'}
+                          </button>
+                          <button
+                            onClick={() => setEditingPayout(p)}
+                            className="rounded-lg border p-1.5 text-gray-500 hover:bg-gray-50 hover:text-navy-900 transition-colors"
+                            title="Editar"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => deletePayout(p.id, p.property.owner.name || p.property.owner.email)}
+                            className="rounded-lg border border-red-200 p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               )
@@ -438,6 +559,13 @@ export default function PayoutsPage() {
           properties={properties}
           onClose={() => setShowCreate(false)}
           onCreated={() => load(clientFilter)}
+        />
+      )}
+      {editingPayout && (
+        <EditPayoutModal
+          payout={editingPayout}
+          onClose={() => setEditingPayout(null)}
+          onSaved={() => load(clientFilter)}
         />
       )}
     </div>

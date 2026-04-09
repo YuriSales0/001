@@ -40,6 +40,19 @@ const integrations = [
     ],
   },
   {
+    category: 'Data Intelligence',
+    items: [
+      {
+        id: 'kepler',
+        name: 'Kepler.gl / deck.gl',
+        description: 'Visualização geoespacial de pricing e ocupação por zona — base para venda de inteligência de mercado a imobiliárias regionais',
+        status: 'planned',
+        features: ['Heatmap de preço médio por zona Costa Tropical', 'Hexbin de ocupação por época e micro-mercado', 'Dashboard de mercado para imobiliárias (produto standalone)'],
+        eta: '2027',
+      },
+    ],
+  },
+  {
     category: 'Marketing',
     items: [
       {
@@ -88,7 +101,7 @@ export default function IntegrationsPage() {
           <div className="text-xs text-gray-500 mt-1">Activas</div>
         </div>
         <div className="rounded-xl border bg-white p-4 text-center">
-          <div className="text-2xl font-bold text-amber-500">5</div>
+          <div className="text-2xl font-bold text-amber-500">6</div>
           <div className="text-xs text-gray-500 mt-1">Planeadas</div>
         </div>
         <div className="rounded-xl border bg-white p-4 text-center">
