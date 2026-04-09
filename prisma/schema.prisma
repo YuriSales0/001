@@ -227,6 +227,7 @@ model Property {
   payouts        Payout[]
   invoices       Invoice[]
   pricingPoints  PricingDataPoint[]
+  checklistItems PropertyChecklistItem[]
 }
 
 model Invoice {
@@ -519,6 +520,18 @@ enum CampaignType {
   EMAIL
   EVENT
   PRINT
+}
+
+model PropertyChecklistItem {
+  id         String   @id @default(cuid())
+  propertyId String
+  category   String   // 'exterior' | 'interior'
+  label      String
+  isActive   Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 model Campaign {

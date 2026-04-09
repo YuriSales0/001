@@ -38,6 +38,28 @@ type CheckoutReport = {
   submittedAt?: string
 }
 
+type PreventiveReport = {
+  type: 'preventive'
+  sections: { name: string; items: { id: string; label: string; checked: boolean; anomaly: boolean; note: string }[] }[]
+  checkedCount: number
+  totalCount: number
+  anomalyCount: number
+  photoUrls?: string[]
+  submittedAt?: string
+}
+
+type CorrectiveReport = {
+  type: 'corrective'
+  problem: string
+  rootCause?: string | null
+  actionTaken: string
+  specialistName?: string | null
+  cost?: number
+  resolved: boolean
+  photoUrls?: string[]
+  submittedAt?: string
+}
+
 const TYPE_LABEL: Record<string, string> = {
   CLEANING: "Cleaning",
   MAINTENANCE_PREVENTIVE: "Preventive maintenance",
@@ -78,14 +100,23 @@ const fmtRelative = (s: string) => {
   return `${Math.floor(days / 30)} months ago`
 }
 
-function parseCheckoutReport(notes: string | null): CheckoutReport | null {
+const CORRECTIVE_ACTION_LABELS: Record<string, string> = {
+  repaired:       'Reparado pelo técnico',
+  specialist:     'Especialista contactado',
+  temporary_fix:  'Solução temporária',
+  pending_parts:  'Aguarda peças',
+  no_action:      'Sem acção necessária',
+}
+
+function parseReport(notes: string | null): CheckoutReport | PreventiveReport | CorrectiveReport | null {
   if (!notes) return null
   try {
     const parsed = JSON.parse(notes)
-    if (parsed && typeof parsed === "object" && "condition" in parsed) return parsed
-  } catch {
-    // not JSON, ignore
-  }
+    if (!parsed || typeof parsed !== "object") return null
+    if (parsed.type === 'preventive') return parsed as PreventiveReport
+    if (parsed.type === 'corrective') return parsed as CorrectiveReport
+    if ('condition' in parsed) return parsed as CheckoutReport
+  } catch { /* not JSON */ }
   return null
 }
 
@@ -141,8 +172,14 @@ export default function ClientCarePage() {
 
   const issuesNeedingAttention = useMemo(
     () => completed
-      .map(t => ({ task: t, report: parseCheckoutReport(t.notes) }))
-      .filter(x => x.report && (x.report.condition === "minor" || x.report.condition === "major"))
+      .map(t => ({ task: t, report: parseReport(t.notes) }))
+      .filter(x => {
+        if (!x.report) return false
+        if ('condition' in x.report) return x.report.condition === "minor" || x.report.condition === "major"
+        if ('type' in x.report && x.report.type === 'corrective') return !(x.report as CorrectiveReport).resolved
+        if ('type' in x.report && x.report.type === 'preventive') return (x.report as PreventiveReport).anomalyCount > 0
+        return false
+      })
       .slice(0, 5),
     [completed],
   )
@@ -215,25 +252,41 @@ export default function ClientCarePage() {
             <h2 className="font-serif font-bold text-hm-black">Recent issues flagged by our team</h2>
           </div>
           <div className="space-y-2">
-            {issuesNeedingAttention.map(({ task, report }) => (
-              <div key={task.id} className="rounded-lg border border-hm-border p-3 bg-white">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-serif font-semibold text-hm-black">
-                      {task.property.name} · {TYPE_LABEL[task.type] ?? task.type}
-                    </p>
-                    {report?.issues && (
-                      <p className="font-sans text-sm text-hm-slate mt-1 whitespace-pre-wrap">{report.issues}</p>
-                    )}
+            {issuesNeedingAttention.map(({ task, report }) => {
+              const corrective = (report && 'type' in report && report.type === 'corrective') ? report as CorrectiveReport : null
+              const preventive = (report && 'type' in report && report.type === 'preventive') ? report as PreventiveReport : null
+              const checkout   = (report && 'condition' in report) ? report as CheckoutReport : null
+              const isCorrectiveUnresolved = !!(corrective && !corrective.resolved)
+              const isPreventiveAnomaly   = !!(preventive && preventive.anomalyCount > 0)
+              const isMajorCheckout       = checkout?.condition === "major"
+              return (
+                <div key={task.id} className="rounded-lg border border-hm-border p-3 bg-white">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-serif font-semibold text-hm-black">
+                        {task.property.name} · {TYPE_LABEL[task.type] ?? task.type}
+                      </p>
+                      {corrective && (
+                        <p className="font-sans text-sm text-hm-slate mt-1">{corrective.problem}</p>
+                      )}
+                      {preventive && (
+                        <p className="font-sans text-sm text-hm-slate mt-1">
+                          {preventive.anomalyCount} anomalia{preventive.anomalyCount !== 1 ? 's' : ''} detectada{preventive.anomalyCount !== 1 ? 's' : ''}
+                        </p>
+                      )}
+                      {checkout?.issues && (
+                        <p className="font-sans text-sm text-hm-slate mt-1 whitespace-pre-wrap">{checkout.issues}</p>
+                      )}
+                    </div>
+                    <span className={`text-xs font-sans font-semibold rounded-full px-2 py-0.5 shrink-0 ${
+                      isMajorCheckout || isCorrectiveUnresolved ? "bg-hm-red/10 text-hm-red" : "bg-hm-gold/15 text-hm-gold-dk"
+                    }`}>
+                      {isCorrectiveUnresolved ? "Pendente" : isPreventiveAnomaly ? "Anomalia" : isMajorCheckout ? "Major" : "Minor"}
+                    </span>
                   </div>
-                  <span className={`text-xs font-sans font-semibold rounded-full px-2 py-0.5 shrink-0 ${
-                    report?.condition === "major" ? "bg-hm-red/10 text-hm-red" : "bg-hm-gold/15 text-hm-gold-dk"
-                  }`}>
-                    {report?.condition === "major" ? "Major" : "Minor"}
-                  </span>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}
@@ -300,13 +353,16 @@ export default function ClientCarePage() {
           <div className="space-y-2">
             {completed.map(t => {
               const Icon = TYPE_ICON[t.type] ?? CheckCircle2
-              const report = parseCheckoutReport(t.notes)
+              const report = parseReport(t.notes)
+              const preventive = (report && 'type' in report && report.type === 'preventive') ? report as PreventiveReport : null
+              const corrective = (report && 'type' in report && report.type === 'corrective') ? report as CorrectiveReport : null
+              const checkout   = (report && 'condition' in report) ? report as CheckoutReport : null
               return (
                 <div key={t.id} className="rounded-hm border border-hm-border p-4"
                      style={{ background: "var(--hm-sand)" }}>
                   <div className="flex items-start gap-4">
                     <div className="h-10 w-10 rounded-full flex items-center justify-center shrink-0"
-                         style={{ background: "var(--hm-green)" }}>
+                         style={{ background: corrective && !corrective.resolved ? "var(--hm-red)" : "var(--hm-green)" }}>
                       <Icon className="h-5 w-5 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -318,27 +374,86 @@ export default function ClientCarePage() {
                         {TYPE_LABEL[t.type] ?? t.type} · {t.property.name}
                         {t.assignee && ` · by ${t.assignee.name ?? t.assignee.email}`}
                       </p>
-                      {report && (
-                        <div className="mt-3 rounded-lg border border-hm-border p-3 bg-white">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className={`inline-flex items-center gap-1 text-xs font-sans font-semibold rounded-full px-2 py-0.5 ${
-                              report.condition === "good" ? "bg-hm-green/10 text-hm-green"
-                                : report.condition === "minor" ? "bg-hm-gold/15 text-hm-gold-dk"
-                                : "bg-hm-red/10 text-hm-red"
-                            }`}>
-                              {report.condition === "good" ? "Good condition"
-                                : report.condition === "minor" ? "Minor issues"
-                                : "Major issues"}
+
+                      {/* Preventive report */}
+                      {preventive && (
+                        <div className="mt-3 rounded-lg border border-hm-border p-3 bg-white space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="font-sans text-xs font-semibold text-hm-green">
+                              ✓ {preventive.checkedCount}/{preventive.totalCount} itens verificados
                             </span>
+                            {preventive.anomalyCount > 0 && (
+                              <span className="font-sans text-xs font-semibold text-hm-gold-dk">
+                                ⚠ {preventive.anomalyCount} anomalia{preventive.anomalyCount !== 1 ? 's' : ''}
+                              </span>
+                            )}
                           </div>
-                          {report.issues && (
-                            <p className="font-sans text-sm text-hm-slate whitespace-pre-wrap">{report.issues}</p>
+                          {preventive.sections?.flatMap(sec => sec.items.filter(i => i.anomaly)).length > 0 && (
+                            <div>
+                              <p className="font-sans text-xs text-hm-slate/60 mb-1">Anomalias detectadas:</p>
+                              {preventive.sections.flatMap(sec => sec.items.filter(i => i.anomaly)).map((item, i) => (
+                                <p key={i} className="font-sans text-xs text-hm-slate">⚠ {item.label}{item.note ? ` — ${item.note}` : ''}</p>
+                              ))}
+                            </div>
                           )}
-                          {report.damages && (
-                            <p className="font-sans text-xs text-hm-slate/70 mt-1 whitespace-pre-wrap">
-                              <strong>Damages:</strong> {report.damages}
-                            </p>
+                          {preventive.photoUrls && preventive.photoUrls.length > 0 && (
+                            <div className="grid grid-cols-3 gap-1.5 pt-1">
+                              {preventive.photoUrls.map((url, i) => (
+                                <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                                   className="block rounded overflow-hidden border aspect-video bg-gray-100">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
+                                </a>
+                              ))}
+                            </div>
                           )}
+                        </div>
+                      )}
+
+                      {/* Corrective report */}
+                      {corrective && (
+                        <div className="mt-3 rounded-lg border border-hm-border p-3 bg-white space-y-2">
+                          <p className="font-sans text-sm text-hm-slate">{corrective.problem}</p>
+                          <div className="flex flex-wrap gap-3">
+                            <span className={`font-sans text-xs font-semibold rounded-full px-2 py-0.5 ${corrective.resolved ? 'bg-hm-green/10 text-hm-green' : 'bg-hm-red/10 text-hm-red'}`}>
+                              {corrective.resolved ? 'Resolvido' : 'Pendente'}
+                            </span>
+                            <span className="font-sans text-xs text-hm-slate/60">
+                              {CORRECTIVE_ACTION_LABELS[corrective.actionTaken] ?? corrective.actionTaken}
+                            </span>
+                            {corrective.cost != null && corrective.cost > 0 && (
+                              <span className="font-sans text-xs text-hm-slate/60">€{corrective.cost}</span>
+                            )}
+                          </div>
+                          {corrective.rootCause && (
+                            <p className="font-sans text-xs text-hm-slate/70">Causa: {corrective.rootCause}</p>
+                          )}
+                          {corrective.photoUrls && corrective.photoUrls.length > 0 && (
+                            <div className="grid grid-cols-3 gap-1.5 pt-1">
+                              {corrective.photoUrls.map((url, i) => (
+                                <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                                   className="block rounded overflow-hidden border aspect-video bg-gray-100">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
+                                </a>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Checkout / legacy report */}
+                      {checkout && (
+                        <div className="mt-3 rounded-lg border border-hm-border p-3 bg-white">
+                          <span className={`inline-flex items-center text-xs font-sans font-semibold rounded-full px-2 py-0.5 ${
+                            checkout.condition === "good" ? "bg-hm-green/10 text-hm-green"
+                              : checkout.condition === "minor" ? "bg-hm-gold/15 text-hm-gold-dk"
+                              : "bg-hm-red/10 text-hm-red"
+                          }`}>
+                            {checkout.condition === "good" ? "Good condition" : checkout.condition === "minor" ? "Minor issues" : "Major issues"}
+                          </span>
+                          {checkout.issues && <p className="font-sans text-sm text-hm-slate mt-1 whitespace-pre-wrap">{checkout.issues}</p>}
+                          {checkout.damages && <p className="font-sans text-xs text-hm-slate/70 mt-1"><strong>Damages:</strong> {checkout.damages}</p>}
                         </div>
                       )}
                     </div>
