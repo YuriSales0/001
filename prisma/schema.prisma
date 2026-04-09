@@ -451,6 +451,10 @@ model PricingDataPoint {
   isHoliday             Boolean  @default(false)
   isLocalEvent          Boolean  @default(false)
   occupancyNearbyPct    Float?   // % occupancy in area (from external API)
+  suggestedPriceMin     Float?   // lower bound of PriceLabs range
+  suggestedPriceMax     Float?   // upper bound of PriceLabs range
+  competitorAvgPrice    Float?   // avg competitor price that night (from PriceLabs)
+  revenueResult         Float?   // actual revenue generated (priceCharged × nights, post-stay)
   reservationId         String?
   createdAt             DateTime @default(now())
 
