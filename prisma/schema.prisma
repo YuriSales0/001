@@ -266,7 +266,7 @@ model Reservation {
 model Payout {
   id            String       @id @default(cuid())
   propertyId    String
-  reservationId String
+  reservationId String?
   grossAmount   Float
   commission    Float
   commissionRate Float       @default(18.0)
@@ -275,11 +275,12 @@ model Payout {
   platform      Platform?
   paidAt        DateTime?
   status        PayoutStatus @default(SCHEDULED)
+  description   String?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
-  property    Property    @relation(fields: [propertyId], references: [id])
-  reservation Reservation @relation(fields: [reservationId], references: [id])
+  property    Property     @relation(fields: [propertyId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
 }
 
 model Expense {

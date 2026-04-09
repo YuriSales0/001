@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { calcCommission } from '@/lib/finance'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,5 +48,57 @@ export async function GET(request: NextRequest) {
   } catch (e) {
     console.error('Error fetching payouts:', e)
     return NextResponse.json({ error: 'Failed to fetch payouts' }, { status: 500 })
+  }
+}
+
+export async function POST(request: NextRequest) {
+  const guard = await requireRole(['ADMIN'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+
+  try {
+    const body = await request.json()
+    const { propertyId, grossAmount, scheduledFor, platform, description } = body as {
+      propertyId: string
+      grossAmount: number
+      scheduledFor: string
+      platform?: string
+      description?: string
+    }
+
+    if (!propertyId || !grossAmount || !scheduledFor) {
+      return NextResponse.json({ error: 'propertyId, grossAmount and scheduledFor are required' }, { status: 400 })
+    }
+
+    // Get owner's plan to calculate commission
+    const property = await prisma.property.findUnique({
+      where: { id: propertyId },
+      include: { owner: { select: { id: true, subscriptionPlan: true } } },
+    })
+    if (!property) return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+
+    const { commission, commissionRate, net } = calcCommission(+grossAmount, property.owner?.subscriptionPlan)
+
+    const payout = await prisma.payout.create({
+      data: {
+        propertyId,
+        grossAmount,
+        commission,
+        commissionRate,
+        netAmount: net,
+        scheduledFor: new Date(scheduledFor),
+        platform: platform as never ?? null,
+        description: description ?? null,
+        status: 'SCHEDULED',
+      },
+      include: {
+        property: { select: { id: true, name: true, owner: { select: { id: true, name: true, email: true } } } },
+        reservation: { select: { id: true, guestName: true, checkIn: true, checkOut: true } },
+      },
+    })
+
+    return NextResponse.json(payout, { status: 201 })
+  } catch (e) {
+    console.error('Error creating payout:', e)
+    return NextResponse.json({ error: 'Failed to create payout' }, { status: 500 })
   }
 }

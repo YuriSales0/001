@@ -95,7 +95,6 @@ function baseWrapper(content: string) {
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f0;padding:40px 0;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-        <!-- Header -->
         <tr>
           <td style="background:#111827;padding:24px 32px;">
             <span style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">
@@ -106,9 +105,7 @@ function baseWrapper(content: string) {
             </span>
           </td>
         </tr>
-        <!-- Body -->
         <tr><td style="padding:32px;">${content}</td></tr>
-        <!-- Footer -->
         <tr>
           <td style="background:#f9f9f7;padding:20px 32px;border-top:1px solid #ececec;">
             <p style="margin:0;font-size:12px;color:#999;">HostMasters · Property Management · Costa Tropical, Spain</p>
@@ -230,7 +227,7 @@ export function ownerStatementEmail(opts: {
   const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
   const shortId = opts.payoutId.slice(-8).toUpperCase()
   const platformLabel = opts.platform
-    ? { AIRBNB: 'Airbnb', BOOKING: 'Booking.com', DIRECT: 'Direct booking', OTHER: 'Other' }[opts.platform] ?? opts.platform
+    ? ({ AIRBNB: 'Airbnb', BOOKING: 'Booking.com', DIRECT: 'Direct booking', OTHER: 'Other' } as Record<string,string>)[opts.platform] ?? opts.platform
     : 'N/A'
 
   const body = `

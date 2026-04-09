@@ -37,9 +37,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (status === 'PAID') {
       const owner = payout.property?.owner
       const paidAt = payout.paidAt ?? new Date()
-      const checkInStr  = payout.reservation.checkIn.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-      const checkOutStr = payout.reservation.checkOut.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-      const description = `Rental income — ${payout.property.name} · ${payout.reservation.guestName} (${checkInStr}–${checkOutStr})`
+      const checkInStr  = payout.reservation ? payout.reservation.checkIn.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : null
+      const checkOutStr = payout.reservation ? payout.reservation.checkOut.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : null
+      const description = payout.reservation
+        ? `Rental income — ${payout.property.name} · ${payout.reservation.guestName} (${checkInStr}–${checkOutStr})`
+        : (payout as unknown as { description?: string }).description ?? `Manual payout — ${payout.property.name}`
 
       // Auto-create Invoice for the owner
       let invoice = null
@@ -73,9 +75,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
             netAmount:      payout.netAmount,
             currency:       'EUR',
             paidAt:         paidAt.toISOString(),
-            guestName:      payout.reservation.guestName,
-            checkIn:        payout.reservation.checkIn.toISOString(),
-            checkOut:       payout.reservation.checkOut.toISOString(),
+            guestName:      payout.reservation?.guestName ?? '—',
+            checkIn:        payout.reservation?.checkIn.toISOString() ?? paidAt.toISOString(),
+            checkOut:       payout.reservation?.checkOut.toISOString() ?? paidAt.toISOString(),
             platform:       payout.platform,
             dashboardUrl:   `${DASHBOARD_URL}/client/payouts`,
           }),
