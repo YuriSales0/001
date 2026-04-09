@@ -23,7 +23,7 @@ const AI_PLANS = ['MID', 'PREMIUM']
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
   if (!user) redirect('/login')
-  if (user.role !== 'CLIENT') redirect('/me')
+  if (!user.isSuperUser && user.role !== 'CLIENT') redirect('/me')
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()

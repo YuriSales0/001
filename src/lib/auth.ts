@@ -44,6 +44,7 @@ export const authOptions: NextAuthOptions = {
                 email: user.email,
                 role: user.role as AppRole,
                 language: user.language,
+                isSuperUser: (user as unknown as { isSuperUser?: boolean }).isSuperUser ?? false,
               }
             }
           }
@@ -67,6 +68,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id
         token.role = (user as { role?: AppRole }).role || 'CLIENT'
         token.language = (user as { language?: string }).language || 'en'
+        token.isSuperUser = (user as { isSuperUser?: boolean }).isSuperUser ?? false
       }
       return token
     },
@@ -75,6 +77,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.role = token.role as AppRole
         session.user.language = (token.language as string) || 'en'
+        session.user.isSuperUser = token.isSuperUser as boolean
       }
       return session
     },

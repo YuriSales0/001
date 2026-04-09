@@ -14,7 +14,7 @@ const navLinks = [
 export default async function CrewLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
   if (!user) redirect('/login')
-  if (user.role !== 'CREW') redirect('/me')
+  if (!user.isSuperUser && user.role !== 'CREW') redirect('/me')
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()

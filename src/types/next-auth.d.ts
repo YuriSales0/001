@@ -11,6 +11,7 @@ declare module 'next-auth' {
       image?: string | null
       role: AppRole
       language: string
+      isSuperUser: boolean
     }
   }
 }

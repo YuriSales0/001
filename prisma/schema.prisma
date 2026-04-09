@@ -134,6 +134,7 @@ model User {
   ltv                Float?    @default(0)
   bio                String?
   commissionRate     Float?
+  isSuperUser        Boolean   @default(false)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 

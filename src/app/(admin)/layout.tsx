@@ -7,6 +7,6 @@ export const dynamic = 'force-dynamic'
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
   if (!user) redirect('/login')
-  if (user.role !== 'ADMIN') redirect('/login')
+  if (!user.isSuperUser && user.role !== 'ADMIN') redirect('/login')
   return <ManagerLayout user={{ name: user.name, email: user.email, image: user.image }} role="ADMIN">{children}</ManagerLayout>
 }
