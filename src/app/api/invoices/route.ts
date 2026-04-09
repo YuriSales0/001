@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { sendEmail, invoiceCreatedEmail } from '@/lib/email'
+
+const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,7 +59,27 @@ export async function POST(req: NextRequest) {
         dueDate: dueDate ? new Date(dueDate) : null,
         notes: notes || null,
       },
+      include: { client: { select: { name: true, email: true } } },
     })
+
+    // Send invoice email to client
+    if (invoice.client?.email) {
+      await sendEmail({
+        to: invoice.client.email,
+        subject: `Invoice from HostMasters`,
+        html: invoiceCreatedEmail({
+          clientName: invoice.client.name || invoice.client.email,
+          invoiceId: invoice.id,
+          description: invoice.description,
+          amount: invoice.amount,
+          currency: invoice.currency,
+          dueDate: invoice.dueDate?.toISOString() ?? null,
+          notes: invoice.notes,
+          dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
+        }),
+      }).catch(e => console.error('Email send error:', e))
+    }
+
     return NextResponse.json(invoice, { status: 201 })
   } catch (e) {
     console.error(e)

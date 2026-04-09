@@ -1,0 +1,150 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { headers } from 'next/headers'
+import { getStripe } from '@/lib/stripe'
+import { prisma } from '@/lib/prisma'
+import { sendEmail, subscriptionInvoiceEmail } from '@/lib/email'
+import Stripe from 'stripe'
+
+export const dynamic = 'force-dynamic'
+
+const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
+
+// Map Stripe price IDs to our plan names
+const PRICE_TO_PLAN: Record<string, string> = {
+  [process.env.STRIPE_BASIC_PRICE_ID   || 'price_basic']:   'BASIC',
+  [process.env.STRIPE_MID_PRICE_ID     || 'price_mid']:     'MID',
+  [process.env.STRIPE_PREMIUM_PRICE_ID || 'price_premium']: 'PREMIUM',
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.text()
+  const sig  = headers().get('stripe-signature') ?? ''
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET not set')
+    return NextResponse.json({ error: 'Webhook secret missing' }, { status: 500 })
+  }
+
+  let event: Stripe.Event
+  try {
+    event = getStripe().webhooks.constructEvent(body, sig, webhookSecret)
+  } catch (err) {
+    console.error('Stripe webhook signature verification failed:', err)
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+  }
+
+  try {
+    switch (event.type) {
+
+      // ── Subscription payment succeeded ──────────────────────────────────────
+      case 'invoice.payment_succeeded': {
+        const stripeInvoice = event.data.object as Stripe.Invoice
+        const customerId = stripeInvoice.customer as string
+        const subscriptionId = (stripeInvoice as Stripe.Invoice & { subscription?: string }).subscription ?? null
+        const amountPaid = (stripeInvoice.amount_paid ?? 0) / 100
+        const currency = (stripeInvoice.currency ?? 'eur').toUpperCase()
+        const periodStart = stripeInvoice.period_start ? new Date(stripeInvoice.period_start * 1000).toISOString() : new Date().toISOString()
+        const periodEnd   = stripeInvoice.period_end   ? new Date(stripeInvoice.period_end   * 1000).toISOString() : new Date().toISOString()
+
+        // Skip zero-amount invoices (trials, etc.)
+        if (amountPaid <= 0) break
+
+        // Find the user by Stripe customer ID
+        const user = await prisma.user.findFirst({ where: { stripeCustomerId: customerId } })
+        if (!user) {
+          console.warn(`No user found for Stripe customer ${customerId}`)
+          break
+        }
+
+        // Determine plan from subscription price
+        const validPlans = ['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const
+        type Plan = typeof validPlans[number]
+        let planName: Plan = (user.subscriptionPlan as Plan) ?? 'BASIC'
+        if (subscriptionId) {
+          const sub = await getStripe().subscriptions.retrieve(subscriptionId)
+          const priceId = sub.items.data[0]?.price?.id
+          const mapped = priceId ? PRICE_TO_PLAN[priceId] : undefined
+          if (mapped && validPlans.includes(mapped as Plan)) planName = mapped as Plan
+        }
+
+        // Find admin (createdBy)
+        const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' } })
+
+        // Create Invoice record
+        const invoice = await prisma.invoice.create({
+          data: {
+            clientId: user.id,
+            createdById: admin?.id ?? user.id,
+            description: `HostMasters ${planName} — ${new Date(periodStart).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`,
+            amount: amountPaid,
+            currency,
+            status: 'PAID',
+            paidAt: new Date(),
+            notes: `Stripe invoice ${stripeInvoice.id}`,
+          },
+        })
+
+        // Update user subscription status
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            subscriptionPlan: planName,
+            subscriptionStatus: 'active',
+          },
+        })
+
+        // Send thank-you + invoice email
+        if (user.email) {
+          await sendEmail({
+            to: user.email,
+            subject: `Thank you — HostMasters ${planName} subscription`,
+            html: subscriptionInvoiceEmail({
+              clientName: user.name || user.email,
+              plan: planName,
+              amount: amountPaid,
+              currency,
+              periodStart,
+              periodEnd,
+              invoiceId: invoice.id,
+              dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
+            }),
+          }).catch(e => console.error('Subscription email error:', e))
+        }
+        break
+      }
+
+      // ── Subscription cancelled / payment failed ──────────────────────────────
+      case 'customer.subscription.deleted':
+      case 'invoice.payment_failed': {
+        const obj = event.data.object as Stripe.Subscription | Stripe.Invoice
+        const customerId = 'customer' in obj ? obj.customer as string : (obj as Stripe.Subscription).customer as string
+        const user = await prisma.user.findFirst({ where: { stripeCustomerId: customerId } })
+        if (user) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { subscriptionStatus: event.type === 'customer.subscription.deleted' ? 'cancelled' : 'past_due' },
+          })
+        }
+        break
+      }
+
+      // ── Customer created — store Stripe ID ───────────────────────────────────
+      case 'customer.created': {
+        const customer = event.data.object as Stripe.Customer
+        if (customer.email) {
+          await prisma.user.updateMany({
+            where: { email: customer.email },
+            data: { stripeCustomerId: customer.id },
+          })
+        }
+        break
+      }
+    }
+  } catch (err) {
+    console.error('Webhook handler error:', err)
+    return NextResponse.json({ error: 'Handler error' }, { status: 500 })
+  }
+
+  return NextResponse.json({ received: true })
+}
