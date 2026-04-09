@@ -104,12 +104,17 @@ export default function PayoutsPage() {
 
   useEffect(() => { load() }, [])
 
-  const markPaid = async (id: string) => {
+  const [paying, setPaying] = useState<string | null>(null)
+
+  const markPaid = async (id: string, ownerName: string, amount: number) => {
+    if (!confirm(`Confirm payout to ${ownerName} of ${fmt(amount)}?\n\nThis will:\n• Mark payout as paid\n• Generate invoice automatically\n• Send Owner Statement by email`)) return
+    setPaying(id)
     await fetch(`/api/payouts/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'PAID' }),
     })
+    setPaying(null)
     load()
   }
 
@@ -283,10 +288,11 @@ export default function PayoutsPage() {
                   <td className="px-4 py-3 text-right">
                     {p.status === 'SCHEDULED' && (
                       <button
-                        onClick={() => markPaid(p.id)}
-                        className="text-xs rounded-md bg-navy-900 text-white px-3 py-1 hover:bg-navy-800"
+                        onClick={() => markPaid(p.id, p.property.owner.name || p.property.owner.email, p.netAmount)}
+                        disabled={paying === p.id}
+                        className="inline-flex items-center gap-1.5 text-xs rounded-lg bg-green-600 text-white px-3 py-1.5 hover:bg-green-700 disabled:opacity-50 font-medium transition-colors"
                       >
-                        Marcar pago
+                        {paying === p.id ? '…' : '✓ Mark paid'}
                       </button>
                     )}
                   </td>
