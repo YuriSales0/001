@@ -54,6 +54,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
             amount:   payout.netAmount,
             currency: 'EUR',
             status:   'PAID',
+            type:     'RENTAL',
             paidAt,
             notes: `Auto-generated from payout ${payout.id}`,
           },

@@ -18,9 +18,9 @@ export async function GET() {
     propertiesCount,
     clientsCount,
     activeRes,
-    monthRevenueAgg,
     openPayoutsAgg,
     paidPayoutsAgg,
+    paidSubscriptionsAgg,
     overdueTasks,
     upcomingCheckIns,
     upcomingCheckOuts,
@@ -30,20 +30,21 @@ export async function GET() {
     prisma.property.count(),
     prisma.user.count({ where: { role: 'CLIENT' } }),
     prisma.reservation.count({ where: { status: { in: ['UPCOMING', 'ACTIVE'] } } }),
-    // Gross from payouts paid this month (same source as commission — consistent)
-    prisma.payout.aggregate({
-      _sum: { grossAmount: true },
-      where: { status: 'PAID', paidAt: { gte: monthStart, lt: monthEnd } },
-    }),
     prisma.payout.aggregate({
       _sum: { netAmount: true, commission: true },
       _count: true,
       where: { status: 'SCHEDULED' },
     }),
-    // Commission from payouts actually paid this month (accurate, plan-aware)
+    // Rental commissions + gross from payouts paid this month
     prisma.payout.aggregate({
       _sum: { grossAmount: true, commission: true },
       where: { status: 'PAID', paidAt: { gte: monthStart, lt: monthEnd } },
+    }),
+    // Subscription invoices paid this month (platform fees from owners)
+    prisma.invoice.aggregate({
+      _sum: { amount: true },
+      _count: true,
+      where: { type: 'SUBSCRIPTION', status: 'PAID', paidAt: { gte: monthStart, lt: monthEnd } },
     }),
     prisma.task.count({
       where: { status: { not: 'COMPLETED' }, dueDate: { lt: now } },
@@ -68,16 +69,19 @@ export async function GET() {
     }),
   ])
 
-  // Both gross and commission come from PAID payouts this month — consistent source
-  const monthRevenue = monthRevenueAgg._sum.grossAmount ?? 0
-  const monthCommission = paidPayoutsAgg._sum.commission ?? 0
+  const rentalVolume    = paidPayoutsAgg._sum.grossAmount ?? 0   // total arrendamento gerido
+  const rentalCommission = paidPayoutsAgg._sum.commission ?? 0   // comissão s/ alugueis
+  const subscriptionRevenue = paidSubscriptionsAgg._sum.amount ?? 0  // subscrições pagas
+  const totalHMRevenue = rentalCommission + subscriptionRevenue   // receita total HostMasters
 
   return NextResponse.json({
     propertiesCount,
     clientsCount,
     activeReservations: activeRes,
-    monthRevenue,
-    monthCommission,
+    rentalVolume,
+    rentalCommission,
+    subscriptionRevenue,
+    totalHMRevenue,
     openPayouts: {
       count: openPayoutsAgg._count,
       net: openPayoutsAgg._sum.netAmount ?? 0,

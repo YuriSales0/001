@@ -12,8 +12,10 @@ type Stats = {
   propertiesCount: number
   clientsCount: number
   activeReservations: number
-  monthRevenue: number
-  monthCommission: number
+  rentalVolume: number
+  rentalCommission: number
+  subscriptionRevenue: number
+  totalHMRevenue: number
   openPayouts: { count: number; net: number; commission: number }
   overdueTasks: number
   leadsOpen: number
@@ -80,9 +82,9 @@ export default function AdminDashboard() {
       color: "text-navy-700",
     },
     {
-      label: "Revenue this month",
-      value: fmtEUR(stats.monthRevenue),
-      sub: `Commission ${fmtEUR(stats.monthCommission)}`,
+      label: "HM revenue this month",
+      value: fmtEUR(stats.totalHMRevenue),
+      sub: `Alugueis ${fmtEUR(stats.rentalCommission)} · Sub ${fmtEUR(stats.subscriptionRevenue)}`,
       icon: Euro,
       href: "/my-reports",
       color: "text-navy-700",
@@ -231,27 +233,33 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Revenue trend */}
+      {/* Revenue breakdown */}
       <div className="rounded-xl border bg-white p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-navy-500" />
-            <span className="font-semibold text-navy-900 text-sm">This month at a glance</span>
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="h-4 w-4 text-navy-500" />
+          <span className="font-semibold text-navy-900 text-sm">This month at a glance</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="rounded-lg bg-gray-50 p-3">
+            <div className="text-xl font-bold text-navy-900">{fmtEUR(stats.rentalVolume)}</div>
+            <div className="text-xs text-gray-400 mt-0.5">Volume arrendamentos</div>
+          </div>
+          <div className="rounded-lg bg-orange-50 p-3">
+            <div className="text-xl font-bold text-orange-600">{fmtEUR(stats.rentalCommission)}</div>
+            <div className="text-xs text-gray-400 mt-0.5">Comissão alugueis</div>
+          </div>
+          <div className="rounded-lg bg-blue-50 p-3">
+            <div className="text-xl font-bold text-blue-600">{fmtEUR(stats.subscriptionRevenue)}</div>
+            <div className="text-xs text-gray-400 mt-0.5">Subscrições pagas</div>
+          </div>
+          <div className="rounded-lg bg-green-50 p-3 border border-green-200">
+            <div className="text-xl font-bold text-green-600">{fmtEUR(stats.totalHMRevenue)}</div>
+            <div className="text-xs text-gray-500 mt-0.5 font-medium">Receita total HM</div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-2xl font-bold text-navy-900">{fmtEUR(stats.monthRevenue)}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Gross revenue</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-green-600">{fmtEUR(stats.monthCommission)}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Our commission</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-navy-900">{fmtEUR(stats.openPayouts.net)}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Owner payouts pending</div>
-          </div>
+        <div className="mt-3 pt-3 border-t flex justify-between text-sm text-gray-500">
+          <span>Payouts pendentes aos proprietários</span>
+          <span className="font-semibold text-navy-900">{fmtEUR(stats.openPayouts.net)}</span>
         </div>
       </div>
 

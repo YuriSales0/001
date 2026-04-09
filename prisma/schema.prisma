@@ -109,6 +109,12 @@ enum InvoiceStatus {
   CANCELLED
 }
 
+enum InvoiceType {
+  RENTAL
+  SUBSCRIPTION
+  ADJUSTMENT
+}
+
 model User {
   id                 String    @id @default(cuid())
   name               String?
@@ -229,6 +235,7 @@ model Invoice {
   amount      Float
   currency    String        @default("EUR")
   status      InvoiceStatus @default(SENT)
+  type        InvoiceType   @default(RENTAL)
   dueDate     DateTime?
   paidAt      DateTime?
   notes       String?       @db.Text
