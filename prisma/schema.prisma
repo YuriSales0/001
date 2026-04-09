@@ -211,6 +211,8 @@ model Property {
   lastInspectionAt DateTime?
   status           PropertyStatus @default(PENDING_APPROVAL)
   commissionRate   Float          @default(18.0)
+  latitude         Float?
+  longitude        Float?
   ownerId          String
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
