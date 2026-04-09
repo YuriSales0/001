@@ -13,10 +13,11 @@ type DashboardStats = {
   propertiesCount: number
   clientsCount: number
   activeReservations: number
-  monthRevenue: number
-  monthCommission: number
+  rentalVolume: number
+  rentalCommission: number
+  openPayouts: { count: number; net: number; commission: number }
   overdueTasks: number
-  leadsOpen: number
+  pendingInvoices: { count: number; total: number }
   upcomingCheckIns: { id: string; guestName: string; checkIn: string; property: { name: string } }[]
   upcomingCheckOuts: { id: string; guestName: string; checkOut: string; property: { name: string } }[]
 }
@@ -32,7 +33,7 @@ export default function ManagerDashboard() {
   const [lastRefresh, setLastRefresh] = useState(new Date())
 
   const load = () => {
-    fetch("/api/admin/stats")
+    fetch("/api/manager/stats")
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         setStats(data)
@@ -56,7 +57,7 @@ export default function ManagerDashboard() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Manoela's Control Panel</h1>
+          <h1 className="text-2xl font-bold text-navy-900">Manager Portal</h1>
           <p className="text-sm text-gray-500 mt-0.5">{todayStr}</p>
         </div>
         <button
@@ -84,18 +85,12 @@ export default function ManagerDashboard() {
       {stats ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {[
-            { label: "Active owners", value: stats.clientsCount,       icon: Users,       href: "/manager/clients", color: "text-navy-600" },
-            { label: "Pipeline leads", value: stats.leadsOpen,          icon: UserCheck,   href: "/crm",             color: "text-navy-600" },
-            { label: "Live bookings",  value: stats.activeReservations, icon: CalendarDays,href: "/reservations",    color: "text-navy-600" },
+            { label: "Active owners",   value: stats.clientsCount,           icon: Users,        href: "/manager/clients",  color: "text-navy-600" },
+            { label: "Live bookings",   value: stats.activeReservations,      icon: CalendarDays, href: "/reservations",     color: "text-navy-600" },
+            { label: "Rental volume",   value: fmtEUR(stats.rentalVolume),    icon: Euro,         href: "/revenue",          color: "text-green-600" },
+            { label: "Payouts pending", value: fmtEUR(stats.openPayouts.net), icon: Wrench,       href: "/manager/payouts",  color: "text-amber-600" },
             {
-              label: "Revenue this month",
-              value: fmtEUR(stats.monthRevenue),
-              icon: Euro,
-              href: "/revenue",
-              color: "text-green-600",
-            },
-            {
-              label: "Open alerts",
+              label: "Overdue tasks",
               value: stats.overdueTasks,
               icon: AlertTriangle,
               href: "#",
@@ -244,7 +239,7 @@ export default function ManagerDashboard() {
             </div>
             <div className="flex items-center gap-2 text-amber-600">
               <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-              {stats?.leadsOpen ?? 0} leads in pipeline
+              {stats?.openPayouts.count ?? 0} payouts pending
             </div>
             <div className="flex items-center gap-2 text-green-600">
               <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
