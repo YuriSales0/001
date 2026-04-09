@@ -40,19 +40,6 @@ const integrations = [
     ],
   },
   {
-    category: 'Channel Manager',
-    items: [
-      {
-        id: 'smoobu',
-        name: 'Smoobu',
-        description: 'Sincroniza reservas e preços directamente com Airbnb, Booking.com e VRBO',
-        status: 'planned',
-        features: ['Sincronização de reservas bidirecional', 'Aplica preços de AI nas plataformas', 'Calendário unificado'],
-        eta: 'Q3 2026',
-      },
-    ],
-  },
-  {
     category: 'Marketing',
     items: [
       {
@@ -101,7 +88,7 @@ export default function IntegrationsPage() {
           <div className="text-xs text-gray-500 mt-1">Activas</div>
         </div>
         <div className="rounded-xl border bg-white p-4 text-center">
-          <div className="text-2xl font-bold text-amber-500">6</div>
+          <div className="text-2xl font-bold text-amber-500">5</div>
           <div className="text-xs text-gray-500 mt-1">Planeadas</div>
         </div>
         <div className="rounded-xl border bg-white p-4 text-center">
