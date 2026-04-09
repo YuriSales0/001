@@ -1,8 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+<<<<<<< Updated upstream
 import { InvoiceForm } from '@/components/invoice-form'
 import { Info, X, AlertCircle } from 'lucide-react'
+=======
+import Link from 'next/link'
+import { Info, X, AlertCircle, Receipt, Plus } from 'lucide-react'
+>>>>>>> Stashed changes
 import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES } from '@/lib/finance'
 
@@ -16,11 +21,16 @@ type Payout = {
   paidAt: string | null
   status: 'SCHEDULED' | 'PAID' | 'CANCELLED'
   platform: string | null
+  description: string | null
   property: { id: string; name: string; owner: { id: string; name: string | null; email: string } }
-  reservation: { id: string; guestName: string; checkIn: string; checkOut: string }
+  reservation: { id: string; guestName: string; checkIn: string; checkOut: string } | null
 }
 
+type Property = { id: string; name: string; owner: { name: string | null; email: string } }
+
 const fmtDate = (s: string) => new Date(s).toLocaleDateString('pt-PT')
+
+const PLATFORMS = ['AIRBNB', 'BOOKING', 'VRBO', 'DIRECT', 'OTHER']
 
 function HowItWorksModal({ onClose }: { onClose: () => void }) {
   return (
@@ -79,6 +89,185 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
   )
 }
 
+function CreatePayoutModal({
+  properties,
+  onClose,
+  onCreated,
+}: {
+  properties: Property[]
+  onClose: () => void
+  onCreated: () => void
+}) {
+  const { fmt } = useCurrency()
+  const [propertyId, setPropertyId] = useState('')
+  const [grossAmount, setGrossAmount] = useState('')
+  const [platform, setPlatform] = useState('')
+  const [scheduledFor, setScheduledFor] = useState(
+    new Date().toISOString().split('T')[0]
+  )
+  const [description, setDescription] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+
+  // Preview commission
+  const gross = parseFloat(grossAmount) || 0
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!propertyId || gross <= 0) {
+      setError('Selecciona uma propriedade e um valor válido.')
+      return
+    }
+    setSaving(true)
+    setError('')
+    const res = await fetch('/api/payouts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        propertyId,
+        grossAmount: gross,
+        scheduledFor,
+        platform: platform || undefined,
+        description: description || undefined,
+      }),
+    })
+    setSaving(false)
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      setError(data.error || 'Erro ao criar payout.')
+      return
+    }
+    onCreated()
+    onClose()
+  }
+
+  const selectedProp = properties.find(p => p.id === propertyId)
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+        <div className="flex items-center justify-between p-5 border-b">
+          <h2 className="text-lg font-bold text-navy-900">Criar payout manual</h2>
+          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <form onSubmit={submit} className="p-5 space-y-4">
+          {error && (
+            <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Propriedade *</label>
+            <select
+              value={propertyId}
+              onChange={e => setPropertyId(e.target.value)}
+              className="w-full rounded-md border px-3 py-2 text-sm"
+              required
+            >
+              <option value="">Seleccionar propriedade…</option>
+              {properties.map(p => (
+                <option key={p.id} value={p.id}>
+                  {p.name} — {p.owner.name || p.owner.email}
+                </option>
+              ))}
+            </select>
+            {selectedProp && (
+              <p className="mt-1 text-xs text-gray-500">
+                Proprietário: {selectedProp.owner.name || selectedProp.owner.email}
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Valor bruto (€) *</label>
+              <input
+                type="number"
+                min="1"
+                step="0.01"
+                value={grossAmount}
+                onChange={e => setGrossAmount(e.target.value)}
+                placeholder="0.00"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
+              <select
+                value={platform}
+                onChange={e => setPlatform(e.target.value)}
+                className="w-full rounded-md border px-3 py-2 text-sm"
+              >
+                <option value="">— Nenhuma —</option>
+                {PLATFORMS.map(pl => (
+                  <option key={pl} value={pl}>{PLATFORM_LABELS[pl] ?? pl}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada *</label>
+            <input
+              type="date"
+              value={scheduledFor}
+              onChange={e => setScheduledFor(e.target.value)}
+              className="w-full rounded-md border px-3 py-2 text-sm"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
+            <input
+              type="text"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              placeholder="ex: Ajuste manual — Jan 2026"
+              className="w-full rounded-md border px-3 py-2 text-sm"
+            />
+          </div>
+
+          {gross > 0 && (
+            <div className="rounded-lg bg-gray-50 border p-3 text-sm space-y-1">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Valor bruto</span>
+                <span className="font-medium">{fmt(gross)}</span>
+              </div>
+              <div className="flex justify-between text-orange-600">
+                <span>Comissão (calculada pelo plano)</span>
+                <span>— calculada no servidor</span>
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50"
+            >
+              {saving ? 'A criar…' : 'Criar payout'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function PayoutsPage() {
   const { fmt } = useCurrency()
   const [payouts, setPayouts] = useState<Payout[]>([])
@@ -87,6 +276,8 @@ export default function PayoutsPage() {
   const [showInvoiceForm, setShowInvoiceForm] = useState(false)
   const [showHowItWorks, setShowHowItWorks] = useState(false)
   const [overdueOnly, setOverdueOnly] = useState(false)
+  const [showCreate, setShowCreate] = useState(false)
+  const [properties, setProperties] = useState<Property[]>([])
 
   const now = new Date()
   const isOverdue = (p: Payout) =>
@@ -103,7 +294,18 @@ export default function PayoutsPage() {
     }
   }
 
-  useEffect(() => { load() }, [])
+  const loadProperties = async () => {
+    const res = await fetch('/api/properties?limit=200')
+    if (res.ok) {
+      const data = await res.json()
+      setProperties(Array.isArray(data) ? data : (data.properties ?? []))
+    }
+  }
+
+  useEffect(() => {
+    load()
+    loadProperties()
+  }, [])
 
   const markPaid = async (id: string) => {
     await fetch(`/api/payouts/${id}`, {
@@ -145,11 +347,27 @@ export default function PayoutsPage() {
             <Info className="h-4 w-4" />
             Como funciona
           </button>
+<<<<<<< Updated upstream
           <button
             onClick={() => setShowInvoiceForm(s => !s)}
             className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800"
           >
             {showInvoiceForm ? 'Fechar' : '+ Factura manual'}
+=======
+          <Link
+            href="/manager/invoices"
+            className="inline-flex items-center gap-1.5 rounded-md bg-gray-100 text-gray-700 px-4 py-2 text-sm hover:bg-gray-200"
+          >
+            <Receipt className="h-4 w-4" />
+            Invoices
+          </Link>
+          <button
+            onClick={() => setShowCreate(true)}
+            className="inline-flex items-center gap-1.5 rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800"
+          >
+            <Plus className="h-4 w-4" />
+            Criar payout
+>>>>>>> Stashed changes
           </button>
         </div>
       </div>
@@ -231,7 +449,7 @@ export default function PayoutsPage() {
             <tr>
               <th className="px-4 py-3">Propriedade</th>
               <th className="px-4 py-3">Proprietário</th>
-              <th className="px-4 py-3">Hóspede</th>
+              <th className="px-4 py-3">Hóspede / Descrição</th>
               <th className="px-4 py-3">Plataforma</th>
               <th className="px-4 py-3">Checkout</th>
               <th className="px-4 py-3">Agendado</th>
@@ -251,18 +469,25 @@ export default function PayoutsPage() {
             )}
             {displayed.map(p => {
               const overdue = isOverdue(p)
+              const guestOrDesc = p.reservation?.guestName ?? p.description ?? '—'
+              const checkoutStr = p.reservation ? fmtDate(p.reservation.checkOut) : '—'
               return (
                 <tr key={p.id} className={`border-t ${overdue ? 'bg-red-50' : ''}`}>
                   <td className="px-4 py-3 font-medium">{p.property.name}</td>
                   <td className="px-4 py-3 text-gray-600">{p.property.owner.name || p.property.owner.email}</td>
-                  <td className="px-4 py-3 text-gray-600">{p.reservation.guestName}</td>
+                  <td className="px-4 py-3 text-gray-600">
+                    {guestOrDesc}
+                    {!p.reservation && (
+                      <span className="ml-1.5 rounded-full bg-purple-100 text-purple-700 px-1.5 py-0.5 text-[10px] font-medium">manual</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     {p.platform
                       ? <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs">{PLATFORM_LABELS[p.platform] ?? p.platform}</span>
                       : <span className="text-gray-400 text-xs">—</span>
                     }
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{fmtDate(p.reservation.checkOut)}</td>
+                  <td className="px-4 py-3 text-gray-600">{checkoutStr}</td>
                   <td className={`px-4 py-3 ${overdue ? 'text-red-600 font-semibold' : 'text-gray-600'}`}>
                     {fmtDate(p.scheduledFor)}
                     {overdue && <span className="ml-1 text-xs">(atraso)</span>}
@@ -300,6 +525,13 @@ export default function PayoutsPage() {
       </div>
 
       {showHowItWorks && <HowItWorksModal onClose={() => setShowHowItWorks(false)} />}
+      {showCreate && (
+        <CreatePayoutModal
+          properties={properties}
+          onClose={() => setShowCreate(false)}
+          onCreated={() => load(clientFilter)}
+        />
+      )}
     </div>
   )
 }
