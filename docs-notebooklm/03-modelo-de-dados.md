@@ -1,0 +1,548 @@
+# HostMasters — Modelo de Dados (Prisma Schema)
+
+Este ficheiro descreve todas as entidades da base de dados e as suas relações.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  CREW
+  CLIENT
+}
+
+enum PropertyStatus {
+  PENDING_CLIENT
+  PENDING_APPROVAL
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+}
+
+enum TaskType {
+  CLEANING
+  MAINTENANCE_PREVENTIVE
+  MAINTENANCE_CORRECTIVE
+  INSPECTION
+  CHECK_IN
+  CHECK_OUT
+  TRANSFER
+  SHOPPING
+  LAUNDRY
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ReservationStatus {
+  UPCOMING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  AWAITING_REPORT
+}
+
+enum SupplierType {
+  CLEANER
+  PLUMBER
+  ELECTRICIAN
+  GENERAL
+}
+
+enum SubscriptionPlan {
+  STARTER
+  BASIC
+  MID
+  PREMIUM
+}
+
+enum Platform {
+  AIRBNB
+  BOOKING
+  DIRECT
+  OTHER
+}
+
+enum ConversationStatus {
+  OPEN
+  CLOSED
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  RETAINED
+  LOST
+  REMARKETING
+}
+
+enum LeadSource {
+  CADASTRO
+  NEWSLETTER
+  ONLINE
+  PHONE
+  WHATSAPP
+  WEBSITE
+  EMAIL
+  REFERRAL
+  OTHER
+}
+
+enum PayoutStatus {
+  SCHEDULED
+  PAID
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  CANCELLED
+}
+
+enum InvoiceType {
+  RENTAL
+  SUBSCRIPTION
+  ADJUSTMENT
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String    @unique
+  emailVerified      DateTime?
+  image              String?
+  password           String?
+  role               Role      @default(CLIENT)
+  phone              String?
+  language           String    @default("en")
+  birthday           DateTime?
+  stripeCustomerId   String?
+  subscriptionPlan   SubscriptionPlan?
+  subscriptionStatus String?
+  managerId          String?
+  satisfactionScore  Float?
+  ltv                Float?    @default(0)
+  bio                String?
+  commissionRate     Float?
+  isSuperUser        Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  manager       User?      @relation("ManagerClients", fields: [managerId], references: [id])
+  clients       User[]     @relation("ManagerClients")
+  accounts      Account[]
+  sessions      Session[]
+  properties    Property[]
+  tasks         Task[]     @relation("AssignedTasks")
+  leads         Lead[]     @relation("LeadOwner")
+  assignedLeads Lead[]     @relation("AssignedLeads")
+  invoicesReceived     Invoice[]      @relation("ClientInvoices")
+  invoicesIssued       Invoice[]      @relation("CreatedInvoices")
+  clientConversations  Conversation[] @relation("ClientConversations")
+  managerConversations Conversation[] @relation("ManagerConversations")
+  sentMessages         Message[]      @relation("SentMessages")
+  campaigns            Campaign[]     @relation("CampaignCreator")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Property {
+  id               String         @id @default(cuid())
+  name             String
+  address          String
+  city             String
+  postalCode       String?
+  description      String?        @db.Text
+  photos           String[]
+  contractUrl      String?
+  smartLockId      String?
+  bedrooms         Int?
+  sizeSqm          Int?
+  airbnbConnected   Boolean        @default(false)
+  bookingConnected  Boolean        @default(false)
+  airbnbIcalUrl     String?
+  airbnbListingId   String?
+  bookingIcalUrl    String?
+  bookingPropertyId String?
+  lastCleaningAt   DateTime?
+  lastInspectionAt DateTime?
+  status           PropertyStatus @default(PENDING_APPROVAL)
+  commissionRate   Float          @default(18.0)
+  ownerId          String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  owner          User               @relation(fields: [ownerId], references: [id])
+  reservations   Reservation[]
+  expenses       Expense[]
+  monthlyReports MonthlyReport[]
+  tasks          Task[]
+  suppliers      SupplierProperty[]
+  blockedDates   BlockedDate[]
+  payouts        Payout[]
+  invoices       Invoice[]
+  pricingPoints  PricingDataPoint[]
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  clientId    String
+  propertyId  String?
+  createdById String
+  description String        @db.Text
+  amount      Float
+  currency    String        @default("EUR")
+  status           InvoiceStatus @default(SENT)
+  type             InvoiceType   @default(RENTAL)
+  isAutoGenerated  Boolean       @default(false)
+  dueDate          DateTime?
+  paidAt      DateTime?
+  notes       String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client    User      @relation("ClientInvoices", fields: [clientId], references: [id])
+  property  Property? @relation(fields: [propertyId], references: [id])
+  createdBy User      @relation("CreatedInvoices", fields: [createdById], references: [id])
+}
+
+model Reservation {
+  id            String            @id @default(cuid())
+  propertyId    String
+  guestName     String
+  guestEmail    String?
+  guestPhone    String?
+  checkIn       DateTime
+  checkOut      DateTime
+  amount        Float
+  currency      String            @default("EUR")
+  platform      Platform?
+  externalId    String?
+  status        ReservationStatus @default(UPCOMING)
+  notes         String?           @db.Text
+  crewReport    String?           @db.Text
+  crewReportAt  DateTime?
+  crewReportBy  String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  property      Property           @relation(fields: [propertyId], references: [id])
+  expenses      Expense[]
+  payouts       Payout[]
+  pricingPoints PricingDataPoint[]
+}
+
+model Payout {
+  id            String       @id @default(cuid())
+  propertyId    String
+  reservationId String?
+  grossAmount   Float
+  commission    Float
+  commissionRate Float       @default(18.0)
+  netAmount     Float
+  scheduledFor  DateTime
+  platform      Platform?
+  paidAt        DateTime?
+  status        PayoutStatus @default(SCHEDULED)
+  description   String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  property    Property     @relation(fields: [propertyId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+}
+
+model Expense {
+  id            String    @id @default(cuid())
+  propertyId    String
+  reservationId String?
+  description   String
+  amount        Float
+  category      String
+  date          DateTime
+  receipt       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  property    Property     @relation(fields: [propertyId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+}
+
+model MonthlyReport {
+  id            String    @id @default(cuid())
+  propertyId    String
+  month         Int
+  year          Int
+  grossRevenue  Float
+  totalExpenses Float
+  commission    Float
+  ownerPayout   Float
+  pdfUrl        String?
+  sentAt        DateTime?
+  createdAt     DateTime  @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@unique([propertyId, month, year])
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  propertyId  String
+  type        TaskType
+  status      TaskStatus @default(PENDING)
+  title       String
+  description String?    @db.Text
+  notes       String?    @db.Text
+  checklist   Json?
+  dueDate     DateTime
+  assigneeId  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id])
+  assignee User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
+}
+
+model Supplier {
+  id        String       @id @default(cuid())
+  name      String
+  type      SupplierType
+  phone     String
+  email     String?
+  notes     String?      @db.Text
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  properties SupplierProperty[]
+}
+
+model SupplierProperty {
+  id         String @id @default(cuid())
+  supplierId String
+  propertyId String
+
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@unique([supplierId, propertyId])
+}
+
+model BlockedDate {
+  id         String   @id @default(cuid())
+  propertyId String
+  startDate  DateTime
+  endDate    DateTime
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id])
+}
+
+model Lead {
+  id                String     @id @default(cuid())
+  name              String
+  email             String?
+  phone             String?
+  source            LeadSource @default(WEBSITE)
+  status            LeadStatus @default(NEW)
+  message           String?    @db.Text
+  notes             String?    @db.Text
+  budget            Float?
+  propertyType      String?
+  followUpDate      DateTime?
+  score             Int?
+  bantData          Json?
+  ownerId           String?
+  assignedManagerId String?
+  convertedUserId   String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  owner           User? @relation("LeadOwner", fields: [ownerId], references: [id])
+  assignedManager User? @relation("AssignedLeads", fields: [assignedManagerId], references: [id])
+}
+
+model Conversation {
+  id        String             @id @default(cuid())
+  clientId  String
+  managerId String
+  status    ConversationStatus @default(OPEN)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  client   User      @relation("ClientConversations", fields: [clientId], references: [id])
+  manager  User      @relation("ManagerConversations", fields: [managerId], references: [id])
+  messages Message[]
+
+  @@unique([clientId, managerId])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  body           String   @db.Text
+  readAt         DateTime?
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id])
+}
+
+// ─── Pricing Intelligence ────────────────────────────────────────────────────
+
+model PricingDataPoint {
+  id                    String   @id @default(cuid())
+  propertyId            String
+  date                  DateTime // specific night
+  priceCharged          Float
+  platform              Platform?
+  suggestedPrice        Float?   // what external API suggested (if available)
+  suggestedSource       String?  // "PRICELABS" | "OWN_MODEL" | null
+  acceptedSuggestion    Boolean?
+  leadTimeDays          Int?     // days between booking and check-in
+  stayLength            Int?     // nights
+  dayOfWeek             Int      // 0=Mon … 6=Sun
+  monthOfYear           Int      // 1–12
+  isWeekend             Boolean  @default(false)
+  isHoliday             Boolean  @default(false)
+  isLocalEvent          Boolean  @default(false)
+  occupancyNearbyPct    Float?   // % occupancy in area (from external API)
+  suggestedPriceMin     Float?   // lower bound of PriceLabs range
+  suggestedPriceMax     Float?   // upper bound of PriceLabs range
+  competitorAvgPrice    Float?   // avg competitor price that night (from PriceLabs)
+  revenueResult         Float?   // actual revenue generated (priceCharged × nights, post-stay)
+  reservationId         String?
+  createdAt             DateTime @default(now())
+
+  property    Property     @relation(fields: [propertyId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+
+  @@index([propertyId, date])
+  @@index([date])
+}
+
+// ─── Marketing ───────────────────────────────────────────────────────────────
+
+enum MarketingChannelType {
+  GOOGLE_ADS
+  META
+  LINKEDIN
+  EMAIL
+  SEO
+  CONTENT
+  EVENT
+  PRINT
+  PARTNERSHIP
+  SIGNAGE
+  REFERRAL
+  OTHER
+}
+
+enum CampaignStatus {
+  PLANNING
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum CampaignType {
+  DIGITAL
+  PHYSICAL
+  EMAIL
+  EVENT
+  PRINT
+}
+
+model Campaign {
+  id               String               @id @default(cuid())
+  name             String
+  channel          MarketingChannelType
+  type             CampaignType
+  status           CampaignStatus       @default(PLANNING)
+  budgetAllocated  Float                @default(0)
+  budgetSpent      Float                @default(0)
+  startDate        DateTime?
+  endDate          DateTime?
+  targetAudience   String?
+  description      String?              @db.Text
+  notes            String?              @db.Text
+  createdById      String
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  createdBy        User                 @relation("CampaignCreator", fields: [createdById], references: [id])
+  spends           CampaignSpend[]
+  leadAttributions LeadAttribution[]
+}
+
+model CampaignSpend {
+  id          String   @id @default(cuid())
+  campaignId  String
+  amount      Float
+  date        DateTime
+  description String?
+  receiptUrl  String?
+  createdAt   DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model LeadAttribution {
+  id           String   @id @default(cuid())
+  leadId       String
+  campaignId   String
+  attributedAt DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([leadId, campaignId])
+}
