@@ -37,6 +37,7 @@ type Lead = {
   bantData: BantAnswers | null
   createdAt: string
   updatedAt?: string
+  leadAttributions: { campaign: { id: string; name: string; channel: string } }[]
 }
 
 // ── BANT Scoring engine ──────────────────────────────────────────────────────
@@ -174,6 +175,9 @@ export default function CRMPage() {
   const dragRef = useRef<string | null>(null)
   const [draggingOver, setDraggingOver] = useState<LeadStage | null>(null)
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
+  const [campaigns, setCampaigns] = useState<{ id: string; name: string; channel: string }[]>([])
+  const [attributing, setAttributing] = useState(false)
+  const [attrCampaignId, setAttrCampaignId] = useState("")
 
   // Add lead form state
   const [form, setForm] = useState({
@@ -192,10 +196,14 @@ export default function CRMPage() {
           nationality: l.nationality ?? undefined,
           score: l.score ?? null,
           bantData: (l.bantData as BantAnswers) ?? null,
+          leadAttributions: l.leadAttributions ?? [],
         }))
         setLeads(mapped)
       })
       .finally(() => setLoading(false))
+    fetch("/api/campaigns")
+      .then(r => r.ok ? r.json() : [])
+      .then(setCampaigns)
   }, [])
 
   const updateStage = async (leadId: string, stage: LeadStage) => {
@@ -210,6 +218,32 @@ export default function CRMPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: reverseMap[stage] }),
     })
+  }
+
+  const addAttribution = async (leadId: string, campaignId: string) => {
+    const res = await fetch(`/api/leads/${leadId}/attribution`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ campaignId }),
+    })
+    if (!res.ok) return
+    const attr = await res.json()
+    const update = (l: Lead) => l.id === leadId
+      ? { ...l, leadAttributions: [...l.leadAttributions.filter(a => a.campaign.id !== campaignId), { campaign: attr.campaign }] }
+      : l
+    setLeads(prev => prev.map(update))
+    setSelectedLead(l => l ? update(l) : l)
+    setAttrCampaignId("")
+    setAttributing(false)
+  }
+
+  const removeAttribution = async (leadId: string, campaignId: string) => {
+    await fetch(`/api/leads/${leadId}/attribution?campaignId=${campaignId}`, { method: "DELETE" })
+    const update = (l: Lead) => l.id === leadId
+      ? { ...l, leadAttributions: l.leadAttributions.filter(a => a.campaign.id !== campaignId) }
+      : l
+    setLeads(prev => prev.map(update))
+    setSelectedLead(l => l ? update(l) : l)
   }
 
   const saveLead = async () => {
@@ -482,6 +516,61 @@ export default function CRMPage() {
                 <p className="text-sm text-gray-700 whitespace-pre-wrap">
                   {selectedLead.notes || <span className="text-gray-400 italic">No notes yet</span>}
                 </p>
+              </div>
+
+              {/* Campaign attribution */}
+              <div>
+                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">Campaign attribution</h3>
+                <div className="space-y-1.5">
+                  {selectedLead.leadAttributions.length === 0 && !attributing && (
+                    <p className="text-xs text-gray-400 italic">No campaign attributed yet.</p>
+                  )}
+                  {selectedLead.leadAttributions.map(a => (
+                    <div key={a.campaign.id} className="flex items-center justify-between rounded-lg bg-gray-50 border px-3 py-2">
+                      <span className="text-xs font-medium text-navy-900">{a.campaign.name}</span>
+                      <button
+                        onClick={() => removeAttribution(selectedLead.id, a.campaign.id)}
+                        className="text-gray-300 hover:text-red-500 transition-colors ml-2"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                  {attributing ? (
+                    <div className="flex gap-2">
+                      <select
+                        value={attrCampaignId}
+                        onChange={e => setAttrCampaignId(e.target.value)}
+                        className="flex-1 rounded-lg border px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-navy-300"
+                      >
+                        <option value="">Select campaign…</option>
+                        {campaigns
+                          .filter(c => !selectedLead.leadAttributions.some(a => a.campaign.id === c.id))
+                          .map(c => <option key={c.id} value={c.id}>{c.name}</option>)
+                        }
+                      </select>
+                      <button
+                        onClick={() => attrCampaignId && addAttribution(selectedLead.id, attrCampaignId)}
+                        disabled={!attrCampaignId}
+                        className="rounded-lg bg-navy-900 text-white px-3 py-1.5 text-xs font-medium disabled:opacity-40"
+                      >
+                        Add
+                      </button>
+                      <button onClick={() => setAttributing(false)} className="text-gray-400 hover:text-gray-600 px-1">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    campaigns.length > 0 && (
+                      <button
+                        onClick={() => setAttributing(true)}
+                        className="text-xs text-navy-600 hover:underline"
+                      >
+                        + Attribute to campaign
+                      </button>
+                    )
+                  )}
+                </div>
               </div>
 
               {/* Source + dates */}

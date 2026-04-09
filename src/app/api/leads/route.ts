@@ -5,6 +5,9 @@ import { requireRole } from '@/lib/session'
 const LEAD_INCLUDE = {
   owner: { select: { id: true, name: true, email: true } },
   assignedManager: { select: { id: true, name: true, email: true } },
+  leadAttributions: {
+    include: { campaign: { select: { id: true, name: true, channel: true } } },
+  },
 } as const
 
 export async function GET(request: NextRequest) {
