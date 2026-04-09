@@ -1,13 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-<<<<<<< Updated upstream
-import { InvoiceForm } from '@/components/invoice-form'
-import { Info, X, AlertCircle } from 'lucide-react'
-=======
 import Link from 'next/link'
 import { Info, X, AlertCircle, Receipt, Plus } from 'lucide-react'
->>>>>>> Stashed changes
 import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES } from '@/lib/finance'
 
@@ -109,7 +104,6 @@ function CreatePayoutModal({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  // Preview commission
   const gross = parseFloat(grossAmount) || 0
 
   const submit = async (e: React.FormEvent) => {
@@ -134,7 +128,7 @@ function CreatePayoutModal({
     setSaving(false)
     if (!res.ok) {
       const data = await res.json().catch(() => ({}))
-      setError(data.error || 'Erro ao criar payout.')
+      setError((data as { error?: string }).error || 'Erro ao criar payout.')
       return
     }
     onCreated()
@@ -239,9 +233,9 @@ function CreatePayoutModal({
                 <span className="text-gray-500">Valor bruto</span>
                 <span className="font-medium">{fmt(gross)}</span>
               </div>
-              <div className="flex justify-between text-orange-600">
-                <span>Comissão (calculada pelo plano)</span>
-                <span>— calculada no servidor</span>
+              <div className="flex justify-between text-orange-600 text-xs">
+                <span>Comissão calculada pelo plano do proprietário</span>
+                <span>no servidor</span>
               </div>
             </div>
           )}
@@ -273,7 +267,6 @@ export default function PayoutsPage() {
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
   const [clientFilter, setClientFilter] = useState('')
-  const [showInvoiceForm, setShowInvoiceForm] = useState(false)
   const [showHowItWorks, setShowHowItWorks] = useState(false)
   const [overdueOnly, setOverdueOnly] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
@@ -297,7 +290,7 @@ export default function PayoutsPage() {
   const loadProperties = async () => {
     const res = await fetch('/api/properties?limit=200')
     if (res.ok) {
-      const data = await res.json()
+      const data = await res.json() as { properties?: Property[] } | Property[]
       setProperties(Array.isArray(data) ? data : (data.properties ?? []))
     }
   }
@@ -307,12 +300,17 @@ export default function PayoutsPage() {
     loadProperties()
   }, [])
 
-  const markPaid = async (id: string) => {
+  const [paying, setPaying] = useState<string | null>(null)
+
+  const markPaid = async (id: string, ownerName: string, amount: number) => {
+    if (!confirm(`Confirm payout to ${ownerName} of ${fmt(amount)}?\n\nThis will:\n• Mark payout as paid\n• Generate invoice automatically\n• Send Owner Statement by email`)) return
+    setPaying(id)
     await fetch(`/api/payouts/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'PAID' }),
     })
+    setPaying(null)
     load()
   }
 
@@ -347,13 +345,6 @@ export default function PayoutsPage() {
             <Info className="h-4 w-4" />
             Como funciona
           </button>
-<<<<<<< Updated upstream
-          <button
-            onClick={() => setShowInvoiceForm(s => !s)}
-            className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800"
-          >
-            {showInvoiceForm ? 'Fechar' : '+ Factura manual'}
-=======
           <Link
             href="/manager/invoices"
             className="inline-flex items-center gap-1.5 rounded-md bg-gray-100 text-gray-700 px-4 py-2 text-sm hover:bg-gray-200"
@@ -367,12 +358,9 @@ export default function PayoutsPage() {
           >
             <Plus className="h-4 w-4" />
             Criar payout
->>>>>>> Stashed changes
           </button>
         </div>
       </div>
-
-      {showInvoiceForm && <InvoiceForm />}
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -390,7 +378,6 @@ export default function PayoutsPage() {
             {payouts.filter(p => p.status === 'SCHEDULED').length}
           </div>
         </div>
-        {/* Overdue button with pulse */}
         <div className="rounded-xl border bg-white p-4 flex flex-col">
           <div className="text-xs uppercase text-gray-500 mb-1">Em atraso</div>
           <button
@@ -510,10 +497,11 @@ export default function PayoutsPage() {
                   <td className="px-4 py-3 text-right">
                     {p.status === 'SCHEDULED' && (
                       <button
-                        onClick={() => markPaid(p.id)}
-                        className="text-xs rounded-md bg-navy-900 text-white px-3 py-1 hover:bg-navy-800"
+                        onClick={() => markPaid(p.id, p.property.owner.name || p.property.owner.email, p.netAmount)}
+                        disabled={paying === p.id}
+                        className="inline-flex items-center gap-1.5 text-xs rounded-lg bg-green-600 text-white px-3 py-1.5 hover:bg-green-700 disabled:opacity-50 font-medium transition-colors"
                       >
-                        Marcar pago
+                        {paying === p.id ? '…' : '✓ Mark paid'}
                       </button>
                     )}
                   </td>
