@@ -256,12 +256,129 @@ Campaign  ← marketing
 - Validação cruzada com sugestões PriceLabs (`acceptedSuggestion` no PricingDataPoint)
 - Substituição gradual → redução de custo por token vs. API externa
 
-### 📝 Pendente (identificado mas não implementado)
-- Documentação de roles e permissões (mapa visual de interacções)
+### 📝 Pendente / Próximos passos
+- Bug hunting sistemático em todos os portais
+- AI Monitoring cron (ver secção abaixo)
+- AI Team Assistant (ver secção abaixo)
 - Activity log / audit trail por role
-- `/api/campaigns/[id]` — endpoint de detalhe/edição/delete de campanha
-- Spend tracking UI em Marketing
-- Lead attribution UI por campanha
+- Documentação de roles e permissões (mapa visual)
+
+---
+
+## SuperUser & Impersonação
+
+Campo `isSuperUser Boolean @default(false)` no modelo `User` (não é um Role enum — evita conflitos com ALTER TYPE do PostgreSQL).
+
+**Como funciona:**
+- Login com conta SUPERUSER → aparece barra fixa no fundo (indigo-950, badge dourado "SUPERUSER")
+- Dropdown com todos os utilizadores agrupados por role
+- Ao seleccionar → POST `/api/superuser/impersonate` → cookie HttpOnly `hm_view_as` (8h)
+- `requireRole()` em `session.ts` lê o cookie e devolve o utilizador efectivo (impersonado)
+- Layouts dos portais verificam `isSuperUser` para permitir acesso a qualquer URL
+
+**Ficheiros:**
+- `src/lib/session.ts` — `resolveEffectiveUser()`, tipo `EffectiveUser`
+- `src/app/api/superuser/impersonate/route.ts` — POST (set cookie) / DELETE (clear)
+- `src/app/api/superuser/users/route.ts` — lista todos os utilizadores por role
+- `src/components/hm/superuser-bar.tsx` — barra UI de impersonação
+
+**Email do superuser**: `yurisales968@gmail.com` — campo activado via SQL directo na Neon.
+
+---
+
+## AI Monitoring — Co-worker Automatizado
+
+Cron job que verifica inconsistências na base de dados diariamente e envia alerta ao ADMIN.
+
+**Arquitectura:**
+```
+Vercel Cron (diário) → /api/cron/ai-monitor
+  → Haiku API com snapshot de anomalias
+  → Email de relatório ao ADMIN (se houver problemas)
+```
+
+**Verificações planeadas:**
+| Check | Query | Anomalia |
+|-------|-------|----------|
+| Payouts PAID sem invoice | `payout.status=PAID AND NOT EXISTS invoice WHERE payoutId` | Invoice auto não criado |
+| Reservas sem tarefa CHECK_IN | `reservation WITHOUT task type=CHECK_IN` | Crew não notificado |
+| Comissão com taxa errada | `payout.commissionRate != PLAN_COMMISSION[owner.subscriptionPlan]` | Taxa desactualizada |
+| Propriedades ACTIVE sem owner | `property.status=ACTIVE AND ownerId=null` | Dados órfãos |
+| Invoices PAID sem paidAt | `invoice.status=PAID AND paidAt=null` | Ficam invisíveis no dashboard |
+
+**Custo estimado:** ~$0.20/mês (Haiku 4.5 — checks de lógica, não criatividade)
+
+**Ficheiros a criar:**
+- `src/app/api/cron/ai-monitor/route.ts` — lógica principal
+- Config em `vercel.json`: `"0 7 * * *"` (07:00 UTC diário)
+
+---
+
+## AI Team Assistant — Auxiliar Operacional
+
+Chatbot embebido no portal para responder a perguntas da equipa (CREW, MANAGER) sobre procedimentos, planos, regras financeiras e operações.
+
+**Arquitectura:**
+```
+Widget de chat (sidebar ou modal) → /api/ai/assistant
+  → Haiku API com contexto dos docs HM como system prompt
+  → Resposta em streaming
+```
+
+**Contexto do sistema (fixo, cacheado):**
+- Regras de limpeza por plano
+- Tipos de tarefas e responsáveis
+- Fluxo de reserva completo
+- Regras de payout e comissão
+- Procedimentos de checkout e relatório
+- Guia de fornecedores
+
+**Com Prompt Caching** (18k tokens de docs):
+- Cache write: apenas no primeiro request do dia
+- Cache read: 0.1× do preço de input → ~$0.003/pergunta (Haiku)
+- 200 perguntas/mês → ~$0.60/mês
+
+**Acesso por role:**
+- CREW → procedimentos, checklists, regras de relatório
+- MANAGER → regras financeiras, planos, CRM, fornecedores
+- ADMIN → tudo
+
+**Ficheiros a criar:**
+- `src/app/api/ai/assistant/route.ts` — streaming com Anthropic SDK
+- `src/components/hm/ai-chat.tsx` — widget de chat
+- `src/lib/ai-context.ts` — system prompt com docs HM
+
+---
+
+## Geospatial Intelligence — Roadmap Kepler.gl
+
+**Visão:** Vender inteligência geoespacial de mercado a imobiliárias e gestores da região de Costa Tropical como produto de dados standalone (B2B2B).
+
+**Estado actual:** Campos `latitude Float?` e `longitude Float?` adicionados ao modelo `Property` — prontos para acumular dados sem UI ainda.
+
+**O que se torna possível com volume (20+ propriedades):**
+
+| Visualização | Dados | Valor |
+|---|---|---|
+| Heatmap de preço médio por zona | PricingDataPoint + Property.lat/lon | Identificar micro-mercados |
+| Hexbin de ocupação por época | Reservas + checkIn/checkOut | Procura por zona e mês |
+| Cluster de performance | grossRevenue / ocupação / comissão | Prioridade comercial |
+| Posicionamento do owner | Propriedade vs. média da zona | Justificar pricing ao cliente |
+
+**Stack técnico:**
+- `@deck.gl/react` + `ScatterplotLayer` + `HeatmapLayer` (não o Kepler.gl completo — mais leve, integra com Next.js)
+- Dados externos futuros: INE turismo, Airbnb market data, concorrentes via API
+
+**Fases:**
+1. *(Agora)* Campos lat/lon no schema — acumular dados
+2. *(20+ props)* Mapa interno Admin — decisão estratégica
+3. *(Escala)* Vista MID/PREMIUM — "o teu posicionamento na Costa Tropical"
+4. *(Produto separado)* Dashboard de mercado para imobiliárias regionais
+
+**Modelo de receita data intelligence:**
+- API de dados de mercado por zona (subscrição mensal a imobiliárias)
+- Relatório mensal de ocupação e pricing por micro-mercado
+- Lead de potenciais proprietários a partir de dados de procura
 
 ---
 
@@ -273,11 +390,14 @@ Campaign  ← marketing
 | `src/app/api/payouts/[id]/route.ts` | PATCH PAID → paidAt + invoice auto (isAutoGenerated=true) + 2 emails |
 | `src/app/api/admin/stats/route.ts` | Métricas dashboard admin |
 | `src/app/api/manager/stats/route.ts` | Métricas dashboard manager (scoped por managerId) |
+| `src/lib/session.ts` | `requireRole()`, `resolveEffectiveUser()`, impersonação via cookie `hm_view_as` |
 | `src/contexts/currency-context.tsx` | Display-only — nunca usar em inputs de valor real |
 | `prisma/schema.prisma` | Modelo de dados completo |
-| `src/__tests__/finance.test.ts` | 18 unit tests — comissões, arredondamentos, payout dates |
+| `src/__tests__/finance.test.ts` | 27 unit tests — comissões, arredondamentos, payout dates, cleaning fees |
 | `src/app/(admin)/payouts/page.tsx` | Modal criação payout — preview EUR fixo (sem useCurrency) |
 | `src/app/client/layout.tsx` | Plan-gating AI — lê subscriptionPlan da DB, não da sessão |
+| `src/app/api/cron/monthly-statements/route.ts` | Cron dia 1, 08:00 UTC — relatório mensal por owner |
+| `src/components/hm/superuser-bar.tsx` | Barra de impersonação (só visível para isSuperUser=true) |
 
 ---
 
