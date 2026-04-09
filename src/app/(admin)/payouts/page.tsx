@@ -177,7 +177,7 @@ function CreatePayoutModal({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Valor bruto (EUR) *</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Valor recebido da plataforma (EUR) *</label>
               <input type="number" min="1" step="0.01" value={grossAmount} onChange={e => setGrossAmount(e.target.value)} placeholder="0.00" className="w-full rounded-md border px-3 py-2 text-sm" required />
             </div>
             <div>
@@ -199,7 +199,7 @@ function CreatePayoutModal({
           {gross > 0 && (
             <div className="rounded-lg bg-gray-50 border divide-y text-sm">
               <div className="flex justify-between px-3 py-2">
-                <span className="text-gray-500">Valor recebido (bruto)</span>
+                <span className="text-gray-500">Recebido da plataforma</span>
                 <span className="font-medium">{fmt(gross)}</span>
               </div>
               <div className="flex justify-between px-3 py-2 text-orange-600">
@@ -212,8 +212,8 @@ function CreatePayoutModal({
                 </span>
                 <span>− {fmt(commission)}</span>
               </div>
-              <div className="flex justify-between px-3 py-2.5 font-semibold">
-                <span>Payout ao proprietário</span>
+              <div className="flex justify-between px-3 py-2.5 font-semibold border-t-2">
+                <span>Valor a receber pelo proprietário</span>
                 <span className="text-green-600">{fmt(net)}</span>
               </div>
             </div>
