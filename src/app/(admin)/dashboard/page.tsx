@@ -7,6 +7,7 @@ import {
   FileText, UserPlus, TrendingUp, Clock, CheckCircle2, Activity,
 } from "lucide-react"
 import { AlertBanner } from "@/components/hm/alert-banner"
+import { SystemMonitor } from "@/components/hm/system-monitor"
 
 type Stats = {
   propertiesCount: number
@@ -175,6 +176,9 @@ export default function AdminDashboard() {
           )
         })}
       </div>
+
+      {/* System Monitor — AI anomaly detection (no Claude API yet) */}
+      <SystemMonitor />
 
       {/* Today's operations */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

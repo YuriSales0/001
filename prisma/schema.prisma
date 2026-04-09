@@ -468,6 +468,27 @@ model PricingDataPoint {
   @@index([date])
 }
 
+// ─── AI Monitoring ───────────────────────────────────────────────────────────
+
+enum AlertSeverity {
+  HIGH
+  MEDIUM
+  LOW
+  INFO
+}
+
+model SystemAlert {
+  id         String        @id @default(cuid())
+  checkType  String        // PAYOUT_NO_INVOICE | INVOICE_PAID_NO_PAIDAT | COMMISSION_MISMATCH | CHECKIN_NO_TASK | PROPERTY_STALE
+  severity   AlertSeverity @default(MEDIUM)
+  entityId   String?       // ID da entidade afectada
+  entityType String?       // "Payout" | "Invoice" | "Reservation" | "Property"
+  message    String
+  details    Json?         // dados adicionais para o futuro modelo Claude
+  resolvedAt DateTime?
+  createdAt  DateTime      @default(now())
+}
+
 // ─── Marketing ───────────────────────────────────────────────────────────────
 
 enum MarketingChannelType {
