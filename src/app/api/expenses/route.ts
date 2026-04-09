@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
         where: { id: propertyId },
         select: { owner: { select: { managerId: true } } },
       })
-      if (prop?.owner.managerId !== me.id) {
+      if (!prop || prop.owner.managerId !== me.id) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
     }

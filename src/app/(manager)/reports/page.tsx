@@ -136,8 +136,8 @@ export default function ReportsPage() {
         ["Reservations", String(summary.reservations)],
         ["Total Nights", String(summary.nights)],
         ["Gross Revenue", fmtMoney(summary.revenue)],
-        ["Commission (18%)", fmtMoney(summary.revenue * 0.18)],
-        ["Net to Owner", fmtMoney(summary.revenue * 0.82)],
+        ["Commission (17%)", fmtMoney(summary.revenue * 0.17)],
+        ["Net to Owner", fmtMoney(summary.revenue * 0.83)],
       ],
     })
     doc.save(`report-${summary.propertyName.replace(/\s+/g, "-")}-${summary.month.replace(/\s+/g, "-")}.pdf`)
@@ -260,8 +260,8 @@ export default function ReportsPage() {
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: "Revenue",      value: fmtMoney(selected.revenue),                      color: "text-emerald-700" },
-                  { label: "Commission",   value: fmtMoney(selected.revenue * 0.18),               color: "text-gray-700" },
-                  { label: "Net to owner", value: fmtMoney(selected.revenue * 0.82),               color: "text-navy-900" },
+                  { label: "Commission",   value: fmtMoney(selected.revenue * 0.17),               color: "text-gray-700" },
+                  { label: "Net to owner", value: fmtMoney(selected.revenue * 0.83),               color: "text-navy-900" },
                   { label: "Reservations", value: String(selected.reservations),                    color: "text-navy-900" },
                   { label: "Nights",       value: String(selected.nights),                          color: "text-navy-900" },
                   { label: "ADR",          value: selected.nights ? fmtMoney(selected.revenue / selected.nights) : "—", color: "text-navy-900" },

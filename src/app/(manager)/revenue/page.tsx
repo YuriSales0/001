@@ -95,7 +95,7 @@ export default function RevenuePage() {
   if (byProperty.size === 0) {
     monthRes.forEach(r => {
       const existing = byProperty.get(r.property.id)
-      const commissionRate = 0.18
+      const commissionRate = 0.17
       const commission = r.amount * commissionRate
       const net = r.amount - commission
       if (existing) {

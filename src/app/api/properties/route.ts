@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         description,
         photos: photos || [],
         ownerId,
-        commissionRate: commissionRate ?? 18.0,
+        commissionRate: commissionRate ?? 17.0,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         status: status as any,
       },

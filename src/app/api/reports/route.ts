@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function GET(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const { searchParams } = new URL(request.url)
     const propertyId = searchParams.get('propertyId')
@@ -39,6 +42,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const body = await request.json()
     const { propertyId, month, year } = body

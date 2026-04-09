@@ -23,7 +23,7 @@ export function formatDate(date: Date | string): string {
 export function calculateOwnerPayout(
   grossRevenue: number,
   totalExpenses: number,
-  commissionRate: number = 18
+  commissionRate: number = 17
 ): { commission: number; payout: number } {
   const commission = grossRevenue * (commissionRate / 100)
   const payout = grossRevenue - totalExpenses - commission

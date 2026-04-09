@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const { id } = params
 
@@ -46,6 +49,8 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const { id } = params
     const body = await request.json()
@@ -81,6 +86,8 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const guard = await requireRole(['ADMIN'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
     const { id } = params
 

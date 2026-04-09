@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { requireRole } from '@/lib/session'
 
 export async function POST(request: NextRequest) {
+  const guard = await requireRole(['CLIENT', 'ADMIN'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const body = await request.json()
     const { priceId, userId } = body
@@ -12,6 +16,11 @@ export async function POST(request: NextRequest) {
         { error: 'Missing required fields: priceId, userId' },
         { status: 400 }
       )
+    }
+
+    // CLIENT can only create checkout for themselves
+    if (me.role === 'CLIENT' && me.id !== userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const user = await prisma.user.findUnique({
