@@ -41,14 +41,16 @@ Plataforma de gestão operacional e financeira para proprietários de imóveis e
 ## Modelo de Receita
 
 ### Planos e comissões
-| Plano | Taxa comissão | Mensalidade | Diferencial |
-|-------|--------------|-------------|-------------|
-| STARTER | 20% | Grátis | Base |
-| BASIC | 20% | €89/mês | Suporte |
-| MID | 18% | €139/mês | AI Pricing (PriceLabs) |
-| PREMIUM | 15% | €199/mês | AI Pricing + taxa reduzida |
+| Plano | Comissão | Mensalidade | Taxa limpeza | Diferencial |
+|-------|----------|-------------|--------------|-------------|
+| STARTER | 22% | Grátis | €70/saída (sempre) | Base — sem manutenção |
+| BASIC | 20% | €89/mês | €60/saída (sempre) | Manutenção preventiva, relatório PT/ES/EN |
+| MID | 17% | €159/mês | €45 se <5 noites / incluída ≥5 noites | AI pricing + Smart Lock |
+| PREMIUM | 13% | €269/mês | €35 se <3 noites / incluída ≥3 noites | Fiscal (Modelo 179 + IRNR), upsells, resposta 4h |
 
-`DEFAULT_COMMISSION_RATE = 0.18` (igual ao MID). Lógica centralizada em `src/lib/finance.ts`.
+`DEFAULT_COMMISSION_RATE = 0.17` (igual ao MID). Lógica centralizada em `src/lib/finance.ts`.
+
+**Constantes em `finance.ts`**: `PLAN_COMMISSION`, `PLAN_MONTHLY_FEE`, `CLEANING_FEE_STANDARD`, `CLEANING_INCLUDED_MIN_NIGHTS`.
 
 ### Duas fontes de receita HM
 1. **Comissão de arrendamentos** — calculada em cada payout (por plano do owner)

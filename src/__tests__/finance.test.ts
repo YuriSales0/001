@@ -5,6 +5,8 @@ import {
   commissionRateForPlan,
   calcCommission,
   payoutDateFrom,
+  CLEANING_FEE_STANDARD,
+  CLEANING_INCLUDED_MIN_NIGHTS,
 } from '@/lib/finance'
 
 // ---------------------------------------------------------------------------
@@ -12,10 +14,10 @@ import {
 // ---------------------------------------------------------------------------
 describe('commissionRateForPlan', () => {
   it('returns correct rate for each plan', () => {
-    expect(commissionRateForPlan('STARTER')).toBe(0.20)
+    expect(commissionRateForPlan('STARTER')).toBe(0.22)
     expect(commissionRateForPlan('BASIC')).toBe(0.20)
-    expect(commissionRateForPlan('MID')).toBe(0.18)
-    expect(commissionRateForPlan('PREMIUM')).toBe(0.15)
+    expect(commissionRateForPlan('MID')).toBe(0.17)
+    expect(commissionRateForPlan('PREMIUM')).toBe(0.13)
   })
 
   it('returns DEFAULT_COMMISSION_RATE for unknown plan', () => {
@@ -34,32 +36,39 @@ describe('commissionRateForPlan', () => {
 // calcCommission
 // ---------------------------------------------------------------------------
 describe('calcCommission', () => {
-  it('calculates correctly for PREMIUM (15%)', () => {
+  it('calculates correctly for PREMIUM (13%)', () => {
     const result = calcCommission(1000, 'PREMIUM')
     expect(result.gross).toBe(1000)
-    expect(result.commission).toBe(150)
-    expect(result.net).toBe(850)
-    expect(result.commissionRate).toBe(15)
+    expect(result.commission).toBe(130)
+    expect(result.net).toBe(870)
+    expect(result.commissionRate).toBe(13)
   })
 
-  it('calculates correctly for MID (18%)', () => {
+  it('calculates correctly for MID (17%)', () => {
     const result = calcCommission(1000, 'MID')
-    expect(result.commission).toBe(180)
-    expect(result.net).toBe(820)
-    expect(result.commissionRate).toBe(18)
+    expect(result.commission).toBe(170)
+    expect(result.net).toBe(830)
+    expect(result.commissionRate).toBe(17)
   })
 
-  it('calculates correctly for STARTER / BASIC (20%)', () => {
+  it('calculates correctly for BASIC (20%)', () => {
     const result = calcCommission(1000, 'BASIC')
     expect(result.commission).toBe(200)
     expect(result.net).toBe(800)
     expect(result.commissionRate).toBe(20)
   })
 
+  it('calculates correctly for STARTER (22%)', () => {
+    const result = calcCommission(1000, 'STARTER')
+    expect(result.commission).toBe(220)
+    expect(result.net).toBe(780)
+    expect(result.commissionRate).toBe(22)
+  })
+
   it('rounds to 2 decimal places', () => {
-    const result = calcCommission(333.33, 'MID') // 333.33 * 0.18 = 59.9994
-    expect(result.commission).toBe(60.00)
-    expect(result.net).toBe(273.33)
+    const result = calcCommission(333.33, 'MID') // 333.33 * 0.17 = 56.6661
+    expect(result.commission).toBe(56.67)
+    expect(result.net).toBe(276.66)
   })
 
   it('gross + commission == net is always exact', () => {
@@ -151,4 +160,21 @@ describe('payoutDateFrom', () => {
       expect(payout.getTime()).toBe(expected.getTime())
     })
   })
+})
+
+// ---------------------------------------------------------------------------
+// Cleaning fee constants
+// ---------------------------------------------------------------------------
+describe('CLEANING_FEE_STANDARD', () => {
+  it('STARTER has €70 cleaning fee', () => expect(CLEANING_FEE_STANDARD['STARTER']).toBe(70))
+  it('BASIC has €60 cleaning fee',   () => expect(CLEANING_FEE_STANDARD['BASIC']).toBe(60))
+  it('MID has €45 cleaning fee',     () => expect(CLEANING_FEE_STANDARD['MID']).toBe(45))
+  it('PREMIUM has €35 cleaning fee', () => expect(CLEANING_FEE_STANDARD['PREMIUM']).toBe(35))
+})
+
+describe('CLEANING_INCLUDED_MIN_NIGHTS', () => {
+  it('STARTER: never included (null)',  () => expect(CLEANING_INCLUDED_MIN_NIGHTS['STARTER']).toBeNull())
+  it('BASIC: never included (null)',    () => expect(CLEANING_INCLUDED_MIN_NIGHTS['BASIC']).toBeNull())
+  it('MID: included from 5 nights',    () => expect(CLEANING_INCLUDED_MIN_NIGHTS['MID']).toBe(5))
+  it('PREMIUM: included from 3 nights',() => expect(CLEANING_INCLUDED_MIN_NIGHTS['PREMIUM']).toBe(3))
 })

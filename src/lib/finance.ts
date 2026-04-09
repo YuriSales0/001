@@ -2,10 +2,22 @@
  * Hostmaster financial rules.
  *
  * Commission per subscription plan:
- *   STARTER  → 20%
+ *   STARTER  → 22%
  *   BASIC    → 20%
- *   MID      → 18%  (most popular)
- *   PREMIUM  → 15%
+ *   MID      → 17%  (most popular)
+ *   PREMIUM  → 13%
+ *
+ * Monthly fees (EUR):
+ *   STARTER  →   0  (no monthly fee)
+ *   BASIC    →  89
+ *   MID      → 159
+ *   PREMIUM  → 269
+ *
+ * Cleaning fee per turnover (EUR):
+ *   STARTER  → 70 (always charged)
+ *   BASIC    → 60 (always charged)
+ *   MID      → 45 if stay < 5 nights, included if stay ≥ 5 nights
+ *   PREMIUM  → 35 if stay < 3 nights, included if stay ≥ 3 nights
  *
  * Payout scheduling:
  *   Airbnb  → checkOut + 1 day + 2 business days
@@ -14,14 +26,40 @@
  */
 
 export const PLAN_COMMISSION: Record<string, number> = {
-  STARTER: 0.20,
+  STARTER: 0.22,
   BASIC:   0.20,
-  MID:     0.18,
-  PREMIUM: 0.15,
+  MID:     0.17,
+  PREMIUM: 0.13,
+}
+
+export const PLAN_MONTHLY_FEE: Record<string, number> = {
+  STARTER:   0,
+  BASIC:    89,
+  MID:     159,
+  PREMIUM: 269,
+}
+
+/** Standard cleaning fee per turnover (EUR) */
+export const CLEANING_FEE_STANDARD: Record<string, number> = {
+  STARTER: 70,
+  BASIC:   60,
+  MID:     45,
+  PREMIUM: 35,
+}
+
+/**
+ * Minimum nights for cleaning to be included in the plan.
+ * null = never included (always charged).
+ */
+export const CLEANING_INCLUDED_MIN_NIGHTS: Record<string, number | null> = {
+  STARTER: null,
+  BASIC:   null,
+  MID:     5,
+  PREMIUM: 3,
 }
 
 /** Default when plan is unknown */
-export const DEFAULT_COMMISSION_RATE = 0.18
+export const DEFAULT_COMMISSION_RATE = 0.17
 
 export function commissionRateForPlan(plan?: string | null): number {
   return PLAN_COMMISSION[plan ?? ''] ?? DEFAULT_COMMISSION_RATE
