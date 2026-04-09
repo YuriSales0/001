@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Info, X, AlertCircle, Receipt, Plus } from 'lucide-react'
 import { useCurrency } from '@/contexts/currency-context'
-import { PLATFORM_LABELS, PLATFORM_RULES } from '@/lib/finance'
+import { PLATFORM_LABELS, PLATFORM_RULES, PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from '@/lib/finance'
 
 type Payout = {
   id: string
@@ -21,7 +21,7 @@ type Payout = {
   reservation: { id: string; guestName: string; checkIn: string; checkOut: string } | null
 }
 
-type Property = { id: string; name: string; owner: { name: string | null; email: string } }
+type Property = { id: string; name: string; owner: { name: string | null; email: string; subscriptionPlan: string | null } }
 
 const fmtDate = (s: string) => new Date(s).toLocaleDateString('pt-PT')
 
@@ -122,6 +122,12 @@ function CreatePayoutModal({
   const [error, setError] = useState('')
 
   const gross = parseFloat(grossAmount) || 0
+  const selectedProp = properties.find(p => p.id === propertyId)
+  const plan = selectedProp?.owner?.subscriptionPlan ?? null
+  const rate = PLAN_COMMISSION[plan ?? ''] ?? DEFAULT_COMMISSION_RATE
+  const commission = gross > 0 ? +(gross * rate).toFixed(2) : 0
+  const net = gross > 0 ? +(gross - commission).toFixed(2) : 0
+  const rateLabel = `${+(rate * 100).toFixed(1)}%`
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -143,8 +149,6 @@ function CreatePayoutModal({
     onClose()
   }
 
-  const selectedProp = properties.find(p => p.id === propertyId)
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
@@ -162,7 +166,14 @@ function CreatePayoutModal({
                 <option key={p.id} value={p.id}>{p.name} — {p.owner.name || p.owner.email}</option>
               ))}
             </select>
-            {selectedProp && <p className="mt-1 text-xs text-gray-500">Proprietário: {selectedProp.owner.name || selectedProp.owner.email}</p>}
+            {selectedProp && (
+              <p className="mt-1 text-xs text-gray-500">
+                Proprietário: {selectedProp.owner.name || selectedProp.owner.email}
+                {selectedProp.owner.subscriptionPlan && (
+                  <span className="ml-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 font-medium text-gray-600">{selectedProp.owner.subscriptionPlan}</span>
+                )}
+              </p>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -186,14 +197,24 @@ function CreatePayoutModal({
             <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="ex: Ajuste manual — Jan 2026" className="w-full rounded-md border px-3 py-2 text-sm" />
           </div>
           {gross > 0 && (
-            <div className="rounded-lg bg-gray-50 border p-3 text-sm space-y-1">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Valor bruto</span>
+            <div className="rounded-lg bg-gray-50 border divide-y text-sm">
+              <div className="flex justify-between px-3 py-2">
+                <span className="text-gray-500">Valor recebido (bruto)</span>
                 <span className="font-medium">{fmt(gross)}</span>
               </div>
-              <div className="flex justify-between text-orange-600 text-xs">
-                <span>Comissão calculada pelo plano do proprietário</span>
-                <span>no servidor</span>
+              <div className="flex justify-between px-3 py-2 text-orange-600">
+                <span>
+                  Comissão HostMasters
+                  {plan
+                    ? <span className="ml-1 rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-bold">{plan} · {rateLabel}</span>
+                    : <span className="ml-1 text-xs text-gray-400">(plano padrão · {rateLabel})</span>
+                  }
+                </span>
+                <span>− {fmt(commission)}</span>
+              </div>
+              <div className="flex justify-between px-3 py-2.5 font-semibold">
+                <span>Payout ao proprietário</span>
+                <span className="text-green-600">{fmt(net)}</span>
               </div>
             </div>
           )}
