@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { InvoiceForm } from '@/components/invoice-form'
-import { Info, X, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
+import { Info, X, AlertCircle, Receipt } from 'lucide-react'
 import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES } from '@/lib/finance'
 
@@ -84,7 +84,6 @@ export default function PayoutsPage() {
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
   const [clientFilter, setClientFilter] = useState('')
-  const [showInvoiceForm, setShowInvoiceForm] = useState(false)
   const [showHowItWorks, setShowHowItWorks] = useState(false)
   const [overdueOnly, setOverdueOnly] = useState(false)
 
@@ -145,16 +144,15 @@ export default function PayoutsPage() {
             <Info className="h-4 w-4" />
             Como funciona
           </button>
-          <button
-            onClick={() => setShowInvoiceForm(s => !s)}
-            className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800"
+          <Link
+            href="/manager/invoices"
+            className="inline-flex items-center gap-1.5 rounded-md bg-gray-900 text-white px-4 py-2 text-sm hover:bg-gray-800"
           >
-            {showInvoiceForm ? 'Fechar' : '+ Factura manual'}
-          </button>
+            <Receipt className="h-4 w-4" />
+            Invoices
+          </Link>
         </div>
       </div>
-
-      {showInvoiceForm && <InvoiceForm />}
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

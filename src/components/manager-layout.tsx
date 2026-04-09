@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight,
-  BarChart3, FileText, Calendar, Wrench, Home, Wallet,
+  BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -18,6 +18,7 @@ const managerLinks = [
   { href: "/reservations",      label: "Reservations", icon: CalendarDays },
   { href: "/manager/clients",   label: "My Owners",    icon: Users },
   { href: "/maintenance",       label: "Maintenance",  icon: Wrench },
+  { href: "/manager/invoices",  label: "Invoices",     icon: Receipt },
   { href: "/setup",             label: "Setup",        icon: FileText },
   { href: "/revenue",           label: "Revenue",      icon: TrendingUp },
   { href: "/reports",           label: "Reports",      icon: FileBarChart },
@@ -25,16 +26,17 @@ const managerLinks = [
 ]
 
 const adminLinks = [
-  { href: "/dashboard",     label: "Dashboard",    icon: Home },
-  { href: "/crm",           label: "CRM",          icon: BarChart3 },
-  { href: "/calendar",      label: "Calendar",     icon: Calendar },
-  { href: "/reservations",  label: "Reservations", icon: CalendarDays },
-  { href: "/maintenance",   label: "Maintenance",  icon: Wrench },
-  { href: "/setup",         label: "Setup",        icon: FileText },
-  { href: "/my-properties", label: "Properties",   icon: Building2 },
-  { href: "/payouts",       label: "Payouts",      icon: Wallet },
-  { href: "/team",          label: "Team",         icon: Users },
-  { href: "/messages",      label: "Messages",     icon: MessageCircle },
+  { href: "/dashboard",         label: "Dashboard",    icon: Home },
+  { href: "/crm",               label: "CRM",          icon: BarChart3 },
+  { href: "/calendar",          label: "Calendar",     icon: Calendar },
+  { href: "/reservations",      label: "Reservations", icon: CalendarDays },
+  { href: "/maintenance",       label: "Maintenance",  icon: Wrench },
+  { href: "/manager/invoices",  label: "Invoices",     icon: Receipt },
+  { href: "/setup",             label: "Setup",        icon: FileText },
+  { href: "/my-properties",     label: "Properties",   icon: Building2 },
+  { href: "/payouts",           label: "Payouts",      icon: Wallet },
+  { href: "/team",              label: "Team",         icon: Users },
+  { href: "/messages",          label: "Messages",     icon: MessageCircle },
 ]
 
 interface ManagerLayoutProps {
