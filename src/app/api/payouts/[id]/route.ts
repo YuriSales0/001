@@ -42,6 +42,13 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json(updated)
     }
 
+    // Guard against double Mark Paid (race condition / retry / double-click)
+    if (status === 'PAID') {
+      const existing = await prisma.payout.findUnique({ where: { id: params.id }, select: { status: true } })
+      if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      if (existing.status === 'PAID') return NextResponse.json({ error: 'Payout already paid' }, { status: 409 })
+    }
+
     const data: Record<string, unknown> = { status }
     if (status === 'PAID') data.paidAt = new Date()
 
