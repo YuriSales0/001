@@ -20,9 +20,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { name, email, phone, source, notes, ref } = body
 
-    if (!name || typeof name !== 'string') {
+    if (!name || typeof name !== 'string' || !name.trim()) {
       return NextResponse.json({ error: 'name is required' }, { status: 400 })
     }
+    if (name.trim().length > 200) {
+      return NextResponse.json({ error: 'name too long' }, { status: 400 })
+    }
+
+    // Validate email format if provided
+    const trimmedEmail = typeof email === 'string' ? email.trim() : ''
+    if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      return NextResponse.json({ error: 'invalid email format' }, { status: 400 })
+    }
+
+    // Sanitize text fields — strip HTML tags to prevent stored XSS
+    const stripTags = (s: string) => s.replace(/<[^>]*>/g, '')
 
     // Resolve campaign from tracking code (QR code ref)
     let campaignId: string | null = null
@@ -36,11 +48,11 @@ export async function POST(request: NextRequest) {
 
     const lead = await prisma.lead.create({
       data: {
-        name: name.trim(),
-        email: email?.trim() || null,
-        phone: phone?.trim() || null,
+        name: stripTags(name.trim()).slice(0, 200),
+        email: trimmedEmail || null,
+        phone: typeof phone === 'string' ? stripTags(phone.trim()).slice(0, 50) : null,
         source: campaignId ? 'PRINT' : (source ?? 'WEBSITE'),
-        notes: notes?.trim() || null,
+        notes: typeof notes === 'string' ? stripTags(notes.trim()).slice(0, 1000) : null,
         status: 'NEW',
       },
       select: { id: true, name: true, email: true, createdAt: true },

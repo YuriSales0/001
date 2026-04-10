@@ -149,6 +149,19 @@ export async function GET() {
     })
   }
 
+  // P1b — Invoices auto-gerados a mais que payouts (possível duplicação)
+  const duplicateInvoices = Math.max(0, autoInvoicesCount - paidPayoutsCount)
+  if (duplicateInvoices > 0) {
+    issues.push({
+      type: 'INVOICE_DUPLICATE',
+      section: 'payouts',
+      severity: 'HIGH',
+      message: `${duplicateInvoices} invoice${duplicateInvoices > 1 ? 's' : ''} auto-gerado${duplicateInvoices > 1 ? 's' : ''} a mais que payouts pagos — possível duplicação`,
+      count: duplicateInvoices,
+      action: { label: 'Ver invoices', href: '/manager/invoices' },
+    })
+  }
+
   // P2 — Payouts SCHEDULED em atraso (scheduledFor < hoje)
   const overduePayouts = await prisma.payout.count({
     where: { status: 'SCHEDULED', scheduledFor: { lt: now } },

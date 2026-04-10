@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Info, X, AlertCircle, Receipt, Plus, Pencil, Trash2 } from 'lucide-react'
+import { Info, X, AlertCircle, Receipt, Plus, Pencil, Trash2, Ban } from 'lucide-react'
 import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES, PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from '@/lib/finance'
 
@@ -365,8 +365,21 @@ export default function PayoutsPage() {
   const [paying, setPaying] = useState<string | null>(null)
   const [editingPayout, setEditingPayout] = useState<Payout | null>(null)
 
+  const cancelPayout = async (id: string, label: string, wasPaid: boolean) => {
+    const warning = wasPaid
+      ? `Cancelar payout PAGO de ${label}?\n\nIsto irá:\n- Mudar o estado para CANCELADO\n- Cancelar o invoice auto-gerado associado`
+      : `Cancelar payout agendado de ${label}?\n\nO payout ficará no estado CANCELADO.`
+    if (!confirm(warning)) return
+    await fetch(`/api/payouts/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'CANCELLED' }),
+    })
+    load(clientFilter)
+  }
+
   const deletePayout = async (id: string, label: string) => {
-    if (!confirm(`Eliminar payout de ${label}?\n\nEsta acção não pode ser desfeita.`)) return
+    if (!confirm(`Eliminar permanentemente o payout cancelado de ${label}?\n\nEsta acção não pode ser desfeita.`)) return
     await fetch(`/api/payouts/${id}`, { method: 'DELETE' })
     load(clientFilter)
   }
@@ -536,13 +549,31 @@ export default function PayoutsPage() {
                             <Pencil className="h-3.5 w-3.5" />
                           </button>
                           <button
-                            onClick={() => deletePayout(p.id, p.property.owner.name || p.property.owner.email)}
-                            className="rounded-lg border border-red-200 p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                            title="Eliminar"
+                            onClick={() => cancelPayout(p.id, p.property.owner.name || p.property.owner.email, false)}
+                            className="rounded-lg border border-orange-200 p-1.5 text-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                            title="Cancelar"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Ban className="h-3.5 w-3.5" />
                           </button>
                         </>
+                      )}
+                      {p.status === 'PAID' && (
+                        <button
+                          onClick={() => cancelPayout(p.id, p.property.owner.name || p.property.owner.email, true)}
+                          className="inline-flex items-center gap-1.5 text-xs rounded-lg border border-orange-200 text-orange-600 px-3 py-1.5 hover:bg-orange-50 font-medium transition-colors"
+                        >
+                          <Ban className="h-3.5 w-3.5" />
+                          Cancelar
+                        </button>
+                      )}
+                      {p.status === 'CANCELLED' && (
+                        <button
+                          onClick={() => deletePayout(p.id, p.property.owner.name || p.property.owner.email)}
+                          className="inline-flex items-center gap-1.5 text-xs rounded-lg border border-red-200 text-red-500 px-3 py-1.5 hover:bg-red-50 font-medium transition-colors"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          Excluir
+                        </button>
                       )}
                     </div>
                   </td>
