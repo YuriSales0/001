@@ -56,7 +56,9 @@ type GeoResponse = {
   region: string
   count: number
   realCount: number
+  competitorCount: number
   demoCount: number
+  demoMode: boolean
   stats: { totalGross: number; avgPricePerNight: number; avgOccupancy: number; avgRevPAR: number }
   points: MarketProperty[]
   zones: MarketZone[]
@@ -132,6 +134,7 @@ const POI_ICONS: Record<POI['type'], { icon: typeof Waves; color: string }> = {
 export function MarketMap() {
   const [data, setData] = useState<GeoResponse | null>(null)
   const [loading, setLoading] = useState(true)
+  const [demoMode, setDemoMode] = useState(false)
   const [metric, setMetric] = useState<Metric>('revpar')
   const [viewMode, setViewMode] = useState<ViewMode>('points')
   const [mapStyle, setMapStyle] = useState<MapStyleName>('dark')
@@ -141,12 +144,15 @@ export function MarketMap() {
   const [selectedZone, setSelectedZone] = useState<MarketZone | null>(null)
   const [hovered, setHovered] = useState<{ x: number; y: number; point: MarketProperty } | null>(null)
 
-  useEffect(() => {
-    fetch('/api/market/geo')
+  const loadData = (demo: boolean) => {
+    setLoading(true)
+    fetch(`/api/market/geo${demo ? '?demo=true' : ''}`)
       .then(r => r.ok ? r.json() : null)
       .then(d => { setData(d); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [])
+  }
+
+  useEffect(() => { loadData(demoMode) }, [demoMode])
 
   const cfg = METRIC_CONFIG[metric]
 
@@ -394,7 +400,10 @@ export function MarketMap() {
           {data && (
             <div className="pl-3 ml-1 border-l border-white/10 text-[10px] text-white/60 leading-tight">
               <div>{data.count} propriedades</div>
-              <div className="text-[#C9A84C]">{data.realCount} reais · {data.demoCount} demo</div>
+              <div className="text-[#C9A84C]">
+                {data.realCount} próprias · {data.competitorCount} scraped
+                {data.demoCount > 0 && <span className="text-amber-400"> · {data.demoCount} demo</span>}
+              </div>
             </div>
           )}
         </div>
@@ -527,6 +536,22 @@ export function MarketMap() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="px-4 py-3 border-t border-white/10">
+            <button
+              onClick={() => setDemoMode(d => !d)}
+              className={`w-full rounded-lg px-3 py-2 text-[11px] font-bold uppercase tracking-wider transition-colors ${
+                demoMode
+                  ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                  : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10 hover:text-white/70'
+              }`}
+            >
+              {demoMode ? 'Demo activo — ver dados reais' : 'Activar modo demo'}
+            </button>
+            {!demoMode && data && data.count === 0 && (
+              <p className="text-[9px] text-white/30 mt-1.5 text-center">Sem dados reais — activa o demo para preview</p>
+            )}
           </div>
         </div>
       )}

@@ -186,9 +186,11 @@ function temperatureFor(score: number): MarketZone['temperature'] {
   return 'COLD'
 }
 
-export async function GET() {
+export async function GET(request: { nextUrl: URL } & Request) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+
+  const showDemo = new URL(request.url).searchParams.get('demo') === 'true'
 
   const ninetyDaysAgo = new Date()
   ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
@@ -240,9 +242,41 @@ export async function GET() {
     }
   })
 
-  // Demo seed — realista por zona
+  // ── Competitor listings (dados reais de scraping) ──
+  const competitors = await prisma.competitorListing.findMany({
+    where: { isActive: true },
+    select: {
+      id: true,
+      title: true,
+      latitude: true,
+      longitude: true,
+      bedrooms: true,
+      pricePerNight: true,
+      rating: true,
+      reviewCount: true,
+      isSuperhost: true,
+      zoneId: true,
+    },
+  })
+
+  const competitorPoints = competitors.map(c => ({
+    id: `comp-${c.id}`,
+    name: c.title,
+    latitude: c.latitude,
+    longitude: c.longitude,
+    status: 'ACTIVE',
+    bedrooms: c.bedrooms,
+    zoneId: c.zoneId ?? findZoneFor(c.latitude, c.longitude) ?? 'zone-interior',
+    avgPrice: +c.pricePerNight.toFixed(0),
+    occupancy: 70, // estimativa base para competitors (não temos dados reais de ocupação)
+    revPAR: +(c.pricePerNight * 0.70).toFixed(0),
+    grossRevenue: +(c.pricePerNight * 0.70 * 90).toFixed(0), // estimativa 90 dias
+    isReal: true as const, // scraped = real market data
+  }))
+
+  // Demo seed — só incluído quando ?demo=true
   type DemoRaw = Omit<MarketProperty, 'zoneId' | 'marketScore' | 'revPAR'>
-  const DEMO_SEED_RAW: DemoRaw[] = [
+  const DEMO_SEED_RAW: DemoRaw[] = !showDemo ? [] : [
     // San Cristóbal
     { id: 'd-sc-1', name: 'Villa San Cristóbal',       latitude: 36.7318, longitude: -3.7005, status: 'ACTIVE', bedrooms: 4, avgPrice: 235, occupancy: 82, grossRevenue: 17343, isReal: false },
     { id: 'd-sc-2', name: 'Apartamento Paseo',         latitude: 36.7305, longitude: -3.6985, status: 'ACTIVE', bedrooms: 2, avgPrice: 145, occupancy: 78, grossRevenue: 10179, isReal: false },
@@ -295,7 +329,7 @@ export async function GET() {
     revPAR: +((p.avgPrice * p.occupancy) / 100).toFixed(0),
   }))
 
-  const allPointsRaw = [...realPointsWithRevPAR, ...demoPoints]
+  const allPointsRaw = [...realPointsWithRevPAR, ...competitorPoints, ...demoPoints]
 
   // Market score: 50% RevPAR normalizado + 50% occupancy
   const maxRevPAR = Math.max(...allPointsRaw.map(p => p.revPAR), 1)
@@ -339,7 +373,9 @@ export async function GET() {
     region: 'Costa Tropical · Almuñécar',
     count: points.length,
     realCount: realPoints.length,
+    competitorCount: competitorPoints.length,
     demoCount: demoPoints.length,
+    demoMode: showDemo,
     stats: {
       totalGross: +totalGross.toFixed(0),
       avgPricePerNight: +avgPrice.toFixed(0),
