@@ -5,45 +5,92 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, Building2, CalendarDays, Users,
-  TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight,
+  TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight, ChevronDown,
   BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
+  Target, Settings, Brain,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { cn } from "@/lib/utils"
 
-const managerLinks = [
-  { href: "/manager/dashboard", label: "Dashboard",    icon: LayoutDashboard },
-  { href: "/crm",               label: "CRM",          icon: BarChart3 },
-  { href: "/calendar",          label: "Calendar",     icon: Calendar },
-  { href: "/properties",        label: "Properties",   icon: Building2 },
-  { href: "/reservations",      label: "Reservations", icon: CalendarDays },
-  { href: "/manager/clients",   label: "My Owners",    icon: Users },
-  { href: "/maintenance",       label: "Maintenance",  icon: Wrench },
-  { href: "/manager/invoices",  label: "Invoices",     icon: Receipt },
-  { href: "/setup",             label: "Setup",        icon: FileText },
-  { href: "/revenue",           label: "Revenue",      icon: TrendingUp },
-  { href: "/reports",           label: "Reports",      icon: FileBarChart },
-  { href: "/manager/messages",  label: "Messages",     icon: MessageCircle },
+type NavItem = { href: string; label: string; icon: React.ElementType }
+type NavGroup = { label: string; icon: React.ElementType; items: NavItem[] }
+type NavEntry = NavItem | NavGroup
+
+function isGroup(entry: NavEntry): entry is NavGroup {
+  return 'items' in entry
+}
+
+// ── Admin navigation (grouped) ──
+const adminNav: NavEntry[] = [
+  { href: "/dashboard", label: "Dashboard", icon: Home },
+  { href: "/calendar", label: "Calendar", icon: Calendar },
+  {
+    label: "Leads", icon: Target, items: [
+      { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
+      { href: "/marketing", label: "Marketing", icon: Megaphone },
+    ],
+  },
+  {
+    label: "Operations", icon: CalendarDays, items: [
+      { href: "/reservations", label: "Reservations", icon: CalendarDays },
+      { href: "/setup", label: "Setup", icon: FileText },
+      { href: "/maintenance", label: "Maintenance", icon: Wrench },
+    ],
+  },
+  {
+    label: "Finance", icon: Wallet, items: [
+      { href: "/payouts", label: "Payouts", icon: Wallet },
+      { href: "/manager/invoices", label: "Invoices", icon: Receipt },
+      { href: "/report-summary", label: "Reports", icon: FileBarChart },
+      { href: "/my-reports", label: "Owner Reports", icon: FileText },
+    ],
+  },
+  {
+    label: "Administration", icon: Settings, items: [
+      { href: "/team", label: "Team", icon: Users },
+      { href: "/my-properties", label: "Properties", icon: Building2 },
+      { href: "/integrations", label: "Integrations", icon: Landmark },
+    ],
+  },
+  {
+    label: "HostMasters AI", icon: Brain, items: [
+      { href: "/ai", label: "AI Pricing", icon: Sparkles },
+      { href: "/ai-monitor", label: "AI Monitor", icon: Activity },
+    ],
+  },
+  { href: "/messages", label: "Messages", icon: MessageCircle },
 ]
 
-const adminLinks = [
-  { href: "/dashboard",         label: "Dashboard",    icon: Home },
-  { href: "/crm",               label: "CRM",          icon: BarChart3 },
-  { href: "/calendar",          label: "Calendar",     icon: Calendar },
-  { href: "/reservations",      label: "Reservations", icon: CalendarDays },
-  { href: "/maintenance",       label: "Maintenance",  icon: Wrench },
-  { href: "/manager/invoices",  label: "Invoices",     icon: Receipt },
-  { href: "/setup",             label: "Setup",        icon: FileText },
-  { href: "/my-properties",     label: "Properties",   icon: Building2 },
-  { href: "/payouts",           label: "Payouts",      icon: Wallet },
-  { href: "/report-summary",    label: "Reports",      icon: FileBarChart },
-  { href: "/my-reports",        label: "Owner Reports", icon: FileText },
-  { href: "/team",              label: "Team",         icon: Users },
-  { href: "/ai",                   label: "AI Pricing",   icon: Sparkles },
-  { href: "/marketing",            label: "Marketing",    icon: Megaphone },
-  { href: "/integrations",         label: "Integrations", icon: Landmark },
-  { href: "/ai-monitor",           label: "AI Monitor",   icon: Activity },
-  { href: "/messages",          label: "Messages",     icon: MessageCircle },
+// ── Manager navigation (grouped) ──
+const managerNav: NavEntry[] = [
+  { href: "/manager/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/calendar", label: "Calendar", icon: Calendar },
+  {
+    label: "Leads", icon: Target, items: [
+      { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Operations", icon: CalendarDays, items: [
+      { href: "/reservations", label: "Reservations", icon: CalendarDays },
+      { href: "/properties", label: "Properties", icon: Building2 },
+      { href: "/setup", label: "Setup", icon: FileText },
+      { href: "/maintenance", label: "Maintenance", icon: Wrench },
+    ],
+  },
+  {
+    label: "Finance", icon: Wallet, items: [
+      { href: "/manager/invoices", label: "Invoices", icon: Receipt },
+      { href: "/revenue", label: "Revenue", icon: TrendingUp },
+      { href: "/reports", label: "Reports", icon: FileBarChart },
+    ],
+  },
+  {
+    label: "My Portfolio", icon: Users, items: [
+      { href: "/manager/clients", label: "My Owners", icon: Users },
+    ],
+  },
+  { href: "/manager/messages", label: "Messages", icon: MessageCircle },
 ]
 
 interface ManagerLayoutProps {
@@ -54,16 +101,31 @@ interface ManagerLayoutProps {
 
 export default function ManagerLayout({ children, user, role }: ManagerLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const pathname = usePathname()
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
     : role === "ADMIN" ? "AD" : "MG"
 
   const isAdmin = role === "ADMIN"
-  const sidebarLinks = isAdmin ? adminLinks : managerLinks
+  const nav = isAdmin ? adminNav : managerNav
   const dashboardHref = isAdmin ? "/dashboard" : "/manager/dashboard"
   const profileHref = isAdmin ? "/profile" : "/manager/profile"
   const badgeLabel = isAdmin ? "Admin" : "Manager"
+
+  // Auto-expand group containing active page
+  const isPathInGroup = (group: NavGroup) => group.items.some(item =>
+    pathname === item.href || (item.href !== "/dashboard" && item.href !== "/manager/dashboard" && pathname.startsWith(item.href))
+  )
+
+  const toggleGroup = (label: string) => {
+    setExpanded(prev => ({ ...prev, [label]: !prev[label] }))
+  }
+
+  const isGroupExpanded = (group: NavGroup) => {
+    if (expanded[group.label] !== undefined) return expanded[group.label]
+    return isPathInGroup(group) // auto-expand if active page is inside
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -93,27 +155,73 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
-          {sidebarLinks.map((link) => {
-            const Icon = link.icon
-            const isActive =
-              pathname === link.href ||
-              (link.href !== "/manager/dashboard" && link.href !== "/manager" && link.href !== "/dashboard" && pathname.startsWith(link.href))
+        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
+          {nav.map((entry, i) => {
+            if (!isGroup(entry)) {
+              // Simple link
+              const Icon = entry.icon
+              const isActive = pathname === entry.href ||
+                (entry.href !== "/dashboard" && entry.href !== "/manager/dashboard" && entry.href !== "/manager" && pathname.startsWith(entry.href))
+              return (
+                <Link
+                  key={entry.href}
+                  href={entry.href}
+                  className={cn(
+                    "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    isActive ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"
+                  )}
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {entry.label}
+                </Link>
+              )
+            }
+
+            // Group with sub-items
+            const GroupIcon = entry.icon
+            const isOpen = isGroupExpanded(entry)
+            const hasActive = isPathInGroup(entry)
+
             return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-white/10 text-white"
-                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+              <div key={`group-${i}`}>
+                <button
+                  onClick={() => toggleGroup(entry.label)}
+                  className={cn(
+                    "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    hasActive ? "text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"
+                  )}
+                >
+                  <GroupIcon className="h-4 w-4 shrink-0" />
+                  <span className="flex-1 text-left">{entry.label}</span>
+                  {isOpen
+                    ? <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
+                    : <ChevronRight className="h-3.5 w-3.5 text-gray-500" />
+                  }
+                </button>
+                {isOpen && (
+                  <div className="ml-4 pl-3 border-l border-white/10 space-y-0.5 mt-0.5 mb-1">
+                    {entry.items.map(item => {
+                      const ItemIcon = item.icon
+                      const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={cn(
+                            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-colors",
+                            isActive ? "bg-white/10 text-white" : "text-gray-500 hover:bg-white/5 hover:text-gray-300"
+                          )}
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          <ItemIcon className="h-3.5 w-3.5 shrink-0" />
+                          {item.label}
+                        </Link>
+                      )
+                    })}
+                  </div>
                 )}
-                onClick={() => setSidebarOpen(false)}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                {link.label}
-              </Link>
+              </div>
             )
           })}
         </nav>
