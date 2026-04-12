@@ -14,27 +14,10 @@ const DEFAULT_COMMISSION = 0.18
 const PAYOUT_DELAY_DAYS = 7
 
 async function main() {
-  // ── Admin ──────────────────────────────────────────────────────────────────
-  const adminEmail    = process.env.ADMIN_EMAIL    || 'admin@hostmaster.es'
-  const adminPassword = process.env.ADMIN_PASSWORD || 'changeme123'
-
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: { role: 'ADMIN', password: await bcrypt.hash(adminPassword, 10) },
-    create: {
-      email: adminEmail,
-      name: 'Hostmaster Admin',
-      role: 'ADMIN',
-      password: await bcrypt.hash(adminPassword, 10),
-      language: 'en',
-    },
-  })
-  console.log(`✓ admin:   ${adminEmail} / ${adminPassword}`)
-
   // ── Yuri (owner / superuser) ────────────────────────────────────────────
   await prisma.user.upsert({
     where: { email: 'yurisales968@gmail.com' },
-    update: { isSuperUser: true, role: 'ADMIN' },
+    update: { isSuperUser: true, role: 'ADMIN', password: await bcrypt.hash('asdasd123@', 10) },
     create: {
       email: 'yurisales968@gmail.com',
       name: 'Yuri Sales',
@@ -44,7 +27,7 @@ async function main() {
       isSuperUser: true,
     },
   })
-  console.log('✓ owner:   yurisales968@gmail.com (superuser)')
+  console.log('✓ admin:   yurisales968@gmail.com (superuser)')
 
   // ── Demo Manager ──────────────────────────────────────────────────────────
   const manager = await prisma.user.upsert({
