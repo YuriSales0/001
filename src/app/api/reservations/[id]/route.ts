@@ -55,6 +55,32 @@ export async function PUT(
     const { id } = params
     const body = await request.json()
 
+    // ── Cancelling a reservation ──
+    if (body.status === 'CANCELLED') {
+      const reservation = await prisma.reservation.findUnique({
+        where: { id },
+        select: { id: true, status: true },
+      })
+      if (!reservation) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      if (reservation.status === 'CANCELLED') return NextResponse.json({ error: 'Already cancelled' }, { status: 409 })
+
+      // Cancel associated SCHEDULED payouts
+      await prisma.payout.updateMany({
+        where: { reservationId: id, status: 'SCHEDULED' },
+        data: { status: 'CANCELLED', cancelledAt: new Date() },
+      })
+
+      // Cancel associated pending tasks
+      await prisma.task.updateMany({
+        where: {
+          propertyId: (await prisma.reservation.findUnique({ where: { id }, select: { propertyId: true } }))!.propertyId,
+          status: { in: ['PENDING', 'IN_PROGRESS'] },
+          dueDate: { gte: new Date() },
+        },
+        data: { status: 'COMPLETED' },
+      })
+    }
+
     // ── Admin activating reservation manually ──
     if (body.status === 'ACTIVE' || body.status === 'COMPLETED') {
       const reservation = await prisma.reservation.findUnique({

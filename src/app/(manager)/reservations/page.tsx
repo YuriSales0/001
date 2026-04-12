@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle, Play, CheckCheck } from "lucide-react"
+import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle, Play, CheckCheck, Ban } from "lucide-react"
 
 type ReservationStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED"
 type Platform = "AIRBNB" | "BOOKING" | "DIRECT" | "OTHER"
@@ -236,6 +236,18 @@ export default function ReservationsPage() {
 
   const [activating, setActivating] = useState<string|null>(null)
 
+  const cancelReservation = async (id: string, guestName: string) => {
+    if (!confirm(`Cancelar a reserva de ${guestName}?\n\nIsto irá:\n- Mudar a reserva para CANCELLED\n- Cancelar payouts agendados associados\n- Cancelar tarefas pendentes`)) return
+    setActivating(id)
+    await fetch(`/api/reservations/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'CANCELLED' }),
+    })
+    setActivating(null)
+    await load()
+  }
+
   const changeReservationStatus = async (id: string, status: 'ACTIVE'|'COMPLETED', force = false) => {
     setActivating(id)
     const res = await fetch(`/api/reservations/${id}`, {
@@ -361,26 +373,46 @@ export default function ReservationsPage() {
                     <span className="text-base font-bold text-gray-900">{fmtMoney(r.amount)}</span>
                     <div className="flex gap-1.5">
                       {r.status === 'UPCOMING' && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'ACTIVE') }}
-                          disabled={activating === r.id}
-                          className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-emerald-700 disabled:opacity-50 transition-colors"
-                          title="Activar reserva"
-                        >
-                          <Play className="h-3 w-3" />
-                          {activating === r.id ? '...' : 'Activar'}
-                        </button>
+                        <>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'ACTIVE') }}
+                            disabled={activating === r.id}
+                            className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                            title="Activar reserva"
+                          >
+                            <Play className="h-3 w-3" />
+                            {activating === r.id ? '...' : 'Activar'}
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); cancelReservation(r.id, r.guestName) }}
+                            disabled={activating === r.id}
+                            className="inline-flex items-center gap-1 rounded-lg border border-red-200 text-red-500 px-2.5 py-1 text-[11px] font-semibold hover:bg-red-50 disabled:opacity-50 transition-colors"
+                            title="Cancelar reserva"
+                          >
+                            <Ban className="h-3 w-3" />
+                          </button>
+                        </>
                       )}
                       {r.status === 'ACTIVE' && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'COMPLETED') }}
-                          disabled={activating === r.id}
-                          className="inline-flex items-center gap-1 rounded-lg bg-gray-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-gray-700 disabled:opacity-50 transition-colors"
-                          title="Marcar como concluída"
-                        >
-                          <CheckCheck className="h-3 w-3" />
-                          {activating === r.id ? '...' : 'Concluir'}
-                        </button>
+                        <>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'COMPLETED') }}
+                            disabled={activating === r.id}
+                            className="inline-flex items-center gap-1 rounded-lg bg-gray-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                            title="Marcar como concluída"
+                          >
+                            <CheckCheck className="h-3 w-3" />
+                            {activating === r.id ? '...' : 'Concluir'}
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); cancelReservation(r.id, r.guestName) }}
+                            disabled={activating === r.id}
+                            className="inline-flex items-center gap-1 rounded-lg border border-red-200 text-red-500 px-2.5 py-1 text-[11px] font-semibold hover:bg-red-50 disabled:opacity-50 transition-colors"
+                            title="Cancelar reserva"
+                          >
+                            <Ban className="h-3 w-3" />
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
