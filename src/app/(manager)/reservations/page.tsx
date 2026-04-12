@@ -176,6 +176,8 @@ export default function ReservationsPage() {
   const [form, setForm] = useState({
     propertyId:"",guestName:"",guestEmail:"",guestPhone:"",
     checkIn:"",checkOut:"",amount:"",platform:"DIRECT",
+    guestNationality:"",guestAgeGroup:"",guestGroupSize:"",
+    hasChildren:false,hasPets:false,guestLanguage:"",
   })
 
   const load = async () => {
@@ -213,6 +215,12 @@ export default function ReservationsPage() {
         guestEmail:form.guestEmail||undefined,guestPhone:form.guestPhone||undefined,
         checkIn:new Date(form.checkIn).toISOString(),checkOut:new Date(form.checkOut).toISOString(),
         amount:parseFloat(form.amount),platform:form.platform,
+        guestNationality:form.guestNationality||undefined,
+        guestAgeGroup:form.guestAgeGroup||undefined,
+        guestGroupSize:form.guestGroupSize?parseInt(form.guestGroupSize):undefined,
+        hasChildren:form.hasChildren||undefined,
+        hasPets:form.hasPets||undefined,
+        guestLanguage:form.guestLanguage||undefined,
       }),
     })
     if (!res.ok) {
@@ -220,7 +228,7 @@ export default function ReservationsPage() {
       setCreateError(err.error??"Failed to create reservation")
     } else {
       setShowCreate(false)
-      setForm({propertyId:"",guestName:"",guestEmail:"",guestPhone:"",checkIn:"",checkOut:"",amount:"",platform:"DIRECT"})
+      setForm({propertyId:"",guestName:"",guestEmail:"",guestPhone:"",checkIn:"",checkOut:"",amount:"",platform:"DIRECT",guestNationality:"",guestAgeGroup:"",guestGroupSize:"",hasChildren:false,hasPets:false,guestLanguage:""})
       await load()
     }
     setCreating(false)
@@ -465,6 +473,72 @@ export default function ReservationsPage() {
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" placeholder="0.00"/>
                 </div>
               </div>
+
+              {/* Guest Profile — feeds AI Pricing engine */}
+              <div className="border-t pt-4">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Guest profile (AI data)</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nationality</label>
+                    <select value={form.guestNationality} onChange={e=>setForm(f=>({...f,guestNationality:e.target.value}))}
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                      <option value="">Unknown</option>
+                      {[
+                        {v:"GB",l:"🇬🇧 United Kingdom"},{v:"DE",l:"🇩🇪 Germany"},{v:"FR",l:"🇫🇷 France"},
+                        {v:"NL",l:"🇳🇱 Netherlands"},{v:"ES",l:"🇪🇸 Spain"},{v:"SE",l:"🇸🇪 Sweden"},
+                        {v:"NO",l:"🇳🇴 Norway"},{v:"DK",l:"🇩🇰 Denmark"},{v:"IT",l:"🇮🇹 Italy"},
+                        {v:"PT",l:"🇵🇹 Portugal"},{v:"US",l:"🇺🇸 USA"},{v:"BR",l:"🇧🇷 Brazil"},
+                        {v:"BE",l:"🇧🇪 Belgium"},{v:"CH",l:"🇨🇭 Switzerland"},{v:"IE",l:"🇮🇪 Ireland"},
+                        {v:"PL",l:"🇵🇱 Poland"},{v:"CZ",l:"🇨🇿 Czech Republic"},{v:"AT",l:"🇦🇹 Austria"},
+                      ].map(c=><option key={c.v} value={c.v}>{c.l}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Guest type</label>
+                    <select value={form.guestAgeGroup} onChange={e=>setForm(f=>({...f,guestAgeGroup:e.target.value}))}
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                      <option value="">Unknown</option>
+                      <option value="YOUNG_COUPLE">Young couple</option>
+                      <option value="FAMILY">Family</option>
+                      <option value="MATURE_COUPLE">Mature couple</option>
+                      <option value="GROUP">Group of friends</option>
+                      <option value="SOLO">Solo traveller</option>
+                      <option value="SENIOR">Senior</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Group size</label>
+                    <input type="number" min="1" max="20" value={form.guestGroupSize} onChange={e=>setForm(f=>({...f,guestGroupSize:e.target.value}))}
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" placeholder="e.g. 4"/>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Language</label>
+                    <select value={form.guestLanguage} onChange={e=>setForm(f=>({...f,guestLanguage:e.target.value}))}
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                      <option value="">Unknown</option>
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                      <option value="de">German</option>
+                      <option value="fr">French</option>
+                      <option value="nl">Dutch</option>
+                      <option value="pt">Portuguese</option>
+                      <option value="sv">Swedish</option>
+                      <option value="no">Norwegian</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-4 col-span-2">
+                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                      <input type="checkbox" checked={form.hasChildren} onChange={e=>setForm(f=>({...f,hasChildren:e.target.checked}))} className="accent-gray-900"/>
+                      Children
+                    </label>
+                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                      <input type="checkbox" checked={form.hasPets} onChange={e=>setForm(f=>({...f,hasPets:e.target.checked}))} className="accent-gray-900"/>
+                      Pets
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={()=>setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
                 <button type="submit" disabled={creating}

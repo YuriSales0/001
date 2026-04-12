@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { Sparkles, TrendingUp, BarChart3, Calendar, AlertCircle, MapPin } from 'lucide-react'
+import { Sparkles, TrendingUp, BarChart3, Calendar, AlertCircle, MapPin, Cpu, ArrowUpRight, ArrowDownRight, Minus, Target } from 'lucide-react'
 
 // Market Map — client-only (deck.gl needs window)
 const MarketMap = dynamic(
@@ -14,7 +14,40 @@ const MarketMap = dynamic(
   )},
 )
 
-type Tab = 'pricing' | 'market'
+type Tab = 'pricing' | 'engine' | 'market'
+
+type PricingFactor = {
+  name: string
+  effect: number
+  description: string
+}
+
+type PricingSuggestion = {
+  basePrice: number
+  suggestedPrice: number
+  confidence: 'LOW' | 'MEDIUM' | 'HIGH'
+  factors: PricingFactor[]
+  competitorMedian: number | null
+  competitorCount: number
+  dataPoints: number
+  percentile: number | null
+}
+
+type PropertySuggestion = {
+  propertyId: string
+  propertyName: string
+  zoneId: string | null
+  bedrooms: number
+  suggestion: PricingSuggestion
+}
+
+type EngineData = {
+  targetMonth: number
+  targetDayOfWeek: number
+  propertyCount: number
+  competitorCount: number
+  suggestions: PropertySuggestion[]
+}
 
 type StatsData = {
   totalPoints: number
@@ -29,7 +62,11 @@ const DAY_NAMES   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
 export default function AIPage() {
   const [tab, setTab] = useState<Tab>('pricing')
   const [stats, setStats] = useState<StatsData | null>(null)
+  const [engine, setEngine] = useState<EngineData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [engineLoading, setEngineLoading] = useState(false)
+  const [engineMonth, setEngineMonth] = useState(new Date().getMonth() + 1)
+  const [engineDay, setEngineDay] = useState(5) // Saturday
 
   useEffect(() => {
     fetch('/api/ai/stats')
@@ -37,6 +74,19 @@ export default function AIPage() {
       .then(d => { setStats(d); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
+
+  const loadEngine = (month: number, day: number) => {
+    setEngineLoading(true)
+    fetch(`/api/ai/pricing-engine?month=${month}&dayOfWeek=${day}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { setEngine(d); setEngineLoading(false) })
+      .catch(() => setEngineLoading(false))
+  }
+
+  useEffect(() => {
+    if (tab === 'engine' && !engine) loadEngine(engineMonth, engineDay)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab])
 
   const totalPoints = stats?.totalPoints ?? 0
   const byMonth = stats?.byMonth ?? []
@@ -70,6 +120,15 @@ export default function AIPage() {
         >
           <BarChart3 className="h-4 w-4" />
           Pricing Data
+        </button>
+        <button
+          onClick={() => setTab('engine')}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+            tab === 'engine' ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          <Cpu className="h-4 w-4" />
+          Motor de Pricing
         </button>
         <button
           onClick={() => setTab('market')}
@@ -239,6 +298,118 @@ export default function AIPage() {
             </>
           )}
         </>
+      )}
+
+      {/* ═══ Tab: Motor de Pricing ═══ */}
+      {tab === 'engine' && (
+        <div className="space-y-6">
+          {/* Controls */}
+          <div className="flex flex-wrap items-center gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Mês alvo</label>
+              <select value={engineMonth} onChange={e => { const m = parseInt(e.target.value); setEngineMonth(m); loadEngine(m, engineDay) }}
+                className="rounded-lg border px-3 py-2 text-sm">
+                {MONTH_NAMES.map((n, i) => <option key={i} value={i + 1}>{n}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Dia da semana</label>
+              <select value={engineDay} onChange={e => { const d = parseInt(e.target.value); setEngineDay(d); loadEngine(engineMonth, d) }}
+                className="rounded-lg border px-3 py-2 text-sm">
+                {DAY_NAMES.map((n, i) => <option key={i} value={i}>{n}</option>)}
+              </select>
+            </div>
+            {engine && (
+              <div className="ml-auto flex items-center gap-4 text-xs text-gray-500">
+                <span>{engine.propertyCount} propriedades</span>
+                <span>{engine.competitorCount} competitors</span>
+              </div>
+            )}
+          </div>
+
+          {engineLoading && <div className="text-center py-12 text-gray-500 text-sm">A calcular sugestões...</div>}
+
+          {engine && !engineLoading && engine.suggestions.length === 0 && (
+            <div className="rounded-xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+              <Target className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+              <h3 className="font-semibold text-gray-700 mb-1">Sem propriedades activas</h3>
+              <p className="text-sm text-gray-500">Adiciona propriedades com reservas para gerar sugestões de preço.</p>
+            </div>
+          )}
+
+          {engine && !engineLoading && engine.suggestions.length > 0 && (
+            <div className="space-y-3">
+              {engine.suggestions.map(ps => {
+                const s = ps.suggestion
+                const delta = s.suggestedPrice - s.basePrice
+                const deltaPct = s.basePrice > 0 ? (delta / s.basePrice) * 100 : 0
+                const confColor = s.confidence === 'HIGH' ? 'bg-green-100 text-green-700' : s.confidence === 'MEDIUM' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-500'
+
+                return (
+                  <div key={ps.propertyId} className="rounded-xl border bg-white overflow-hidden">
+                    {/* Header */}
+                    <div className="px-5 py-4 flex items-center justify-between gap-4 border-b">
+                      <div className="min-w-0 flex-1">
+                        <div className="font-semibold text-navy-900">{ps.propertyName}</div>
+                        <div className="text-xs text-gray-400 mt-0.5">
+                          {ps.bedrooms > 0 && `${ps.bedrooms} quartos · `}
+                          {ps.zoneId?.replace('zone-', '').replace(/-/g, ' ') ?? 'zona desconhecida'}
+                          {s.competitorCount > 0 && ` · ${s.competitorCount} competitors na zona`}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="text-2xl font-bold text-navy-900">€{s.suggestedPrice}</div>
+                        <div className="flex items-center justify-end gap-1 mt-0.5">
+                          {delta > 0 ? <ArrowUpRight className="h-3 w-3 text-green-600" /> : delta < 0 ? <ArrowDownRight className="h-3 w-3 text-red-500" /> : <Minus className="h-3 w-3 text-gray-400" />}
+                          <span className={`text-xs font-semibold ${delta > 0 ? 'text-green-600' : delta < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                            {delta > 0 ? '+' : ''}{deltaPct.toFixed(0)}% vs. base €{s.basePrice}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Stats row */}
+                    <div className="px-5 py-3 flex items-center gap-4 text-xs bg-gray-50 border-b">
+                      <span className={`rounded-full px-2 py-0.5 font-bold ${confColor}`}>{s.confidence}</span>
+                      <span className="text-gray-500">{s.dataPoints} noites próprias</span>
+                      {s.competitorMedian && <span className="text-gray-500">Mediana mercado: €{s.competitorMedian}</span>}
+                      {s.percentile !== null && <span className="text-gray-500">Percentil {s.percentile}%</span>}
+                    </div>
+
+                    {/* Factors */}
+                    <div className="px-5 py-3">
+                      <div className="flex flex-wrap gap-2">
+                        {s.factors.map((f, i) => {
+                          const isUp = f.effect > 1.01
+                          const isDown = f.effect < 0.99
+                          return (
+                            <div key={i} className={`rounded-lg border px-2.5 py-1.5 text-xs ${isUp ? 'border-green-200 bg-green-50 text-green-700' : isDown ? 'border-red-200 bg-red-50 text-red-600' : 'border-gray-200 bg-gray-50 text-gray-500'}`}
+                              title={f.description}>
+                              <span className="font-semibold">{f.name}</span>
+                              <span className="ml-1">
+                                {isUp ? `+${((f.effect - 1) * 100).toFixed(0)}%` : isDown ? `${((f.effect - 1) * 100).toFixed(0)}%` : '0%'}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Methodology note */}
+          <div className="flex items-start gap-3 rounded-xl bg-gray-50 border p-4 text-sm text-gray-600">
+            <Cpu className="h-5 w-5 shrink-0 mt-0.5 text-gray-400" />
+            <div>
+              <strong>Motor v1 (estatístico)</strong> — combina dados próprios + competitors com 7 factores: sazonalidade Costa Tropical,
+              dia da semana, lead time, ocupação, posicionamento vs. mercado, rating e superhost.
+              Assertividade validada via MAPE quando houver volume. Próxima versão: XGBoost (Python).
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ═══ Tab: Market Intelligence ═══ */}

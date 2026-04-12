@@ -50,7 +50,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { propertyId, guestName, guestEmail, guestPhone, checkIn, checkOut, amount, platform } = body
+    const {
+      propertyId, guestName, guestEmail, guestPhone, checkIn, checkOut, amount, platform,
+      // Guest demographics
+      guestNationality, guestCountry, guestAge, guestAgeGroup, guestGroupSize,
+      hasChildren, hasPets, isRepeatGuest, guestLanguage, bookingChannel,
+    } = body
 
     if (!propertyId || !guestName || !checkIn || !checkOut || amount == null) {
       return NextResponse.json(
@@ -75,6 +80,9 @@ export async function POST(request: NextRequest) {
     const validPlatforms = ['AIRBNB', 'BOOKING', 'DIRECT', 'OTHER']
     const platformValue = platformEnum && validPlatforms.includes(platformEnum) ? platformEnum : undefined
 
+    // Auto-calculate booking lead days
+    const autoLeadDays = Math.max(0, Math.round((checkInDate.getTime() - Date.now()) / 86400000))
+
     const reservation = await prisma.reservation.create({
       data: {
         propertyId,
@@ -85,6 +93,18 @@ export async function POST(request: NextRequest) {
         checkOut: checkOutDate,
         amount,
         platform: platformValue,
+        // Guest demographics
+        guestNationality: guestNationality ?? null,
+        guestCountry: guestCountry ?? null,
+        guestAge: guestAge ? parseInt(guestAge) : null,
+        guestAgeGroup: guestAgeGroup ?? null,
+        guestGroupSize: guestGroupSize ? parseInt(guestGroupSize) : null,
+        hasChildren: hasChildren ?? null,
+        hasPets: hasPets ?? null,
+        isRepeatGuest: isRepeatGuest ?? false,
+        guestLanguage: guestLanguage ?? null,
+        bookingLeadDays: autoLeadDays,
+        bookingChannel: bookingChannel ?? null,
         payouts: {
           create: {
             propertyId,
