@@ -47,12 +47,37 @@ function renderMarkdown(text: string): string {
 
 export function AiChat({ role = 'ADMIN' }: Props) {
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (typeof window === 'undefined') return []
+    try {
+      const saved = sessionStorage.getItem('hm-chat-messages')
+      return saved ? JSON.parse(saved) : []
+    } catch { return [] }
+  })
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [ready, setReady] = useState<boolean | null>(null)
+  const [ready, setReady] = useState<boolean | null>(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const saved = sessionStorage.getItem('hm-chat-ready')
+      return saved ? JSON.parse(saved) : null
+    } catch { return null }
+  })
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Persist messages and ready state to sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('hm-chat-messages', JSON.stringify(messages))
+    } catch { /* quota exceeded */ }
+  }, [messages])
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('hm-chat-ready', JSON.stringify(ready))
+    } catch { /* ignore */ }
+  }, [ready])
 
   useEffect(() => {
     if (open) {
