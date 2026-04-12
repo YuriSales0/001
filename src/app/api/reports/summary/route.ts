@@ -21,18 +21,47 @@ export async function GET(request: NextRequest) {
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
 
-  const period = request.nextUrl.searchParams.get('period') ?? 'current'
+  const params = request.nextUrl.searchParams
   const now = new Date()
 
-  // Period ranges
+  // Custom date ranges: ?from=2026-04-01&to=2026-04-30&compareFrom=2025-04-01&compareTo=2025-04-30
+  // Or presets: ?period=current (default) | previous | year
+  const fromParam = params.get('from')
+  const toParam = params.get('to')
+  const compareFromParam = params.get('compareFrom')
+  const compareToParam = params.get('compareTo')
+  const preset = params.get('period') ?? 'current'
+
   let periodStart: Date, periodEnd: Date, prevStart: Date, prevEnd: Date
 
-  if (period === 'previous') {
+  if (fromParam && toParam) {
+    // Custom date range
+    periodStart = new Date(fromParam)
+    periodEnd = new Date(toParam)
+    periodEnd.setHours(23, 59, 59, 999)
+
+    if (compareFromParam && compareToParam) {
+      prevStart = new Date(compareFromParam)
+      prevEnd = new Date(compareToParam)
+      prevEnd.setHours(23, 59, 59, 999)
+    } else {
+      // Default comparison: same duration, immediately before
+      const durationMs = periodEnd.getTime() - periodStart.getTime()
+      prevEnd = new Date(periodStart)
+      prevStart = new Date(periodStart.getTime() - durationMs)
+    }
+  } else if (preset === 'previous') {
     periodStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)
     periodEnd = new Date(now.getFullYear(), now.getMonth(), 1)
     prevStart = new Date(now.getFullYear(), now.getMonth() - 2, 1)
     prevEnd = periodStart
+  } else if (preset === 'year') {
+    periodStart = new Date(now.getFullYear(), 0, 1)
+    periodEnd = now
+    prevStart = new Date(now.getFullYear() - 1, 0, 1)
+    prevEnd = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate())
   } else {
+    // current month
     periodStart = new Date(now.getFullYear(), now.getMonth(), 1)
     periodEnd = now
     prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)

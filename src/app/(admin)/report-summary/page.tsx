@@ -79,18 +79,100 @@ function KPI({ label, value, delta, sub }: { label: string; value: string; delta
   )
 }
 
+type PeriodPreset = 'current' | 'previous' | 'year' | 'custom'
+
 export default function ReportsPage() {
   const [report, setReport] = useState<Report | null>(null)
   const [loading, setLoading] = useState(true)
+  const [preset, setPreset] = useState<PeriodPreset>('current')
+  const [fromDate, setFromDate] = useState('')
+  const [toDate, setToDate] = useState('')
+  const [compareFrom, setCompareFrom] = useState('')
+  const [compareTo, setCompareTo] = useState('')
 
-  useEffect(() => {
-    fetch('/api/reports/summary')
+  const loadReport = (p: PeriodPreset, from?: string, to?: string, cFrom?: string, cTo?: string) => {
+    setLoading(true)
+    let url = '/api/reports/summary'
+    if (p === 'custom' && from && to) {
+      url += `?from=${from}&to=${to}`
+      if (cFrom && cTo) url += `&compareFrom=${cFrom}&compareTo=${cTo}`
+    } else {
+      url += `?period=${p}`
+    }
+    fetch(url)
       .then(r => r.ok ? r.json() : null)
       .then(d => { setReport(d); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [])
+  }
 
-  if (loading) return <div className="p-6 text-gray-500 text-sm">A carregar report...</div>
+  useEffect(() => { loadReport('current') }, [])
+
+  const periodSelector = (
+    <div className="rounded-xl border bg-white p-4">
+      <div className="flex flex-wrap items-end gap-3">
+        <div className="flex gap-1 rounded-lg bg-gray-100 p-1">
+          {([
+            { key: 'current', label: 'Este mês' },
+            { key: 'previous', label: 'Mês anterior' },
+            { key: 'year', label: 'Ano' },
+            { key: 'custom', label: 'Personalizado' },
+          ] as { key: PeriodPreset; label: string }[]).map(opt => (
+            <button
+              key={opt.key}
+              onClick={() => { setPreset(opt.key); if (opt.key !== 'custom') loadReport(opt.key) }}
+              className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
+                preset === opt.key ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+
+        {preset === 'custom' && (
+          <>
+            <div className="flex items-center gap-2">
+              <div>
+                <label className="block text-[10px] uppercase text-gray-500 mb-0.5">Período</label>
+                <div className="flex gap-1">
+                  <input type="date" value={fromDate} onChange={e => setFromDate(e.target.value)}
+                    className="rounded-md border px-2 py-1 text-xs" />
+                  <input type="date" value={toDate} onChange={e => setToDate(e.target.value)}
+                    className="rounded-md border px-2 py-1 text-xs" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] uppercase text-gray-500 mb-0.5">Comparar com</label>
+                <div className="flex gap-1">
+                  <input type="date" value={compareFrom} onChange={e => setCompareFrom(e.target.value)}
+                    className="rounded-md border px-2 py-1 text-xs" />
+                  <input type="date" value={compareTo} onChange={e => setCompareTo(e.target.value)}
+                    className="rounded-md border px-2 py-1 text-xs" />
+                </div>
+              </div>
+              <button
+                onClick={() => loadReport('custom', fromDate, toDate, compareFrom, compareTo)}
+                disabled={!fromDate || !toDate}
+                className="rounded-lg bg-navy-900 text-white px-4 py-2 text-xs font-semibold hover:bg-navy-800 disabled:opacity-40 self-end"
+              >
+                Aplicar
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+
+  if (loading) return (
+    <div className="p-6 space-y-6">
+      <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+        <BarChart3 className="h-7 w-7 text-gray-400" /> Reports
+      </h1>
+      {periodSelector}
+      <div className="text-gray-500 text-sm py-8 text-center">A carregar...</div>
+    </div>
+  )
   if (!report) return <div className="p-6 text-gray-500 text-sm">Erro ao carregar report.</div>
 
   if (report.role === 'ADMIN') {
@@ -102,12 +184,14 @@ export default function ReportsPage() {
         <div>
           <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
             <BarChart3 className="h-7 w-7 text-gray-400" />
-            Report Mensal
+            Reports
           </h1>
           <p className="text-sm text-gray-600 mt-1">
             {r.period} vs. {r.previousPeriod}
           </p>
         </div>
+
+        {periodSelector}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <KPI label="Receita bruta" value={fmtEUR(c.grossRevenue)} delta={r.delta.grossRevenue} sub={`ant. ${fmtEUR(p.grossRevenue)}`} />
@@ -153,6 +237,8 @@ export default function ReportsPage() {
             {r.period} vs. {r.previousPeriod}
           </p>
         </div>
+
+        {periodSelector}
 
         {/* Manager earnings highlight */}
         <div className="rounded-xl border-2 border-[#C9A84C] bg-[#C9A84C]/5 p-5">
