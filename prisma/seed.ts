@@ -31,6 +31,21 @@ async function main() {
   })
   console.log(`✓ admin:   ${adminEmail} / ${adminPassword}`)
 
+  // ── Yuri (owner / superuser) ────────────────────────────────────────────
+  await prisma.user.upsert({
+    where: { email: 'yurisales968@gmail.com' },
+    update: { isSuperUser: true, role: 'ADMIN' },
+    create: {
+      email: 'yurisales968@gmail.com',
+      name: 'Yuri Sales',
+      role: 'ADMIN',
+      password: await bcrypt.hash('asdasd123@', 10),
+      language: 'pt',
+      isSuperUser: true,
+    },
+  })
+  console.log('✓ owner:   yurisales968@gmail.com (superuser)')
+
   // ── Demo Manager ──────────────────────────────────────────────────────────
   const manager = await prisma.user.upsert({
     where: { email: 'manager@hostmaster.es' },
