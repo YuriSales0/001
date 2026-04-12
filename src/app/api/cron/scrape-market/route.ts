@@ -3,22 +3,22 @@ import Anthropic from '@anthropic-ai/sdk'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // 5 min timeout for scraping + analysis
+export const maxDuration = 300
 
 /**
- * Cron: Market Scraping Agent
- * Scheduled: weekly (Sunday 06:00 UTC) — vercel.json
+ * Cron: Market Scraping via Managed Agent
+ * Schedule: weekly (Sunday 06:00 UTC) — vercel.json
  *
- * Uses Claude with tool_use to:
- * 1. Fetch Airbnb/Booking search pages for Costa Tropical
- * 2. Extract listing data in structured format
- * 3. Analyse market trends
- * 4. Store results in CompetitorListing + MarketReport
+ * Uses Anthropic Managed Agents with web_search + web_fetch to:
+ * 1. Search Airbnb/Booking for Almuñécar listings
+ * 2. Extract structured listing data
+ * 3. Call custom tool `store_listings` → upserts CompetitorListing
+ * 4. Analyse market and call `store_report` → creates MarketReport
  *
- * Cost estimate: ~€2-5/run with Haiku (parsing) + Sonnet (analysis)
+ * Setup: SCRAPER_AGENT_ID + SCRAPER_ENV_ID must be set in env.
+ * Run /api/ai/scraper-setup first to create them.
  */
 export async function GET(request: NextRequest) {
-  // Auth: Vercel Cron or manual trigger with secret
   const cronSecret = process.env.CRON_SECRET
   if (cronSecret) {
     const auth = request.headers.get('authorization')
@@ -28,294 +28,215 @@ export async function GET(request: NextRequest) {
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 503 })
+  }
+
+  const agentId = process.env.SCRAPER_AGENT_ID
+  const envId = process.env.SCRAPER_ENV_ID
+
+  if (!agentId || !envId) {
     return NextResponse.json({
-      error: 'ANTHROPIC_API_KEY not configured',
-      hint: 'Add ANTHROPIC_API_KEY to Vercel environment variables',
+      error: 'SCRAPER_AGENT_ID and SCRAPER_ENV_ID must be set. Run POST /api/ai/scraper-setup first.',
     }, { status: 503 })
   }
 
   const client = new Anthropic()
-  const region = 'Almuñécar, Costa Tropical, Spain'
   const now = new Date()
 
-  // ── Step 1: Fetch search pages ──
-  const searchUrls = [
-    `https://www.airbnb.com/s/Almu%C3%B1%C3%A9car--Spain/homes?adults=2&checkin=&checkout=&tab_id=home_tab&refinement_paths%5B%5D=%2Fhomes`,
-    `https://www.booking.com/searchresults.html?ss=Almu%C3%B1%C3%A9car&ssne=Almu%C3%B1%C3%A9car&dest_type=city&nflt=ht_id%3D220`,
-  ]
-
-  const fetchedPages: { url: string; html: string; status: number }[] = []
-
-  for (const url of searchUrls) {
-    try {
-      const res = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
-          'Accept': 'text/html,application/xhtml+xml',
-        },
-        signal: AbortSignal.timeout(15000),
-      })
-      const html = await res.text()
-      fetchedPages.push({ url, html: html.slice(0, 50000), status: res.status }) // limit to 50KB per page
-    } catch (err) {
-      console.error(`[Scrape] Failed to fetch ${url}:`, err)
-      fetchedPages.push({ url, html: '', status: 0 })
-    }
-  }
-
-  const successfulPages = fetchedPages.filter(p => p.status === 200 && p.html.length > 1000)
-
-  if (successfulPages.length === 0) {
-    // No pages fetched — store report noting the failure and exit
-    await prisma.marketReport.upsert({
-      where: {
-        weekOf_region_type: {
-          weekOf: getMonday(now),
-          region: 'costa-tropical',
-          type: 'WEEKLY_SCRAPE',
-        },
-      },
-      create: {
-        weekOf: getMonday(now),
-        region: 'costa-tropical',
-        type: 'WEEKLY_SCRAPE',
-        summary: 'Scraping failed — no pages fetched successfully. Platforms may be blocking automated requests.',
-        data: { fetchAttempts: fetchedPages.length, errors: fetchedPages.map(p => ({ url: p.url, status: p.status })) },
-        listingsScraped: 0,
-        topInsight: 'Scrape failed — retry next week or add manual data via /api/competitors',
-      },
-      update: {
-        summary: 'Scraping failed — no pages fetched successfully.',
-        data: { fetchAttempts: fetchedPages.length, errors: fetchedPages.map(p => ({ url: p.url, status: p.status })) },
-      },
-    })
-    return NextResponse.json({ status: 'failed', reason: 'no pages fetched' })
-  }
-
-  // ── Step 2: Claude extracts listings from HTML ──
-  type ExtractedListing = {
-    title: string
-    pricePerNight: number
-    bedrooms: number
-    bathrooms: number
-    maxGuests: number
-    rating: number | null
-    reviewCount: number
-    isSuperhost: boolean
-    instantBook: boolean
-    latitude: number | null
-    longitude: number | null
-    amenities: string[]
-    propertyType: string
-    platform: string
-  }
-
-  let extractedListings: ExtractedListing[] = []
-
-  for (const page of successfulPages) {
-    const platform = page.url.includes('airbnb') ? 'AIRBNB' : 'BOOKING'
-
-    try {
-      const extraction = await client.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4096,
-        system: `You are a data extraction agent. Extract vacation rental listing data from HTML.
-Return ONLY a JSON array of listings. Each listing should have:
-- title: string
-- pricePerNight: number (in EUR, estimate if shown in other currency)
-- bedrooms: number (default 1)
-- bathrooms: number (default 1)
-- maxGuests: number (default 4)
-- rating: number | null (0-5 scale)
-- reviewCount: number (default 0)
-- isSuperhost: boolean
-- instantBook: boolean
-- latitude: number | null
-- longitude: number | null
-- amenities: string[] (pool, wifi, AC, parking, etc.)
-- propertyType: string (apartment, villa, house, studio, room)
-
-If data is not visible, use sensible defaults. Extract as many listings as you can find.
-If the HTML is blocked/empty/CAPTCHA, return an empty array [].
-Return ONLY valid JSON, no markdown, no explanation.`,
-        messages: [{
-          role: 'user',
-          content: `Extract listing data from this ${platform} search page HTML:\n\n${page.html}`,
-        }],
-      })
-
-      const text = extraction.content[0].type === 'text' ? extraction.content[0].text : '[]'
-      const cleaned = text.replace(/^```json?\n?/, '').replace(/\n?```$/, '').trim()
-      const parsed = JSON.parse(cleaned) as ExtractedListing[]
-      extractedListings.push(
-        ...parsed.map(l => ({ ...l, platform }))
-      )
-    } catch (err) {
-      console.error(`[Scrape] Claude extraction failed for ${platform}:`, err)
-    }
-  }
-
-  // ── Step 3: Store extracted listings ──
-  let stored = 0
-  let errors = 0
-
-  for (const listing of extractedListings) {
-    try {
-      const zoneId = listing.latitude && listing.longitude
-        ? detectZone(listing.latitude, listing.longitude)
-        : null
-
-      await prisma.competitorListing.upsert({
-        where: {
-          externalId_platform: {
-            externalId: `scraped_${listing.title.toLowerCase().replace(/\s+/g, '_').slice(0, 50)}`,
-            platform: listing.platform as 'AIRBNB' | 'BOOKING',
-          },
-        },
-        create: {
-          externalId: `scraped_${listing.title.toLowerCase().replace(/\s+/g, '_').slice(0, 50)}`,
-          platform: listing.platform as 'AIRBNB' | 'BOOKING',
-          title: listing.title,
-          latitude: listing.latitude ?? 36.7340, // default Almuñécar center
-          longitude: listing.longitude ?? -3.6899,
-          zoneId,
-          bedrooms: listing.bedrooms,
-          bathrooms: listing.bathrooms,
-          maxGuests: listing.maxGuests,
-          pricePerNight: listing.pricePerNight,
-          rating: listing.rating,
-          reviewCount: listing.reviewCount,
-          isSuperhost: listing.isSuperhost,
-          instantBook: listing.instantBook,
-          amenities: listing.amenities ? JSON.stringify(listing.amenities) : null,
-          lastScrapedAt: now,
-        },
-        update: {
-          pricePerNight: listing.pricePerNight,
-          rating: listing.rating,
-          reviewCount: listing.reviewCount,
-          lastScrapedAt: now,
-          isActive: true,
-        },
-      })
-      stored++
-    } catch {
-      errors++
-    }
-  }
-
-  // ── Step 4: Claude analyses the market ──
-  let analysis = ''
-  let topInsight = ''
-
-  if (extractedListings.length >= 3) {
-    try {
-      const avgPrice = extractedListings.reduce((s, l) => s + l.pricePerNight, 0) / extractedListings.length
-      const priceRange = {
-        min: Math.min(...extractedListings.map(l => l.pricePerNight)),
-        max: Math.max(...extractedListings.map(l => l.pricePerNight)),
-      }
-      const avgRating = extractedListings.filter(l => l.rating).reduce((s, l) => s + (l.rating ?? 0), 0) /
-        Math.max(1, extractedListings.filter(l => l.rating).length)
-      const superhostPct = (extractedListings.filter(l => l.isSuperhost).length / extractedListings.length) * 100
-      const types = extractedListings.reduce((acc, l) => {
-        acc[l.propertyType] = (acc[l.propertyType] ?? 0) + 1
-        return acc
-      }, {} as Record<string, number>)
-
-      const dataForAnalysis = {
-        region,
-        date: now.toISOString().split('T')[0],
-        listingsCount: extractedListings.length,
-        avgPrice: +avgPrice.toFixed(0),
-        priceRange,
-        avgRating: +avgRating.toFixed(1),
-        superhostPct: +superhostPct.toFixed(0),
-        propertyTypes: types,
-        avgBedrooms: +(extractedListings.reduce((s, l) => s + l.bedrooms, 0) / extractedListings.length).toFixed(1),
-      }
-
-      const analysisResponse = await client.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system: `You are a market analyst for short-term rentals in Costa Tropical, Spain.
-Analyse the scraped market data and provide:
-1. A 2-3 paragraph market summary in Portuguese (Portugal)
-2. Key trends and anomalies
-3. One actionable insight for property managers
-4. Comparison with typical Costa Tropical seasonal patterns
-
-Be concise, data-driven, and actionable. This feeds a dashboard for property managers.`,
-        messages: [{
-          role: 'user',
-          content: `Analyse this week's market data for ${region}:\n\n${JSON.stringify(dataForAnalysis, null, 2)}`,
-        }],
-      })
-
-      analysis = analysisResponse.content[0].type === 'text' ? analysisResponse.content[0].text : ''
-      // Extract first sentence as top insight
-      topInsight = analysis.split('.')[0] + '.'
-    } catch (err) {
-      console.error('[Scrape] Analysis failed:', err)
-      analysis = 'Análise não disponível esta semana.'
-    }
-  }
-
-  // ── Step 5: Store market report ──
-  const avgPrice = extractedListings.length > 0
-    ? extractedListings.reduce((s, l) => s + l.pricePerNight, 0) / extractedListings.length
-    : null
-
-  await prisma.marketReport.upsert({
-    where: {
-      weekOf_region_type: {
-        weekOf: getMonday(now),
-        region: 'costa-tropical',
-        type: 'WEEKLY_SCRAPE',
-      },
-    },
-    create: {
-      weekOf: getMonday(now),
-      region: 'costa-tropical',
-      type: 'WEEKLY_SCRAPE',
-      summary: analysis || `Scraped ${stored} listings from ${successfulPages.length} source(s).`,
-      data: {
-        extractedCount: extractedListings.length,
-        storedCount: stored,
-        errorCount: errors,
-        sources: successfulPages.map(p => p.url),
-      },
-      listingsScraped: stored,
-      avgPrice: avgPrice ? +avgPrice.toFixed(0) : null,
-      topInsight: topInsight || null,
-    },
-    update: {
-      summary: analysis || `Scraped ${stored} listings.`,
-      data: {
-        extractedCount: extractedListings.length,
-        storedCount: stored,
-        errorCount: errors,
-        sources: successfulPages.map(p => p.url),
-      },
-      listingsScraped: stored,
-      avgPrice: avgPrice ? +avgPrice.toFixed(0) : null,
-      topInsight: topInsight || null,
-    },
+  // ── Create session ──
+  const session = await client.beta.sessions.create({
+    agent: agentId,
+    environment_id: envId,
+    title: `Market scrape — ${now.toISOString().split('T')[0]}`,
   })
+
+  // ── Send scraping instructions ──
+  const stream = await client.beta.sessions.events.stream(session.id)
+
+  await client.beta.sessions.events.send(session.id, {
+    events: [{
+      type: 'user.message',
+      content: [{
+        type: 'text',
+        text: `Scrape the short-term rental market for Almuñécar, Costa Tropical, Spain.
+
+INSTRUCTIONS:
+1. Use web_search to find vacation rental listings in Almuñécar on Airbnb and Booking.com
+2. Use web_fetch on the search result URLs to get listing details
+3. Extract as many listings as possible (target: 20-50) with these fields:
+   - title, pricePerNight (EUR), bedrooms, bathrooms, maxGuests
+   - rating (0-5), reviewCount, isSuperhost, propertyType
+   - latitude/longitude if available, amenities list
+   - platform (AIRBNB or BOOKING)
+4. Call the store_listings tool with the extracted data (batch into groups of 10)
+5. After storing, analyse the market:
+   - Average price per night by property type
+   - Price range (min/max)
+   - % superhosts
+   - Most common amenities
+   - Market trends or notable patterns
+6. Call store_report with your analysis
+
+Today's date: ${now.toISOString().split('T')[0]}
+Region: Almuñécar, Granada, Spain (Costa Tropical)
+Focus: vacation rentals (entire homes/apartments, not hotel rooms)`,
+      }],
+    }],
+  })
+
+  // ── Stream events, handle custom tool calls ──
+  let stored = 0
+  let reportStored = false
+  const errors: string[] = []
+
+  for await (const event of stream) {
+    // Handle custom tool calls
+    if (event.type === 'agent.custom_tool_use') {
+      const evt = event as unknown as { tool_name?: string; name?: string; input?: unknown }
+      const toolName = evt.tool_name ?? evt.name ?? ''
+      const toolInput = evt.input
+
+      if (toolName === 'store_listings') {
+        try {
+          const listings = (toolInput as { listings: Array<Record<string, unknown>> }).listings ?? []
+          for (const item of listings) {
+            const zoneId = item.latitude && item.longitude
+              ? detectZone(item.latitude as number, item.longitude as number)
+              : null
+
+            await prisma.competitorListing.upsert({
+              where: {
+                externalId_platform: {
+                  externalId: `scraped_${(item.title as string ?? '').toLowerCase().replace(/\s+/g, '_').slice(0, 50)}`,
+                  platform: (item.platform as string ?? 'AIRBNB') as 'AIRBNB' | 'BOOKING',
+                },
+              },
+              create: {
+                externalId: `scraped_${(item.title as string ?? '').toLowerCase().replace(/\s+/g, '_').slice(0, 50)}`,
+                platform: (item.platform as string ?? 'AIRBNB') as 'AIRBNB' | 'BOOKING',
+                title: (item.title as string) ?? 'Unknown',
+                latitude: (item.latitude as number) ?? 36.7340,
+                longitude: (item.longitude as number) ?? -3.6899,
+                zoneId,
+                bedrooms: (item.bedrooms as number) ?? 1,
+                bathrooms: (item.bathrooms as number) ?? 1,
+                maxGuests: (item.maxGuests as number) ?? 4,
+                pricePerNight: (item.pricePerNight as number) ?? 0,
+                rating: (item.rating as number) ?? null,
+                reviewCount: (item.reviewCount as number) ?? 0,
+                isSuperhost: (item.isSuperhost as boolean) ?? false,
+                amenities: item.amenities ? JSON.stringify(item.amenities) : null,
+                lastScrapedAt: now,
+              },
+              update: {
+                pricePerNight: (item.pricePerNight as number) ?? 0,
+                rating: (item.rating as number) ?? null,
+                reviewCount: (item.reviewCount as number) ?? 0,
+                lastScrapedAt: now,
+                isActive: true,
+              },
+            })
+            stored++
+          }
+
+          await client.beta.sessions.events.send(session.id, {
+            events: [{
+              type: 'user.custom_tool_result',
+              custom_tool_use_id: event.id,
+              content: [{ type: 'text', text: `Stored ${listings.length} listings successfully. Total: ${stored}` }],
+            }],
+          })
+        } catch (err) {
+          errors.push(`store_listings: ${err}`)
+          await client.beta.sessions.events.send(session.id, {
+            events: [{
+              type: 'user.custom_tool_result',
+              custom_tool_use_id: event.id,
+              content: [{ type: 'text', text: `Error storing listings: ${err}` }],
+              is_error: true,
+            }],
+          })
+        }
+      } else if (toolName === 'store_report') {
+        try {
+          const input = toolInput as { summary: string; avgPrice?: number; avgOccupancy?: number; topInsight?: string; data?: unknown }
+          await prisma.marketReport.upsert({
+            where: {
+              weekOf_region_type: {
+                weekOf: getMonday(now),
+                region: 'costa-tropical',
+                type: 'WEEKLY_SCRAPE',
+              },
+            },
+            create: {
+              weekOf: getMonday(now),
+              region: 'costa-tropical',
+              type: 'WEEKLY_SCRAPE',
+              summary: input.summary,
+              data: (input.data ?? { storedCount: stored }) as object,
+              listingsScraped: stored,
+              avgPrice: input.avgPrice ?? null,
+              avgOccupancy: input.avgOccupancy ?? null,
+              topInsight: input.topInsight ?? null,
+            },
+            update: {
+              summary: input.summary,
+              data: (input.data ?? { storedCount: stored }) as object,
+              listingsScraped: stored,
+              avgPrice: input.avgPrice ?? null,
+              topInsight: input.topInsight ?? null,
+            },
+          })
+          reportStored = true
+
+          await client.beta.sessions.events.send(session.id, {
+            events: [{
+              type: 'user.custom_tool_result',
+              custom_tool_use_id: event.id,
+              content: [{ type: 'text', text: 'Market report stored successfully.' }],
+            }],
+          })
+        } catch (err) {
+          errors.push(`store_report: ${err}`)
+          await client.beta.sessions.events.send(session.id, {
+            events: [{
+              type: 'user.custom_tool_result',
+              custom_tool_use_id: event.id,
+              content: [{ type: 'text', text: `Error storing report: ${err}` }],
+              is_error: true,
+            }],
+          })
+        }
+      }
+    }
+
+    // Break conditions
+    if (event.type === 'session.status_terminated') break
+    if (event.type === 'session.status_idle') {
+      const stopReason = (event as { stop_reason?: { type: string } }).stop_reason
+      if (stopReason?.type !== 'requires_action') break
+    }
+  }
+
+  // ── Cleanup: archive session ──
+  try {
+    // Small delay for status sync
+    await new Promise(r => setTimeout(r, 500))
+    await client.beta.sessions.archive(session.id)
+  } catch {
+    // Session may already be terminated
+  }
 
   const result = {
     status: 'completed',
-    region,
+    sessionId: session.id,
     date: now.toISOString(),
-    fetched: successfulPages.length,
-    extracted: extractedListings.length,
-    stored,
-    errors,
-    topInsight,
+    listingsStored: stored,
+    reportStored,
+    errors: errors.length > 0 ? errors : undefined,
   }
 
-  console.log('[Scrape Market]', JSON.stringify(result))
+  console.log('[Scrape Market] Cron complete:', JSON.stringify(result))
   return NextResponse.json(result)
 }
 
