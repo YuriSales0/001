@@ -46,7 +46,7 @@ export default function ClientPayouts() {
   }, [])
 
   const totalIn = payouts.filter(p => p.status === 'SCHEDULED').reduce((s, p) => s + p.netAmount, 0)
-  const totalOut = invoices.filter(i => i.status === 'SENT').reduce((s, i) => s + i.amount, 0)
+  const totalOut = invoices.filter(i => i.status === 'SENT' || i.status === 'DRAFT').reduce((s, i) => s + i.amount, 0)
 
   if (loading) return <div className="p-6 text-gray-500">Loading…</div>
 

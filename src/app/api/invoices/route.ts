@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
         createdById: me.id,
         description,
         amount: Number(amount),
+        status: 'SENT', // manual invoices are immediately visible to client
         dueDate: dueDate ? new Date(dueDate) : null,
         notes: notes || null,
       },
