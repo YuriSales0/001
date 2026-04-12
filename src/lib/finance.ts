@@ -107,6 +107,29 @@ export function payoutDateFrom(checkOut: Date, platform?: PayoutPlatform): Date 
   return d
 }
 
+// ── Manager compensation ──────────────────────────────────────────────────
+export const DEFAULT_MANAGER_SUBSCRIPTION_SHARE = 0.10 // 10% of client subscription
+export const DEFAULT_MANAGER_COMMISSION_SHARE = 0.02   // 2% of gross rental revenue
+
+export function calcManagerEarnings(opts: {
+  grossRevenue: number
+  subscriptionFees: number
+  subscriptionShare?: number | null
+  commissionShare?: number | null
+}) {
+  const subShare = opts.subscriptionShare ?? DEFAULT_MANAGER_SUBSCRIPTION_SHARE
+  const comShare = opts.commissionShare ?? DEFAULT_MANAGER_COMMISSION_SHARE
+  const fromSubscriptions = +(opts.subscriptionFees * subShare).toFixed(2)
+  const fromCommissions = +(opts.grossRevenue * comShare).toFixed(2)
+  return {
+    fromSubscriptions,
+    fromCommissions,
+    total: +(fromSubscriptions + fromCommissions).toFixed(2),
+    subscriptionShareRate: subShare,
+    commissionShareRate: comShare,
+  }
+}
+
 export const PLATFORM_LABELS: Record<string, string> = {
   AIRBNB:  'Airbnb',
   BOOKING: 'Booking.com',

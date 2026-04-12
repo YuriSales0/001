@@ -36,6 +36,8 @@ const adminLinks = [
   { href: "/setup",             label: "Setup",        icon: FileText },
   { href: "/my-properties",     label: "Properties",   icon: Building2 },
   { href: "/payouts",           label: "Payouts",      icon: Wallet },
+  { href: "/reports",           label: "Reports",      icon: FileBarChart },
+  { href: "/my-reports",        label: "Owner Reports", icon: FileText },
   { href: "/team",              label: "Team",         icon: Users },
   { href: "/ai",                   label: "AI Pricing",   icon: Sparkles },
   { href: "/marketing",            label: "Marketing",    icon: Megaphone },
