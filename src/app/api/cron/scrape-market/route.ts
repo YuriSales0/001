@@ -31,12 +31,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 503 })
   }
 
-  const agentId = process.env.SCRAPER_AGENT_ID
-  const envId = process.env.SCRAPER_ENV_ID
+  // Read agent/env IDs from database (saved by /api/ai/scraper-setup)
+  const [agentSetting, envSetting] = await Promise.all([
+    prisma.appSetting.findUnique({ where: { key: 'SCRAPER_AGENT_ID' } }),
+    prisma.appSetting.findUnique({ where: { key: 'SCRAPER_ENV_ID' } }),
+  ])
+  const agentId = agentSetting?.value
+  const envId = envSetting?.value
 
   if (!agentId || !envId) {
     return NextResponse.json({
-      error: 'SCRAPER_AGENT_ID and SCRAPER_ENV_ID must be set. Run POST /api/ai/scraper-setup first.',
+      error: 'Scraper não configurado. Activa-o primeiro em AI Pricing → Settings.',
     }, { status: 503 })
   }
 

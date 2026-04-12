@@ -483,6 +483,14 @@ model PricingDataPoint {
   @@index([date])
 }
 
+// ─── App Settings (key-value store) ─────────────────────────────────────────
+
+model AppSetting {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
 // ─── Competitor Intelligence ─────────────────────────────────────────────────
 
 model MarketReport {
