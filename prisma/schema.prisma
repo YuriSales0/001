@@ -470,6 +470,56 @@ model PricingDataPoint {
   @@index([date])
 }
 
+// ─── Competitor Intelligence ─────────────────────────────────────────────────
+
+model CompetitorListing {
+  id              String    @id @default(cuid())
+  externalId      String?   // Airbnb/Booking listing ID
+  platform        Platform  // AIRBNB | BOOKING | etc
+  title           String
+  latitude        Float
+  longitude       Float
+  zoneId          String?   // zona de Almuñécar (auto-detectada)
+  bedrooms        Int       @default(1)
+  bathrooms       Int       @default(1)
+  maxGuests       Int       @default(4)
+  pricePerNight   Float     // preço observado (€)
+  priceWeekend    Float?    // preço observado fim de semana
+  rating          Float?    // 0-5
+  reviewCount     Int       @default(0)
+  isSuperhost     Boolean   @default(false)
+  instantBook     Boolean   @default(false)
+  minNights       Int       @default(1)
+  amenities       String?   // JSON stringified list
+  imageUrl        String?
+  listingUrl      String?
+  lastScrapedAt   DateTime  @default(now())
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  prices CompetitorPrice[]
+
+  @@unique([externalId, platform])
+  @@index([latitude, longitude])
+  @@index([zoneId])
+}
+
+model CompetitorPrice {
+  id          String   @id @default(cuid())
+  listingId   String
+  date        DateTime // noite específica
+  price       Float    // preço observado (€)
+  available   Boolean  @default(true)
+  minNights   Int?
+  scrapedAt   DateTime @default(now())
+
+  listing CompetitorListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, date])
+  @@index([date])
+}
+
 // ─── AI Monitoring ───────────────────────────────────────────────────────────
 
 enum AlertSeverity {
