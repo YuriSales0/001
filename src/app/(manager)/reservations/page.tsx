@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle } from "lucide-react"
+import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle, Play, CheckCheck } from "lucide-react"
 
 type ReservationStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED"
 type Platform = "AIRBNB" | "BOOKING" | "DIRECT" | "OTHER"
@@ -234,6 +234,31 @@ export default function ReservationsPage() {
     setCreating(false)
   }
 
+  const [activating, setActivating] = useState<string|null>(null)
+
+  const changeReservationStatus = async (id: string, status: 'ACTIVE'|'COMPLETED', force = false) => {
+    setActivating(id)
+    const res = await fetch(`/api/reservations/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, force }),
+    })
+    const data = await res.json()
+
+    // Warning from API — crew hasn't completed CHECK_IN
+    if (data.warning) {
+      if (confirm(data.message)) {
+        await changeReservationStatus(id, status, true)
+      } else {
+        setActivating(null)
+      }
+      return
+    }
+
+    setActivating(null)
+    await load()
+  }
+
   const byStatus = (status: ReservationStatus) =>
     reservations.filter(r=>r.status===status)
       .sort((a,b)=>new Date(a.checkIn).getTime()-new Date(b.checkIn).getTime())
@@ -332,9 +357,32 @@ export default function ReservationsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 sm:flex-col sm:items-end">
+                  <div className="flex items-center gap-2 sm:flex-col sm:items-end">
                     <span className="text-base font-bold text-gray-900">{fmtMoney(r.amount)}</span>
-                    {r.guestEmail&&<span className="text-xs text-gray-400 truncate max-w-[160px]">{r.guestEmail}</span>}
+                    <div className="flex gap-1.5">
+                      {r.status === 'UPCOMING' && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'ACTIVE') }}
+                          disabled={activating === r.id}
+                          className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                          title="Activar reserva"
+                        >
+                          <Play className="h-3 w-3" />
+                          {activating === r.id ? '...' : 'Activar'}
+                        </button>
+                      )}
+                      {r.status === 'ACTIVE' && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'COMPLETED') }}
+                          disabled={activating === r.id}
+                          className="inline-flex items-center gap-1 rounded-lg bg-gray-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                          title="Marcar como concluída"
+                        >
+                          <CheckCheck className="h-3 w-3" />
+                          {activating === r.id ? '...' : 'Concluir'}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
