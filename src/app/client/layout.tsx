@@ -6,6 +6,8 @@ import {
   Home, TrendingUp, CalendarDays, Star, MessageCircle, Building2,
   Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles,
 } from 'lucide-react'
+import { OnboardingGate } from '@/components/hm/onboarding-gate'
+import { AiChat } from '@/components/hm/ai-chat'
 
 export const dynamic = 'force-dynamic'
 
@@ -146,8 +148,11 @@ export default async function ClientLayout({ children }: { children: React.React
         </header>
 
         <main className="flex-1 px-4 sm:px-6 py-6">
-          {children}
+          <OnboardingGate role="CLIENT">
+            {children}
+          </OnboardingGate>
         </main>
+        <AiChat role="CLIENT" />
 
         <footer className="border-t py-6 text-center text-xs text-gray-400"
                 style={{ borderColor: 'var(--hm-border)' }}>

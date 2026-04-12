@@ -10,6 +10,7 @@ import {
   Target, Settings, Brain,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
+import { OnboardingGate } from "@/components/hm/onboarding-gate"
 import { cn } from "@/lib/utils"
 
 type NavItem = { href: string; label: string; icon: React.ElementType }
@@ -293,7 +294,9 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
         </header>
 
         <main className="flex-1 bg-gray-50">
-          {children}
+          {role === 'MANAGER' ? (
+            <OnboardingGate role="MANAGER">{children}</OnboardingGate>
+          ) : children}
         </main>
       </div>
       <AiChat role={role} />

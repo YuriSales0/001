@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar } from 'lucide-react'
 import { AiChat } from '@/components/hm/ai-chat'
+import { OnboardingGate } from '@/components/hm/onboarding-gate'
 
 export const dynamic = 'force-dynamic'
 
@@ -122,7 +123,9 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
             </Link>
           </div>
         </header>
-        <main className="flex-1">{children}</main>
+        <main className="flex-1">
+          <OnboardingGate role="CREW">{children}</OnboardingGate>
+        </main>
       </div>
       <AiChat role="CREW" />
     </div>

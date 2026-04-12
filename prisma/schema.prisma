@@ -137,6 +137,16 @@ model User {
   // Manager compensation (configurable per manager)
   managerSubscriptionShare  Float?    // % of client subscription fee (default: 10%)
   managerCommissionShare    Float?    // % of gross rental revenue (default: 2%)
+  // Crew compensation
+  crewContractType   String?   // MONTHLY | FREELANCER
+  crewMonthlyRate    Float?    // €/month (if MONTHLY)
+  crewTaskRate       Float?    // €/task (if FREELANCER)
+  crewHourlyRate     Float?    // €/hour (if FREELANCER, optional)
+  crewSkills         String?   // JSON array: ["CLEANING","MAINTENANCE","CHECK_IN",...]
+  crewAvailability   String?   // JSON: {"mon":true,"tue":true,...}
+  // Onboarding
+  onboardingCompleted Boolean  @default(false)
+  onboardingData      Json?    // wizard answers stored here
   isSuperUser        Boolean   @default(false)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
@@ -151,6 +161,7 @@ model User {
   assignedLeads Lead[]     @relation("AssignedLeads")
   invoicesReceived     Invoice[]      @relation("ClientInvoices")
   invoicesIssued       Invoice[]      @relation("CreatedInvoices")
+  contracts            Contract[]     @relation("ContractUser")
   clientConversations  Conversation[] @relation("ClientConversations")
   managerConversations Conversation[] @relation("ManagerConversations")
   sentMessages         Message[]      @relation("SentMessages")
@@ -484,6 +495,28 @@ model PricingDataPoint {
 
   @@index([propertyId, date])
   @@index([date])
+}
+
+// ─── Contracts ──────────────────────────────────────────────────────────────
+
+model Contract {
+  id            String   @id @default(cuid())
+  userId        String   // Manager, Crew, or Client
+  type          String   // MANAGER_AGREEMENT | CREW_MONTHLY | CREW_FREELANCER | CLIENT_SERVICE
+  title         String
+  terms         String   @db.Text  // contract content (markdown or HTML)
+  compensation  Json?    // structured: {monthlyRate, taskRate, commissionShare, subscriptionShare...}
+  startDate     DateTime
+  endDate       DateTime?
+  status        String   @default("ACTIVE") // DRAFT | ACTIVE | EXPIRED | TERMINATED
+  signedAt      DateTime?
+  signedByUser  Boolean  @default(false)
+  signedByAdmin Boolean  @default(false)
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation("ContractUser", fields: [userId], references: [id])
 }
 
 // ─── App Settings (key-value store) ─────────────────────────────────────────
