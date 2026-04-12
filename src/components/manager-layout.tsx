@@ -23,7 +23,6 @@ function isGroup(entry: NavEntry): entry is NavGroup {
 // ── Admin navigation (grouped) ──
 const adminNav: NavEntry[] = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/calendar", label: "Calendar", icon: Calendar },
   {
     label: "Leads", icon: Target, items: [
       { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
@@ -32,6 +31,7 @@ const adminNav: NavEntry[] = [
   },
   {
     label: "Operations", icon: CalendarDays, items: [
+      { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/reservations", label: "Reservations", icon: CalendarDays },
       { href: "/setup", label: "Setup", icon: FileText },
       { href: "/maintenance", label: "Maintenance", icon: Wrench },
@@ -64,7 +64,6 @@ const adminNav: NavEntry[] = [
 // ── Manager navigation (grouped) ──
 const managerNav: NavEntry[] = [
   { href: "/manager/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/calendar", label: "Calendar", icon: Calendar },
   {
     label: "Leads", icon: Target, items: [
       { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
@@ -72,6 +71,7 @@ const managerNav: NavEntry[] = [
   },
   {
     label: "Operations", icon: CalendarDays, items: [
+      { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/reservations", label: "Reservations", icon: CalendarDays },
       { href: "/properties", label: "Properties", icon: Building2 },
       { href: "/setup", label: "Setup", icon: FileText },
