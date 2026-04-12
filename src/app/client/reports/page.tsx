@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { TrendingUp, Home, CalendarDays, Euro, BarChart3 } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Home, CalendarDays, Euro, BarChart3, Download } from 'lucide-react'
+import { generateReportSummaryPDF } from '@/lib/pdf'
 
 type Reservation = {
   id: string
@@ -60,15 +61,24 @@ export default function ClientReportsPage() {
   const [loading, setLoading] = useState(true)
   const [propFilter, setPropFilter] = useState('ALL')
 
+  const [summary, setSummary] = useState<{
+    period: string; previousPeriod: string
+    current: { grossRevenue: number; commission: number; netReceived: number; reservations: number; occupancy: number; avgPricePerNight: number; totalNights: number }
+    previous: { grossRevenue: number; commission: number; netReceived: number; reservations: number; occupancy: number; avgPricePerNight: number; totalNights: number }
+    delta: Record<string, number | null>
+  } | null>(null)
+
   useEffect(() => {
     Promise.all([
       fetch('/api/reservations').then(r => r.ok ? r.json() : []),
       fetch('/api/payouts').then(r => r.ok ? r.json() : []),
       fetch('/api/properties').then(r => r.ok ? r.json() : []),
-    ]).then(([res, pay, props]) => {
+      fetch('/api/reports/summary').then(r => r.ok ? r.json() : null),
+    ]).then(([res, pay, props, sum]) => {
       setReservations(res)
       setPayouts(pay)
       setProperties(props)
+      setSummary(sum)
       setLoading(false)
     })
   }, [])
@@ -151,17 +161,75 @@ export default function ClientReportsPage() {
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-navy-900">Relatórios</h1>
-          <p className="text-sm text-gray-500">Resumo financeiro e de ocupação das tuas propriedades</p>
+          <p className="text-sm text-gray-500">
+            Resumo financeiro e de ocupação das tuas propriedades
+            {summary && <span className="text-gray-400"> · {summary.period} vs. {summary.previousPeriod}</span>}
+          </p>
         </div>
-        <select
-          value={propFilter}
-          onChange={e => setPropFilter(e.target.value)}
-          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
-        >
-          <option value="ALL">Todas as propriedades</option>
-          {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
+        <div className="flex items-center gap-2">
+          <select
+            value={propFilter}
+            onChange={e => setPropFilter(e.target.value)}
+            className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+          >
+            <option value="ALL">Todas as propriedades</option>
+            {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+          <button
+            onClick={() => {
+              if (!summary) return
+              const fmtD = (d: number | null) => d === null ? '—' : `${d > 0 ? '+' : ''}${d.toFixed(1)}%`
+              const doc = generateReportSummaryPDF({
+                title: 'Owner Report',
+                period: summary.period,
+                previousPeriod: summary.previousPeriod,
+                role: 'CLIENT',
+                kpis: [
+                  { label: 'Receita bruta', value: fmt(summary.current.grossRevenue), previous: fmt(summary.previous.grossRevenue), delta: fmtD(summary.delta.grossRevenue) },
+                  { label: 'Comissão HM', value: fmt(summary.current.commission), previous: fmt(summary.previous.commission), delta: null },
+                  { label: 'Receita líquida', value: fmt(summary.current.netReceived), previous: fmt(summary.previous.netReceived), delta: fmtD(summary.delta.netReceived) },
+                  { label: 'Reservas', value: String(summary.current.reservations), previous: String(summary.previous.reservations), delta: fmtD(summary.delta.reservations) },
+                  { label: 'Noites ocupadas', value: String(summary.current.totalNights), previous: String(summary.previous.totalNights), delta: null },
+                  { label: 'Ocupação', value: `${summary.current.occupancy}%`, previous: `${summary.previous.occupancy}%`, delta: fmtD(summary.delta.occupancy) },
+                  { label: 'Preço médio/noite', value: fmt(summary.current.avgPricePerNight), previous: fmt(summary.previous.avgPricePerNight), delta: null },
+                ],
+              })
+              doc.save(`hostmasters-report-owner-${summary.period.replace(/\s/g, '-')}.pdf`)
+            }}
+            disabled={!summary}
+            className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40 transition-colors"
+          >
+            <Download className="h-4 w-4" />
+            PDF
+          </button>
+        </div>
       </div>
+
+      {/* Period comparison */}
+      {summary && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { label: 'Receita líquida', value: fmt(summary.current.netReceived), delta: summary.delta.netReceived, prev: fmt(summary.previous.netReceived) },
+            { label: 'Reservas', value: String(summary.current.reservations), delta: summary.delta.reservations, prev: String(summary.previous.reservations) },
+            { label: 'Ocupação', value: `${summary.current.occupancy}%`, delta: summary.delta.occupancy, prev: `${summary.previous.occupancy}%` },
+            { label: 'Preço médio', value: fmt(summary.current.avgPricePerNight), delta: null, prev: fmt(summary.previous.avgPricePerNight) },
+          ].map(kpi => (
+            <div key={kpi.label} className="rounded-xl border bg-white p-4">
+              <div className="text-xs uppercase text-gray-500">{kpi.label}</div>
+              <div className="text-xl font-bold text-navy-900 mt-1">{kpi.value}</div>
+              <div className="flex items-center gap-1.5 mt-1">
+                {kpi.delta !== null && kpi.delta !== undefined && (
+                  <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${kpi.delta > 0 ? 'text-green-600' : kpi.delta < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                    {kpi.delta > 0 ? <TrendingUp className="h-3 w-3" /> : kpi.delta < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
+                    {kpi.delta > 0 ? '+' : ''}{kpi.delta.toFixed(1)}%
+                  </span>
+                )}
+                <span className="text-xs text-gray-400">ant. {kpi.prev}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
