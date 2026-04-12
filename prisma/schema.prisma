@@ -210,7 +210,7 @@ model Property {
   lastCleaningAt   DateTime?
   lastInspectionAt DateTime?
   status           PropertyStatus @default(PENDING_APPROVAL)
-  commissionRate   Float          @default(18.0)
+  commissionRate   Float          @default(17.0)
   latitude         Float?
   longitude        Float?
   ownerId          String
@@ -297,7 +297,7 @@ model Payout {
   reservationId String?
   grossAmount   Float
   commission    Float
-  commissionRate Float       @default(18.0)
+  commissionRate Float       @default(17.0)
   netAmount     Float
   scheduledFor  DateTime
   platform      Platform?

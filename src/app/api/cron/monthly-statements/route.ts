@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, monthlyStatementEmail } from '@/lib/email'
+import { commissionRateForPlan } from '@/lib/finance'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300 // 5-minute timeout for batch sends
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
   const properties = await prisma.property.findMany({
     where: { status: 'ACTIVE' },
     include: {
-      owner: { select: { id: true, name: true, email: true } },
+      owner: { select: { id: true, name: true, email: true, subscriptionPlan: true } },
     },
   })
 
@@ -75,7 +76,8 @@ export async function GET(request: NextRequest) {
 
       const grossRevenue  = reservations.reduce((s, r) => s + r.amount, 0)
       const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0)
-      const commissionRate = property.commissionRate
+      // Use plan-based commission rate (not the property's static field)
+      const commissionRate = commissionRateForPlan(property.owner.subscriptionPlan) * 100
       const commission    = +(grossRevenue * commissionRate / 100).toFixed(2)
       const ownerPayout   = +(grossRevenue - totalExpenses - commission).toFixed(2)
 
