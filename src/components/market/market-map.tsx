@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { DeckGL } from '@deck.gl/react'
-import { ScatterplotLayer, PolygonLayer, TextLayer } from '@deck.gl/layers'
+import { ScatterplotLayer, PolygonLayer, TextLayer, ColumnLayer } from '@deck.gl/layers'
 import { HeatmapLayer, HexagonLayer } from '@deck.gl/aggregation-layers'
 import Map from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -66,7 +66,7 @@ type GeoResponse = {
 }
 
 type Metric = 'price' | 'occupancy' | 'revpar' | 'revenue' | 'score'
-type ViewMode = 'points' | 'heatmap' | 'hexagon'
+type ViewMode = 'points' | 'heatmap' | 'columns' | 'hexagon'
 type MapStyleName = 'dark' | 'light'
 
 // ─── Config ───────────────────────────────────────────────────────────────
@@ -249,7 +249,66 @@ export function MarketMap() {
           updateTriggers: { getWeight: metric },
         })
       )
+    } else if (viewMode === 'columns') {
+      // Individual 3D columns per property — clean, precise
+      const maxVal = Math.max(...data.points.map(p => cfg.accessor(p)), 1)
+      ls.push(
+        new ColumnLayer<MarketProperty>({
+          id: 'columns',
+          data: data.points,
+          pickable: true,
+          diskResolution: 20,
+          radius: 40,
+          extruded: true,
+          elevationScale: 50,
+          getPosition: (d) => [d.longitude, d.latitude],
+          getElevation: (d) => (cfg.accessor(d) / maxVal) * 100,
+          getFillColor: (d) => gradientColor(cfg.accessor(d), cfg.max),
+          opacity: 0.9,
+          onHover: (info) => {
+            if (info.object) setHovered({ x: info.x, y: info.y, point: info.object as MarketProperty })
+            else setHovered(null)
+          },
+          onClick: (info) => {
+            if (info.object) { setSelectedProp(info.object as MarketProperty); setSelectedZone(null) }
+          },
+          updateTriggers: { getFillColor: metric, getElevation: metric },
+        })
+      )
+
+      // Zone polygons as translucent 3D bases
+      if (showZones) {
+        ls.push(
+          new PolygonLayer<MarketZone>({
+            id: 'zones-3d',
+            data: data.zones.filter(z => z.propertyCount > 0),
+            pickable: true,
+            stroked: true,
+            filled: true,
+            extruded: true,
+            lineWidthMinPixels: 1,
+            getPolygon: (d) => d.polygon,
+            getElevation: (d) => (cfg.accessorZone(d) / cfg.max) * 800,
+            getFillColor: (d) => {
+              const c = gradientColor(cfg.accessorZone(d), cfg.max)
+              return [c[0], c[1], c[2], 35]
+            },
+            getLineColor: (d) => {
+              const c = gradientColor(cfg.accessorZone(d), cfg.max)
+              return [c[0], c[1], c[2], 120]
+            },
+            onClick: (info) => {
+              if (info.object) { setSelectedZone(info.object as MarketZone); setSelectedProp(null) }
+            },
+            updateTriggers: { getFillColor: metric, getElevation: metric, getLineColor: metric },
+          })
+        )
+      }
     } else if (viewMode === 'hexagon') {
+      // Aggregated hexbin — auto-scaled elevation
+      const maxVal = Math.max(...data.points.map(p => cfg.accessor(p)), 1)
+      const autoElevation = 3000 / maxVal // normaliza para que a coluna mais alta = ~3000m visualmente
+
       ls.push(
         new HexagonLayer<MarketProperty>({
           id: 'hexagon',
@@ -257,18 +316,24 @@ export function MarketMap() {
           getPosition: (d) => [d.longitude, d.latitude],
           getElevationWeight: (d) => cfg.accessor(d),
           getColorWeight: (d) => cfg.accessor(d),
-          radius: 350,
-          elevationScale: metric === 'revenue' ? 0.15 : (metric === 'price' ? 8 : 25),
+          radius: 250,
+          elevationScale: autoElevation,
+          upperPercentile: 95, // clip outliers
           extruded: true,
-          coverage: 0.88,
-          opacity: 0.9,
+          coverage: 0.85,
+          opacity: 0.85,
+          material: {
+            ambient: 0.6,
+            diffuse: 0.6,
+            shininess: 40,
+          },
           colorRange: [
-            [59, 130, 246],
-            [34, 197, 94],
-            [201, 168, 76],
-            [249, 115, 22],
-            [220, 38, 38],
-            [201, 168, 76],
+            [30, 58, 138],    // deep blue
+            [59, 130, 246],   // blue
+            [34, 197, 94],    // green
+            [201, 168, 76],   // gold
+            [249, 115, 22],   // orange
+            [185, 28, 28],    // deep red
           ],
           updateTriggers: { getElevationWeight: metric, getColorWeight: metric },
         })
@@ -434,7 +499,8 @@ export function MarketMap() {
           {([
             { key: 'points',  label: 'Pins' },
             { key: 'heatmap', label: 'Heat' },
-            { key: 'hexagon', label: '3D' },
+            { key: 'columns', label: '3D' },
+            { key: 'hexagon', label: 'Hexbin' },
           ] as { key: ViewMode; label: string }[]).map(opt => (
             <button
               key={opt.key}
