@@ -7,6 +7,7 @@ import {
   CheckCircle2, TrendingUp, Phone, ArrowRight, Sparkles, ShieldCheck, AlertTriangle,
 } from "lucide-react"
 import { PlanBadge } from "@/components/hm/plan-badge"
+import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 
 type DashboardData = {
   property: {
@@ -187,19 +188,15 @@ export default function OwnerDashboard() {
   return (
     <div className="space-y-8">
       {/* Welcome */}
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">
-          Good morning
-        </h1>
-        <p className="mt-1 font-sans text-hm-slate/70 text-lg">
-          Here is everything happening with your property today.
-        </p>
-      </div>
+      <DashboardGreeting
+        headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
+        dateClass="mt-1 font-sans text-hm-slate/70 text-base"
+      />
 
       {/* Pending invoices alert */}
       {pendingInvoices.count > 0 && (
         <Link href="/client/payouts"
-          className="flex items-center gap-3 rounded-xl border-2 border-orange-200 bg-orange-50 px-5 py-4 hover:bg-orange-100 transition-colors">
+          className="flex items-center gap-3 rounded-xl border-2 border-orange-200 bg-orange-50 px-5 py-4 hover:bg-orange-100 transition-colors hm-animate-in hm-stagger-2">
           <AlertTriangle className="h-5 w-5 text-orange-500 shrink-0" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-orange-800">
@@ -216,7 +213,7 @@ export default function OwnerDashboard() {
       {prop ? (
         <>
           {/* Property hero card */}
-          <div className="rounded-hm border border-hm-border overflow-hidden"
+          <div className="rounded-hm border border-hm-border overflow-hidden hm-animate-in hm-stagger-2"
                style={{ background: 'var(--hm-sand)' }}>
             {/* Top bar with plan */}
             <div className="px-6 py-4 border-b border-hm-border flex items-center justify-between">
@@ -307,7 +304,7 @@ export default function OwnerDashboard() {
           </div>
 
           {/* Care snapshot */}
-          <div className="rounded-hm border border-hm-border overflow-hidden"
+          <div className="rounded-hm border border-hm-border overflow-hidden hm-animate-in hm-stagger-3"
                style={{ background: 'var(--hm-sand)' }}>
             <div className="px-6 py-4 border-b border-hm-border flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -359,7 +356,7 @@ export default function OwnerDashboard() {
           </div>
 
           {/* Quick actions */}
-          <div>
+          <div className="hm-animate-in hm-stagger-4">
             <h2 className="text-xl font-serif font-bold text-hm-black mb-4">Quick actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link
@@ -410,7 +407,7 @@ export default function OwnerDashboard() {
           </div>
 
           {/* Status cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 hm-animate-in hm-stagger-5">
             {prop.smartLockId && (
               <div className="rounded-hm border border-hm-border p-5"
                    style={{ background: 'var(--hm-sand)' }}>

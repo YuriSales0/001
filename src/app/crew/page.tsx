@@ -4,6 +4,7 @@ import {
   Wrench, Calendar, MapPin, ClipboardCheck, CheckCircle2, PlayCircle,
   AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save,
 } from "lucide-react"
+import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 
 type ChecklistItem = { text: string; done: boolean }
 type Task = {
@@ -144,12 +145,14 @@ export default function CrewHome() {
     <div className="flex h-[calc(100vh-3.25rem)]" style={{ fontFamily: "system-ui, sans-serif" }}>
       {/* List */}
       <aside className="w-80 border-r bg-white flex flex-col shrink-0">
-        <div className="px-4 py-3 border-b">
-          <h1 className="text-lg font-bold text-navy-900">My tasks</h1>
-          <p className="text-xs text-gray-500">Field operations dashboard</p>
+        <div className="px-4 py-3 border-b hm-animate-in hm-stagger-1">
+          <DashboardGreeting
+            headingClass="text-lg font-bold text-navy-900"
+            dateClass="text-xs text-gray-500 mt-0.5"
+          />
         </div>
 
-        <div className="flex border-b">
+        <div className="flex border-b hm-animate-in hm-stagger-2">
           {[
             { k: "today", l: `Today (${counts.today})` },
             { k: "open",  l: `Open (${counts.open})` },
@@ -169,7 +172,7 @@ export default function CrewHome() {
           ))}
         </div>
 
-        <div className="flex-1 overflow-y-auto divide-y">
+        <div className="flex-1 overflow-y-auto divide-y hm-animate-in hm-stagger-3">
           {loading && (
             <div className="p-6 flex items-center gap-2 text-sm text-gray-400">
               <Loader2 className="h-4 w-4 animate-spin" /> Loading…

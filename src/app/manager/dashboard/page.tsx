@@ -8,6 +8,7 @@ import {
   UserCheck, ClipboardCheck, Wrench, Home, MessageCircle,
 } from "lucide-react"
 import { AlertBanner } from "@/components/hm/alert-banner"
+import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 
 type DashboardStats = {
   propertiesCount: number
@@ -56,13 +57,10 @@ export default function ManagerDashboard() {
     <div className="p-4 sm:p-6 space-y-6" style={{ fontFamily: 'system-ui, sans-serif' }}>
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-navy-900">Manager Portal</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{todayStr}</p>
-        </div>
+        <DashboardGreeting />
         <button
           onClick={load}
-          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 border rounded-lg px-3 py-2 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 border rounded-lg px-3 py-2 transition-colors hm-animate-in hm-stagger-1"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Refresh
@@ -74,16 +72,18 @@ export default function ManagerDashboard() {
 
       {/* Alerts panel */}
       {stats && stats.overdueTasks > 0 && (
-        <AlertBanner
-          level="error"
-          title={`${stats.overdueTasks} overdue task${stats.overdueTasks > 1 ? "s" : ""} require attention`}
-          message="Assign or resolve overdue tasks to maintain SLA compliance."
-        />
+        <div className="hm-animate-in hm-stagger-2">
+          <AlertBanner
+            level="error"
+            title={`${stats.overdueTasks} overdue task${stats.overdueTasks > 1 ? "s" : ""} require attention`}
+            message="Assign or resolve overdue tasks to maintain SLA compliance."
+          />
+        </div>
       )}
 
       {/* Top metrics */}
       {stats ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 hm-animate-in hm-stagger-2">
           {[
             { label: "Active owners",   value: stats.clientsCount,           icon: Users,        href: "/manager/clients",  color: "text-navy-600" },
             { label: "Live bookings",   value: stats.activeReservations,      icon: CalendarDays, href: "/reservations",     color: "text-navy-600" },
@@ -129,7 +129,7 @@ export default function ManagerDashboard() {
       )}
 
       {/* Operations today */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 hm-animate-in hm-stagger-3">
         {[
           {
             label: "Check-ins today",
@@ -176,7 +176,7 @@ export default function ManagerDashboard() {
       </div>
 
       {/* Check-ins & Check-outs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 hm-animate-in hm-stagger-4">
         <div className="rounded-xl border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center gap-2">
             <Clock className="h-4 w-4 text-navy-500" />
@@ -225,7 +225,7 @@ export default function ManagerDashboard() {
       </div>
 
       {/* Alerts legend + Quick actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 hm-animate-in hm-stagger-5">
         {/* Alert types */}
         <div className="rounded-xl border bg-white p-4">
           <div className="flex items-center gap-2 mb-3">

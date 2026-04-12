@@ -92,3 +92,58 @@ h1, h2, h3, h4, h5, h6 {
     background: linear-gradient(135deg, #C9A84C 0%, #E8C96A 50%, #B8922A 100%);
   }
 }
+
+/* ──────────────────────────────────────────
+   Dashboard entrance animations
+   ────────────────────────────────────────── */
+@keyframes hm-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hm-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hm-animate-in {
+  opacity: 0;
+  animation: hm-fade-in-up 0.5s ease-out forwards;
+}
+
+.hm-stagger-1 { animation-delay: 0ms; }
+.hm-stagger-2 { animation-delay: 80ms; }
+.hm-stagger-3 { animation-delay: 160ms; }
+.hm-stagger-4 { animation-delay: 240ms; }
+.hm-stagger-5 { animation-delay: 320ms; }
+.hm-stagger-6 { animation-delay: 400ms; }
+.hm-stagger-7 { animation-delay: 480ms; }
+.hm-stagger-8 { animation-delay: 560ms; }
+
+/* Landing page animations */
+@keyframes hm-hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hm-hero-animate {
+  opacity: 0;
+  animation: hm-hero-fade 0.7s ease-out forwards;
+}
+
+.hm-hero-delay-1 { animation-delay: 100ms; }
+.hm-hero-delay-2 { animation-delay: 250ms; }
+.hm-hero-delay-3 { animation-delay: 400ms; }
+.hm-hero-delay-4 { animation-delay: 550ms; }

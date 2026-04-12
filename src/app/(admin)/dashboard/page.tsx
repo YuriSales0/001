@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { AlertBanner } from "@/components/hm/alert-banner"
 import { SystemMonitor } from "@/components/hm/system-monitor"
+import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 
 type Stats = {
   propertiesCount: number
@@ -127,13 +128,8 @@ export default function AdminDashboard() {
     <div className="p-6 space-y-6" style={{ fontFamily: 'system-ui, sans-serif' }}>
       {/* Header */}
       <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-navy-900">Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-0.5">
-            {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+        <DashboardGreeting />
+        <div className="flex items-center gap-2 hm-animate-in hm-stagger-1">
           <span className="flex items-center gap-1.5 text-xs text-green-600 bg-green-50 border border-green-200 rounded-full px-3 py-1">
             <Activity className="h-3.5 w-3.5" />
             System live
@@ -143,15 +139,15 @@ export default function AdminDashboard() {
 
       {/* Alerts */}
       {stats.overdueTasks > 0 && (
-        <AlertBanner
+        <div className="hm-animate-in hm-stagger-2"><AlertBanner
           level="error"
           title={`${stats.overdueTasks} overdue task${stats.overdueTasks > 1 ? "s" : ""}`}
           message="Review and assign tasks to prevent SLA breaches."
-        />
+        /></div>
       )}
 
       {/* Metric grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 hm-animate-in hm-stagger-2">
         {metricCards.map(card => {
           const Icon = card.icon
           return (
@@ -178,10 +174,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* System Monitor — AI anomaly detection (no Claude API yet) */}
-      <SystemMonitor />
+      <div className="hm-animate-in hm-stagger-3"><SystemMonitor /></div>
 
       {/* Today's operations */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 hm-animate-in hm-stagger-4">
         {/* Check-ins */}
         <div className="rounded-xl border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center justify-between">
@@ -238,7 +234,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Revenue breakdown */}
-      <div className="rounded-xl border bg-white p-4">
+      <div className="rounded-xl border bg-white p-4 hm-animate-in hm-stagger-5">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp className="h-4 w-4 text-navy-500" />
           <span className="font-semibold text-navy-900 text-sm">This month at a glance</span>
@@ -268,7 +264,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick nav */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 hm-animate-in hm-stagger-6">
         {[
           { href: "/calendar",       label: "Calendar" },
           { href: "/payouts",        label: "Payouts" },
