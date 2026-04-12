@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { Bot, X, Send, Loader2, AlertCircle } from 'lucide-react'
 
 type Message = {
@@ -13,10 +13,30 @@ type Props = {
 }
 
 const PLACEHOLDER: Record<string, string> = {
-  CREW:    'Ex: Como preencho o relatório de checkout?',
-  MANAGER: 'Ex: Como calculo a comissão de um payout MID?',
-  ADMIN:   'Ex: Quais anomalias estão activas no monitor?',
-  CLIENT:  'Ex: Quando recebo o próximo pagamento?',
+  CREW:    'Ex: Que tarefas tenho esta semana?',
+  MANAGER: 'Ex: Como está a ocupação dos meus clientes?',
+  ADMIN:   'Ex: Quais anomalias estão activas?',
+  CLIENT:  'Ex: Como está a performance da minha propriedade?',
+}
+
+/** Lightweight markdown → HTML (bold, italic, lists, line breaks) */
+function renderMarkdown(text: string): string {
+  return text
+    // Bold: **text** or __text__
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    // Italic: *text* or _text_
+    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+    // Inline code: `code`
+    .replace(/`([^`]+)`/g, '<code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;font-size:12px">$1</code>')
+    // Bullet lists: - item or • item
+    .replace(/^[-•] (.+)$/gm, '<div style="display:flex;gap:6px;align-items:baseline"><span style="color:#999">·</span><span>$1</span></div>')
+    // Numbered lists: 1. item
+    .replace(/^(\d+)\. (.+)$/gm, '<div style="display:flex;gap:6px;align-items:baseline"><span style="color:#999;font-size:11px">$1.</span><span>$2</span></div>')
+    // Headers: ## or ### → bold with spacing
+    .replace(/^#{1,3} (.+)$/gm, '<div style="font-weight:600;margin-top:8px;margin-bottom:2px">$1</div>')
+    // Line breaks
+    .replace(/\n/g, '<br/>')
 }
 
 export function AiChat({ role = 'ADMIN' }: Props) {
@@ -51,7 +71,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: text,
-          history: updated.slice(-10), // últimas 10 mensagens como contexto
+          history: updated.slice(-10),
         }),
       })
       const data = await res.json()
@@ -65,6 +85,13 @@ export function AiChat({ role = 'ADMIN' }: Props) {
   }
 
   const placeholder = PLACEHOLDER[role] ?? 'Coloca a tua questão…'
+
+  const welcomeByRole: Record<string, string> = useMemo(() => ({
+    CREW: 'Olá! Posso ajudar-te com tarefas, checklists, relatórios de checkout e procedimentos de campo.',
+    MANAGER: 'Olá! Posso ajudar com a tua carteira de clientes, payouts, CRM e relatórios.',
+    ADMIN: 'Olá! Posso ajudar com tudo — operações, financeiro, AI Pricing, monitor de anomalias.',
+    CLIENT: 'Olá! Posso ajudar-te a entender os teus ganhos, reservas, plano e manutenção.',
+  }), [])
 
   return (
     <>
@@ -80,7 +107,6 @@ export function AiChat({ role = 'ADMIN' }: Props) {
           ? <X className="h-5 w-5 text-white" />
           : <Bot className="h-5 w-5 text-white" />
         }
-        {/* Unread dot — só quando fechado e há mensagens */}
         {!open && messages.length > 0 && ready === false && (
           <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-amber-400 border-2 border-white" />
         )}
@@ -90,7 +116,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
       {open && (
         <div
           className="fixed bottom-28 right-6 z-40 flex flex-col rounded-2xl border bg-white shadow-2xl"
-          style={{ width: 340, height: 480 }}
+          style={{ width: 370, height: 520 }}
         >
           {/* Header */}
           <div className="flex items-center gap-2.5 rounded-t-2xl border-b bg-navy-900 px-4 py-3">
@@ -100,7 +126,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-white">Assistente HM</p>
               <p className="text-[10px] text-white/50">
-                {ready === false ? 'Configuração pendente' : ready === true ? 'Claude Haiku · activo' : role}
+                {ready === false ? 'Configuração pendente' : ready === true ? 'Activo · com dados reais' : role}
               </p>
             </div>
             <button onClick={() => setOpen(false)} className="text-white/40 hover:text-white transition-colors">
@@ -109,30 +135,35 @@ export function AiChat({ role = 'ADMIN' }: Props) {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full text-center text-gray-400 gap-2">
+              <div className="flex flex-col items-center justify-center h-full text-center text-gray-400 gap-2 px-4">
                 <Bot className="h-8 w-8 text-gray-200" />
-                <p className="text-xs">Olá! Sou o assistente interno da HostMasters.<br />Posso ajudar com procedimentos, regras financeiras e operações.</p>
+                <p className="text-xs leading-relaxed">{welcomeByRole[role] ?? welcomeByRole.ADMIN}</p>
               </div>
             )}
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div
-                  className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
+                  className={`max-w-[88%] rounded-xl px-3 py-2 text-[13px] leading-relaxed ${
                     m.role === 'user'
                       ? 'bg-navy-900 text-white rounded-br-sm'
-                      : 'bg-gray-100 text-gray-800 rounded-bl-sm'
+                      : 'bg-gray-50 text-gray-700 rounded-bl-sm border border-gray-100'
                   }`}
-                  style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                  style={{ wordBreak: 'break-word' }}
+                  dangerouslySetInnerHTML={
+                    m.role === 'assistant'
+                      ? { __html: renderMarkdown(m.content) }
+                      : undefined
+                  }
                 >
-                  {m.content}
+                  {m.role === 'user' ? m.content : undefined}
                 </div>
               </div>
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-xl rounded-bl-sm px-3 py-2">
+                <div className="bg-gray-50 border border-gray-100 rounded-xl rounded-bl-sm px-3 py-2">
                   <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />
                 </div>
               </div>
