@@ -162,3 +162,137 @@ export function generateMonthlyReportPDF(data: ReportData): jsPDF {
 
   return doc
 }
+
+// ── Report Summary PDF ─────────────────────────────────────────────────────
+
+interface SummaryKPI {
+  label: string
+  value: string
+  delta: string | null
+  previous: string
+}
+
+interface ReportSummaryPDFData {
+  title: string
+  period: string
+  previousPeriod: string
+  role: string
+  kpis: SummaryKPI[]
+  managerEarnings?: {
+    fromSubscriptions: string
+    fromCommissions: string
+    total: string
+    rates: string
+  }
+  clients?: { name: string; plan: string }[]
+}
+
+export function generateReportSummaryPDF(data: ReportSummaryPDFData): jsPDF {
+  const doc = new jsPDF()
+  const navy: [number, number, number] = [30, 58, 95]
+  const gold: [number, number, number] = [201, 169, 110]
+
+  // Header
+  doc.setFillColor(...navy)
+  doc.rect(0, 0, 210, 40, 'F')
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(24)
+  doc.setFont('helvetica', 'bold')
+  doc.text('HostMasters', 15, 20)
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(...gold)
+  doc.text('Costa Tropical · España', 15, 28)
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(10)
+  doc.text(data.title, 195, 20, { align: 'right' })
+  doc.text(`${data.period} vs. ${data.previousPeriod}`, 195, 28, { align: 'right' })
+
+  let y = 55
+
+  // Manager earnings card (if applicable)
+  if (data.managerEarnings) {
+    doc.setFillColor(252, 249, 235)
+    doc.setDrawColor(...gold)
+    doc.rect(15, y - 5, 180, 35, 'FD')
+    doc.setTextColor(...navy)
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.text('A MINHA COMISSÃO', 20, y + 2)
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    y += 10
+    doc.text(`Assinaturas: ${data.managerEarnings.fromSubscriptions}`, 25, y)
+    doc.text(`Comissões: ${data.managerEarnings.fromCommissions}`, 100, y)
+    y += 8
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(14)
+    doc.setTextColor(...gold)
+    doc.text(`Total: ${data.managerEarnings.total}`, 25, y)
+    doc.setTextColor(150, 150, 150)
+    doc.setFontSize(8)
+    doc.setFont('helvetica', 'normal')
+    doc.text(data.managerEarnings.rates, 120, y)
+    y += 20
+  }
+
+  // KPI table
+  doc.setTextColor(...navy)
+  doc.setFillColor(...navy)
+  doc.rect(15, y - 5, 180, 8, 'F')
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'bold')
+  doc.text('MÉTRICAS', 20, y)
+  y += 5
+
+  autoTable(doc, {
+    startY: y,
+    head: [['Métrica', 'Actual', 'Anterior', 'Variação']],
+    body: data.kpis.map(k => [k.label, k.value, k.previous, k.delta ?? '—']),
+    theme: 'striped',
+    headStyles: { fillColor: navy, fontSize: 9 },
+    bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
+    columnStyles: {
+      1: { halign: 'right', fontStyle: 'bold' },
+      2: { halign: 'right', textColor: [150, 150, 150] },
+      3: { halign: 'right' },
+    },
+    margin: { left: 15, right: 15 },
+  })
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  y = (doc as any).lastAutoTable.finalY + 15
+
+  // Client list (manager)
+  if (data.clients && data.clients.length > 0) {
+    doc.setFillColor(...navy)
+    doc.rect(15, y - 5, 180, 8, 'F')
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'bold')
+    doc.text('CLIENTES NA CARTEIRA', 20, y)
+    y += 5
+
+    autoTable(doc, {
+      startY: y,
+      head: [['Cliente', 'Plano']],
+      body: data.clients.map(c => [c.name, c.plan]),
+      theme: 'striped',
+      headStyles: { fillColor: navy, fontSize: 9 },
+      bodyStyles: { fontSize: 9 },
+      margin: { left: 15, right: 15 },
+    })
+  }
+
+  // Footer
+  const pageHeight = doc.internal.pageSize.height
+  doc.setFillColor(...navy)
+  doc.rect(0, pageHeight - 15, 210, 15, 'F')
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(8)
+  doc.setFont('helvetica', 'normal')
+  doc.text(`HostMasters — Report gerado em ${new Date().toLocaleDateString('pt-PT')}`, 105, pageHeight - 6, { align: 'center' })
+
+  return doc
+}

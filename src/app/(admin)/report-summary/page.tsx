@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TrendingUp, TrendingDown, Minus, BarChart3 } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, BarChart3, Download } from 'lucide-react'
+import { generateReportSummaryPDF } from '@/lib/pdf'
 
 type PeriodData = {
   grossRevenue: number
@@ -175,20 +176,82 @@ export default function ReportsPage() {
   )
   if (!report) return <div className="p-6 text-gray-500 text-sm">Erro ao carregar report.</div>
 
+  const exportPDF = () => {
+    if (!report) return
+    const fmtDelta = (d: number | null) => d === null ? '—' : `${d > 0 ? '+' : ''}${d.toFixed(1)}%`
+
+    if (report.role === 'ADMIN') {
+      const r = report as AdminReport
+      const c = r.current, p = r.previous
+      const doc = generateReportSummaryPDF({
+        title: 'Report Admin',
+        period: r.period,
+        previousPeriod: r.previousPeriod,
+        role: 'ADMIN',
+        kpis: [
+          { label: 'Receita bruta', value: fmtEUR(c.grossRevenue), previous: fmtEUR(p.grossRevenue), delta: fmtDelta(r.delta.grossRevenue) },
+          { label: 'Comissão HM', value: fmtEUR(c.hmCommission), previous: fmtEUR(p.hmCommission), delta: fmtDelta(r.delta.hmCommission) },
+          { label: 'Receita total HM', value: fmtEUR(c.hmTotalRevenue), previous: fmtEUR(p.hmTotalRevenue), delta: null },
+          { label: 'Invoices pagos', value: fmtEUR(c.invoiceRevenue), previous: fmtEUR(p.invoiceRevenue), delta: null },
+          { label: 'Pago a owners', value: fmtEUR(c.netToOwners), previous: fmtEUR(p.netToOwners), delta: null },
+          { label: 'Reservas', value: String(c.reservations), previous: String(p.reservations), delta: fmtDelta(r.delta.reservations) },
+          { label: 'Preço médio/noite', value: fmtEUR(c.avgPricePerNight), previous: fmtEUR(p.avgPricePerNight), delta: fmtDelta(r.delta.avgPrice) },
+          { label: 'Noites ocupadas', value: String(c.totalNights), previous: String(p.totalNights), delta: fmtDelta(r.delta.occupancyNights) },
+          { label: 'Propriedades activas', value: String(c.activeProperties), previous: String(p.activeProperties), delta: null },
+          { label: 'Clientes', value: String(c.totalClients), previous: String(p.totalClients), delta: null },
+        ],
+      })
+      doc.save(`hostmasters-report-admin-${r.period.replace(/\s/g, '-')}.pdf`)
+    }
+
+    if (report.role === 'MANAGER') {
+      const r = report as ManagerReport
+      const c = r.current, p = r.previous
+      const rates = r.compensationRates
+      const doc = generateReportSummaryPDF({
+        title: `Report Manager — ${r.managerName}`,
+        period: r.period,
+        previousPeriod: r.previousPeriod,
+        role: 'MANAGER',
+        kpis: [
+          { label: 'Clientes', value: String(c.clientCount), previous: String(p.clientCount), delta: fmtDelta(r.delta.clientCount) },
+          { label: 'Receita bruta (carteira)', value: fmtEUR(c.grossRevenue), previous: fmtEUR(p.grossRevenue), delta: fmtDelta(r.delta.grossRevenue) },
+          { label: 'Reservas', value: String(c.reservations), previous: String(p.reservations), delta: fmtDelta(r.delta.reservations) },
+          { label: 'Assinaturas/mês', value: fmtEUR(c.subscriptionFees), previous: fmtEUR(p.subscriptionFees), delta: null },
+        ],
+        managerEarnings: {
+          fromSubscriptions: fmtEUR(c.managerEarnings.fromSubscriptions),
+          fromCommissions: fmtEUR(c.managerEarnings.fromCommissions),
+          total: fmtEUR(c.managerEarnings.total),
+          rates: `${(rates.subscriptionShare * 100).toFixed(0)}% assinaturas + ${(rates.commissionShare * 100).toFixed(0)}% comissões`,
+        },
+        clients: c.clients.map(cl => ({ name: cl.name ?? 'Sem nome', plan: cl.plan ?? 'STARTER' })),
+      })
+      doc.save(`hostmasters-report-manager-${r.period.replace(/\s/g, '-')}.pdf`)
+    }
+  }
+
   if (report.role === 'ADMIN') {
     const r = report as AdminReport
     const c = r.current
     const p = r.previous
     return (
       <div className="p-6 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
-            <BarChart3 className="h-7 w-7 text-gray-400" />
-            Reports
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            {r.period} vs. {r.previousPeriod}
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+              <BarChart3 className="h-7 w-7 text-gray-400" />
+              Reports
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">
+              {r.period} vs. {r.previousPeriod}
+            </p>
+          </div>
+          <button onClick={exportPDF}
+            className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+            <Download className="h-4 w-4" />
+            Exportar PDF
+          </button>
         </div>
 
         {periodSelector}
@@ -228,14 +291,21 @@ export default function ReportsPage() {
     const rates = r.compensationRates
     return (
       <div className="p-6 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
-            <BarChart3 className="h-7 w-7 text-gray-400" />
-            O meu Report
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            {r.period} vs. {r.previousPeriod}
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+              <BarChart3 className="h-7 w-7 text-gray-400" />
+              O meu Report
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">
+              {r.period} vs. {r.previousPeriod}
+            </p>
+          </div>
+          <button onClick={exportPDF}
+            className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+            <Download className="h-4 w-4" />
+            Exportar PDF
+          </button>
         </div>
 
         {periodSelector}
