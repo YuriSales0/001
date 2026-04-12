@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         },
         {
           type: 'text',
-          text: `\n\n## Dados em tempo real (${new Date().toLocaleDateString('pt-PT')})\n\nUtilizador: ${me.name ?? me.email} (${me.role})\n\n${liveContext}\n\nIMPORTANTE: Responde de forma natural e conversacional. Usa negrito só para números ou valores-chave. Não uses headers markdown (##) nem listas com hífens excessivos. Escreve como se estivesses a falar com um colega.`,
+          text: `Dados em tempo real (${new Date().toLocaleDateString('pt-PT')}):\nUtilizador: ${me.name ?? me.email} (${me.role})\n\n${liveContext}\n\nLembra-te: sem emojis, sem headers (#), sem listas com hífens. Responde como numa mensagem curta a um colega. Se tens dados do utilizador acima, usa-os directamente na resposta.`,
         },
       ],
       messages: [

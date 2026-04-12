@@ -22,6 +22,10 @@ const PLACEHOLDER: Record<string, string> = {
 /** Lightweight markdown → HTML (bold, italic, lists, line breaks) */
 function renderMarkdown(text: string): string {
   return text
+    // Strip common emojis that pollute the chat
+    .replace(/[✅❌⚠️📅📍💰👤😊🔗✓📌🔴🟡🟢⭐🏠💡🎯📊📈📉🔧⚙️🚀💬📝🔔📢🏡🌊🏖️🛏️]/g, '')
+    // Strip markdown headers → just bold text
+    .replace(/^#{1,3} (.+)$/gm, '<strong>$1</strong>')
     // Bold: **text** or __text__
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/__(.+?)__/g, '<strong>$1</strong>')
@@ -29,14 +33,16 @@ function renderMarkdown(text: string): string {
     .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
     // Inline code: `code`
     .replace(/`([^`]+)`/g, '<code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;font-size:12px">$1</code>')
-    // Bullet lists: - item or • item
-    .replace(/^[-•] (.+)$/gm, '<div style="display:flex;gap:6px;align-items:baseline"><span style="color:#999">·</span><span>$1</span></div>')
+    // Bullet lists: - item or • item → clean dots
+    .replace(/^[-•] (.+)$/gm, '<div style="display:flex;gap:6px;align-items:baseline;margin:2px 0"><span style="color:#999">·</span><span>$1</span></div>')
     // Numbered lists: 1. item
-    .replace(/^(\d+)\. (.+)$/gm, '<div style="display:flex;gap:6px;align-items:baseline"><span style="color:#999;font-size:11px">$1.</span><span>$2</span></div>')
-    // Headers: ## or ### → bold with spacing
-    .replace(/^#{1,3} (.+)$/gm, '<div style="font-weight:600;margin-top:8px;margin-bottom:2px">$1</div>')
+    .replace(/^(\d+)\. (.+)$/gm, '<div style="display:flex;gap:6px;align-items:baseline;margin:2px 0"><span style="color:#999;font-size:11px">$1.</span><span>$2</span></div>')
+    // Clean up double line breaks
+    .replace(/\n{3,}/g, '\n\n')
     // Line breaks
     .replace(/\n/g, '<br/>')
+    // Clean up empty brs
+    .replace(/(<br\/>){3,}/g, '<br/><br/>')
 }
 
 export function AiChat({ role = 'ADMIN' }: Props) {
