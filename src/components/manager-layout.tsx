@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight,
-  BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity, MapPin,
+  BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { cn } from "@/lib/utils"
@@ -38,7 +38,6 @@ const adminLinks = [
   { href: "/payouts",           label: "Payouts",      icon: Wallet },
   { href: "/team",              label: "Team",         icon: Users },
   { href: "/ai",                   label: "AI Pricing",   icon: Sparkles },
-  { href: "/market-intelligence",  label: "Market Map",   icon: MapPin },
   { href: "/marketing",            label: "Marketing",    icon: Megaphone },
   { href: "/integrations",         label: "Integrations", icon: Landmark },
   { href: "/ai-monitor",           label: "AI Monitor",   icon: Activity },

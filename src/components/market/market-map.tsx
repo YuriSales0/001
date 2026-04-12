@@ -65,7 +65,7 @@ type GeoResponse = {
 
 type Metric = 'price' | 'occupancy' | 'revpar' | 'revenue' | 'score'
 type ViewMode = 'points' | 'heatmap' | 'hexagon'
-type MapStyleName = 'dark' | 'light' | 'satellite'
+type MapStyleName = 'dark' | 'light'
 
 // ─── Config ───────────────────────────────────────────────────────────────
 const INITIAL_VIEW_STATE = {
@@ -79,7 +79,6 @@ const INITIAL_VIEW_STATE = {
 const MAP_STYLES: Record<MapStyleName, string> = {
   dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
   light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-  satellite: 'https://api.maptiler.com/maps/hybrid/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
 }
 
 const METRIC_CONFIG: Record<Metric, { label: string; short: string; unit: string; icon: typeof Euro; accessor: (p: MarketProperty) => number; accessorZone: (z: MarketZone) => number; max: number }> = {
@@ -362,7 +361,7 @@ export function MarketMap() {
   }
 
   return (
-    <div className="relative h-[calc(100vh-3.5rem)] w-full bg-[#0a0e1a] overflow-hidden">
+    <div className="relative h-full w-full bg-[#0a0e1a] overflow-hidden" style={{ minHeight: 500 }}>
       {/* ── Deck.gl Map ── */}
       {/* @ts-expect-error deck.gl layer typing is loose across versions */}
       <DeckGL initialViewState={INITIAL_VIEW_STATE} controller={true} layers={layers}>
@@ -516,7 +515,7 @@ export function MarketMap() {
           <div className="px-4 py-3 border-t border-white/10">
             <div className="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-2">Estilo do mapa</div>
             <div className="flex gap-1">
-              {(['dark', 'light', 'satellite'] as MapStyleName[]).map(s => (
+              {(['dark', 'light'] as MapStyleName[]).map(s => (
                 <button
                   key={s}
                   onClick={() => setMapStyle(s)}
