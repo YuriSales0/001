@@ -267,6 +267,19 @@ model Reservation {
   status        ReservationStatus @default(UPCOMING)
   notes         String?           @db.Text
   crewReport    String?           @db.Text
+
+  // ── Guest demographics (dados nativos HM) ──
+  guestNationality  String?    // ISO 3166-1 alpha-2 (ES, DE, GB, FR, NL...)
+  guestCountry      String?    // country name display
+  guestAge          Int?       // idade estimada
+  guestAgeGroup     String?    // YOUNG_COUPLE | FAMILY | MATURE_COUPLE | GROUP | SOLO | SENIOR
+  guestGroupSize    Int?       // número de pessoas
+  hasChildren       Boolean?
+  hasPets           Boolean?
+  isRepeatGuest     Boolean    @default(false)
+  guestLanguage     String?    // língua principal (es, en, de, fr, nl...)
+  bookingLeadDays   Int?       // dias entre booking e check-in (auto-calculado)
+  bookingChannel    String?    // DIRECT_PLATFORM | WEBSITE | REFERRAL | REPEAT
   crewReportAt  DateTime?
   crewReportBy  String?
   createdAt     DateTime          @default(now())
@@ -471,6 +484,22 @@ model PricingDataPoint {
 }
 
 // ─── Competitor Intelligence ─────────────────────────────────────────────────
+
+model MarketReport {
+  id         String   @id @default(cuid())
+  weekOf     DateTime // Monday of the report week
+  region     String   @default("costa-tropical")
+  type       String   // WEEKLY_SCRAPE | DEMAND_ANALYSIS | PRICING_REVIEW | DEMOGRAPHIC
+  summary    String   @db.Text  // Análise gerada pelo Claude Agent
+  data       Json     // Dados estruturados (stats, trends, anomalias)
+  listingsScraped   Int @default(0)
+  avgPrice          Float?
+  avgOccupancy      Float?
+  topInsight        String?   // Insight principal da semana
+  createdAt  DateTime @default(now())
+
+  @@unique([weekOf, region, type])
+}
 
 model CompetitorListing {
   id              String    @id @default(cuid())
