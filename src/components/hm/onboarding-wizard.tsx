@@ -33,9 +33,9 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
   const [taskRate, setTaskRate] = useState('')
   const [skills, setSkills] = useState<string[]>([])
 
-  // Manager
-  const [subscriptionShare, setSubscriptionShare] = useState('10')
-  const [commissionShare, setCommissionShare] = useState('2')
+  // Manager — no defaults, Admin sets these via invite
+  const [subscriptionShare, setSubscriptionShare] = useState('')
+  const [commissionShare, setCommissionShare] = useState('')
 
   // Contract
   const [acceptedContracts, setAcceptedContracts] = useState<string[]>([])
@@ -48,6 +48,12 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           setData(d)
           if (d.currentData.name) setName(d.currentData.name as string)
           if (d.currentData.phone) setPhone(d.currentData.phone as string)
+          // Load values pre-set by Admin during invite
+          if (d.currentData.managerSubscriptionShare) setSubscriptionShare(String((d.currentData.managerSubscriptionShare as number) * 100))
+          if (d.currentData.managerCommissionShare) setCommissionShare(String((d.currentData.managerCommissionShare as number) * 100))
+          if (d.currentData.crewContractType) setContractType(d.currentData.crewContractType as string)
+          if (d.currentData.crewMonthlyRate) setMonthlyRate(String(d.currentData.crewMonthlyRate))
+          if (d.currentData.crewTaskRate) setTaskRate(String(d.currentData.crewTaskRate))
         }
       })
   }, [])
@@ -193,7 +199,9 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                 <Briefcase className="h-5 w-5 text-gray-400" />
                 Acordo de compensação
               </div>
-              <p className="text-xs text-gray-500 mb-3">Estes valores foram definidos com o Admin. Confirma ou ajusta.</p>
+              <p className="text-xs text-gray-500 mb-3">
+                {subscriptionShare ? 'Valores definidos pelo Admin. Confirma os termos.' : 'Preenche os valores acordados com o Admin.'}
+              </p>
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-600 mb-1">% da assinatura do cliente</label>

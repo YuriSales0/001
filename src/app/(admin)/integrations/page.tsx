@@ -3,7 +3,143 @@ import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
+const SERVICE_TERMS: Record<string, { title: string; terms: string }> = {
+  MANAGER_AGREEMENT: {
+    title: 'Acordo de Manager',
+    terms: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS — MANAGER
+
+Entre: HostMasters Costa Tropical S.L. ("Empresa")
+E: [Nome do Manager] ("Manager")
+
+1. OBJECTO
+O Manager compromete-se a gerir uma carteira de proprietários atribuída pela Empresa, incluindo:
+- Comunicação com proprietários e hóspedes
+- Supervisão de reservas e operações
+- Gestão de leads e pipeline comercial
+- Coordenação com a equipa operacional (Crew)
+
+2. COMPENSAÇÃO
+a) Percentagem sobre assinaturas: [X]% do valor mensal de cada cliente na carteira
+b) Percentagem sobre receita bruta: [X]% do valor bruto de cada reserva dos seus clientes
+c) Pagamento: mensal, até ao dia 10 do mês seguinte
+
+3. DURAÇÃO
+Contrato por tempo indeterminado, com período experimental de 3 meses.
+Rescisão: aviso prévio de 30 dias por qualquer das partes.
+
+4. CONFIDENCIALIDADE
+O Manager compromete-se a manter sigilo sobre dados de clientes, preços, e informações internas.
+
+5. PROPRIEDADE INTELECTUAL
+Todo o trabalho realizado na plataforma HostMasters é propriedade da Empresa.
+
+HostMasters — Costa Tropical, España`,
+  },
+  CREW_MONTHLY: {
+    title: 'Contrato Crew (Mensal)',
+    terms: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS — CREW (MENSAL)
+
+Entre: HostMasters Costa Tropical S.L. ("Empresa")
+E: [Nome do Crew] ("Prestador")
+
+1. OBJECTO
+O Prestador compromete-se a executar tarefas operacionais atribuídas pela Empresa:
+- Limpeza de propriedades
+- Check-in e check-out de hóspedes
+- Inspecções e manutenção preventiva
+- Relatórios de estado
+
+2. COMPENSAÇÃO
+Valor fixo mensal: €[X]/mês
+Pagamento: até ao dia 5 do mês seguinte
+
+3. HORÁRIO E DISPONIBILIDADE
+Disponibilidade conforme acordo. Tarefas atribuídas via plataforma HostMasters.
+
+4. DURAÇÃO
+Contrato mensal renovável automaticamente. Rescisão: 15 dias de aviso prévio.
+
+HostMasters — Costa Tropical, España`,
+  },
+  CREW_FREELANCER: {
+    title: 'Contrato Crew (Freelancer)',
+    terms: `CONTRATO DE PRESTAÇÃO DE SERVIÇOS — CREW (FREELANCER)
+
+Entre: HostMasters Costa Tropical S.L. ("Empresa")
+E: [Nome do Crew] ("Prestador")
+
+1. OBJECTO
+O Prestador compromete-se a executar tarefas pontuais atribuídas pela Empresa.
+
+2. COMPENSAÇÃO
+Valor por tarefa concluída: €[X]/tarefa
+Valor por hora (quando aplicável): €[X]/hora
+Pagamento: semanal ou mensal conforme acordo.
+
+3. SEM EXCLUSIVIDADE
+O Prestador é livre de prestar serviços a terceiros.
+
+4. DURAÇÃO
+Sem duração fixa. Cada tarefa aceite constitui um compromisso individual.
+
+HostMasters — Costa Tropical, España`,
+  },
+  CLIENT_SERVICE: {
+    title: 'Contrato de Serviço (Proprietário)',
+    terms: `CONTRATO DE GESTÃO DE PROPRIEDADE
+
+Entre: HostMasters Costa Tropical S.L. ("Empresa")
+E: [Nome do Proprietário] ("Proprietário")
+
+1. OBJECTO
+A Empresa compromete-se a gerir o arrendamento de curta duração da(s) propriedade(s) do Proprietário, incluindo:
+- Publicação em plataformas (Airbnb, Booking.com)
+- Gestão de reservas e comunicação com hóspedes
+- Coordenação de limpeza, check-in/out e manutenção
+- Relatórios financeiros mensais
+
+2. COMPENSAÇÃO DA EMPRESA
+Plano: [STARTER|BASIC|MID|PREMIUM]
+- Comissão: [13-22]% sobre o valor bruto de cada reserva
+- Mensalidade: €[0-269]/mês conforme plano
+- Taxa de limpeza: conforme plano
+
+3. PAGAMENTO AO PROPRIETÁRIO
+O valor líquido (receita bruta - comissão) é transferido conforme calendário da plataforma:
+- Airbnb: checkout + 1 dia + 2 dias úteis
+- Booking: fim do mês
+- Directo: checkout + 7 dias
+
+4. DURAÇÃO
+Contrato anual renovável. Rescisão: 60 dias de aviso prévio.
+
+5. RESPONSABILIDADES DO PROPRIETÁRIO
+- Manter a propriedade em condições habitáveis
+- Autorizar acesso à equipa operacional
+- Manter seguro de responsabilidade civil activo
+
+HostMasters — Costa Tropical, España`,
+  },
+}
+
 const integrations = [
+  {
+    category: 'Contratos & Termos de Serviço',
+    items: [
+      {
+        id: 'contracts',
+        name: 'Gestão de Contratos',
+        description: 'Templates de contrato por role — assinatura digital no onboarding',
+        status: 'active',
+        features: [
+          `${Object.keys(SERVICE_TERMS).length} templates: Manager, Crew (mensal/freelancer), Cliente`,
+          'Assinatura dual: Admin + User no wizard de onboarding',
+          'Contratos visíveis no perfil do Admin',
+        ],
+        eta: 'Activo',
+      },
+    ],
+  },
   {
     category: 'Bancário',
     items: [

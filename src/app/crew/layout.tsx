@@ -1,16 +1,17 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
-import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar } from 'lucide-react'
+import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
 import { AiChat } from '@/components/hm/ai-chat'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
 
 export const dynamic = 'force-dynamic'
 
 const navLinks = [
-  { href: '/crew',          label: 'My Tasks',  icon: ClipboardList },
-  { href: '/crew/calendar', label: 'Calendar',  icon: Calendar },
-  { href: '/crew/profile',  label: 'My Profile', icon: User },
+  { href: '/crew',          label: 'My Tasks',    icon: ClipboardList },
+  { href: '/crew/calendar', label: 'Calendar',    icon: Calendar },
+  { href: '/crew/earnings', label: 'Earnings',    icon: Wallet },
+  { href: '/crew/profile',  label: 'My Profile',  icon: User },
 ]
 
 export default async function CrewLayout({ children }: { children: React.ReactNode }) {

@@ -1,0 +1,188 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { Wallet, TrendingUp, TrendingDown, Minus, CheckCircle2, Clock } from 'lucide-react'
+
+type Task = {
+  id: string
+  title: string
+  type: string
+  status: string
+  dueDate: string
+  property: { name: string }
+}
+
+type CrewProfile = {
+  crewContractType: string | null
+  crewMonthlyRate: number | null
+  crewTaskRate: number | null
+}
+
+type MonthData = {
+  month: string
+  tasksCompleted: number
+  earnings: number
+}
+
+const fmtEUR = (n: number) => new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
+
+export default function CrewEarningsPage() {
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [profile, setProfile] = useState<CrewProfile | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/tasks').then(r => r.ok ? r.json() : []),
+      fetch('/api/me').then(r => r.ok ? r.json() : null),
+    ]).then(([t, p]) => {
+      setTasks(t)
+      setProfile(p)
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return <div className="p-6 text-sm text-gray-400">A carregar...</div>
+
+  const contractType = profile?.crewContractType ?? 'FREELANCER'
+  const monthlyRate = profile?.crewMonthlyRate ?? 0
+  const taskRate = profile?.crewTaskRate ?? 0
+
+  const completedTasks = tasks.filter(t => t.status === 'COMPLETED')
+  const pendingTasks = tasks.filter(t => t.status !== 'COMPLETED')
+
+  // Group by month
+  const byMonth: Record<string, Task[]> = {}
+  completedTasks.forEach(t => {
+    const key = t.dueDate.slice(0, 7)
+    if (!byMonth[key]) byMonth[key] = []
+    byMonth[key].push(t)
+  })
+
+  const monthlyBreakdown: MonthData[] = Object.entries(byMonth)
+    .sort(([a], [b]) => b.localeCompare(a))
+    .slice(0, 6)
+    .map(([month, monthTasks]) => ({
+      month,
+      tasksCompleted: monthTasks.length,
+      earnings: contractType === 'MONTHLY' ? monthlyRate : monthTasks.length * taskRate,
+    }))
+
+  const currentMonth = new Date().toISOString().slice(0, 7)
+  const currentMonthTasks = byMonth[currentMonth]?.length ?? 0
+  const currentEarnings = contractType === 'MONTHLY' ? monthlyRate : currentMonthTasks * taskRate
+
+  const prevMonth = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 7)
+  const prevMonthTasks = byMonth[prevMonth]?.length ?? 0
+  const prevEarnings = contractType === 'MONTHLY' ? monthlyRate : prevMonthTasks * taskRate
+
+  const earningsDelta = prevEarnings > 0 ? ((currentEarnings - prevEarnings) / prevEarnings) * 100 : null
+
+  const fmtMonth = (key: string) => {
+    const [y, m] = key.split('-')
+    return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' })
+  }
+
+  return (
+    <div className="p-6 space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <Wallet className="h-6 w-6 text-gray-400" />
+          Os meus recebimentos
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Contrato: <span className="font-semibold">{contractType === 'MONTHLY' ? `Mensal (${fmtEUR(monthlyRate)}/mês)` : `Freelancer (${fmtEUR(taskRate)}/tarefa)`}</span>
+        </p>
+      </div>
+
+      {/* KPIs */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="rounded-xl border bg-white p-4">
+          <div className="text-xs uppercase text-gray-500">Este mês</div>
+          <div className="text-2xl font-bold text-gray-900 mt-1">{fmtEUR(currentEarnings)}</div>
+          <div className="flex items-center gap-1 mt-1">
+            {earningsDelta !== null && (
+              <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${earningsDelta > 0 ? 'text-green-600' : earningsDelta < 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                {earningsDelta > 0 ? <TrendingUp className="h-3 w-3" /> : earningsDelta < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
+                {earningsDelta > 0 ? '+' : ''}{earningsDelta.toFixed(0)}%
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="rounded-xl border bg-white p-4">
+          <div className="text-xs uppercase text-gray-500">Tarefas este mês</div>
+          <div className="text-2xl font-bold text-gray-900 mt-1">{currentMonthTasks}</div>
+          <div className="text-xs text-gray-400 mt-1">concluídas</div>
+        </div>
+        <div className="rounded-xl border bg-white p-4">
+          <div className="text-xs uppercase text-gray-500">Pendentes</div>
+          <div className="text-2xl font-bold text-orange-600 mt-1">{pendingTasks.length}</div>
+          <div className="text-xs text-gray-400 mt-1">por concluir</div>
+        </div>
+        <div className="rounded-xl border bg-white p-4">
+          <div className="text-xs uppercase text-gray-500">Total acumulado</div>
+          <div className="text-2xl font-bold text-gray-900 mt-1">
+            {fmtEUR(contractType === 'MONTHLY' ? monthlyRate * monthlyBreakdown.length : completedTasks.length * taskRate)}
+          </div>
+          <div className="text-xs text-gray-400 mt-1">{completedTasks.length} tarefas total</div>
+        </div>
+      </div>
+
+      {/* Monthly breakdown */}
+      <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="px-5 py-3 border-b bg-gray-50">
+          <h2 className="text-sm font-semibold text-gray-700">Recebimentos por mês</h2>
+        </div>
+        <table className="w-full text-sm">
+          <thead className="text-left text-xs uppercase text-gray-500 border-b">
+            <tr>
+              <th className="px-5 py-3">Mês</th>
+              <th className="px-5 py-3 text-center">Tarefas</th>
+              <th className="px-5 py-3 text-right">Valor</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {monthlyBreakdown.length === 0 && (
+              <tr><td colSpan={3} className="px-5 py-8 text-center text-gray-400">Sem dados de tarefas concluídas.</td></tr>
+            )}
+            {monthlyBreakdown.map(m => (
+              <tr key={m.month} className="hover:bg-gray-50">
+                <td className="px-5 py-3 font-medium text-gray-900 capitalize">{fmtMonth(m.month)}</td>
+                <td className="px-5 py-3 text-center text-gray-600">{m.tasksCompleted}</td>
+                <td className="px-5 py-3 text-right font-semibold text-green-700">{fmtEUR(m.earnings)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Recent completed tasks */}
+      <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="px-5 py-3 border-b bg-gray-50">
+          <h2 className="text-sm font-semibold text-gray-700">Últimas tarefas concluídas</h2>
+        </div>
+        <div className="divide-y">
+          {completedTasks.slice(0, 10).map(t => (
+            <div key={t.id} className="px-5 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                <div>
+                  <div className="text-sm font-medium text-gray-900">{t.title}</div>
+                  <div className="text-xs text-gray-400">{t.property.name} · {new Date(t.dueDate).toLocaleDateString('pt-PT')}</div>
+                </div>
+              </div>
+              {contractType === 'FREELANCER' && (
+                <span className="text-sm font-semibold text-green-700">{fmtEUR(taskRate)}</span>
+              )}
+            </div>
+          ))}
+          {completedTasks.length === 0 && (
+            <div className="px-5 py-8 text-center text-gray-400 text-sm flex items-center justify-center gap-2">
+              <Clock className="h-4 w-4" /> Sem tarefas concluídas ainda
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
