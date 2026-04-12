@@ -16,13 +16,15 @@ export default function LoginPage() {
     setError("");
 
     try {
-      // 1. Get CSRF token
-      const csrfRes = await fetch("/api/auth/csrf");
+      // 1. Get CSRF token (with credentials so cookie is shared)
+      const csrfRes = await fetch("/api/auth/csrf", { credentials: "include" });
       const { csrfToken } = await csrfRes.json();
 
-      // 2. Call credentials callback directly
+      // 2. Call credentials callback — use redirect:manual to capture Set-Cookie
       const res = await fetch("/api/auth/callback/credentials", {
         method: "POST",
+        credentials: "include",
+        redirect: "manual",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
           csrfToken,
@@ -32,9 +34,13 @@ export default function LoginPage() {
         }),
       });
 
-      if (res.ok) {
+      // NextAuth returns 200 with JSON when json=true, or 302 redirect on success
+      if (res.type === "opaqueredirect" || res.ok) {
+        // Give the browser a moment to process Set-Cookie headers
+        await new Promise(r => setTimeout(r, 100));
+
         // 3. Verify session was created
-        const sessionRes = await fetch("/api/auth/session");
+        const sessionRes = await fetch("/api/auth/session", { credentials: "include" });
         const session = await sessionRes.json();
 
         if (session?.user) {
@@ -43,9 +49,9 @@ export default function LoginPage() {
         }
       }
 
-      setError("Invalid credentials. Use password: dev");
+      setError("Credenciais inválidas. Verifique email e senha.");
     } catch {
-      setError("Login failed. Please try again.");
+      setError("Erro ao fazer login. Tente novamente.");
     } finally {
       setLoading(false);
     }
