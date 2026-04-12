@@ -55,7 +55,46 @@ export async function PUT(
     const { id } = params
     const body = await request.json()
 
+    // ── Admin activating reservation manually ──
+    if (body.status === 'ACTIVE' || body.status === 'COMPLETED') {
+      const reservation = await prisma.reservation.findUnique({
+        where: { id },
+        select: { id: true, status: true, propertyId: true, checkIn: true, checkOut: true },
+      })
+      if (!reservation) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+      // Check if crew has completed CHECK_IN task
+      if (body.status === 'ACTIVE') {
+        const checkInTask = await prisma.task.findFirst({
+          where: {
+            propertyId: reservation.propertyId,
+            type: 'CHECK_IN',
+            dueDate: {
+              gte: new Date(new Date(reservation.checkIn).setDate(reservation.checkIn.getDate() - 1)),
+              lte: new Date(new Date(reservation.checkIn).setDate(reservation.checkIn.getDate() + 1)),
+            },
+          },
+          select: { id: true, status: true, assignee: { select: { name: true } } },
+        })
+
+        const crewCompleted = checkInTask?.status === 'COMPLETED'
+
+        // If force=false and crew hasn't completed, return warning
+        if (!body.force && !crewCompleted) {
+          return NextResponse.json({
+            warning: true,
+            message: checkInTask
+              ? `A tarefa de CHECK_IN atribuída a ${checkInTask.assignee?.name ?? 'crew'} ainda não foi concluída (estado: ${checkInTask.status}). Deseja activar a reserva mesmo assim?`
+              : 'Não existe tarefa de CHECK_IN para esta reserva. Deseja activar mesmo assim?',
+            taskId: checkInTask?.id ?? null,
+            taskStatus: checkInTask?.status ?? null,
+          }, { status: 200 })
+        }
+      }
+    }
+
     const data: Record<string, unknown> = { ...body }
+    delete data.force // don't persist the force flag
     if (body.checkIn) data.checkIn = new Date(body.checkIn)
     if (body.checkOut) data.checkOut = new Date(body.checkOut)
 

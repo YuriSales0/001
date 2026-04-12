@@ -66,9 +66,47 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       },
     })
 
-    // Notify the owner when a task is completed (best-effort, never block the response).
+    // Auto-activate reservation when CHECK_IN task is completed
     const becameCompleted =
       (data.status === 'COMPLETED' || isCheckoutSubmit) && existing.status !== 'COMPLETED'
+
+    if (becameCompleted && existing.type === 'CHECK_IN') {
+      // Find UPCOMING reservation for this property around the task due date
+      const taskDate = existing.dueDate
+      const dayBefore = new Date(taskDate)
+      dayBefore.setDate(dayBefore.getDate() - 1)
+      const dayAfter = new Date(taskDate)
+      dayAfter.setDate(dayAfter.getDate() + 1)
+
+      await prisma.reservation.updateMany({
+        where: {
+          propertyId: existing.propertyId,
+          status: 'UPCOMING',
+          checkIn: { gte: dayBefore, lte: dayAfter },
+        },
+        data: { status: 'ACTIVE' },
+      })
+    }
+
+    // Auto-complete reservation when CHECK_OUT task is completed
+    if (becameCompleted && (existing.type === 'CHECK_OUT' || (isCheckoutSubmit && existing.type === 'CLEANING'))) {
+      const taskDate = existing.dueDate
+      const dayBefore = new Date(taskDate)
+      dayBefore.setDate(dayBefore.getDate() - 1)
+      const dayAfter = new Date(taskDate)
+      dayAfter.setDate(dayAfter.getDate() + 1)
+
+      await prisma.reservation.updateMany({
+        where: {
+          propertyId: existing.propertyId,
+          status: 'ACTIVE',
+          checkOut: { gte: dayBefore, lte: dayAfter },
+        },
+        data: { status: 'COMPLETED' },
+      })
+    }
+
+    // Notify the owner when a task is completed (best-effort, never block the response).
     if (becameCompleted && existing.property.owner.email) {
       const ownerEmail = existing.property.owner.email
       sendEmail({
