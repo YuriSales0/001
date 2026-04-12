@@ -24,7 +24,31 @@
     "status": "Status",
     "active": "Active",
     "inactive": "Inactive",
-    "maintenance": "Maintenance"
+    "maintenance": "Maintenance",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "actions": "Actions",
+    "details": "Details",
+    "date": "Date",
+    "from": "From",
+    "to": "To",
+    "total": "Total",
+    "notes": "Notes",
+    "description": "Description",
+    "name": "Name",
+    "phone": "Phone",
+    "address": "Address",
+    "language": "Language",
+    "updated": "Updated successfully",
+    "created": "Created successfully",
+    "deleted": "Deleted successfully",
+    "error": "Something went wrong",
+    "required": "Required field",
+    "invalidEmail": "Invalid email address"
   },
   "owner": {
     "welcome": "Welcome back",
@@ -36,7 +60,20 @@
     "financialReport": "Financial Report",
     "downloadReport": "Download Report",
     "personalUse": "Block for Personal Use",
-    "noUpcomingBookings": "No upcoming bookings"
+    "noUpcomingBookings": "No upcoming bookings",
+    "myProperties": "My Properties",
+    "myStatements": "My Statements",
+    "myReservations": "My Reservations",
+    "propertyDetails": "Property Details",
+    "earningsOverview": "Earnings Overview",
+    "occupancyCalendar": "Occupancy Calendar",
+    "maintenanceRequests": "Maintenance Requests",
+    "requestMaintenance": "Request Maintenance",
+    "annualSummary": "Annual Summary",
+    "ytdEarnings": "Year-to-Date Earnings",
+    "payoutHistory": "Payout History",
+    "pendingPayout": "Pending Payout",
+    "paidOut": "Paid Out"
   },
   "manager": {
     "overview": "Overview",
@@ -53,7 +90,66 @@
     "addReservation": "Add Reservation",
     "addTask": "Add Task",
     "addSupplier": "Add Supplier",
-    "generateReport": "Generate Report"
+    "generateReport": "Generate Report",
+    "assignTask": "Assign Task",
+    "checkIns": "Check-ins",
+    "checkOuts": "Check-outs",
+    "todayActivity": "Today's Activity",
+    "weekOverview": "Week Overview",
+    "ownerStatements": "Owner Statements",
+    "crewManagement": "Crew Management",
+    "cleaningSchedule": "Cleaning Schedule",
+    "inspectionReport": "Inspection Report",
+    "performanceMetrics": "Performance Metrics",
+    "guestCommunication": "Guest Communication"
+  },
+  "admin": {
+    "systemLive": "System Live",
+    "hmRevenue": "HM Revenue",
+    "openPayouts": "Open Payouts",
+    "pendingInvoices": "Pending Invoices",
+    "overdueTasksAlert": "Overdue Tasks Alert",
+    "upcomingCheckIns": "Upcoming Check-ins",
+    "upcomingCheckOuts": "Upcoming Check-outs",
+    "revenueBreakdown": "Revenue Breakdown",
+    "rentalVolume": "Rental Volume",
+    "rentalCommission": "Rental Commission",
+    "invoicesPaid": "Invoices Paid",
+    "totalRevenue": "Total Revenue",
+    "quickNav": "Quick Navigation",
+    "userManagement": "User Management",
+    "allProperties": "All Properties",
+    "allReservations": "All Reservations",
+    "systemSettings": "System Settings",
+    "platformHealth": "Platform Health",
+    "managerPerformance": "Manager Performance",
+    "financialOverview": "Financial Overview",
+    "subscriptionPlans": "Subscription Plans"
+  },
+  "crew": {
+    "myTasks": "My Tasks",
+    "fieldOperations": "Field Operations",
+    "today": "Today",
+    "open": "Open",
+    "done": "Done",
+    "selectTask": "Select a task",
+    "startTask": "Start Task",
+    "markComplete": "Mark Complete",
+    "submitReport": "Submit Report",
+    "checklist": "Checklist",
+    "checkoutReport": "Checkout Report",
+    "propertyCondition": "Property Condition",
+    "good": "Good",
+    "minorIssues": "Minor Issues",
+    "majorIssues": "Major Issues",
+    "observedIssues": "Observed Issues",
+    "damages": "Damages",
+    "internalNotes": "Internal Notes",
+    "uploadPhotos": "Upload Photos",
+    "taskDetails": "Task Details",
+    "priority": "Priority",
+    "assignedTo": "Assigned To",
+    "dueDate": "Due Date"
   },
   "finance": {
     "grossRevenue": "Gross Revenue",
@@ -62,7 +158,21 @@
     "ownerPayout": "Owner Payout",
     "income": "Income",
     "expenses": "Expenses",
-    "statement": "Statement"
+    "statement": "Statement",
+    "netRevenue": "Net Revenue",
+    "platformFees": "Platform Fees",
+    "cleaningFees": "Cleaning Fees",
+    "maintenanceCosts": "Maintenance Costs",
+    "monthlyFee": "Monthly Fee",
+    "annualFee": "Annual Fee",
+    "payoutDate": "Payout Date",
+    "payoutStatus": "Payout Status",
+    "paid": "Paid",
+    "pending": "Pending",
+    "overdue": "Overdue",
+    "invoiceNumber": "Invoice Number",
+    "billingPeriod": "Billing Period",
+    "taxReport": "Tax Report"
   },
   "auth": {
     "signIn": "Sign In",
@@ -72,6 +182,100 @@
     "continueWithGoogle": "Continue with Google",
     "orContinueWith": "Or continue with",
     "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "hasAccount": "Already have an account?",
+    "forgotPassword": "Forgot your password?",
+    "resetPassword": "Reset Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "verifyEmail": "Verify your email",
+    "resendVerification": "Resend verification email",
+    "signOutConfirm": "Are you sure you want to sign out?"
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problem",
+      "solution": "Solution",
+      "plans": "Plans",
+      "enter": "Enter",
+      "startFree": "Start free"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Your property deserves",
+      "titleGold": "more than management.",
+      "title2": "It deserves intelligence.",
+      "subtitle": "You bought on the Costa Tropical to invest — not to worry about cleanings, difficult guests or misaligned prices. HostMasters handles everything with real data, AI pricing and total transparency.",
+      "cta": "1st month free on Premium plan",
+      "ctaSub": "No commitment. Cancel anytime.",
+      "noLockin": "No lock-in",
+      "intlOwners": "International owners",
+      "aiPowered": "AI-powered pricing"
+    },
+    "problem": {
+      "badge": "The problem",
+      "title": "Being a remote owner shouldn't be this hard",
+      "items": [
+        { "title": "Random pricing", "desc": "Without market data, pricing is guesswork. You lose revenue in peaks and can't attract in low seasons." },
+        { "title": "Zero visibility", "desc": "You don't know what's happening at your property until you get a complaint or a surprise bill." },
+        { "title": "Slow communication", "desc": "Lost emails, photos that never arrive, reports that only come when you insist." },
+        { "title": "Opaque commissions", "desc": "You don't know how much is left for you. Hidden costs eat your profitability without warning." }
+      ]
+    },
+    "solution": {
+      "badge": "The solution",
+      "title": "Management with intelligence, not guesswork",
+      "subtitle": "Three pillars that make HostMasters different from any traditional property manager.",
+      "items": [
+        { "title": "AI Dynamic Pricing", "desc": "Algorithm that analyzes seasonality, local events, competition and real-time demand to set the optimal price for each night.", "highlight": "Up to +25% revenue vs. fixed pricing" },
+        { "title": "Your own data, not estimates", "desc": "Dashboard with real data from your bookings, revenue and costs. Detailed monthly reports to the cent — no surprises.", "highlight": "Total transparency in numbers" },
+        { "title": "Market Intelligence", "desc": "Access to Costa Tropical market data: occupancy rates by zone, average prices, demand trends and benchmarks.", "highlight": "Decisions based on real data" }
+      ]
+    },
+    "social": {
+      "badge": "What the market says",
+      "title": "A platform built for the future",
+      "items": [
+        { "quote": "The short-term rental market on the Costa Tropical is growing fast, but most management is still done manually. A platform that combines AI pricing with real data has enormous potential to professionalize the sector.", "name": "Industry Analysis", "origin": "European STR Market Report 2025" },
+        { "quote": "Property owners investing in southern Spain need transparency and technology. The gap between what traditional managers offer and what technology enables is exactly where innovation happens.", "name": "Market Outlook", "origin": "Costa Tropical Real Estate Trends" },
+        { "quote": "The combination of dynamic pricing algorithms, real-time market data and transparent owner portals represents the next generation of property management — one that benefits both owners and guests.", "name": "Technology Perspective", "origin": "PropTech Innovation Review" }
+      ]
+    },
+    "plans": {
+      "badge": "Plans",
+      "title": "Choose the level of service you need",
+      "subtitle": "All plans include full management. The more you invest, the lower the commission and the more intelligent tools you get.",
+      "recommended": "Recommended",
+      "monthlyFee": "/month",
+      "annualFee": "/year",
+      "commission": "Commission",
+      "startNow": "Start now",
+      "firstMonthFree": "1st month free",
+      "noMonthlyFee": "No monthly fee",
+      "starter": {
+        "features": ["Full STR management", "Airbnb, Booking.com & direct listings", "24/7 guest communications", "Monthly owner statement", "Owner dashboard", "Cleaning: €70/turnover"]
+      },
+      "basic": {
+        "features": ["Everything in Starter", "Preventive maintenance (1x/month)", "Pre & post-stay inspection", "Documentation management", "Multi-language statements", "Cleaning: €60/turnover"]
+      },
+      "mid": {
+        "features": ["Everything in Basic", "AI pricing + Smart Lock", "Priority response: 12h owner / 2h guest", "Statement in any language", "Cleaning included ≥5 nights"]
+      },
+      "premium": {
+        "features": ["Everything in Mid", "Fiscal compliance (Modelo 179 + IRNR)", "Guest upsells: transfers, grocery, laundry", "Emergency response within 4h", "Cleaning included ≥3 nights"]
+      }
+    },
+    "finalCta": {
+      "title1": "Ready to have",
+      "titleGold": "real control",
+      "title2": "over your property?",
+      "subtitle": "Start with the Premium plan for 1 month at no cost. See the difference that real data and AI pricing make to your revenue.",
+      "cta": "Start 1 month free",
+      "enterPortal": "Enter portal",
+      "disclaimer": "No commitment · No credit card · Cancel anytime"
+    },
+    "footer": {
+      "tagline": "Premium short-term rental management.",
+      "copyright": "© 2026 HostMasters."
+    }
   }
 }

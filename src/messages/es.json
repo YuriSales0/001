@@ -24,7 +24,31 @@
     "status": "Estado",
     "active": "Activo",
     "inactive": "Inactivo",
-    "maintenance": "Mantenimiento"
+    "maintenance": "Mantenimiento",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "yes": "Sí",
+    "no": "No",
+    "close": "Cerrar",
+    "actions": "Acciones",
+    "details": "Detalles",
+    "date": "Fecha",
+    "from": "Desde",
+    "to": "Hasta",
+    "total": "Total",
+    "notes": "Notas",
+    "description": "Descripción",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "language": "Idioma",
+    "updated": "Actualizado correctamente",
+    "created": "Creado correctamente",
+    "deleted": "Eliminado correctamente",
+    "error": "Algo salió mal",
+    "required": "Campo obligatorio",
+    "invalidEmail": "Dirección de correo no válida"
   },
   "owner": {
     "welcome": "Bienvenido de nuevo",
@@ -36,10 +60,23 @@
     "financialReport": "Informe Financiero",
     "downloadReport": "Descargar Informe",
     "personalUse": "Bloquear para Uso Personal",
-    "noUpcomingBookings": "Sin reservas próximas"
+    "noUpcomingBookings": "Sin reservas próximas",
+    "myProperties": "Mis Propiedades",
+    "myStatements": "Mis Extractos",
+    "myReservations": "Mis Reservas",
+    "propertyDetails": "Detalles de la Propiedad",
+    "earningsOverview": "Resumen de Ingresos",
+    "occupancyCalendar": "Calendario de Ocupación",
+    "maintenanceRequests": "Solicitudes de Mantenimiento",
+    "requestMaintenance": "Solicitar Mantenimiento",
+    "annualSummary": "Resumen Anual",
+    "ytdEarnings": "Ingresos Acumulados del Año",
+    "payoutHistory": "Historial de Pagos",
+    "pendingPayout": "Pago Pendiente",
+    "paidOut": "Pagado"
   },
   "manager": {
-    "overview": "Resumen",
+    "overview": "Visión General",
     "totalProperties": "Total de Propiedades",
     "activeReservations": "Reservas Activas",
     "pendingTasks": "Tareas Pendientes",
@@ -53,7 +90,66 @@
     "addReservation": "Añadir Reserva",
     "addTask": "Añadir Tarea",
     "addSupplier": "Añadir Proveedor",
-    "generateReport": "Generar Informe"
+    "generateReport": "Generar Informe",
+    "assignTask": "Asignar Tarea",
+    "checkIns": "Check-ins",
+    "checkOuts": "Check-outs",
+    "todayActivity": "Actividad de Hoy",
+    "weekOverview": "Resumen de la Semana",
+    "ownerStatements": "Extractos de Propietarios",
+    "crewManagement": "Gestión del Equipo",
+    "cleaningSchedule": "Agenda de Limpiezas",
+    "inspectionReport": "Informe de Inspección",
+    "performanceMetrics": "Métricas de Rendimiento",
+    "guestCommunication": "Comunicación con Huéspedes"
+  },
+  "admin": {
+    "systemLive": "Sistema Operativo",
+    "hmRevenue": "Ingresos HM",
+    "openPayouts": "Pagos Pendientes",
+    "pendingInvoices": "Facturas Pendientes",
+    "overdueTasksAlert": "Alerta de Tareas Vencidas",
+    "upcomingCheckIns": "Check-ins Próximos",
+    "upcomingCheckOuts": "Check-outs Próximos",
+    "revenueBreakdown": "Desglose de Ingresos",
+    "rentalVolume": "Volumen de Alquiler",
+    "rentalCommission": "Comisión de Alquiler",
+    "invoicesPaid": "Facturas Pagadas",
+    "totalRevenue": "Ingresos Totales",
+    "quickNav": "Navegación Rápida",
+    "userManagement": "Gestión de Usuarios",
+    "allProperties": "Todas las Propiedades",
+    "allReservations": "Todas las Reservas",
+    "systemSettings": "Ajustes del Sistema",
+    "platformHealth": "Estado de la Plataforma",
+    "managerPerformance": "Rendimiento de Gestores",
+    "financialOverview": "Visión Financiera",
+    "subscriptionPlans": "Planes de Suscripción"
+  },
+  "crew": {
+    "myTasks": "Mis Tareas",
+    "fieldOperations": "Operaciones de Campo",
+    "today": "Hoy",
+    "open": "Abierta",
+    "done": "Hecha",
+    "selectTask": "Seleccionar una tarea",
+    "startTask": "Iniciar Tarea",
+    "markComplete": "Marcar como Completada",
+    "submitReport": "Enviar Informe",
+    "checklist": "Lista de Verificación",
+    "checkoutReport": "Informe de Checkout",
+    "propertyCondition": "Estado de la Propiedad",
+    "good": "Bueno",
+    "minorIssues": "Incidencias Menores",
+    "majorIssues": "Incidencias Graves",
+    "observedIssues": "Incidencias Observadas",
+    "damages": "Daños",
+    "internalNotes": "Notas Internas",
+    "uploadPhotos": "Subir Fotos",
+    "taskDetails": "Detalles de la Tarea",
+    "priority": "Prioridad",
+    "assignedTo": "Asignada a",
+    "dueDate": "Fecha Límite"
   },
   "finance": {
     "grossRevenue": "Ingresos Brutos",
@@ -62,7 +158,21 @@
     "ownerPayout": "Pago al Propietario",
     "income": "Ingresos",
     "expenses": "Gastos",
-    "statement": "Extracto"
+    "statement": "Extracto",
+    "netRevenue": "Ingresos Netos",
+    "platformFees": "Comisiones de Plataforma",
+    "cleaningFees": "Gastos de Limpieza",
+    "maintenanceCosts": "Costes de Mantenimiento",
+    "monthlyFee": "Cuota Mensual",
+    "annualFee": "Cuota Anual",
+    "payoutDate": "Fecha de Pago",
+    "payoutStatus": "Estado del Pago",
+    "paid": "Pagado",
+    "pending": "Pendiente",
+    "overdue": "Vencido",
+    "invoiceNumber": "Número de Factura",
+    "billingPeriod": "Periodo de Facturación",
+    "taxReport": "Informe Fiscal"
   },
   "auth": {
     "signIn": "Iniciar Sesión",
@@ -72,6 +182,100 @@
     "continueWithGoogle": "Continuar con Google",
     "orContinueWith": "O continuar con",
     "noAccount": "¿No tienes cuenta?",
-    "hasAccount": "¿Ya tienes cuenta?"
+    "hasAccount": "¿Ya tienes cuenta?",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer Contraseña",
+    "newPassword": "Nueva Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "verifyEmail": "Verifica tu correo electrónico",
+    "resendVerification": "Reenviar correo de verificación",
+    "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?"
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problema",
+      "solution": "Solución",
+      "plans": "Planes",
+      "enter": "Entrar",
+      "startFree": "Empezar gratis"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Tu propiedad merece",
+      "titleGold": "más que gestión.",
+      "title2": "Merece inteligencia.",
+      "subtitle": "Compraste en la Costa Tropical para invertir — no para preocuparte por limpiezas, huéspedes difíciles o precios desajustados. HostMasters se encarga de todo con datos reales, precios con IA y total transparencia.",
+      "cta": "1er mes gratis en el plan Premium",
+      "ctaSub": "Sin compromiso. Cancela cuando quieras.",
+      "noLockin": "Sin permanencia",
+      "intlOwners": "Propietarios internacionales",
+      "aiPowered": "Precios con IA"
+    },
+    "problem": {
+      "badge": "El problema",
+      "title": "Ser propietario a distancia no debería ser tan difícil",
+      "items": [
+        { "title": "Precios al azar", "desc": "Sin datos de mercado, fijar precios es pura adivinación. Pierdes ingresos en temporada alta y no atraes en temporada baja." },
+        { "title": "Cero visibilidad", "desc": "No sabes qué pasa en tu propiedad hasta que recibes una queja o una factura sorpresa." },
+        { "title": "Comunicación lenta", "desc": "Correos perdidos, fotos que nunca llegan, informes que solo aparecen cuando insistes." },
+        { "title": "Comisiones opacas", "desc": "No sabes cuánto te queda. Los costes ocultos se comen tu rentabilidad sin previo aviso." }
+      ]
+    },
+    "solution": {
+      "badge": "La solución",
+      "title": "Gestión con inteligencia, no adivinación",
+      "subtitle": "Tres pilares que hacen a HostMasters diferente de cualquier gestor de propiedades tradicional.",
+      "items": [
+        { "title": "Precio Dinámico con IA", "desc": "Algoritmo que analiza estacionalidad, eventos locales, competencia y demanda en tiempo real para fijar el precio óptimo de cada noche.", "highlight": "Hasta +25% de ingresos vs. precio fijo" },
+        { "title": "Tus propios datos, no estimaciones", "desc": "Panel con datos reales de tus reservas, ingresos y costes. Informes mensuales detallados al céntimo — sin sorpresas.", "highlight": "Transparencia total en los números" },
+        { "title": "Inteligencia de Mercado", "desc": "Acceso a datos de mercado de la Costa Tropical: tasas de ocupación por zona, precios medios, tendencias de demanda y benchmarks.", "highlight": "Decisiones basadas en datos reales" }
+      ]
+    },
+    "social": {
+      "badge": "Lo que dice el mercado",
+      "title": "Una plataforma construida para el futuro",
+      "items": [
+        { "quote": "El mercado de alquiler vacacional en la Costa Tropical crece rápido, pero la mayoría de la gestión sigue siendo manual. Una plataforma que combine precios con IA y datos reales tiene un enorme potencial para profesionalizar el sector.", "name": "Análisis del Sector", "origin": "European STR Market Report 2025" },
+        { "quote": "Los propietarios que invierten en el sur de España necesitan transparencia y tecnología. La brecha entre lo que ofrecen los gestores tradicionales y lo que la tecnología permite es exactamente donde ocurre la innovación.", "name": "Perspectiva de Mercado", "origin": "Costa Tropical Real Estate Trends" },
+        { "quote": "La combinación de algoritmos de precio dinámico, datos de mercado en tiempo real y portales transparentes para propietarios representa la próxima generación de gestión de propiedades — una que beneficia tanto a propietarios como a huéspedes.", "name": "Perspectiva Tecnológica", "origin": "PropTech Innovation Review" }
+      ]
+    },
+    "plans": {
+      "badge": "Planes",
+      "title": "Elige el nivel de servicio que necesitas",
+      "subtitle": "Todos los planes incluyen gestión completa. Cuanto más inviertas, menor la comisión y más herramientas inteligentes recibes.",
+      "recommended": "Recomendado",
+      "monthlyFee": "/mes",
+      "annualFee": "/año",
+      "commission": "Comisión",
+      "startNow": "Empezar ahora",
+      "firstMonthFree": "1er mes gratis",
+      "noMonthlyFee": "Sin cuota mensual",
+      "starter": {
+        "features": ["Gestión completa de VUT", "Airbnb, Booking.com y anuncios directos", "Comunicación 24/7 con huéspedes", "Extracto mensual del propietario", "Panel del propietario", "Limpieza: €70/rotación"]
+      },
+      "basic": {
+        "features": ["Todo en Starter", "Mantenimiento preventivo (1x/mes)", "Inspección pre y post estancia", "Gestión de documentación", "Extractos multilingüe", "Limpieza: €60/rotación"]
+      },
+      "mid": {
+        "features": ["Todo en Basic", "Precio con IA + Smart Lock", "Respuesta prioritaria: 12h propietario / 2h huésped", "Extracto en cualquier idioma", "Limpieza incluida ≥5 noches"]
+      },
+      "premium": {
+        "features": ["Todo en Mid", "Cumplimiento fiscal (Modelo 179 + IRNR)", "Upsells para huéspedes: transfers, compra, lavandería", "Respuesta de emergencia en 4h", "Limpieza incluida ≥3 noches"]
+      }
+    },
+    "finalCta": {
+      "title1": "¿Listo para tener",
+      "titleGold": "control real",
+      "title2": "sobre tu propiedad?",
+      "subtitle": "Empieza con el plan Premium durante 1 mes sin coste. Descubre la diferencia que los datos reales y los precios con IA hacen en tus ingresos.",
+      "cta": "Empezar 1 mes gratis",
+      "enterPortal": "Entrar al portal",
+      "disclaimer": "Sin compromiso · Sin tarjeta de crédito · Cancela cuando quieras"
+    },
+    "footer": {
+      "tagline": "Gestión premium de alquiler vacacional.",
+      "copyright": "© 2026 HostMasters."
+    }
   }
 }

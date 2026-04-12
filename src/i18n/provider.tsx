@@ -10,6 +10,7 @@ import {
 } from 'react'
 import {
   type Locale,
+  type Messages,
   getLocale as readCookieLocale,
   setLocale as writeCookieLocale,
   loadMessages,
@@ -20,14 +21,14 @@ interface LocaleContextValue {
   locale: Locale
   setLocale: (locale: Locale) => void
   t: (key: string) => string
-  messages: Record<string, Record<string, string>>
+  messages: Messages
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null)
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en')
-  const [messages, setMessages] = useState<Record<string, Record<string, string>>>({})
+  const [messages, setMessages] = useState<Messages>({})
 
   // Load messages whenever locale changes
   useEffect(() => {

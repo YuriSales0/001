@@ -24,7 +24,7 @@ export async function PATCH(request: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await request.json()
-  const { name, phone, bio, image, commissionRate, currentPassword, newPassword } = body
+  const { name, phone, bio, image, commissionRate, language, currentPassword, newPassword } = body
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: Record<string, any> = {}
@@ -32,6 +32,8 @@ export async function PATCH(request: NextRequest) {
   if (phone       !== undefined) data.phone          = phone
   if (bio         !== undefined) data.bio            = bio
   if (image       !== undefined) data.image          = image
+  if (language    !== undefined && ['en', 'pt', 'es', 'de'].includes(language))
+    data.language = language
   if (commissionRate !== undefined && ['ADMIN','MANAGER','CREW'].includes(user.role))
     data.commissionRate = commissionRate
 

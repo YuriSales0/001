@@ -1,5 +1,8 @@
 export type Locale = 'en' | 'pt' | 'es' | 'de'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Messages = Record<string, any>
+
 export const LOCALES: { code: Locale; label: string; flag: string }[] = [
   { code: 'en', label: 'English',    flag: '🇬🇧' },
   { code: 'pt', label: 'Português',  flag: '🇵🇹' },
@@ -28,7 +31,7 @@ export function setLocale(locale: Locale): void {
 }
 
 /** Dynamically import messages for a given locale */
-export async function loadMessages(locale: Locale): Promise<Record<string, Record<string, string>>> {
+export async function loadMessages(locale: Locale): Promise<Messages> {
   try {
     const mod = await import(`@/messages/${locale}.json`)
     return mod.default ?? mod
@@ -41,14 +44,17 @@ export async function loadMessages(locale: Locale): Promise<Record<string, Recor
 
 /** Dot-notation accessor: t(messages, 'common.dashboard') => 'Dashboard' */
 export function t(
-  messages: Record<string, Record<string, string>>,
+  messages: Messages,
   key: string,
 ): string {
   const parts = key.split('.')
-  if (parts.length !== 2) return key
-
-  const [namespace, field] = parts
-  return messages?.[namespace]?.[field] ?? key
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let current: any = messages
+  for (const part of parts) {
+    current = current?.[part]
+    if (current === undefined) return key
+  }
+  return typeof current === 'string' ? current : key
 }
 
 function isLocale(value: string): value is Locale {

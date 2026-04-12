@@ -30,16 +30,16 @@ export function LanguageSelector({ className }: LanguageSelectorProps) {
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-full mt-1 z-20 min-w-[160px] rounded-hm border border-hm-border bg-hm-ivory shadow-lg">
-            {languages.map(lang => (
+            {LOCALES.map(lang => (
               <button
                 key={lang.code}
                 onClick={() => {
-                  onChange?.(lang.code)
+                  setLocale(lang.code)
                   setOpen(false)
                 }}
                 className={cn(
                   "flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-serif hover:bg-hm-sand transition-colors text-left",
-                  current === lang.code ? "text-hm-gold-dk font-semibold" : "text-hm-slate"
+                  locale === lang.code ? "text-hm-gold-dk font-semibold" : "text-hm-slate"
                 )}
               >
                 <span className="text-base">{lang.flag}</span>

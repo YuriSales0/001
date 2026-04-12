@@ -108,13 +108,11 @@ async function main() {
     }
   }
 
-  // ── Clean up legacy default admin if email changed ────────────────────────
-  if (adminEmail !== 'admin@hostmaster.es') {
-    const stale = await prisma.user.findUnique({ where: { email: 'admin@hostmaster.es' } })
-    if (stale) {
-      await prisma.user.delete({ where: { email: 'admin@hostmaster.es' } })
-      console.log('Removed stale admin@hostmaster.es')
-    }
+  // ── Clean up legacy demo admin if it exists ────────────────────────────────
+  const staleAdmin = await prisma.user.findUnique({ where: { email: 'admin@hostmaster.es' } })
+  if (staleAdmin) {
+    await prisma.user.delete({ where: { email: 'admin@hostmaster.es' } })
+    console.log('Removed stale admin@hostmaster.es')
   }
 }
 
