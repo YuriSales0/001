@@ -4,6 +4,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import { buildSystemPrompt, ASSISTANT_MODEL } from '@/lib/ai-context'
 import type { ChatRole } from '@/lib/ai-context'
 
+export const maxDuration = 30 // 30s timeout (Vercel Pro = 60s, Hobby = 10s)
+
 export async function POST(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
@@ -19,17 +21,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'message required' }, { status: 400 })
   }
 
-  // Graceful fallback se ANTHROPIC_API_KEY não estiver definida
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({
-      answer: `**Assistente não configurado ainda.**\n\nPara activar, adiciona \`ANTHROPIC_API_KEY\` nas variáveis de ambiente do Vercel.\n\nCusto estimado: ~€0.55/mês para 200 perguntas (Haiku + Prompt Caching).`,
+      answer: `**Assistente não configurado ainda.**\n\nPara activar, adiciona \`ANTHROPIC_API_KEY\` nas variáveis de ambiente do Vercel.`,
       ready: false,
     })
   }
 
   try {
     const client = new Anthropic()
-    const response = await client.messages.create({
+
+    // Use streaming to avoid Vercel timeout
+    const stream = await client.messages.stream({
       model: ASSISTANT_MODEL,
       max_tokens: 1024,
       system: [
@@ -45,7 +48,8 @@ export async function POST(request: NextRequest) {
       ],
     })
 
-    const text = response.content[0].type === 'text' ? response.content[0].text : ''
+    const finalMessage = await stream.finalMessage()
+    const text = finalMessage.content[0].type === 'text' ? finalMessage.content[0].text : ''
     return NextResponse.json({ answer: text, ready: true })
   } catch (err) {
     console.error('[AI Assistant]', err)
