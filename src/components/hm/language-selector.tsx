@@ -3,25 +3,17 @@
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { ChevronDown } from "lucide-react"
-
-const languages = [
-  { code: "en", label: "English",    flag: "🇬🇧" },
-  { code: "de", label: "Deutsch",    flag: "🇩🇪" },
-  { code: "sv", label: "Svenska",    flag: "🇸🇪" },
-  { code: "nl", label: "Nederlands", flag: "🇳🇱" },
-  { code: "no", label: "Norsk",      flag: "🇳🇴" },
-  { code: "da", label: "Dansk",      flag: "🇩🇰" },
-]
+import { useLocale } from "@/i18n/provider"
+import { LOCALES } from "@/i18n"
 
 interface LanguageSelectorProps {
-  current?: string
-  onChange?: (code: string) => void
   className?: string
 }
 
-export function LanguageSelector({ current = "en", onChange, className }: LanguageSelectorProps) {
+export function LanguageSelector({ className }: LanguageSelectorProps) {
+  const { locale, setLocale } = useLocale()
   const [open, setOpen] = useState(false)
-  const selected = languages.find(l => l.code === current) ?? languages[0]
+  const selected = LOCALES.find(l => l.code === locale) ?? LOCALES[0]
 
   return (
     <div className={cn("relative", className)}>
