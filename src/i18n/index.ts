@@ -62,6 +62,17 @@ export function t(
   return typeof current === 'string' ? current : key
 }
 
+/** Synchronously load messages for server components (uses require) */
+export function loadMessagesSync(locale: Locale): Messages {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require(`@/messages/${locale}.json`)
+  } catch {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('@/messages/en.json')
+  }
+}
+
 function isLocale(value: string): value is Locale {
   return ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da', 'no'].includes(value)
 }

@@ -75,12 +75,14 @@ export default function ManagerMessagesPage() {
   const send = async () => {
     if (!active || active.readonly || !text.trim()) return
     setSending(true)
-    await fetch(`/api/conversations/${active.id}/messages`, {
+    const res = await fetch(`/api/conversations/${active.id}/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ body: text }),
     })
-    setText(''); setSending(false)
+    setSending(false)
+    if (!res.ok) { alert('Failed to send message'); return }
+    setText('')
     fetchMessages(active.id); loadConvs()
   }
 

@@ -127,18 +127,20 @@ export default function ManagerInvoices() {
   useEffect(() => { load() }, [load])
 
   const markPaid = async (id: string) => {
-    await fetch(`/api/invoices/${id}`, {
+    const res = await fetch(`/api/invoices/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'PAID' }),
     })
+    if (!res.ok) { alert('Failed to mark invoice as paid'); return }
     load()
   }
 
   const deleteInvoice = async (id: string) => {
     setDeleting(id)
-    await fetch(`/api/invoices/${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE' })
     setDeleting(null)
+    if (!res.ok) { alert('Failed to delete invoice'); return }
     load()
   }
 

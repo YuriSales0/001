@@ -16,7 +16,13 @@ const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB')
 
 export default function ManagerPayouts() {
   const [payouts, setPayouts] = useState<Payout[]>([])
-  useEffect(() => { fetch('/api/payouts').then(r => r.ok ? r.json() : []).then(setPayouts) }, [])
+  const [error, setError] = useState(false)
+  useEffect(() => {
+    fetch('/api/payouts')
+      .then(r => { if (!r.ok) throw new Error(); return r.json() })
+      .then(setPayouts)
+      .catch(() => setError(true))
+  }, [])
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold text-navy-900">Payouts (my clients)</h1>
@@ -30,7 +36,8 @@ export default function ManagerPayouts() {
             </tr>
           </thead>
           <tbody>
-            {payouts.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-gray-500">No payouts</td></tr>}
+            {error && <tr><td colSpan={6} className="text-center py-8"><p className="text-sm text-red-500">Failed to load data</p></td></tr>}
+            {!error && payouts.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-gray-500">No payouts</td></tr>}
             {payouts.map(p => (
               <tr key={p.id} className="border-t">
                 <td className="px-4 py-3">{p.property.owner.name || p.property.owner.email}</td>

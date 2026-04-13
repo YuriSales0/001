@@ -22,11 +22,11 @@ export default function CrewProfilePage() {
   const [pwSaved, setPwSaved] = useState(false)
 
   useEffect(() => {
-    fetch("/api/profile").then(r => r.json()).then(d => {
+    fetch("/api/profile").then(r => { if (!r.ok) throw new Error(); return r.json() }).then(d => {
       setProfile(d)
       setForm({ name: d.name ?? "", phone: d.phone ?? "", bio: d.bio ?? "", image: d.image ?? "" })
       setLoading(false)
-    })
+    }).catch(() => { setError("Failed to load profile"); setLoading(false) })
   }, [])
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {

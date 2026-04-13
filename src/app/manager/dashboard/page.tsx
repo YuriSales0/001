@@ -31,15 +31,18 @@ const fmtDate = (s: string) =>
 
 export default function ManagerDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [error, setError] = useState(false)
   const [lastRefresh, setLastRefresh] = useState(new Date())
 
   const load = () => {
+    setError(false)
     fetch("/api/manager/stats")
-      .then(r => r.ok ? r.json() : null)
+      .then(r => { if (!r.ok) throw new Error(); return r.json() })
       .then(data => {
         setStats(data)
         setLastRefresh(new Date())
       })
+      .catch(() => setError(true))
   }
 
   useEffect(() => {
@@ -69,6 +72,8 @@ export default function ManagerDashboard() {
           </span>
         </button>
       </div>
+
+      {error && <p className="text-sm text-red-500 text-center p-4">Failed to load data</p>}
 
       {/* Alerts panel */}
       {stats && stats.overdueTasks > 0 && (

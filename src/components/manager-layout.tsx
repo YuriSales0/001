@@ -12,6 +12,7 @@ import {
 import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
 import { cn } from "@/lib/utils"
+import { useLocale } from "@/i18n/provider"
 
 type NavItem = { href: string; label: string; icon: React.ElementType }
 type NavGroup = { label: string; icon: React.ElementType; items: NavItem[] }
@@ -21,78 +22,82 @@ function isGroup(entry: NavEntry): entry is NavGroup {
   return 'items' in entry
 }
 
-// ── Admin navigation (grouped) ──
-const adminNav: NavEntry[] = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
-  {
-    label: "Leads", icon: Target, items: [
-      { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
-      { href: "/marketing", label: "Marketing", icon: Megaphone },
-    ],
-  },
-  {
-    label: "Operations", icon: CalendarDays, items: [
-      { href: "/calendar", label: "Calendar", icon: Calendar },
-      { href: "/reservations", label: "Reservations", icon: CalendarDays },
-      { href: "/setup", label: "Setup", icon: FileText },
-      { href: "/maintenance", label: "Maintenance", icon: Wrench },
-    ],
-  },
-  {
-    label: "Finance", icon: Wallet, items: [
-      { href: "/payouts", label: "Payouts", icon: Wallet },
-      { href: "/manager/invoices", label: "Invoices", icon: Receipt },
-      { href: "/report-summary", label: "Reports", icon: FileBarChart },
-      { href: "/my-reports", label: "Owner Reports", icon: FileText },
-    ],
-  },
-  {
-    label: "Administration", icon: Settings, items: [
-      { href: "/team", label: "Team", icon: Users },
-      { href: "/my-properties", label: "Properties", icon: Building2 },
-      { href: "/integrations", label: "Integrations", icon: Landmark },
-    ],
-  },
-  {
-    label: "HostMasters AI", icon: Brain, items: [
-      { href: "/ai", label: "AI Pricing", icon: Sparkles },
-      { href: "/ai-monitor", label: "AI Monitor", icon: Activity },
-    ],
-  },
-  { href: "/messages", label: "Messages", icon: MessageCircle },
-]
+function useAdminNav(): NavEntry[] {
+  const { t } = useLocale()
+  return [
+    { href: "/dashboard", label: t('common.dashboard'), icon: Home },
+    {
+      label: t('common.leads'), icon: Target, items: [
+        { href: "/crm", label: t('common.crmPipeline'), icon: BarChart3 },
+        { href: "/marketing", label: t('common.marketing'), icon: Megaphone },
+      ],
+    },
+    {
+      label: t('common.operations'), icon: CalendarDays, items: [
+        { href: "/calendar", label: t('common.calendar'), icon: Calendar },
+        { href: "/reservations", label: t('common.reservations'), icon: CalendarDays },
+        { href: "/setup", label: t('common.setup'), icon: FileText },
+        { href: "/maintenance", label: t('common.maintenance'), icon: Wrench },
+      ],
+    },
+    {
+      label: t('finance.income'), icon: Wallet, items: [
+        { href: "/payouts", label: t('common.payouts'), icon: Wallet },
+        { href: "/manager/invoices", label: t('common.invoices'), icon: Receipt },
+        { href: "/report-summary", label: t('common.reports'), icon: FileBarChart },
+        { href: "/my-reports", label: t('common.ownerReports'), icon: FileText },
+      ],
+    },
+    {
+      label: t('common.administration'), icon: Settings, items: [
+        { href: "/team", label: t('common.team'), icon: Users },
+        { href: "/my-properties", label: t('common.properties'), icon: Building2 },
+        { href: "/integrations", label: t('common.integrations'), icon: Landmark },
+      ],
+    },
+    {
+      label: "HostMasters AI", icon: Brain, items: [
+        { href: "/ai", label: "AI Pricing", icon: Sparkles },
+        { href: "/ai-monitor", label: "AI Monitor", icon: Activity },
+      ],
+    },
+    { href: "/messages", label: t('common.messages'), icon: MessageCircle },
+  ]
+}
 
-// ── Manager navigation (grouped) ──
-const managerNav: NavEntry[] = [
-  { href: "/manager/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  {
-    label: "Leads", icon: Target, items: [
-      { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
-    ],
-  },
-  {
-    label: "Operations", icon: CalendarDays, items: [
-      { href: "/calendar", label: "Calendar", icon: Calendar },
-      { href: "/reservations", label: "Reservations", icon: CalendarDays },
-      { href: "/properties", label: "Properties", icon: Building2 },
-      { href: "/setup", label: "Setup", icon: FileText },
-      { href: "/maintenance", label: "Maintenance", icon: Wrench },
-    ],
-  },
-  {
-    label: "Finance", icon: Wallet, items: [
-      { href: "/manager/invoices", label: "Invoices", icon: Receipt },
-      { href: "/revenue", label: "Revenue", icon: TrendingUp },
-      { href: "/reports", label: "Reports", icon: FileBarChart },
-    ],
-  },
-  {
-    label: "My Portfolio", icon: Users, items: [
-      { href: "/manager/clients", label: "My Owners", icon: Users },
-    ],
-  },
-  { href: "/manager/messages", label: "Messages", icon: MessageCircle },
-]
+function useManagerNav(): NavEntry[] {
+  const { t } = useLocale()
+  return [
+    { href: "/manager/dashboard", label: t('common.dashboard'), icon: LayoutDashboard },
+    {
+      label: t('common.leads'), icon: Target, items: [
+        { href: "/crm", label: t('common.crmPipeline'), icon: BarChart3 },
+      ],
+    },
+    {
+      label: t('common.operations'), icon: CalendarDays, items: [
+        { href: "/calendar", label: t('common.calendar'), icon: Calendar },
+        { href: "/reservations", label: t('common.reservations'), icon: CalendarDays },
+        { href: "/properties", label: t('common.properties'), icon: Building2 },
+        { href: "/setup", label: t('common.setup'), icon: FileText },
+        { href: "/maintenance", label: t('common.maintenance'), icon: Wrench },
+      ],
+    },
+    {
+      label: t('finance.income'), icon: Wallet, items: [
+        { href: "/manager/invoices", label: t('common.invoices'), icon: Receipt },
+        { href: "/revenue", label: t('common.revenue'), icon: TrendingUp },
+        { href: "/reports", label: t('common.reports'), icon: FileBarChart },
+      ],
+    },
+    {
+      label: t('common.myPortfolio'), icon: Users, items: [
+        { href: "/manager/clients", label: t('common.myOwners'), icon: Users },
+      ],
+    },
+    { href: "/manager/messages", label: t('common.messages'), icon: MessageCircle },
+  ]
+}
 
 interface ManagerLayoutProps {
   children: React.ReactNode
@@ -104,11 +109,14 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const pathname = usePathname()
+  const { t } = useLocale()
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
     : role === "ADMIN" ? "AD" : "MG"
 
   const isAdmin = role === "ADMIN"
+  const adminNav = useAdminNav()
+  const managerNav = useManagerNav()
   const nav = isAdmin ? adminNav : managerNav
   const dashboardHref = isAdmin ? "/dashboard" : "/manager/dashboard"
   const profileHref = isAdmin ? "/profile" : "/manager/profile"
@@ -240,7 +248,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
             style={pathname === profileHref ? { background: 'rgba(201,168,76,0.15)', color: '#C9A84C' } : {}}
           >
             <User className="h-4 w-4 shrink-0" />
-            My Profile
+            {t('common.myProfile')}
           </Link>
           <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
             {user?.image ? (

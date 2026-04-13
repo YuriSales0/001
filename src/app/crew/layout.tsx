@@ -4,21 +4,23 @@ import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
 import { AiChat } from '@/components/hm/ai-chat'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
+import { loadMessagesSync, t, type Locale } from '@/i18n'
 
 export const dynamic = 'force-dynamic'
-
-const navLinks = [
-  { href: '/crew',          label: 'My Tasks',    icon: ClipboardList },
-  { href: '/crew/calendar', label: 'Calendar',    icon: Calendar },
-  { href: '/crew/earnings', label: 'Earnings',    icon: Wallet },
-  { href: '/crew/profile',  label: 'My Profile',  icon: User },
-]
 
 export default async function CrewLayout({ children }: { children: React.ReactNode }) {
   const realUser = await getCurrentUser()
   if (!realUser) redirect('/login')
   if (!realUser.isSuperUser && realUser.role !== 'CREW') redirect('/me')
   const user = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
+  const msgs = loadMessagesSync((user.language as Locale) ?? 'en')
+
+  const navLinks = [
+    { href: '/crew',          label: t(msgs, 'crew.myTasks'),      icon: ClipboardList },
+    { href: '/crew/calendar', label: t(msgs, 'common.calendar'),   icon: Calendar },
+    { href: '/crew/earnings', label: t(msgs, 'common.revenue'),    icon: Wallet },
+    { href: '/crew/profile',  label: t(msgs, 'common.myProfile'),  icon: User },
+  ]
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
@@ -106,7 +108,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
           <div className="flex items-center gap-1.5 text-sm text-gray-500">
             <span className="font-medium text-gray-800">HostMasters</span>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span>Crew Portal</span>
+            <span>{t(msgs, 'common.crewPortal')}</span>
           </div>
           <div className="ml-auto">
             <Link href="/crew/profile"
@@ -120,7 +122,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
                   {initials}
                 </div>
               )}
-              <span className="hidden sm:block">{user.name ?? 'My Profile'}</span>
+              <span className="hidden sm:block">{user.name ?? t(msgs, 'common.myProfile')}</span>
             </Link>
           </div>
         </header>

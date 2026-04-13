@@ -8,17 +8,9 @@ import {
 } from 'lucide-react'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
 import { AiChat } from '@/components/hm/ai-chat'
+import { loadMessagesSync, t, type Locale } from '@/i18n'
 
 export const dynamic = 'force-dynamic'
-
-const baseLinks = [
-  { href: '/client/dashboard',  label: 'My Home',     icon: Home },
-  { href: '/client/financials', label: 'My Earnings', icon: TrendingUp },
-  { href: '/client/bookings',   label: 'My Bookings', icon: CalendarDays },
-  { href: '/client/care',       label: 'Care',        icon: Wrench },
-  { href: '/client/plan',       label: 'My Plan',     icon: Star },
-  { href: '/client/messages',   label: 'Contact us',  icon: MessageCircle },
-]
 
 const AI_PLANS = ['MID', 'PREMIUM']
 
@@ -27,6 +19,16 @@ export default async function ClientLayout({ children }: { children: React.React
   if (!realUser) redirect('/login')
   if (!realUser.isSuperUser && realUser.role !== 'CLIENT') redirect('/me')
   const user = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
+  const msgs = loadMessagesSync((user.language as Locale) ?? 'en')
+
+  const baseLinks = [
+    { href: '/client/dashboard',  label: t(msgs, 'common.dashboard'),        icon: Home },
+    { href: '/client/financials', label: t(msgs, 'owner.monthlyEarnings'),   icon: TrendingUp },
+    { href: '/client/bookings',   label: t(msgs, 'owner.myReservations'),    icon: CalendarDays },
+    { href: '/client/care',       label: t(msgs, 'common.maintenance'),      icon: Wrench },
+    { href: '/client/plan',       label: t(msgs, 'common.myPlan'),           icon: Star },
+    { href: '/client/messages',   label: t(msgs, 'owner.contactManager'),    icon: MessageCircle },
+  ]
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
@@ -95,7 +97,7 @@ export default async function ClientLayout({ children }: { children: React.React
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors"
           >
             <User className="h-4 w-4 shrink-0" />
-            My Profile
+            {t(msgs, 'common.myProfile')}
           </Link>
           <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
             {user.image ? (
@@ -128,7 +130,7 @@ export default async function ClientLayout({ children }: { children: React.React
           <div className="flex items-center gap-1.5 text-sm text-gray-500">
             <span className="font-medium text-gray-800">HostMasters</span>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span>Client Portal</span>
+            <span>{t(msgs, 'common.clientPortal')}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
             <Link href="/client/profile"
@@ -142,7 +144,7 @@ export default async function ClientLayout({ children }: { children: React.React
                   {initials}
                 </div>
               )}
-              <span className="hidden sm:block">{user.name ?? 'My Profile'}</span>
+              <span className="hidden sm:block">{user.name ?? t(msgs, 'common.myProfile')}</span>
             </Link>
           </div>
         </header>
