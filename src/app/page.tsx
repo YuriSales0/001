@@ -19,6 +19,7 @@ import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
 import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
+import { CostaTropicalSilhouette } from "@/components/hm/costa-tropical-silhouette"
 
 /* ── Plan data from finance.ts ── */
 const plans = [
@@ -69,7 +70,9 @@ export default function LandingPage() {
 
       {/* ───────── Hero ───────── */}
       <section className="relative overflow-hidden" style={{ background: "#111827" }}>
-        <div className="absolute inset-0 opacity-30"
+        {/* Costa Tropical coastline silhouette */}
+        <CostaTropicalSilhouette className="absolute bottom-0 left-0 right-0 w-full h-[60%] pointer-events-none" />
+        <div className="absolute inset-0 opacity-20"
              style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.15) 0%, transparent 70%)" }} />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-24 sm:py-32 lg:py-40">
           <div className="max-w-3xl">
