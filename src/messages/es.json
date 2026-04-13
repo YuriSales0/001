@@ -189,7 +189,17 @@
     "confirmPassword": "Confirmar Contraseña",
     "verifyEmail": "Verifica tu correo electrónico",
     "resendVerification": "Reenviar correo de verificación",
-    "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?"
+    "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?",
+    "createAccount": "Crea tu cuenta",
+    "registerSubtitle": "Propietarios — empieza a gestionar tu inversión en la Costa Tropical.",
+    "namePlaceholder": "Tu nombre completo",
+    "passwordPlaceholder": "Mín. 6 caracteres",
+    "creating": "Creando...",
+    "nameRequired": "El nombre es obligatorio",
+    "welcomeBack": "Bienvenido de nuevo",
+    "loginSubtitle": "Accede a tu portal de propietario",
+    "invalidCredentials": "Credenciales inválidas. Revisa tu email y contraseña.",
+    "signingIn": "Entrando..."
   },
   "tour": {
     "next": "Siguiente",

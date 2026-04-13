@@ -1,119 +1,139 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import Link from "next/link";
-import { Building2, LogIn } from "lucide-react";
+import { useState } from "react"
+import Link from "next/link"
+import { Building2, ArrowRight } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { t } = useLocale()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+    e.preventDefault()
+    setLoading(true)
+    setError("")
 
     try {
-      // 1. Get CSRF token (with credentials so cookie is shared)
-      const csrfRes = await fetch("/api/auth/csrf", { credentials: "include" });
-      const { csrfToken } = await csrfRes.json();
+      const csrfRes = await fetch("/api/auth/csrf", { credentials: "include" })
+      const { csrfToken } = await csrfRes.json()
 
-      // 2. Call credentials callback — use redirect:manual to capture Set-Cookie
       const res = await fetch("/api/auth/callback/credentials", {
         method: "POST",
         credentials: "include",
         redirect: "manual",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          csrfToken,
-          email,
-          password,
-          json: "true",
-        }),
-      });
+        body: new URLSearchParams({ csrfToken, email, password, json: "true" }),
+      })
 
-      // NextAuth returns 200 with JSON when json=true, or 302 redirect on success
       if (res.type === "opaqueredirect" || res.ok) {
-        // Give the browser a moment to process Set-Cookie headers
-        await new Promise(r => setTimeout(r, 100));
-
-        // 3. Verify session was created
-        const sessionRes = await fetch("/api/auth/session", { credentials: "include" });
-        const session = await sessionRes.json();
-
+        await new Promise(r => setTimeout(r, 100))
+        const sessionRes = await fetch("/api/auth/session", { credentials: "include" })
+        const session = await sessionRes.json()
         if (session?.user) {
-          window.location.href = "/me";
-          return;
+          window.location.href = "/me"
+          return
         }
       }
 
-      setError("Credenciais inválidas. Verifique email e senha.");
+      setError(t("auth.invalidCredentials"))
     } catch {
-      setError("Erro ao fazer login. Tente novamente.");
+      setError(t("common.error"))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#111827" }}>
+      <div className="absolute inset-0 opacity-30"
+           style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%)" }} />
+
+      <div className="relative w-full max-w-md">
+        {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
-            <Building2 className="h-8 w-8 text-[#1e3a5f]" />
-            <span className="text-2xl font-bold text-[#1e3a5f]">Hostmaster</span>
+            <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "#C9A84C" }}>
+              <Building2 className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-2xl font-bold text-white">
+              Host<span style={{ color: "#C9A84C" }}>Masters</span>
+            </span>
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h1 className="text-2xl font-bold text-[#1e3a5f] text-center mb-1">Welcome Back</h1>
-          <p className="text-gray-500 text-center text-sm mb-6">Sign in to your account</p>
+        {/* Card */}
+        <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#1a2332", border: "1px solid rgba(201,168,76,0.15)" }}>
+          <div className="p-8">
+            <h1 className="text-2xl font-bold text-white text-center mb-1">{t("auth.welcomeBack")}</h1>
+            <p className="text-sm text-gray-400 text-center mb-8">{t("auth.loginSubtitle")}</p>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                id="email"
-                type="email"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                id="password"
-                type="password"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] focus:border-transparent"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
+                  {t("auth.email")}
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full rounded-lg border px-4 py-3 text-sm transition-colors focus:outline-none"
+                  style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
+                  placeholder="email@example.com"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
+                  {t("auth.password")}
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full rounded-lg border px-4 py-3 text-sm transition-colors focus:outline-none"
+                  style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
+                  placeholder="••••••••"
+                />
+              </div>
 
-            {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
-            )}
+              {error && (
+                <p className="text-sm text-red-400 text-center rounded-lg px-3 py-2" style={{ background: "rgba(220,38,38,0.1)" }}>
+                  {error}
+                </p>
+              )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-[#1e3a5f] text-white rounded-lg py-2.5 text-sm font-medium hover:bg-[#162d4a] transition-colors disabled:opacity-50"
-            >
-              <LogIn className="h-4 w-4" />
-              {loading ? "Signing in..." : "Sign In"}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 rounded-lg py-3.5 text-sm font-semibold transition-all hover:scale-[1.01] disabled:opacity-50"
+                style={{ background: "#C9A84C", color: "#111827" }}
+              >
+                {loading ? t("auth.signingIn") : t("auth.signIn")}
+                {!loading && <ArrowRight className="h-4 w-4" />}
+              </button>
+            </form>
+          </div>
 
-          <p className="text-sm text-gray-600 mt-4 text-center">
-            New owner? <Link href="/register" className="text-navy-900 font-semibold">Create account</Link>
-          </p>
+          <div className="border-t px-8 py-4 text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+            <p className="text-sm text-gray-500">
+              {t("auth.noAccount")}{" "}
+              <Link href="/register" className="font-semibold transition-colors" style={{ color: "#C9A84C" }}>
+                {t("auth.signUp")}
+              </Link>
+            </p>
+          </div>
         </div>
+
+        <p className="text-center text-xs text-gray-600 mt-6">
+          Costa Tropical · España
+        </p>
       </div>
     </div>
-  );
+  )
 }

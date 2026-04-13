@@ -189,7 +189,17 @@
     "confirmPassword": "Passwort bestätigen",
     "verifyEmail": "E-Mail bestätigen",
     "resendVerification": "Bestätigungsmail erneut senden",
-    "signOutConfirm": "Möchten Sie sich wirklich abmelden?"
+    "signOutConfirm": "Möchten Sie sich wirklich abmelden?",
+    "createAccount": "Konto erstellen",
+    "registerSubtitle": "Eigentümer — verwalten Sie Ihre Investition an der Costa Tropical.",
+    "namePlaceholder": "Ihr vollständiger Name",
+    "passwordPlaceholder": "Mind. 6 Zeichen",
+    "creating": "Wird erstellt...",
+    "nameRequired": "Name ist erforderlich",
+    "welcomeBack": "Willkommen zurück",
+    "loginSubtitle": "Melden Sie sich in Ihrem Eigentümerportal an",
+    "invalidCredentials": "Ungültige Anmeldedaten. Überprüfen Sie E-Mail und Passwort.",
+    "signingIn": "Anmeldung..."
   },
   "tour": {
     "next": "Weiter",

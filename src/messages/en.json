@@ -189,7 +189,17 @@
     "confirmPassword": "Confirm Password",
     "verifyEmail": "Verify your email",
     "resendVerification": "Resend verification email",
-    "signOutConfirm": "Are you sure you want to sign out?"
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "createAccount": "Create your account",
+    "registerSubtitle": "Property owners — start managing your Costa Tropical investment.",
+    "namePlaceholder": "Your full name",
+    "passwordPlaceholder": "Min. 6 characters",
+    "creating": "Creating...",
+    "nameRequired": "Name is required",
+    "welcomeBack": "Welcome back",
+    "loginSubtitle": "Sign in to your owner portal",
+    "invalidCredentials": "Invalid credentials. Check your email and password.",
+    "signingIn": "Signing in..."
   },
   "tour": {
     "next": "Next",
