@@ -191,6 +191,80 @@
     "resendVerification": "Bestätigungsmail erneut senden",
     "signOutConfirm": "Möchten Sie sich wirklich abmelden?"
   },
+  "demo": {
+    "badge": "Plattform-Tour",
+    "title": "Alles, was Sie brauchen, an einem Ort",
+    "subtitle": "Eine vollständige Verwaltungsplattform, entwickelt für internationale Immobilieneigentümer. Entdecken Sie, was Sie im Inneren erwartet.",
+    "tabs": {
+      "dashboard": "Eigentümer-Dashboard",
+      "bookings": "Buchungen & Kalender",
+      "finance": "Finanzberichte",
+      "care": "Pflege & Wartung",
+      "communication": "Kommunikation"
+    },
+    "dashboard": {
+      "title": "Ihre Immobilie auf einen Blick",
+      "desc": "Einnahmen in Echtzeit, Belegungsraten, Informationen zum nächsten Gast und Zustand der Immobilie — alles in einem Premium-Dashboard. Nie wieder Ihren Manager anrufen, um Updates zu erhalten.",
+      "features": ["Nettoeinnahmen dieses Monats", "Belegungsrate mit visueller Leiste", "Nächster Gast mit Nationalitätsflagge", "Zustand der Immobilie", "Schnellaktionen: Termine blockieren, Besuch anfordern, Berichte ansehen"]
+    },
+    "bookings": {
+      "title": "Vollständige Buchungsübersicht",
+      "desc": "Sehen Sie jede Reservierung auf allen Plattformen — Airbnb, Booking.com und Direktbuchungen. Blockieren Sie Termine für die persönliche Nutzung. Lassen Sie sich nie wieder von einer Buchung überraschen.",
+      "features": ["Einheitlicher Kalender aller OTAs", "Gastdetails und Nationalität", "Check-in- / Check-out-Daten", "Einnahmen pro Buchung", "Persönliche Terminblockierung"]
+    },
+    "finance": {
+      "title": "Transparente Finanzen auf den Cent genau",
+      "desc": "Monatliche Abrechnungen mit detaillierter Aufschlüsselung. Sehen Sie genau, was Sie verdient haben, was berechnet wurde und was kommt. Laden Sie PDF-Berichte in Ihrer Sprache herunter.",
+      "features": ["Aufschlüsselung der Bruttoeinnahmen", "Details zu Provisionen und Gebühren", "Berechnung der Nettoauszahlung", "PDF-Berichte in 4 Sprachen", "Jahresübersicht bis dato"]
+    },
+    "care": {
+      "title": "Ihre Immobilie, stets bestens betreut",
+      "desc": "Verfolgen Sie jede Reinigung, Inspektion und Wartung. Sehen Sie Berichte mit Fotos. Kennen Sie den Zustand Ihrer Immobilie jederzeit, von überall.",
+      "features": ["Geplante Reinigung nach jedem Aufenthalt", "Nachverfolgung vorbeugender Wartung", "Zustandsberichte nach dem Checkout", "Problemmeldungen mit Fotos", "Besichtigungen jederzeit anfordern"]
+    },
+    "communication": {
+      "title": "Direkter Draht zu Ihrem Team",
+      "desc": "Kommunizieren Sie direkt mit Ihrem Manager über die Plattform. Keine verlorenen E-Mails, kein Telefon-Ping-Pong. Alles dokumentiert, alles transparent.",
+      "features": ["In-App-Nachrichten mit Ihrem Manager", "KI-Assistent für sofortige Antworten", "Benachrichtigungsverlauf", "Dokumentenfreigabe", "Mehrsprachiger Support"]
+    }
+  },
+  "aiTools": {
+    "badge": "KI-gestützt",
+    "title": "5 intelligente Tools, die für Sie arbeiten",
+    "subtitle": "HostMasters ist nicht nur ein Verwaltungsunternehmen — es ist eine Technologieplattform. Unsere KI-Tools arbeiten rund um die Uhr, um Ihre Einnahmen zu maximieren und Ihre Immobilie zu schützen.",
+    "tools": [
+      {
+        "name": "KI-Dynamische Preisgestaltung",
+        "desc": "Algorithmus, der 7 Faktoren analysiert — Saisonalität, Veranstaltungen, Wettbewerb, Nachfrage, Vorlaufzeit, Bewertungen und Belegung — um den optimalen Preis für jede einzelne Nacht festzulegen.",
+        "stat": "Bis zu +25% Einnahmen",
+        "statLabel": "ggü. Festpreisen"
+      },
+      {
+        "name": "KI-Team-Assistent",
+        "desc": "Intelligenter Chat-Assistent, verfügbar in jedem Portal. Fragen Sie nach Ihren Einnahmen, nächsten Buchungen, dem Zustand der Immobilie oder jeder anderen Frage — erhalten Sie sofortige Antworten auf Basis Ihrer echten Daten.",
+        "stat": "24/7",
+        "statLabel": "sofortige Antworten"
+      },
+      {
+        "name": "KI-Monitor",
+        "desc": "Autonomes System, das täglich 9 Prüfungen für jede Reservierung, Auszahlung und Aufgabe durchführt. Erkennt Anomalien, bevor sie zu Problemen werden — verpasste Check-ins, überfällige Auszahlungen, inaktive Immobilien.",
+        "stat": "9 Prüfungen",
+        "statLabel": "jeden Tag, automatisch"
+      },
+      {
+        "name": "Marktintelligenz",
+        "desc": "Wöchentliche Datenerhebung von Airbnb und Booking.com in der Region Costa Tropical. Echte Wettbewerbsdaten: Preise, Bewertungen, Belegung. Interaktive Karte mit Zonenanalyse und Marktpositionierung.",
+        "stat": "Über 50 Inserate",
+        "statLabel": "wöchentlich erfasst"
+      },
+      {
+        "name": "Preisanalyse für Eigentümer",
+        "desc": "Die Preisentwicklung Ihrer Immobilie im Zeitverlauf. Saisonale Trends, Durchschnittsraten, Belegungsmuster. Vergleichen Sie Ihre Preise mit dem Markt und erkennen Sie Optimierungspotenziale.",
+        "stat": "Echte Daten",
+        "statLabel": "keine Schätzungen"
+      }
+    ]
+  },
   "landing": {
     "nav": {
       "problem": "Problem",

@@ -191,6 +191,80 @@
     "resendVerification": "Reenviar email de verificação",
     "signOutConfirm": "Tem a certeza que pretende terminar sessão?"
   },
+  "demo": {
+    "badge": "Tour pela Plataforma",
+    "title": "Tudo o que precisa, num só lugar",
+    "subtitle": "Uma plataforma de gestão completa concebida para proprietários internacionais. Veja o que o espera lá dentro.",
+    "tabs": {
+      "dashboard": "Painel do Proprietário",
+      "bookings": "Reservas e Calendário",
+      "finance": "Relatórios Financeiros",
+      "care": "Cuidado e Manutenção",
+      "communication": "Comunicação"
+    },
+    "dashboard": {
+      "title": "A sua propriedade num relance",
+      "desc": "Rendimentos em tempo real, taxas de ocupação, informação do próximo hóspede e estado da propriedade — tudo num painel premium. Nunca mais precisa de ligar ao seu gestor para atualizações.",
+      "features": ["Rendimento líquido deste mês", "Taxa de ocupação com barra visual", "Próximo hóspede com bandeira de nacionalidade", "Estado da propriedade", "Ações rápidas: bloquear datas, pedir visita, ver relatórios"]
+    },
+    "bookings": {
+      "title": "Visibilidade total das reservas",
+      "desc": "Veja todas as reservas em todas as plataformas — Airbnb, Booking.com e diretas. Bloqueie datas para uso pessoal. Nunca mais será surpreendido por uma reserva.",
+      "features": ["Calendário unificado de todas as OTAs", "Detalhes e nacionalidade do hóspede", "Datas de check-in / check-out", "Receita por reserva", "Bloqueio de datas pessoais"]
+    },
+    "finance": {
+      "title": "Finanças transparentes ao cêntimo",
+      "desc": "Extratos mensais com discriminação detalhada. Veja exatamente o que ganhou, o que foi cobrado e o que vem a seguir. Transfira relatórios em PDF no seu idioma.",
+      "features": ["Discriminação da receita bruta", "Detalhe de comissões e taxas", "Cálculo do pagamento líquido", "Relatórios em PDF em 4 idiomas", "Resumo acumulado do ano"]
+    },
+    "care": {
+      "title": "A sua propriedade, sempre bem cuidada",
+      "desc": "Acompanhe cada limpeza, inspeção e visita de manutenção. Veja relatórios com fotografias. Saiba o estado da sua propriedade a qualquer momento, de qualquer lugar.",
+      "features": ["Limpeza programada após cada estadia", "Acompanhamento de manutenção preventiva", "Relatórios de estado pós-checkout", "Sinalização de problemas com fotografias", "Solicite visitas a qualquer momento"]
+    },
+    "communication": {
+      "title": "Linha direta com a sua equipa",
+      "desc": "Comunique diretamente com o seu gestor através da plataforma. Sem emails perdidos, sem chamadas sem resposta. Tudo documentado, tudo transparente.",
+      "features": ["Mensagens na plataforma com o gestor", "Assistente de IA para respostas instantâneas", "Histórico de notificações", "Partilha de documentos", "Suporte multilingue"]
+    }
+  },
+  "aiTools": {
+    "badge": "Potenciado por IA",
+    "title": "5 ferramentas inteligentes a trabalhar por si",
+    "subtitle": "A HostMasters não é apenas uma empresa de gestão — é uma plataforma tecnológica. As nossas ferramentas de IA trabalham 24/7 para maximizar a sua receita e proteger a sua propriedade.",
+    "tools": [
+      {
+        "name": "Preço Dinâmico com IA",
+        "desc": "Algoritmo que analisa 7 fatores — sazonalidade, eventos, concorrência, procura, antecedência, avaliações e ocupação — para definir o preço ideal para cada noite.",
+        "stat": "Até +25% de receita",
+        "statLabel": "vs. preço fixo"
+      },
+      {
+        "name": "Assistente de Equipa com IA",
+        "desc": "Assistente de chat inteligente disponível em todos os portais. Pergunte sobre os seus rendimentos, próximas reservas, estado da propriedade ou qualquer questão — obtenha respostas instantâneas com base nos seus dados reais.",
+        "stat": "24/7",
+        "statLabel": "respostas instantâneas"
+      },
+      {
+        "name": "Monitor de IA",
+        "desc": "Sistema autónomo que executa 9 verificações diárias em cada reserva, pagamento e tarefa. Deteta anomalias antes de se tornarem problemas — check-ins falhados, pagamentos em atraso, propriedades inativas.",
+        "stat": "9 verificações",
+        "statLabel": "todos os dias, automaticamente"
+      },
+      {
+        "name": "Inteligência de Mercado",
+        "desc": "Recolha semanal de dados do Airbnb e Booking.com na região da Costa Tropical. Dados reais da concorrência: preços, avaliações, ocupação. Mapa interativo com análise por zona e posicionamento de mercado.",
+        "stat": "Mais de 50 anúncios",
+        "statLabel": "monitorizados semanalmente"
+      },
+      {
+        "name": "Análise de Preços do Cliente",
+        "desc": "O desempenho de preços da sua propriedade ao longo do tempo. Tendências sazonais, tarifas médias, padrões de ocupação. Compare os seus preços com o mercado e identifique oportunidades de otimização.",
+        "stat": "Dados reais",
+        "statLabel": "não estimativas"
+      }
+    ]
+  },
   "landing": {
     "nav": {
       "problem": "Problema",

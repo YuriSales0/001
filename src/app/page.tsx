@@ -17,6 +17,8 @@ import {
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
+import { PlatformDemo } from "@/components/hm/platform-demo"
+import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
 
 /* ── Plan data from finance.ts ── */
 const plans = [
@@ -188,6 +190,12 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ───────── Platform Demo ───────── */}
+      <PlatformDemo />
+
+      {/* ───────── AI Tools ───────── */}
+      <AiToolsShowcase />
 
       {/* ───────── Plans ───────── */}
       <section id="planos" className="py-20 sm:py-28 bg-white">

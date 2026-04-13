@@ -191,6 +191,80 @@
     "resendVerification": "Reenviar correo de verificación",
     "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?"
   },
+  "demo": {
+    "badge": "Tour por la Plataforma",
+    "title": "Todo lo que necesitas, en un solo lugar",
+    "subtitle": "Una plataforma de gestión completa diseñada para propietarios internacionales. Descubre lo que te espera dentro.",
+    "tabs": {
+      "dashboard": "Panel del Propietario",
+      "bookings": "Reservas y Calendario",
+      "finance": "Informes Financieros",
+      "care": "Cuidado y Mantenimiento",
+      "communication": "Comunicación"
+    },
+    "dashboard": {
+      "title": "Tu propiedad de un vistazo",
+      "desc": "Ingresos en tiempo real, tasas de ocupación, información del próximo huésped y estado de la propiedad — todo en un panel premium. No más llamadas a tu gestor para pedir actualizaciones.",
+      "features": ["Ingresos netos de este mes", "Tasa de ocupación con barra visual", "Próximo huésped con bandera de nacionalidad", "Estado de la propiedad", "Acciones rápidas: bloquear fechas, solicitar visita, ver informes"]
+    },
+    "bookings": {
+      "title": "Visibilidad total de reservas",
+      "desc": "Ve cada reserva en todas las plataformas — Airbnb, Booking.com y directas. Bloquea fechas para uso personal. Nunca más te sorprenderá una reserva.",
+      "features": ["Calendario unificado de todas las OTAs", "Detalles y nacionalidad del huésped", "Fechas de check-in / check-out", "Ingresos por reserva", "Bloqueo de fechas personales"]
+    },
+    "finance": {
+      "title": "Finanzas transparentes al céntimo",
+      "desc": "Extractos mensuales con desglose detallado. Ve exactamente lo que ganaste, lo que se cobró y lo que viene. Descarga informes en PDF en tu idioma.",
+      "features": ["Desglose de ingresos brutos", "Detalle de comisiones y tasas", "Cálculo del pago neto", "Informes en PDF en 4 idiomas", "Resumen acumulado del año"]
+    },
+    "care": {
+      "title": "Tu propiedad, siempre cuidada",
+      "desc": "Haz seguimiento de cada limpieza, inspección y visita de mantenimiento. Ve informes con fotos. Conoce el estado de tu propiedad en todo momento, desde cualquier lugar.",
+      "features": ["Limpieza programada tras cada estancia", "Seguimiento de mantenimiento preventivo", "Informes de estado post-checkout", "Señalización de incidencias con fotos", "Solicita visitas en cualquier momento"]
+    },
+    "communication": {
+      "title": "Línea directa con tu equipo",
+      "desc": "Comunícate directamente con tu gestor a través de la plataforma. Sin correos perdidos, sin llamadas sin respuesta. Todo documentado, todo transparente.",
+      "features": ["Mensajería en la plataforma con tu gestor", "Asistente de IA para respuestas instantáneas", "Historial de notificaciones", "Compartición de documentos", "Soporte multilingüe"]
+    }
+  },
+  "aiTools": {
+    "badge": "Impulsado por IA",
+    "title": "5 herramientas inteligentes trabajando para ti",
+    "subtitle": "HostMasters no es solo una empresa de gestión — es una plataforma tecnológica. Nuestras herramientas de IA trabajan 24/7 para maximizar tus ingresos y proteger tu propiedad.",
+    "tools": [
+      {
+        "name": "Precio Dinámico con IA",
+        "desc": "Algoritmo que analiza 7 factores — estacionalidad, eventos, competencia, demanda, antelación, valoraciones y ocupación — para fijar el precio óptimo de cada noche.",
+        "stat": "Hasta +25% de ingresos",
+        "statLabel": "vs. precio fijo"
+      },
+      {
+        "name": "Asistente de Equipo con IA",
+        "desc": "Asistente de chat inteligente disponible en todos los portales. Pregunta sobre tus ingresos, próximas reservas, estado de la propiedad o cualquier duda — obtén respuestas instantáneas basadas en tus datos reales.",
+        "stat": "24/7",
+        "statLabel": "respuestas instantáneas"
+      },
+      {
+        "name": "Monitor de IA",
+        "desc": "Sistema autónomo que ejecuta 9 comprobaciones diarias en cada reserva, pago y tarea. Detecta anomalías antes de que se conviertan en problemas — check-ins fallidos, pagos vencidos, propiedades inactivas.",
+        "stat": "9 comprobaciones",
+        "statLabel": "cada día, automáticamente"
+      },
+      {
+        "name": "Inteligencia de Mercado",
+        "desc": "Rastreo semanal de Airbnb y Booking.com en la región de la Costa Tropical. Datos reales de la competencia: precios, valoraciones, ocupación. Mapa interactivo con análisis por zona y posicionamiento de mercado.",
+        "stat": "Más de 50 anuncios",
+        "statLabel": "rastreados semanalmente"
+      },
+      {
+        "name": "Analítica de Precios del Cliente",
+        "desc": "El rendimiento de precios de tu propiedad a lo largo del tiempo. Tendencias estacionales, tarifas medias, patrones de ocupación. Compara tus precios con el mercado e identifica oportunidades de optimización.",
+        "stat": "Datos reales",
+        "statLabel": "no estimaciones"
+      }
+    ]
+  },
   "landing": {
     "nav": {
       "problem": "Problema",
