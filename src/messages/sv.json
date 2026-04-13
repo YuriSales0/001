@@ -1,0 +1,560 @@
+{
+  "common": {
+    "dashboard": "Instrumentpanel",
+    "properties": "Fastigheter",
+    "reservations": "Bokningar",
+    "calendar": "Kalender",
+    "reports": "Rapporter",
+    "tasks": "Uppgifter",
+    "suppliers": "Leverantörer",
+    "revenue": "Intäkter",
+    "settings": "Inställningar",
+    "logout": "Logga ut",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "delete": "Radera",
+    "edit": "Redigera",
+    "add": "Lägg till",
+    "search": "Sök",
+    "filter": "Filtrera",
+    "loading": "Laddar...",
+    "noData": "Ingen data tillgänglig",
+    "viewAll": "Visa alla",
+    "download": "Ladda ner",
+    "status": "Status",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "maintenance": "Underhåll",
+    "confirm": "Bekräfta",
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "yes": "Ja",
+    "no": "Nej",
+    "close": "Stäng",
+    "actions": "Åtgärder",
+    "details": "Detaljer",
+    "date": "Datum",
+    "from": "Från",
+    "to": "Till",
+    "total": "Totalt",
+    "notes": "Anteckningar",
+    "description": "Beskrivning",
+    "name": "Namn",
+    "phone": "Telefon",
+    "address": "Adress",
+    "language": "Språk",
+    "updated": "Uppdaterad",
+    "created": "Skapad",
+    "deleted": "Raderad",
+    "error": "Något gick fel",
+    "required": "Obligatoriskt fält",
+    "invalidEmail": "Ogiltig e-postadress"
+  },
+  "owner": {
+    "welcome": "Välkommen tillbaka",
+    "monthlyEarnings": "Månatliga Intäkter",
+    "nextBooking": "Nästa Bokning",
+    "lastInspection": "Senaste Inspektion",
+    "blockDates": "Blockera Datum",
+    "contactManager": "Kontakta Manager",
+    "financialReport": "Ekonomisk Rapport",
+    "downloadReport": "Ladda ner Rapport",
+    "personalUse": "Blockera för Personligt Bruk",
+    "noUpcomingBookings": "Inga kommande bokningar",
+    "myProperties": "Mina Fastigheter",
+    "myStatements": "Mina Utdrag",
+    "myReservations": "Mina Bokningar",
+    "propertyDetails": "Fastighetsdetaljer",
+    "earningsOverview": "Intäktsöversikt",
+    "occupancyCalendar": "Beläggningskalender",
+    "maintenanceRequests": "Underhållsförfrågningar",
+    "requestMaintenance": "Begär Underhåll",
+    "annualSummary": "Årssammanfattning",
+    "ytdEarnings": "Intäkter Hittills i År",
+    "payoutHistory": "Utbetalningshistorik",
+    "pendingPayout": "Väntande Utbetalning",
+    "paidOut": "Utbetald"
+  },
+  "manager": {
+    "overview": "Översikt",
+    "totalProperties": "Totala Fastigheter",
+    "activeReservations": "Aktiva Bokningar",
+    "pendingTasks": "Väntande Uppgifter",
+    "monthlyRevenue": "Månatliga Intäkter",
+    "upcoming": "Kommande",
+    "completed": "Slutförd",
+    "occupancyRate": "Beläggningsgrad",
+    "avgDailyRate": "Snittdagspris",
+    "revPAR": "RevPAR",
+    "addProperty": "Lägg till Fastighet",
+    "addReservation": "Lägg till Bokning",
+    "addTask": "Lägg till Uppgift",
+    "addSupplier": "Lägg till Leverantör",
+    "generateReport": "Generera Rapport",
+    "assignTask": "Tilldela Uppgift",
+    "checkIns": "Incheckningar",
+    "checkOuts": "Utcheckningar",
+    "todayActivity": "Dagens Aktivitet",
+    "weekOverview": "Veckoöversikt",
+    "ownerStatements": "Ägarutdrag",
+    "crewManagement": "Teamhantering",
+    "cleaningSchedule": "Städschema",
+    "inspectionReport": "Inspektionsrapport",
+    "performanceMetrics": "Prestationsmått",
+    "guestCommunication": "Gästkommunikation"
+  },
+  "admin": {
+    "systemLive": "System Aktivt",
+    "hmRevenue": "HM Intäkter",
+    "openPayouts": "Öppna Utbetalningar",
+    "pendingInvoices": "Väntande Fakturor",
+    "overdueTasksAlert": "Varning Försenade Uppgifter",
+    "upcomingCheckIns": "Kommande Incheckningar",
+    "upcomingCheckOuts": "Kommande Utcheckningar",
+    "revenueBreakdown": "Intäktsfördelning",
+    "rentalVolume": "Hyresvolym",
+    "rentalCommission": "Hyreskommission",
+    "invoicesPaid": "Betalda Fakturor",
+    "totalRevenue": "Totala Intäkter",
+    "quickNav": "Snabbnavigering",
+    "userManagement": "Användarhantering",
+    "allProperties": "Alla Fastigheter",
+    "allReservations": "Alla Bokningar",
+    "systemSettings": "Systeminställningar",
+    "platformHealth": "Plattformsstatus",
+    "managerPerformance": "Managerprestanda",
+    "financialOverview": "Ekonomisk Översikt",
+    "subscriptionPlans": "Prenumerationsplaner"
+  },
+  "crew": {
+    "myTasks": "Mina Uppgifter",
+    "fieldOperations": "Fältoperationer",
+    "today": "Idag",
+    "open": "Öppen",
+    "done": "Klar",
+    "selectTask": "Välj en uppgift",
+    "startTask": "Starta Uppgift",
+    "markComplete": "Markera som Klar",
+    "submitReport": "Skicka Rapport",
+    "checklist": "Checklista",
+    "checkoutReport": "Utcheckningsrapport",
+    "propertyCondition": "Fastighetsskick",
+    "good": "Bra",
+    "minorIssues": "Mindre Problem",
+    "majorIssues": "Större Problem",
+    "observedIssues": "Observerade Problem",
+    "damages": "Skador",
+    "internalNotes": "Interna Anteckningar",
+    "uploadPhotos": "Ladda upp Foton",
+    "taskDetails": "Uppgiftsdetaljer",
+    "priority": "Prioritet",
+    "assignedTo": "Tilldelad till",
+    "dueDate": "Förfallodatum"
+  },
+  "finance": {
+    "grossRevenue": "Bruttointäkter",
+    "totalExpenses": "Totala Kostnader",
+    "commission": "Kommission",
+    "ownerPayout": "Ägarutbetalning",
+    "income": "Intäkter",
+    "expenses": "Kostnader",
+    "statement": "Utdrag",
+    "netRevenue": "Nettointäkter",
+    "platformFees": "Plattformsavgifter",
+    "cleaningFees": "Städavgifter",
+    "maintenanceCosts": "Underhållskostnader",
+    "monthlyFee": "Månadsavgift",
+    "annualFee": "Årsavgift",
+    "payoutDate": "Utbetalningsdatum",
+    "payoutStatus": "Utbetalningsstatus",
+    "paid": "Betald",
+    "pending": "Väntande",
+    "overdue": "Försenad",
+    "invoiceNumber": "Fakturanummer",
+    "billingPeriod": "Faktureringsperiod",
+    "taxReport": "Skatterapport"
+  },
+  "auth": {
+    "signIn": "Logga in",
+    "signUp": "Registrera",
+    "email": "E-post",
+    "password": "Lösenord",
+    "continueWithGoogle": "Fortsätt med Google",
+    "orContinueWith": "Eller fortsätt med",
+    "noAccount": "Har du inget konto?",
+    "hasAccount": "Har du redan ett konto?",
+    "forgotPassword": "Glömt lösenordet?",
+    "resetPassword": "Återställ Lösenord",
+    "newPassword": "Nytt Lösenord",
+    "confirmPassword": "Bekräfta Lösenord",
+    "verifyEmail": "Verifiera din e-post",
+    "resendVerification": "Skicka verifieringsmail igen",
+    "signOutConfirm": "Är du säker på att du vill logga ut?",
+    "createAccount": "Skapa ditt konto",
+    "registerSubtitle": "Fastighetsägare — börja hantera din investering på Costa Tropical.",
+    "namePlaceholder": "Ditt fullständiga namn",
+    "passwordPlaceholder": "Min. 6 tecken",
+    "creating": "Skapar...",
+    "nameRequired": "Namn krävs",
+    "welcomeBack": "Välkommen tillbaka",
+    "loginSubtitle": "Logga in på din ägarportal",
+    "invalidCredentials": "Ogiltiga inloggningsuppgifter. Kontrollera e-post och lösenord.",
+    "signingIn": "Loggar in..."
+  },
+  "tour": {
+    "next": "Nästa",
+    "back": "Tillbaka",
+    "skip": "Hoppa över turen",
+    "finish": "Börja använda HostMasters",
+    "saving": "Sparar...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Välkommen till HostMasters",
+          "desc": "Låt oss visa dig allt som din ägarportal kan göra. Denna snabba tur guidar dig genom alla tillgängliga verktyg."
+        },
+        "dashboard": {
+          "title": "Din Instrumentpanel",
+          "desc": "Din startskärm visar allt på en gång: månadens intäkter, beläggningsgrad, nästa gäst och fastighetens skick.",
+          "features": [
+            "Nettointäkter med månadsjämförelse",
+            "Beläggningsfält med procent",
+            "Nästa gäst med nationalitet",
+            "Fastighetsstatus",
+            "Snabbåtgärdsknappar"
+          ]
+        },
+        "earnings": {
+          "title": "Intäkter & Utbetalningar",
+          "desc": "Följ varje euro. Se dina bruttointäkter, vår kommission, städavgifter, underhållskostnader och din nettoutbetalning.",
+          "features": [
+            "Månatliga ekonomiska utdrag",
+            "Kommissionsfördelning per bokning",
+            "Utbetalningsschema och historik",
+            "Årssammanfattning",
+            "PDF-export på ditt språk"
+          ]
+        },
+        "bookings": {
+          "title": "Bokningar & Kalender",
+          "desc": "Se varje bokning på Airbnb, Booking.com och direktbokningar. Blockera datum för personligt bruk.",
+          "features": [
+            "Samlad kalender över alla plattformar",
+            "Gästdetaljer och nationalitet",
+            "Intäkt per bokning",
+            "Personlig datumblockering",
+            "Incheckning/utcheckning"
+          ]
+        },
+        "care": {
+          "title": "Skötsel & Underhåll",
+          "desc": "Din fastighet inspekteras efter varje utcheckning. Följ städningar, förebyggande underhåll och eventuella problem.",
+          "features": [
+            "Inspektionsrapporter efter utcheckning",
+            "Städschema",
+            "Förebyggande underhållslogg",
+            "Problemrapporter med foton",
+            "Begär besök med ett klick"
+          ]
+        },
+        "communication": {
+          "title": "Direkt Kommunikation",
+          "desc": "Skicka meddelanden till din fastighetsförvaltare direkt via plattformen. Inga borttappade mejl.",
+          "features": [
+            "Meddelanden i appen med din manager",
+            "Fullständig konversationshistorik",
+            "AI-assistent för snabba svar",
+            "Dela dokument och foton"
+          ]
+        },
+        "ai": {
+          "title": "AI-drivna Verktyg",
+          "desc": "HostMasters använder artificiell intelligens för att maximera dina intäkter. Dynamisk prissättning justerar ditt nattpris baserat på 7 marknadsfaktorer.",
+          "features": [
+            "AI Dynamisk Prissättning (upp till +25%)",
+            "24/7 AI-assistent med dina riktiga data",
+            "Dagliga automatiska kontroller",
+            "Marknadsintelligens"
+          ]
+        },
+        "reports": {
+          "title": "Rapporter & Dokument",
+          "desc": "Ladda ner detaljerade månadsutdrag som PDF på ditt föredragna språk.",
+          "features": [
+            "Månatliga PDF-utdrag",
+            "Rapporter på 9 språk",
+            "Årlig ekonomisk sammanfattning",
+            "Detalj på transaktionsnivå"
+          ]
+        },
+        "plan": {
+          "title": "Din Plan",
+          "desc": "Du kan se och uppgradera din prenumeration när som helst. Högre planer ger lägre kommission och AI-verktyg.",
+          "features": [
+            "4 planer: Starter, Basic, Mid, Premium",
+            "Lägre kommission med högre planer",
+            "AI-funktioner på Mid och Premium",
+            "Uppgradera när som helst"
+          ]
+        },
+        "done": {
+          "title": "Du är redo!",
+          "desc": "Din portal är klar. Utforska din instrumentpanel, kolla dina intäkter och kontakta din manager. Välkommen till HostMasters."
+        }
+      }
+    }
+  },
+  "demo": {
+    "badge": "Plattformstur",
+    "title": "Allt du behöver, på ett ställe",
+    "subtitle": "En komplett förvaltningsplattform designad för internationella fastighetsägare.",
+    "tabs": {
+      "dashboard": "Ägarens Instrumentpanel",
+      "bookings": "Bokningar & Kalender",
+      "finance": "Ekonomiska Rapporter",
+      "care": "Skötsel & Underhåll",
+      "communication": "Kommunikation"
+    },
+    "dashboard": {
+      "title": "Din fastighet på ett ögonblick",
+      "desc": "Intäkter i realtid, beläggningsgrad, nästa gäst och fastighetsstatus — allt i en premium instrumentpanel.",
+      "features": [
+        "Nettointäkter denna månad",
+        "Beläggningsgrad med visuellt fält",
+        "Nästa gäst med nationalitetsflagga",
+        "Fastighetsstatus",
+        "Snabbåtgärder"
+      ]
+    },
+    "bookings": {
+      "title": "Full bokningsöversikt",
+      "desc": "Se varje bokning över alla plattformar. Blockera datum för personligt bruk.",
+      "features": [
+        "Samlad kalender",
+        "Gästdetaljer",
+        "Check-in/check-out datum",
+        "Intäkt per bokning",
+        "Datumblockering"
+      ]
+    },
+    "finance": {
+      "title": "Transparenta finanser till varje cent",
+      "desc": "Månadsutdrag med detaljerad uppdelning. Se exakt vad du tjänat och vad som debiterats.",
+      "features": [
+        "Bruttointäktsuppdelning",
+        "Kommissions- och avgiftsdetaljer",
+        "Nettoutbetalningsberäkning",
+        "PDF-rapporter på 9 språk",
+        "Årsöversikt"
+      ]
+    },
+    "care": {
+      "title": "Din fastighet, alltid omhändertagen",
+      "desc": "Följ varje städning, inspektion och underhållsbesök med foton och rapporter.",
+      "features": [
+        "Planerad städning efter varje vistelse",
+        "Förebyggande underhåll",
+        "Statusrapporter",
+        "Problemrapportering med foton",
+        "Begär besök"
+      ]
+    },
+    "communication": {
+      "title": "Direkt kontakt med ditt team",
+      "desc": "Kommunicera direkt med din förvaltare via plattformen. Allt dokumenterat.",
+      "features": [
+        "Meddelanden i appen",
+        "AI-assistent",
+        "Notifikationshistorik",
+        "Dokumentdelning",
+        "Flerspråkigt stöd"
+      ]
+    }
+  },
+  "aiTools": {
+    "badge": "Drivs av AI",
+    "title": "5 intelligenta verktyg som arbetar för dig",
+    "subtitle": "HostMasters är inte bara ett förvaltningsbolag — det är en teknikplattform.",
+    "tools": [
+      {
+        "name": "AI Dynamisk Prissättning",
+        "desc": "Algoritm som analyserar 7 faktorer för att sätta optimalt pris varje natt.",
+        "stat": "Upp till +25% intäkter",
+        "statLabel": "vs. fasta priser"
+      },
+      {
+        "name": "AI Teamassistent",
+        "desc": "Intelligent chattassistent tillgänglig i varje portal. Ställ frågor om intäkter, bokningar eller fastighetsstatus.",
+        "stat": "24/7",
+        "statLabel": "omedelbara svar"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Autonomt system som kör 9 dagliga kontroller på varje bokning, utbetalning och uppgift.",
+        "stat": "9 kontroller",
+        "statLabel": "varje dag, automatiskt"
+      },
+      {
+        "name": "Marknadsintelligens",
+        "desc": "Veckovis datainsamling från Airbnb och Booking.com i Costa Tropical-regionen.",
+        "stat": "50+ annonser",
+        "statLabel": "spåras varje vecka"
+      },
+      {
+        "name": "Prisanalys för Ägare",
+        "desc": "Din fastighets prisprestanda över tid. Säsongstrender, snitttariffer, beläggning.",
+        "stat": "Riktig data",
+        "statLabel": "inga uppskattningar"
+      }
+    ]
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problem",
+      "solution": "Lösning",
+      "plans": "Planer",
+      "enter": "Logga in",
+      "startFree": "Starta gratis"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Din fastighet förtjänar",
+      "titleGold": "mer än förvaltning.",
+      "title2": "Den förtjänar intelligens.",
+      "subtitle": "Du köpte på Costa Tropical för att investera — inte för att oroa dig för städning, svåra gäster eller felaktiga priser. HostMasters sköter allt med riktig data, AI-prissättning och full transparens.",
+      "cta": "Första månaden gratis på Premium",
+      "ctaSub": "Ingen bindning. Avsluta när du vill.",
+      "noLockin": "Ingen bindning",
+      "intlOwners": "Internationella ägare",
+      "aiPowered": "AI-driven prissättning"
+    },
+    "problem": {
+      "badge": "Problemet",
+      "title": "Att vara ägare på distans borde inte vara så svårt",
+      "items": [
+        {
+          "title": "Slumpmässig prissättning",
+          "desc": "Utan marknadsdata är prissättning gissningar. Du förlorar intäkter i högsäsong."
+        },
+        {
+          "title": "Noll insyn",
+          "desc": "Du vet inte vad som händer med din fastighet förrän du får ett klagomål."
+        },
+        {
+          "title": "Långsam kommunikation",
+          "desc": "Borttappade mejl, foton som aldrig kommer, rapporter bara när du insisterar."
+        },
+        {
+          "title": "Ogenomskinliga kommissioner",
+          "desc": "Du vet inte hur mycket som blir kvar. Dolda kostnader äter din lönsamhet."
+        }
+      ]
+    },
+    "solution": {
+      "badge": "Lösningen",
+      "title": "Förvaltning med intelligens, inte gissningar",
+      "subtitle": "Tre pelare som gör HostMasters annorlunda.",
+      "items": [
+        {
+          "title": "AI Dynamisk Prissättning",
+          "desc": "Algoritm som analyserar säsongsvariation, lokala evenemang, konkurrens och efterfrågan i realtid.",
+          "highlight": "Upp till +25% intäkter vs. fasta priser"
+        },
+        {
+          "title": "Dina egna data, inte uppskattningar",
+          "desc": "Instrumentpanel med riktig data från dina bokningar, intäkter och kostnader.",
+          "highlight": "Total transparens i siffrorna"
+        },
+        {
+          "title": "Marknadsintelligens",
+          "desc": "Tillgång till marknadsdata för Costa Tropical: beläggning per zon, snittpriser, trender.",
+          "highlight": "Beslut baserade på riktig data"
+        }
+      ]
+    },
+    "social": {
+      "badge": "Vad marknaden säger",
+      "title": "En plattform byggd för framtiden",
+      "items": [
+        {
+          "quote": "Korttidsuthyrningsmarknaden på Costa Tropical växer snabbt, men förvaltningen sker fortfarande manuellt. En plattform som kombinerar AI-prissättning med riktig data har enorm potential.",
+          "name": "Branschanalys",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Fastighetsägare som investerar i södra Spanien behöver transparens och teknik. Gapet mellan traditionella förvaltare och vad tekniken möjliggör är precis där innovation sker.",
+          "name": "Marknadsutsikter",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "Kombinationen av dynamiska prisalgoritmer, marknadsdata i realtid och transparenta ägarportaler representerar nästa generation av fastighetsförvaltning.",
+          "name": "Teknikperspektiv",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
+    "plans": {
+      "badge": "Planer",
+      "title": "Välj den servicenivå du behöver",
+      "subtitle": "Alla planer inkluderar full förvaltning. Ju mer du investerar, desto lägre kommission.",
+      "recommended": "Rekommenderad",
+      "monthlyFee": "/månad",
+      "annualFee": "/år",
+      "commission": "Kommission",
+      "startNow": "Starta nu",
+      "firstMonthFree": "Första månaden gratis",
+      "noMonthlyFee": "Ingen månadsavgift",
+      "starter": {
+        "features": [
+          "Fullständig STR-förvaltning",
+          "Airbnb, Booking.com & direktannonser",
+          "24/7 gästkommunikation",
+          "Månatligt ägarutdrag",
+          "Ägarinstrumentpanel",
+          "Städning: €70/byte"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Allt i Starter",
+          "Förebyggande underhåll (1x/månad)",
+          "Inspektion före & efter vistelse",
+          "Dokumenthantering",
+          "Flerspråkiga utdrag",
+          "Städning: €60/byte"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Allt i Basic",
+          "AI-prissättning + Smart Lock",
+          "Prioriterad respons: 12t ägare / 2t gäst",
+          "Utdrag på valfritt språk",
+          "Städning ingår ≥5 nätter"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Allt i Mid",
+          "Skatteefterlevnad (Modelo 179 + IRNR)",
+          "Gästtillägg: transfer, mat, tvätt",
+          "Nödsvar inom 4 timmar",
+          "Städning ingår ≥3 nätter"
+        ]
+      }
+    },
+    "finalCta": {
+      "title1": "Redo att ha",
+      "titleGold": "riktig kontroll",
+      "title2": "över din fastighet?",
+      "subtitle": "Börja med Premium-planen i 1 månad utan kostnad.",
+      "cta": "Starta 1 månad gratis",
+      "enterPortal": "Gå till portalen",
+      "disclaimer": "Ingen bindning · Inget kreditkort · Avsluta när som helst"
+    },
+    "footer": {
+      "tagline": "Premium korttidsuthyrningsförvaltning.",
+      "copyright": "© 2026 HostMasters."
+    }
+  }
+}

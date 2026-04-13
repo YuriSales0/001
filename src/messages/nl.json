@@ -1,0 +1,560 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "properties": "Vastgoed",
+    "reservations": "Reserveringen",
+    "calendar": "Kalender",
+    "reports": "Rapporten",
+    "tasks": "Taken",
+    "suppliers": "Leveranciers",
+    "revenue": "Omzet",
+    "settings": "Instellingen",
+    "logout": "Uitloggen",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "add": "Toevoegen",
+    "search": "Zoeken",
+    "filter": "Filteren",
+    "loading": "Laden...",
+    "noData": "Geen gegevens beschikbaar",
+    "viewAll": "Alles bekijken",
+    "download": "Downloaden",
+    "status": "Status",
+    "active": "Actief",
+    "inactive": "Inactief",
+    "maintenance": "Onderhoud",
+    "confirm": "Bevestigen",
+    "back": "Terug",
+    "next": "Volgende",
+    "yes": "Ja",
+    "no": "Nee",
+    "close": "Sluiten",
+    "actions": "Acties",
+    "details": "Details",
+    "date": "Datum",
+    "from": "Van",
+    "to": "Naar",
+    "total": "Totaal",
+    "notes": "Notities",
+    "description": "Beschrijving",
+    "name": "Naam",
+    "phone": "Telefoon",
+    "address": "Adres",
+    "language": "Taal",
+    "updated": "Succesvol bijgewerkt",
+    "created": "Succesvol aangemaakt",
+    "deleted": "Succesvol verwijderd",
+    "error": "Er ging iets mis",
+    "required": "Verplicht veld",
+    "invalidEmail": "Ongeldig e-mailadres"
+  },
+  "owner": {
+    "welcome": "Welkom terug",
+    "monthlyEarnings": "Maandelijkse Inkomsten",
+    "nextBooking": "Volgende Boeking",
+    "lastInspection": "Laatste Inspectie",
+    "blockDates": "Data Blokkeren",
+    "contactManager": "Manager Contacteren",
+    "financialReport": "Financieel Rapport",
+    "downloadReport": "Rapport Downloaden",
+    "personalUse": "Blokkeren voor Persoonlijk Gebruik",
+    "noUpcomingBookings": "Geen komende boekingen",
+    "myProperties": "Mijn Vastgoed",
+    "myStatements": "Mijn Overzichten",
+    "myReservations": "Mijn Reserveringen",
+    "propertyDetails": "Vastgoeddetails",
+    "earningsOverview": "Inkomstenoverzicht",
+    "occupancyCalendar": "Bezettingskalender",
+    "maintenanceRequests": "Onderhoudsverzoeken",
+    "requestMaintenance": "Onderhoud Aanvragen",
+    "annualSummary": "Jaaroverzicht",
+    "ytdEarnings": "Inkomsten dit Jaar",
+    "payoutHistory": "Uitbetalingsgeschiedenis",
+    "pendingPayout": "Openstaande Uitbetaling",
+    "paidOut": "Uitbetaald"
+  },
+  "manager": {
+    "overview": "Overzicht",
+    "totalProperties": "Totaal Vastgoed",
+    "activeReservations": "Actieve Reserveringen",
+    "pendingTasks": "Openstaande Taken",
+    "monthlyRevenue": "Maandelijkse Omzet",
+    "upcoming": "Aankomend",
+    "completed": "Afgerond",
+    "occupancyRate": "Bezettingsgraad",
+    "avgDailyRate": "Gem. Dagprijs",
+    "revPAR": "RevPAR",
+    "addProperty": "Vastgoed Toevoegen",
+    "addReservation": "Reservering Toevoegen",
+    "addTask": "Taak Toevoegen",
+    "addSupplier": "Leverancier Toevoegen",
+    "generateReport": "Rapport Genereren",
+    "assignTask": "Taak Toewijzen",
+    "checkIns": "Check-ins",
+    "checkOuts": "Check-outs",
+    "todayActivity": "Activiteit Vandaag",
+    "weekOverview": "Weekoverzicht",
+    "ownerStatements": "Eigenaaroverzichten",
+    "crewManagement": "Teambeheer",
+    "cleaningSchedule": "Schoonmaakschema",
+    "inspectionReport": "Inspectierapport",
+    "performanceMetrics": "Prestatiemetrics",
+    "guestCommunication": "Gastcommunicatie"
+  },
+  "admin": {
+    "systemLive": "Systeem Actief",
+    "hmRevenue": "HM Omzet",
+    "openPayouts": "Openstaande Uitbetalingen",
+    "pendingInvoices": "Openstaande Facturen",
+    "overdueTasksAlert": "Waarschuwing Achterstallige Taken",
+    "upcomingCheckIns": "Aankomende Check-ins",
+    "upcomingCheckOuts": "Aankomende Check-outs",
+    "revenueBreakdown": "Omzetoverzicht",
+    "rentalVolume": "Huurvolume",
+    "rentalCommission": "Huurcommissie",
+    "invoicesPaid": "Betaalde Facturen",
+    "totalRevenue": "Totale Omzet",
+    "quickNav": "Snelle Navigatie",
+    "userManagement": "Gebruikersbeheer",
+    "allProperties": "Alle Vastgoed",
+    "allReservations": "Alle Reserveringen",
+    "systemSettings": "Systeeminstellingen",
+    "platformHealth": "Platformstatus",
+    "managerPerformance": "Managerprestaties",
+    "financialOverview": "Financieel Overzicht",
+    "subscriptionPlans": "Abonnementsplannen"
+  },
+  "crew": {
+    "myTasks": "Mijn Taken",
+    "fieldOperations": "Veldoperaties",
+    "today": "Vandaag",
+    "open": "Open",
+    "done": "Afgerond",
+    "selectTask": "Selecteer een taak",
+    "startTask": "Taak Starten",
+    "markComplete": "Als Afgerond Markeren",
+    "submitReport": "Rapport Indienen",
+    "checklist": "Checklist",
+    "checkoutReport": "Checkout Rapport",
+    "propertyCondition": "Staat van het Vastgoed",
+    "good": "Goed",
+    "minorIssues": "Kleine Problemen",
+    "majorIssues": "Grote Problemen",
+    "observedIssues": "Waargenomen Problemen",
+    "damages": "Schade",
+    "internalNotes": "Interne Notities",
+    "uploadPhotos": "Fotos Uploaden",
+    "taskDetails": "Taakdetails",
+    "priority": "Prioriteit",
+    "assignedTo": "Toegewezen aan",
+    "dueDate": "Vervaldatum"
+  },
+  "finance": {
+    "grossRevenue": "Bruto Omzet",
+    "totalExpenses": "Totale Kosten",
+    "commission": "Commissie",
+    "ownerPayout": "Uitbetaling Eigenaar",
+    "income": "Inkomsten",
+    "expenses": "Uitgaven",
+    "statement": "Overzicht",
+    "netRevenue": "Netto Omzet",
+    "platformFees": "Platformkosten",
+    "cleaningFees": "Schoonmaakkosten",
+    "maintenanceCosts": "Onderhoudskosten",
+    "monthlyFee": "Maandelijkse Kosten",
+    "annualFee": "Jaarlijkse Kosten",
+    "payoutDate": "Uitbetalingsdatum",
+    "payoutStatus": "Uitbetalingsstatus",
+    "paid": "Betaald",
+    "pending": "In Behandeling",
+    "overdue": "Achterstallig",
+    "invoiceNumber": "Factuurnummer",
+    "billingPeriod": "Facturatieperiode",
+    "taxReport": "Belastingrapport"
+  },
+  "auth": {
+    "signIn": "Inloggen",
+    "signUp": "Registreren",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "continueWithGoogle": "Doorgaan met Google",
+    "orContinueWith": "Of doorgaan met",
+    "noAccount": "Nog geen account?",
+    "hasAccount": "Heeft u al een account?",
+    "forgotPassword": "Wachtwoord vergeten?",
+    "resetPassword": "Wachtwoord Herstellen",
+    "newPassword": "Nieuw Wachtwoord",
+    "confirmPassword": "Wachtwoord Bevestigen",
+    "verifyEmail": "Bevestig uw e-mail",
+    "resendVerification": "Verificatie-e-mail opnieuw verzenden",
+    "signOutConfirm": "Weet u zeker dat u wilt uitloggen?",
+    "createAccount": "Account aanmaken",
+    "registerSubtitle": "Vastgoedeigenaren — beheer uw investering aan de Costa Tropical.",
+    "namePlaceholder": "Uw volledige naam",
+    "passwordPlaceholder": "Min. 6 tekens",
+    "creating": "Aanmaken...",
+    "nameRequired": "Naam is verplicht",
+    "welcomeBack": "Welkom terug",
+    "loginSubtitle": "Log in op uw eigenaarsportaal",
+    "invalidCredentials": "Ongeldige inloggegevens. Controleer e-mail en wachtwoord.",
+    "signingIn": "Inloggen..."
+  },
+  "tour": {
+    "next": "Volgende",
+    "back": "Terug",
+    "skip": "Tour overslaan",
+    "finish": "Begin met HostMasters",
+    "saving": "Opslaan...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Welkom bij HostMasters",
+          "desc": "Laat ons u alles tonen wat uw eigenaarsportaal kan doen. Deze snelle tour laat u alle beschikbare tools zien om uw vastgoed overal ter wereld te beheren."
+        },
+        "dashboard": {
+          "title": "Uw Dashboard",
+          "desc": "Uw startscherm toont alles in één oogopslag: de inkomsten van deze maand, bezettingsgraad, uw volgende gast en de staat van uw vastgoed. Realtime bijgewerkt.",
+          "features": [
+            "Netto inkomsten met maandvergelijking",
+            "Bezettingsbalk met percentage",
+            "Volgende gast met nationaliteit",
+            "Status vastgoed",
+            "Snelactieknoppen"
+          ]
+        },
+        "earnings": {
+          "title": "Inkomsten & Uitbetalingen",
+          "desc": "Volg elke euro. Bekijk uw bruto-inkomen, onze commissie, schoonmaakkosten, onderhoudskosten en uw netto uitbetaling. Alles gespecificeerd, niets verborgen.",
+          "features": [
+            "Maandelijkse financiële overzichten",
+            "Commissie-uitsplitsing per boeking",
+            "Uitbetalingsschema en -geschiedenis",
+            "Jaaroverzicht tot heden",
+            "PDF-export in uw taal"
+          ]
+        },
+        "bookings": {
+          "title": "Boekingen & Kalender",
+          "desc": "Bekijk elke reservering op Airbnb, Booking.com en directe boekingen. Weet wie er komt, wanneer en hoeveel elk verblijf oplevert. Blokkeer data voor persoonlijk gebruik.",
+          "features": [
+            "Geünificeerde kalender over alle platformen",
+            "Gastdetails en nationaliteit",
+            "Opbrengst per reservering",
+            "Persoonlijke datumblokkering",
+            "Check-in / check-out tracking"
+          ]
+        },
+        "care": {
+          "title": "Zorg & Onderhoud",
+          "desc": "Uw vastgoed wordt na elke checkout geïnspecteerd. Volg schoonmaakbeurten, preventief onderhoud en eventuele problemen — allemaal met fotos en rapporten.",
+          "features": [
+            "Inspectierapporten na checkout",
+            "Schoonmaakschema tracking",
+            "Preventief onderhoudslogboek",
+            "Probleemrapporten met fotos",
+            "Bezoekverzoeken met één klik"
+          ]
+        },
+        "communication": {
+          "title": "Directe Communicatie",
+          "desc": "Stuur berichten naar uw vastgoedbeheerder direct via het platform. Geen verloren e-mails, geen gemiste telefoontjes. Alles gedocumenteerd en doorzoekbaar.",
+          "features": [
+            "In-app berichten met uw manager",
+            "Volledige gespreksgeschiedenis",
+            "AI-assistent voor directe antwoorden",
+            "Document- en fotodeling"
+          ]
+        },
+        "ai": {
+          "title": "AI-aangedreven Tools",
+          "desc": "HostMasters gebruikt kunstmatige intelligentie om uw inkomsten te maximaliseren. Dynamische prijzen passen uw nachttarief aan op basis van 7 marktfactoren.",
+          "features": [
+            "AI Dynamische Prijzen (tot +25% omzet)",
+            "24/7 AI-assistent met uw echte gegevens",
+            "Dagelijkse automatische vastgoedcontroles",
+            "Marktintelligentie & concurrentietracking"
+          ]
+        },
+        "reports": {
+          "title": "Rapporten & Documenten",
+          "desc": "Download gedetailleerde maandoverzichten als PDF in uw voorkeurstaal. Jaaroverzichten, belastingrapporten en volledige transparantie.",
+          "features": [
+            "Maandelijkse PDF-overzichten",
+            "Rapporten in 9 talen",
+            "Jaarlijks financieel overzicht",
+            "Transactieniveau detail"
+          ]
+        },
+        "plan": {
+          "title": "Uw Plan",
+          "desc": "U kunt uw abonnement op elk moment bekijken en upgraden. Hogere plannen bieden lagere commissies, AI-prijzen en prioritaire ondersteuning.",
+          "features": [
+            "4 plannen: Starter, Basic, Mid, Premium",
+            "Lagere commissie bij hogere plannen",
+            "AI-functies op Mid en Premium",
+            "Upgrade wanneer u wilt, geen binding"
+          ]
+        },
+        "done": {
+          "title": "U bent helemaal klaar!",
+          "desc": "Uw portaal is gereed. Verken uw dashboard, bekijk uw inkomsten en neem op elk moment contact op met uw manager. Welkom bij HostMasters."
+        }
+      }
+    }
+  },
+  "demo": {
+    "badge": "Platform Tour",
+    "title": "Alles wat u nodig heeft, op één plek",
+    "subtitle": "Een compleet beheerplatform ontworpen voor internationale vastgoedeigenaren. Ontdek wat u binnen wacht.",
+    "tabs": {
+      "dashboard": "Eigenaars Dashboard",
+      "bookings": "Boekingen & Kalender",
+      "finance": "Financiële Rapporten",
+      "care": "Zorg & Onderhoud",
+      "communication": "Communicatie"
+    },
+    "dashboard": {
+      "title": "Uw vastgoed in één oogopslag",
+      "desc": "Realtime inkomsten, bezettingsgraden, informatie over de volgende gast en de staat van het vastgoed — alles in één premium dashboard.",
+      "features": [
+        "Netto inkomsten deze maand",
+        "Bezettingsgraad met visuele balk",
+        "Volgende gast met nationaliteitsvlag",
+        "Status van het vastgoed",
+        "Snelacties: data blokkeren, bezoek aanvragen, rapporten bekijken"
+      ]
+    },
+    "bookings": {
+      "title": "Volledig boekingsoverzicht",
+      "desc": "Bekijk elke reservering op alle platformen — Airbnb, Booking.com en direct. Blokkeer data voor persoonlijk gebruik.",
+      "features": [
+        "Geünificeerde kalender van alle OTAs",
+        "Gastdetails en nationaliteit",
+        "Check-in / check-out data",
+        "Opbrengst per boeking",
+        "Persoonlijke datumblokkering"
+      ]
+    },
+    "finance": {
+      "title": "Transparante financiën tot op de cent",
+      "desc": "Maandoverzichten met gedetailleerde uitsplitsing. Bekijk exact wat u verdiend heeft en wat er in rekening is gebracht.",
+      "features": [
+        "Uitsplitsing bruto-opbrengst",
+        "Detail commissies en kosten",
+        "Berekening netto uitbetaling",
+        "PDF-rapporten in 9 talen",
+        "Jaaroverzicht tot heden"
+      ]
+    },
+    "care": {
+      "title": "Uw vastgoed, altijd goed verzorgd",
+      "desc": "Volg elke schoonmaakbeurt, inspectie en onderhoudsbezoek. Bekijk rapporten met fotos.",
+      "features": [
+        "Geplande schoonmaak na elk verblijf",
+        "Preventief onderhoud tracking",
+        "Statusrapporten na checkout",
+        "Probleemmelding met fotos",
+        "Verzoek bezoeken op elk moment"
+      ]
+    },
+    "communication": {
+      "title": "Directe lijn met uw team",
+      "desc": "Communiceer direct met uw manager via het platform. Geen verloren e-mails. Alles gedocumenteerd, alles transparant.",
+      "features": [
+        "In-app berichten met manager",
+        "AI-assistent voor directe antwoorden",
+        "Meldingsgeschiedenis",
+        "Documenten delen",
+        "Meertalige ondersteuning"
+      ]
+    }
+  },
+  "aiTools": {
+    "badge": "Aangedreven door AI",
+    "title": "5 intelligente tools die voor u werken",
+    "subtitle": "HostMasters is niet zomaar een beheerbedrijf — het is een technologieplatform. Onze AI-tools werken 24/7 om uw inkomsten te maximaliseren.",
+    "tools": [
+      {
+        "name": "AI Dynamische Prijzen",
+        "desc": "Algoritme dat 7 factoren analyseert — seizoen, evenementen, concurrentie, vraag, boekingstermijn, beoordelingen en bezetting — om de optimale prijs voor elke nacht te bepalen.",
+        "stat": "Tot +25% omzet",
+        "statLabel": "vs. vaste prijzen"
+      },
+      {
+        "name": "AI Team Assistent",
+        "desc": "Intelligente chatassistent beschikbaar in elk portaal. Vraag naar uw inkomsten, volgende boekingen of vastgoedstatus — krijg direct antwoord op basis van uw echte gegevens.",
+        "stat": "24/7",
+        "statLabel": "directe antwoorden"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Autonoom systeem dat dagelijks 9 controles uitvoert op elke reservering, uitbetaling en taak. Detecteert anomalieën voordat ze problemen worden.",
+        "stat": "9 controles",
+        "statLabel": "elke dag, automatisch"
+      },
+      {
+        "name": "Marktintelligentie",
+        "desc": "Wekelijkse data-analyse van Airbnb en Booking.com in de regio Costa Tropical. Echte concurrentiegegevens: prijzen, beoordelingen, bezetting.",
+        "stat": "50+ advertenties",
+        "statLabel": "wekelijks gevolgd"
+      },
+      {
+        "name": "Prijsanalyse voor Eigenaren",
+        "desc": "De prijsprestaties van uw vastgoed in de tijd. Seizoentrends, gemiddelde tarieven, bezettingspatronen. Vergelijk uw prijzen met de markt.",
+        "stat": "Echte gegevens",
+        "statLabel": "geen schattingen"
+      }
+    ]
+  },
+  "landing": {
+    "nav": {
+      "problem": "Probleem",
+      "solution": "Oplossing",
+      "plans": "Plannen",
+      "enter": "Inloggen",
+      "startFree": "Gratis starten"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Uw vastgoed verdient",
+      "titleGold": "meer dan beheer.",
+      "title2": "Het verdient intelligentie.",
+      "subtitle": "U heeft aan de Costa Tropical gekocht om te investeren — niet om u zorgen te maken over schoonmaak, lastige gasten of verkeerde prijzen. HostMasters regelt alles met echte gegevens, AI-prijzen en volledige transparantie.",
+      "cta": "1e maand gratis op het Premium plan",
+      "ctaSub": "Geen binding. Op elk moment opzegbaar.",
+      "noLockin": "Geen binding",
+      "intlOwners": "Internationale eigenaren",
+      "aiPowered": "AI-gestuurde prijzen"
+    },
+    "problem": {
+      "badge": "Het probleem",
+      "title": "Op afstand eigenaar zijn zou niet zo moeilijk moeten zijn",
+      "items": [
+        {
+          "title": "Willekeurige prijzen",
+          "desc": "Zonder marktgegevens is prijsbepaling giswerk. U verliest omzet in piekseizoenen en trekt geen gasten in het laagseizoen."
+        },
+        {
+          "title": "Nul zichtbaarheid",
+          "desc": "U weet niet wat er met uw vastgoed gebeurt tot u een klacht of een verrassingsrekening krijgt."
+        },
+        {
+          "title": "Trage communicatie",
+          "desc": "Verloren e-mails, fotos die nooit aankomen, rapporten die er alleen komen als u aandringt."
+        },
+        {
+          "title": "Ondoorzichtige commissies",
+          "desc": "U weet niet hoeveel er voor u overblijft. Verborgen kosten vreten uw rendement op zonder waarschuwing."
+        }
+      ]
+    },
+    "solution": {
+      "badge": "De oplossing",
+      "title": "Beheer met intelligentie, niet met giswerk",
+      "subtitle": "Drie pijlers die HostMasters anders maken dan elke traditionele vastgoedbeheerder.",
+      "items": [
+        {
+          "title": "AI Dynamische Prijzen",
+          "desc": "Algoritme dat seizoensgebondenheid, lokale evenementen, concurrentie en realtime vraag analyseert om de optimale prijs per nacht te bepalen.",
+          "highlight": "Tot +25% omzet vs. vaste prijzen"
+        },
+        {
+          "title": "Uw eigen gegevens, geen schattingen",
+          "desc": "Dashboard met echte gegevens van uw boekingen, inkomsten en kosten. Gedetailleerde maandrapporten tot op de cent — geen verrassingen.",
+          "highlight": "Volledige transparantie in cijfers"
+        },
+        {
+          "title": "Marktintelligentie",
+          "desc": "Toegang tot marktgegevens van de Costa Tropical: bezettingsgraden per zone, gemiddelde prijzen, vraagtrends en benchmarks.",
+          "highlight": "Beslissingen gebaseerd op echte gegevens"
+        }
+      ]
+    },
+    "social": {
+      "badge": "Wat de markt zegt",
+      "title": "Een platform gebouwd voor de toekomst",
+      "items": [
+        {
+          "quote": "De kortetermijnhuurmarkt aan de Costa Tropical groeit snel, maar het meeste beheer gebeurt nog handmatig. Een platform dat AI-prijzen combineert met echte gegevens heeft enorm potentieel om de sector te professionaliseren.",
+          "name": "Sector Analyse",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Vastgoedeigenaren die in Zuid-Spanje investeren hebben transparantie en technologie nodig. Het gat tussen wat traditionele beheerders bieden en wat technologie mogelijk maakt is precies waar innovatie plaatsvindt.",
+          "name": "Marktvooruitzichten",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "De combinatie van dynamische prijsalgoritmen, realtime marktgegevens en transparante eigenaarsportalen vertegenwoordigt de volgende generatie vastgoedbeheer.",
+          "name": "Technologisch Perspectief",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
+    "plans": {
+      "badge": "Plannen",
+      "title": "Kies het serviceniveau dat u nodig heeft",
+      "subtitle": "Alle plannen omvatten volledig beheer. Hoe meer u investeert, hoe lager de commissie en hoe meer intelligente tools u krijgt.",
+      "recommended": "Aanbevolen",
+      "monthlyFee": "/maand",
+      "annualFee": "/jaar",
+      "commission": "Commissie",
+      "startNow": "Nu starten",
+      "firstMonthFree": "1e maand gratis",
+      "noMonthlyFee": "Geen maandelijkse kosten",
+      "starter": {
+        "features": [
+          "Volledig STR-beheer",
+          "Airbnb, Booking.com & directe advertenties",
+          "24/7 gastcommunicatie",
+          "Maandelijks eigenaaroverzicht",
+          "Eigenaars dashboard",
+          "Schoonmaak: €70/wisselbeurt"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Alles in Starter",
+          "Preventief onderhoud (1x/maand)",
+          "Pre- & post-verblijf inspectie",
+          "Documentbeheer",
+          "Meertalige overzichten",
+          "Schoonmaak: €60/wisselbeurt"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Alles in Basic",
+          "AI-prijzen + Smart Lock",
+          "Prioritaire respons: 12u eigenaar / 2u gast",
+          "Overzicht in elke taal",
+          "Schoonmaak inbegrepen ≥5 nachten"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Alles in Mid",
+          "Fiscale compliance (Modelo 179 + IRNR)",
+          "Gastupsells: transfers, boodschappen, was",
+          "Noodrespons binnen 4 uur",
+          "Schoonmaak inbegrepen ≥3 nachten"
+        ]
+      }
+    },
+    "finalCta": {
+      "title1": "Klaar om",
+      "titleGold": "echte controle",
+      "title2": "over uw vastgoed te hebben?",
+      "subtitle": "Begin met het Premium plan voor 1 maand zonder kosten. Ontdek het verschil dat echte gegevens en AI-prijzen maken voor uw inkomsten.",
+      "cta": "Start 1 maand gratis",
+      "enterPortal": "Naar het portaal",
+      "disclaimer": "Geen binding · Geen creditcard · Op elk moment opzegbaar"
+    },
+    "footer": {
+      "tagline": "Premium kortetermijnhuurbeheer.",
+      "copyright": "© 2026 HostMasters."
+    }
+  }
+}

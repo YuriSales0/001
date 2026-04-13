@@ -1,0 +1,560 @@
+{
+  "common": {
+    "dashboard": "Tableau de bord",
+    "properties": "Propriétés",
+    "reservations": "Réservations",
+    "calendar": "Calendrier",
+    "reports": "Rapports",
+    "tasks": "Tâches",
+    "suppliers": "Fournisseurs",
+    "revenue": "Revenus",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "loading": "Chargement...",
+    "noData": "Aucune donnée disponible",
+    "viewAll": "Tout voir",
+    "download": "Télécharger",
+    "status": "Statut",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "maintenance": "Maintenance",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "yes": "Oui",
+    "no": "Non",
+    "close": "Fermer",
+    "actions": "Actions",
+    "details": "Détails",
+    "date": "Date",
+    "from": "De",
+    "to": "À",
+    "total": "Total",
+    "notes": "Notes",
+    "description": "Description",
+    "name": "Nom",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "language": "Langue",
+    "updated": "Mis à jour avec succès",
+    "created": "Créé avec succès",
+    "deleted": "Supprimé avec succès",
+    "error": "Une erreur est survenue",
+    "required": "Champ obligatoire",
+    "invalidEmail": "Adresse e-mail invalide"
+  },
+  "owner": {
+    "welcome": "Bienvenue",
+    "monthlyEarnings": "Revenus Mensuels",
+    "nextBooking": "Prochaine Réservation",
+    "lastInspection": "Dernière Inspection",
+    "blockDates": "Bloquer des Dates",
+    "contactManager": "Contacter le Manager",
+    "financialReport": "Rapport Financier",
+    "downloadReport": "Télécharger le Rapport",
+    "personalUse": "Bloquer pour Usage Personnel",
+    "noUpcomingBookings": "Aucune réservation à venir",
+    "myProperties": "Mes Propriétés",
+    "myStatements": "Mes Relevés",
+    "myReservations": "Mes Réservations",
+    "propertyDetails": "Détails de la Propriété",
+    "earningsOverview": "Aperçu des Revenus",
+    "occupancyCalendar": "Calendrier d'Occupation",
+    "maintenanceRequests": "Demandes de Maintenance",
+    "requestMaintenance": "Demander une Maintenance",
+    "annualSummary": "Bilan Annuel",
+    "ytdEarnings": "Revenus depuis le Début de l'Année",
+    "payoutHistory": "Historique des Versements",
+    "pendingPayout": "Versement en Attente",
+    "paidOut": "Versé"
+  },
+  "manager": {
+    "overview": "Aperçu",
+    "totalProperties": "Total Propriétés",
+    "activeReservations": "Réservations Actives",
+    "pendingTasks": "Tâches en Attente",
+    "monthlyRevenue": "Revenus Mensuels",
+    "upcoming": "À venir",
+    "completed": "Terminé",
+    "occupancyRate": "Taux d'Occupation",
+    "avgDailyRate": "Tarif Journalier Moy.",
+    "revPAR": "RevPAR",
+    "addProperty": "Ajouter Propriété",
+    "addReservation": "Ajouter Réservation",
+    "addTask": "Ajouter Tâche",
+    "addSupplier": "Ajouter Fournisseur",
+    "generateReport": "Générer Rapport",
+    "assignTask": "Assigner Tâche",
+    "checkIns": "Check-ins",
+    "checkOuts": "Check-outs",
+    "todayActivity": "Activité du Jour",
+    "weekOverview": "Aperçu Hebdomadaire",
+    "ownerStatements": "Relevés Propriétaires",
+    "crewManagement": "Gestion d'Équipe",
+    "cleaningSchedule": "Planning de Ménage",
+    "inspectionReport": "Rapport d'Inspection",
+    "performanceMetrics": "Indicateurs de Performance",
+    "guestCommunication": "Communication Clients"
+  },
+  "admin": {
+    "systemLive": "Système Actif",
+    "hmRevenue": "Revenus HM",
+    "openPayouts": "Versements en Attente",
+    "pendingInvoices": "Factures en Attente",
+    "overdueTasksAlert": "Alerte Tâches en Retard",
+    "upcomingCheckIns": "Check-ins à Venir",
+    "upcomingCheckOuts": "Check-outs à Venir",
+    "revenueBreakdown": "Ventilation des Revenus",
+    "rentalVolume": "Volume Locatif",
+    "rentalCommission": "Commission Locative",
+    "invoicesPaid": "Factures Payées",
+    "totalRevenue": "Revenus Totaux",
+    "quickNav": "Navigation Rapide",
+    "userManagement": "Gestion Utilisateurs",
+    "allProperties": "Toutes les Propriétés",
+    "allReservations": "Toutes les Réservations",
+    "systemSettings": "Paramètres Système",
+    "platformHealth": "Santé de la Plateforme",
+    "managerPerformance": "Performance Manager",
+    "financialOverview": "Aperçu Financier",
+    "subscriptionPlans": "Plans d'Abonnement"
+  },
+  "crew": {
+    "myTasks": "Mes Tâches",
+    "fieldOperations": "Opérations Terrain",
+    "today": "Aujourd'hui",
+    "open": "Ouvert",
+    "done": "Terminé",
+    "selectTask": "Sélectionner une tâche",
+    "startTask": "Démarrer la Tâche",
+    "markComplete": "Marquer comme Terminé",
+    "submitReport": "Soumettre Rapport",
+    "checklist": "Checklist",
+    "checkoutReport": "Rapport de Checkout",
+    "propertyCondition": "État de la Propriété",
+    "good": "Bon",
+    "minorIssues": "Problèmes Mineurs",
+    "majorIssues": "Problèmes Majeurs",
+    "observedIssues": "Problèmes Observés",
+    "damages": "Dommages",
+    "internalNotes": "Notes Internes",
+    "uploadPhotos": "Télécharger Photos",
+    "taskDetails": "Détails de la Tâche",
+    "priority": "Priorité",
+    "assignedTo": "Assigné à",
+    "dueDate": "Date d'Échéance"
+  },
+  "finance": {
+    "grossRevenue": "Revenus Bruts",
+    "totalExpenses": "Dépenses Totales",
+    "commission": "Commission",
+    "ownerPayout": "Versement Propriétaire",
+    "income": "Revenus",
+    "expenses": "Dépenses",
+    "statement": "Relevé",
+    "netRevenue": "Revenus Nets",
+    "platformFees": "Frais de Plateforme",
+    "cleaningFees": "Frais de Ménage",
+    "maintenanceCosts": "Coûts de Maintenance",
+    "monthlyFee": "Frais Mensuels",
+    "annualFee": "Frais Annuels",
+    "payoutDate": "Date de Versement",
+    "payoutStatus": "Statut du Versement",
+    "paid": "Payé",
+    "pending": "En Attente",
+    "overdue": "En Retard",
+    "invoiceNumber": "Numéro de Facture",
+    "billingPeriod": "Période de Facturation",
+    "taxReport": "Rapport Fiscal"
+  },
+  "auth": {
+    "signIn": "Connexion",
+    "signUp": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "continueWithGoogle": "Continuer avec Google",
+    "orContinueWith": "Ou continuer avec",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Vous avez déjà un compte ?",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser",
+    "newPassword": "Nouveau Mot de Passe",
+    "confirmPassword": "Confirmer le Mot de Passe",
+    "verifyEmail": "Vérifiez votre e-mail",
+    "resendVerification": "Renvoyer l'e-mail de vérification",
+    "signOutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "createAccount": "Créer votre compte",
+    "registerSubtitle": "Propriétaires — commencez à gérer votre investissement sur la Costa Tropical.",
+    "namePlaceholder": "Votre nom complet",
+    "passwordPlaceholder": "Min. 6 caractères",
+    "creating": "Création...",
+    "nameRequired": "Le nom est obligatoire",
+    "welcomeBack": "Bon retour",
+    "loginSubtitle": "Connectez-vous à votre portail propriétaire",
+    "invalidCredentials": "Identifiants invalides. Vérifiez votre e-mail et mot de passe.",
+    "signingIn": "Connexion..."
+  },
+  "tour": {
+    "next": "Suivant",
+    "back": "Retour",
+    "skip": "Passer la visite",
+    "finish": "Commencer avec HostMasters",
+    "saving": "Enregistrement...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Bienvenue chez HostMasters",
+          "desc": "Laissez-nous vous montrer tout ce que votre portail propriétaire peut faire. Cette visite rapide vous guidera à travers tous les outils disponibles."
+        },
+        "dashboard": {
+          "title": "Votre Tableau de Bord",
+          "desc": "Votre écran d'accueil affiche tout en un coup d'œil : les revenus du mois, le taux d'occupation, votre prochain hôte et l'état de votre propriété.",
+          "features": [
+            "Revenus nets avec comparaison mensuelle",
+            "Barre d'occupation avec pourcentage",
+            "Prochain hôte avec nationalité",
+            "État de la propriété",
+            "Boutons d'action rapide"
+          ]
+        },
+        "earnings": {
+          "title": "Revenus & Versements",
+          "desc": "Suivez chaque euro. Consultez vos revenus bruts, notre commission, les frais de ménage, les coûts de maintenance et votre versement net.",
+          "features": [
+            "Relevés financiers mensuels",
+            "Ventilation des commissions par réservation",
+            "Calendrier et historique des versements",
+            "Bilan annuel",
+            "Export PDF dans votre langue"
+          ]
+        },
+        "bookings": {
+          "title": "Réservations & Calendrier",
+          "desc": "Consultez chaque réservation sur Airbnb, Booking.com et les réservations directes. Bloquez des dates pour votre usage personnel.",
+          "features": [
+            "Calendrier unifié sur toutes les plateformes",
+            "Détails et nationalité des hôtes",
+            "Revenus par réservation",
+            "Blocage de dates personnelles",
+            "Suivi check-in / check-out"
+          ]
+        },
+        "care": {
+          "title": "Entretien & Maintenance",
+          "desc": "Votre propriété est inspectée après chaque checkout. Suivez les ménages, la maintenance préventive et tout problème — avec photos et rapports.",
+          "features": [
+            "Rapports d'inspection post-checkout",
+            "Suivi du planning de ménage",
+            "Journal de maintenance préventive",
+            "Signalement de problèmes avec photos",
+            "Demandes de visite en un clic"
+          ]
+        },
+        "communication": {
+          "title": "Communication Directe",
+          "desc": "Envoyez des messages à votre gestionnaire directement via la plateforme. Pas d'e-mails perdus. Tout est documenté et consultable.",
+          "features": [
+            "Messagerie in-app avec votre manager",
+            "Historique complet des conversations",
+            "Assistant IA pour réponses instantanées",
+            "Partage de documents et photos"
+          ]
+        },
+        "ai": {
+          "title": "Outils Alimentés par l'IA",
+          "desc": "HostMasters utilise l'intelligence artificielle pour maximiser vos revenus. La tarification dynamique ajuste votre prix par nuit selon 7 facteurs de marché.",
+          "features": [
+            "Tarification dynamique IA (jusqu'à +25% de revenus)",
+            "Assistant IA 24/7 avec vos données réelles",
+            "Contrôles automatiques quotidiens",
+            "Intelligence de marché & suivi concurrentiel"
+          ]
+        },
+        "reports": {
+          "title": "Rapports & Documents",
+          "desc": "Téléchargez des relevés mensuels détaillés en PDF dans votre langue préférée. Bilans annuels et transparence totale.",
+          "features": [
+            "Relevés mensuels PDF",
+            "Rapports en 9 langues",
+            "Bilan financier annuel",
+            "Détail au niveau transaction"
+          ]
+        },
+        "plan": {
+          "title": "Votre Plan",
+          "desc": "Vous pouvez consulter et améliorer votre abonnement à tout moment. Les plans supérieurs offrent des commissions réduites et des outils IA.",
+          "features": [
+            "4 plans : Starter, Basic, Mid, Premium",
+            "Commission réduite avec plans supérieurs",
+            "Fonctions IA sur Mid et Premium",
+            "Upgrade quand vous voulez"
+          ]
+        },
+        "done": {
+          "title": "Tout est prêt !",
+          "desc": "Votre portail est opérationnel. Explorez votre tableau de bord, consultez vos revenus et contactez votre manager. Bienvenue chez HostMasters."
+        }
+      }
+    }
+  },
+  "demo": {
+    "badge": "Visite de la Plateforme",
+    "title": "Tout ce dont vous avez besoin, en un seul endroit",
+    "subtitle": "Une plateforme de gestion complète conçue pour les propriétaires internationaux.",
+    "tabs": {
+      "dashboard": "Tableau de Bord",
+      "bookings": "Réservations & Calendrier",
+      "finance": "Rapports Financiers",
+      "care": "Entretien & Maintenance",
+      "communication": "Communication"
+    },
+    "dashboard": {
+      "title": "Votre propriété en un coup d'œil",
+      "desc": "Revenus en temps réel, taux d'occupation, prochain hôte et état de la propriété — tout dans un tableau de bord premium.",
+      "features": [
+        "Revenus nets ce mois",
+        "Taux d'occupation avec barre",
+        "Prochain hôte avec drapeau",
+        "État de la propriété",
+        "Actions rapides"
+      ]
+    },
+    "bookings": {
+      "title": "Visibilité totale des réservations",
+      "desc": "Voyez chaque réservation sur toutes les plateformes. Bloquez des dates pour usage personnel.",
+      "features": [
+        "Calendrier unifié",
+        "Détails et nationalité des hôtes",
+        "Dates check-in / check-out",
+        "Revenus par réservation",
+        "Blocage de dates"
+      ]
+    },
+    "finance": {
+      "title": "Finances transparentes au centime",
+      "desc": "Relevés mensuels détaillés. Voyez exactement ce que vous avez gagné et ce qui a été facturé.",
+      "features": [
+        "Ventilation des revenus bruts",
+        "Détail commissions et frais",
+        "Calcul du versement net",
+        "Rapports PDF en 9 langues",
+        "Bilan annuel"
+      ]
+    },
+    "care": {
+      "title": "Votre propriété, toujours entretenue",
+      "desc": "Suivez chaque ménage, inspection et visite de maintenance. Rapports avec photos.",
+      "features": [
+        "Ménage planifié après chaque séjour",
+        "Suivi maintenance préventive",
+        "Rapports post-checkout",
+        "Signalement avec photos",
+        "Demande de visite"
+      ]
+    },
+    "communication": {
+      "title": "Ligne directe avec votre équipe",
+      "desc": "Communiquez avec votre gestionnaire via la plateforme. Tout documenté, tout transparent.",
+      "features": [
+        "Messagerie in-app",
+        "Assistant IA",
+        "Historique notifications",
+        "Partage documents",
+        "Support multilingue"
+      ]
+    }
+  },
+  "aiTools": {
+    "badge": "Propulsé par l'IA",
+    "title": "5 outils intelligents qui travaillent pour vous",
+    "subtitle": "HostMasters n'est pas qu'une société de gestion — c'est une plateforme technologique. Nos outils IA travaillent 24/7.",
+    "tools": [
+      {
+        "name": "Tarification Dynamique IA",
+        "desc": "Algorithme analysant 7 facteurs pour fixer le prix optimal de chaque nuit.",
+        "stat": "Jusqu'à +25% de revenus",
+        "statLabel": "vs. prix fixe"
+      },
+      {
+        "name": "Assistant d'Équipe IA",
+        "desc": "Chat intelligent disponible dans chaque portail. Posez des questions sur vos revenus, réservations ou l'état de votre propriété.",
+        "stat": "24/7",
+        "statLabel": "réponses instantanées"
+      },
+      {
+        "name": "Moniteur IA",
+        "desc": "Système autonome effectuant 9 vérifications quotidiennes sur chaque réservation, versement et tâche.",
+        "stat": "9 vérifications",
+        "statLabel": "chaque jour, automatiquement"
+      },
+      {
+        "name": "Intelligence de Marché",
+        "desc": "Analyse hebdomadaire d'Airbnb et Booking.com dans la région Costa Tropical. Données réelles de la concurrence.",
+        "stat": "50+ annonces",
+        "statLabel": "suivies chaque semaine"
+      },
+      {
+        "name": "Analyse de Prix Client",
+        "desc": "Performance tarifaire de votre propriété dans le temps. Tendances saisonnières et comparaison avec le marché.",
+        "stat": "Données réelles",
+        "statLabel": "pas des estimations"
+      }
+    ]
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problème",
+      "solution": "Solution",
+      "plans": "Plans",
+      "enter": "Connexion",
+      "startFree": "Commencer gratuitement"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Votre propriété mérite",
+      "titleGold": "plus que de la gestion.",
+      "title2": "Elle mérite de l'intelligence.",
+      "subtitle": "Vous avez acheté sur la Costa Tropical pour investir — pas pour vous soucier du ménage, des hôtes difficiles ou des prix inadaptés. HostMasters gère tout avec des données réelles, des prix IA et une transparence totale.",
+      "cta": "1er mois gratuit sur le plan Premium",
+      "ctaSub": "Sans engagement. Résiliez quand vous voulez.",
+      "noLockin": "Sans engagement",
+      "intlOwners": "Propriétaires internationaux",
+      "aiPowered": "Prix alimentés par l'IA"
+    },
+    "problem": {
+      "badge": "Le problème",
+      "title": "Être propriétaire à distance ne devrait pas être si difficile",
+      "items": [
+        {
+          "title": "Prix aléatoires",
+          "desc": "Sans données de marché, la tarification est un jeu de devinettes. Vous perdez des revenus en haute saison."
+        },
+        {
+          "title": "Zéro visibilité",
+          "desc": "Vous ne savez pas ce qui se passe chez vous jusqu'à recevoir une plainte ou une facture surprise."
+        },
+        {
+          "title": "Communication lente",
+          "desc": "E-mails perdus, photos qui n'arrivent jamais, rapports qui ne viennent que quand vous insistez."
+        },
+        {
+          "title": "Commissions opaques",
+          "desc": "Vous ne savez pas combien il vous reste. Les coûts cachés rongent votre rentabilité."
+        }
+      ]
+    },
+    "solution": {
+      "badge": "La solution",
+      "title": "Gestion avec intelligence, pas avec des devinettes",
+      "subtitle": "Trois piliers qui rendent HostMasters différent de tout gestionnaire traditionnel.",
+      "items": [
+        {
+          "title": "Tarification Dynamique IA",
+          "desc": "Algorithme qui analyse la saisonnalité, les événements locaux, la concurrence et la demande en temps réel.",
+          "highlight": "Jusqu'à +25% de revenus vs. prix fixe"
+        },
+        {
+          "title": "Vos propres données, pas des estimations",
+          "desc": "Tableau de bord avec des données réelles de vos réservations, revenus et coûts. Rapports mensuels détaillés au centime.",
+          "highlight": "Transparence totale dans les chiffres"
+        },
+        {
+          "title": "Intelligence de Marché",
+          "desc": "Accès aux données du marché de la Costa Tropical : taux d'occupation par zone, prix moyens, tendances.",
+          "highlight": "Décisions basées sur des données réelles"
+        }
+      ]
+    },
+    "social": {
+      "badge": "Ce que dit le marché",
+      "title": "Une plateforme conçue pour l'avenir",
+      "items": [
+        {
+          "quote": "Le marché de la location courte durée sur la Costa Tropical croît rapidement, mais la gestion reste principalement manuelle. Une plateforme combinant IA et données réelles a un énorme potentiel.",
+          "name": "Analyse Sectorielle",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Les propriétaires investissant dans le sud de l'Espagne ont besoin de transparence et de technologie. L'écart entre les gestionnaires traditionnels et ce que la technologie permet est le terreau de l'innovation.",
+          "name": "Perspectives du Marché",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "La combinaison d'algorithmes de tarification dynamique, de données de marché en temps réel et de portails propriétaires transparents représente la prochaine génération de gestion immobilière.",
+          "name": "Perspective Technologique",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
+    "plans": {
+      "badge": "Plans",
+      "title": "Choisissez le niveau de service dont vous avez besoin",
+      "subtitle": "Tous les plans incluent une gestion complète. Plus vous investissez, plus la commission est basse.",
+      "recommended": "Recommandé",
+      "monthlyFee": "/mois",
+      "annualFee": "/an",
+      "commission": "Commission",
+      "startNow": "Commencer",
+      "firstMonthFree": "1er mois gratuit",
+      "noMonthlyFee": "Sans frais mensuels",
+      "starter": {
+        "features": [
+          "Gestion STR complète",
+          "Airbnb, Booking.com & annonces directes",
+          "Communication 24/7 avec les hôtes",
+          "Relevé mensuel propriétaire",
+          "Tableau de bord propriétaire",
+          "Ménage : €70/rotation"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Tout dans Starter",
+          "Maintenance préventive (1x/mois)",
+          "Inspection pré & post-séjour",
+          "Gestion documentaire",
+          "Relevés multilingues",
+          "Ménage : €60/rotation"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Tout dans Basic",
+          "Prix IA + Smart Lock",
+          "Réponse prioritaire : 12h proprio / 2h hôte",
+          "Relevé dans toute langue",
+          "Ménage inclus ≥5 nuits"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Tout dans Mid",
+          "Conformité fiscale (Modelo 179 + IRNR)",
+          "Upsells hôtes : transferts, courses, lessive",
+          "Réponse d'urgence sous 4h",
+          "Ménage inclus ≥3 nuits"
+        ]
+      }
+    },
+    "finalCta": {
+      "title1": "Prêt à avoir",
+      "titleGold": "un vrai contrôle",
+      "title2": "sur votre propriété ?",
+      "subtitle": "Commencez avec le plan Premium pendant 1 mois sans frais. Voyez la différence que font les données réelles et les prix IA.",
+      "cta": "Commencer 1 mois gratuit",
+      "enterPortal": "Accéder au portail",
+      "disclaimer": "Sans engagement · Sans carte bancaire · Résiliez à tout moment"
+    },
+    "footer": {
+      "tagline": "Gestion premium de locations courte durée.",
+      "copyright": "© 2026 HostMasters."
+    }
+  }
+}
