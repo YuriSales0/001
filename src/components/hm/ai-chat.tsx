@@ -19,9 +19,19 @@ const PLACEHOLDER: Record<string, string> = {
   CLIENT:  'Ex: Como está a performance da minha propriedade?',
 }
 
+/** Escape HTML entities so user/API content cannot inject tags */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 /** Lightweight markdown → HTML (bold, italic, lists, line breaks) */
 function renderMarkdown(text: string): string {
-  return text
+  return escapeHtml(text)
     // Strip common emojis that pollute the chat
     .replace(/[✅❌⚠️📅📍💰👤😊🔗✓📌🔴🟡🟢⭐🏠💡🎯📊📈📉🔧⚙️🚀💬📝🔔📢🏡🌊🏖️🛏️]/g, '')
     // Strip markdown headers → just bold text

@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
         commissionRate,
         netAmount: net,
         scheduledFor: new Date(scheduledFor),
-        platform: platform as never ?? null,
+        platform: (platform as "AIRBNB" | "BOOKING" | "DIRECT" | "OTHER") || null,
         description: description ?? null,
         status: 'SCHEDULED',
       },

@@ -98,7 +98,10 @@ export default function PropertiesPage() {
   const sync = async (id: string) => {
     setSyncing(id)
     const res = await fetch(`/api/properties/${id}/sync`, { method: 'POST' })
-    if (res.ok) setLastSync(s => ({ ...s, [id]: res.json() as unknown as SyncResult }))
+    if (res.ok) {
+      const data = await res.json() as SyncResult
+      setLastSync(s => ({ ...s, [id]: data }))
+    }
     setSyncing(null)
   }
 
