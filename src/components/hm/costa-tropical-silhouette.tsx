@@ -1,7 +1,8 @@
 /**
  * Stylized SVG silhouette of the Costa Tropical coastline
- * from Motril (east) to Nerja (west), with mountain backdrop.
- * Used as hero background element on the landing page.
+ * from Nerja (west/left) to Calahonda (east/right).
+ * Based on the real geography — mostly horizontal coast with
+ * La Herradura bay as the key feature.
  */
 export function CostaTropicalSilhouette({ className }: { className?: string }) {
   return (
@@ -12,113 +13,121 @@ export function CostaTropicalSilhouette({ className }: { className?: string }) {
       className={className}
       preserveAspectRatio="none"
     >
-      {/* Mountain silhouette (Sierra Nevada / Sierra de Almijara backdrop) */}
+      {/* Mountain silhouette — Sierra de Almijara (above Nerja/La Herradura) + Sierra Nevada foothills (east) */}
       <path
-        d="M0 280 L30 260 L60 240 L90 210 L120 190 L150 170 L170 155 L200 140 L220 130 L250 120 L270 115 L290 110 L310 105 L340 100 L360 108 L380 115 L400 105 L420 95 L440 85 L460 80 L480 78 L500 82 L520 90 L540 85 L560 75 L580 70 L600 65 L620 60 L640 65 L660 72 L680 68 L700 62 L720 58 L740 55 L760 60 L780 68 L800 75 L820 70 L840 65 L860 72 L880 80 L900 88 L920 95 L940 100 L960 110 L980 120 L1000 135 L1020 150 L1040 160 L1060 170 L1080 185 L1100 200 L1120 220 L1140 240 L1160 255 L1180 270 L1200 280 L1200 400 L0 400 Z"
-        fill="url(#mountain-gradient)"
-        opacity="0.12"
-      />
-
-      {/* Coastline — the actual Costa Tropical shore from Motril to Nerja */}
-      <path
-        d="M0 340
-           C40 338, 60 335, 100 330
-           C130 326, 150 322, 180 318
-           L210 315
-           C230 313, 245 310, 260 306
-           C280 300, 295 295, 320 290
-           C340 286, 355 284, 370 282
-           C390 280, 410 278, 430 275
-           C445 272, 460 268, 480 264
-           C500 260, 515 258, 535 256
-           C555 254, 575 252, 590 248
-           C610 244, 625 240, 645 238
-           C660 236, 672 235, 685 236
-           C700 238, 710 240, 720 238
-           C735 234, 748 228, 765 224
-           C780 220, 795 218, 810 220
-           C825 222, 835 226, 845 224
-           C860 220, 875 215, 895 212
-           C915 210, 930 212, 945 214
-           C960 216, 972 220, 985 218
-           C1000 214, 1015 210, 1035 208
-           C1055 206, 1075 208, 1095 212
-           C1115 216, 1135 222, 1155 228
-           C1175 234, 1190 240, 1200 245
+        d="M0 220
+           L40 200 L80 185 L110 170 L140 155 L170 140 L200 125
+           L230 115 L260 108 L290 100 L320 95 L350 90 L380 88
+           L410 92 L440 98 L470 95 L500 100 L530 108
+           L560 115 L590 120 L620 128 L650 135 L680 140
+           L710 148 L740 155 L770 160 L800 168 L830 175
+           L860 180 L890 185 L920 190 L950 195 L980 200
+           L1010 205 L1040 210 L1070 215 L1100 220 L1130 225
+           L1160 230 L1200 235
            L1200 400 L0 400 Z"
-        fill="url(#coast-gradient)"
-        opacity="0.08"
+        fill="url(#hm-mountain-grad)"
+        opacity="0.10"
       />
 
-      {/* Sea line — subtle wave at the coast edge */}
+      {/* Land mass above coastline */}
       <path
-        d="M0 340
-           C40 338, 60 335, 100 330
-           C130 326, 150 322, 180 318
-           L210 315
-           C230 313, 245 310, 260 306
-           C280 300, 295 295, 320 290
-           C340 286, 355 284, 370 282
-           C390 280, 410 278, 430 275
-           C445 272, 460 268, 480 264
-           C500 260, 515 258, 535 256
-           C555 254, 575 252, 590 248
-           C610 244, 625 240, 645 238
-           C660 236, 672 235, 685 236
-           C700 238, 710 240, 720 238
-           C735 234, 748 228, 765 224
-           C780 220, 795 218, 810 220
-           C825 222, 835 226, 845 224
-           C860 220, 875 215, 895 212
-           C915 210, 930 212, 945 214
-           C960 216, 972 220, 985 218
-           C1000 214, 1015 210, 1035 208
-           C1055 206, 1075 208, 1095 212
-           C1115 216, 1135 222, 1155 228
-           C1175 234, 1190 240, 1200 245"
-        stroke="url(#line-gradient)"
+        d="M0 295
+           C30 293, 50 292, 80 290
+           C110 288, 130 290, 150 292
+           C170 294, 185 298, 200 305
+           C215 312, 230 322, 245 330
+           C255 335, 262 338, 270 338
+           C280 337, 290 332, 300 325
+           C310 318, 318 312, 330 308
+           C345 302, 360 298, 380 296
+           C400 294, 420 293, 450 292
+           C480 291, 510 290, 540 290
+           C570 290, 590 291, 610 292
+           C630 293, 645 292, 660 290
+           C675 288, 685 289, 700 290
+           C720 291, 740 290, 760 290
+           C790 290, 820 291, 850 292
+           C880 293, 910 292, 940 291
+           C960 290, 980 291, 1000 293
+           C1020 295, 1040 298, 1060 302
+           C1080 306, 1095 312, 1110 318
+           C1125 324, 1140 330, 1155 336
+           C1170 342, 1185 348, 1200 352
+           L1200 400 L0 400 Z"
+        fill="url(#hm-coast-grad)"
+        opacity="0.07"
+      />
+
+      {/* Coastline stroke — the actual shore */}
+      <path
+        d="M0 295
+           C30 293, 50 292, 80 290
+           C110 288, 130 290, 150 292
+           C170 294, 185 298, 200 305
+           C215 312, 230 322, 245 330
+           C255 335, 262 338, 270 338
+           C280 337, 290 332, 300 325
+           C310 318, 318 312, 330 308
+           C345 302, 360 298, 380 296
+           C400 294, 420 293, 450 292
+           C480 291, 510 290, 540 290
+           C570 290, 590 291, 610 292
+           C630 293, 645 292, 660 290
+           C675 288, 685 289, 700 290
+           C720 291, 740 290, 760 290
+           C790 290, 820 291, 850 292
+           C880 293, 910 292, 940 291
+           C960 290, 980 291, 1000 293
+           C1020 295, 1040 298, 1060 302
+           C1080 306, 1095 312, 1110 318
+           C1125 324, 1140 330, 1155 336
+           C1170 342, 1185 348, 1200 352"
+        stroke="url(#hm-line-grad)"
         strokeWidth="1.5"
         fill="none"
-        opacity="0.25"
+        opacity="0.30"
       />
 
-      {/* City markers along the coast */}
-      {/* Motril */}
-      <circle cx="180" cy="316" r="3" fill="#C9A84C" opacity="0.5" />
-      <text x="180" y="308" textAnchor="middle" fill="#C9A84C" opacity="0.35" fontSize="9" fontFamily="system-ui">Motril</text>
+      {/* City markers */}
+      {/* Nerja (far west) */}
+      <circle cx="80" cy="288" r="2.5" fill="#C9A84C" opacity="0.6" />
+      <text x="80" y="278" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Nerja</text>
 
-      {/* Salobreña */}
-      <circle cx="370" cy="281" r="3" fill="#C9A84C" opacity="0.5" />
-      <text x="370" y="273" textAnchor="middle" fill="#C9A84C" opacity="0.35" fontSize="9" fontFamily="system-ui">Salobreña</text>
+      {/* La Herradura (in the bay) */}
+      <circle cx="270" cy="336" r="2.5" fill="#C9A84C" opacity="0.6" />
+      <text x="270" y="350" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">La Herradura</text>
 
       {/* Almuñécar */}
-      <circle cx="590" cy="247" r="3" fill="#C9A84C" opacity="0.5" />
-      <text x="590" y="239" textAnchor="middle" fill="#C9A84C" opacity="0.35" fontSize="9" fontFamily="system-ui">Almuñécar</text>
+      <circle cx="420" cy="292" r="2.5" fill="#C9A84C" opacity="0.6" />
+      <text x="420" y="282" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Almuñécar</text>
 
-      {/* La Herradura */}
-      <circle cx="810" cy="219" r="3" fill="#C9A84C" opacity="0.5" />
-      <text x="810" y="211" textAnchor="middle" fill="#C9A84C" opacity="0.35" fontSize="9" fontFamily="system-ui">La Herradura</text>
+      {/* Salobreña */}
+      <circle cx="660" cy="289" r="2.5" fill="#C9A84C" opacity="0.6" />
+      <text x="660" y="279" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Salobreña</text>
 
-      {/* Nerja */}
-      <circle cx="1035" cy="207" r="3" fill="#C9A84C" opacity="0.5" />
-      <text x="1035" y="199" textAnchor="middle" fill="#C9A84C" opacity="0.35" fontSize="9" fontFamily="system-ui">Nerja</text>
+      {/* Motril */}
+      <circle cx="880" cy="292" r="2.5" fill="#C9A84C" opacity="0.6" />
+      <text x="880" y="282" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Motril</text>
 
-      {/* Gradients */}
+      {/* Torrenueva */}
+      <circle cx="1080" cy="304" r="2.5" fill="#C9A84C" opacity="0.6" />
+      <text x="1080" y="294" textAnchor="middle" fill="#C9A84C" opacity="0.35" fontSize="9" fontFamily="system-ui">Torrenueva</text>
+
       <defs>
-        <linearGradient id="mountain-gradient" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="hm-mountain-grad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#C9A84C" />
           <stop offset="100%" stopColor="#111827" />
         </linearGradient>
-        <linearGradient id="coast-gradient" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#111827" />
-          <stop offset="30%" stopColor="#C9A84C" />
-          <stop offset="70%" stopColor="#C9A84C" />
-          <stop offset="100%" stopColor="#111827" />
-        </linearGradient>
-        <linearGradient id="line-gradient" x1="0" y1="0" x2="1" y2="0">
+        <linearGradient id="hm-coast-grad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="transparent" />
           <stop offset="20%" stopColor="#C9A84C" />
           <stop offset="80%" stopColor="#C9A84C" />
+          <stop offset="100%" stopColor="transparent" />
+        </linearGradient>
+        <linearGradient id="hm-line-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="transparent" />
+          <stop offset="15%" stopColor="#C9A84C" />
+          <stop offset="85%" stopColor="#C9A84C" />
           <stop offset="100%" stopColor="transparent" />
         </linearGradient>
       </defs>
