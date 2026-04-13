@@ -124,7 +124,7 @@ export default function RegisterPage() {
                     <button
                       key={lang.code}
                       type="button"
-                      onClick={() => setForm({ ...form, language: lang.code })}
+                      onClick={() => { setForm({ ...form, language: lang.code }); setLocale(lang.code) }}
                       className="rounded-lg border px-3 py-2.5 text-center text-sm transition-all"
                       style={{
                         background: form.language === lang.code ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.03)",
