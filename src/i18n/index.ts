@@ -1,4 +1,4 @@
-export type Locale = 'en' | 'pt' | 'es' | 'de'
+export type Locale = 'en' | 'pt' | 'es' | 'de' | 'nl' | 'fr' | 'sv' | 'da' | 'no'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Messages = Record<string, any>
@@ -8,6 +8,11 @@ export const LOCALES: { code: Locale; label: string; flag: string }[] = [
   { code: 'pt', label: 'Português',  flag: '🇵🇹' },
   { code: 'es', label: 'Español',    flag: '🇪🇸' },
   { code: 'de', label: 'Deutsch',    flag: '🇩🇪' },
+  { code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+  { code: 'fr', label: 'Français',   flag: '🇫🇷' },
+  { code: 'sv', label: 'Svenska',    flag: '🇸🇪' },
+  { code: 'da', label: 'Dansk',      flag: '🇩🇰' },
+  { code: 'no', label: 'Norsk',      flag: '🇳🇴' },
 ]
 
 const COOKIE_NAME = 'hm_locale'
@@ -58,5 +63,5 @@ export function t(
 }
 
 function isLocale(value: string): value is Locale {
-  return ['en', 'pt', 'es', 'de'].includes(value)
+  return ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da', 'no'].includes(value)
 }

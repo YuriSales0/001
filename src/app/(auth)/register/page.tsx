@@ -119,7 +119,7 @@ export default function RegisterPage() {
                   <Globe className="h-3 w-3 inline mr-1" />
                   {t("common.language")}
                 </label>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                   {LOCALES.map(lang => (
                     <button
                       key={lang.code}
