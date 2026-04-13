@@ -216,42 +216,86 @@
         "dashboard": {
           "title": "Tu Panel",
           "desc": "Tu pantalla principal muestra todo de un vistazo: los ingresos de este mes, la tasa de ocupación, tu próximo huésped y el estado de tu propiedad. Actualizado en tiempo real.",
-          "features": ["Ingresos netos con comparación mensual", "Barra de ocupación con porcentaje", "Próximo huésped con nacionalidad", "Estado de la propiedad", "Botones de acción rápida"]
+          "features": [
+            "Ingresos netos con comparación mensual",
+            "Barra de ocupación con porcentaje",
+            "Próximo huésped con nacionalidad",
+            "Estado de la propiedad",
+            "Botones de acción rápida"
+          ]
         },
         "earnings": {
           "title": "Ingresos y Pagos",
           "desc": "Controla cada euro. Consulta tus ingresos brutos, nuestra comisión, gastos de limpieza, costes de mantenimiento y tu pago neto. Todo desglosado, nada oculto.",
-          "features": ["Extractos financieros mensuales", "Desglose de comisión por reserva", "Calendario e historial de pagos", "Resumen acumulado del año", "Exportación en PDF en tu idioma"]
+          "features": [
+            "Extractos financieros mensuales",
+            "Desglose de comisión por reserva",
+            "Calendario e historial de pagos",
+            "Resumen acumulado del año",
+            "Exportación en PDF en tu idioma"
+          ]
         },
         "bookings": {
           "title": "Reservas y Calendario",
           "desc": "Consulta todas las reservas de Airbnb, Booking.com y reservas directas. Sabe quién viene, cuándo y cuánto genera cada estancia. Bloquea fechas para uso personal en cualquier momento.",
-          "features": ["Calendario unificado de todas las plataformas", "Detalles y nacionalidad del huésped", "Ingresos por reserva", "Bloqueo de fechas personales", "Seguimiento de check-in / check-out"]
+          "features": [
+            "Calendario unificado de todas las plataformas",
+            "Detalles y nacionalidad del huésped",
+            "Ingresos por reserva",
+            "Bloqueo de fechas personales",
+            "Seguimiento de check-in / check-out"
+          ]
         },
         "care": {
           "title": "Cuidado y Mantenimiento",
           "desc": "Tu propiedad se inspecciona después de cada checkout. Haz seguimiento de limpiezas, mantenimiento preventivo y cualquier incidencia — todo con fotos e informes. Solicita una visita en cualquier momento.",
-          "features": ["Informes de inspección post-checkout", "Seguimiento del calendario de limpiezas", "Registro de mantenimiento preventivo", "Informes de incidencias con fotos", "Solicitud de visitas con un clic"]
+          "features": [
+            "Informes de inspección post-checkout",
+            "Seguimiento del calendario de limpiezas",
+            "Registro de mantenimiento preventivo",
+            "Informes de incidencias con fotos",
+            "Solicitud de visitas con un clic"
+          ]
         },
         "communication": {
           "title": "Comunicación Directa",
           "desc": "Escribe a tu gestor de propiedad directamente a través de la plataforma. Sin correos perdidos, sin llamadas sin respuesta. Todo documentado y localizable. Tu asistente de IA también está disponible 24/7.",
-          "features": ["Mensajería en la plataforma con tu gestor", "Historial completo de conversaciones", "Asistente de IA para respuestas instantáneas", "Compartición de documentos y fotos"]
+          "features": [
+            "Mensajería en la plataforma con tu gestor",
+            "Historial completo de conversaciones",
+            "Asistente de IA para respuestas instantáneas",
+            "Compartición de documentos y fotos"
+          ]
         },
         "ai": {
           "title": "Herramientas con Inteligencia Artificial",
           "desc": "HostMasters utiliza inteligencia artificial para maximizar tus ingresos. El precio dinámico ajusta tu tarifa por noche en función de 7 factores de mercado. Nuestro monitor de IA revisa tu propiedad a diario en busca de anomalías.",
-          "features": ["Precio Dinámico con IA (hasta +25% de ingresos)", "Asistente de IA 24/7 con tus datos reales", "Comprobaciones diarias automatizadas de la propiedad", "Inteligencia de mercado y seguimiento de la competencia"]
+          "features": [
+            "Precio Dinámico con IA (hasta +25% de ingresos)",
+            "Asistente de IA 24/7 con tus datos reales",
+            "Comprobaciones diarias automatizadas de la propiedad",
+            "Inteligencia de mercado y seguimiento de la competencia"
+          ]
         },
         "reports": {
           "title": "Informes y Documentos",
           "desc": "Descarga extractos mensuales detallados en PDF en tu idioma preferido. Resúmenes anuales, informes preparados para impuestos y total transparencia en cada transacción.",
-          "features": ["Extractos mensuales en PDF", "Informes en EN, PT, ES, DE", "Resumen financiero anual", "Detalle a nivel de transacción"]
+          "features": [
+            "Extractos mensuales en PDF",
+            "Informes en EN, PT, ES, DE",
+            "Resumen financiero anual",
+            "Detalle a nivel de transacción"
+          ]
         },
         "plan": {
           "title": "Tu Plan",
           "desc": "Puedes consultar y mejorar tu plan de suscripción en cualquier momento. Los planes superiores desbloquean comisiones más bajas, precios con IA, integración con cerradura inteligente y soporte prioritario.",
-          "features": ["4 planes: Starter, Basic, Mid, Premium", "Menor comisión en planes superiores", "Funcionalidades de IA en Mid y Premium", "Mejora en cualquier momento, sin permanencia"]
+          "features": [
+            "4 planes: Starter, Basic, Mid, Premium",
+            "Menor comisión en planes superiores",
+            "Funcionalidades de IA en Mid y Premium",
+            "Mejora en cualquier momento, sin permanencia"
+          ]
         },
         "profile": {
           "title": "Vamos a configurar tu perfil",
@@ -264,6 +308,22 @@
         "done": {
           "title": "¡Todo listo!",
           "desc": "Tu portal está preparado. Explora tu panel, consulta tus ingresos y contacta con tu gestor en cualquier momento. Bienvenido a HostMasters."
+        },
+        "sidebar": {
+          "title": "Tu Navegación",
+          "desc": "Esta barra lateral te da acceso rápido a todas las secciones: dashboard, ingresos, reservas, mantenimiento, plan y comunicación directa con tu gestor."
+        },
+        "guest": {
+          "title": "Tu Próximo Huésped",
+          "desc": "Ve quién llega a continuación — con bandera de nacionalidad, fechas y duración de la estancia. Siempre al tanto."
+        },
+        "condition": {
+          "title": "Estado de la Propiedad",
+          "desc": "Después de cada checkout, tu propiedad se inspecciona. Ve el estado actual aquí — verde significa todo bien, los problemas aparecen inmediatamente."
+        },
+        "actions": {
+          "title": "Acciones Rápidas",
+          "desc": "Bloquea fechas para uso personal, solicita una visita de mantenimiento o consulta tu informe financiero completo — todo con un clic."
         }
       }
     }
@@ -282,27 +342,57 @@
     "dashboard": {
       "title": "Tu propiedad de un vistazo",
       "desc": "Ingresos en tiempo real, tasas de ocupación, información del próximo huésped y estado de la propiedad — todo en un panel premium. No más llamadas a tu gestor para pedir actualizaciones.",
-      "features": ["Ingresos netos de este mes", "Tasa de ocupación con barra visual", "Próximo huésped con bandera de nacionalidad", "Estado de la propiedad", "Acciones rápidas: bloquear fechas, solicitar visita, ver informes"]
+      "features": [
+        "Ingresos netos de este mes",
+        "Tasa de ocupación con barra visual",
+        "Próximo huésped con bandera de nacionalidad",
+        "Estado de la propiedad",
+        "Acciones rápidas: bloquear fechas, solicitar visita, ver informes"
+      ]
     },
     "bookings": {
       "title": "Visibilidad total de reservas",
       "desc": "Ve cada reserva en todas las plataformas — Airbnb, Booking.com y directas. Bloquea fechas para uso personal. Nunca más te sorprenderá una reserva.",
-      "features": ["Calendario unificado de todas las OTAs", "Detalles y nacionalidad del huésped", "Fechas de check-in / check-out", "Ingresos por reserva", "Bloqueo de fechas personales"]
+      "features": [
+        "Calendario unificado de todas las OTAs",
+        "Detalles y nacionalidad del huésped",
+        "Fechas de check-in / check-out",
+        "Ingresos por reserva",
+        "Bloqueo de fechas personales"
+      ]
     },
     "finance": {
       "title": "Finanzas transparentes al céntimo",
       "desc": "Extractos mensuales con desglose detallado. Ve exactamente lo que ganaste, lo que se cobró y lo que viene. Descarga informes en PDF en tu idioma.",
-      "features": ["Desglose de ingresos brutos", "Detalle de comisiones y tasas", "Cálculo del pago neto", "Informes en PDF en 4 idiomas", "Resumen acumulado del año"]
+      "features": [
+        "Desglose de ingresos brutos",
+        "Detalle de comisiones y tasas",
+        "Cálculo del pago neto",
+        "Informes en PDF en 4 idiomas",
+        "Resumen acumulado del año"
+      ]
     },
     "care": {
       "title": "Tu propiedad, siempre cuidada",
       "desc": "Haz seguimiento de cada limpieza, inspección y visita de mantenimiento. Ve informes con fotos. Conoce el estado de tu propiedad en todo momento, desde cualquier lugar.",
-      "features": ["Limpieza programada tras cada estancia", "Seguimiento de mantenimiento preventivo", "Informes de estado post-checkout", "Señalización de incidencias con fotos", "Solicita visitas en cualquier momento"]
+      "features": [
+        "Limpieza programada tras cada estancia",
+        "Seguimiento de mantenimiento preventivo",
+        "Informes de estado post-checkout",
+        "Señalización de incidencias con fotos",
+        "Solicita visitas en cualquier momento"
+      ]
     },
     "communication": {
       "title": "Línea directa con tu equipo",
       "desc": "Comunícate directamente con tu gestor a través de la plataforma. Sin correos perdidos, sin llamadas sin respuesta. Todo documentado, todo transparente.",
-      "features": ["Mensajería en la plataforma con tu gestor", "Asistente de IA para respuestas instantáneas", "Historial de notificaciones", "Compartición de documentos", "Soporte multilingüe"]
+      "features": [
+        "Mensajería en la plataforma con tu gestor",
+        "Asistente de IA para respuestas instantáneas",
+        "Historial de notificaciones",
+        "Compartición de documentos",
+        "Soporte multilingüe"
+      ]
     }
   },
   "aiTools": {
@@ -366,10 +456,22 @@
       "badge": "El problema",
       "title": "Ser propietario a distancia no debería ser tan difícil",
       "items": [
-        { "title": "Precios al azar", "desc": "Sin datos de mercado, fijar precios es pura adivinación. Pierdes ingresos en temporada alta y no atraes en temporada baja." },
-        { "title": "Cero visibilidad", "desc": "No sabes qué pasa en tu propiedad hasta que recibes una queja o una factura sorpresa." },
-        { "title": "Comunicación lenta", "desc": "Correos perdidos, fotos que nunca llegan, informes que solo aparecen cuando insistes." },
-        { "title": "Comisiones opacas", "desc": "No sabes cuánto te queda. Los costes ocultos se comen tu rentabilidad sin previo aviso." }
+        {
+          "title": "Precios al azar",
+          "desc": "Sin datos de mercado, fijar precios es pura adivinación. Pierdes ingresos en temporada alta y no atraes en temporada baja."
+        },
+        {
+          "title": "Cero visibilidad",
+          "desc": "No sabes qué pasa en tu propiedad hasta que recibes una queja o una factura sorpresa."
+        },
+        {
+          "title": "Comunicación lenta",
+          "desc": "Correos perdidos, fotos que nunca llegan, informes que solo aparecen cuando insistes."
+        },
+        {
+          "title": "Comisiones opacas",
+          "desc": "No sabes cuánto te queda. Los costes ocultos se comen tu rentabilidad sin previo aviso."
+        }
       ]
     },
     "solution": {
@@ -377,18 +479,42 @@
       "title": "Gestión con inteligencia, no adivinación",
       "subtitle": "Tres pilares que hacen a HostMasters diferente de cualquier gestor de propiedades tradicional.",
       "items": [
-        { "title": "Precio Dinámico con IA", "desc": "Algoritmo que analiza estacionalidad, eventos locales, competencia y demanda en tiempo real para fijar el precio óptimo de cada noche.", "highlight": "Hasta +25% de ingresos vs. precio fijo" },
-        { "title": "Tus propios datos, no estimaciones", "desc": "Panel con datos reales de tus reservas, ingresos y costes. Informes mensuales detallados al céntimo — sin sorpresas.", "highlight": "Transparencia total en los números" },
-        { "title": "Inteligencia de Mercado", "desc": "Acceso a datos de mercado de la Costa Tropical: tasas de ocupación por zona, precios medios, tendencias de demanda y benchmarks.", "highlight": "Decisiones basadas en datos reales" }
+        {
+          "title": "Precio Dinámico con IA",
+          "desc": "Algoritmo que analiza estacionalidad, eventos locales, competencia y demanda en tiempo real para fijar el precio óptimo de cada noche.",
+          "highlight": "Hasta +25% de ingresos vs. precio fijo"
+        },
+        {
+          "title": "Tus propios datos, no estimaciones",
+          "desc": "Panel con datos reales de tus reservas, ingresos y costes. Informes mensuales detallados al céntimo — sin sorpresas.",
+          "highlight": "Transparencia total en los números"
+        },
+        {
+          "title": "Inteligencia de Mercado",
+          "desc": "Acceso a datos de mercado de la Costa Tropical: tasas de ocupación por zona, precios medios, tendencias de demanda y benchmarks.",
+          "highlight": "Decisiones basadas en datos reales"
+        }
       ]
     },
     "social": {
       "badge": "Lo que dice el mercado",
       "title": "Una plataforma construida para el futuro",
       "items": [
-        { "quote": "El mercado de alquiler vacacional en la Costa Tropical crece rápido, pero la mayoría de la gestión sigue siendo manual. Una plataforma que combine precios con IA y datos reales tiene un enorme potencial para profesionalizar el sector.", "name": "Análisis del Sector", "origin": "European STR Market Report 2025" },
-        { "quote": "Los propietarios que invierten en el sur de España necesitan transparencia y tecnología. La brecha entre lo que ofrecen los gestores tradicionales y lo que la tecnología permite es exactamente donde ocurre la innovación.", "name": "Perspectiva de Mercado", "origin": "Costa Tropical Real Estate Trends" },
-        { "quote": "La combinación de algoritmos de precio dinámico, datos de mercado en tiempo real y portales transparentes para propietarios representa la próxima generación de gestión de propiedades — una que beneficia tanto a propietarios como a huéspedes.", "name": "Perspectiva Tecnológica", "origin": "PropTech Innovation Review" }
+        {
+          "quote": "El mercado de alquiler vacacional en la Costa Tropical crece rápido, pero la mayoría de la gestión sigue siendo manual. Una plataforma que combine precios con IA y datos reales tiene un enorme potencial para profesionalizar el sector.",
+          "name": "Análisis del Sector",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Los propietarios que invierten en el sur de España necesitan transparencia y tecnología. La brecha entre lo que ofrecen los gestores tradicionales y lo que la tecnología permite es exactamente donde ocurre la innovación.",
+          "name": "Perspectiva de Mercado",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "La combinación de algoritmos de precio dinámico, datos de mercado en tiempo real y portales transparentes para propietarios representa la próxima generación de gestión de propiedades — una que beneficia tanto a propietarios como a huéspedes.",
+          "name": "Perspectiva Tecnológica",
+          "origin": "PropTech Innovation Review"
+        }
       ]
     },
     "plans": {
@@ -403,16 +529,42 @@
       "firstMonthFree": "1er mes gratis",
       "noMonthlyFee": "Sin cuota mensual",
       "starter": {
-        "features": ["Gestión completa de VUT", "Airbnb, Booking.com y anuncios directos", "Comunicación 24/7 con huéspedes", "Extracto mensual del propietario", "Panel del propietario", "Limpieza: €70/rotación"]
+        "features": [
+          "Gestión completa de VUT",
+          "Airbnb, Booking.com y anuncios directos",
+          "Comunicación 24/7 con huéspedes",
+          "Extracto mensual del propietario",
+          "Panel del propietario",
+          "Limpieza: €70/rotación"
+        ]
       },
       "basic": {
-        "features": ["Todo en Starter", "Mantenimiento preventivo (1x/mes)", "Inspección pre y post estancia", "Gestión de documentación", "Extractos multilingüe", "Limpieza: €60/rotación"]
+        "features": [
+          "Todo en Starter",
+          "Mantenimiento preventivo (1x/mes)",
+          "Inspección pre y post estancia",
+          "Gestión de documentación",
+          "Extractos multilingüe",
+          "Limpieza: €60/rotación"
+        ]
       },
       "mid": {
-        "features": ["Todo en Basic", "Precio con IA + Smart Lock", "Respuesta prioritaria: 12h propietario / 2h huésped", "Extracto en cualquier idioma", "Limpieza incluida ≥5 noches"]
+        "features": [
+          "Todo en Basic",
+          "Precio con IA + Smart Lock",
+          "Respuesta prioritaria: 12h propietario / 2h huésped",
+          "Extracto en cualquier idioma",
+          "Limpieza incluida ≥5 noches"
+        ]
       },
       "premium": {
-        "features": ["Todo en Mid", "Cumplimiento fiscal (Modelo 179 + IRNR)", "Upsells para huéspedes: transfers, compra, lavandería", "Respuesta de emergencia en 4h", "Limpieza incluida ≥3 noches"]
+        "features": [
+          "Todo en Mid",
+          "Cumplimiento fiscal (Modelo 179 + IRNR)",
+          "Upsells para huéspedes: transfers, compra, lavandería",
+          "Respuesta de emergencia en 4h",
+          "Limpieza incluida ≥3 noches"
+        ]
       }
     },
     "finalCta": {

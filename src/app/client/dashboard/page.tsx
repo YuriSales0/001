@@ -213,7 +213,7 @@ export default function OwnerDashboard() {
       {prop ? (
         <>
           {/* Property hero card */}
-          <div className="rounded-hm border border-hm-border overflow-hidden hm-animate-in hm-stagger-2"
+          <div data-tour="earnings-hero" className="rounded-hm border border-hm-border overflow-hidden hm-animate-in hm-stagger-2"
                style={{ background: 'var(--hm-sand)' }}>
             {/* Top bar with plan */}
             <div className="px-6 py-4 border-b border-hm-border flex items-center justify-between">
@@ -253,7 +253,7 @@ export default function OwnerDashboard() {
 
             {/* Next booking + condition */}
             <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
+              <div data-tour="next-guest">
                 <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-2">
                   Next guest
                 </p>
@@ -277,7 +277,7 @@ export default function OwnerDashboard() {
                 )}
               </div>
 
-              <div>
+              <div data-tour="property-condition">
                 <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-2">
                   Property condition
                 </p>
@@ -304,7 +304,7 @@ export default function OwnerDashboard() {
           </div>
 
           {/* Care snapshot */}
-          <div className="rounded-hm border border-hm-border overflow-hidden hm-animate-in hm-stagger-3"
+          <div data-tour="care-section" className="rounded-hm border border-hm-border overflow-hidden hm-animate-in hm-stagger-3"
                style={{ background: 'var(--hm-sand)' }}>
             <div className="px-6 py-4 border-b border-hm-border flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -356,7 +356,7 @@ export default function OwnerDashboard() {
           </div>
 
           {/* Quick actions */}
-          <div className="hm-animate-in hm-stagger-4">
+          <div data-tour="quick-actions" className="hm-animate-in hm-stagger-4">
             <h2 className="text-xl font-serif font-bold text-hm-black mb-4">Quick actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link

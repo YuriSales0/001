@@ -72,7 +72,7 @@ export default async function ClientLayout({ children }: { children: React.React
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
+        <nav data-tour="sidebar-nav" className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
           {navLinks.map(link => {
             const Icon = link.icon
             return (

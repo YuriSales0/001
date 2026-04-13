@@ -216,42 +216,86 @@
         "dashboard": {
           "title": "Your Dashboard",
           "desc": "Your home screen shows everything at a glance: this month's earnings, occupancy rate, your next guest, and the condition of your property. Updated in real time.",
-          "features": ["Net earnings with monthly comparison", "Occupancy bar with percentage", "Next guest with nationality", "Property condition status", "Quick action buttons"]
+          "features": [
+            "Net earnings with monthly comparison",
+            "Occupancy bar with percentage",
+            "Next guest with nationality",
+            "Property condition status",
+            "Quick action buttons"
+          ]
         },
         "earnings": {
           "title": "Earnings & Payouts",
           "desc": "Track every euro. See your gross income, our commission, cleaning fees, maintenance costs, and your net payout. Everything itemized, nothing hidden.",
-          "features": ["Monthly financial statements", "Commission breakdown by booking", "Payout schedule and history", "Year-to-date summary", "PDF export in your language"]
+          "features": [
+            "Monthly financial statements",
+            "Commission breakdown by booking",
+            "Payout schedule and history",
+            "Year-to-date summary",
+            "PDF export in your language"
+          ]
         },
         "bookings": {
           "title": "Bookings & Calendar",
           "desc": "See every reservation across Airbnb, Booking.com, and direct bookings. Know who's coming, when, and how much each stay generates. Block dates for personal use anytime.",
-          "features": ["Unified calendar across all platforms", "Guest details and nationality", "Revenue per reservation", "Personal date blocking", "Check-in / check-out tracking"]
+          "features": [
+            "Unified calendar across all platforms",
+            "Guest details and nationality",
+            "Revenue per reservation",
+            "Personal date blocking",
+            "Check-in / check-out tracking"
+          ]
         },
         "care": {
           "title": "Care & Maintenance",
           "desc": "Your property is inspected after every checkout. Track cleanings, preventive maintenance, and any issues — all with photos and reports. Request a visit anytime.",
-          "features": ["Post-checkout inspection reports", "Cleaning schedule tracking", "Preventive maintenance log", "Issue reports with photos", "One-click visit requests"]
+          "features": [
+            "Post-checkout inspection reports",
+            "Cleaning schedule tracking",
+            "Preventive maintenance log",
+            "Issue reports with photos",
+            "One-click visit requests"
+          ]
         },
         "communication": {
           "title": "Direct Communication",
           "desc": "Message your property manager directly through the platform. No lost emails, no phone tag. Everything documented and searchable. Your AI assistant is also available 24/7.",
-          "features": ["In-app messaging with your manager", "Full conversation history", "AI assistant for instant answers", "Document and photo sharing"]
+          "features": [
+            "In-app messaging with your manager",
+            "Full conversation history",
+            "AI assistant for instant answers",
+            "Document and photo sharing"
+          ]
         },
         "ai": {
           "title": "AI-Powered Tools",
           "desc": "HostMasters uses artificial intelligence to maximize your revenue. Dynamic pricing adjusts your nightly rate based on 7 market factors. Our AI monitor checks your property daily for anomalies.",
-          "features": ["AI Dynamic Pricing (up to +25% revenue)", "24/7 AI assistant with your real data", "Daily automated property checks", "Market intelligence & competitor tracking"]
+          "features": [
+            "AI Dynamic Pricing (up to +25% revenue)",
+            "24/7 AI assistant with your real data",
+            "Daily automated property checks",
+            "Market intelligence & competitor tracking"
+          ]
         },
         "reports": {
           "title": "Reports & Documents",
           "desc": "Download detailed monthly statements as PDF in your preferred language. Annual summaries, tax-ready reports, and full transparency on every transaction.",
-          "features": ["Monthly PDF statements", "Reports in EN, PT, ES, DE", "Annual financial summary", "Transaction-level detail"]
+          "features": [
+            "Monthly PDF statements",
+            "Reports in EN, PT, ES, DE",
+            "Annual financial summary",
+            "Transaction-level detail"
+          ]
         },
         "plan": {
           "title": "Your Plan",
           "desc": "You can view and upgrade your subscription plan at any time. Higher plans unlock lower commissions, AI pricing, smart lock integration, and priority support.",
-          "features": ["4 plans: Starter, Basic, Mid, Premium", "Lower commission with higher plans", "AI features on Mid and Premium", "Upgrade anytime, no lock-in"]
+          "features": [
+            "4 plans: Starter, Basic, Mid, Premium",
+            "Lower commission with higher plans",
+            "AI features on Mid and Premium",
+            "Upgrade anytime, no lock-in"
+          ]
         },
         "profile": {
           "title": "Let's set up your profile",
@@ -264,6 +308,22 @@
         "done": {
           "title": "You're all set!",
           "desc": "Your portal is ready. Explore your dashboard, check your earnings, and contact your manager anytime. Welcome to HostMasters."
+        },
+        "sidebar": {
+          "title": "Your Navigation",
+          "desc": "This sidebar gives you quick access to every section: dashboard, earnings, bookings, property care, your plan, and direct communication with your manager."
+        },
+        "guest": {
+          "title": "Your Next Guest",
+          "desc": "See who is arriving next — with nationality flag, dates, and stay duration. Always know what is coming."
+        },
+        "condition": {
+          "title": "Property Condition",
+          "desc": "After every checkout, your property is inspected. See the current condition status here — green means all good, flagged issues appear immediately."
+        },
+        "actions": {
+          "title": "Quick Actions",
+          "desc": "Block dates for personal use, request a maintenance visit, or view your full financial report — all with one click from your dashboard."
         }
       }
     }
@@ -282,27 +342,57 @@
     "dashboard": {
       "title": "Your property at a glance",
       "desc": "Real-time earnings, occupancy rates, next guest information, and property condition — all in one premium dashboard. No more calling your manager for updates.",
-      "features": ["Net earnings this month", "Occupancy rate with visual bar", "Next guest with nationality flag", "Property condition status", "Quick actions: block dates, request visit, view reports"]
+      "features": [
+        "Net earnings this month",
+        "Occupancy rate with visual bar",
+        "Next guest with nationality flag",
+        "Property condition status",
+        "Quick actions: block dates, request visit, view reports"
+      ]
     },
     "bookings": {
       "title": "Full booking visibility",
       "desc": "See every reservation across all platforms — Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
-      "features": ["Unified calendar across all OTAs", "Guest details and nationality", "Check-in / check-out dates", "Revenue per booking", "Personal date blocking"]
+      "features": [
+        "Unified calendar across all OTAs",
+        "Guest details and nationality",
+        "Check-in / check-out dates",
+        "Revenue per booking",
+        "Personal date blocking"
+      ]
     },
     "finance": {
       "title": "Transparent finances to the cent",
       "desc": "Monthly statements with itemized breakdowns. See exactly what you earned, what was charged, and what's coming. Download PDF reports in your language.",
-      "features": ["Gross revenue breakdown", "Commission and fees detail", "Net payout calculation", "PDF reports in 4 languages", "Year-to-date summary"]
+      "features": [
+        "Gross revenue breakdown",
+        "Commission and fees detail",
+        "Net payout calculation",
+        "PDF reports in 4 languages",
+        "Year-to-date summary"
+      ]
     },
     "care": {
       "title": "Your property, always cared for",
       "desc": "Track every cleaning, inspection, and maintenance visit. See reports with photos. Know the condition of your property at all times, from anywhere.",
-      "features": ["Scheduled cleaning after each stay", "Preventive maintenance tracking", "Post-checkout condition reports", "Issue flagging with photos", "Request visits anytime"]
+      "features": [
+        "Scheduled cleaning after each stay",
+        "Preventive maintenance tracking",
+        "Post-checkout condition reports",
+        "Issue flagging with photos",
+        "Request visits anytime"
+      ]
     },
     "communication": {
       "title": "Direct line to your team",
       "desc": "Message your manager directly through the platform. No lost emails, no phone tag. Everything documented, everything transparent.",
-      "features": ["In-app messaging with manager", "AI assistant for instant answers", "Notification history", "Document sharing", "Multi-language support"]
+      "features": [
+        "In-app messaging with manager",
+        "AI assistant for instant answers",
+        "Notification history",
+        "Document sharing",
+        "Multi-language support"
+      ]
     }
   },
   "aiTools": {
@@ -366,10 +456,22 @@
       "badge": "The problem",
       "title": "Being a remote owner shouldn't be this hard",
       "items": [
-        { "title": "Random pricing", "desc": "Without market data, pricing is guesswork. You lose revenue in peaks and can't attract in low seasons." },
-        { "title": "Zero visibility", "desc": "You don't know what's happening at your property until you get a complaint or a surprise bill." },
-        { "title": "Slow communication", "desc": "Lost emails, photos that never arrive, reports that only come when you insist." },
-        { "title": "Opaque commissions", "desc": "You don't know how much is left for you. Hidden costs eat your profitability without warning." }
+        {
+          "title": "Random pricing",
+          "desc": "Without market data, pricing is guesswork. You lose revenue in peaks and can't attract in low seasons."
+        },
+        {
+          "title": "Zero visibility",
+          "desc": "You don't know what's happening at your property until you get a complaint or a surprise bill."
+        },
+        {
+          "title": "Slow communication",
+          "desc": "Lost emails, photos that never arrive, reports that only come when you insist."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don't know how much is left for you. Hidden costs eat your profitability without warning."
+        }
       ]
     },
     "solution": {
@@ -377,18 +479,42 @@
       "title": "Management with intelligence, not guesswork",
       "subtitle": "Three pillars that make HostMasters different from any traditional property manager.",
       "items": [
-        { "title": "AI Dynamic Pricing", "desc": "Algorithm that analyzes seasonality, local events, competition and real-time demand to set the optimal price for each night.", "highlight": "Up to +25% revenue vs. fixed pricing" },
-        { "title": "Your own data, not estimates", "desc": "Dashboard with real data from your bookings, revenue and costs. Detailed monthly reports to the cent — no surprises.", "highlight": "Total transparency in numbers" },
-        { "title": "Market Intelligence", "desc": "Access to Costa Tropical market data: occupancy rates by zone, average prices, demand trends and benchmarks.", "highlight": "Decisions based on real data" }
+        {
+          "title": "AI Dynamic Pricing",
+          "desc": "Algorithm that analyzes seasonality, local events, competition and real-time demand to set the optimal price for each night.",
+          "highlight": "Up to +25% revenue vs. fixed pricing"
+        },
+        {
+          "title": "Your own data, not estimates",
+          "desc": "Dashboard with real data from your bookings, revenue and costs. Detailed monthly reports to the cent — no surprises.",
+          "highlight": "Total transparency in numbers"
+        },
+        {
+          "title": "Market Intelligence",
+          "desc": "Access to Costa Tropical market data: occupancy rates by zone, average prices, demand trends and benchmarks.",
+          "highlight": "Decisions based on real data"
+        }
       ]
     },
     "social": {
       "badge": "What the market says",
       "title": "A platform built for the future",
       "items": [
-        { "quote": "The short-term rental market on the Costa Tropical is growing fast, but most management is still done manually. A platform that combines AI pricing with real data has enormous potential to professionalize the sector.", "name": "Industry Analysis", "origin": "European STR Market Report 2025" },
-        { "quote": "Property owners investing in southern Spain need transparency and technology. The gap between what traditional managers offer and what technology enables is exactly where innovation happens.", "name": "Market Outlook", "origin": "Costa Tropical Real Estate Trends" },
-        { "quote": "The combination of dynamic pricing algorithms, real-time market data and transparent owner portals represents the next generation of property management — one that benefits both owners and guests.", "name": "Technology Perspective", "origin": "PropTech Innovation Review" }
+        {
+          "quote": "The short-term rental market on the Costa Tropical is growing fast, but most management is still done manually. A platform that combines AI pricing with real data has enormous potential to professionalize the sector.",
+          "name": "Industry Analysis",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Property owners investing in southern Spain need transparency and technology. The gap between what traditional managers offer and what technology enables is exactly where innovation happens.",
+          "name": "Market Outlook",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "The combination of dynamic pricing algorithms, real-time market data and transparent owner portals represents the next generation of property management — one that benefits both owners and guests.",
+          "name": "Technology Perspective",
+          "origin": "PropTech Innovation Review"
+        }
       ]
     },
     "plans": {
@@ -403,16 +529,42 @@
       "firstMonthFree": "1st month free",
       "noMonthlyFee": "No monthly fee",
       "starter": {
-        "features": ["Full STR management", "Airbnb, Booking.com & direct listings", "24/7 guest communications", "Monthly owner statement", "Owner dashboard", "Cleaning: €70/turnover"]
+        "features": [
+          "Full STR management",
+          "Airbnb, Booking.com & direct listings",
+          "24/7 guest communications",
+          "Monthly owner statement",
+          "Owner dashboard",
+          "Cleaning: €70/turnover"
+        ]
       },
       "basic": {
-        "features": ["Everything in Starter", "Preventive maintenance (1x/month)", "Pre & post-stay inspection", "Documentation management", "Multi-language statements", "Cleaning: €60/turnover"]
+        "features": [
+          "Everything in Starter",
+          "Preventive maintenance (1x/month)",
+          "Pre & post-stay inspection",
+          "Documentation management",
+          "Multi-language statements",
+          "Cleaning: €60/turnover"
+        ]
       },
       "mid": {
-        "features": ["Everything in Basic", "AI pricing + Smart Lock", "Priority response: 12h owner / 2h guest", "Statement in any language", "Cleaning included ≥5 nights"]
+        "features": [
+          "Everything in Basic",
+          "AI pricing + Smart Lock",
+          "Priority response: 12h owner / 2h guest",
+          "Statement in any language",
+          "Cleaning included ≥5 nights"
+        ]
       },
       "premium": {
-        "features": ["Everything in Mid", "Fiscal compliance (Modelo 179 + IRNR)", "Guest upsells: transfers, grocery, laundry", "Emergency response within 4h", "Cleaning included ≥3 nights"]
+        "features": [
+          "Everything in Mid",
+          "Fiscal compliance (Modelo 179 + IRNR)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "Cleaning included ≥3 nights"
+        ]
       }
     },
     "finalCta": {

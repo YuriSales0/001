@@ -216,42 +216,86 @@
         "dashboard": {
           "title": "Ihr Dashboard",
           "desc": "Ihr Startbildschirm zeigt alles auf einen Blick: die Einnahmen dieses Monats, die Belegungsrate, Ihren nächsten Gast und den Zustand Ihrer Immobilie. In Echtzeit aktualisiert.",
-          "features": ["Nettoeinnahmen mit Monatsvergleich", "Belegungsbalken mit Prozentangabe", "Nächster Gast mit Nationalität", "Zustand der Immobilie", "Schnellaktions-Schaltflächen"]
+          "features": [
+            "Nettoeinnahmen mit Monatsvergleich",
+            "Belegungsbalken mit Prozentangabe",
+            "Nächster Gast mit Nationalität",
+            "Zustand der Immobilie",
+            "Schnellaktions-Schaltflächen"
+          ]
         },
         "earnings": {
           "title": "Einnahmen und Auszahlungen",
           "desc": "Verfolgen Sie jeden Euro. Sehen Sie Ihre Bruttoeinnahmen, unsere Provision, Reinigungskosten, Wartungskosten und Ihre Nettoauszahlung. Alles aufgeschlüsselt, nichts verborgen.",
-          "features": ["Monatliche Finanzabrechnungen", "Provisionsaufschlüsselung pro Buchung", "Auszahlungsplan und -verlauf", "Jahresübersicht bis dato", "PDF-Export in Ihrer Sprache"]
+          "features": [
+            "Monatliche Finanzabrechnungen",
+            "Provisionsaufschlüsselung pro Buchung",
+            "Auszahlungsplan und -verlauf",
+            "Jahresübersicht bis dato",
+            "PDF-Export in Ihrer Sprache"
+          ]
         },
         "bookings": {
           "title": "Buchungen und Kalender",
           "desc": "Sehen Sie alle Reservierungen von Airbnb, Booking.com und Direktbuchungen. Erfahren Sie, wer kommt, wann und wie viel jeder Aufenthalt einbringt. Blockieren Sie jederzeit Termine für die persönliche Nutzung.",
-          "features": ["Einheitlicher Kalender aller Plattformen", "Gastdetails und Nationalität", "Einnahmen pro Reservierung", "Persönliche Terminblockierung", "Check-in- / Check-out-Verfolgung"]
+          "features": [
+            "Einheitlicher Kalender aller Plattformen",
+            "Gastdetails und Nationalität",
+            "Einnahmen pro Reservierung",
+            "Persönliche Terminblockierung",
+            "Check-in- / Check-out-Verfolgung"
+          ]
         },
         "care": {
           "title": "Pflege und Wartung",
           "desc": "Ihre Immobilie wird nach jedem Checkout inspiziert. Verfolgen Sie Reinigungen, vorbeugende Wartung und etwaige Probleme — alles mit Fotos und Berichten. Fordern Sie jederzeit einen Besuch an.",
-          "features": ["Inspektionsberichte nach dem Checkout", "Nachverfolgung des Reinigungsplans", "Protokoll der vorbeugenden Wartung", "Problemberichte mit Fotos", "Besuchsanfrage mit einem Klick"]
+          "features": [
+            "Inspektionsberichte nach dem Checkout",
+            "Nachverfolgung des Reinigungsplans",
+            "Protokoll der vorbeugenden Wartung",
+            "Problemberichte mit Fotos",
+            "Besuchsanfrage mit einem Klick"
+          ]
         },
         "communication": {
           "title": "Direkte Kommunikation",
           "desc": "Schreiben Sie Ihrem Immobilienmanager direkt über die Plattform. Keine verlorenen E-Mails, kein Telefon-Ping-Pong. Alles dokumentiert und durchsuchbar. Ihr KI-Assistent ist ebenfalls rund um die Uhr verfügbar.",
-          "features": ["In-App-Nachrichten mit Ihrem Manager", "Vollständiger Gesprächsverlauf", "KI-Assistent für sofortige Antworten", "Dokumenten- und Fotofreigabe"]
+          "features": [
+            "In-App-Nachrichten mit Ihrem Manager",
+            "Vollständiger Gesprächsverlauf",
+            "KI-Assistent für sofortige Antworten",
+            "Dokumenten- und Fotofreigabe"
+          ]
         },
         "ai": {
           "title": "KI-gestützte Tools",
           "desc": "HostMasters nutzt künstliche Intelligenz, um Ihre Einnahmen zu maximieren. Die dynamische Preisgestaltung passt Ihren Nachtpreis anhand von 7 Marktfaktoren an. Unser KI-Monitor überprüft Ihre Immobilie täglich auf Auffälligkeiten.",
-          "features": ["KI-Dynamische Preisgestaltung (bis zu +25% Einnahmen)", "KI-Assistent 24/7 mit Ihren echten Daten", "Tägliche automatisierte Immobilienprüfungen", "Marktintelligenz und Wettbewerbsanalyse"]
+          "features": [
+            "KI-Dynamische Preisgestaltung (bis zu +25% Einnahmen)",
+            "KI-Assistent 24/7 mit Ihren echten Daten",
+            "Tägliche automatisierte Immobilienprüfungen",
+            "Marktintelligenz und Wettbewerbsanalyse"
+          ]
         },
         "reports": {
           "title": "Berichte und Dokumente",
           "desc": "Laden Sie detaillierte monatliche Abrechnungen als PDF in Ihrer bevorzugten Sprache herunter. Jahresübersichten, steuerfertige Berichte und volle Transparenz bei jeder Transaktion.",
-          "features": ["Monatliche PDF-Abrechnungen", "Berichte in EN, PT, ES, DE", "Jährliche Finanzübersicht", "Detail auf Transaktionsebene"]
+          "features": [
+            "Monatliche PDF-Abrechnungen",
+            "Berichte in EN, PT, ES, DE",
+            "Jährliche Finanzübersicht",
+            "Detail auf Transaktionsebene"
+          ]
         },
         "plan": {
           "title": "Ihr Plan",
           "desc": "Sie können Ihren Abonnementplan jederzeit einsehen und upgraden. Höhere Pläne bieten niedrigere Provisionen, KI-Preisgestaltung, Smart-Lock-Integration und bevorzugten Support.",
-          "features": ["4 Pläne: Starter, Basic, Mid, Premium", "Niedrigere Provision bei höheren Plänen", "KI-Funktionen bei Mid und Premium", "Jederzeit upgraden, keine Bindung"]
+          "features": [
+            "4 Pläne: Starter, Basic, Mid, Premium",
+            "Niedrigere Provision bei höheren Plänen",
+            "KI-Funktionen bei Mid und Premium",
+            "Jederzeit upgraden, keine Bindung"
+          ]
         },
         "profile": {
           "title": "Lassen Sie uns Ihr Profil einrichten",
@@ -264,6 +308,22 @@
         "done": {
           "title": "Alles bereit!",
           "desc": "Ihr Portal ist einsatzbereit. Erkunden Sie Ihr Dashboard, prüfen Sie Ihre Einnahmen und kontaktieren Sie Ihren Manager jederzeit. Willkommen bei HostMasters."
+        },
+        "sidebar": {
+          "title": "Ihre Navigation",
+          "desc": "Diese Seitenleiste gibt Ihnen schnellen Zugriff auf alle Bereiche: Dashboard, Einnahmen, Buchungen, Pflege, Plan und direkte Kommunikation mit Ihrem Manager."
+        },
+        "guest": {
+          "title": "Ihr Nächster Gast",
+          "desc": "Sehen Sie, wer als Nächstes ankommt — mit Nationalitätsflagge, Daten und Aufenthaltsdauer. Immer im Bilde."
+        },
+        "condition": {
+          "title": "Zustand der Immobilie",
+          "desc": "Nach jedem Checkout wird Ihre Immobilie inspiziert. Sehen Sie hier den aktuellen Zustand — grün bedeutet alles in Ordnung."
+        },
+        "actions": {
+          "title": "Schnellaktionen",
+          "desc": "Blockieren Sie Termine, fordern Sie einen Wartungsbesuch an oder sehen Sie Ihren vollständigen Finanzbericht — alles mit einem Klick."
         }
       }
     }
@@ -282,27 +342,57 @@
     "dashboard": {
       "title": "Ihre Immobilie auf einen Blick",
       "desc": "Einnahmen in Echtzeit, Belegungsraten, Informationen zum nächsten Gast und Zustand der Immobilie — alles in einem Premium-Dashboard. Nie wieder Ihren Manager anrufen, um Updates zu erhalten.",
-      "features": ["Nettoeinnahmen dieses Monats", "Belegungsrate mit visueller Leiste", "Nächster Gast mit Nationalitätsflagge", "Zustand der Immobilie", "Schnellaktionen: Termine blockieren, Besuch anfordern, Berichte ansehen"]
+      "features": [
+        "Nettoeinnahmen dieses Monats",
+        "Belegungsrate mit visueller Leiste",
+        "Nächster Gast mit Nationalitätsflagge",
+        "Zustand der Immobilie",
+        "Schnellaktionen: Termine blockieren, Besuch anfordern, Berichte ansehen"
+      ]
     },
     "bookings": {
       "title": "Vollständige Buchungsübersicht",
       "desc": "Sehen Sie jede Reservierung auf allen Plattformen — Airbnb, Booking.com und Direktbuchungen. Blockieren Sie Termine für die persönliche Nutzung. Lassen Sie sich nie wieder von einer Buchung überraschen.",
-      "features": ["Einheitlicher Kalender aller OTAs", "Gastdetails und Nationalität", "Check-in- / Check-out-Daten", "Einnahmen pro Buchung", "Persönliche Terminblockierung"]
+      "features": [
+        "Einheitlicher Kalender aller OTAs",
+        "Gastdetails und Nationalität",
+        "Check-in- / Check-out-Daten",
+        "Einnahmen pro Buchung",
+        "Persönliche Terminblockierung"
+      ]
     },
     "finance": {
       "title": "Transparente Finanzen auf den Cent genau",
       "desc": "Monatliche Abrechnungen mit detaillierter Aufschlüsselung. Sehen Sie genau, was Sie verdient haben, was berechnet wurde und was kommt. Laden Sie PDF-Berichte in Ihrer Sprache herunter.",
-      "features": ["Aufschlüsselung der Bruttoeinnahmen", "Details zu Provisionen und Gebühren", "Berechnung der Nettoauszahlung", "PDF-Berichte in 4 Sprachen", "Jahresübersicht bis dato"]
+      "features": [
+        "Aufschlüsselung der Bruttoeinnahmen",
+        "Details zu Provisionen und Gebühren",
+        "Berechnung der Nettoauszahlung",
+        "PDF-Berichte in 4 Sprachen",
+        "Jahresübersicht bis dato"
+      ]
     },
     "care": {
       "title": "Ihre Immobilie, stets bestens betreut",
       "desc": "Verfolgen Sie jede Reinigung, Inspektion und Wartung. Sehen Sie Berichte mit Fotos. Kennen Sie den Zustand Ihrer Immobilie jederzeit, von überall.",
-      "features": ["Geplante Reinigung nach jedem Aufenthalt", "Nachverfolgung vorbeugender Wartung", "Zustandsberichte nach dem Checkout", "Problemmeldungen mit Fotos", "Besichtigungen jederzeit anfordern"]
+      "features": [
+        "Geplante Reinigung nach jedem Aufenthalt",
+        "Nachverfolgung vorbeugender Wartung",
+        "Zustandsberichte nach dem Checkout",
+        "Problemmeldungen mit Fotos",
+        "Besichtigungen jederzeit anfordern"
+      ]
     },
     "communication": {
       "title": "Direkter Draht zu Ihrem Team",
       "desc": "Kommunizieren Sie direkt mit Ihrem Manager über die Plattform. Keine verlorenen E-Mails, kein Telefon-Ping-Pong. Alles dokumentiert, alles transparent.",
-      "features": ["In-App-Nachrichten mit Ihrem Manager", "KI-Assistent für sofortige Antworten", "Benachrichtigungsverlauf", "Dokumentenfreigabe", "Mehrsprachiger Support"]
+      "features": [
+        "In-App-Nachrichten mit Ihrem Manager",
+        "KI-Assistent für sofortige Antworten",
+        "Benachrichtigungsverlauf",
+        "Dokumentenfreigabe",
+        "Mehrsprachiger Support"
+      ]
     }
   },
   "aiTools": {
@@ -366,10 +456,22 @@
       "badge": "Das Problem",
       "title": "Fernbesitzer zu sein sollte nicht so schwer sein",
       "items": [
-        { "title": "Zufällige Preise", "desc": "Ohne Marktdaten sind Preise reines Raten. Sie verlieren Einnahmen in Spitzenzeiten und können in der Nebensaison nicht überzeugen." },
-        { "title": "Null Transparenz", "desc": "Sie wissen nicht, was in Ihrer Immobilie passiert — bis eine Beschwerde oder eine überraschende Rechnung kommt." },
-        { "title": "Langsame Kommunikation", "desc": "Verlorene E-Mails, Fotos die nie ankommen, Berichte die erst auf Nachfrage erscheinen." },
-        { "title": "Undurchsichtige Provisionen", "desc": "Sie wissen nicht, wie viel für Sie übrig bleibt. Versteckte Kosten schmälern Ihre Rendite ohne Vorwarnung." }
+        {
+          "title": "Zufällige Preise",
+          "desc": "Ohne Marktdaten sind Preise reines Raten. Sie verlieren Einnahmen in Spitzenzeiten und können in der Nebensaison nicht überzeugen."
+        },
+        {
+          "title": "Null Transparenz",
+          "desc": "Sie wissen nicht, was in Ihrer Immobilie passiert — bis eine Beschwerde oder eine überraschende Rechnung kommt."
+        },
+        {
+          "title": "Langsame Kommunikation",
+          "desc": "Verlorene E-Mails, Fotos die nie ankommen, Berichte die erst auf Nachfrage erscheinen."
+        },
+        {
+          "title": "Undurchsichtige Provisionen",
+          "desc": "Sie wissen nicht, wie viel für Sie übrig bleibt. Versteckte Kosten schmälern Ihre Rendite ohne Vorwarnung."
+        }
       ]
     },
     "solution": {
@@ -377,18 +479,42 @@
       "title": "Verwaltung mit Intelligenz, nicht Vermutung",
       "subtitle": "Drei Säulen, die HostMasters von jedem traditionellen Immobilienverwalter unterscheiden.",
       "items": [
-        { "title": "KI-Dynamische Preisgestaltung", "desc": "Algorithmus, der Saisonalität, lokale Events, Wettbewerb und Echtzeit-Nachfrage analysiert, um den optimalen Preis für jede Nacht zu setzen.", "highlight": "Bis zu +25% Einnahmen ggü. Festpreisen" },
-        { "title": "Ihre eigenen Daten, keine Schätzungen", "desc": "Dashboard mit echten Daten aus Ihren Buchungen, Einnahmen und Kosten. Detaillierte Monatsberichte auf den Cent genau — keine Überraschungen.", "highlight": "Volle Transparenz bei den Zahlen" },
-        { "title": "Marktintelligenz", "desc": "Zugang zu Marktdaten der Costa Tropical: Belegungsraten nach Zone, Durchschnittspreise, Nachfragetrends und Benchmarks.", "highlight": "Entscheidungen auf Basis echter Daten" }
+        {
+          "title": "KI-Dynamische Preisgestaltung",
+          "desc": "Algorithmus, der Saisonalität, lokale Events, Wettbewerb und Echtzeit-Nachfrage analysiert, um den optimalen Preis für jede Nacht zu setzen.",
+          "highlight": "Bis zu +25% Einnahmen ggü. Festpreisen"
+        },
+        {
+          "title": "Ihre eigenen Daten, keine Schätzungen",
+          "desc": "Dashboard mit echten Daten aus Ihren Buchungen, Einnahmen und Kosten. Detaillierte Monatsberichte auf den Cent genau — keine Überraschungen.",
+          "highlight": "Volle Transparenz bei den Zahlen"
+        },
+        {
+          "title": "Marktintelligenz",
+          "desc": "Zugang zu Marktdaten der Costa Tropical: Belegungsraten nach Zone, Durchschnittspreise, Nachfragetrends und Benchmarks.",
+          "highlight": "Entscheidungen auf Basis echter Daten"
+        }
       ]
     },
     "social": {
       "badge": "Was der Markt sagt",
       "title": "Eine Plattform für die Zukunft gebaut",
       "items": [
-        { "quote": "Der Kurzzeitvermietungsmarkt an der Costa Tropical wächst schnell, aber die meiste Verwaltung erfolgt noch manuell. Eine Plattform, die KI-Preisgestaltung mit echten Daten kombiniert, hat enormes Potenzial, den Sektor zu professionalisieren.", "name": "Branchenanalyse", "origin": "European STR Market Report 2025" },
-        { "quote": "Immobilienbesitzer, die in Südspanien investieren, brauchen Transparenz und Technologie. Die Lücke zwischen dem, was traditionelle Verwalter bieten, und dem, was Technologie ermöglicht, ist genau dort, wo Innovation entsteht.", "name": "Marktausblick", "origin": "Costa Tropical Real Estate Trends" },
-        { "quote": "Die Kombination aus dynamischen Preisalgorithmen, Echtzeit-Marktdaten und transparenten Eigentümerportalen repräsentiert die nächste Generation der Immobilienverwaltung — eine, die sowohl Eigentümern als auch Gästen zugutekommt.", "name": "Technologie-Perspektive", "origin": "PropTech Innovation Review" }
+        {
+          "quote": "Der Kurzzeitvermietungsmarkt an der Costa Tropical wächst schnell, aber die meiste Verwaltung erfolgt noch manuell. Eine Plattform, die KI-Preisgestaltung mit echten Daten kombiniert, hat enormes Potenzial, den Sektor zu professionalisieren.",
+          "name": "Branchenanalyse",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Immobilienbesitzer, die in Südspanien investieren, brauchen Transparenz und Technologie. Die Lücke zwischen dem, was traditionelle Verwalter bieten, und dem, was Technologie ermöglicht, ist genau dort, wo Innovation entsteht.",
+          "name": "Marktausblick",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "Die Kombination aus dynamischen Preisalgorithmen, Echtzeit-Marktdaten und transparenten Eigentümerportalen repräsentiert die nächste Generation der Immobilienverwaltung — eine, die sowohl Eigentümern als auch Gästen zugutekommt.",
+          "name": "Technologie-Perspektive",
+          "origin": "PropTech Innovation Review"
+        }
       ]
     },
     "plans": {
@@ -403,16 +529,42 @@
       "firstMonthFree": "1. Monat gratis",
       "noMonthlyFee": "Keine monatliche Gebühr",
       "starter": {
-        "features": ["Komplette Kurzzeitvermietungs-Verwaltung", "Airbnb, Booking.com & Direktinserate", "24/7 Gästekommunikation", "Monatliche Eigentümerabrechnung", "Eigentümer-Dashboard", "Reinigung: €70/Wechsel"]
+        "features": [
+          "Komplette Kurzzeitvermietungs-Verwaltung",
+          "Airbnb, Booking.com & Direktinserate",
+          "24/7 Gästekommunikation",
+          "Monatliche Eigentümerabrechnung",
+          "Eigentümer-Dashboard",
+          "Reinigung: €70/Wechsel"
+        ]
       },
       "basic": {
-        "features": ["Alles aus Starter", "Vorbeugende Wartung (1x/Monat)", "Inspektion vor und nach dem Aufenthalt", "Dokumentenmanagement", "Mehrsprachige Abrechnungen", "Reinigung: €60/Wechsel"]
+        "features": [
+          "Alles aus Starter",
+          "Vorbeugende Wartung (1x/Monat)",
+          "Inspektion vor und nach dem Aufenthalt",
+          "Dokumentenmanagement",
+          "Mehrsprachige Abrechnungen",
+          "Reinigung: €60/Wechsel"
+        ]
       },
       "mid": {
-        "features": ["Alles aus Basic", "KI-Preisgestaltung + Smart Lock", "Prioritätsantwort: 12h Eigentümer / 2h Gast", "Abrechnung in jeder Sprache", "Reinigung inklusive ab 5 Nächten"]
+        "features": [
+          "Alles aus Basic",
+          "KI-Preisgestaltung + Smart Lock",
+          "Prioritätsantwort: 12h Eigentümer / 2h Gast",
+          "Abrechnung in jeder Sprache",
+          "Reinigung inklusive ab 5 Nächten"
+        ]
       },
       "premium": {
-        "features": ["Alles aus Mid", "Steuerkonformität (Modelo 179 + IRNR)", "Gäste-Upsells: Transfers, Einkauf, Wäsche", "Notfallreaktion innerhalb von 4h", "Reinigung inklusive ab 3 Nächten"]
+        "features": [
+          "Alles aus Mid",
+          "Steuerkonformität (Modelo 179 + IRNR)",
+          "Gäste-Upsells: Transfers, Einkauf, Wäsche",
+          "Notfallreaktion innerhalb von 4h",
+          "Reinigung inklusive ab 3 Nächten"
+        ]
       }
     },
     "finalCta": {

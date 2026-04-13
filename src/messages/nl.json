@@ -300,6 +300,22 @@
         "done": {
           "title": "U bent helemaal klaar!",
           "desc": "Uw portaal is gereed. Verken uw dashboard, bekijk uw inkomsten en neem op elk moment contact op met uw manager. Welkom bij HostMasters."
+        },
+        "sidebar": {
+          "title": "Uw Navigatie",
+          "desc": "Deze zijbalk geeft u snel toegang tot alle secties: dashboard, inkomsten, boekingen, onderhoud, plan en directe communicatie met uw manager."
+        },
+        "guest": {
+          "title": "Uw Volgende Gast",
+          "desc": "Zie wie er als volgende aankomt — met nationaliteitsvlag, data en verblijfsduur. Altijd op de hoogte."
+        },
+        "condition": {
+          "title": "Staat van het Vastgoed",
+          "desc": "Na elke checkout wordt uw vastgoed geïnspecteerd. Bekijk de huidige status hier — groen betekent alles in orde."
+        },
+        "actions": {
+          "title": "Snelacties",
+          "desc": "Blokkeer data voor persoonlijk gebruik, vraag een onderhoudsbezoek aan of bekijk uw volledige financieel rapport — alles met één klik."
         }
       }
     }

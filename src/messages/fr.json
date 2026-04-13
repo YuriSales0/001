@@ -300,6 +300,22 @@
         "done": {
           "title": "Tout est prêt !",
           "desc": "Votre portail est opérationnel. Explorez votre tableau de bord, consultez vos revenus et contactez votre manager. Bienvenue chez HostMasters."
+        },
+        "sidebar": {
+          "title": "Votre Navigation",
+          "desc": "Cette barre latérale vous donne accès rapide à toutes les sections : tableau de bord, revenus, réservations, entretien, plan et communication directe."
+        },
+        "guest": {
+          "title": "Votre Prochain Hôte",
+          "desc": "Voyez qui arrive ensuite — avec drapeau de nationalité, dates et durée du séjour. Toujours informé."
+        },
+        "condition": {
+          "title": "État de la Propriété",
+          "desc": "Après chaque checkout, votre propriété est inspectée. Voyez l'état actuel ici — vert signifie tout va bien."
+        },
+        "actions": {
+          "title": "Actions Rapides",
+          "desc": "Bloquez des dates, demandez une visite de maintenance ou consultez votre rapport financier complet — tout en un clic."
         }
       }
     }

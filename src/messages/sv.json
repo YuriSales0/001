@@ -300,6 +300,22 @@
         "done": {
           "title": "Du är redo!",
           "desc": "Din portal är klar. Utforska din instrumentpanel, kolla dina intäkter och kontakta din manager. Välkommen till HostMasters."
+        },
+        "sidebar": {
+          "title": "Din Navigation",
+          "desc": "Denna sidopanel ger dig snabb åtkomst till alla sektioner: instrumentpanel, intäkter, bokningar, underhåll, plan och direkt kommunikation."
+        },
+        "guest": {
+          "title": "Din Nästa Gäst",
+          "desc": "Se vem som anländer härnäst — med nationalitetsflagga, datum och vistelselängd. Alltid informerad."
+        },
+        "condition": {
+          "title": "Fastighetens Skick",
+          "desc": "Efter varje utcheckning inspekteras din fastighet. Se aktuellt skick här — grönt betyder allt bra."
+        },
+        "actions": {
+          "title": "Snabbåtgärder",
+          "desc": "Blockera datum, begär ett underhållsbesök eller se din fullständiga ekonomiska rapport — allt med ett klick."
         }
       }
     }
