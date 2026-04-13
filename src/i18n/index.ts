@@ -1,4 +1,4 @@
-export type Locale = 'en' | 'pt' | 'es' | 'de' | 'nl' | 'fr' | 'sv' | 'da' | 'no'
+export type Locale = 'en' | 'pt' | 'es' | 'de' | 'nl' | 'fr' | 'sv'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Messages = Record<string, any>
@@ -11,8 +11,6 @@ export const LOCALES: { code: Locale; label: string; flag: string }[] = [
   { code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
   { code: 'fr', label: 'Français',   flag: '🇫🇷' },
   { code: 'sv', label: 'Svenska',    flag: '🇸🇪' },
-  { code: 'da', label: 'Dansk',      flag: '🇩🇰' },
-  { code: 'no', label: 'Norsk',      flag: '🇳🇴' },
 ]
 
 const COOKIE_NAME = 'hm_locale'
@@ -74,5 +72,5 @@ export function loadMessagesSync(locale: Locale): Messages {
 }
 
 function isLocale(value: string): value is Locale {
-  return ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da', 'no'].includes(value)
+  return ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv'].includes(value)
 }

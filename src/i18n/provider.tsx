@@ -44,7 +44,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       .then(res => res.json())
       .then(session => {
         const lang = session?.user?.language as Locale | undefined
-        if (lang && ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da', 'no'].includes(lang)) {
+        if (lang && ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv'].includes(lang)) {
           setLocaleState(lang)
           writeCookieLocale(lang)
         }
