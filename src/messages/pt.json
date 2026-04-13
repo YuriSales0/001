@@ -191,6 +191,73 @@
     "resendVerification": "Reenviar email de verificação",
     "signOutConfirm": "Tem a certeza que pretende terminar sessão?"
   },
+  "tour": {
+    "next": "Seguinte",
+    "back": "Voltar",
+    "skip": "Saltar tour",
+    "finish": "Começar a usar o HostMasters",
+    "saving": "A guardar...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Bem-vindo ao HostMasters",
+          "desc": "Deixe-nos mostrar-lhe tudo o que o seu portal de proprietário pode fazer. Este tour rápido vai guiá-lo por todas as ferramentas disponíveis para gerir e monitorizar a sua propriedade a partir de qualquer lugar do mundo."
+        },
+        "dashboard": {
+          "title": "O seu Painel",
+          "desc": "O seu ecrã principal mostra tudo de relance: os rendimentos deste mês, a taxa de ocupação, o próximo hóspede e o estado da sua propriedade. Atualizado em tempo real.",
+          "features": ["Rendimentos líquidos com comparação mensal", "Barra de ocupação com percentagem", "Próximo hóspede com nacionalidade", "Estado da propriedade", "Botões de ação rápida"]
+        },
+        "earnings": {
+          "title": "Rendimentos e Pagamentos",
+          "desc": "Acompanhe cada euro. Veja a sua receita bruta, a nossa comissão, custos de limpeza, custos de manutenção e o seu pagamento líquido. Tudo discriminado, nada escondido.",
+          "features": ["Extratos financeiros mensais", "Detalhe de comissão por reserva", "Calendário e histórico de pagamentos", "Resumo acumulado do ano", "Exportação em PDF no seu idioma"]
+        },
+        "bookings": {
+          "title": "Reservas e Calendário",
+          "desc": "Veja todas as reservas do Airbnb, Booking.com e reservas diretas. Saiba quem vem, quando e quanto cada estadia gera. Bloqueie datas para uso pessoal a qualquer momento.",
+          "features": ["Calendário unificado de todas as plataformas", "Detalhes e nacionalidade do hóspede", "Receita por reserva", "Bloqueio de datas pessoais", "Acompanhamento de check-in / check-out"]
+        },
+        "care": {
+          "title": "Cuidado e Manutenção",
+          "desc": "A sua propriedade é inspecionada após cada checkout. Acompanhe limpezas, manutenção preventiva e quaisquer problemas — tudo com fotografias e relatórios. Solicite uma visita a qualquer momento.",
+          "features": ["Relatórios de inspeção pós-checkout", "Acompanhamento do calendário de limpezas", "Registo de manutenção preventiva", "Relatórios de problemas com fotografias", "Pedidos de visita com um clique"]
+        },
+        "communication": {
+          "title": "Comunicação Direta",
+          "desc": "Envie mensagens ao seu gestor de propriedade diretamente pela plataforma. Sem emails perdidos, sem chamadas sem resposta. Tudo documentado e pesquisável. O seu assistente de IA também está disponível 24/7.",
+          "features": ["Mensagens na plataforma com o seu gestor", "Histórico completo de conversas", "Assistente de IA para respostas instantâneas", "Partilha de documentos e fotografias"]
+        },
+        "ai": {
+          "title": "Ferramentas com Inteligência Artificial",
+          "desc": "O HostMasters utiliza inteligência artificial para maximizar a sua receita. O preço dinâmico ajusta a sua tarifa por noite com base em 7 fatores de mercado. O nosso monitor de IA verifica a sua propriedade diariamente em busca de anomalias.",
+          "features": ["Preço Dinâmico com IA (até +25% de receita)", "Assistente de IA 24/7 com os seus dados reais", "Verificações diárias automatizadas da propriedade", "Inteligência de mercado e monitorização da concorrência"]
+        },
+        "reports": {
+          "title": "Relatórios e Documentos",
+          "desc": "Transfira extratos mensais detalhados em PDF no seu idioma preferido. Resumos anuais, relatórios prontos para fins fiscais e total transparência em cada transação.",
+          "features": ["Extratos mensais em PDF", "Relatórios em EN, PT, ES, DE", "Resumo financeiro anual", "Detalhe ao nível da transação"]
+        },
+        "plan": {
+          "title": "O seu Plano",
+          "desc": "Pode consultar e atualizar o seu plano de subscrição a qualquer momento. Planos superiores desbloqueiam comissões mais baixas, preços com IA, integração com fechadura inteligente e suporte prioritário.",
+          "features": ["4 planos: Starter, Basic, Mid, Premium", "Comissão mais baixa nos planos superiores", "Funcionalidades de IA no Mid e Premium", "Atualize a qualquer momento, sem fidelização"]
+        },
+        "profile": {
+          "title": "Vamos configurar o seu perfil",
+          "desc": "Apenas alguns detalhes para podermos personalizar a sua experiência.",
+          "nameLabel": "Nome completo",
+          "namePlaceholder": "O seu nome",
+          "phoneLabel": "Número de telefone",
+          "langLabel": "Idioma preferido"
+        },
+        "done": {
+          "title": "Está tudo pronto!",
+          "desc": "O seu portal está preparado. Explore o seu painel, consulte os seus rendimentos e contacte o seu gestor a qualquer momento. Bem-vindo ao HostMasters."
+        }
+      }
+    }
+  },
   "demo": {
     "badge": "Tour pela Plataforma",
     "title": "Tudo o que precisa, num só lugar",

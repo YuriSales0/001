@@ -191,6 +191,73 @@
     "resendVerification": "Resend verification email",
     "signOutConfirm": "Are you sure you want to sign out?"
   },
+  "tour": {
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip tour",
+    "finish": "Start using HostMasters",
+    "saving": "Saving...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Welcome to HostMasters",
+          "desc": "Let us show you everything your owner portal can do. This quick tour will walk you through all the tools available to manage and monitor your property from anywhere in the world."
+        },
+        "dashboard": {
+          "title": "Your Dashboard",
+          "desc": "Your home screen shows everything at a glance: this month's earnings, occupancy rate, your next guest, and the condition of your property. Updated in real time.",
+          "features": ["Net earnings with monthly comparison", "Occupancy bar with percentage", "Next guest with nationality", "Property condition status", "Quick action buttons"]
+        },
+        "earnings": {
+          "title": "Earnings & Payouts",
+          "desc": "Track every euro. See your gross income, our commission, cleaning fees, maintenance costs, and your net payout. Everything itemized, nothing hidden.",
+          "features": ["Monthly financial statements", "Commission breakdown by booking", "Payout schedule and history", "Year-to-date summary", "PDF export in your language"]
+        },
+        "bookings": {
+          "title": "Bookings & Calendar",
+          "desc": "See every reservation across Airbnb, Booking.com, and direct bookings. Know who's coming, when, and how much each stay generates. Block dates for personal use anytime.",
+          "features": ["Unified calendar across all platforms", "Guest details and nationality", "Revenue per reservation", "Personal date blocking", "Check-in / check-out tracking"]
+        },
+        "care": {
+          "title": "Care & Maintenance",
+          "desc": "Your property is inspected after every checkout. Track cleanings, preventive maintenance, and any issues — all with photos and reports. Request a visit anytime.",
+          "features": ["Post-checkout inspection reports", "Cleaning schedule tracking", "Preventive maintenance log", "Issue reports with photos", "One-click visit requests"]
+        },
+        "communication": {
+          "title": "Direct Communication",
+          "desc": "Message your property manager directly through the platform. No lost emails, no phone tag. Everything documented and searchable. Your AI assistant is also available 24/7.",
+          "features": ["In-app messaging with your manager", "Full conversation history", "AI assistant for instant answers", "Document and photo sharing"]
+        },
+        "ai": {
+          "title": "AI-Powered Tools",
+          "desc": "HostMasters uses artificial intelligence to maximize your revenue. Dynamic pricing adjusts your nightly rate based on 7 market factors. Our AI monitor checks your property daily for anomalies.",
+          "features": ["AI Dynamic Pricing (up to +25% revenue)", "24/7 AI assistant with your real data", "Daily automated property checks", "Market intelligence & competitor tracking"]
+        },
+        "reports": {
+          "title": "Reports & Documents",
+          "desc": "Download detailed monthly statements as PDF in your preferred language. Annual summaries, tax-ready reports, and full transparency on every transaction.",
+          "features": ["Monthly PDF statements", "Reports in EN, PT, ES, DE", "Annual financial summary", "Transaction-level detail"]
+        },
+        "plan": {
+          "title": "Your Plan",
+          "desc": "You can view and upgrade your subscription plan at any time. Higher plans unlock lower commissions, AI pricing, smart lock integration, and priority support.",
+          "features": ["4 plans: Starter, Basic, Mid, Premium", "Lower commission with higher plans", "AI features on Mid and Premium", "Upgrade anytime, no lock-in"]
+        },
+        "profile": {
+          "title": "Let's set up your profile",
+          "desc": "Just a few details so we can personalize your experience.",
+          "nameLabel": "Full name",
+          "namePlaceholder": "Your name",
+          "phoneLabel": "Phone number",
+          "langLabel": "Preferred language"
+        },
+        "done": {
+          "title": "You're all set!",
+          "desc": "Your portal is ready. Explore your dashboard, check your earnings, and contact your manager anytime. Welcome to HostMasters."
+        }
+      }
+    }
+  },
   "demo": {
     "badge": "Platform Tour",
     "title": "Everything you need, in one place",

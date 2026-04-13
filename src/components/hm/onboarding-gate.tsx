@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { ClientTour } from './client-tour'
 import { OnboardingWizard } from './onboarding-wizard'
 
 type Props = {
@@ -9,8 +10,8 @@ type Props = {
 }
 
 /**
- * Wraps page content and shows onboarding wizard if user hasn't completed it.
- * Include in layout.tsx for Manager, Crew, Client portals.
+ * Wraps page content and shows onboarding tour/wizard if user hasn't completed it.
+ * CLIENT gets the interactive platform tour. MANAGER/CREW get the setup wizard.
  */
 export function OnboardingGate({ role, children }: Props) {
   const [needsOnboarding, setNeedsOnboarding] = useState<boolean | null>(null)
@@ -28,12 +29,16 @@ export function OnboardingGate({ role, children }: Props) {
   // Still checking
   if (needsOnboarding === null) return <>{children}</>
 
-  // Show wizard
+  // Show tour/wizard
   if (needsOnboarding) {
     return (
       <>
         {children}
-        <OnboardingWizard role={role} onComplete={() => setNeedsOnboarding(false)} />
+        {role === 'CLIENT' ? (
+          <ClientTour onComplete={() => setNeedsOnboarding(false)} />
+        ) : (
+          <OnboardingWizard role={role} onComplete={() => setNeedsOnboarding(false)} />
+        )}
       </>
     )
   }

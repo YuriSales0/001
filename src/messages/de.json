@@ -191,6 +191,73 @@
     "resendVerification": "Bestätigungsmail erneut senden",
     "signOutConfirm": "Möchten Sie sich wirklich abmelden?"
   },
+  "tour": {
+    "next": "Weiter",
+    "back": "Zurück",
+    "skip": "Tour überspringen",
+    "finish": "HostMasters jetzt nutzen",
+    "saving": "Wird gespeichert...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Willkommen bei HostMasters",
+          "desc": "Lassen Sie uns Ihnen zeigen, was Ihr Eigentümerportal alles kann. Dieser kurze Rundgang führt Sie durch alle verfügbaren Tools, mit denen Sie Ihre Immobilie von überall auf der Welt verwalten und überwachen können."
+        },
+        "dashboard": {
+          "title": "Ihr Dashboard",
+          "desc": "Ihr Startbildschirm zeigt alles auf einen Blick: die Einnahmen dieses Monats, die Belegungsrate, Ihren nächsten Gast und den Zustand Ihrer Immobilie. In Echtzeit aktualisiert.",
+          "features": ["Nettoeinnahmen mit Monatsvergleich", "Belegungsbalken mit Prozentangabe", "Nächster Gast mit Nationalität", "Zustand der Immobilie", "Schnellaktions-Schaltflächen"]
+        },
+        "earnings": {
+          "title": "Einnahmen und Auszahlungen",
+          "desc": "Verfolgen Sie jeden Euro. Sehen Sie Ihre Bruttoeinnahmen, unsere Provision, Reinigungskosten, Wartungskosten und Ihre Nettoauszahlung. Alles aufgeschlüsselt, nichts verborgen.",
+          "features": ["Monatliche Finanzabrechnungen", "Provisionsaufschlüsselung pro Buchung", "Auszahlungsplan und -verlauf", "Jahresübersicht bis dato", "PDF-Export in Ihrer Sprache"]
+        },
+        "bookings": {
+          "title": "Buchungen und Kalender",
+          "desc": "Sehen Sie alle Reservierungen von Airbnb, Booking.com und Direktbuchungen. Erfahren Sie, wer kommt, wann und wie viel jeder Aufenthalt einbringt. Blockieren Sie jederzeit Termine für die persönliche Nutzung.",
+          "features": ["Einheitlicher Kalender aller Plattformen", "Gastdetails und Nationalität", "Einnahmen pro Reservierung", "Persönliche Terminblockierung", "Check-in- / Check-out-Verfolgung"]
+        },
+        "care": {
+          "title": "Pflege und Wartung",
+          "desc": "Ihre Immobilie wird nach jedem Checkout inspiziert. Verfolgen Sie Reinigungen, vorbeugende Wartung und etwaige Probleme — alles mit Fotos und Berichten. Fordern Sie jederzeit einen Besuch an.",
+          "features": ["Inspektionsberichte nach dem Checkout", "Nachverfolgung des Reinigungsplans", "Protokoll der vorbeugenden Wartung", "Problemberichte mit Fotos", "Besuchsanfrage mit einem Klick"]
+        },
+        "communication": {
+          "title": "Direkte Kommunikation",
+          "desc": "Schreiben Sie Ihrem Immobilienmanager direkt über die Plattform. Keine verlorenen E-Mails, kein Telefon-Ping-Pong. Alles dokumentiert und durchsuchbar. Ihr KI-Assistent ist ebenfalls rund um die Uhr verfügbar.",
+          "features": ["In-App-Nachrichten mit Ihrem Manager", "Vollständiger Gesprächsverlauf", "KI-Assistent für sofortige Antworten", "Dokumenten- und Fotofreigabe"]
+        },
+        "ai": {
+          "title": "KI-gestützte Tools",
+          "desc": "HostMasters nutzt künstliche Intelligenz, um Ihre Einnahmen zu maximieren. Die dynamische Preisgestaltung passt Ihren Nachtpreis anhand von 7 Marktfaktoren an. Unser KI-Monitor überprüft Ihre Immobilie täglich auf Auffälligkeiten.",
+          "features": ["KI-Dynamische Preisgestaltung (bis zu +25% Einnahmen)", "KI-Assistent 24/7 mit Ihren echten Daten", "Tägliche automatisierte Immobilienprüfungen", "Marktintelligenz und Wettbewerbsanalyse"]
+        },
+        "reports": {
+          "title": "Berichte und Dokumente",
+          "desc": "Laden Sie detaillierte monatliche Abrechnungen als PDF in Ihrer bevorzugten Sprache herunter. Jahresübersichten, steuerfertige Berichte und volle Transparenz bei jeder Transaktion.",
+          "features": ["Monatliche PDF-Abrechnungen", "Berichte in EN, PT, ES, DE", "Jährliche Finanzübersicht", "Detail auf Transaktionsebene"]
+        },
+        "plan": {
+          "title": "Ihr Plan",
+          "desc": "Sie können Ihren Abonnementplan jederzeit einsehen und upgraden. Höhere Pläne bieten niedrigere Provisionen, KI-Preisgestaltung, Smart-Lock-Integration und bevorzugten Support.",
+          "features": ["4 Pläne: Starter, Basic, Mid, Premium", "Niedrigere Provision bei höheren Plänen", "KI-Funktionen bei Mid und Premium", "Jederzeit upgraden, keine Bindung"]
+        },
+        "profile": {
+          "title": "Lassen Sie uns Ihr Profil einrichten",
+          "desc": "Nur ein paar Angaben, damit wir Ihr Erlebnis personalisieren können.",
+          "nameLabel": "Vollständiger Name",
+          "namePlaceholder": "Ihr Name",
+          "phoneLabel": "Telefonnummer",
+          "langLabel": "Bevorzugte Sprache"
+        },
+        "done": {
+          "title": "Alles bereit!",
+          "desc": "Ihr Portal ist einsatzbereit. Erkunden Sie Ihr Dashboard, prüfen Sie Ihre Einnahmen und kontaktieren Sie Ihren Manager jederzeit. Willkommen bei HostMasters."
+        }
+      }
+    }
+  },
   "demo": {
     "badge": "Plattform-Tour",
     "title": "Alles, was Sie brauchen, an einem Ort",
