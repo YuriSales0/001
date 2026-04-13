@@ -32,7 +32,7 @@ export async function PATCH(request: NextRequest) {
   if (phone       !== undefined) data.phone          = phone
   if (bio         !== undefined) data.bio            = bio
   if (image       !== undefined) data.image          = image
-  if (language    !== undefined && ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv'].includes(language))
+  if (language    !== undefined && ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da'].includes(language))
     data.language = language
   if (commissionRate !== undefined && ['ADMIN','MANAGER','CREW'].includes(user.role))
     data.commissionRate = commissionRate
