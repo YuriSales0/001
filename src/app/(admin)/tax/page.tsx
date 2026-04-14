@@ -141,11 +141,15 @@ export default function AdminTaxPage() {
               onEdit={() => setEditingId(o.id)}
               onCancel={() => setEditingId(null)}
               onSave={async (data) => {
-                await fetch(`/api/tax-obligations/${o.id}`, {
+                const res = await fetch(`/api/tax-obligations/${o.id}`, {
                   method: "PATCH",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify(data),
                 })
+                if (!res.ok) {
+                  alert('Failed to save changes')
+                  return
+                }
                 setEditingId(null)
                 load()
               }}
@@ -298,7 +302,12 @@ function NewObligationModal({
       }),
     })
     setSaving(false)
-    if (res.ok) onCreated()
+    if (res.ok) {
+      onCreated()
+    } else {
+      const err = await res.json().catch(() => ({}))
+      alert('Failed to create: ' + (err.error || 'unknown error'))
+    }
   }
 
   return (
