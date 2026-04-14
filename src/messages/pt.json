@@ -91,7 +91,8 @@
     "ytdEarnings": "Rendimento Acumulado do Ano",
     "payoutHistory": "Histórico de Pagamentos",
     "pendingPayout": "Pagamento Pendente",
-    "paidOut": "Pago"
+    "paidOut": "Pago",
+    "taxCompliance": "Fiscal"
   },
   "manager": {
     "overview": "Visão Geral",

@@ -166,6 +166,7 @@ model User {
   managerConversations Conversation[] @relation("ManagerConversations")
   sentMessages         Message[]      @relation("SentMessages")
   campaigns            Campaign[]     @relation("CampaignCreator")
+  taxObligations       TaxObligation[]
 }
 
 model Account {
@@ -201,6 +202,49 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+enum TaxObligationType {
+  VUT_LICENSE          // Licença turística (Junta de Andalucía)
+  MODELO_179           // Declaração trimestral de hóspedes (Agência Tributária)
+  IRNR_MODELO_210      // Imposto de renda não-residentes (trimestral)
+  NIE                  // Número de identificação de estrangeiro
+  ENERGY_CERTIFICATE   // Certificado energético (10 anos)
+  FISCAL_REPRESENTATIVE // Representante fiscal para não-residentes
+  IBI                  // Imposto sobre bens imóveis (anual)
+  OTHER
+}
+
+enum TaxObligationStatus {
+  NOT_STARTED    // Ainda não iniciado
+  IN_PROGRESS    // A tratar
+  ACTION_REQUIRED // Falta documento/acção do cliente
+  COMPLETED      // Feito para este período
+  EXPIRED        // Prazo passou sem acção
+  NOT_APPLICABLE // Não se aplica a este cliente
+}
+
+model TaxObligation {
+  id              String              @id @default(cuid())
+  userId          String              // CLIENT owner
+  propertyId      String?             // opcional: algumas obrigações são por propriedade
+  type            TaxObligationType
+  status          TaxObligationStatus @default(NOT_STARTED)
+  periodLabel     String              // ex: "Q1 2026", "2026", "Uma vez"
+  dueDate         DateTime?           // próximo prazo
+  completedAt     DateTime?
+  documentUrl     String?             // link para PDF/comprovativo
+  notes           String?             // nota interna do Admin/Manager
+  handledBy       String?             // ADMIN que tratou
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+
+  @@index([userId, type])
+  @@index([dueDate])
+  @@index([status])
 }
 
 model Property {
@@ -242,6 +286,7 @@ model Property {
   invoices       Invoice[]
   pricingPoints  PricingDataPoint[]
   checklistItems PropertyChecklistItem[]
+  taxObligations TaxObligation[]
 }
 
 model Invoice {

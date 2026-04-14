@@ -91,7 +91,8 @@
     "ytdEarnings": "Indtægter i År",
     "payoutHistory": "Udbetalingshistorik",
     "pendingPayout": "Afventende Udbetaling",
-    "paidOut": "Udbetalt"
+    "paidOut": "Udbetalt",
+    "taxCompliance": "Skat & Compliance"
   },
   "manager": {
     "overview": "Oversigt",

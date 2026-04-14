@@ -4,7 +4,7 @@ import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import {
   Home, TrendingUp, CalendarDays, Star, MessageCircle, Building2,
-  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles,
+  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles, FileText,
 } from 'lucide-react'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
 import { AiChat } from '@/components/hm/ai-chat'
@@ -26,6 +26,7 @@ export default async function ClientLayout({ children }: { children: React.React
     { href: '/client/financials', label: t(msgs, 'owner.monthlyEarnings'),   icon: TrendingUp },
     { href: '/client/bookings',   label: t(msgs, 'owner.myReservations'),    icon: CalendarDays },
     { href: '/client/care',       label: t(msgs, 'common.maintenance'),      icon: Wrench },
+    { href: '/client/tax',        label: t(msgs, 'owner.taxCompliance'),     icon: FileText },
     { href: '/client/plan',       label: t(msgs, 'common.myPlan'),           icon: Star },
     { href: '/client/messages',   label: t(msgs, 'owner.contactManager'),    icon: MessageCircle },
   ]

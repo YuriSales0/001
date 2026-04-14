@@ -91,7 +91,8 @@
     "ytdEarnings": "Revenus depuis le Début de l'Année",
     "payoutHistory": "Historique des Versements",
     "pendingPayout": "Versement en Attente",
-    "paidOut": "Versé"
+    "paidOut": "Versé",
+    "taxCompliance": "Fiscalité"
   },
   "manager": {
     "overview": "Aperçu",

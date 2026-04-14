@@ -91,7 +91,8 @@
     "ytdEarnings": "Bisherige Jahreseinnahmen",
     "payoutHistory": "Auszahlungsverlauf",
     "pendingPayout": "Ausstehende Auszahlung",
-    "paidOut": "Ausgezahlt"
+    "paidOut": "Ausgezahlt",
+    "taxCompliance": "Steuern & Compliance"
   },
   "manager": {
     "overview": "Übersicht",
