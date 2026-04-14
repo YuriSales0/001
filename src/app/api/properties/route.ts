@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { createdAt: 'desc' },
+      take: 500,
     })
 
     return NextResponse.json(properties)

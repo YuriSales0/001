@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { checkIn: 'desc' },
+      take: 500,
     })
 
     return NextResponse.json(reservations)

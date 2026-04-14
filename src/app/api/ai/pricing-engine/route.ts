@@ -57,6 +57,8 @@ export async function GET(request: NextRequest) {
         select: { amount: true, checkIn: true, checkOut: true },
       },
     },
+    orderBy: { createdAt: 'desc' },
+    take: 500,
   })
 
   // Get all competitor listings with recent prices
@@ -71,6 +73,8 @@ export async function GET(request: NextRequest) {
       rating: true,
       isSuperhost: true,
     },
+    orderBy: { createdAt: 'desc' },
+    take: 500,
   })
 
   // Auto-detect zone for each property

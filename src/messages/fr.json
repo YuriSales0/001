@@ -47,6 +47,7 @@
     "created": "Créé avec succès",
     "deleted": "Supprimé avec succès",
     "error": "Une erreur est survenue",
+    "tryAgain": "Réessayer",
     "required": "Champ obligatoire",
     "invalidEmail": "Adresse e-mail invalide",
     "myProfile": "Mon Profil",

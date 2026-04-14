@@ -47,6 +47,7 @@
     "created": "Creado correctamente",
     "deleted": "Eliminado correctamente",
     "error": "Algo salió mal",
+    "tryAgain": "Intentar de Nuevo",
     "required": "Campo obligatorio",
     "invalidEmail": "Dirección de correo no válida",
     "myProfile": "Mi Perfil",

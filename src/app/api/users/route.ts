@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
     where,
     select: { id: true, name: true, email: true, role: true, phone: true, managerId: true },
     orderBy: { name: 'asc' },
+    take: 500,
   })
   return NextResponse.json(users)
 }

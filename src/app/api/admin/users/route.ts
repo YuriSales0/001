@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
       manager: { select: { id: true, name: true, email: true } },
     },
     orderBy: { createdAt: 'desc' },
+    take: 500,
   })
   return NextResponse.json(users)
 }

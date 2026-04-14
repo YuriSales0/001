@@ -47,6 +47,7 @@
     "created": "Erfolgreich erstellt",
     "deleted": "Erfolgreich gelöscht",
     "error": "Etwas ist schiefgelaufen",
+    "tryAgain": "Erneut Versuchen",
     "required": "Pflichtfeld",
     "invalidEmail": "Ungültige E-Mail-Adresse",
     "myProfile": "Mein Profil",

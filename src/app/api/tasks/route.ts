@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { dueDate: 'asc' },
+      take: 500,
     })
 
     return NextResponse.json(tasks)

@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
       createdBy: { select: { id: true, name: true, email: true } },
     },
     orderBy: { createdAt: 'desc' },
+    take: 500,
   })
   return NextResponse.json(invoices)
 }

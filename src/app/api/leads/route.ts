@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     where,
     include: LEAD_INCLUDE,
     orderBy: { createdAt: 'desc' },
+    take: 500,
   })
 
   return NextResponse.json(leads)

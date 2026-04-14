@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
         reservation: { select: { id: true, guestName: true, checkIn: true, checkOut: true } },
       },
       orderBy: { scheduledFor: 'asc' },
+      take: 500,
     })
 
     return NextResponse.json(payouts)

@@ -9,19 +9,7 @@ import {
   Building2, X, User, ChevronRight,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const navLinks = [
-  { href: "/dashboard",     label: "Dashboard",    icon: Home },
-  { href: "/crm",           label: "CRM",          icon: BarChart3 },
-  { href: "/calendar",      label: "Calendar",     icon: Calendar },
-  { href: "/reservations",  label: "Reservations", icon: CalendarDays },
-  { href: "/maintenance",   label: "Maintenance",  icon: Wrench },
-  { href: "/setup",         label: "Setup",        icon: FileText },
-  { href: "/my-properties", label: "Properties",   icon: Building2 },
-  { href: "/payouts",       label: "Payouts",      icon: Wallet },
-  { href: "/team",          label: "Team",         icon: Users },
-  { href: "/messages",      label: "Messages",     icon: MessageCircle },
-]
+import { useLocale } from "@/i18n/provider"
 
 interface OwnerLayoutProps {
   children: React.ReactNode
@@ -31,6 +19,20 @@ interface OwnerLayoutProps {
 export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const { t } = useLocale()
+
+  const navLinks = [
+    { href: "/dashboard",     label: t('common.dashboard'),    icon: Home },
+    { href: "/crm",           label: "CRM",                    icon: BarChart3 },
+    { href: "/calendar",      label: t('common.calendar'),     icon: Calendar },
+    { href: "/reservations",  label: t('common.reservations'), icon: CalendarDays },
+    { href: "/maintenance",   label: t('common.maintenance'),  icon: Wrench },
+    { href: "/setup",         label: t('common.setup'),        icon: FileText },
+    { href: "/my-properties", label: t('common.properties'),   icon: Building2 },
+    { href: "/payouts",       label: t('common.payouts'),      icon: Wallet },
+    { href: "/team",          label: t('common.team'),         icon: Users },
+    { href: "/messages",      label: t('common.messages'),     icon: MessageCircle },
+  ]
 
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
@@ -111,7 +113,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
             style={pathname === "/profile" ? { background: 'rgba(201,168,76,0.15)', color: '#C9A84C' } : {}}
           >
             <User className="h-4 w-4 shrink-0" />
-            My Profile
+            {t('common.myProfile')}
           </Link>
           <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
             {user?.image ? (
