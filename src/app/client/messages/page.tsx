@@ -17,29 +17,41 @@ export default function ClientMessagesPage() {
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
   const [noManager, setNoManager] = useState(false)
+  const [loadError, setLoadError] = useState(false)
   const [myId, setMyId] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   // Load conversation list (creates/finds the client's conv)
   const loadConv = async () => {
-    const res = await fetch('/api/conversations')
-    if (!res.ok) {
-      setNoManager(true)
-      return
+    try {
+      const res = await fetch('/api/conversations')
+      if (!res.ok) {
+        setNoManager(true)
+        return
+      }
+      const data: Conversation[] = await res.json()
+      if (data.length === 0) { setNoManager(true); return }
+      setConv(data[0])
+      fetchMessages(data[0].id)
+    } catch {
+      setLoadError(true)
     }
-    const data: Conversation[] = await res.json()
-    if (data.length === 0) { setNoManager(true); return }
-    setConv(data[0])
-    fetchMessages(data[0].id)
   }
 
   const fetchMessages = async (id: string) => {
-    const res = await fetch(`/api/conversations/${id}/messages`)
-    if (res.ok) {
-      const msgs: Message[] = await res.json()
-      setMessages(msgs)
-      if (msgs.length > 0) setMyId(prev => prev) // keep
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    try {
+      const res = await fetch(`/api/conversations/${id}/messages`)
+      if (res.ok) {
+        const msgs: Message[] = await res.json()
+        setMessages(msgs)
+        if (msgs.length > 0) setMyId(prev => prev) // keep
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+        setLoadError(false)
+      } else {
+        setLoadError(true)
+      }
+    } catch {
+      setLoadError(true)
     }
   }
 
@@ -66,13 +78,14 @@ export default function ClientMessagesPage() {
   const send = async () => {
     if (!conv || !text.trim()) return
     setSending(true)
-    await fetch(`/api/conversations/${conv.id}/messages`, {
+    const res = await fetch(`/api/conversations/${conv.id}/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ body: text }),
-    })
-    setText('')
+    }).catch(() => null)
     setSending(false)
+    if (!res || !res.ok) { alert('Failed to send message'); return }
+    setText('')
     fetchMessages(conv.id)
   }
 
@@ -83,6 +96,12 @@ export default function ClientMessagesPage() {
         <h2 className="text-lg font-semibold text-gray-700 mb-1">Sem gestor atribuído</h2>
         <p className="text-sm text-gray-500">Contacta o administrador para te atribuir um gestor.</p>
       </div>
+    )
+  }
+
+  if (!conv && loadError) {
+    return (
+      <div className="p-4 text-sm text-red-500">Failed to load messages. Try refreshing.</div>
     )
   }
 

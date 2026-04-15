@@ -125,6 +125,7 @@ export default function ClientCarePage() {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
 
   const [showRequest, setShowRequest] = useState(false)
   const [requesting, setRequesting] = useState(false)
@@ -139,19 +140,24 @@ export default function ClientCarePage() {
 
   const load = async () => {
     setLoading(true)
-    const [tRes, rRes, pRes] = await Promise.all([
-      fetch("/api/tasks"),
-      fetch("/api/reservations"),
-      fetch("/api/properties"),
-    ])
-    if (tRes.ok) setTasks(await tRes.json())
-    if (rRes.ok) setReservations(await rRes.json())
-    if (pRes.ok) {
+    setLoadError(false)
+    try {
+      const [tRes, rRes, pRes] = await Promise.all([
+        fetch("/api/tasks"),
+        fetch("/api/reservations"),
+        fetch("/api/properties"),
+      ])
+      if (!tRes.ok || !rRes.ok || !pRes.ok) throw new Error()
+      setTasks(await tRes.json())
+      setReservations(await rRes.json())
       const props = await pRes.json()
       setProperties(props)
       if (props.length > 0) setReqForm(f => ({ ...f, propertyId: f.propertyId || props[0].id }))
+    } catch {
+      setLoadError(true)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
   useEffect(() => { load() }, [])
 
@@ -220,6 +226,12 @@ export default function ClientCarePage() {
         <div className="h-32 rounded-hm bg-hm-sand" />
         <div className="h-64 rounded-hm bg-hm-sand" />
       </div>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
     )
   }
 

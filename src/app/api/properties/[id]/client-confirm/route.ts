@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { PropertyStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
@@ -24,7 +25,7 @@ export async function POST(
 
   const updated = await prisma.property.update({
     where: { id: params.id },
-    data: { status: 'PENDING_APPROVAL' as never },
+    data: { status: PropertyStatus.PENDING_APPROVAL },
     select: { id: true, status: true },
   })
 

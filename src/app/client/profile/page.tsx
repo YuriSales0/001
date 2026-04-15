@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, FileText, Download, Star, User } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -182,6 +183,7 @@ async function downloadDoc(type: "management" | "rules" | "guide", ownerName: st
 }
 
 export default function ClientProfilePage() {
+  const { t } = useLocale()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -218,24 +220,24 @@ export default function ClientProfilePage() {
       body: JSON.stringify(form),
     })
     if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000) }
-    else { const d = await res.json(); setError(d.error ?? "Failed to save") }
+    else { const d = await res.json(); setError(d.error ?? t('profile.failedToSave')) }
     setSaving(false)
   }
 
   const savePassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setPwError(""); setPwSaved(false)
-    if (pw.next !== pw.confirm) { setPwError("Passwords do not match"); return }
-    if (pw.next.length < 8) { setPwError("Password must be at least 8 characters"); return }
+    if (pw.next !== pw.confirm) { setPwError(t('profile.passwordsDoNotMatch')); return }
+    if (pw.next.length < 8) { setPwError(t('profile.passwordMinLength')); return }
     const res = await fetch("/api/profile", {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ currentPassword: pw.current, newPassword: pw.next }),
     })
     if (res.ok) { setPwSaved(true); setPw({ current: "", next: "", confirm: "" }); setTimeout(() => setPwSaved(false), 3000) }
-    else { const d = await res.json(); setPwError(d.error ?? "Failed to update password") }
+    else { const d = await res.json(); setPwError(d.error ?? t('profile.failedToUpdatePassword')) }
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Loading…</div>
+  if (loading) return <div className="p-8 text-sm text-gray-400">{t('common.loading')}</div>
 
   const plan = profile?.subscriptionPlan ?? "STARTER"
   const ownerName = profile?.name ?? profile?.email ?? "Owner"
@@ -243,8 +245,8 @@ export default function ClientProfilePage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: 'var(--hm-black)' }}>My Profile</h1>
-        <p className="text-sm text-gray-500">Manage your account and download your documents.</p>
+        <h1 className="text-2xl font-bold" style={{ color: 'var(--hm-black)' }}>{t('common.myProfile')}</h1>
+        <p className="text-sm text-gray-500">{t('profile.subtitle')}</p>
       </div>
 
       {/* Photo + identity */}

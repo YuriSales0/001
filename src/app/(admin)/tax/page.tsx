@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { FileText, Plus, Filter, CheckCircle2, Clock, AlertTriangle, Edit2, Save, X } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type Obligation = {
   id: string
@@ -45,6 +46,7 @@ const fmtDate = (s: string | null) =>
   s ? new Date(s).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—"
 
 export default function AdminTaxPage() {
+  const { t } = useLocale()
   const [obligations, setObligations] = useState<Obligation[]>([])
   const [clients, setClients] = useState<Client[]>([])
   const [properties, setProperties] = useState<Property[]>([])
@@ -90,34 +92,34 @@ export default function AdminTaxPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Tax & Compliance</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Manage fiscal obligations for all clients</p>
+          <h1 className="text-2xl font-bold text-navy-900">{t('admin.tax')}</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{t('admin.taxSubtitle')}</p>
         </div>
         <button
           onClick={() => setShowNewModal(true)}
           className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 transition-colors"
         >
-          <Plus className="h-4 w-4" /> New obligation
+          <Plus className="h-4 w-4" /> {t('admin.newObligation')}
         </button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard icon={FileText} label="Total tracked" value={stats.total} color="text-navy-700" />
-        <StatCard icon={AlertTriangle} label="Action required" value={stats.actionRequired} color="text-red-600" />
-        <StatCard icon={Clock} label="Due in 30 days" value={stats.upcoming} color="text-amber-600" />
-        <StatCard icon={CheckCircle2} label="Completed" value={stats.completed} color="text-green-600" />
+        <StatCard icon={FileText} label={t('admin.totalTracked')} value={stats.total} color="text-navy-700" />
+        <StatCard icon={AlertTriangle} label={t('admin.actionRequired')} value={stats.actionRequired} color="text-red-600" />
+        <StatCard icon={Clock} label={t('admin.dueIn30d')} value={stats.upcoming} color="text-amber-600" />
+        <StatCard icon={CheckCircle2} label={t('manager.completed')} value={stats.completed} color="text-green-600" />
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 bg-white rounded-xl border p-3">
         <Filter className="h-4 w-4 text-gray-400" />
         <select value={filter} onChange={e => setFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
-          <option value="all">All statuses</option>
+          <option value="all">{t('admin.allStatuses')}</option>
           {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
         <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
-          <option value="">All clients</option>
+          <option value="">{t('admin.allClients')}</option>
           {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email}</option>)}
         </select>
         <span className="text-xs text-gray-400 ml-auto">{visible.length} item{visible.length !== 1 ? "s" : ""}</span>
@@ -125,7 +127,7 @@ export default function AdminTaxPage() {
 
       {/* List */}
       {loading ? (
-        <div className="text-center py-10 text-sm text-gray-400">Loading…</div>
+        <div className="text-center py-10 text-sm text-gray-400">{t('common.loading')}</div>
       ) : visible.length === 0 ? (
         <div className="bg-white rounded-xl border p-10 text-center text-sm text-gray-400">
           No obligations match the current filters.

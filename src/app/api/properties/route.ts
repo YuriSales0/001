@@ -12,7 +12,20 @@ export async function GET(request: NextRequest) {
 
     const where: Record<string, unknown> = {}
     if (user.role === 'CLIENT') where.ownerId = user.id
-    else if (user.role === 'MANAGER') where.owner = { managerId: user.id }
+    else if (user.role === 'MANAGER') {
+      if (ownerId) {
+        const owner = await prisma.user.findUnique({
+          where: { id: ownerId },
+          select: { managerId: true },
+        })
+        if (owner?.managerId !== user.id) {
+          return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        }
+        where.ownerId = ownerId
+      } else {
+        where.owner = { managerId: user.id }
+      }
+    }
     else if (ownerId) where.ownerId = ownerId
 
     const properties = await prisma.property.findMany({

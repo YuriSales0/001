@@ -30,19 +30,24 @@ export default function CrewEarningsPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [profile, setProfile] = useState<CrewProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/tasks').then(r => r.ok ? r.json() : []),
-      fetch('/api/me').then(r => r.ok ? r.json() : null),
+      fetch('/api/tasks').then(r => { if (!r.ok) throw new Error(); return r.json() }),
+      fetch('/api/me').then(r => { if (!r.ok) throw new Error(); return r.json() }),
     ]).then(([t, p]) => {
-      setTasks(t)
+      setTasks(Array.isArray(t) ? t : [])
       setProfile(p)
+    }).catch(() => {
+      setLoadError(true)
+    }).finally(() => {
       setLoading(false)
     })
   }, [])
 
   if (loading) return <div className="p-6 text-sm text-gray-400">A carregar...</div>
+  if (loadError) return <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
 
   const contractType = profile?.crewContractType ?? 'FREELANCER'
   const monthlyRate = profile?.crewMonthlyRate ?? 0
