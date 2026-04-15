@@ -66,8 +66,18 @@ export default function ManagerMessagesPage() {
 
   useEffect(() => {
     if (!active) return
-    const id = setInterval(() => { fetchMessages(active.id); loadConvs() }, 4000)
-    return () => clearInterval(id)
+    const tick = () => {
+      if (!document.hidden) { fetchMessages(active.id); loadConvs() }
+    }
+    const id = setInterval(tick, 4000)
+    const onVisible = () => {
+      if (!document.hidden) { fetchMessages(active.id); loadConvs() }
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [active])
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])

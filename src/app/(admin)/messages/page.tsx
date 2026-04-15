@@ -36,8 +36,18 @@ export default function AdminMessagesPage() {
   useEffect(() => {
     if (!active) return
     fetchMessages(active.id)
-    const id = setInterval(() => fetchMessages(active.id), 4000)
-    return () => clearInterval(id)
+    const tick = () => {
+      if (!document.hidden) fetchMessages(active.id)
+    }
+    const id = setInterval(tick, 4000)
+    const onVisible = () => {
+      if (!document.hidden) fetchMessages(active.id)
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [active])
 
   const fetchMessages = async (id: string) => {

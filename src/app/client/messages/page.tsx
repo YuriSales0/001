@@ -63,11 +63,21 @@ export default function ClientMessagesPage() {
     loadConv()
   }, [])
 
-  // Poll every 4s
+  // Poll every 4s (paused when tab hidden)
   useEffect(() => {
     if (!conv) return
-    const id = setInterval(() => fetchMessages(conv.id), 4000)
-    return () => clearInterval(id)
+    const tick = () => {
+      if (!document.hidden) fetchMessages(conv.id)
+    }
+    const id = setInterval(tick, 4000)
+    const onVisible = () => {
+      if (!document.hidden) fetchMessages(conv.id)
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [conv])
 
   // Scroll to bottom on new messages

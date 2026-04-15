@@ -23,23 +23,23 @@ type Client = { id: string; name: string | null; email: string; subscriptionPlan
 type Property = { id: string; name: string; ownerId: string }
 
 const TYPES = [
-  { value: "VUT_LICENSE",          label: "VUT — Tourist License" },
-  { value: "MODELO_179",           label: "Modelo 179" },
-  { value: "IRNR_MODELO_210",      label: "IRNR Modelo 210" },
-  { value: "NIE",                  label: "NIE" },
-  { value: "ENERGY_CERTIFICATE",   label: "Energy Certificate" },
-  { value: "FISCAL_REPRESENTATIVE", label: "Fiscal Representative" },
-  { value: "IBI",                  label: "IBI" },
-  { value: "OTHER",                label: "Other" },
+  { value: "VUT_LICENSE",          labelKey: "admin.taxType.VUT_LICENSE",          fallback: "VUT — Tourist License" },
+  { value: "MODELO_179",           labelKey: "admin.taxType.MODELO_179",           fallback: "Modelo 179" },
+  { value: "IRNR_MODELO_210",      labelKey: "admin.taxType.IRNR_MODELO_210",      fallback: "IRNR Modelo 210" },
+  { value: "NIE",                  labelKey: "admin.taxType.NIE",                  fallback: "NIE" },
+  { value: "ENERGY_CERTIFICATE",   labelKey: "admin.taxType.ENERGY_CERTIFICATE",   fallback: "Energy Certificate" },
+  { value: "FISCAL_REPRESENTATIVE", labelKey: "admin.taxType.FISCAL_REPRESENTATIVE", fallback: "Fiscal Representative" },
+  { value: "IBI",                  labelKey: "admin.taxType.IBI",                  fallback: "IBI" },
+  { value: "OTHER",                labelKey: "admin.taxType.OTHER",                fallback: "Other" },
 ]
 
 const STATUSES = [
-  { value: "NOT_STARTED",     label: "Not started",     color: "bg-gray-100 text-gray-700" },
-  { value: "IN_PROGRESS",     label: "In progress",     color: "bg-blue-100 text-blue-700" },
-  { value: "ACTION_REQUIRED", label: "Action required", color: "bg-amber-100 text-amber-700" },
-  { value: "COMPLETED",       label: "Completed",       color: "bg-green-100 text-green-700" },
-  { value: "EXPIRED",         label: "Expired",         color: "bg-red-100 text-red-700" },
-  { value: "NOT_APPLICABLE",  label: "N/A",             color: "bg-gray-50 text-gray-400" },
+  { value: "NOT_STARTED",     labelKey: "admin.taxStatus.NOT_STARTED",     fallback: "Not started",     color: "bg-gray-100 text-gray-700" },
+  { value: "IN_PROGRESS",     labelKey: "admin.taxStatus.IN_PROGRESS",     fallback: "In progress",     color: "bg-blue-100 text-blue-700" },
+  { value: "ACTION_REQUIRED", labelKey: "admin.taxStatus.ACTION_REQUIRED", fallback: "Action required", color: "bg-amber-100 text-amber-700" },
+  { value: "COMPLETED",       labelKey: "admin.taxStatus.COMPLETED",       fallback: "Completed",       color: "bg-green-100 text-green-700" },
+  { value: "EXPIRED",         labelKey: "admin.taxStatus.EXPIRED",         fallback: "Expired",         color: "bg-red-100 text-red-700" },
+  { value: "NOT_APPLICABLE",  labelKey: "admin.taxStatus.NOT_APPLICABLE",  fallback: "N/A",             color: "bg-gray-50 text-gray-400" },
 ]
 
 const fmtDate = (s: string | null) =>
@@ -116,7 +116,7 @@ export default function AdminTaxPage() {
         <Filter className="h-4 w-4 text-gray-400" />
         <select value={filter} onChange={e => setFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
           <option value="all">{t('admin.allStatuses')}</option>
-          {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+          {STATUSES.map(s => <option key={s.value} value={s.value}>{t(s.labelKey)}</option>)}
         </select>
         <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
           <option value="">{t('admin.allClients')}</option>
@@ -130,7 +130,7 @@ export default function AdminTaxPage() {
         <div className="text-center py-10 text-sm text-gray-400">{t('common.loading')}</div>
       ) : visible.length === 0 ? (
         <div className="bg-white rounded-xl border p-10 text-center text-sm text-gray-400">
-          No obligations match the current filters.
+          {t('admin.noObligationsMatch')}
         </div>
       ) : (
         <div className="bg-white rounded-xl border divide-y">
@@ -149,7 +149,7 @@ export default function AdminTaxPage() {
                   body: JSON.stringify(data),
                 })
                 if (!res.ok) {
-                  alert('Failed to save changes')
+                  alert(t('admin.failedToSave'))
                   return
                 }
                 setEditingId(null)
@@ -196,45 +196,46 @@ function ObligationRow({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSave: (data: any) => Promise<void>
 }) {
+  const { t } = useLocale()
   const [status, setStatus] = useState(o.status)
   const [dueDate, setDueDate] = useState(o.dueDate?.slice(0, 10) ?? "")
   const [notes, setNotes] = useState(o.notes ?? "")
   const [documentUrl, setDocumentUrl] = useState(o.documentUrl ?? "")
 
   const statusMeta = STATUSES.find(s => s.value === o.status)
-  const typeMeta = TYPES.find(t => t.value === o.type)
+  const typeMeta = TYPES.find(ty => ty.value === o.type)
 
   if (editing) {
     return (
       <div className="p-4 bg-gray-50 space-y-3">
         <div className="font-semibold text-navy-900 text-sm">
-          {typeMeta?.label} · {o.user.name ?? o.user.email} · {o.periodLabel}
+          {typeMeta ? t(typeMeta.labelKey) : o.type} · {o.user.name ?? o.user.email} · {o.periodLabel}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Status</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.status')}</label>
             <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
-              {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+              {STATUSES.map(s => <option key={s.value} value={s.value}>{t(s.labelKey)}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Due date</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t('crew.dueDate')}</label>
             <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
           </div>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">Document URL</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.documentUrl')}</label>
           <input value={documentUrl} onChange={e => setDocumentUrl(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="https://..." />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">Notes</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.notes')}</label>
           <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="w-full rounded-lg border px-3 py-2 text-sm" />
         </div>
         <div className="flex gap-2 justify-end">
-          <button onClick={onCancel} className="rounded-lg border px-4 py-1.5 text-sm hover:bg-gray-100"><X className="h-3.5 w-3.5 inline mr-1" />Cancel</button>
+          <button onClick={onCancel} className="rounded-lg border px-4 py-1.5 text-sm hover:bg-gray-100"><X className="h-3.5 w-3.5 inline mr-1" />{t('common.cancel')}</button>
           <button onClick={() => onSave({ status, dueDate: dueDate || null, notes, documentUrl })}
             className="rounded-lg bg-navy-900 text-white px-4 py-1.5 text-sm font-semibold hover:bg-navy-800">
-            <Save className="h-3.5 w-3.5 inline mr-1" /> Save
+            <Save className="h-3.5 w-3.5 inline mr-1" /> {t('common.save')}
           </button>
         </div>
       </div>
@@ -246,9 +247,9 @@ function ObligationRow({
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="font-semibold text-navy-900 text-sm">{typeMeta?.label ?? o.type}</span>
+            <span className="font-semibold text-navy-900 text-sm">{typeMeta ? t(typeMeta.labelKey) : o.type}</span>
             <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${statusMeta?.color}`}>
-              {statusMeta?.label}
+              {statusMeta ? t(statusMeta.labelKey) : o.status}
             </span>
             <span className="text-xs text-gray-500">· {o.periodLabel}</span>
           </div>
@@ -260,9 +261,9 @@ function ObligationRow({
         </div>
         <div className="text-right shrink-0">
           <p className="text-xs text-gray-500">{fmtDate(o.dueDate)}</p>
-          {o.documentUrl && <a href={o.documentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">📎 Document</a>}
+          {o.documentUrl && <a href={o.documentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">📎 {t('admin.document')}</a>}
           <button onClick={onEdit} className="block ml-auto mt-1 text-xs text-navy-700 hover:text-navy-900">
-            <Edit2 className="h-3 w-3 inline mr-0.5" /> Edit
+            <Edit2 className="h-3 w-3 inline mr-0.5" /> {t('common.edit')}
           </button>
         </div>
       </div>
@@ -278,6 +279,7 @@ function NewObligationModal({
   onClose: () => void
   onCreated: () => void
 }) {
+  const { t } = useLocale()
   const [userId, setUserId] = useState("")
   const [propertyId, setPropertyId] = useState("")
   const [type, setType] = useState("VUT_LICENSE")
@@ -308,7 +310,7 @@ function NewObligationModal({
       onCreated()
     } else {
       const err = await res.json().catch(() => ({}))
-      alert('Failed to create: ' + (err.error || 'unknown error'))
+      alert(t('admin.failedToCreate') + ': ' + (err.error || 'unknown error'))
     }
   }
 
@@ -316,52 +318,52 @@ function NewObligationModal({
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
         <div className="px-6 py-4 border-b flex items-center justify-between">
-          <h3 className="font-bold text-navy-900">New tax obligation</h3>
+          <h3 className="font-bold text-navy-900">{t('admin.newTaxObligation')}</h3>
           <button onClick={onClose}><X className="h-4 w-4" /></button>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Client</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.client')}</label>
             <select value={userId} onChange={e => { setUserId(e.target.value); setPropertyId("") }} className="w-full rounded-lg border px-3 py-2 text-sm">
-              <option value="">— Select client —</option>
+              <option value="">{t('admin.selectClient')}</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email} ({c.subscriptionPlan ?? "—"})</option>)}
             </select>
           </div>
           {userId && clientProperties.length > 0 && (
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Property (optional)</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.propertyOptional')}</label>
               <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
-                <option value="">— None (client-level obligation) —</option>
+                <option value="">{t('admin.noProperty')}</option>
                 {clientProperties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </div>
           )}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Type</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.typeLabel')}</label>
             <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
-              {TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+              {TYPES.map(ty => <option key={ty.value} value={ty.value}>{t(ty.labelKey)}</option>)}
             </select>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Period</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.period')}</label>
               <input value={periodLabel} onChange={e => setPeriodLabel(e.target.value)} placeholder="e.g. Q1 2026, 2026, Once" className="w-full rounded-lg border px-3 py-2 text-sm" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">Due date</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">{t('crew.dueDate')}</label>
               <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Notes (visible to client)</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.notesVisibleToClient')}</label>
             <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="w-full rounded-lg border px-3 py-2 text-sm" />
           </div>
         </div>
         <div className="px-6 py-4 border-t flex justify-end gap-2">
-          <button onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
+          <button onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
           <button onClick={submit} disabled={!userId || !periodLabel || saving}
             className="rounded-lg bg-navy-900 text-white px-5 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
-            {saving ? "Creating…" : "Create"}
+            {saving ? t('admin.creating') : t('admin.create')}
           </button>
         </div>
       </div>
