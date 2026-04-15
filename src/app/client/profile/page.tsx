@@ -273,26 +273,26 @@ export default function ClientProfilePage() {
             <p className="font-semibold" style={{ color: 'var(--hm-black)' }}>{profile?.name ?? profile?.email}</p>
             <p className="text-xs text-gray-500">{profile?.email}</p>
             <span className={`mt-1 inline-block rounded px-2 py-0.5 text-[10px] font-bold ${PLAN_COLOR[plan]}`}>
-              {plan} Plan
+              {plan} {t('profile.planSuffix')}
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Full name</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('profile.fullName')}</label>
             <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
               style={{ '--tw-ring-color': 'var(--hm-gold)' } as React.CSSProperties} />
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Phone</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')}</label>
             <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
               placeholder="+34 600 000 000" />
           </div>
           <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Email</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('auth.email')}</label>
             <input value={profile?.email ?? ""} disabled
               className="w-full rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-500 cursor-not-allowed" />
           </div>
@@ -300,11 +300,11 @@ export default function ClientProfilePage() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
         <div className="flex items-center justify-between pt-1">
-          {saved && <span className="text-sm font-medium" style={{ color: 'var(--hm-green)' }}>Saved successfully</span>}
+          {saved && <span className="text-sm font-medium" style={{ color: 'var(--hm-green)' }}>{t('profile.savedSuccessfully')}</span>}
           <button type="submit" disabled={saving}
             className="ml-auto inline-flex items-center gap-2 rounded-xl text-white px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
             style={{ background: 'var(--hm-black)' }}>
-            <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save changes"}
+            <Save className="h-4 w-4" /> {saving ? t('profile.saving') : t('profile.saveChanges')}
           </button>
         </div>
       </form>
@@ -313,7 +313,7 @@ export default function ClientProfilePage() {
       <div className="rounded-xl border bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <Star className="h-4 w-4" style={{ color: 'var(--hm-gold)' }} />
-          <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>Subscription Plan</span>
+          <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>{t('profile.subscriptionPlan')}</span>
         </div>
         <div className="flex items-center justify-between">
           <div>
@@ -321,16 +321,16 @@ export default function ClientProfilePage() {
             <p className="text-xs text-gray-500 mt-1.5">{PLAN_DESC[plan]}</p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-400">Status</p>
+            <p className="text-xs text-gray-400">{t('common.status')}</p>
             <p className={`text-sm font-semibold ${profile?.subscriptionStatus === 'ACTIVE' ? 'text-emerald-600' : 'text-amber-600'}`}>
-              {profile?.subscriptionStatus ?? "Active"}
+              {profile?.subscriptionStatus ?? t('common.active')}
             </p>
           </div>
         </div>
         <a href="/client/plan"
           className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-3 py-1.5 border hover:bg-gray-50 transition-colors"
           style={{ color: 'var(--hm-gold-dk)' }}>
-          View plan details →
+          {t('profile.viewPlanDetails')} →
         </a>
       </div>
 
@@ -338,7 +338,7 @@ export default function ClientProfilePage() {
       <div className="rounded-xl border bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <FileText className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>Your Documents</span>
+          <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>{t('profile.yourDocuments')}</span>
         </div>
         <div className="space-y-3">
           {[
@@ -359,7 +359,7 @@ export default function ClientProfilePage() {
                 onClick={() => downloadDoc(doc.type, ownerName)}
                 className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex-shrink-0"
               >
-                <Download className="h-3 w-3" /> Download
+                <Download className="h-3 w-3" /> {t('common.download')}
               </button>
             </div>
           ))}
@@ -370,10 +370,10 @@ export default function ClientProfilePage() {
       <form onSubmit={savePassword} className="rounded-xl border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>Change password</span>
+          <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>{t('profile.changePassword')}</span>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[["Current password", "current"], ["New password", "next"], ["Confirm new", "confirm"]].map(([label, key]) => (
+          {[[t('profile.currentPassword'), "current"], [t('profile.newPassword'), "next"], [t('profile.confirmNew'), "confirm"]].map(([label, key]) => (
             <div key={key}>
               <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
               <input type="password" value={pw[key as keyof typeof pw]}
@@ -384,10 +384,10 @@ export default function ClientProfilePage() {
         </div>
         {pwError && <p className="text-sm text-red-600">{pwError}</p>}
         <div className="flex items-center justify-between">
-          {pwSaved && <span className="text-sm font-medium text-emerald-600">Password updated</span>}
+          {pwSaved && <span className="text-sm font-medium text-emerald-600">{t('profile.passwordUpdated')}</span>}
           <button type="submit"
             className="ml-auto inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white text-gray-700 px-4 py-2.5 text-sm font-medium hover:bg-gray-50">
-            Update password
+            {t('profile.updatePassword')}
           </button>
         </div>
       </form>
