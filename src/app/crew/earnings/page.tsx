@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Wallet, TrendingUp, TrendingDown, Minus, CheckCircle2, Clock } from 'lucide-react'
+import { Wallet, TrendingUp, TrendingDown, Minus, CheckCircle2, Clock, Zap } from 'lucide-react'
 
 type Task = {
   id: string
@@ -98,6 +98,21 @@ export default function CrewEarningsPage() {
         <p className="text-sm text-gray-500 mt-1">
           Contrato: <span className="font-semibold">{contractType === 'MONTHLY' ? `Mensal (${fmtEUR(monthlyRate)}/mês)` : `Freelancer (${fmtEUR(taskRate)}/tarefa)`}</span>
         </p>
+      </div>
+
+      {/* 24h payout banner */}
+      <div className="rounded-xl border p-4 flex items-start gap-3" style={{ background: 'linear-gradient(90deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%)', borderColor: 'rgba(34,197,94,0.25)' }}>
+        <div className="h-9 w-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(34,197,94,0.15)' }}>
+          <Zap className="h-4.5 w-4.5 text-green-700" />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-green-900">Pagamento em 24h</p>
+          <p className="text-xs text-green-800/80 mt-0.5">
+            {contractType === 'MONTHLY'
+              ? `Recebes ${fmtEUR(monthlyRate)}/mês creditado no dia 1 de cada mês.`
+              : 'Sempre que o proprietário paga o payout da reserva, recebes a tua parte em até 24h por transferência via plataforma. Sem esperar fim de mês.'}
+          </p>
+        </div>
       </div>
 
       {/* KPIs */}

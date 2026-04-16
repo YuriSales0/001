@@ -198,16 +198,16 @@ export default function ManagerReferralPage() {
       <div className="grid grid-cols-2 gap-3">
         <StatCard
           icon={Users}
-          label="Clients from this link"
+          label="Clients in my portfolio"
           value={data.stats.clientCount}
-          hint="Property owners registered through your link"
+          hint="Property owners registered through your link or assigned to you"
           color="#C9A84C"
         />
         <StatCard
           icon={TrendingUp}
-          label="Leads attributed"
+          label="Leads in my pipeline"
           value={data.stats.leadCount}
-          hint="Total inquiries tagged to your link"
+          hint="Open opportunities you can still convert into clients"
           color="#2A7A4F"
         />
       </div>

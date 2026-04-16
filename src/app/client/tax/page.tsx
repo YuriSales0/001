@@ -103,28 +103,81 @@ export default function ClientTaxPage() {
           </p>
         </div>
 
+        {/* Risk callout — what you're exposed to without compliance */}
+        <div className="rounded-hm border-2 border-red-300 p-6" style={{ background: "rgba(239,68,68,0.04)" }}>
+          <div className="flex items-start gap-3 mb-4">
+            <div className="h-9 w-9 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(239,68,68,0.15)" }}>
+              <AlertTriangle className="h-5 w-5 text-red-600" />
+            </div>
+            <div>
+              <h2 className="font-serif font-bold text-hm-black text-lg">What unmanaged compliance costs you</h2>
+              <p className="font-sans text-sm text-hm-slate/70 mt-0.5">
+                Real fines from the Junta de Andalucía and Agencia Tributaria for short-term rental owners in 2025.
+              </p>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <FineCard
+              label="No VUT licence"
+              fine="€3,000 – €30,000"
+              detail="Operating without registered tourist licence (Decreto 28/2016, Junta de Andalucía)"
+            />
+            <FineCard
+              label="No NRU registration"
+              fine="Listing removed"
+              detail="Mandatory since 1 Jul 2025 — Airbnb / Booking de-list properties without it"
+            />
+            <FineCard
+              label="Modelo 179 not filed"
+              fine="€20 per guest"
+              detail="Quarterly guest report. A property with 80 guests/year = €1,600+ in penalties"
+            />
+            <FineCard
+              label="No Energy Certificate"
+              fine="up to €6,000"
+              detail="Mandatory for any rental — fine on top of being unable to advertise legally"
+            />
+            <FineCard
+              label="IRNR not filed"
+              fine="50% – 150% of tax owed"
+              detail="Non-resident income tax (Modelo 210) — penalties stack quarterly + interest"
+            />
+            <FineCard
+              label="No fiscal representative (non-EU)"
+              fine="€1,000 – €6,000"
+              detail="Mandatory for UK / Norwegian / Swiss owners — Spanish state must reach you"
+            />
+          </div>
+        </div>
+
         <div className="rounded-hm border border-hm-border p-10 text-center" style={{ background: "var(--hm-sand)" }}>
           <div className="h-16 w-16 rounded-full mx-auto mb-5 flex items-center justify-center"
                style={{ background: "var(--hm-gold)", opacity: 0.9 }}>
             <Shield className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-2xl font-serif font-bold text-hm-black mb-2">
-            Unlock Tax & Compliance tracking
+            Unlock Tax &amp; Compliance tracking
           </h2>
           <p className="font-sans text-hm-slate/70 max-w-md mx-auto mb-6">
-            Never miss another fiscal deadline. Track VUT license, Modelo 179, IRNR, NIE,
-            energy certificate and more — all in one place. Available on Mid and Premium plans.
+            Stop carrying the risk yourself. Track VUT, NRU, Modelo 179, IRNR, NIE and energy certificate in one place — with deadline alerts months before fines hit.
           </p>
           <div className="max-w-md mx-auto text-left mb-6 space-y-2">
             {[
-              "Deadline tracking for all Spanish fiscal obligations",
-              "Document vault for licenses and certificates",
-              "Automatic alerts before deadlines",
-              "Full service (Modelo 179 + IRNR filed by our team) — Premium only",
+              { f: "Mid", t: "Deadline tracking for every Spanish fiscal obligation" },
+              { f: "Mid", t: "Document vault for licences and certificates" },
+              { f: "Mid", t: "Automatic alerts 60 / 30 / 7 days before each deadline" },
+              { f: "Premium", t: "Full service — Modelo 179 + IRNR filed by our certified tax advisor" },
+              { f: "Premium", t: "NRU registration handled for you" },
+              { f: "Premium", t: "Fiscal representative service for non-EU residents" },
             ].map((feat, i) => (
               <div key={i} className="flex items-start gap-2 text-sm">
                 <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" style={{ color: "var(--hm-gold)" }} />
-                <span className="text-hm-slate">{feat}</span>
+                <span className="text-hm-slate flex-1">{feat.t}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shrink-0"
+                      style={{ background: feat.f === "Premium" ? "rgba(201,168,76,0.2)" : "rgba(27,79,138,0.1)",
+                               color: feat.f === "Premium" ? "var(--hm-gold-dk)" : "var(--hm-blue)" }}>
+                  {feat.f}
+                </span>
               </div>
             ))}
           </div>
@@ -132,8 +185,11 @@ export default function ClientTaxPage() {
             className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-sans font-semibold text-white transition-opacity hover:opacity-90"
             style={{ background: "var(--hm-black)" }}
           >
-            Upgrade plan <ArrowRight className="h-4 w-4" />
+            See plans <ArrowRight className="h-4 w-4" />
           </Link>
+          <p className="text-xs text-hm-slate/50 mt-3">
+            Mid €159/mo · Premium €269/mo — both are tax-deductible against your rental income.
+          </p>
         </div>
       </div>
     )
@@ -242,6 +298,16 @@ export default function ClientTaxPage() {
           </div>
         </Link>
       )}
+    </div>
+  )
+}
+
+function FineCard({ label, fine, detail }: { label: string; fine: string; detail: string }) {
+  return (
+    <div className="rounded-lg border border-red-200 bg-white p-3">
+      <p className="font-sans text-xs font-semibold text-hm-slate/70 uppercase tracking-wider">{label}</p>
+      <p className="font-serif text-lg font-bold text-red-700 mt-1">{fine}</p>
+      <p className="font-sans text-[11px] text-hm-slate/60 mt-1 leading-snug">{detail}</p>
     </div>
   )
 }
