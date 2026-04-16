@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight, ChevronDown,
   BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
-  Target, Settings, Brain, Briefcase,
+  Target, Settings, Brain, Briefcase, Link2,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
@@ -94,6 +94,7 @@ function useManagerNav(): NavEntry[] {
     {
       label: t('common.myPortfolio'), icon: Users, items: [
         { href: "/manager/clients", label: t('common.myOwners'), icon: Users },
+        { href: "/manager/referral", label: "My referral link", icon: Link2 },
       ],
     },
     { href: "/manager/messages", label: t('common.messages'), icon: MessageCircle },

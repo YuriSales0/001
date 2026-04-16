@@ -138,6 +138,8 @@ model User {
   // Manager compensation (configurable per manager)
   managerSubscriptionShare  Float?    // % of client subscription fee (default: 10%)
   managerCommissionShare    Float?    // % of gross rental revenue (default: 2%)
+  referralCode              String?   @unique  // Manager personal referral code for landing link
+  managerZone               String?   // Territory/zone (e.g. "Almunecar", "Nerja")
   // Crew compensation
   crewContractType   String?   // MONTHLY | FREELANCER
   crewMonthlyRate    Float?    // €/month (if MONTHLY)

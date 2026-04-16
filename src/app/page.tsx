@@ -20,6 +20,7 @@ import { LanguageSelector } from "@/components/hm/language-selector"
 import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
 import { JoinHostMasters } from "@/components/hm/join-hostmasters"
+import { ReferralTracker } from "@/components/hm/referral-tracker"
 
 /* ── Plan data from finance.ts ── */
 const plans = [
@@ -36,6 +37,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      <ReferralTracker />
       {/* ───────── Header ───────── */}
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">

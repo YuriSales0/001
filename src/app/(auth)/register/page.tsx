@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Building2, ArrowRight, Globe } from "lucide-react"
@@ -11,8 +11,24 @@ export default function RegisterPage() {
   const router = useRouter()
   const { t, locale, setLocale } = useLocale()
   const [form, setForm] = useState({ name: "", email: "", password: "", language: locale })
+  const [ref, setRef] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
+  // Capture ?ref= from URL or cookie set by landing page
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const urlRef = new URLSearchParams(window.location.search).get("ref")
+    if (urlRef) {
+      setRef(urlRef)
+      // Persist so it survives locale toggles
+      document.cookie = `hm_ref=${encodeURIComponent(urlRef)}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
+      return
+    }
+    // Fallback: read from cookie
+    const match = document.cookie.split("; ").find(r => r.startsWith("hm_ref="))
+    if (match) setRef(decodeURIComponent(match.split("=")[1] ?? ""))
+  }, [])
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,7 +39,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, ref }),
       })
       const data = await res.json()
       if (!res.ok) {
