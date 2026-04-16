@@ -632,6 +632,43 @@
     "footer": {
       "tagline": "Premium korttidsudlejningsadministration.",
       "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Bliv en del af teamet",
+      "title": "Bliv en del af HostMasters",
+      "subtitle": "Vi bygger en platform, ikke bare et ejendomsforvaltningsselskab. Kom med som Manager eller Crew.",
+      "manager": {
+        "title": "Start din forvaltningsvirksomhed",
+        "tagline": "Du har det lokale netværk og taler internationale ejeres sprog. Vi giver dig systemet.",
+        "point1": "15% af kundeabonnementer + 3% af bruttoudlejning",
+        "point2": "Porteføljebonusser: €150 ved 10, €400 ved 20, €750 ved 30 ejendomme",
+        "point3": "Eksklusivt geografisk område",
+        "point4": "Komplet platform: CRM, fakturering, drift",
+        "cta": "Ansøg som Manager",
+        "formTitle": "Manager-ansøgning"
+      },
+      "crew": {
+        "title": "Stabilt arbejde på Costa Tropical",
+        "tagline": "Professionelt arbejde inden for korttidsudlejning med garanteret betaling og klare opgaver.",
+        "point1": "Betaling inden for 24 timer via platformen",
+        "point2": "Klar opgaveliste i appen — ingen forvirring",
+        "point3": "Arbejde hele året (ikke kun sommersæsonen)",
+        "point4": "Forebyggende vedligeholdelse + rengøring + check-ins",
+        "cta": "Ansøg som Crew",
+        "formTitle": "Crew-ansøgning"
+      },
+      "form": {
+        "required": "Navn og e-mail er påkrævet",
+        "zone": "Foretrukket zone",
+        "languages": "Sprog du taler",
+        "experience": "Erfaring (valgfri)",
+        "skills": "Færdigheder",
+        "availability": "Tilgængelighed",
+        "message": "Andet vi bør vide? (valgfri)",
+        "submit": "Send ansøgning",
+        "thanks": "Ansøgning modtaget",
+        "thanksDesc": "Tak! Vi gennemgår din ansøgning og kontakter dig snart."
+      }
     }
   }
 }

@@ -764,3 +764,46 @@ model LeadAttribution {
 
   @@unique([leadId, campaignId])
 }
+
+
+enum RecruitRole {
+  MANAGER
+  CREW
+}
+
+enum RecruitStatus {
+  NEW
+  CONTACTED
+  INTERVIEWING
+  ACCEPTED
+  REJECTED
+}
+
+model RecruitApplication {
+  id             String         @id @default(cuid())
+  role           RecruitRole
+  name           String
+  email          String
+  phone          String?
+  // Location
+  zone           String?        // e.g. "Almunecar", "Nerja", "Salobrena"
+  // Manager-specific
+  languages      String[]       // ["en", "sv", "no"]
+  experience     String?        @db.Text
+  // Crew-specific
+  skills         String[]       // ["CLEANING", "MAINTENANCE", "CHECK_IN"]
+  availability   String?        // "full-time" | "part-time" | "weekends"
+  // Common
+  message        String?        @db.Text
+  source         String?        // utm_source or "landing"
+  locale         String?        // browser locale when submitted
+  status         RecruitStatus  @default(NEW)
+  reviewedAt     DateTime?
+  reviewedById   String?
+  adminNotes     String?        @db.Text
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([role, status])
+  @@index([createdAt])
+}

@@ -640,6 +640,43 @@
     "footer": {
       "tagline": "Premium short-term rental management.",
       "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Join Our Team",
+      "title": "Become part of HostMasters",
+      "subtitle": "We are building a platform, not just a management company. Join us as a Manager or as Crew.",
+      "manager": {
+        "title": "Launch your management business",
+        "tagline": "You have the local network and speak the languages of international owners. We give you the system.",
+        "point1": "15% of client subscriptions + 3% of gross rental",
+        "point2": "Portfolio bonuses: €150 at 10 props, €400 at 20, €750 at 30",
+        "point3": "Exclusive geographic territory",
+        "point4": "Full platform: CRM, billing, operations handled for you",
+        "cta": "Apply as Manager",
+        "formTitle": "Apply as Manager"
+      },
+      "crew": {
+        "title": "Stable work on the Costa Tropical",
+        "tagline": "Professional short-term rental work with guaranteed payment and clear tasks.",
+        "point1": "Payment within 24 hours via the platform",
+        "point2": "Clear task list in the app — no confusion",
+        "point3": "Year-round work (not just summer peak)",
+        "point4": "Preventive maintenance + cleaning + check-ins",
+        "cta": "Apply as Crew",
+        "formTitle": "Apply as Crew"
+      },
+      "form": {
+        "required": "Name and email are required",
+        "zone": "Preferred zone",
+        "languages": "Languages you speak",
+        "experience": "Experience (optional)",
+        "skills": "Skills",
+        "availability": "Availability",
+        "message": "Anything else we should know? (optional)",
+        "submit": "Submit application",
+        "thanks": "Application received",
+        "thanksDesc": "Thank you! We will review your application and contact you soon."
+      }
     }
   }
 }

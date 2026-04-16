@@ -632,6 +632,43 @@
     "footer": {
       "tagline": "Premium korttidsuthyrningsförvaltning.",
       "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Bli en del av teamet",
+      "title": "Bli en del av HostMasters",
+      "subtitle": "Vi bygger en plattform, inte bara ett förvaltningsbolag. Kom med som Manager eller Crew.",
+      "manager": {
+        "title": "Starta din förvaltningsverksamhet",
+        "tagline": "Du har det lokala nätverket och talar internationella ägares språk. Vi ger dig systemet.",
+        "point1": "15% av kundabonnemang + 3% av bruttouthyrning",
+        "point2": "Portföljbonusar: €150 vid 10, €400 vid 20, €750 vid 30 fastigheter",
+        "point3": "Exklusivt geografiskt område",
+        "point4": "Komplett plattform: CRM, fakturering, drift",
+        "cta": "Ansök som Manager",
+        "formTitle": "Manager-ansökan"
+      },
+      "crew": {
+        "title": "Stabilt arbete på Costa Tropical",
+        "tagline": "Professionellt arbete inom korttidsuthyrning med garanterad betalning och tydliga uppgifter.",
+        "point1": "Betalning inom 24 timmar via plattformen",
+        "point2": "Tydlig uppgiftslista i appen — ingen förvirring",
+        "point3": "Arbete året runt (inte bara sommarsäsongen)",
+        "point4": "Förebyggande underhåll + städning + incheckningar",
+        "cta": "Ansök som Crew",
+        "formTitle": "Crew-ansökan"
+      },
+      "form": {
+        "required": "Namn och e-post krävs",
+        "zone": "Föredraget område",
+        "languages": "Språk du talar",
+        "experience": "Erfarenhet (valfritt)",
+        "skills": "Färdigheter",
+        "availability": "Tillgänglighet",
+        "message": "Något mer vi borde veta? (valfritt)",
+        "submit": "Skicka ansökan",
+        "thanks": "Ansökan mottagen",
+        "thanksDesc": "Tack! Vi granskar din ansökan och kontaktar dig snart."
+      }
     }
   }
 }

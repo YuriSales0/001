@@ -632,6 +632,43 @@
     "footer": {
       "tagline": "Premium kortetermijnhuurbeheer.",
       "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Sluit je aan",
+      "title": "Word deel van HostMasters",
+      "subtitle": "We bouwen een platform, niet alleen een beheerbedrijf. Sluit je aan als Manager of Crew.",
+      "manager": {
+        "title": "Start je beheerbedrijf",
+        "tagline": "Jij hebt het lokale netwerk en spreekt de talen van internationale eigenaren. Wij geven jou het systeem.",
+        "point1": "15% van abonnementen + 3% van bruto verhuur",
+        "point2": "Portfoliobonussen: €150 bij 10, €400 bij 20, €750 bij 30 panden",
+        "point3": "Exclusief geografisch gebied",
+        "point4": "Compleet platform: CRM, facturatie, operaties",
+        "cta": "Solliciteer als Manager",
+        "formTitle": "Manager-sollicitatie"
+      },
+      "crew": {
+        "title": "Stabiel werk aan de Costa Tropical",
+        "tagline": "Professioneel werk in korte verhuur met gegarandeerde betaling en duidelijke taken.",
+        "point1": "Betaling binnen 24 uur via het platform",
+        "point2": "Duidelijke takenlijst in de app — geen verwarring",
+        "point3": "Het hele jaar werk (niet alleen in de zomer)",
+        "point4": "Preventief onderhoud + schoonmaak + check-ins",
+        "cta": "Solliciteer als Crew",
+        "formTitle": "Crew-sollicitatie"
+      },
+      "form": {
+        "required": "Naam en e-mail zijn verplicht",
+        "zone": "Voorkeurszone",
+        "languages": "Gesproken talen",
+        "experience": "Ervaring (optioneel)",
+        "skills": "Vaardigheden",
+        "availability": "Beschikbaarheid",
+        "message": "Nog iets dat we moeten weten? (optioneel)",
+        "submit": "Sollicitatie verzenden",
+        "thanks": "Sollicitatie ontvangen",
+        "thanksDesc": "Bedankt! We bekijken je sollicitatie en nemen snel contact op."
+      }
     }
   }
 }

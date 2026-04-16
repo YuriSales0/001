@@ -640,6 +640,43 @@
     "footer": {
       "tagline": "Gestão premium de arrendamento de curta duração.",
       "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Junta-te à Equipa",
+      "title": "Faz parte do HostMasters",
+      "subtitle": "Estamos a construir uma plataforma, não apenas uma empresa de gestão. Junta-te como Manager ou Crew.",
+      "manager": {
+        "title": "Lança o teu negócio de gestão",
+        "tagline": "Tens rede local e falas as línguas dos proprietários internacionais. Nós damos-te o sistema.",
+        "point1": "15% das subscrições dos clientes + 3% do rental líquido",
+        "point2": "Bónus de carteira: €150 com 10 imóveis, €400 com 20, €750 com 30",
+        "point3": "Território geográfico exclusivo",
+        "point4": "Plataforma completa: CRM, facturação, operações tratadas",
+        "cta": "Candidatar como Manager",
+        "formTitle": "Candidatura de Manager"
+      },
+      "crew": {
+        "title": "Trabalho estável na Costa Tropical",
+        "tagline": "Trabalho profissional em alojamento local com pagamento garantido e tarefas claras.",
+        "point1": "Pagamento em 24 horas via plataforma",
+        "point2": "Lista de tarefas clara na app — sem confusão",
+        "point3": "Trabalho o ano inteiro (não só no pico do verão)",
+        "point4": "Manutenção preventiva + limpeza + check-ins",
+        "cta": "Candidatar como Crew",
+        "formTitle": "Candidatura de Crew"
+      },
+      "form": {
+        "required": "Nome e email são obrigatórios",
+        "zone": "Zona preferida",
+        "languages": "Línguas que falas",
+        "experience": "Experiência (opcional)",
+        "skills": "Competências",
+        "availability": "Disponibilidade",
+        "message": "Algo mais que devamos saber? (opcional)",
+        "submit": "Submeter candidatura",
+        "thanks": "Candidatura recebida",
+        "thanksDesc": "Obrigado! Vamos rever a tua candidatura e contactar-te em breve."
+      }
     }
   }
 }

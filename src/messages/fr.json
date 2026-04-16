@@ -632,6 +632,43 @@
     "footer": {
       "tagline": "Gestion premium de locations courte durée.",
       "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Rejoins l'équipe",
+      "title": "Faire partie de HostMasters",
+      "subtitle": "Nous construisons une plateforme, pas seulement une entreprise de gestion. Rejoins-nous comme Manager ou Crew.",
+      "manager": {
+        "title": "Lance ton activité de gestion",
+        "tagline": "Tu as le réseau local et parles les langues des propriétaires internationaux. On te donne le système.",
+        "point1": "15% des abonnements clients + 3% de la location brute",
+        "point2": "Bonus de portefeuille: €150 à 10, €400 à 20, €750 à 30 biens",
+        "point3": "Territoire géographique exclusif",
+        "point4": "Plateforme complète: CRM, facturation, opérations",
+        "cta": "Postuler comme Manager",
+        "formTitle": "Candidature Manager"
+      },
+      "crew": {
+        "title": "Travail stable sur la Costa Tropical",
+        "tagline": "Travail professionnel en location courte durée avec paiement garanti et tâches claires.",
+        "point1": "Paiement sous 24 heures via la plateforme",
+        "point2": "Liste de tâches claire dans l'app — pas de confusion",
+        "point3": "Travail toute l'année (pas seulement en été)",
+        "point4": "Maintenance préventive + ménage + check-ins",
+        "cta": "Postuler comme Crew",
+        "formTitle": "Candidature Crew"
+      },
+      "form": {
+        "required": "Nom et email sont obligatoires",
+        "zone": "Zone préférée",
+        "languages": "Langues parlées",
+        "experience": "Expérience (optionnel)",
+        "skills": "Compétences",
+        "availability": "Disponibilité",
+        "message": "Autre chose à savoir? (optionnel)",
+        "submit": "Envoyer candidature",
+        "thanks": "Candidature reçue",
+        "thanksDesc": "Merci ! Nous examinerons ta candidature et te contacterons bientôt."
+      }
     }
   }
 }

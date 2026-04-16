@@ -640,6 +640,43 @@
     "footer": {
       "tagline": "Premium-Verwaltung für Kurzzeitvermietung.",
       "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Werde Teil des Teams",
+      "title": "Teil von HostMasters werden",
+      "subtitle": "Wir bauen eine Plattform, nicht nur ein Verwaltungsunternehmen. Komm als Manager oder Crew dazu.",
+      "manager": {
+        "title": "Starte dein Verwaltungsgeschäft",
+        "tagline": "Du hast das lokale Netzwerk und sprichst die Sprachen internationaler Eigentümer. Wir geben dir das System.",
+        "point1": "15% der Kundenabos + 3% der Brutto-Mieteinnahmen",
+        "point2": "Portfolio-Boni: €150 bei 10, €400 bei 20, €750 bei 30 Immobilien",
+        "point3": "Exklusives geografisches Gebiet",
+        "point4": "Komplette Plattform: CRM, Abrechnung, Betrieb",
+        "cta": "Als Manager bewerben",
+        "formTitle": "Manager-Bewerbung"
+      },
+      "crew": {
+        "title": "Stabile Arbeit an der Costa Tropical",
+        "tagline": "Professionelle Arbeit im Ferienvermietungssektor mit garantierter Bezahlung und klaren Aufgaben.",
+        "point1": "Zahlung innerhalb von 24 Stunden über die Plattform",
+        "point2": "Klare Aufgabenliste in der App — keine Verwirrung",
+        "point3": "Ganzjährige Arbeit (nicht nur Sommersaison)",
+        "point4": "Vorbeugende Wartung + Reinigung + Check-ins",
+        "cta": "Als Crew bewerben",
+        "formTitle": "Crew-Bewerbung"
+      },
+      "form": {
+        "required": "Name und E-Mail sind erforderlich",
+        "zone": "Bevorzugte Zone",
+        "languages": "Gesprochene Sprachen",
+        "experience": "Erfahrung (optional)",
+        "skills": "Fähigkeiten",
+        "availability": "Verfügbarkeit",
+        "message": "Sonst noch etwas? (optional)",
+        "submit": "Bewerbung absenden",
+        "thanks": "Bewerbung erhalten",
+        "thanksDesc": "Danke! Wir prüfen deine Bewerbung und melden uns bald."
+      }
     }
   }
 }

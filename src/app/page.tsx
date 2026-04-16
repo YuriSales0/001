@@ -19,6 +19,7 @@ import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
 import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
+import { JoinHostMasters } from "@/components/hm/join-hostmasters"
 
 /* ── Plan data from finance.ts ── */
 const plans = [
@@ -327,6 +328,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ───────── Join HostMasters (Managers + Crew) ───────── */}
+      <JoinHostMasters />
 
       {/* ───────── Final CTA ───────── */}
       <section className="py-20 sm:py-28" style={{ background: "#111827" }}>
