@@ -110,6 +110,10 @@ export default function OwnerDashboard() {
           total: pending.reduce((s: number, i: Invoice) => s + i.amount, 0),
         })
 
+        // Check for any property with CONTRACT_PENDING status
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setHasContractPending(properties.some((p: any) => p.status === 'CONTRACT_PENDING'))
+
         const property = properties[0] ?? null
         const now = new Date()
         const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -213,6 +217,23 @@ export default function OwnerDashboard() {
         headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
         dateClass="mt-1 font-sans text-hm-slate/70 text-base"
       />
+
+      {/* Contract pending alert */}
+      {hasContractPending && (
+        <Link href="/client/properties"
+          className="flex items-center gap-3 rounded-xl border-2 border-blue-300 bg-blue-50 px-5 py-4 hover:bg-blue-100 transition-colors hm-animate-in hm-stagger-1">
+          <FileText className="h-5 w-5 text-blue-600 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-blue-800">
+              You have a pending service agreement
+            </p>
+            <p className="text-xs text-blue-600 mt-0.5">
+              Sign it to activate your property and start receiving bookings.
+            </p>
+          </div>
+          <ArrowRight className="h-4 w-4 text-blue-400" />
+        </Link>
+      )}
 
       {/* Pending invoices alert */}
       {pendingInvoices.count > 0 && (
