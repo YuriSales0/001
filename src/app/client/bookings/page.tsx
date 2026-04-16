@@ -276,9 +276,17 @@ export default function OwnerBookings() {
         {shown.length === 0 ? (
           <div className="rounded-hm border border-hm-border p-12 text-center"
                style={{ background: 'var(--hm-sand)' }}>
-            <CalendarDays className="h-12 w-12 mx-auto mb-3 text-hm-slate/30" />
-            <p className="font-serif text-xl text-hm-black">
+            <div className="h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4"
+                 style={{ background: 'var(--hm-border)' }}>
+              <CalendarDays className="h-6 w-6 text-hm-slate/40" />
+            </div>
+            <h3 className="font-serif text-xl font-bold text-hm-black mb-1">
               {view === "upcoming" ? "No upcoming bookings" : "No bookings yet"}
+            </h3>
+            <p className="font-sans text-sm text-hm-slate/60 max-w-sm mx-auto">
+              {view === "upcoming"
+                ? "You have no upcoming reservations at the moment. New bookings from Airbnb, Booking.com and other platforms will appear here automatically."
+                : "Reservations from Airbnb, Booking.com and other platforms will appear here automatically once your property is listed."}
             </p>
           </div>
         ) : (

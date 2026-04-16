@@ -144,7 +144,8 @@ export default function TeamPage() {
             <div className="px-4 py-2 bg-gray-50 text-xs uppercase font-semibold text-gray-600">
               {role} ({grouped[role].length})
             </div>
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="min-w-[600px] w-full text-sm">
               <thead className="text-xs text-gray-500">
                 <tr>
                   <th className="px-4 py-2 text-left font-normal">Name / Email</th>
@@ -226,6 +227,7 @@ export default function TeamPage() {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
         ))
       )}

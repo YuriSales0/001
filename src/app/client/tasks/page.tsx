@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Plus, X, Wrench, ShoppingCart, Car, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
+import { Plus, X, Wrench, ShoppingCart, Car, CheckCircle2, Clock, AlertCircle, Loader2 } from 'lucide-react'
 import { useLocale } from '@/i18n/provider'
 import { useEscapeKey } from '@/lib/use-escape-key'
+import { showToast } from "@/components/hm/toast"
 
 type Property = { id: string; name: string }
 type Task = {
@@ -105,6 +106,7 @@ export default function ClientTasksPage() {
       }
       setShowModal(false)
       setForm(f => ({ ...f, title: '', description: '', dueDate: '' }))
+      showToast('Request sent successfully', 'success')
       load()
     } catch {
       setSubmitError('Network error. Please try again.')
@@ -168,9 +170,19 @@ export default function ClientTasksPage() {
       ) : loading ? (
         <p className="text-gray-400 text-sm">{t('common.loading')}</p>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border bg-white p-10 text-center text-gray-400">
-          <Wrench className="h-10 w-10 mx-auto mb-2 text-gray-200" />
-          {t('clientTasks.noTasks')}
+        <div className="rounded-xl border bg-white p-10 text-center">
+          <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <Wrench className="h-6 w-6 text-gray-400" />
+          </div>
+          <h3 className="font-semibold text-gray-900 mb-1">{t('clientTasks.noTasks')}</h3>
+          <p className="text-sm text-gray-500 mb-4">When you request a visit or maintenance, it will appear here.</p>
+          <button
+            onClick={() => setShowModal(true)}
+            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800"
+          >
+            <Plus className="h-4 w-4" />
+            Request a visit
+          </button>
         </div>
       ) : (
         <div className="space-y-3">
@@ -239,6 +251,7 @@ export default function ClientTasksPage() {
                   {t('clientTasks.property')}
                 </label>
                 <select
+                  required
                   value={form.propertyId}
                   onChange={e => setForm(f => ({ ...f, propertyId: e.target.value }))}
                   className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
@@ -279,6 +292,7 @@ export default function ClientTasksPage() {
                       {t('clientTasks.titleLabel')}
                     </label>
                     <input
+                      required
                       value={form.title}
                       onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                       placeholder={
@@ -311,6 +325,7 @@ export default function ClientTasksPage() {
                     </label>
                     <input
                       type="date"
+                      required
                       value={form.dueDate}
                       onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
                       className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
@@ -339,9 +354,13 @@ export default function ClientTasksPage() {
               <button
                 onClick={submit}
                 disabled={submitting || !form.title || !form.dueDate || !form.propertyId}
-                className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {submitting ? t('clientTasks.submitting') : t('clientTasks.requestTask')}
+                {submitting ? (
+                  <><Loader2 className="h-4 w-4 animate-spin" /> {t('clientTasks.submitting')}</>
+                ) : (
+                  t('clientTasks.requestTask')
+                )}
               </button>
             </div>
           </div>

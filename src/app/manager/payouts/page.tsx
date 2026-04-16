@@ -29,7 +29,8 @@ export default function ManagerPayouts() {
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold text-navy-900">Payouts (my clients)</h1>
       <div className="rounded-xl border bg-white overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
             <tr>
               <th className="px-4 py-3">Client</th><th className="px-4 py-3">Property</th>
@@ -53,6 +54,7 @@ export default function ManagerPayouts() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

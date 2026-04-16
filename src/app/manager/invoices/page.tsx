@@ -192,7 +192,8 @@ export default function ManagerInvoices() {
       <InvoiceForm onCreated={load} />
 
       <div className="rounded-xl border bg-white overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-400 tracking-wide">
             <tr>
               <th className="px-4 py-3">Date</th>
@@ -264,6 +265,7 @@ export default function ManagerInvoices() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {editing && (

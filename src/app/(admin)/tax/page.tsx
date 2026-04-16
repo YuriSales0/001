@@ -130,8 +130,23 @@ export default function AdminTaxPage() {
       {loading ? (
         <div className="text-center py-10 text-sm text-gray-400">{t('common.loading')}</div>
       ) : visible.length === 0 ? (
-        <div className="bg-white rounded-xl border p-10 text-center text-sm text-gray-400">
-          {t('admin.noObligationsMatch')}
+        <div className="bg-white rounded-xl border p-10 text-center">
+          <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <FileText className="h-6 w-6 text-gray-400" />
+          </div>
+          <h3 className="font-semibold text-gray-900 mb-1">{t('admin.noObligationsMatch')}</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            {filter !== "all" || clientFilter
+              ? "Try adjusting your filters, or create a new obligation."
+              : "Start tracking tax obligations for your clients."}
+          </p>
+          <button
+            onClick={() => setShowNewModal(true)}
+            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800"
+          >
+            <Plus className="h-4 w-4" />
+            Create first obligation
+          </button>
         </div>
       ) : (
         <div className="bg-white rounded-xl border divide-y">

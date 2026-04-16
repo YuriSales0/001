@@ -152,7 +152,7 @@ export default function CrewHome() {
   return (
     <div className="flex h-[calc(100vh-3.25rem)]" style={{ fontFamily: "system-ui, sans-serif" }}>
       {/* List */}
-      <aside className="w-80 border-r bg-white flex flex-col shrink-0">
+      <aside className={`w-full lg:w-80 border-r bg-white flex flex-col shrink-0 ${selected ? 'hidden lg:flex' : 'flex'}`}>
         <div className="px-4 py-3 border-b hm-animate-in hm-stagger-1">
           <DashboardGreeting
             headingClass="text-lg font-bold text-navy-900"
@@ -238,7 +238,7 @@ export default function CrewHome() {
       </aside>
 
       {/* Detail */}
-      <main className="flex-1 overflow-y-auto bg-gray-50">
+      <main className={`flex-1 overflow-y-auto bg-gray-50 ${!selected ? 'hidden lg:block' : 'block'}`}>
         {!selected ? (
           <div className="h-full flex items-center justify-center text-gray-400 text-sm">
             <div className="text-center">
@@ -248,6 +248,13 @@ export default function CrewHome() {
           </div>
         ) : (
           <div className="max-w-2xl mx-auto p-6 space-y-5">
+            {/* Back button (mobile) */}
+            <button
+              onClick={() => setSelected(null)}
+              className="lg:hidden inline-flex items-center gap-1 text-sm text-gray-600 hover:text-navy-900 mb-2"
+            >
+              <span aria-hidden="true">&larr;</span> Back to tasks
+            </button>
             {/* Header */}
             <div>
               <div className="flex items-center gap-2 mb-1">
