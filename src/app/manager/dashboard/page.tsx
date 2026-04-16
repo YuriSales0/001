@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 import { AlertBanner } from "@/components/hm/alert-banner"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
+import { ManagerEmptyState } from "@/components/hm/manager-empty-state"
 
 type DashboardStats = {
   propertiesCount: number
@@ -75,8 +76,13 @@ export default function ManagerDashboard() {
 
       {error && <p className="text-sm text-red-500 text-center p-4">Failed to load data</p>}
 
+      {/* Empty state for new Managers with no clients yet */}
+      {stats && stats.clientsCount === 0 && !error && (
+        <ManagerEmptyState />
+      )}
+
       {/* Alerts panel */}
-      {stats && stats.overdueTasks > 0 && (
+      {stats && stats.clientsCount > 0 && stats.overdueTasks > 0 && (
         <div className="hm-animate-in hm-stagger-2">
           <AlertBanner
             level="error"
@@ -86,8 +92,8 @@ export default function ManagerDashboard() {
         </div>
       )}
 
-      {/* Top metrics */}
-      {stats ? (
+      {/* Top metrics — only when Manager has clients */}
+      {stats && stats.clientsCount > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 hm-animate-in hm-stagger-2">
           {[
             { label: "Active owners",   value: stats.clientsCount,           icon: Users,        href: "/manager/clients",  color: "text-navy-600" },
@@ -132,6 +138,9 @@ export default function ManagerDashboard() {
           ))}
         </div>
       )}
+
+      {/* The blocks below only make sense when the Manager has clients. */}
+      {stats && stats.clientsCount > 0 && <>
 
       {/* Operations today */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 hm-animate-in hm-stagger-3">
@@ -283,6 +292,8 @@ export default function ManagerDashboard() {
           </div>
         </div>
       </div>
+
+      </>}
     </div>
   )
 }
