@@ -44,15 +44,16 @@ function groupByMonth(payouts: Payout[]): MonthGroup[] {
   const map = new Map<string, MonthGroup>()
   for (const p of payouts) {
     const d = new Date(p.scheduledFor)
-    const key = `${d.getFullYear()}-${d.getMonth()}`
+    const month0 = d.getMonth()        // 0-indexed
+    const month = month0 + 1            // 1-indexed
+    const year = d.getFullYear()
+    const key = `${year}-${month}`
     if (!map.has(key)) {
-      const month = d.getMonth() + 1
-      const year = d.getFullYear()
-      // Transfer date: 3rd of the following month
-      const transferDate = new Date(year, month, 3).toISOString()
+      // Transfer date: 3rd of the following month (month0+1 is already the next month in Date constructor)
+      const transferDate = new Date(year, month0 + 1, 3).toISOString()
       map.set(key, {
         monthKey: key,
-        monthName: MONTHS[d.getMonth()],
+        monthName: MONTHS[month0],
         year,
         month,
         payouts: [],

@@ -39,14 +39,18 @@ export async function PATCH(request: NextRequest) {
 
   // Password change
   if (newPassword) {
-    if (currentPassword) {
-      const fullUser = await prisma.user.findUnique({ where: { id: user.id } })
-      if (fullUser?.password) {
-        const ok = await bcrypt.compare(currentPassword, fullUser.password)
-        if (!ok) return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 })
-      }
+    if (!currentPassword) {
+      return NextResponse.json({ error: 'Current password required' }, { status: 400 })
     }
-    data.password = await bcrypt.hash(newPassword, 10)
+    const fullUser = await prisma.user.findUnique({ where: { id: user.id } })
+    if (!fullUser?.password) {
+      return NextResponse.json({ error: 'User has no password' }, { status: 400 })
+    }
+    const ok = await bcrypt.compare(currentPassword, fullUser.password)
+    if (!ok) {
+      return NextResponse.json({ error: 'Current password incorrect' }, { status: 401 })
+    }
+    data.password = await bcrypt.hash(newPassword, 12)
   }
 
   const updated = await prisma.user.update({

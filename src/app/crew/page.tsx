@@ -59,6 +59,7 @@ export default function CrewHome() {
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<Task | null>(null)
   const [filter, setFilter] = useState<"open" | "today" | "done">("open")
+  const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [checkout, setCheckout] = useState({
     condition: "good",
@@ -69,14 +70,21 @@ export default function CrewHome() {
 
   const load = async () => {
     setLoading(true)
-    const res = await fetch("/api/tasks")
-    const data: Task[] = res.ok ? await res.json() : []
-    setTasks(data)
-    if (selected) {
-      const fresh = data.find(t => t.id === selected.id)
-      if (fresh) setSelected(fresh)
+    setError(null)
+    try {
+      const res = await fetch("/api/tasks")
+      if (!res.ok) throw new Error("Failed to load tasks")
+      const data: Task[] = await res.json()
+      setTasks(data)
+      if (selected) {
+        const fresh = data.find(t => t.id === selected.id)
+        if (fresh) setSelected(fresh)
+      }
+    } catch {
+      setError("Failed to load tasks. Please try refreshing.")
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -178,7 +186,13 @@ export default function CrewHome() {
               <Loader2 className="h-4 w-4 animate-spin" /> Loading…
             </div>
           )}
-          {!loading && visible.length === 0 && (
+          {!loading && error && (
+            <div className="p-6 text-center text-sm text-red-500">
+              <AlertTriangle className="h-8 w-8 mx-auto text-red-300 mb-1" />
+              {error}
+            </div>
+          )}
+          {!loading && !error && visible.length === 0 && (
             <div className="p-6 text-center text-sm text-gray-400">
               <Calendar className="h-8 w-8 mx-auto text-gray-300 mb-1" />
               No tasks here.

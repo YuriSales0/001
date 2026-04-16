@@ -63,11 +63,13 @@ export default function ClientTasksPage() {
   // Form state
   const [form, setForm] = useState({ propertyId: '', type: 'MAINTENANCE_CORRECTIVE', title: '', description: '', dueDate: '' })
   const [submitting, setSubmitting] = useState(false)
+  const [loadError, setLoadError] = useState(false)
 
   useEscapeKey(showModal, () => setShowModal(false))
 
   const load = () => {
     setLoading(true)
+    setLoadError(false)
     Promise.all([
       fetch('/api/tasks').then(r => r.ok ? r.json() : []),
       fetch('/api/properties').then(r => r.ok ? r.json() : []),
@@ -75,24 +77,40 @@ export default function ClientTasksPage() {
       setTasks(ts)
       setProperties(p)
       if (p.length > 0 && !form.propertyId) setForm(f => ({ ...f, propertyId: p[0].id }))
+    }).catch(() => {
+      setLoadError(true)
+    }).finally(() => {
       setLoading(false)
     })
   }
 
   useEffect(() => { load() }, [])
 
+  const [submitError, setSubmitError] = useState('')
+
   const submit = async () => {
     if (!form.propertyId || !form.title || !form.dueDate) return
     setSubmitting(true)
-    await fetch('/api/tasks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
-    setSubmitting(false)
-    setShowModal(false)
-    setForm(f => ({ ...f, title: '', description: '', dueDate: '' }))
-    load()
+    setSubmitError('')
+    try {
+      const res = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        setSubmitError(err.error ?? 'Could not create task.')
+        return
+      }
+      setShowModal(false)
+      setForm(f => ({ ...f, title: '', description: '', dueDate: '' }))
+      load()
+    } catch {
+      setSubmitError('Network error. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const now = new Date()
@@ -145,7 +163,9 @@ export default function ClientTasksPage() {
       </div>
 
       {/* Tasks list */}
-      {loading ? (
+      {loadError ? (
+        <div className="p-4 text-sm text-red-500">Failed to load tasks. Try refreshing.</div>
+      ) : loading ? (
         <p className="text-gray-400 text-sm">{t('common.loading')}</p>
       ) : filtered.length === 0 ? (
         <div className="rounded-xl border bg-white p-10 text-center text-gray-400">
@@ -210,6 +230,9 @@ export default function ClientTasksPage() {
             </div>
 
             <div className="p-5 space-y-4">
+              {submitError && (
+                <div className="rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm px-3 py-2">{submitError}</div>
+              )}
               {/* Property */}
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">

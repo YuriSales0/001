@@ -9,9 +9,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email and password (min 6 chars) required' }, { status: 400 })
     }
     const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
-    if (existing) return NextResponse.json({ error: 'Email already registered' }, { status: 409 })
+    if (existing) {
+      // Return same success response to prevent email enumeration
+      return NextResponse.json({ ok: true, id: 'existing' })
+    }
 
-    const hash = await bcrypt.hash(password, 10)
+    const hash = await bcrypt.hash(password, 12)
     const user = await prisma.user.create({
       data: {
         email: email.toLowerCase(),

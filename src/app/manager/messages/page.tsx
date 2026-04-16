@@ -38,21 +38,26 @@ export default function ManagerMessagesPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState(false)
   const [myId, setMyId] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const loadConvs = async () => {
-    const res = await fetch('/api/conversations')
-    if (res.ok) {
+    try {
+      const res = await fetch('/api/conversations')
+      if (!res.ok) throw new Error()
       const data: ConvSummary[] = await res.json()
       setConvs(data)
       if (!active && data.length > 0) setActive(data[0])
-    }
+    } catch { setError(true) }
   }
 
   const fetchMessages = async (convId: string) => {
-    const res = await fetch(`/api/conversations/${convId}/messages`)
-    if (res.ok) setMessages(await res.json())
+    try {
+      const res = await fetch(`/api/conversations/${convId}/messages`)
+      if (!res.ok) throw new Error()
+      setMessages(await res.json())
+    } catch { setError(true) }
   }
 
   useEffect(() => {
@@ -101,6 +106,8 @@ export default function ManagerMessagesPage() {
   const clientName = (c: ConvSummary) => c.client.name ?? c.client.email
 
   return (
+    <div className="flex flex-col">
+      {error && <div className="p-4 text-center text-sm text-red-500">Failed to load data</div>}
     <div className="flex h-[calc(100vh-80px)] max-h-[750px] rounded-xl border bg-white overflow-hidden">
       {/* ── Sidebar ── */}
       <aside className="w-64 border-r flex flex-col shrink-0">
@@ -242,6 +249,7 @@ export default function ManagerMessagesPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }

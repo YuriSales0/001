@@ -51,6 +51,7 @@ export default function OwnerBookings() {
   const [blocking, setBlocking] = useState(false)
   const [blockForm, setBlockForm] = useState({ start: "", end: "", reason: "" })
   const [blocking_saving, setBlockingSaving] = useState(false)
+  const [error, setError] = useState("")
 
   useEscapeKey(blocking, () => setBlocking(false))
 
@@ -61,6 +62,9 @@ export default function OwnerBookings() {
     ]).then(([r, b]) => {
       setReservations(r)
       setBlockedDates(b)
+    }).catch(() => {
+      setError("Failed to load bookings. Try refreshing.")
+    }).finally(() => {
       setLoading(false)
     })
   }, [])
@@ -68,27 +72,43 @@ export default function OwnerBookings() {
   const saveBlock = async () => {
     if (!blockForm.start || !blockForm.end) return
     setBlockingSaving(true)
-    const res = await fetch("/api/blocked-dates", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        startDate: blockForm.start,
-        endDate: blockForm.end,
-        reason: blockForm.reason || "Personal use",
-      }),
-    })
-    if (res.ok) {
-      const newBlock = await res.json()
-      setBlockedDates(prev => [...prev, newBlock])
-      setBlockForm({ start: "", end: "", reason: "" })
-      setBlocking(false)
+    setError("")
+    try {
+      const res = await fetch("/api/blocked-dates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startDate: blockForm.start,
+          endDate: blockForm.end,
+          reason: blockForm.reason || "Personal use",
+        }),
+      })
+      if (res.ok) {
+        const newBlock = await res.json()
+        setBlockedDates(prev => [...prev, newBlock])
+        setBlockForm({ start: "", end: "", reason: "" })
+        setBlocking(false)
+      } else {
+        setError("Failed to block dates. Please try again.")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setBlockingSaving(false)
     }
-    setBlockingSaving(false)
   }
 
   const removeBlock = async (id: string) => {
-    await fetch(`/api/blocked-dates/${id}`, { method: "DELETE" })
-    setBlockedDates(prev => prev.filter(b => b.id !== id))
+    try {
+      const res = await fetch(`/api/blocked-dates/${id}`, { method: "DELETE" })
+      if (res.ok) {
+        setBlockedDates(prev => prev.filter(b => b.id !== id))
+      } else {
+        setError("Failed to remove blocked dates.")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    }
   }
 
   const upcoming = reservations
@@ -112,6 +132,9 @@ export default function OwnerBookings() {
 
   return (
     <div className="space-y-8">
+      {error && (
+        <div className="rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3">{error}</div>
+      )}
       <div>
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">My Bookings</h1>
         <p className="mt-1 font-sans text-lg text-hm-slate/70">

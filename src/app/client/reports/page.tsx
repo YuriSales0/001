@@ -115,6 +115,7 @@ export default function ClientReportsPage() {
     const map: Record<string, { gross: number; commission: number; net: number; nights: number; reservations: number }> = {}
 
     filteredPay.forEach(p => {
+      if (!p.reservation?.checkOut) return
       const k = monthKey(p.reservation.checkOut)
       if (!map[k]) map[k] = { gross: 0, commission: 0, net: 0, nights: 0, reservations: 0 }
       map[k].gross += p.grossAmount
@@ -123,6 +124,7 @@ export default function ClientReportsPage() {
     })
 
     filteredRes.forEach(r => {
+      if (!r.checkOut) return
       const k = monthKey(r.checkOut)
       if (!map[k]) map[k] = { gross: 0, commission: 0, net: 0, nights: 0, reservations: 0 }
       map[k].nights += nightsBetween(r.checkIn, r.checkOut)

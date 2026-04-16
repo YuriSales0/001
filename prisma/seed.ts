@@ -17,12 +17,12 @@ async function main() {
   // ── Yuri (owner / superuser) ────────────────────────────────────────────
   await prisma.user.upsert({
     where: { email: 'yurisales968@gmail.com' },
-    update: { isSuperUser: true, role: 'ADMIN', password: await bcrypt.hash('asdasd123@', 10) },
+    update: { isSuperUser: true, role: 'ADMIN', password: await bcrypt.hash('asdasd123@', 12) },
     create: {
       email: 'yurisales968@gmail.com',
       name: 'Yuri Sales',
       role: 'ADMIN',
-      password: await bcrypt.hash('asdasd123@', 10),
+      password: await bcrypt.hash('asdasd123@', 12),
       language: 'pt',
       isSuperUser: true,
     },
@@ -37,7 +37,7 @@ async function main() {
       email: 'manager@hostmaster.es',
       name: 'Ana García',
       role: 'MANAGER',
-      password: await bcrypt.hash('manager123', 10),
+      password: await bcrypt.hash('manager123', 12),
       language: 'es',
       subscriptionPlan: 'MID',
       subscriptionStatus: 'active',
@@ -53,7 +53,7 @@ async function main() {
       email: 'crew@hostmaster.es',
       name: 'Carlos Limpio',
       role: 'CREW',
-      password: await bcrypt.hash('crew123', 10),
+      password: await bcrypt.hash('crew123', 12),
       language: 'es',
     },
   })
@@ -67,7 +67,7 @@ async function main() {
       email: 'client@hostmaster.es',
       name: 'María Propietaria',
       role: 'CLIENT',
-      password: await bcrypt.hash('client123', 10),
+      password: await bcrypt.hash('client123', 12),
       language: 'es',
       managerId: manager.id,
       subscriptionPlan: 'BASIC',

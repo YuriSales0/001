@@ -29,7 +29,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       data.subscriptionPlan = body.subscriptionPlan || null
     }
     if (body.password) {
-      data.password = await bcrypt.hash(body.password, 10)
+      data.password = await bcrypt.hash(body.password, 12)
     }
 
     // Load current state so we can detect actual changes

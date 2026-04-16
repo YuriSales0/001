@@ -6,7 +6,10 @@ import { prisma } from '@/lib/prisma'
 // Simple HMAC-style token validation: INTEGRATION_SECRET env var (optional)
 function isValidToken(req: NextRequest): boolean {
   const secret = process.env.INTEGRATION_SECRET
-  if (!secret) return true // no secret configured → accept all
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') return false // fail-secure in prod
+    return true // allow in dev
+  }
   const token = req.headers.get('x-integration-token') ?? req.nextUrl.searchParams.get('token')
   return token === secret
 }

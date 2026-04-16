@@ -201,26 +201,31 @@ export default function ClientCarePage() {
       return
     }
     setRequesting(true)
-    const res = await fetch("/api/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        propertyId: reqForm.propertyId,
-        type: reqForm.type,
-        title: reqForm.title,
-        description: reqForm.description || undefined,
-        dueDate: new Date(reqForm.dueDate).toISOString(),
-      }),
-    })
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}))
-      setReqError(err.error ?? "Could not send request.")
-    } else {
-      setShowRequest(false)
-      setReqForm(f => ({ ...f, title: "", description: "", dueDate: "" }))
-      await load()
+    try {
+      const res = await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          propertyId: reqForm.propertyId,
+          type: reqForm.type,
+          title: reqForm.title,
+          description: reqForm.description || undefined,
+          dueDate: new Date(reqForm.dueDate).toISOString(),
+        }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        setReqError(err.error ?? "Could not send request.")
+      } else {
+        setShowRequest(false)
+        setReqForm(f => ({ ...f, title: "", description: "", dueDate: "" }))
+        await load()
+      }
+    } catch {
+      setReqError("Network error. Please try again.")
+    } finally {
+      setRequesting(false)
     }
-    setRequesting(false)
   }
 
   if (loading) {
