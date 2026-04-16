@@ -642,6 +642,7 @@ model CompetitorPrice {
 // ─── AI Monitoring ───────────────────────────────────────────────────────────
 
 enum AlertSeverity {
+  CRITICAL
   HIGH
   MEDIUM
   LOW
@@ -649,15 +650,23 @@ enum AlertSeverity {
 }
 
 model SystemAlert {
-  id         String        @id @default(cuid())
-  checkType  String        // PAYOUT_NO_INVOICE | INVOICE_PAID_NO_PAIDAT | COMMISSION_MISMATCH | CHECKIN_NO_TASK | PROPERTY_STALE
-  severity   AlertSeverity @default(MEDIUM)
-  entityId   String?       // ID da entidade afectada
-  entityType String?       // "Payout" | "Invoice" | "Reservation" | "Property"
-  message    String
-  details    Json?         // dados adicionais para o futuro modelo Claude
-  resolvedAt DateTime?
-  createdAt  DateTime      @default(now())
+  id            String        @id @default(cuid())
+  checkType     String        // PAYOUT_NO_INVOICE | INVOICE_PAID_NO_PAIDAT | COMMISSION_MISMATCH | CHECKIN_NO_TASK | PROPERTY_STALE | etc.
+  severity      AlertSeverity @default(MEDIUM)
+  entityId      String?       // ID da entidade afectada
+  entityType    String?       // "Payout" | "Invoice" | "Reservation" | "Property"
+  message       String
+  details       Json?         // dados adicionais para o futuro modelo Claude
+  aiAnalysis    String?       @db.Text // análise + sugestão de fix da Claude Haiku
+  autoFixedAt   DateTime?     // timestamp quando foi auto-corrigido
+  autoFixNotes  String?       @db.Text // o que foi feito no auto-fix
+  notifiedAt    DateTime?     // última vez que enviou email/webhook (para suppression)
+  resolvedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt @default(now())
+
+  @@index([severity, resolvedAt])
+  @@index([checkType, resolvedAt])
 }
 
 // ─── Marketing ───────────────────────────────────────────────────────────────

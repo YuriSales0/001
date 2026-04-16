@@ -1,20 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { PLAN_COMMISSION } from '@/lib/finance'
-import { sendEmail } from '@/lib/email'
 import type { AlertSeverity } from '@prisma/client'
+import { ALL_CHECKS, type CheckResult } from '@/lib/ai-monitor/checks'
+import { analyzeAlert } from '@/lib/ai-monitor/ai-analysis'
+import { autoFix } from '@/lib/ai-monitor/auto-fix'
+import { sendAlertEmail, sendWebhook, shouldNotify } from '@/lib/ai-monitor/notifier'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 120
+export const maxDuration = 300
 
 /**
- * Cron job: AI Monitor — detecção autónoma de anomalias.
- * Scheduled in vercel.json: "0 7 * * *" (07:00 UTC diário).
+ * AI Monitor cron — bug evaluator com 3 tiers:
  *
- * Corre as mesmas verificações que /api/monitor/checks mas:
- * 1. Persiste alertas novos na tabela SystemAlert
- * 2. Auto-resolve alertas que já não se aplicam
- * 3. Envia email de sumário ao ADMIN se houver alertas HIGH
+ * TIER 1 — Foundation
+ *   - 21 checks em 7 categorias (reservations, payouts, properties,
+ *     users, tasks, tax, CRM)
+ *   - 4 severity levels: CRITICAL, HIGH, MEDIUM, LOW
+ *
+ * TIER 2 — Intelligence
+ *   - Claude Haiku analisa cada alerta HIGH/CRITICAL e sugere fix concreto
+ *   - Alert suppression: não re-envia mesmo alerta em <24h
+ *
+ * TIER 3 — Actions
+ *   - Self-healing: auto-fix para checks seguros (commission sync, paidAt backfill)
+ *   - Webhook Slack/Discord além de email
+ *
+ * Scheduled: "0 7 * * *" (07:00 UTC daily).
  */
 export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
@@ -26,152 +37,70 @@ export async function GET(request: NextRequest) {
   }
 
   const now = new Date()
-  const detected: { checkType: string; severity: AlertSeverity; message: string; count: number }[] = []
 
-  // ════════════════════════════════════════════════════════════════
-  // CHECKS — mesma lógica que /api/monitor/checks, optimizada para cron
-  // ════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════
+  // TIER 1: RUN ALL CHECKS IN PARALLEL
+  // ═══════════════════════════════════════════════════════════════
+  const settled = await Promise.allSettled(ALL_CHECKS.map(check => check(now)))
+  const detected: CheckResult[] = settled
+    .filter((r): r is PromiseFulfilledResult<CheckResult | null> => r.status === 'fulfilled')
+    .map(r => r.value)
+    .filter((r): r is CheckResult => r !== null)
 
-  // R1 — Reservas UPCOMING com checkIn já no passado
-  const overdueCheckins = await prisma.reservation.count({
-    where: { status: 'UPCOMING', checkIn: { lt: now } },
-  })
-  if (overdueCheckins > 0) {
-    detected.push({
-      checkType: 'RESERVATION_PAST_CHECKIN',
-      severity: 'HIGH',
-      message: `${overdueCheckins} reserva(s) com estado UPCOMING mas check-in já passou`,
-      count: overdueCheckins,
-    })
-  }
-
-  // R2 — Reservas com check-in em <7 dias sem tarefa CHECK_IN
-  const in7Days = new Date(now)
-  in7Days.setDate(in7Days.getDate() + 7)
-  const upcomingCheckIns = await prisma.reservation.findMany({
-    where: { checkIn: { gte: now, lte: in7Days }, status: { in: ['UPCOMING', 'ACTIVE'] } },
-    select: { id: true, propertyId: true },
-  })
-  if (upcomingCheckIns.length > 0) {
-    const propIds = Array.from(new Set(upcomingCheckIns.map(r => r.propertyId)))
-    const existingTasks = await prisma.task.findMany({
-      where: { type: 'CHECK_IN', propertyId: { in: propIds }, dueDate: { gte: now, lte: in7Days }, status: { not: 'COMPLETED' } },
-      select: { propertyId: true },
-    })
-    const covered = new Set(existingTasks.map(t => t.propertyId))
-    const missing = upcomingCheckIns.filter(r => !covered.has(r.propertyId)).length
-    if (missing > 0) {
-      detected.push({
-        checkType: 'CHECKIN_NO_TASK',
-        severity: 'MEDIUM',
-        message: `${missing} reserva(s) com check-in em <7 dias sem tarefa CHECK_IN`,
-        count: missing,
-      })
+  // Log failed checks separately (don't fail the cron)
+  settled.forEach((r, i) => {
+    if (r.status === 'rejected') {
+      console.error(`[AI Monitor] Check #${i} failed:`, r.reason)
     }
-  }
-
-  // R5 — Reservas com valor €0
-  const zeroAmountReservations = await prisma.reservation.count({
-    where: { amount: 0, status: { not: 'CANCELLED' } },
   })
-  if (zeroAmountReservations > 0) {
-    detected.push({
-      checkType: 'RESERVATION_ZERO_AMOUNT',
-      severity: 'MEDIUM',
-      message: `${zeroAmountReservations} reserva(s) activa(s) com valor €0`,
-      count: zeroAmountReservations,
+
+  // ═══════════════════════════════════════════════════════════════
+  // TIER 3: AUTO-FIX safe issues BEFORE persisting alerts
+  // ═══════════════════════════════════════════════════════════════
+  const enrichedAlerts: (CheckResult & { aiAnalysis?: string | null; autoFixNotes?: string | null })[] = []
+
+  for (const check of detected) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const enriched: any = { ...check }
+
+    if (check.canAutoFix) {
+      try {
+        const fixResult = await autoFix(check)
+        if (fixResult.fixed) {
+          enriched.autoFixNotes = fixResult.notes
+          console.log(`[AI Monitor] Auto-fixed ${check.checkType}: ${fixResult.notes}`)
+        }
+      } catch (err) {
+        console.error(`[AI Monitor] Auto-fix failed for ${check.checkType}:`, err)
+      }
+    }
+
+    enrichedAlerts.push(enriched)
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // TIER 2: AI ANALYSIS for CRITICAL/HIGH alerts (not auto-fixed)
+  // ═══════════════════════════════════════════════════════════════
+  const needsAnalysis = enrichedAlerts.filter(
+    a => (a.severity === 'CRITICAL' || a.severity === 'HIGH') && !a.autoFixNotes,
+  )
+
+  // Run AI analyses in parallel (up to 5 concurrent to avoid rate limits)
+  const BATCH_SIZE = 5
+  for (let i = 0; i < needsAnalysis.length; i += BATCH_SIZE) {
+    const batch = needsAnalysis.slice(i, i + BATCH_SIZE)
+    const analyses = await Promise.all(batch.map(a => analyzeAlert(a)))
+    batch.forEach((alert, idx) => {
+      alert.aiAnalysis = analyses[idx]
     })
   }
 
-  // P1 — Payouts PAID sem invoice auto-gerado
-  const paidPayoutsCount = await prisma.payout.count({ where: { status: 'PAID' } })
-  const autoInvoicesCount = await prisma.invoice.count({ where: { isAutoGenerated: true, status: 'PAID' } })
-  const missingInvoices = Math.max(0, paidPayoutsCount - autoInvoicesCount)
-  if (missingInvoices > 0) {
-    detected.push({
-      checkType: 'PAYOUT_NO_INVOICE',
-      severity: 'HIGH',
-      message: `${missingInvoices} payout(s) pago(s) sem invoice auto-gerado`,
-      count: missingInvoices,
-    })
-  }
+  // ═══════════════════════════════════════════════════════════════
+  // PERSIST: create new, update existing, auto-resolve obsolete
+  // ═══════════════════════════════════════════════════════════════
+  const detectedTypes = enrichedAlerts.map(d => d.checkType)
 
-  // P1b — Invoices auto-gerados a mais que payouts (possível duplicação)
-  const duplicateInvoices = Math.max(0, autoInvoicesCount - paidPayoutsCount)
-  if (duplicateInvoices > 0) {
-    detected.push({
-      checkType: 'INVOICE_DUPLICATE',
-      severity: 'HIGH',
-      message: `${duplicateInvoices} invoice(s) auto-gerado(s) a mais que payouts pagos`,
-      count: duplicateInvoices,
-    })
-  }
-
-  // P2 — Payouts SCHEDULED em atraso
-  const overduePayouts = await prisma.payout.count({
-    where: { status: 'SCHEDULED', scheduledFor: { lt: now } },
-  })
-  if (overduePayouts > 0) {
-    detected.push({
-      checkType: 'PAYOUT_OVERDUE',
-      severity: 'HIGH',
-      message: `${overduePayouts} payout(s) em atraso — data agendada já passou`,
-      count: overduePayouts,
-    })
-  }
-
-  // P3 — Taxa de comissão desactualizada
-  const scheduledPayouts = await prisma.payout.findMany({
-    where: { status: 'SCHEDULED' },
-    select: { commissionRate: true, property: { select: { owner: { select: { subscriptionPlan: true } } } } },
-  })
-  const mismatchedRates = scheduledPayouts.filter(p => {
-    const plan = p.property?.owner?.subscriptionPlan
-    if (!plan) return false
-    return Math.abs(p.commissionRate - (PLAN_COMMISSION[plan] ?? 0) * 100) > 0.1
-  }).length
-  if (mismatchedRates > 0) {
-    detected.push({
-      checkType: 'COMMISSION_MISMATCH',
-      severity: 'MEDIUM',
-      message: `${mismatchedRates} payout(s) com taxa diferente do plano actual do proprietário`,
-      count: mismatchedRates,
-    })
-  }
-
-  // P4 — Invoices PAID sem paidAt
-  const invoicesNoPaidAt = await prisma.invoice.count({ where: { status: 'PAID', paidAt: null } })
-  if (invoicesNoPaidAt > 0) {
-    detected.push({
-      checkType: 'INVOICE_PAID_NO_PAIDAT',
-      severity: 'HIGH',
-      message: `${invoicesNoPaidAt} invoice(s) PAID sem data de pagamento — invisíveis no dashboard`,
-      count: invoicesNoPaidAt,
-    })
-  }
-
-  // Rep3 — Propriedades ACTIVE sem actividade há 90 dias
-  const ninetyDaysAgo = new Date(now)
-  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
-  const staleProperties = await prisma.property.count({
-    where: { status: 'ACTIVE', reservations: { none: { checkIn: { gte: ninetyDaysAgo } } } },
-  })
-  if (staleProperties > 0) {
-    detected.push({
-      checkType: 'PROPERTY_STALE',
-      severity: 'LOW',
-      message: `${staleProperties} propriedade(s) activa(s) sem reservas há 90+ dias`,
-      count: staleProperties,
-    })
-  }
-
-  // ════════════════════════════════════════════════════════════════
-  // PERSISTIR — criar alertas novos, auto-resolver antigos
-  // ════════════════════════════════════════════════════════════════
-
-  const detectedTypes = detected.map(d => d.checkType)
-
-  // Auto-resolver alertas que já não existem
+  // Auto-resolve alerts that no longer apply
   await prisma.systemAlert.updateMany({
     where: {
       resolvedAt: null,
@@ -180,99 +109,95 @@ export async function GET(request: NextRequest) {
     data: { resolvedAt: now },
   })
 
-  // Para cada anomalia detectada, criar alerta se não existir um aberto
+  // Upsert each detected alert
   let created = 0
-  for (const item of detected) {
+  let updated = 0
+  const persisted: { alert: CheckResult & { aiAnalysis?: string | null; autoFixNotes?: string | null }; notifiedAt: Date | null }[] = []
+
+  for (const item of enrichedAlerts) {
     const existing = await prisma.systemAlert.findFirst({
       where: { checkType: item.checkType, resolvedAt: null },
     })
+
     if (!existing) {
       await prisma.systemAlert.create({
         data: {
           checkType: item.checkType,
-          severity: item.severity,
+          severity: item.severity as AlertSeverity,
           message: item.message,
-          details: { count: item.count, detectedAt: now.toISOString() },
+          details: { count: item.count, detectedAt: now.toISOString(), ...(item.details ?? {}) },
+          aiAnalysis: item.aiAnalysis ?? null,
+          autoFixedAt: item.autoFixNotes ? now : null,
+          autoFixNotes: item.autoFixNotes ?? null,
         },
       })
       created++
+      persisted.push({ alert: item, notifiedAt: null })
     } else {
-      // Actualizar mensagem e details do alerta existente
-      await prisma.systemAlert.update({
+      const updatedRecord = await prisma.systemAlert.update({
         where: { id: existing.id },
         data: {
           message: item.message,
-          severity: item.severity,
-          details: { count: item.count, detectedAt: now.toISOString() },
+          severity: item.severity as AlertSeverity,
+          details: { count: item.count, detectedAt: now.toISOString(), ...(item.details ?? {}) },
+          ...(item.aiAnalysis ? { aiAnalysis: item.aiAnalysis } : {}),
+          ...(item.autoFixNotes ? { autoFixedAt: now, autoFixNotes: item.autoFixNotes } : {}),
         },
       })
+      updated++
+      persisted.push({ alert: item, notifiedAt: updatedRecord.notifiedAt })
     }
   }
 
-  // ════════════════════════════════════════════════════════════════
-  // EMAIL — enviar sumário se houver alertas HIGH
-  // ════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════
+  // NOTIFY: email + webhook (with suppression)
+  // ═══════════════════════════════════════════════════════════════
+  const toNotify = persisted
+    .filter(p => p.alert.severity === 'CRITICAL' || p.alert.severity === 'HIGH')
+    .filter(p => shouldNotify(p.notifiedAt))
+    .map(p => p.alert)
 
-  const highAlerts = detected.filter(d => d.severity === 'HIGH')
-
-  if (highAlerts.length > 0) {
+  if (toNotify.length > 0) {
     const adminEmail = process.env.ADMIN_EMAIL
-    if (adminEmail) {
-      const rows = detected
-        .map(d => {
-          const badge = d.severity === 'HIGH'
-            ? '<span style="background:#fef2f2;color:#dc2626;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">HIGH</span>'
-            : d.severity === 'MEDIUM'
-            ? '<span style="background:#fffbeb;color:#d97706;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">MEDIUM</span>'
-            : '<span style="background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">LOW</span>'
-          return `<tr><td style="padding:10px 16px;font-size:13px;">${badge}</td><td style="padding:10px 16px;font-size:13px;color:#333;">${d.message}</td></tr>`
-        })
-        .join('')
+    if (adminEmail) await sendAlertEmail(adminEmail, toNotify, now)
 
-      const html = `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#f4f4f0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f0;padding:40px 0;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-        <tr><td style="background:#111827;padding:24px 32px;">
-          <span style="font-size:20px;font-weight:700;color:#fff;">Host<span style="color:#C9A84C;">Masters</span></span>
-          <span style="margin-left:8px;background:rgba(220,38,38,0.15);color:#fca5a5;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:2px 8px;border-radius:4px;">AI Monitor</span>
-        </td></tr>
-        <tr><td style="padding:32px;">
-          <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Anomalias detectadas</h2>
-          <p style="margin:0 0 24px;font-size:14px;color:#666;">${now.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })} — ${detected.length} problema(s) encontrado(s), ${highAlerts.length} crítico(s)</p>
-          <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;">
-            <tr style="background:#f9fafb;"><td style="padding:10px 16px;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;">Severidade</td><td style="padding:10px 16px;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;">Descrição</td></tr>
-            ${rows}
-          </table>
-          ${process.env.NEXT_PUBLIC_APP_URL ? `<p style="margin:24px 0 0;"><a href="${process.env.NEXT_PUBLIC_APP_URL}/ai-monitor" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">Ver no AI Monitor</a></p>` : ''}
-          <p style="margin:24px 0 0;font-size:13px;color:#999;">Este email é gerado automaticamente pelo AI Monitor da HostMasters.</p>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body></html>`
+    const webhookUrl = process.env.MONITOR_WEBHOOK_URL
+    if (webhookUrl) await sendWebhook(webhookUrl, toNotify)
 
-      try {
-        await sendEmail({
-          to: adminEmail,
-          subject: `[HM Monitor] ${highAlerts.length} alerta(s) crítico(s) detectado(s)`,
-          html,
-        })
-      } catch (err) {
-        console.error('[AI Monitor] Failed to send alert email:', err)
-      }
-    }
+    // Mark as notified
+    await prisma.systemAlert.updateMany({
+      where: {
+        checkType: { in: toNotify.map(a => a.checkType) },
+        resolvedAt: null,
+      },
+      data: { notifiedAt: now },
+    })
   }
 
+  // ═══════════════════════════════════════════════════════════════
+  // RESPONSE SUMMARY
+  // ═══════════════════════════════════════════════════════════════
   const summary = {
     checkedAt: now.toISOString(),
-    detected: detected.length,
-    high: highAlerts.length,
+    totalChecks: ALL_CHECKS.length,
+    detected: enrichedAlerts.length,
+    critical: enrichedAlerts.filter(a => a.severity === 'CRITICAL').length,
+    high: enrichedAlerts.filter(a => a.severity === 'HIGH').length,
+    medium: enrichedAlerts.filter(a => a.severity === 'MEDIUM').length,
+    low: enrichedAlerts.filter(a => a.severity === 'LOW').length,
+    autoFixed: enrichedAlerts.filter(a => a.autoFixNotes).length,
+    aiAnalyzed: enrichedAlerts.filter(a => a.aiAnalysis).length,
     created,
-    resolved: detectedTypes.length === 0 ? 'all' : undefined,
-    issues: detected,
+    updated,
+    notified: toNotify.length,
+    issues: enrichedAlerts.map(a => ({
+      type: a.checkType,
+      severity: a.severity,
+      message: a.message,
+      count: a.count,
+      autoFixed: !!a.autoFixNotes,
+      aiAnalyzed: !!a.aiAnalysis,
+    })),
   }
 
   console.log('[AI Monitor] Cron complete:', JSON.stringify(summary))
