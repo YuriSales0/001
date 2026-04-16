@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
 export async function GET(request: NextRequest) {
-  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const user = guard.user!
   try {
@@ -66,9 +66,19 @@ export async function POST(request: NextRequest) {
     if (me.role === 'CLIENT') ownerId = me.id
     // MANAGER creates for one of their clients — ownerId must be provided and be one of their clients
     if (me.role === 'MANAGER' && ownerId) {
-      const owner = await prisma.user.findUnique({ where: { id: ownerId }, select: { managerId: true } })
+      const owner = await prisma.user.findUnique({ where: { id: ownerId }, select: { managerId: true, role: true } })
       if (owner?.managerId !== me.id) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+    // ADMIN — validate ownerId refers to an existing CLIENT
+    if (me.role === 'ADMIN' && ownerId) {
+      const owner = await prisma.user.findUnique({ where: { id: ownerId }, select: { role: true } })
+      if (!owner) {
+        return NextResponse.json({ error: 'Owner not found' }, { status: 404 })
+      }
+      if (owner.role !== 'CLIENT') {
+        return NextResponse.json({ error: 'Owner must be a CLIENT user' }, { status: 400 })
       }
     }
 
@@ -95,7 +105,7 @@ export async function POST(request: NextRequest) {
         description,
         photos: photos || [],
         ownerId,
-        commissionRate: commissionRate ?? 17.0,
+        commissionRate: me.role === 'ADMIN' ? (commissionRate ?? 17.0) : 17.0,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         status: status as any,
       },

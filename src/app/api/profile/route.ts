@@ -34,7 +34,7 @@ export async function PATCH(request: NextRequest) {
   if (image       !== undefined) data.image          = image
   if (language    !== undefined && ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da'].includes(language))
     data.language = language
-  if (commissionRate !== undefined && ['ADMIN','MANAGER','CREW'].includes(user.role))
+  if (commissionRate !== undefined && user.role === 'ADMIN')
     data.commissionRate = commissionRate
 
   // Password change

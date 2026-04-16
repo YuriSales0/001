@@ -8,6 +8,7 @@ export async function GET(
 ) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { id } = params
 
@@ -20,6 +21,8 @@ export async function GET(
             name: true,
             address: true,
             city: true,
+            ownerId: true,
+            owner: { select: { managerId: true } },
           },
         },
         expenses: {
@@ -33,6 +36,34 @@ export async function GET(
         { error: 'Reservation not found' },
         { status: 404 }
       )
+    }
+
+    // Scope checks
+    if (me.role === 'CLIENT' && reservation.property.ownerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (me.role === 'MANAGER' && reservation.property.owner.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (me.role === 'CREW') {
+      // CREW can only view reservations for properties where they have tasks
+      const hasTask = await prisma.task.findFirst({
+        where: { propertyId: reservation.property.id, assigneeId: me.id },
+        select: { id: true },
+      })
+      if (!hasTask) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      // Return limited data for CREW — no financial details
+      const { expenses: _expenses, ...safeReservation } = reservation
+      return NextResponse.json({
+        ...safeReservation,
+        amount: undefined,
+        property: {
+          id: reservation.property.id,
+          name: reservation.property.name,
+          address: reservation.property.address,
+          city: reservation.property.city,
+        },
+      })
     }
 
     return NextResponse.json(reservation)

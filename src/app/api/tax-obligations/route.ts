@@ -75,12 +75,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid periodLabel (required, max 50 chars)' }, { status: 400 })
   }
 
+  // Validate target user exists and is a CLIENT
+  const client = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, role: true, managerId: true } })
+  if (!client) {
+    return NextResponse.json({ error: 'User not found' }, { status: 404 })
+  }
+  if (client.role !== 'CLIENT') {
+    return NextResponse.json({ error: 'Target user must be a CLIENT' }, { status: 400 })
+  }
   // If manager, verify client belongs to them
-  if (guard.user!.role === 'MANAGER') {
-    const client = await prisma.user.findUnique({ where: { id: userId } })
-    if (!client || client.managerId !== guard.user!.id) {
-      return NextResponse.json({ error: 'forbidden' }, { status: 403 })
-    }
+  if (guard.user!.role === 'MANAGER' && client.managerId !== guard.user!.id) {
+    return NextResponse.json({ error: 'forbidden' }, { status: 403 })
   }
 
   // If propertyId is provided, verify it belongs to the specified user

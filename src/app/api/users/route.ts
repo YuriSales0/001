@@ -13,9 +13,12 @@ export async function GET(req: NextRequest) {
 
   const where: Record<string, unknown> = {}
   if (role) where.role = role
-  // MANAGER restrictions: only see their own clients; CREW are global so any role-filtered fetch is allowed
+  // MANAGER restrictions: only see their own clients and shared CREW users
   if (me.role === 'MANAGER') {
-    if (role === 'CLIENT' || !role) {
+    if (role === 'CREW') {
+      where.role = 'CREW'
+    } else {
+      // Default: only their own clients (block access to ADMIN/MANAGER lists)
       where.role = 'CLIENT'
       where.managerId = me.id
     }

@@ -65,6 +65,17 @@ export async function GET(
         select: { id: true },
       })
       if (!hasTask) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      // Return limited data for CREW — no financial data, no reservations, no expenses
+      return NextResponse.json({
+        id: property.id,
+        name: property.name,
+        address: property.address,
+        city: property.city,
+        postalCode: property.postalCode,
+        description: property.description,
+        photos: property.photos,
+        tasks: property.tasks.filter(t => t.assigneeId === me.id),
+      })
     }
 
     return NextResponse.json(property)
