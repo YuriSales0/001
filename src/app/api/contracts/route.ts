@@ -15,12 +15,17 @@ export async function GET(request: NextRequest) {
   const me = guard.user!
 
   const userId = request.nextUrl.searchParams.get('userId')
+  const propertyId = request.nextUrl.searchParams.get('propertyId')
+  const type = request.nextUrl.searchParams.get('type')
 
-  const where = me.role === 'ADMIN' && userId
+  const where: Record<string, unknown> = me.role === 'ADMIN' && userId
     ? { userId }
     : me.role === 'ADMIN'
     ? {}
     : { userId: me.id }
+
+  if (propertyId) where.propertyId = propertyId
+  if (type) where.type = type
 
   const contracts = await prisma.contract.findMany({
     where,

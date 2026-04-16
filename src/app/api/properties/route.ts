@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { HOUSE_RULES } from '@/lib/house-rules'
 
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
@@ -62,7 +63,19 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     let { ownerId } = body
-    const { name, address, city, postalCode, description, photos, commissionRate } = body
+    const { name, address, city, postalCode, description, photos, commissionRate, houseRules } = body
+
+    // Validate houseRules if provided
+    if (houseRules !== undefined) {
+      if (!Array.isArray(houseRules)) {
+        return NextResponse.json({ error: 'houseRules must be an array' }, { status: 400 })
+      }
+      const validKeys = new Set(HOUSE_RULES.map(r => r.key))
+      const invalid = houseRules.filter((k: string) => !validKeys.has(k))
+      if (invalid.length > 0) {
+        return NextResponse.json({ error: `Invalid house rule keys: ${invalid.join(', ')}` }, { status: 400 })
+      }
+    }
     if (me.role === 'CLIENT') ownerId = me.id
     // MANAGER creates for one of their clients — ownerId must be provided and be one of their clients
     if (me.role === 'MANAGER' && ownerId) {
@@ -104,6 +117,7 @@ export async function POST(request: NextRequest) {
         postalCode,
         description,
         photos: photos || [],
+        houseRules: houseRules ?? [],
         ownerId,
         commissionRate: me.role === 'ADMIN' ? (commissionRate ?? 17.0) : 17.0,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

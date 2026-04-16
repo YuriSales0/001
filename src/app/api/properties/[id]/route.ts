@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { HOUSE_RULES } from '@/lib/house-rules'
 
 export async function GET(
   _request: NextRequest,
@@ -109,9 +110,23 @@ export async function PUT(
     }
 
     const body = await request.json()
+
+    // Validate houseRules if provided
+    if (body.houseRules !== undefined) {
+      if (!Array.isArray(body.houseRules)) {
+        return NextResponse.json({ error: 'houseRules must be an array' }, { status: 400 })
+      }
+      const validKeys = new Set(HOUSE_RULES.map(r => r.key))
+      const invalid = body.houseRules.filter((k: string) => !validKeys.has(k))
+      if (invalid.length > 0) {
+        return NextResponse.json({ error: `Invalid house rule keys: ${invalid.join(', ')}` }, { status: 400 })
+      }
+    }
+
     const allowedFields = ['name', 'address', 'city', 'postalCode', 'description',
                             'photos', 'commissionRate', 'airbnbIcalUrl', 'bookingIcalUrl',
-                            'smartLockId', 'bedrooms', 'bathrooms', 'latitude', 'longitude']
+                            'smartLockId', 'bedrooms', 'bathrooms', 'latitude', 'longitude',
+                            'houseRules']
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: any = {}
     for (const field of allowedFields) {

@@ -65,6 +65,7 @@ export default function OwnerDashboard() {
   const [loading, setLoading] = useState(true)
 
   const [pendingInvoices, setPendingInvoices] = useState<{ count: number; total: number }>({ count: 0, total: 0 })
+  const [hasContractPending, setHasContractPending] = useState(false)
 
   useEffect(() => {
     type Payout = { scheduledFor: string; status: string; netAmount: number }
