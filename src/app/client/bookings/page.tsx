@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CalendarDays, List, Plus, X, AlertTriangle } from "lucide-react"
+import { CalendarDays, List, Plus, X, AlertTriangle, Loader2 } from "lucide-react"
 import { useEscapeKey } from "@/lib/use-escape-key"
 
 type Reservation = {
@@ -228,10 +228,10 @@ export default function OwnerBookings() {
             <button
               onClick={saveBlock}
               disabled={blocking_saving || !blockForm.start || !blockForm.end}
-              className="rounded-lg px-6 py-2.5 font-sans font-semibold text-sm text-white disabled:opacity-50 transition-opacity hover:opacity-90"
+              className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2.5 font-sans font-semibold text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed transition-opacity hover:opacity-90"
               style={{ background: 'var(--hm-black)', minHeight: '44px' }}
             >
-              {blocking_saving ? "Saving…" : "Block these dates"}
+              {blocking_saving ? (<><Loader2 className="h-4 w-4 animate-spin" /> Saving…</>) : "Block these dates"}
             </button>
           </div>
         </div>

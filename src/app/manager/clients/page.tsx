@@ -16,6 +16,17 @@ export default function ManagerClients() {
       .catch(() => setError(true))
       .finally(() => setLoading(false))
   }, [])
+  if (loading) return (
+    <div className="p-6 space-y-4">
+      <h1 className="text-3xl font-bold text-navy-900">My Clients</h1>
+      <div className="space-y-4 animate-pulse">
+        <div className="h-8 rounded bg-gray-100 w-48" />
+        <div className="h-40 rounded-xl bg-gray-100" />
+        <div className="h-40 rounded-xl bg-gray-100" />
+      </div>
+    </div>
+  )
+
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold text-navy-900">My Clients</h1>
@@ -26,7 +37,6 @@ export default function ManagerClients() {
             <tr><th className="px-4 py-3">Name</th><th className="px-4 py-3">Email</th><th className="px-4 py-3">Phone</th><th className="px-4 py-3">ID</th></tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan={4} className="text-center py-8 text-gray-400">Loading…</td></tr>}
             {error && <tr><td colSpan={4} className="text-center py-8"><p className="text-sm text-red-500">Failed to load data</p></td></tr>}
             {!loading && !error && clients.length === 0 && (
               <tr><td colSpan={4}>

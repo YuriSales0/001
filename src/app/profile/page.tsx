@@ -131,7 +131,7 @@ export default function AdminProfilePage() {
         <div className="flex items-center justify-between pt-1">
           {saved && <span className="text-sm text-green-600 font-medium">Saved successfully</span>}
           <button type="submit" disabled={saving}
-            className="ml-auto inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
+            className="ml-auto inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
             <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save changes"}
           </button>
         </div>

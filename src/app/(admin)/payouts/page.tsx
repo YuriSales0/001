@@ -226,7 +226,7 @@ function CreatePayoutModal({
           )}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50">
+            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'A criar...' : 'Criar payout'}
             </button>
           </div>
@@ -324,7 +324,7 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50">
+            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'A guardar...' : 'Guardar'}
             </button>
           </div>

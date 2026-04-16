@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { UserPlus, Trash2, Save } from "lucide-react"
+import { UserPlus, Trash2, Save, Loader2 } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
 
@@ -131,8 +131,8 @@ export default function TeamPage() {
           )}
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" disabled={creating} className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800 disabled:opacity-50">
-          {creating ? 'Creating…' : 'Create user'}
+        <button type="submit" disabled={creating} className="inline-flex items-center gap-2 rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
+          {creating ? (<><Loader2 className="h-4 w-4 animate-spin" /> Creating…</>) : (<><UserPlus className="h-4 w-4" /> Create user</>)}
         </button>
       </form>
 

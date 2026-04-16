@@ -245,7 +245,10 @@ function ObligationRow({
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.notes')}</label>
-          <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="w-full rounded-lg border px-3 py-2 text-sm" />
+          <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm" />
+          <div className="text-right text-xs text-gray-400 mt-1">
+            {notes.length}/500
+          </div>
         </div>
         <div className="flex gap-2 justify-end">
           <button onClick={onCancel} className="rounded-lg border px-4 py-1.5 text-sm hover:bg-gray-100"><X className="h-3.5 w-3.5 inline mr-1" />{t('common.cancel')}</button>
@@ -372,7 +375,10 @@ function NewObligationModal({
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.notesVisibleToClient')}</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} className="w-full rounded-lg border px-3 py-2 text-sm" />
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm" />
+            <div className="text-right text-xs text-gray-400 mt-1">
+              {notes.length}/500
+            </div>
           </div>
         </div>
         <div className="px-6 py-4 border-t flex justify-end gap-2">

@@ -159,7 +159,7 @@ function CampaignModal({
               Cancel
             </button>
             <button type="submit" disabled={saving}
-              className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50">
+              className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Create campaign'}
             </button>
           </div>

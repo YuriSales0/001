@@ -194,8 +194,31 @@ export default function CrewHome() {
           )}
           {!loading && !error && visible.length === 0 && (
             <div className="p-6 text-center text-sm text-gray-400">
-              <Calendar className="h-8 w-8 mx-auto text-gray-300 mb-1" />
-              No tasks here.
+              {filter === "done" ? (
+                <>
+                  <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-400" />
+                  </div>
+                  <p className="font-semibold text-gray-700 mb-0.5">All caught up!</p>
+                  <p className="text-xs text-gray-400">No completed tasks yet. They will appear here once you finish them.</p>
+                </>
+              ) : filter === "today" ? (
+                <>
+                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                    <Calendar className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <p className="font-semibold text-gray-700 mb-0.5">Nothing scheduled for today</p>
+                  <p className="text-xs text-gray-400">Check the Open tab for upcoming tasks.</p>
+                </>
+              ) : (
+                <>
+                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                    <Calendar className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <p className="font-semibold text-gray-700 mb-0.5">No open tasks</p>
+                  <p className="text-xs text-gray-400">New tasks will appear here when assigned to you.</p>
+                </>
+              )}
             </div>
           )}
           {visible.map(t => {
@@ -363,31 +386,43 @@ export default function CrewHome() {
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Observed issues</label>
                   <textarea
                     rows={2}
+                    maxLength={500}
                     value={checkout.issues}
                     onChange={e => setCheckout(c => ({ ...c, issues: e.target.value }))}
                     placeholder="e.g. broken lamp in living room, slow drain in bathroom…"
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
+                  <div className="text-right text-xs text-gray-400 mt-1">
+                    {checkout.issues.length}/500
+                  </div>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Damages requiring follow-up</label>
                   <textarea
                     rows={2}
+                    maxLength={500}
                     value={checkout.damages}
                     onChange={e => setCheckout(c => ({ ...c, damages: e.target.value }))}
                     placeholder="Describe any damage, cost estimate if known…"
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
+                  <div className="text-right text-xs text-gray-400 mt-1">
+                    {checkout.damages.length}/500
+                  </div>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Internal notes for the office</label>
                   <textarea
                     rows={2}
+                    maxLength={500}
                     value={checkout.notes}
                     onChange={e => setCheckout(c => ({ ...c, notes: e.target.value }))}
                     placeholder="Anything the office should know…"
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
+                  <div className="text-right text-xs text-gray-400 mt-1">
+                    {checkout.notes.length}/500
+                  </div>
                 </div>
                 <button
                   onClick={submitCheckout}

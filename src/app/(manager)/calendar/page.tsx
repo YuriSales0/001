@@ -166,7 +166,7 @@ function CreateTaskModal({
         <div className="flex gap-3 px-6 py-4 border-t">
           <button onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm hover:bg-gray-50">Cancelar</button>
           <button onClick={submit} disabled={submitting||!title||!propertyId}
-            className="flex-1 rounded-lg bg-gray-900 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50">
+            className="flex-1 rounded-lg bg-gray-900 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
             {submitting?'A criar…':'Criar tarefa'}
           </button>
         </div>
