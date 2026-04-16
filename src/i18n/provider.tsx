@@ -16,6 +16,8 @@ import {
   loadMessages,
   t as tRaw,
 } from '@/i18n'
+// Pre-load English synchronously to avoid flash of raw translation keys
+import enMessages from '@/messages/en.json'
 
 interface LocaleContextValue {
   locale: Locale
@@ -28,17 +30,23 @@ const LocaleContext = createContext<LocaleContextValue | null>(null)
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en')
-  const [messages, setMessages] = useState<Messages>({})
+  // Initialize with English messages so first render has translations,
+  // not raw keys. Other locales load async on cookie/session detection.
+  const [messages, setMessages] = useState<Messages>(enMessages as Messages)
 
-  // Load messages whenever locale changes
+  // Load messages whenever locale changes (skip if already English — already loaded)
   useEffect(() => {
+    if (locale === 'en') {
+      setMessages(enMessages as Messages)
+      return
+    }
     loadMessages(locale).then(setMessages)
   }, [locale])
 
   // On mount: read cookie, then override with session language if authenticated
   useEffect(() => {
     const cookieLocale = readCookieLocale()
-    setLocaleState(cookieLocale)
+    if (cookieLocale !== 'en') setLocaleState(cookieLocale)
 
     fetch('/api/auth/session')
       .then(res => res.json())
