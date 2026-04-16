@@ -797,12 +797,14 @@ model RecruitApplication {
   message        String?        @db.Text
   source         String?        // utm_source or "landing"
   locale         String?        // browser locale when submitted
-  status         RecruitStatus  @default(NEW)
-  reviewedAt     DateTime?
-  reviewedById   String?
-  adminNotes     String?        @db.Text
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  status             RecruitStatus  @default(NEW)
+  reviewedAt         DateTime?
+  reviewedById       String?
+  adminNotes         String?        @db.Text
+  convertedToUserId  String?        // set when converted into a real User via invite
+  convertedAt        DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
 
   @@index([role, status])
   @@index([createdAt])
