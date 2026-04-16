@@ -98,9 +98,18 @@ export async function PUT(
     }
 
     const body = await request.json()
+    const allowedFields = ['name', 'address', 'city', 'postalCode', 'description',
+                            'photos', 'commissionRate', 'airbnbIcalUrl', 'bookingIcalUrl',
+                            'smartLockId', 'bedrooms', 'bathrooms', 'latitude', 'longitude']
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any = {}
+    for (const field of allowedFields) {
+      if (body[field] !== undefined) data[field] = body[field]
+    }
+    // status transitions should go through dedicated endpoints, not PUT
     const property = await prisma.property.update({
       where: { id },
-      data: body,
+      data,
       include: {
         owner: {
           select: {

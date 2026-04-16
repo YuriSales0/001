@@ -95,6 +95,10 @@ export async function GET(request: NextRequest) {
   // ── Process each property in-memory ──────────────────────────────────────
   for (const property of properties) {
     try {
+      if (!property.owner) {
+        results.push({ propertyId: property.id, status: 'skipped', reason: 'no owner' })
+        continue
+      }
       const existing = reportByProperty.get(property.id)
       if (existing?.sentAt) {
         results.push({ propertyId: property.id, status: 'skipped', reason: 'already sent' })

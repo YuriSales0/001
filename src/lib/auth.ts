@@ -19,6 +19,11 @@ const devUsers: Array<{
   { id: 'client-1', name: 'Thomas Weber', email: 'client@hostmaster.es', role: 'CLIENT', language: 'en' },
 ]
 
+const secret = process.env.NEXTAUTH_SECRET
+if (!secret && process.env.NODE_ENV === 'production') {
+  throw new Error('NEXTAUTH_SECRET must be set in production')
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -84,5 +89,5 @@ export const authOptions: NextAuthOptions = {
   },
   pages: { signIn: '/login' },
   session: { strategy: 'jwt' },
-  secret: process.env.NEXTAUTH_SECRET || 'dev-secret-hostmaster-2026',
+  secret: secret || 'dev-secret-hostmaster-2026',
 }

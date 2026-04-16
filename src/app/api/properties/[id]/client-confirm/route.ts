@@ -19,8 +19,12 @@ export async function POST(
   })
   if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   if (property.ownerId !== me.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if ((property.status as string) === 'PENDING_APPROVAL' || (property.status as string) === 'ACTIVE') {
+    // Already confirmed, return success
+    return NextResponse.json({ ok: true, status: property.status, alreadyConfirmed: true })
+  }
   if ((property.status as string) !== 'PENDING_CLIENT') {
-    return NextResponse.json({ error: 'Property is not awaiting client confirmation' }, { status: 400 })
+    return NextResponse.json({ error: `Cannot confirm property in status ${property.status}` }, { status: 400 })
   }
 
   const updated = await prisma.property.update({

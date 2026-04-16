@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
+function stripTags(s: string | null | undefined): string | null {
+  if (!s) return null
+  return s.replace(/<[^>]*>/g, '').trim()
+}
+
 const LEAD_INCLUDE = {
   owner: { select: { id: true, name: true, email: true } },
   assignedManager: { select: { id: true, name: true, email: true } },
@@ -47,14 +52,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'name and source are required' }, { status: 400 })
   }
 
+  const cleanName = stripTags(name) || name
+  const cleanNotes = stripTags(notes)
+  const cleanMessage = stripTags(message)
+
   const lead = await prisma.lead.create({
     data: {
-      name,
+      name: cleanName,
       email: email || null,
       phone: phone || null,
       source,
-      message: message || null,
-      notes: notes || null,
+      message: cleanMessage,
+      notes: cleanNotes,
       budget: budget ? Number(budget) : null,
       propertyType: propertyType || null,
       followUpDate: followUpDate ? new Date(followUpDate) : null,

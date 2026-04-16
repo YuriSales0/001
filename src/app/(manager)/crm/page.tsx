@@ -219,12 +219,19 @@ export default function CRMPage() {
       QUALIFIED: "QUALIFIED", PROPOSAL_SENT: "QUALIFIED",
       CONTRACT_SIGNED: "CONVERTED", ACTIVE_OWNER: "RETAINED",
     }
+    const oldStatus = leads.find(l => l.id === leadId)?.status
     setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: stage } : l))
-    await fetch(`/api/leads/${leadId}`, {
+    const res = await fetch(`/api/leads/${leadId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: reverseMap[stage] }),
     })
+    if (!res.ok) {
+      // Revert optimistic update
+      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: oldStatus ?? l.status } : l))
+      const { showToast } = await import('@/components/hm/toast')
+      showToast('Failed to update lead status', 'error')
+    }
   }
 
   const addAttribution = async (leadId: string, campaignId: string) => {
