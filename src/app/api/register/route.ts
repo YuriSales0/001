@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
+import { sendEmail } from '@/lib/email'
+import { verificationEmail } from '@/lib/email-verification'
+
+const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,7 +13,8 @@ export async function POST(req: NextRequest) {
     if (!email || !password || password.length < 6) {
       return NextResponse.json({ error: 'Email and password (min 6 chars) required' }, { status: 400 })
     }
-    const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
+    const normalizedEmail = email.toLowerCase().trim()
+    const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } })
     if (existing) {
       // Return same success response to prevent email enumeration
       return NextResponse.json({ ok: true, id: 'existing' })
@@ -29,16 +35,32 @@ export async function POST(req: NextRequest) {
     const hash = await bcrypt.hash(password, 12)
     const user = await prisma.user.create({
       data: {
-        email: email.toLowerCase(),
+        email: normalizedEmail,
         name: name || null,
         password: hash,
         phone: phone || null,
         language: language || 'en',
         role: 'CLIENT',
         managerId,
+        emailVerified: null,
       },
     })
-    return NextResponse.json({ ok: true, id: user.id })
+
+    // Issue verification token (24h) + send email
+    const token = crypto.randomBytes(32).toString('hex')
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000)
+    await prisma.verificationToken.create({
+      data: { identifier: normalizedEmail, token, expires },
+    })
+
+    const verifyUrl = `${APP_URL}/verify-email?token=${token}`
+    sendEmail({
+      to: normalizedEmail,
+      subject: 'Confirm your HostMasters account',
+      html: verificationEmail({ name: name ?? normalizedEmail, verifyUrl }),
+    }).catch(err => console.error('Verification email failed:', err))
+
+    return NextResponse.json({ ok: true, id: user.id, verificationSent: true })
   } catch (e) {
     console.error('register error', e)
     return NextResponse.json({ error: 'Failed to register' }, { status: 500 })

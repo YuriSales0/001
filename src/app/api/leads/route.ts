@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
 
   const body = await request.json()
   const {
@@ -56,6 +57,9 @@ export async function POST(request: NextRequest) {
   const cleanNotes = stripTags(notes)
   const cleanMessage = stripTags(message)
 
+  // MANAGER creating a lead always owns it — ignore client-supplied value
+  const resolvedManagerId = me.role === 'MANAGER' ? me.id : (assignedManagerId || null)
+
   const lead = await prisma.lead.create({
     data: {
       name: cleanName,
@@ -67,7 +71,7 @@ export async function POST(request: NextRequest) {
       budget: budget ? Number(budget) : null,
       propertyType: propertyType || null,
       followUpDate: followUpDate ? new Date(followUpDate) : null,
-      assignedManagerId: assignedManagerId || null,
+      assignedManagerId: resolvedManagerId,
     },
     include: LEAD_INCLUDE,
   })

@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Users } from "lucide-react"
+import { Users, UserPlus } from "lucide-react"
 
 type Client = { id: string; name: string | null; email: string; phone: string | null }
 
@@ -29,7 +29,17 @@ export default function ManagerClients() {
 
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-3xl font-bold text-navy-900">My Clients</h1>
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <h1 className="text-3xl font-bold text-navy-900">My Clients</h1>
+        {clients.length > 0 && (
+          <Link
+            href="/manager/clients/invite"
+            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800"
+          >
+            <UserPlus className="h-4 w-4" /> Invite client
+          </Link>
+        )}
+      </div>
       <div className="rounded-xl border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">

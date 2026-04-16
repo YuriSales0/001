@@ -1,10 +1,11 @@
 "use client"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   Wrench, Calendar, MapPin, ClipboardCheck, CheckCircle2, PlayCircle,
-  AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save,
+  AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save, X, ImagePlus,
 } from "lucide-react"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
+import { showToast } from "@/components/hm/toast"
 
 type ChecklistItem = { text: string; done: boolean }
 type Task = {
@@ -16,7 +17,23 @@ type Task = {
   description: string | null
   notes: string | null
   checklist: ChecklistItem[] | null
+  photos: string[]
   property: { id: string; name: string; address: string; city: string }
+}
+
+// Compress a File to a small JPEG data URL before upload
+async function compressPhoto(file: File, maxDim = 1280, quality = 0.72): Promise<string> {
+  const bitmap = await createImageBitmap(file)
+  const ratio = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height))
+  const w = Math.round(bitmap.width * ratio)
+  const h = Math.round(bitmap.height * ratio)
+  const canvas = document.createElement("canvas")
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext("2d")
+  if (!ctx) throw new Error("Canvas not supported")
+  ctx.drawImage(bitmap, 0, 0, w, h)
+  return canvas.toDataURL("image/jpeg", quality)
 }
 
 const TYPE_LABEL: Record<string, string> = {
@@ -67,6 +84,48 @@ export default function CrewHome() {
     damages: "",
     notes: "",
   })
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const uploadPhoto = async (file: File) => {
+    if (!selected) return
+    setUploadingPhoto(true)
+    try {
+      const dataUrl = await compressPhoto(file)
+      const res = await fetch(`/api/tasks/${selected.id}/photos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ photo: dataUrl }),
+      })
+      const result = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        showToast(result.error ?? "Failed to upload photo", "error")
+        return
+      }
+      setTasks(prev => prev.map(t => t.id === selected.id ? { ...t, photos: result.photos } : t))
+      setSelected(s => s ? { ...s, photos: result.photos } : s)
+    } catch (err) {
+      console.error(err)
+      showToast("Failed to process photo", "error")
+    } finally {
+      setUploadingPhoto(false)
+      if (fileInputRef.current) fileInputRef.current.value = ""
+    }
+  }
+
+  const removePhoto = async (index: number) => {
+    if (!selected) return
+    const res = await fetch(`/api/tasks/${selected.id}/photos?index=${index}`, {
+      method: "DELETE",
+    })
+    const result = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      showToast(result.error ?? "Failed to remove photo", "error")
+      return
+    }
+    setTasks(prev => prev.map(t => t.id === selected.id ? { ...t, photos: result.photos } : t))
+    setSelected(s => s ? { ...s, photos: result.photos } : s)
+  }
 
   const load = async () => {
     setLoading(true)
@@ -145,6 +204,9 @@ export default function CrewHome() {
   const completeRegular = () => patchTask({ status: "COMPLETED" })
 
   const isCheckout = selected?.type === "CHECK_OUT"
+  const requiresPhotos = selected?.type === "CHECK_OUT" || selected?.type === "CLEANING"
+  const photoCount = selected?.photos?.length ?? 0
+  const hasMinPhotos = !requiresPhotos || photoCount >= 2
   const checklistDone = selected?.checklist?.filter(c => c.done).length ?? 0
   const checklistTotal = selected?.checklist?.length ?? 0
   const allChecklistDone = checklistTotal > 0 && checklistDone === checklistTotal
@@ -351,6 +413,72 @@ export default function CrewHome() {
               </div>
             )}
 
+            {/* Photo evidence — CHECK_OUT and CLEANING */}
+            {requiresPhotos && (
+              <div className="rounded-xl border bg-white p-5 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <h3 className="font-semibold text-navy-900 flex items-center gap-2">
+                      <Camera className="h-4 w-4" /> Photo evidence
+                      <span className={`text-xs font-bold ${hasMinPhotos ? "text-green-600" : "text-amber-600"}`}>
+                        {photoCount}/2+
+                      </span>
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      At least 2 photos required. These are sent to the owner as proof of work.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {(selected.photos ?? []).map((p, i) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden border bg-gray-100 group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
+                      {selected.status !== "COMPLETED" && (
+                        <button
+                          onClick={() => removePhoto(i)}
+                          className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label="Remove photo"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {selected.status !== "COMPLETED" && photoCount < 12 && (
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingPhoto}
+                      className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-navy-700 hover:bg-navy-50 flex flex-col items-center justify-center text-gray-500 transition-colors disabled:opacity-50"
+                    >
+                      {uploadingPhoto ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <>
+                          <ImagePlus className="h-5 w-5 mb-1" />
+                          <span className="text-[10px] font-semibold uppercase tracking-wider">Add photo</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (file) uploadPhoto(file)
+                  }}
+                />
+              </div>
+            )}
+
             {/* Checkout report — only for CHECK_OUT */}
             {isCheckout && selected.status !== "COMPLETED" && (
               <div className="rounded-xl border bg-white p-5 space-y-4">
@@ -426,7 +554,7 @@ export default function CrewHome() {
                 </div>
                 <button
                   onClick={submitCheckout}
-                  disabled={saving || (checklistTotal > 0 && !allChecklistDone)}
+                  disabled={saving || (checklistTotal > 0 && !allChecklistDone) || !hasMinPhotos}
                   className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
                 >
                   <Save className="h-5 w-5" /> Submit check-out report
@@ -436,18 +564,30 @@ export default function CrewHome() {
                     <AlertTriangle className="h-3.5 w-3.5" /> Complete the checklist before submitting.
                   </p>
                 )}
+                {!hasMinPhotos && (
+                  <p className="text-xs text-amber-700 flex items-center gap-1">
+                    <AlertTriangle className="h-3.5 w-3.5" /> Add at least 2 photos before submitting.
+                  </p>
+                )}
               </div>
             )}
 
             {/* Mark complete (non-checkout) */}
             {!isCheckout && selected.status !== "COMPLETED" && (
-              <button
-                onClick={completeRegular}
-                disabled={saving || (checklistTotal > 0 && !allChecklistDone)}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
-              >
-                <CheckCircle2 className="h-5 w-5" /> Mark task complete
-              </button>
+              <>
+                <button
+                  onClick={completeRegular}
+                  disabled={saving || (checklistTotal > 0 && !allChecklistDone) || !hasMinPhotos}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
+                >
+                  <CheckCircle2 className="h-5 w-5" /> Mark task complete
+                </button>
+                {!hasMinPhotos && (
+                  <p className="text-xs text-amber-700 flex items-center gap-1">
+                    <AlertTriangle className="h-3.5 w-3.5" /> Add at least 2 photos before marking complete.
+                  </p>
+                )}
+              </>
             )}
 
             {selected.status === "COMPLETED" && (

@@ -21,14 +21,20 @@ const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
  * }
  */
 export async function POST(request: NextRequest) {
-  const guard = await requireRole(['ADMIN'])
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
 
   const body = await request.json()
   const { email, name, role } = body
 
   if (!email || !role || !['MANAGER', 'CREW', 'CLIENT'].includes(role)) {
     return NextResponse.json({ error: 'email and role (MANAGER|CREW|CLIENT) required' }, { status: 400 })
+  }
+
+  // Managers can only invite CLIENTs, and the invitee is always assigned to them
+  if (me.role === 'MANAGER' && role !== 'CLIENT') {
+    return NextResponse.json({ error: 'Managers can only invite clients' }, { status: 403 })
   }
 
   // Check if user already exists
@@ -58,7 +64,12 @@ export async function POST(request: NextRequest) {
 
   if (role === 'CLIENT') {
     if (body.subscriptionPlan) userData.subscriptionPlan = body.subscriptionPlan
-    if (body.managerId) userData.managerId = body.managerId
+    // Force managerId = me.id when a Manager invites; Admin can assign freely
+    if (me.role === 'MANAGER') {
+      userData.managerId = me.id
+    } else if (body.managerId) {
+      userData.managerId = body.managerId
+    }
   }
 
   // Create user

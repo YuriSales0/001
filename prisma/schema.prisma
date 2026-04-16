@@ -419,6 +419,7 @@ model Task {
   description String?    @db.Text
   notes       String?    @db.Text
   checklist   Json?
+  photos      String[]   @default([])
   dueDate     DateTime
   assigneeId  String?
   createdAt   DateTime   @default(now())

@@ -2,20 +2,27 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Building2, ArrowRight } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { Building2, ArrowRight, MailCheck } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 
 export default function LoginPage() {
   const { t } = useLocale()
+  const params = useSearchParams()
+  const justVerified = params.get("verified") === "1"
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [showResend, setShowResend] = useState(false)
+  const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle")
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError("")
+    setShowResend(false)
+    setResendState("idle")
 
     try {
       const csrfRes = await fetch("/api/auth/csrf", { credentials: "include" })
@@ -40,11 +47,24 @@ export default function LoginPage() {
       }
 
       setError(t("auth.invalidCredentials"))
+      // Offer resend option in case the issue is unverified email
+      setShowResend(true)
     } catch {
       setError(t("common.error"))
     } finally {
       setLoading(false)
     }
+  }
+
+  const resendVerification = async () => {
+    if (!email) return
+    setResendState("sending")
+    await fetch("/api/auth/resend-verification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }).catch(() => {})
+    setResendState("sent")
   }
 
   return (
@@ -102,10 +122,35 @@ export default function LoginPage() {
                 />
               </div>
 
-              {error && (
-                <p className="text-sm text-red-400 text-center rounded-lg px-3 py-2" style={{ background: "rgba(220,38,38,0.1)" }}>
-                  {error}
+              {justVerified && !error && (
+                <p className="text-sm text-green-400 text-center rounded-lg px-3 py-2 flex items-center justify-center gap-1.5" style={{ background: "rgba(34,197,94,0.1)" }}>
+                  <MailCheck className="h-4 w-4" />
+                  Email confirmed — sign in to continue.
                 </p>
+              )}
+
+              {error && (
+                <div className="space-y-2">
+                  <p className="text-sm text-red-400 text-center rounded-lg px-3 py-2" style={{ background: "rgba(220,38,38,0.1)" }}>
+                    {error}
+                  </p>
+                  {showResend && email && (
+                    resendState === "sent" ? (
+                      <p className="text-xs text-green-400 text-center">
+                        If that email has a pending confirmation, we just sent a new link. Check your inbox.
+                      </p>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={resendVerification}
+                        disabled={resendState === "sending"}
+                        className="w-full text-xs text-[#C9A84C] hover:underline disabled:opacity-50"
+                      >
+                        {resendState === "sending" ? "Sending…" : "Didn't receive a confirmation email? Resend"}
+                      </button>
+                    )
+                  )}
+                </div>
               )}
 
               <button

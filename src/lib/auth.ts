@@ -43,6 +43,10 @@ export const authOptions: NextAuthOptions = {
             if (user?.password) {
               const ok = await bcrypt.compare(credentials.password, user.password)
               if (!ok) return null
+              // Block login if email is not verified (dev fallback password bypasses this)
+              if (!user.emailVerified && credentials.password !== 'dev') {
+                throw new Error('EMAIL_NOT_VERIFIED')
+              }
               return {
                 id: user.id,
                 name: user.name ?? email,
@@ -53,8 +57,11 @@ export const authOptions: NextAuthOptions = {
               }
             }
           }
-        } catch {
-          // fall through to dev fallback
+        } catch (err) {
+          if (err instanceof Error && err.message === 'EMAIL_NOT_VERIFIED') {
+            throw err
+          }
+          // fall through to dev fallback on infra errors
         }
 
         // Dev fallback — only when not in production
