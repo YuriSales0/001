@@ -19,6 +19,7 @@ export async function GET() {
       role: true,
       name: true,
       phone: true,
+      language: true,
       crewContractType: true,
       crewMonthlyRate: true,
       crewTaskRate: true,
@@ -39,6 +40,7 @@ export async function GET() {
     currentData: {
       name: user.name,
       phone: user.phone,
+      language: user.language,
       crewContractType: user.crewContractType,
       crewMonthlyRate: user.crewMonthlyRate,
       crewTaskRate: user.crewTaskRate,

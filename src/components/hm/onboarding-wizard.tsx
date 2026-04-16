@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CheckCircle2, ArrowRight, FileText, User, Briefcase, Shield } from 'lucide-react'
+import { CheckCircle2, ArrowRight, FileText, User, Briefcase, Shield, Globe } from 'lucide-react'
+import { useLocale } from '@/i18n/provider'
+import { LOCALES, type Locale } from '@/i18n'
 
 type WizardProps = {
   role: string
@@ -18,26 +20,23 @@ type OnboardingData = {
 }
 
 export function OnboardingWizard({ role, onComplete }: WizardProps) {
+  const { t, locale, setLocale } = useLocale()
   const [step, setStep] = useState(0)
   const [data, setData] = useState<OnboardingData | null>(null)
   const [saving, setSaving] = useState(false)
 
-  // Form state
+  const [selectedLang, setSelectedLang] = useState<Locale>(locale)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [language, setLanguage] = useState('es')
 
-  // Crew
   const [contractType, setContractType] = useState('FREELANCER')
   const [monthlyRate, setMonthlyRate] = useState('')
   const [taskRate, setTaskRate] = useState('')
   const [skills, setSkills] = useState<string[]>([])
 
-  // Manager — no defaults, Admin sets these via invite
   const [subscriptionShare, setSubscriptionShare] = useState('')
   const [commissionShare, setCommissionShare] = useState('')
 
-  // Contract
   const [acceptedContracts, setAcceptedContracts] = useState<string[]>([])
 
   useEffect(() => {
@@ -48,7 +47,9 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           setData(d)
           if (d.currentData.name) setName(d.currentData.name as string)
           if (d.currentData.phone) setPhone(d.currentData.phone as string)
-          // Load values pre-set by Admin during invite
+          if (d.currentData.language) {
+            setSelectedLang(d.currentData.language as Locale)
+          }
           if (d.currentData.managerSubscriptionShare) setSubscriptionShare(String((d.currentData.managerSubscriptionShare as number) * 100))
           if (d.currentData.managerCommissionShare) setCommissionShare(String((d.currentData.managerCommissionShare as number) * 100))
           if (d.currentData.crewContractType) setContractType(d.currentData.crewContractType as string)
@@ -58,11 +59,30 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
       })
   }, [])
 
-  const steps = role === 'CREW'
-    ? ['Perfil', 'Contrato', 'Competências', 'Confirmar']
-    : role === 'MANAGER'
-    ? ['Perfil', 'Compensação', 'Contrato', 'Confirmar']
-    : ['Perfil', 'Propriedade', 'Contrato', 'Confirmar'] // CLIENT
+  // Step 0 = Language, then role-specific steps
+  const stepLabels = [
+    t('onboarding.languageStep'),
+    t('onboarding.profileStep'),
+    ...(role === 'CREW'
+      ? [t('onboarding.crewContractStep'), t('onboarding.crewSkillsStep')]
+      : role === 'MANAGER'
+      ? [t('onboarding.managerCompStep')]
+      : [t('onboarding.clientPropertyStep')]),
+    t('onboarding.contractStep'),
+    t('onboarding.confirmStep'),
+  ]
+
+  const pickLanguage = async (lang: Locale) => {
+    setSelectedLang(lang)
+    setLocale(lang)
+    setSaving(true)
+    await fetch('/api/onboarding', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ step: 'language', data: { language: lang } }),
+    })
+    setSaving(false)
+  }
 
   const saveStep = async (stepName: string, stepData: Record<string, unknown>, complete = false) => {
     setSaving(true)
@@ -76,18 +96,24 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
 
   const next = async () => {
     if (step === 0) {
-      await saveStep('profile', { name, phone, language })
+      // Language already saved on pick — just advance
     }
-    if (step === 1 && role === 'CREW') {
-      await saveStep('contract', { contractType, monthlyRate, taskRate })
-    }
-    if (step === 1 && role === 'MANAGER') {
-      await saveStep('compensation', { subscriptionShare: parseFloat(subscriptionShare) / 100, commissionShare: parseFloat(commissionShare) / 100 })
+    if (step === 1) {
+      await saveStep('profile', { name, phone, language: selectedLang })
     }
     if (step === 2 && role === 'CREW') {
+      await saveStep('contract', { contractType, monthlyRate, taskRate })
+    }
+    if (step === 2 && role === 'MANAGER') {
+      await saveStep('compensation', {
+        subscriptionShare: parseFloat(subscriptionShare) / 100,
+        commissionShare: parseFloat(commissionShare) / 100,
+      })
+    }
+    if (step === 3 && role === 'CREW') {
       await saveStep('skills', { skills })
     }
-    if (step === steps.length - 1) {
+    if (step === stepLabels.length - 1) {
       await saveStep('complete', { signContractIds: acceptedContracts }, true)
       onComplete()
       return
@@ -97,6 +123,13 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
 
   const SKILL_OPTIONS = ['CLEANING', 'MAINTENANCE', 'CHECK_IN', 'CHECK_OUT', 'INSPECTION', 'TRANSFER', 'SHOPPING', 'LAUNDRY']
 
+  // Dynamic step indices
+  const profileIdx = 1
+  const roleStep1Idx = 2
+  const roleStep2Idx = role === 'CREW' ? 3 : -1
+  const contractIdx = role === 'CREW' ? 4 : 3
+  const confirmIdx = stepLabels.length - 1
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111827] bg-opacity-95 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl overflow-hidden">
@@ -105,86 +138,104 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           <div className="flex items-center gap-2 mb-1">
             <span className="text-base font-bold text-white">Host<span style={{ color: '#C9A84C' }}>Masters</span></span>
             <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider" style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
-              Setup
+              {t('onboarding.setupTitle')}
             </span>
           </div>
-          <p className="text-sm text-white/60">Configuração inicial da tua conta</p>
+          <p className="text-sm text-white/60">{t('onboarding.setupSubtitle')}</p>
 
-          {/* Progress */}
           <div className="flex gap-1.5 mt-4">
-            {steps.map((s, i) => (
-              <div key={s} className="flex-1">
+            {stepLabels.map((s, i) => (
+              <div key={i} className="flex-1">
                 <div className={`h-1 rounded-full transition-colors ${i <= step ? 'bg-[#C9A84C]' : 'bg-white/10'}`} />
-                <p className={`text-[9px] mt-1 ${i <= step ? 'text-[#C9A84C]' : 'text-white/30'}`}>{s}</p>
+                <p className={`text-[9px] mt-1 truncate ${i <= step ? 'text-[#C9A84C]' : 'text-white/30'}`}>{s}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4 min-h-[280px]">
-          {/* Step 0: Profile */}
+        <div className="p-6 space-y-4 min-h-[320px]">
+          {/* Step 0: Language */}
           {step === 0 && (
+            <>
+              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-1">
+                <Globe className="h-5 w-5 text-[#C9A84C]" />
+                {t('onboarding.languageStep')}
+              </div>
+              <p className="text-xs text-gray-500 mb-4">{t('onboarding.languageStepDesc')}</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {LOCALES.map(lang => (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => pickLanguage(lang.code)}
+                    className="rounded-xl border-2 p-3 text-center transition-all"
+                    style={{
+                      borderColor: selectedLang === lang.code ? '#C9A84C' : 'rgba(0,0,0,0.08)',
+                      background: selectedLang === lang.code ? 'rgba(201,168,76,0.08)' : 'transparent',
+                    }}
+                  >
+                    <span className="text-2xl block mb-1">{lang.flag}</span>
+                    <span className={`text-xs font-semibold ${selectedLang === lang.code ? 'text-[#C9A84C]' : 'text-gray-600'}`}>
+                      {lang.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Step 1: Profile */}
+          {step === profileIdx && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <User className="h-5 w-5 text-gray-400" />
-                O teu perfil
+                {t('onboarding.profileStep')}
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">Nome completo</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.fullName')}</label>
                   <input value={name} onChange={e => setName(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="O teu nome" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm" placeholder={t('onboarding.fullNamePlaceholder')} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">Telefone</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.phone')}</label>
                   <input value={phone} onChange={e => setPhone(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="+34 600 000 000" />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">Idioma preferido</label>
-                  <select value={language} onChange={e => setLanguage(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm">
-                    <option value="es">Español</option>
-                    <option value="en">English</option>
-                    <option value="pt">Português</option>
-                    <option value="de">Deutsch</option>
-                    <option value="fr">Français</option>
-                  </select>
+                    className="w-full rounded-lg border px-3 py-2 text-sm" placeholder={t('onboarding.phonePlaceholder')} />
                 </div>
               </div>
             </>
           )}
 
-          {/* Step 1: Crew Contract */}
-          {step === 1 && role === 'CREW' && (
+          {/* Role step 1: Crew Contract */}
+          {step === roleStep1Idx && role === 'CREW' && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
-                Tipo de contrato
+                {t('onboarding.crewContractStep')}
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <button onClick={() => setContractType('MONTHLY')}
                   className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'MONTHLY' ? 'border-[#C9A84C] bg-[#C9A84C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <div className="text-sm font-semibold">Mensal</div>
-                  <div className="text-xs text-gray-500 mt-1">Valor fixo por mês</div>
+                  <div className="text-sm font-semibold">{t('onboarding.crewMonthly')}</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('onboarding.crewMonthlySub')}</div>
                 </button>
                 <button onClick={() => setContractType('FREELANCER')}
                   className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'FREELANCER' ? 'border-[#C9A84C] bg-[#C9A84C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <div className="text-sm font-semibold">Freelancer</div>
-                  <div className="text-xs text-gray-500 mt-1">Por tarefa concluída</div>
+                  <div className="text-sm font-semibold">{t('onboarding.crewFreelancer')}</div>
+                  <div className="text-xs text-gray-500 mt-1">{t('onboarding.crewFreelancerSub')}</div>
                 </button>
               </div>
               {contractType === 'MONTHLY' && (
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">Valor mensal (€)</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.crewMonthlyLabel')}</label>
                   <input type="number" value={monthlyRate} onChange={e => setMonthlyRate(e.target.value)}
                     className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="ex: 1200" />
                 </div>
               )}
               {contractType === 'FREELANCER' && (
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">Valor por tarefa (€)</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.crewTaskLabel')}</label>
                   <input type="number" value={taskRate} onChange={e => setTaskRate(e.target.value)}
                     className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="ex: 35" />
                 </div>
@@ -192,73 +243,71 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
             </>
           )}
 
-          {/* Step 1: Manager Compensation */}
-          {step === 1 && role === 'MANAGER' && (
+          {/* Role step 1: Manager Compensation */}
+          {step === roleStep1Idx && role === 'MANAGER' && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
-                Acordo de compensação
+                {t('onboarding.managerCompStep')}
               </div>
               <p className="text-xs text-gray-500 mb-3">
-                {subscriptionShare ? 'Valores definidos pelo Admin. Confirma os termos.' : 'Preenche os valores acordados com o Admin.'}
+                {subscriptionShare ? t('onboarding.managerCompDescSet') : t('onboarding.managerCompDescEmpty')}
               </p>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">% da assinatura do cliente</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.managerSubShare')}</label>
                   <input type="number" min="0" max="50" value={subscriptionShare} onChange={e => setSubscriptionShare(e.target.value)}
                     className="w-full rounded-lg border px-3 py-2 text-sm" />
-                  <p className="text-[10px] text-gray-400 mt-0.5">Ex: cliente MID (€159/mês) → recebes €{(159 * parseFloat(subscriptionShare || '0') / 100).toFixed(0)}/mês</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">Ex: MID (€159/mo) → €{(159 * parseFloat(subscriptionShare || '0') / 100).toFixed(0)}/mo</p>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">% da receita bruta de aluguéis</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.managerCommShare')}</label>
                   <input type="number" min="0" max="10" step="0.5" value={commissionShare} onChange={e => setCommissionShare(e.target.value)}
                     className="w-full rounded-lg border px-3 py-2 text-sm" />
-                  <p className="text-[10px] text-gray-400 mt-0.5">Ex: €2000 bruto → recebes €{(2000 * parseFloat(commissionShare || '0') / 100).toFixed(0)}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">Ex: €2000 bruto → €{(2000 * parseFloat(commissionShare || '0') / 100).toFixed(0)}</p>
                 </div>
               </div>
             </>
           )}
 
-          {/* Step 1: Client Property (placeholder) */}
-          {step === 1 && role === 'CLIENT' && (
+          {/* Role step 1: Client Property */}
+          {step === roleStep1Idx && role === 'CLIENT' && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
-                A tua propriedade
+                {t('onboarding.clientPropertyStep')}
               </div>
-              <p className="text-sm text-gray-500">
-                A tua propriedade será configurada pelo Admin ou Manager. Nesta fase, confirma os teus dados pessoais e aceita o contrato de serviço no próximo passo.
-              </p>
+              <p className="text-sm text-gray-500">{t('onboarding.clientPropertyDesc')}</p>
             </>
           )}
 
-          {/* Step 2: Crew Skills */}
-          {step === 2 && role === 'CREW' && (
+          {/* Crew Skills */}
+          {step === roleStep2Idx && role === 'CREW' && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <Shield className="h-5 w-5 text-gray-400" />
-                Competências
+                {t('onboarding.crewSkillsStep')}
               </div>
-              <p className="text-xs text-gray-500 mb-3">Selecciona os tipos de tarefa que sabes executar.</p>
+              <p className="text-xs text-gray-500 mb-3">{t('onboarding.crewSkillsDesc')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {SKILL_OPTIONS.map(skill => (
                   <label key={skill} className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm cursor-pointer hover:bg-gray-50">
                     <input type="checkbox" checked={skills.includes(skill)}
                       onChange={e => setSkills(e.target.checked ? [...skills, skill] : skills.filter(s => s !== skill))}
                       className="accent-[#C9A84C]" />
-                    {skill.replace(/_/g, ' ')}
+                    {t(`crew.taskTypes.${skill}`) || skill.replace(/_/g, ' ')}
                   </label>
                 ))}
               </div>
             </>
           )}
 
-          {/* Step 2: Contract signing (Manager + Client) */}
-          {step === 2 && (role === 'MANAGER' || role === 'CLIENT') && (
+          {/* Contract signing */}
+          {step === contractIdx && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <FileText className="h-5 w-5 text-gray-400" />
-                Contrato de serviço
+                {t('onboarding.contractStep')}
               </div>
               {data && data.pendingContracts.length > 0 ? (
                 <div className="space-y-3">
@@ -269,32 +318,32 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                         className="mt-0.5 accent-[#C9A84C]" />
                       <div>
                         <div className="text-sm font-semibold">{c.title}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">Li e aceito os termos deste contrato</div>
+                        <div className="text-xs text-gray-500 mt-0.5">{t('onboarding.contractAccept')}</div>
                       </div>
                     </label>
                   ))}
                 </div>
               ) : (
                 <div className="rounded-xl bg-gray-50 border p-4 text-sm text-gray-500">
-                  Nenhum contrato pendente. O Admin vai disponibilizar o teu contrato em breve.
+                  {t('onboarding.contractNone')}
                 </div>
               )}
             </>
           )}
 
-          {/* Final step: Confirm */}
-          {step === steps.length - 1 && (
+          {/* Confirm */}
+          {step === confirmIdx && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
-                Tudo pronto
+                {t('onboarding.confirmStep')}
               </div>
               <div className="rounded-xl bg-green-50 border border-green-200 p-4 text-sm text-green-800">
-                {role === 'CREW' && `Contrato ${contractType === 'MONTHLY' ? 'mensal' : 'freelancer'} configurado. ${skills.length} competência(s) seleccionada(s).`}
-                {role === 'MANAGER' && `Compensação: ${subscriptionShare}% assinaturas + ${commissionShare}% comissões.`}
-                {role === 'CLIENT' && 'O teu perfil está configurado. Bem-vindo à HostMasters.'}
+                {role === 'CREW' && `${contractType === 'MONTHLY' ? t('onboarding.confirmCrewMonthly') : t('onboarding.confirmCrewFreelancer')} ${t('onboarding.confirmCrewSkills').replace('{n}', String(skills.length))}`}
+                {role === 'MANAGER' && t('onboarding.confirmManager').replace('{sub}', subscriptionShare).replace('{comm}', commissionShare)}
+                {role === 'CLIENT' && t('onboarding.confirmClient')}
               </div>
-              <p className="text-xs text-gray-400">Clica "Concluir" para entrar na plataforma. Podes alterar estas definições mais tarde no teu perfil.</p>
+              <p className="text-xs text-gray-400">{t('onboarding.confirmHint')}</p>
             </>
           )}
         </div>
@@ -304,13 +353,13 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {step > 0 ? (
             <button onClick={() => setStep(s => s - 1)}
               className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50">
-              Voltar
+              {t('onboarding.back')}
             </button>
           ) : <div />}
-          <button onClick={next} disabled={saving || (step === 0 && !name)}
+          <button onClick={next} disabled={saving || (step === profileIdx && !name)}
             className="inline-flex items-center gap-2 rounded-lg bg-[#111827] text-white px-5 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50">
-            {saving ? 'A guardar...' : step === steps.length - 1 ? 'Concluir' : 'Próximo'}
-            {!saving && step < steps.length - 1 && <ArrowRight className="h-4 w-4" />}
+            {saving ? t('onboarding.saving') : step === confirmIdx ? t('onboarding.finish') : t('onboarding.next')}
+            {!saving && step < confirmIdx && <ArrowRight className="h-4 w-4" />}
           </button>
         </div>
       </div>
