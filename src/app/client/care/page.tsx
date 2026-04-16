@@ -5,6 +5,7 @@ import {
   Wrench, ShieldCheck, Sparkles, Camera, Clock, CheckCircle2,
   AlertTriangle, Plus, X, Calendar, FileText, MessageCircle,
 } from "lucide-react"
+import { useEscapeKey } from "@/lib/use-escape-key"
 
 type Property = { id: string; name: string }
 
@@ -137,6 +138,8 @@ export default function ClientCarePage() {
     dueDate: "",
   })
   const [reqError, setReqError] = useState("")
+
+  useEscapeKey(showRequest, () => setShowRequest(false))
 
   const load = async () => {
     setLoading(true)

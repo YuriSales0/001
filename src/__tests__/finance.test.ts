@@ -4,6 +4,7 @@ import {
   DEFAULT_COMMISSION_RATE,
   commissionRateForPlan,
   calcCommission,
+  calcManagerEarnings,
   payoutDateFrom,
   CLEANING_FEE_STANDARD,
   CLEANING_INCLUDED_MIN_NIGHTS,
@@ -177,4 +178,93 @@ describe('CLEANING_INCLUDED_MIN_NIGHTS', () => {
   it('BASIC: never included (null)',    () => expect(CLEANING_INCLUDED_MIN_NIGHTS['BASIC']).toBeNull())
   it('MID: included from 5 nights',    () => expect(CLEANING_INCLUDED_MIN_NIGHTS['MID']).toBe(5))
   it('PREMIUM: included from 3 nights',() => expect(CLEANING_INCLUDED_MIN_NIGHTS['PREMIUM']).toBe(3))
+})
+
+// ---------------------------------------------------------------------------
+// calcManagerEarnings
+// ---------------------------------------------------------------------------
+describe('calcManagerEarnings', () => {
+  it('splits subscription fees and commissions correctly with defaults', () => {
+    const result = calcManagerEarnings({ grossRevenue: 10000, subscriptionFees: 500 })
+    expect(result.fromSubscriptions).toBe(50)  // 500 * 0.10
+    expect(result.fromCommissions).toBe(200)   // 10000 * 0.02
+    expect(result.total).toBe(250)
+  })
+
+  it('uses custom subscription and commission shares', () => {
+    const result = calcManagerEarnings({
+      grossRevenue: 5000, subscriptionFees: 200,
+      subscriptionShare: 0.15, commissionShare: 0.03
+    })
+    expect(result.fromSubscriptions).toBe(30)
+    expect(result.fromCommissions).toBe(150)
+    expect(result.total).toBe(180)
+  })
+
+  it('falls back to defaults when shares are null', () => {
+    const result = calcManagerEarnings({
+      grossRevenue: 1000, subscriptionFees: 100,
+      subscriptionShare: null, commissionShare: null
+    })
+    expect(result.fromSubscriptions).toBe(10)
+    expect(result.fromCommissions).toBe(20)
+  })
+
+  it('handles zero revenue', () => {
+    const result = calcManagerEarnings({ grossRevenue: 0, subscriptionFees: 0 })
+    expect(result.total).toBe(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// calcCommission edge cases
+// ---------------------------------------------------------------------------
+describe('calcCommission edge cases', () => {
+  it('handles very small amounts without losing precision', () => {
+    const result = calcCommission(0.01, 'PREMIUM')
+    expect(result.commission + result.net).toBeCloseTo(0.01, 2)
+  })
+
+  it('handles zero amount', () => {
+    const result = calcCommission(0, 'MID')
+    expect(result.commission).toBe(0)
+    expect(result.net).toBe(0)
+  })
+
+  it('handles very large amounts (six figures)', () => {
+    const result = calcCommission(999999.99, 'BASIC')
+    // 999999.99 * 0.20 = 199999.998 → rounds to 200000.00
+    expect(result.commission).toBe(200000)
+    expect(result.net).toBe(799999.99)
+    expect(result.commission + result.net).toBeCloseTo(999999.99, 2)
+  })
+
+  it('uses DEFAULT_COMMISSION_RATE when plan is unknown', () => {
+    const result = calcCommission(1000, 'INVALID_PLAN')
+    expect(result.commissionRate).toBe(17)  // DEFAULT = 0.17
+    expect(result.commission).toBe(170)
+  })
+
+  it('handles null plan gracefully', () => {
+    const result = calcCommission(1000, null)
+    expect(result.commissionRate).toBe(17)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// commissionRateForPlan (additional coverage)
+// ---------------------------------------------------------------------------
+describe('commissionRateForPlan (additional)', () => {
+  it('returns correct rate for each plan', () => {
+    expect(commissionRateForPlan('STARTER')).toBe(0.22)
+    expect(commissionRateForPlan('BASIC')).toBe(0.20)
+    expect(commissionRateForPlan('MID')).toBe(0.17)
+    expect(commissionRateForPlan('PREMIUM')).toBe(0.13)
+  })
+
+  it('falls back to DEFAULT for unknown', () => {
+    expect(commissionRateForPlan('UNKNOWN')).toBe(0.17)
+    expect(commissionRateForPlan(null)).toBe(0.17)
+    expect(commissionRateForPlan(undefined)).toBe(0.17)
+  })
 })

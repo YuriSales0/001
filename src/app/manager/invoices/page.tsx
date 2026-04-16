@@ -2,6 +2,9 @@
 import { useEffect, useState, useCallback } from "react"
 import { InvoiceForm } from "@/components/invoice-form"
 import { Pencil, Trash2, X, CheckCircle } from "lucide-react"
+import { ConfirmDialog } from "@/components/hm/confirm-dialog"
+import { showToast } from "@/components/hm/toast"
+import { useEscapeKey } from "@/lib/use-escape-key"
 
 type Invoice = {
   id: string
@@ -41,6 +44,8 @@ function EditModal({ invoice, onClose, onSaved }: {
   })
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
+
+  useEscapeKey(true, onClose)
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -126,13 +131,19 @@ export default function ManagerInvoices() {
   }, [])
   useEffect(() => { load() }, [load])
 
+  const [confirmAction, setConfirmAction] = useState<
+    | { type: 'markPaid'; id: string; label: string }
+    | { type: 'delete'; id: string; label: string }
+    | null
+  >(null)
+
   const markPaid = async (id: string) => {
     const res = await fetch(`/api/invoices/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'PAID' }),
     })
-    if (!res.ok) { alert('Failed to mark invoice as paid'); return }
+    if (!res.ok) { showToast('Failed to mark invoice as paid', 'error'); return }
     load()
   }
 
@@ -140,7 +151,7 @@ export default function ManagerInvoices() {
     setDeleting(id)
     const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE' })
     setDeleting(null)
-    if (!res.ok) { alert('Failed to delete invoice'); return }
+    if (!res.ok) { showToast('Failed to delete invoice', 'error'); return }
     load()
   }
 
@@ -223,7 +234,7 @@ export default function ManagerInvoices() {
                   <div className="flex items-center justify-end gap-1">
                     {i.status !== 'PAID' && i.status !== 'CANCELLED' && (
                       <button
-                        onClick={() => markPaid(i.id)}
+                        onClick={() => setConfirmAction({ type: 'markPaid', id: i.id, label: i.client.name || i.client.email })}
                         title="Mark as paid"
                         className="rounded-md p-1.5 text-green-600 hover:bg-green-50 transition-colors"
                       >
@@ -240,11 +251,7 @@ export default function ManagerInvoices() {
                       </button>
                     )}
                     <button
-                      onClick={() => {
-                        if (confirm(`Delete invoice for ${i.client.name || i.client.email}?`)) {
-                          deleteInvoice(i.id)
-                        }
-                      }}
+                      onClick={() => setConfirmAction({ type: 'delete', id: i.id, label: i.client.name || i.client.email })}
                       disabled={deleting === i.id}
                       title="Delete invoice"
                       className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-40"
@@ -266,6 +273,31 @@ export default function ManagerInvoices() {
           onSaved={load}
         />
       )}
+
+      <ConfirmDialog
+        open={confirmAction?.type === 'markPaid'}
+        title="Mark invoice as paid"
+        message={confirmAction?.type === 'markPaid' ? `Mark invoice for ${confirmAction.label} as paid?` : ''}
+        confirmLabel="Mark paid"
+        onConfirm={() => {
+          if (confirmAction?.type === 'markPaid') markPaid(confirmAction.id)
+          setConfirmAction(null)
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
+
+      <ConfirmDialog
+        open={confirmAction?.type === 'delete'}
+        title="Delete invoice"
+        message={confirmAction?.type === 'delete' ? `Delete invoice for ${confirmAction.label}? This cannot be undone.` : ''}
+        confirmLabel="Delete"
+        variant="danger"
+        onConfirm={() => {
+          if (confirmAction?.type === 'delete') deleteInvoice(confirmAction.id)
+          setConfirmAction(null)
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
     </div>
   )
 }

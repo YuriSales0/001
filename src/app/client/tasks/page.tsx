@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Plus, X, Wrench, ShoppingCart, Car, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
 import { useLocale } from '@/i18n/provider'
+import { useEscapeKey } from '@/lib/use-escape-key'
 
 type Property = { id: string; name: string }
 type Task = {
@@ -62,6 +63,8 @@ export default function ClientTasksPage() {
   // Form state
   const [form, setForm] = useState({ propertyId: '', type: 'MAINTENANCE_CORRECTIVE', title: '', description: '', dueDate: '' })
   const [submitting, setSubmitting] = useState(false)
+
+  useEscapeKey(showModal, () => setShowModal(false))
 
   const load = () => {
     setLoading(true)

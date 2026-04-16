@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { CalendarDays, List, Plus, X, AlertTriangle } from "lucide-react"
+import { useEscapeKey } from "@/lib/use-escape-key"
 
 type Reservation = {
   id: string
@@ -50,6 +51,8 @@ export default function OwnerBookings() {
   const [blocking, setBlocking] = useState(false)
   const [blockForm, setBlockForm] = useState({ start: "", end: "", reason: "" })
   const [blocking_saving, setBlockingSaving] = useState(false)
+
+  useEscapeKey(blocking, () => setBlocking(false))
 
   useEffect(() => {
     Promise.all([

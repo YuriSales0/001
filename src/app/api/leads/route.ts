@@ -23,8 +23,7 @@ export async function GET(request: NextRequest) {
   // MANAGER sees only leads assigned to them
   if (me.role === 'MANAGER') where.assignedManagerId = me.id
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const leads = await (prisma.lead as any).findMany({
+  const leads = await prisma.lead.findMany({
     where,
     include: LEAD_INCLUDE,
     orderBy: { createdAt: 'desc' },
@@ -48,8 +47,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'name and source are required' }, { status: 400 })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const lead = await (prisma.lead as any).create({
+  const lead = await prisma.lead.create({
     data: {
       name,
       email: email || null,

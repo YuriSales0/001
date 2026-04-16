@@ -186,9 +186,16 @@ export default function CRMPage() {
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
+    type ApiLead = Omit<Lead, "status" | "language" | "bantData" | "leadAttributions"> & {
+      status: string
+      language?: string
+      nationality?: string | null
+      bantData?: unknown
+      leadAttributions?: Lead["leadAttributions"]
+    }
     fetch("/api/leads")
       .then(r => r.ok ? r.json() : [])
-      .then((data: any[]) => {
+      .then((data: ApiLead[]) => {
         const mapped: Lead[] = data.map(l => ({
           ...l,
           status: (STATUS_TO_STAGE[l.status] ?? "NEW_LEAD") as LeadStage,

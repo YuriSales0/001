@@ -56,6 +56,7 @@ export async function PUT(
     const body = await request.json()
 
     // ── Cancelling a reservation ──
+    let paidPayoutsWarning: string | null = null
     if (body.status === 'CANCELLED') {
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -64,11 +65,20 @@ export async function PUT(
       if (!reservation) return NextResponse.json({ error: 'Not found' }, { status: 404 })
       if (reservation.status === 'CANCELLED') return NextResponse.json({ error: 'Already cancelled' }, { status: 409 })
 
+      // Count PAID payouts — they stay PAID and require manual refund
+      const paidCount = await prisma.payout.count({
+        where: { reservationId: id, status: 'PAID' },
+      })
+
       // Cancel associated SCHEDULED payouts
       await prisma.payout.updateMany({
         where: { reservationId: id, status: 'SCHEDULED' },
         data: { status: 'CANCELLED', cancelledAt: new Date() },
       })
+
+      paidPayoutsWarning = paidCount > 0
+        ? `${paidCount} paid payout${paidCount === 1 ? '' : 's'} require manual refund`
+        : null
 
       // Cancel associated pending tasks
       await prisma.task.updateMany({
@@ -137,7 +147,7 @@ export async function PUT(
       },
     })
 
-    return NextResponse.json(reservation)
+    return NextResponse.json({ ...reservation, warning: paidPayoutsWarning })
   } catch (error) {
     console.error('Error updating reservation:', error)
     return NextResponse.json(

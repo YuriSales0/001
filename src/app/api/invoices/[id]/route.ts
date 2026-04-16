@@ -32,19 +32,24 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     // Send thank-you email when marked paid
     if (status === 'PAID' && invoice.client?.email) {
-      await sendEmail({
-        to: invoice.client.email,
-        subject: `Payment confirmed — HostMasters`,
-        html: invoicePaidEmail({
-          clientName: invoice.client.name || invoice.client.email,
-          invoiceId: invoice.id,
-          description: invoice.description,
-          amount: invoice.amount,
-          currency: invoice.currency,
-          paidAt: invoice.paidAt?.toISOString(),
-          dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
-        }),
-      }).catch(e => console.error('Email send error:', e))
+      try {
+        await sendEmail({
+          to: invoice.client.email,
+          subject: `Payment confirmed — HostMasters`,
+          html: invoicePaidEmail({
+            clientName: invoice.client.name || invoice.client.email,
+            invoiceId: invoice.id,
+            description: invoice.description,
+            amount: invoice.amount,
+            currency: invoice.currency,
+            paidAt: invoice.paidAt?.toISOString(),
+            dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
+          }),
+        })
+      } catch (e) {
+        console.error('Invoice paid email failed:', e)
+        // Don't fail the request — invoice is saved, email can be retried
+      }
     }
 
     return NextResponse.json(invoice)

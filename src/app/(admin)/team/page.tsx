@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { UserPlus, Trash2, Save } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
-import { useEscapeKey } from "@/lib/use-escape-key"
 
 type Role = 'ADMIN' | 'MANAGER' | 'CREW' | 'CLIENT'
 type Plan = 'BASIC' | 'MID' | 'PREMIUM' | null
@@ -27,6 +26,7 @@ export default function TeamPage() {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState("")
   const [edits, setEdits] = useState<Record<string, Partial<User>>>({})
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; label: string } | null>(null)
 
   const load = async () => {
     setLoading(true)
@@ -80,17 +80,16 @@ export default function TeamPage() {
       load()
     } else {
       const d = await res.json()
-      alert(d.error || 'Failed')
+      showToast(d.error || 'Failed', 'error')
     }
   }
 
-  const remove = async (id: string, label: string) => {
-    if (!confirm(`Delete ${label}? This cannot be undone.`)) return
+  const remove = async (id: string) => {
     const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' })
     if (res.ok) load()
     else {
       const d = await res.json()
-      alert(d.error || 'Failed')
+      showToast(d.error || 'Failed', 'error')
     }
   }
 
@@ -213,7 +212,7 @@ export default function TeamPage() {
                           </button>
                         )}
                         <button
-                          onClick={() => remove(u.id, u.name || u.email)}
+                          onClick={() => setDeleteTarget({ id: u.id, label: u.name || u.email })}
                           className="inline-flex items-center gap-1 rounded-md border border-red-200 text-red-600 px-2 py-1 text-xs hover:bg-red-50"
                         >
                           <Trash2 className="h-3 w-3" /> Delete
@@ -230,6 +229,20 @@ export default function TeamPage() {
           </div>
         ))
       )}
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Delete user"
+        message={deleteTarget ? `Delete ${deleteTarget.label}? This cannot be undone.` : ''}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (deleteTarget) remove(deleteTarget.id)
+          setDeleteTarget(null)
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

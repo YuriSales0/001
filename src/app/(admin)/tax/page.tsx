@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { FileText, Plus, Filter, CheckCircle2, Clock, AlertTriangle, Edit2, Save, X } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
+import { showToast } from "@/components/hm/toast"
 
 type Obligation = {
   id: string
@@ -149,7 +150,7 @@ export default function AdminTaxPage() {
                   body: JSON.stringify(data),
                 })
                 if (!res.ok) {
-                  alert(t('admin.failedToSave'))
+                  showToast(t('admin.failedToSave'), 'error')
                   return
                 }
                 setEditingId(null)
@@ -310,7 +311,7 @@ function NewObligationModal({
       onCreated()
     } else {
       const err = await res.json().catch(() => ({}))
-      alert(t('admin.failedToCreate') + ': ' + (err.error || 'unknown error'))
+      showToast(t('admin.failedToCreate') + ': ' + (err.error || 'unknown error'), 'error')
     }
   }
 

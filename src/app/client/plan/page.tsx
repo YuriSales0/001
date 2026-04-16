@@ -106,9 +106,10 @@ export default function OwnerPlan() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    type PropertyWithOwner = { owner?: { subscriptionPlan?: PlanId } }
     fetch("/api/properties")
       .then(r => r.ok ? r.json() : [])
-      .then((props: any[]) => {
+      .then((props: PropertyWithOwner[]) => {
         const plan = props[0]?.owner?.subscriptionPlan as PlanId
         if (plan) setCurrentPlan(plan)
       })

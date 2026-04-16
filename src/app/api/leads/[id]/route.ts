@@ -15,11 +15,10 @@ export async function PATCH(
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const lead = await (prisma.lead as any).findUnique({
+  const lead = await prisma.lead.findUnique({
     where: { id: params.id },
     select: { id: true, assignedManagerId: true },
-  }) as { id: string; assignedManagerId: string | null } | null
+  })
   if (!lead) return NextResponse.json({ error: 'Lead not found' }, { status: 404 })
 
   // MANAGER can only update leads assigned to them
@@ -39,8 +38,7 @@ export async function PATCH(
     ? { assignedManagerId: assignedManagerId || null }
     : {}
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updated = await (prisma.lead as any).update({
+  const updated = await prisma.lead.update({
     where: { id: params.id },
     data: {
       ...(status !== undefined && { status }),
