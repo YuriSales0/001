@@ -69,6 +69,9 @@ export async function POST(request: NextRequest) {
     if (!propertyId || !grossAmount || !scheduledFor) {
       return NextResponse.json({ error: 'propertyId, grossAmount and scheduledFor are required' }, { status: 400 })
     }
+    if (grossAmount <= 0) {
+      return NextResponse.json({ error: 'grossAmount must be positive' }, { status: 400 })
+    }
 
     // Get owner's plan to calculate commission
     const property = await prisma.property.findUnique({

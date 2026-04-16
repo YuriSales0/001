@@ -8,9 +8,18 @@ const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { status } = await req.json() as { status?: 'DRAFT' | 'SENT' | 'PAID' | 'CANCELLED' }
     if (!status) return NextResponse.json({ error: 'status required' }, { status: 400 })
+
+    // Managers can only modify invoices they created
+    if (me.role === 'MANAGER') {
+      const existing = await prisma.invoice.findUnique({ where: { id: params.id } })
+      if (!existing || existing.createdById !== me.id) {
+        return NextResponse.json({ error: 'forbidden' }, { status: 403 })
+      }
+    }
 
     const data: Record<string, unknown> = { status }
     if (status === 'PAID') data.paidAt = new Date()

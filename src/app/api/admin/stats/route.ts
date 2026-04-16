@@ -9,8 +9,8 @@ export async function GET() {
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
   const now = new Date()
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
+  const monthEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
   const in7 = new Date(now)
   in7.setDate(in7.getDate() + 7)
 
