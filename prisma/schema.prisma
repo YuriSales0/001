@@ -15,8 +15,9 @@ enum Role {
 }
 
 enum PropertyStatus {
-  PENDING_CLIENT
-  PENDING_APPROVAL
+  PENDING_CLIENT       // Owner a preencher dados
+  PENDING_APPROVAL     // Admin a aprovar
+  CONTRACT_PENDING     // Aprovada, à espera de assinatura do contrato
   ACTIVE
   INACTIVE
   MAINTENANCE
@@ -268,6 +269,7 @@ model Property {
   lastCleaningAt   DateTime?
   lastInspectionAt DateTime?
   status           PropertyStatus @default(PENDING_APPROVAL)
+  houseRules       String[]       // pre-defined rule keys, e.g. ["NO_SMOKING", "QUIET_22_08"]
   commissionRate   Float          @default(17.0)
   latitude         Float?
   longitude        Float?
@@ -287,6 +289,7 @@ model Property {
   pricingPoints  PricingDataPoint[]
   checklistItems PropertyChecklistItem[]
   taxObligations TaxObligation[]
+  contracts      Contract[]
 }
 
 model Invoice {
@@ -546,23 +549,25 @@ model PricingDataPoint {
 // ─── Contracts ──────────────────────────────────────────────────────────────
 
 model Contract {
-  id            String   @id @default(cuid())
-  userId        String   // Manager, Crew, or Client
-  type          String   // MANAGER_AGREEMENT | CREW_MONTHLY | CREW_FREELANCER | CLIENT_SERVICE
+  id            String    @id @default(cuid())
+  userId        String    // Manager, Crew, or Client
+  propertyId    String?   // For CLIENT_SERVICE contracts, links to the property
+  type          String    // MANAGER_AGREEMENT | CREW_MONTHLY | CREW_FREELANCER | CLIENT_SERVICE
   title         String
-  terms         String   @db.Text  // contract content (markdown or HTML)
-  compensation  Json?    // structured: {monthlyRate, taskRate, commissionShare, subscriptionShare...}
+  terms         String    @db.Text  // contract content (markdown or HTML)
+  compensation  Json?     // structured: {monthlyRate, taskRate, commissionShare, subscriptionShare...}
   startDate     DateTime
   endDate       DateTime?
-  status        String   @default("ACTIVE") // DRAFT | ACTIVE | EXPIRED | TERMINATED
+  status        String    @default("ACTIVE") // DRAFT | ACTIVE | EXPIRED | TERMINATED
   signedAt      DateTime?
-  signedByUser  Boolean  @default(false)
-  signedByAdmin Boolean  @default(false)
-  notes         String?  @db.Text
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  signedByUser  Boolean   @default(false)
+  signedByAdmin Boolean   @default(false)
+  notes         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  user User @relation("ContractUser", fields: [userId], references: [id])
+  user     User      @relation("ContractUser", fields: [userId], references: [id])
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
 }
 
 // ─── App Settings (key-value store) ─────────────────────────────────────────
