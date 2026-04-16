@@ -6,6 +6,7 @@ import {
 } from "lucide-react"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 import { showToast } from "@/components/hm/toast"
+import { useLocale } from "@/i18n/provider"
 
 type ChecklistItem = { text: string; done: boolean }
 type Task = {
@@ -36,17 +37,10 @@ async function compressPhoto(file: File, maxDim = 1280, quality = 0.72): Promise
   return canvas.toDataURL("image/jpeg", quality)
 }
 
-const TYPE_LABEL: Record<string, string> = {
-  CLEANING: "Cleaning",
-  MAINTENANCE_PREVENTIVE: "Preventive maintenance",
-  MAINTENANCE_CORRECTIVE: "Corrective maintenance",
-  INSPECTION: "Inspection",
-  CHECK_IN: "Check-in",
-  CHECK_OUT: "Check-out",
-  TRANSFER: "Transfer",
-  SHOPPING: "Shopping",
-  LAUNDRY: "Laundry",
-}
+const TYPE_KEYS = [
+  'CLEANING', 'MAINTENANCE_PREVENTIVE', 'MAINTENANCE_CORRECTIVE', 'INSPECTION',
+  'CHECK_IN', 'CHECK_OUT', 'TRANSFER', 'SHOPPING', 'LAUNDRY',
+] as const
 
 const TYPE_COLOR: Record<string, string> = {
   CLEANING: "bg-blue-100 text-blue-700",
@@ -72,6 +66,9 @@ const dayKey = (s: string) => {
 }
 
 export default function CrewHome() {
+  const { t } = useLocale()
+  const typeLabel = (type: string) =>
+    (TYPE_KEYS as readonly string[]).includes(type) ? t(`crew.taskTypes.${type}`) : type
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<Task | null>(null)
@@ -99,14 +96,14 @@ export default function CrewHome() {
       })
       const result = await res.json().catch(() => ({}))
       if (!res.ok) {
-        showToast(result.error ?? "Failed to upload photo", "error")
+        showToast(result.error ?? t('crew.home.photoUploadFailed'), "error")
         return
       }
       setTasks(prev => prev.map(t => t.id === selected.id ? { ...t, photos: result.photos } : t))
       setSelected(s => s ? { ...s, photos: result.photos } : s)
     } catch (err) {
       console.error(err)
-      showToast("Failed to process photo", "error")
+      showToast(t('crew.home.photoProcessFailed'), "error")
     } finally {
       setUploadingPhoto(false)
       if (fileInputRef.current) fileInputRef.current.value = ""
@@ -120,7 +117,7 @@ export default function CrewHome() {
     })
     const result = await res.json().catch(() => ({}))
     if (!res.ok) {
-      showToast(result.error ?? "Failed to remove photo", "error")
+      showToast(result.error ?? t('crew.home.photoRemoveFailed'), "error")
       return
     }
     setTasks(prev => prev.map(t => t.id === selected.id ? { ...t, photos: result.photos } : t))
@@ -140,7 +137,7 @@ export default function CrewHome() {
         if (fresh) setSelected(fresh)
       }
     } catch {
-      setError("Failed to load tasks. Please try refreshing.")
+      setError(t('crew.home.loadFailed'))
     } finally {
       setLoading(false)
     }
@@ -224,20 +221,20 @@ export default function CrewHome() {
 
         <div className="flex border-b hm-animate-in hm-stagger-2">
           {[
-            { k: "today", l: `Today (${counts.today})` },
-            { k: "open",  l: `Open (${counts.open})` },
-            { k: "done",  l: `Done (${counts.done})` },
-          ].map(t => (
+            { k: "today", l: `${t('crew.today')} (${counts.today})` },
+            { k: "open",  l: `${t('crew.open')} (${counts.open})` },
+            { k: "done",  l: `${t('crew.done')} (${counts.done})` },
+          ].map(f => (
             <button
-              key={t.k}
-              onClick={() => setFilter(t.k as typeof filter)}
+              key={f.k}
+              onClick={() => setFilter(f.k as typeof filter)}
               className={`flex-1 px-3 py-2 text-xs font-semibold border-b-2 transition-colors ${
-                filter === t.k
+                filter === f.k
                   ? "border-navy-900 text-navy-900"
                   : "border-transparent text-gray-500 hover:text-navy-900"
               }`}
             >
-              {t.l}
+              {f.l}
             </button>
           ))}
         </div>
@@ -245,7 +242,7 @@ export default function CrewHome() {
         <div className="flex-1 overflow-y-auto divide-y hm-animate-in hm-stagger-3">
           {loading && (
             <div className="p-6 flex items-center gap-2 text-sm text-gray-400">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+              <Loader2 className="h-4 w-4 animate-spin" /> {t('crew.home.loading')}
             </div>
           )}
           {!loading && error && (
@@ -261,24 +258,24 @@ export default function CrewHome() {
                   <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-2">
                     <CheckCircle2 className="h-5 w-5 text-green-400" />
                   </div>
-                  <p className="font-semibold text-gray-700 mb-0.5">All caught up!</p>
-                  <p className="text-xs text-gray-400">No completed tasks yet. They will appear here once you finish them.</p>
+                  <p className="font-semibold text-gray-700 mb-0.5">{t('crew.home.allCaughtUp')}</p>
+                  <p className="text-xs text-gray-400">{t('crew.home.allCaughtUpBody')}</p>
                 </>
               ) : filter === "today" ? (
                 <>
                   <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
                     <Calendar className="h-5 w-5 text-gray-400" />
                   </div>
-                  <p className="font-semibold text-gray-700 mb-0.5">Nothing scheduled for today</p>
-                  <p className="text-xs text-gray-400">Check the Open tab for upcoming tasks.</p>
+                  <p className="font-semibold text-gray-700 mb-0.5">{t('crew.home.nothingToday')}</p>
+                  <p className="text-xs text-gray-400">{t('crew.home.nothingTodayBody')}</p>
                 </>
               ) : (
                 <>
                   <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
                     <Calendar className="h-5 w-5 text-gray-400" />
                   </div>
-                  <p className="font-semibold text-gray-700 mb-0.5">No open tasks</p>
-                  <p className="text-xs text-gray-400">New tasks will appear here when assigned to you.</p>
+                  <p className="font-semibold text-gray-700 mb-0.5">{t('crew.home.noOpen')}</p>
+                  <p className="text-xs text-gray-400">{t('crew.home.noOpenBody')}</p>
                 </>
               )}
             </div>
@@ -297,7 +294,7 @@ export default function CrewHome() {
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <span className="text-sm font-semibold text-navy-900 truncate">{t.title}</span>
                   <span className={`text-[10px] font-semibold rounded px-1.5 py-0.5 shrink-0 ${TYPE_COLOR[t.type] ?? "bg-gray-100 text-gray-700"}`}>
-                    {TYPE_LABEL[t.type]?.split(" ")[0] ?? t.type}
+                    {typeLabel(t.type).split(" ")[0]}
                   </span>
                 </div>
                 <div className="text-xs text-gray-500 truncate flex items-center gap-1">
@@ -344,7 +341,7 @@ export default function CrewHome() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className={`text-xs font-semibold rounded-full px-2.5 py-0.5 ${TYPE_COLOR[selected.type] ?? "bg-gray-100 text-gray-700"}`}>
-                  {TYPE_LABEL[selected.type] ?? selected.type}
+                  {typeLabel(selected.type)}
                 </span>
                 <span className={`text-xs font-semibold rounded-full px-2.5 py-0.5 ${
                   selected.status === "COMPLETED" ? "bg-green-100 text-green-700"
@@ -419,13 +416,13 @@ export default function CrewHome() {
                 <div className="flex items-center justify-between gap-2">
                   <div>
                     <h3 className="font-semibold text-navy-900 flex items-center gap-2">
-                      <Camera className="h-4 w-4" /> Photo evidence
+                      <Camera className="h-4 w-4" /> {t('crew.home.photoEvidence')}
                       <span className={`text-xs font-bold ${hasMinPhotos ? "text-green-600" : "text-amber-600"}`}>
                         {photoCount}/2+
                       </span>
                     </h3>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      At least 2 photos required. These are sent to the owner as proof of work.
+                      {t('crew.home.photoSubtitle')}
                     </p>
                   </div>
                 </div>
@@ -458,7 +455,7 @@ export default function CrewHome() {
                       ) : (
                         <>
                           <ImagePlus className="h-5 w-5 mb-1" />
-                          <span className="text-[10px] font-semibold uppercase tracking-wider">Add photo</span>
+                          <span className="text-[10px] font-semibold uppercase tracking-wider">{t('crew.home.addPhoto')}</span>
                         </>
                       )}
                     </button>
@@ -561,12 +558,12 @@ export default function CrewHome() {
                 </button>
                 {checklistTotal > 0 && !allChecklistDone && (
                   <p className="text-xs text-amber-700 flex items-center gap-1">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Complete the checklist before submitting.
+                    <AlertTriangle className="h-3.5 w-3.5" /> {t('crew.home.completeChecklistFirst')}
                   </p>
                 )}
                 {!hasMinPhotos && (
                   <p className="text-xs text-amber-700 flex items-center gap-1">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Add at least 2 photos before submitting.
+                    <AlertTriangle className="h-3.5 w-3.5" /> {t('crew.home.min2BeforeSubmit')}
                   </p>
                 )}
               </div>
@@ -584,7 +581,7 @@ export default function CrewHome() {
                 </button>
                 {!hasMinPhotos && (
                   <p className="text-xs text-amber-700 flex items-center gap-1">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Add at least 2 photos before marking complete.
+                    <AlertTriangle className="h-3.5 w-3.5" /> {t('crew.home.min2BeforeComplete')}
                   </p>
                 )}
               </>
@@ -601,7 +598,7 @@ export default function CrewHome() {
 
             {saving && (
               <div className="flex items-center gap-2 text-xs text-gray-500">
-                <Loader2 className="h-3 w-3 animate-spin" /> Saving…
+                <Loader2 className="h-3 w-3 animate-spin" /> {t('crew.home.savingStatus')}
               </div>
             )}
           </div>

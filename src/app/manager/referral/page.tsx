@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Copy, CheckCircle2, Link2, Users, TrendingUp, Pencil, Loader2, Share2 } from "lucide-react"
 import { showToast } from "@/components/hm/toast"
+import { useLocale } from "@/i18n/provider"
 
 type ReferralData = {
   referralCode: string
@@ -12,6 +13,7 @@ type ReferralData = {
 }
 
 export default function ManagerReferralPage() {
+  const { t } = useLocale()
   const [data, setData] = useState<ReferralData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -57,11 +59,11 @@ export default function ManagerReferralPage() {
     const result = await res.json().catch(() => ({}))
     setSaving(false)
     if (res.ok) {
-      showToast("Referral link updated", "success")
+      showToast(t('manager.referralPage.linkUpdated'), "success")
       setEditing(false)
       load()
     } else {
-      showToast(result.error ?? "Failed to update", "error")
+      showToast(result.error ?? t('manager.referralPage.linkUpdateFailed'), "error")
     }
   }
 
@@ -97,7 +99,7 @@ export default function ManagerReferralPage() {
     return (
       <div className="p-6" style={{ fontFamily: "system-ui, sans-serif" }}>
         <p className="text-sm text-red-500 text-center p-4 rounded-lg bg-red-50">
-          Failed to load referral data. <button onClick={load} className="underline">Try again</button>
+          {t('manager.referralPage.loadFailed')} <button onClick={load} className="underline">{t('manager.referralPage.tryAgain')}</button>
         </p>
       </div>
     )
@@ -106,9 +108,9 @@ export default function ManagerReferralPage() {
   return (
     <div className="p-6 space-y-6" style={{ fontFamily: "system-ui, sans-serif" }}>
       <div>
-        <h1 className="text-2xl font-bold text-navy-900">My Referral Link</h1>
+        <h1 className="text-2xl font-bold text-navy-900">{t('manager.referralPage.title')}</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Share this link with property owners in your territory. New clients registering through it will be automatically assigned to you.
+          {t('manager.referralPage.subtitle')}
         </p>
       </div>
 
@@ -118,7 +120,7 @@ export default function ManagerReferralPage() {
         <div className="relative p-6 sm:p-8">
           <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium mb-4" style={{ background: "rgba(201,168,76,0.15)", color: "#C9A84C", border: "1px solid rgba(201,168,76,0.25)" }}>
             <Link2 className="h-3.5 w-3.5" />
-            Your personal link
+            {t('manager.referralPage.personalLink')}
           </div>
 
           {!editing ? (
@@ -127,33 +129,33 @@ export default function ManagerReferralPage() {
                 <code className="text-lg sm:text-xl font-mono text-white break-all">{data.referralUrl}</code>
               </div>
               {data.managerZone && (
-                <p className="text-xs text-gray-400 mb-4">Territory: {data.managerZone}</p>
+                <p className="text-xs text-gray-400 mb-4">{t('manager.referralPage.territoryPrefix')} {data.managerZone}</p>
               )}
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={copy}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-[#C9A84C] text-[#111827] px-4 py-2 text-sm font-bold hover:opacity-90 transition-opacity"
                 >
-                  {copied ? <><CheckCircle2 className="h-4 w-4" /> Copied!</> : <><Copy className="h-4 w-4" /> Copy link</>}
+                  {copied ? <><CheckCircle2 className="h-4 w-4" /> {t('manager.referralPage.copied')}</> : <><Copy className="h-4 w-4" /> {t('manager.referralPage.copyLink')}</>}
                 </button>
                 <button
                   onClick={share}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/5 text-white px-4 py-2 text-sm font-semibold hover:bg-white/10 transition-colors"
                 >
-                  <Share2 className="h-4 w-4" /> Share
+                  <Share2 className="h-4 w-4" /> {t('manager.referralPage.share')}
                 </button>
                 <button
                   onClick={() => setEditing(true)}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/5 text-white px-4 py-2 text-sm font-semibold hover:bg-white/10 transition-colors"
                 >
-                  <Pencil className="h-4 w-4" /> Customize
+                  <Pencil className="h-4 w-4" /> {t('manager.referralPage.customize')}
                 </button>
               </div>
             </>
           ) : (
             <div className="space-y-3 max-w-md">
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Referral code</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{t('manager.referralPage.codeLabel')}</label>
                 <input
                   value={codeInput}
                   onChange={e => setCodeInput(e.target.value)}
@@ -161,14 +163,14 @@ export default function ManagerReferralPage() {
                   className="w-full rounded-lg px-3 py-2 text-sm font-mono"
                   style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff" }}
                 />
-                <p className="text-[10px] text-gray-400 mt-1">Only letters, numbers, and hyphens (3-40 chars). Must be unique.</p>
+                <p className="text-[10px] text-gray-400 mt-1">{t('manager.referralPage.codeHint')}</p>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Territory</label>
+                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{t('manager.referralPage.territoryLabel')}</label>
                 <input
                   value={zoneInput}
                   onChange={e => setZoneInput(e.target.value)}
-                  placeholder="Almuñécar, Nerja, etc."
+                  placeholder={t('manager.referralPage.territoryPlaceholder')}
                   className="w-full rounded-lg px-3 py-2 text-sm"
                   style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff" }}
                 />
@@ -179,14 +181,14 @@ export default function ManagerReferralPage() {
                   disabled={saving || !codeInput.trim()}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-[#C9A84C] text-[#111827] px-4 py-2 text-sm font-bold hover:opacity-90 disabled:opacity-50"
                 >
-                  {saving ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving…</> : "Save"}
+                  {saving ? <><Loader2 className="h-4 w-4 animate-spin" /> {t('manager.referralPage.saving')}</> : t('manager.referralPage.save')}
                 </button>
                 <button
                   onClick={() => { setEditing(false); setCodeInput(data.referralCode); setZoneInput(data.managerZone ?? "") }}
                   disabled={saving}
                   className="rounded-lg border border-white/20 bg-white/5 text-white px-4 py-2 text-sm hover:bg-white/10 disabled:opacity-50"
                 >
-                  Cancel
+                  {t('manager.referralPage.cancel')}
                 </button>
               </div>
             </div>
@@ -198,66 +200,55 @@ export default function ManagerReferralPage() {
       <div className="grid grid-cols-2 gap-3">
         <StatCard
           icon={Users}
-          label="Clients in my portfolio"
+          label={t('manager.referralPage.statsClients')}
           value={data.stats.clientCount}
-          hint="Property owners registered through your link or assigned to you"
+          hint={t('manager.referralPage.statsClientsHint')}
           color="#C9A84C"
         />
         <StatCard
           icon={TrendingUp}
-          label="Leads in my pipeline"
+          label={t('manager.referralPage.statsLeads')}
           value={data.stats.leadCount}
-          hint="Open opportunities you can still convert into clients"
+          hint={t('manager.referralPage.statsLeadsHint')}
           color="#2A7A4F"
         />
       </div>
 
       {/* How it works */}
       <div className="rounded-xl border bg-white p-6">
-        <h3 className="font-semibold text-navy-900 mb-3">How it works</h3>
+        <h3 className="font-semibold text-navy-900 mb-3">{t('manager.referralPage.howTitle')}</h3>
         <ol className="space-y-3 text-sm">
           <Step n={1}>
-            Share your personal link with property owners — in conversations, emails, WhatsApp, or social media.
+            {t('manager.referralPage.howStep1')}
           </Step>
           <Step n={2}>
-            When a prospect visits <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">{data.referralUrl}</code>, we automatically tag them as yours.
+            {t('manager.referralPage.howStep2Before')} <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">{data.referralUrl}</code>{t('manager.referralPage.howStep2After')}
           </Step>
           <Step n={3}>
-            If they register and become a client, they&rsquo;re assigned to your portfolio automatically.
+            {t('manager.referralPage.howStep3')}
           </Step>
           <Step n={4}>
-            You start earning 15% of their subscription and 3% of their gross rental, month after month.
+            {t('manager.referralPage.howStep4')}
           </Step>
         </ol>
       </div>
 
       {/* Pre-written message */}
       <div className="rounded-xl border bg-gray-50 p-6">
-        <h3 className="font-semibold text-navy-900 mb-3">Ready-to-send pitch</h3>
-        <p className="text-xs text-gray-500 mb-2">Copy this message and personalise it before sending:</p>
+        <h3 className="font-semibold text-navy-900 mb-3">{t('manager.referralPage.pitchTitle')}</h3>
+        <p className="text-xs text-gray-500 mb-2">{t('manager.referralPage.pitchIntro')}</p>
         <div className="rounded-lg bg-white border p-4 text-sm text-gray-700 whitespace-pre-wrap mb-3">
-{`Hi [Name],
-
-I know you own a property on the Costa Tropical and might be interested in how to get better returns without the headaches.
-
-I work with HostMasters, a platform that handles everything — listing, guest comms, cleaning, maintenance, fiscal compliance (Modelo 179, IRNR, NRU registration). Transparent fees, real data dashboard, and AI-driven pricing.
-
-Check it out here: ${data.referralUrl}
-
-Happy to walk you through it whenever suits you.
-
-Best,
-[Your name]`}
+          {t('manager.referralPage.pitchBody').replace('{url}', data.referralUrl)}
         </div>
         <button
           onClick={() => {
-            const pitch = `Hi [Name],\n\nI know you own a property on the Costa Tropical and might be interested in how to get better returns without the headaches.\n\nI work with HostMasters, a platform that handles everything — listing, guest comms, cleaning, maintenance, fiscal compliance (Modelo 179, IRNR, NRU registration). Transparent fees, real data dashboard, and AI-driven pricing.\n\nCheck it out here: ${data.referralUrl}\n\nHappy to walk you through it whenever suits you.\n\nBest,\n[Your name]`
+            const pitch = t('manager.referralPage.pitchBody').replace('{url}', data.referralUrl)
             navigator.clipboard.writeText(pitch)
-            showToast("Pitch copied to clipboard", "success")
+            showToast(t('manager.referralPage.pitchCopied'), "success")
           }}
           className="inline-flex items-center gap-1.5 rounded-lg border bg-white px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
         >
-          <Copy className="h-4 w-4" /> Copy message
+          <Copy className="h-4 w-4" /> {t('manager.referralPage.pitchCopy')}
         </button>
       </div>
     </div>
