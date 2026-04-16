@@ -7,8 +7,14 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  // MANAGER can only see campaigns they created
+  const where: Record<string, unknown> = {}
+  if (me.role === 'MANAGER') where.createdById = me.id
 
   const campaigns = await prisma.campaign.findMany({
+    where,
     include: { _count: { select: { leadAttributions: true } } },
     orderBy: { createdAt: 'desc' },
   })

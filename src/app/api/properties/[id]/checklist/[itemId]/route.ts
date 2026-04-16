@@ -10,6 +10,18 @@ export async function PATCH(
 ) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  // MANAGER can only update checklist items for properties belonging to their clients
+  if (me.role === 'MANAGER') {
+    const prop = await prisma.property.findUnique({
+      where: { id: params.id },
+      select: { owner: { select: { managerId: true } } },
+    })
+    if (!prop || prop.owner?.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
 
   const body = await request.json()
   const data: Record<string, unknown> = {}
@@ -31,6 +43,18 @@ export async function DELETE(
 ) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  // MANAGER can only delete checklist items for properties belonging to their clients
+  if (me.role === 'MANAGER') {
+    const prop = await prisma.property.findUnique({
+      where: { id: params.id },
+      select: { owner: { select: { managerId: true } } },
+    })
+    if (!prop || prop.owner?.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
 
   await prisma.propertyChecklistItem.delete({ where: { id: params.itemId } })
   return new NextResponse(null, { status: 204 })

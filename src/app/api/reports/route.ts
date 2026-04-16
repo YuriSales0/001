@@ -5,6 +5,7 @@ import { requireRole } from '@/lib/session'
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const { searchParams } = new URL(request.url)
     const propertyId = searchParams.get('propertyId')
@@ -15,6 +16,11 @@ export async function GET(request: NextRequest) {
     if (propertyId) where.propertyId = propertyId
     if (month) where.month = parseInt(month, 10)
     if (year) where.year = parseInt(year, 10)
+
+    // MANAGER can only see reports for properties belonging to their clients
+    if (me.role === 'MANAGER') {
+      where.property = { owner: { managerId: me.id } }
+    }
 
     const reports = await prisma.monthlyReport.findMany({
       where,
@@ -44,6 +50,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const body = await request.json()
     const { propertyId, month, year } = body
@@ -57,6 +64,7 @@ export async function POST(request: NextRequest) {
 
     const property = await prisma.property.findUnique({
       where: { id: propertyId },
+      include: { owner: { select: { managerId: true } } },
     })
 
     if (!property) {
@@ -64,6 +72,11 @@ export async function POST(request: NextRequest) {
         { error: 'Property not found' },
         { status: 404 }
       )
+    }
+
+    // MANAGER can only generate reports for properties belonging to their clients
+    if (me.role === 'MANAGER' && property.owner?.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const startDate = new Date(year, month - 1, 1)

@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
 
+// NOTE: Suppliers are intentionally a shared global resource — no role-scoping needed.
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })

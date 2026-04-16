@@ -4,6 +4,9 @@ import { requireRole } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
 
+// NOTE: Suppliers are intentionally a shared global resource (cleaning companies,
+// plumbers, electricians, etc.) across the organization. MANAGER access to all
+// suppliers is correct business logic — no role-scoping needed here.
 export async function GET() {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })

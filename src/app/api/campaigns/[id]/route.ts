@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic'
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
 
   const campaign = await prisma.campaign.findUnique({
     where: { id: params.id },
@@ -16,12 +17,27 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
     },
   })
   if (!campaign) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  // MANAGER can only see campaigns they created
+  if (me.role === 'MANAGER' && campaign.createdById !== me.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   return NextResponse.json(campaign)
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  // MANAGER can only edit campaigns they created
+  if (me.role === 'MANAGER') {
+    const existing = await prisma.campaign.findUnique({ where: { id: params.id }, select: { createdById: true } })
+    if (!existing || existing.createdById !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
 
   const body = await request.json()
   const { name, status, channel, type, budgetAllocated, startDate, endDate, targetAudience, description, notes } = body
@@ -45,6 +61,15 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  // MANAGER can only delete campaigns they created
+  if (me.role === 'MANAGER') {
+    const existing = await prisma.campaign.findUnique({ where: { id: params.id }, select: { createdById: true } })
+    if (!existing || existing.createdById !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
 
   await prisma.campaign.delete({ where: { id: params.id } })
   return new NextResponse(null, { status: 204 })
