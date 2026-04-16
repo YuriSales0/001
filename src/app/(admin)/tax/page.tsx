@@ -384,7 +384,7 @@ function NewObligationModal({
         <div className="px-6 py-4 border-t flex justify-end gap-2">
           <button onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
           <button onClick={submit} disabled={!userId || !periodLabel || saving}
-            className="rounded-lg bg-navy-900 text-white px-5 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
+            className="rounded-lg bg-navy-900 text-white px-5 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
             {saving ? t('admin.creating') : t('admin.create')}
           </button>
         </div>

@@ -622,7 +622,7 @@ export default function ReservationsPage() {
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={()=>setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
                 <button type="submit" disabled={creating}
-                  className="rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50">
+                  className="rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
                   {creating?"Saving…":"Create reservation"}
                 </button>
               </div>

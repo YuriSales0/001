@@ -367,7 +367,7 @@ export default function TasksPage() {
                 <button
                   type="submit"
                   disabled={creating}
-                  className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50"
+                  className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {creating ? "Creating…" : "Dispatch task"}
                 </button>
