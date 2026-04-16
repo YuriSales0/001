@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight, ChevronDown,
   BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
-  Target, Settings, Brain,
+  Target, Settings, Brain, Briefcase,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
@@ -51,6 +51,7 @@ function useAdminNav(): NavEntry[] {
     {
       label: t('common.administration'), icon: Settings, items: [
         { href: "/team", label: t('common.team'), icon: Users },
+        { href: "/recruit", label: "Recruiting", icon: Briefcase },
         { href: "/my-properties", label: t('common.properties'), icon: Building2 },
         { href: "/integrations", label: t('common.integrations'), icon: Landmark },
       ],
