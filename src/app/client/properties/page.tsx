@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Building2, MapPin, Check, AlertCircle, Plus, X, Clock, CheckCircle2, Settings, FileText } from 'lucide-react'
-import { HOUSE_RULES, HOUSE_RULE_CATEGORIES, getRulesByCategory, type HouseRuleCategory } from '@/lib/house-rules'
+import { HOUSE_RULES, HOUSE_RULE_CATEGORIES, getRulesByCategory, ruleLabel, categoryLabel, type HouseRuleCategory } from '@/lib/house-rules'
 import { ContractViewer } from '@/components/hm/contract-viewer'
+import { useLocale } from '@/i18n/provider'
 
 type Contract = {
   id: string
@@ -35,6 +36,7 @@ const STATUS_BADGE: Record<string, { cls: string; label: string }> = {
 }
 
 function HouseRulesSelector({ selected, onChange }: { selected: string[]; onChange: (rules: string[]) => void }) {
+  const { locale } = useLocale()
   const rulesByCategory = getRulesByCategory()
 
   const toggle = (key: string) => {
@@ -49,7 +51,7 @@ function HouseRulesSelector({ selected, onChange }: { selected: string[]; onChan
         return (
           <div key={cat.key}>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold text-gray-900">{cat.labelEn}</h4>
+              <h4 className="text-sm font-semibold text-gray-900">{categoryLabel(cat, locale)}</h4>
               <span className="text-xs text-gray-400">{selectedInCat}/{rules.length}</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -62,7 +64,7 @@ function HouseRulesSelector({ selected, onChange }: { selected: string[]; onChan
                     className="accent-[#C9A84C]"
                   />
                   <span>{rule.icon}</span>
-                  <span className="text-gray-700">{rule.labelEn}</span>
+                  <span className="text-gray-700">{ruleLabel(rule, locale)}</span>
                 </label>
               ))}
             </div>
