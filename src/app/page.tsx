@@ -20,6 +20,7 @@ import { LanguageSelector } from "@/components/hm/language-selector"
 import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
 import { JoinHostMasters } from "@/components/hm/join-hostmasters"
+import { ManagerRecruitSection } from "@/components/hm/manager-recruit-section"
 import { ReferralTracker } from "@/components/hm/referral-tracker"
 
 /* ── Plan data from finance.ts ── */
@@ -53,6 +54,9 @@ export default function LandingPage() {
             <a href="#problema" className="hover:text-gray-900 transition-colors">{t('landing.nav.problem')}</a>
             <a href="#solucao" className="hover:text-gray-900 transition-colors">{t('landing.nav.solution')}</a>
             <a href="#planos" className="hover:text-gray-900 transition-colors">{t('landing.nav.plans')}</a>
+            <a href="#manager" className="font-semibold hover:text-gray-900 transition-colors" style={{ color: "#C9A84C" }}>
+              Become a Manager
+            </a>
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSelector />
@@ -331,7 +335,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ───────── Join HostMasters (Managers + Crew) ───────── */}
+      {/* ───────── Manager Recruitment (main) ───────── */}
+      <ManagerRecruitSection />
+
+      {/* ───────── Application form (Managers + Crew) ───────── */}
       <JoinHostMasters />
 
       {/* ───────── Final CTA ───────── */}
