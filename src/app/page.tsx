@@ -19,8 +19,6 @@ import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
 import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
-import { JoinHostMasters } from "@/components/hm/join-hostmasters"
-import { ManagerRecruitSection } from "@/components/hm/manager-recruit-section"
 import { ReferralTracker } from "@/components/hm/referral-tracker"
 
 /* ── Plan data from finance.ts ── */
@@ -54,9 +52,9 @@ export default function LandingPage() {
             <a href="#problema" className="hover:text-gray-900 transition-colors">{t('landing.nav.problem')}</a>
             <a href="#solucao" className="hover:text-gray-900 transition-colors">{t('landing.nav.solution')}</a>
             <a href="#planos" className="hover:text-gray-900 transition-colors">{t('landing.nav.plans')}</a>
-            <a href="#manager" className="font-semibold hover:text-gray-900 transition-colors" style={{ color: "#C9A84C" }}>
-              Become a Manager
-            </a>
+            <Link href="/careers" className="font-semibold hover:text-gray-900 transition-colors" style={{ color: "#C9A84C" }}>
+              Careers
+            </Link>
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSelector />
@@ -335,11 +333,32 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ───────── Manager Recruitment (main) ───────── */}
-      <ManagerRecruitSection />
-
-      {/* ───────── Application form (Managers + Crew) ───────── */}
-      <JoinHostMasters />
+      {/* ───────── Work with us (subtle teaser → /careers) ───────── */}
+      <section className="py-16 sm:py-20" style={{ background: "#0d1420" }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10"
+               style={{ background: "linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.02) 100%)", border: "1px solid rgba(201,168,76,0.15)" }}>
+            <div className="flex-1">
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#C9A84C" }}>
+                {t('landing.join.badge')}
+              </p>
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                {t('landing.join.title')}
+              </h3>
+              <p className="text-sm text-gray-400">
+                {t('landing.join.subtitle')}
+              </p>
+            </div>
+            <Link
+              href="/careers"
+              className="inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-bold transition-all hover:scale-[1.02] shrink-0"
+              style={{ background: "#C9A84C", color: "#111827" }}
+            >
+              {t('landing.join.manager.cta')} <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ───────── Final CTA ───────── */}
       <section className="py-20 sm:py-28" style={{ background: "#111827" }}>
