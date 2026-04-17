@@ -37,8 +37,42 @@ enum TaskType {
 
 enum TaskStatus {
   PENDING
+  NOTIFIED          // Crew was notified about task
+  CONFIRMED         // Crew confirmed they'll do it
   IN_PROGRESS
-  COMPLETED
+  SUBMITTED         // Crew submitted report + photos
+  APPROVED          // Captain approved the work
+  REJECTED          // Captain rejected — needs redo or redistribute
+  REDISTRIBUTED     // Reassigned to another crew member
+  COMPLETED         // Legacy — kept for backward compat
+}
+
+enum CrewScoreLevel {
+  SUSPENDED    // 0-49
+  BASIC        // 50-149
+  VERIFIED     // 150-299
+  EXPERT       // 300-499
+  ELITE        // 500+
+}
+
+enum CrewPayoutStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+}
+
+enum InterventionStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  ESCALATED
+}
+
+enum AiRiskLevel {
+  LOW
+  MEDIUM
+  HIGH
 }
 
 enum ReservationStatus {
@@ -147,6 +181,8 @@ model User {
   crewHourlyRate     Float?    // €/hour (if FREELANCER, optional)
   crewSkills         String?   // JSON array: ["CLEANING","MAINTENANCE","CHECK_IN",...]
   crewAvailability   String?   // JSON: {"mon":true,"tue":true,...}
+  isCaptain          Boolean   @default(false) // Crew Captain (fixed supervisor, not gig)
+  stripeConnectId    String?   // Stripe Connect account for Crew payouts
   // Onboarding
   onboardingCompleted Boolean  @default(false)
   onboardingData      Json?    // wizard answers stored here
@@ -170,6 +206,13 @@ model User {
   sentMessages         Message[]      @relation("SentMessages")
   campaigns            Campaign[]     @relation("CampaignCreator")
   taxObligations       TaxObligation[]
+  // Crew system
+  crewScore            CrewScore?
+  crewRelationships    CrewPropertyRelationship[] @relation("CrewRelationships")
+  crewPayouts          CrewPayout[]               @relation("CrewPayouts")
+  captainTasks         Task[]                     @relation("CaptainTasks")
+  managerInterventions CrewIntervention[]         @relation("ManagerInterventions")
+  captainInterventions CrewIntervention[]         @relation("CaptainInterventions")
 }
 
 model Account {
@@ -259,8 +302,10 @@ model Property {
   description      String?        @db.Text
   photos           String[]
   contractUrl      String?
-  smartLockId      String?
-  bedrooms         Int?
+  smartLockId          String?
+  smartLockInstalled   Boolean   @default(false)
+  smartLockProvider    String?   // e.g. "Nuki", "TTLock", "Yale"
+  bedrooms             Int?
   sizeSqm          Int?
   airbnbConnected   Boolean        @default(false)
   bookingConnected  Boolean        @default(false)
@@ -290,8 +335,9 @@ model Property {
   invoices       Invoice[]
   pricingPoints  PricingDataPoint[]
   checklistItems PropertyChecklistItem[]
-  taxObligations TaxObligation[]
-  contracts      Contract[]
+  taxObligations     TaxObligation[]
+  contracts          Contract[]
+  crewRelationships  CrewPropertyRelationship[]
 }
 
 model Invoice {
@@ -422,12 +468,134 @@ model Task {
   photos      String[]   @default([])
   dueDate     DateTime
   assigneeId  String?
+  // Lifecycle timestamps
+  notifiedAt  DateTime?
+  confirmedAt DateTime?
+  submittedAt DateTime?
+  approvedAt  DateTime?
+  rejectedAt  DateTime?
+  // Captain & payout
+  captainId           String?
+  smartLockCode       String?
+  smartLockExpiresAt  DateTime?
+  amount              Float?    // payout amount for this task
+  scoreImpact         Int?      // score delta after approval/rejection
+  crewPayoutId        String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  property Property @relation(fields: [propertyId], references: [id])
-  assignee User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  property    Property         @relation(fields: [propertyId], references: [id])
+  assignee    User?            @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  captain     User?            @relation("CaptainTasks", fields: [captainId], references: [id])
+  crewPayout  CrewPayout?      @relation("PayoutTasks", fields: [crewPayoutId], references: [id])
+  interventions CrewIntervention[]
+
+  @@index([assigneeId, status])
+  @@index([crewPayoutId])
 }
+
+// ─── Crew System ────────────────────────────────────────────────────────────
+
+model CrewScore {
+  id            String         @id @default(cuid())
+  userId        String         @unique
+  currentScore  Int            @default(100)
+  level         CrewScoreLevel @default(BASIC)
+  totalTasks    Int            @default(0)
+  totalApproved Int            @default(0)
+  totalRejected Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history CrewScoreEvent[]
+}
+
+model CrewScoreEvent {
+  id          String   @id @default(cuid())
+  crewScoreId String
+  taskId      String?
+  delta       Int
+  reason      String
+  scoreBefore Int
+  scoreAfter  Int
+  createdAt   DateTime @default(now())
+
+  crewScore CrewScore @relation(fields: [crewScoreId], references: [id], onDelete: Cascade)
+
+  @@index([crewScoreId, createdAt])
+}
+
+model CrewPropertyRelationship {
+  id                 String      @id @default(cuid())
+  crewId             String
+  propertyId         String
+  totalTasks         Int         @default(0)
+  firstTaskAt        DateTime?
+  lastTaskAt         DateTime?
+  taskTypeBreakdown  Json?
+  propertyTrustScore Int         @default(50)
+  ownerApproved      Boolean     @default(false)
+  captainEndorsed    Boolean     @default(false)
+  incidentCount      Int         @default(0)
+  aiRiskLevel        AiRiskLevel @default(LOW)
+  aiAlertActive      Boolean     @default(false)
+  aiLastEvaluatedAt  DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  crew     User     @relation("CrewRelationships", fields: [crewId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([crewId, propertyId])
+  @@index([propertyId])
+}
+
+model CrewPayout {
+  id               String           @id @default(cuid())
+  crewId           String
+  weekStart        DateTime
+  weekEnd          DateTime
+  taskCount        Int              @default(0)
+  totalAmount      Float            @default(0)
+  bonusAmount      Float            @default(0)
+  finalAmount      Float            @default(0)
+  status           CrewPayoutStatus @default(PENDING)
+  stripeTransferId String?
+  statementSentAt  DateTime?
+  paidAt           DateTime?
+  failedReason     String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  crew  User   @relation("CrewPayouts", fields: [crewId], references: [id], onDelete: Cascade)
+  tasks Task[] @relation("PayoutTasks")
+
+  @@unique([crewId, weekStart])
+  @@index([status])
+}
+
+model CrewIntervention {
+  id         String             @id @default(cuid())
+  taskId     String
+  managerId  String
+  captainId  String?
+  reason     String             @db.Text
+  status     InterventionStatus @default(OPEN)
+  resolution String?            @db.Text
+  resolvedAt DateTime?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  task    Task  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  manager User  @relation("ManagerInterventions", fields: [managerId], references: [id])
+  captain User? @relation("CaptainInterventions", fields: [captainId], references: [id])
+
+  @@index([taskId])
+  @@index([status])
+}
+
+// ─── Suppliers ──────────────────────────────────────────────────────────────
 
 model Supplier {
   id        String       @id @default(cuid())
