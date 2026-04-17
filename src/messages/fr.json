@@ -864,5 +864,35 @@
     "saving": "Enregistrement…",
     "setupTitle": "Setup",
     "setupSubtitle": "Configuration initiale de ton compte"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Tu as un contrat de service en attente",
+      "pendingContractDesc": "Signe-le pour activer ton bien et commencer à recevoir des réservations.",
+      "pendingInvoice": "{n} facture(s) en attente",
+      "pendingInvoiceTotal": "Total : {amount} — clique pour voir les détails",
+      "earningsThisMonth": "Tes revenus ce mois — net",
+      "occupancy": "Taux d'occupation ce mois",
+      "nextGuest": "Prochain voyageur",
+      "noUpcoming": "Pas de réservations à venir",
+      "propertyCondition": "État du bien",
+      "issuesFlagged": "{n} problème(s) signalé(s)",
+      "allGood": "Tout va bien",
+      "lastInspected": "Dernière inspection {date}",
+      "careTitle": "Entretien & maintenance",
+      "seeAll": "Tout voir",
+      "upcomingVisits": "Visites prévues",
+      "openIssues": "Problèmes ouverts",
+      "quickActions": "Actions rapides",
+      "blockDates": "Bloquer des dates",
+      "blockDatesDesc": "Réserve du temps pour toi",
+      "requestVisit": "Demander une visite",
+      "requestVisitDesc": "Ménage, réparations ou vérification",
+      "viewEarnings": "Voir les revenus",
+      "viewEarningsDesc": "Relevés et projections",
+      "propertySetup": "Ton bien est en cours de configuration",
+      "propertySetupDesc": "Ton Manager prépare ton bien. Tu verras ton tableau de bord ici quand tout sera prêt.",
+      "contactManager": "Contacter ton Manager"
+    }
   }
 }

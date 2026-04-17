@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { PlanBadge } from "@/components/hm/plan-badge"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
+import { useLocale } from "@/i18n/provider"
 
 type DashboardData = {
   property: {
@@ -64,6 +65,7 @@ export default function OwnerDashboard() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const { t } = useLocale()
   const [pendingInvoices, setPendingInvoices] = useState<{ count: number; total: number }>({ count: 0, total: 0 })
   const [hasContractPending, setHasContractPending] = useState(false)
 
@@ -225,10 +227,10 @@ export default function OwnerDashboard() {
           <FileText className="h-5 w-5 text-blue-600 shrink-0" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-blue-800">
-              You have a pending service agreement
+              {t('client.dashboard.pendingContract')}
             </p>
             <p className="text-xs text-blue-600 mt-0.5">
-              Sign it to activate your property and start receiving bookings.
+              {t('client.dashboard.pendingContractDesc')}
             </p>
           </div>
           <ArrowRight className="h-4 w-4 text-blue-400" />
@@ -242,10 +244,10 @@ export default function OwnerDashboard() {
           <AlertTriangle className="h-5 w-5 text-orange-500 shrink-0" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-orange-800">
-              {pendingInvoices.count === 1 ? 'You have 1 pending invoice' : `You have ${pendingInvoices.count} pending invoices`}
+              {t('client.dashboard.pendingInvoice').replace('{n}', String(pendingInvoices.count))}
             </p>
             <p className="text-xs text-orange-600 mt-0.5">
-              Total: {fmtEUR(pendingInvoices.total)} — click to view details
+              {t('client.dashboard.pendingInvoiceTotal').replace('{amount}', fmtEUR(pendingInvoices.total))}
             </p>
           </div>
           <ArrowRight className="h-4 w-4 text-orange-400" />
@@ -270,7 +272,7 @@ export default function OwnerDashboard() {
             <div className="px-6 py-8 text-center border-b border-hm-border"
                  style={{ background: 'var(--hm-ivory)' }}>
               <p className="font-sans text-sm uppercase tracking-widest text-hm-slate/60 mb-2">
-                Your earnings this month — net
+                {t('client.dashboard.earningsThisMonth')}
               </p>
               <p className="text-6xl font-serif font-bold text-hm-black">
                 {fmtEUR(data?.earnings.thisMonth ?? 0)}
@@ -278,7 +280,7 @@ export default function OwnerDashboard() {
               {/* Occupancy bar */}
               <div className="mt-4 max-w-xs mx-auto">
                 <div className="flex items-center justify-between text-sm font-sans text-hm-slate/60 mb-1">
-                  <span>Occupancy this month</span>
+                  <span>{t('client.dashboard.occupancy')}</span>
                   <span className="font-semibold text-hm-black">{data?.earnings.occupancyPct ?? 0}%</span>
                 </div>
                 <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--hm-border)' }}>
@@ -297,7 +299,7 @@ export default function OwnerDashboard() {
             <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div data-tour="next-guest">
                 <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-2">
-                  Next guest
+                  {t('client.dashboard.nextGuest')}
                 </p>
                 {data?.nextBooking ? (
                   <div className="flex items-center gap-2">
@@ -315,25 +317,25 @@ export default function OwnerDashboard() {
                     </div>
                   </div>
                 ) : (
-                  <p className="font-sans text-hm-slate/60">No upcoming bookings</p>
+                  <p className="font-sans text-hm-slate/60">{t('client.dashboard.noUpcoming')}</p>
                 )}
               </div>
 
               <div data-tour="property-condition">
                 <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-2">
-                  Property condition
+                  {t('client.dashboard.propertyCondition')}
                 </p>
                 {(data?.flaggedIssues ?? 0) > 0 ? (
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="h-5 w-5 text-hm-red" />
                     <span className="font-serif font-semibold text-hm-red">
-                      {data?.flaggedIssues} issue{data?.flaggedIssues === 1 ? "" : "s"} flagged
+                      {t('client.dashboard.issuesFlagged').replace('{n}', String(data?.flaggedIssues ?? 0))}
                     </span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-hm-green" />
-                    <span className="font-serif font-semibold text-hm-green">All good</span>
+                    <span className="font-serif font-semibold text-hm-green">{t('client.dashboard.allGood')}</span>
                   </div>
                 )}
                 {prop.lastInspectionAt && (
@@ -351,25 +353,25 @@ export default function OwnerDashboard() {
             <div className="px-6 py-4 border-b border-hm-border flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wrench className="h-5 w-5 text-hm-gold-dk" />
-                <h2 className="font-serif font-bold text-hm-black text-lg">Care & maintenance</h2>
+                <h2 className="font-serif font-bold text-hm-black text-lg">{t('client.dashboard.careTitle')}</h2>
               </div>
               <Link
                 href="/client/care"
                 className="inline-flex items-center gap-1 font-sans text-sm text-hm-gold-dk hover:opacity-80"
               >
-                See all <ArrowRight className="h-3.5 w-3.5" />
+                {t('client.dashboard.seeAll')} <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-hm-border">
               <div className="px-6 py-4">
                 <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-1">
-                  Upcoming visits
+                  {t('client.dashboard.upcomingVisits')}
                 </p>
                 <p className="font-serif text-2xl font-bold text-hm-black">{data?.upcomingVisits ?? 0}</p>
               </div>
               <div className="px-6 py-4">
                 <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-1">
-                  Open issues
+                  {t('client.dashboard.openIssues')}
                 </p>
                 <p className={`font-serif text-2xl font-bold ${(data?.flaggedIssues ?? 0) > 0 ? "text-hm-red" : "text-hm-black"}`}>
                   {data?.flaggedIssues ?? 0}
@@ -399,7 +401,7 @@ export default function OwnerDashboard() {
 
           {/* Quick actions */}
           <div data-tour="quick-actions" className="hm-animate-in hm-stagger-4">
-            <h2 className="text-xl font-serif font-bold text-hm-black mb-4">Quick actions</h2>
+            <h2 className="text-xl font-serif font-bold text-hm-black mb-4">{t('client.dashboard.quickActions')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link
                 href="/client/bookings"
@@ -411,8 +413,8 @@ export default function OwnerDashboard() {
                   <CalendarDays className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-serif font-bold text-hm-black">Block dates</p>
-                  <p className="font-sans text-sm text-hm-slate/70">Reserve time for yourself</p>
+                  <p className="font-serif font-bold text-hm-black">{t('client.dashboard.blockDates')}</p>
+                  <p className="font-sans text-sm text-hm-slate/70">{t('client.dashboard.blockDatesDesc')}</p>
                 </div>
               </Link>
 
@@ -426,8 +428,8 @@ export default function OwnerDashboard() {
                   <Wrench className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-serif font-bold text-hm-black">Request a visit</p>
-                  <p className="font-sans text-sm text-hm-slate/70">Cleaning, repairs or check</p>
+                  <p className="font-serif font-bold text-hm-black">{t('client.dashboard.requestVisit')}</p>
+                  <p className="font-sans text-sm text-hm-slate/70">{t('client.dashboard.requestVisitDesc')}</p>
                 </div>
               </Link>
 
@@ -441,8 +443,8 @@ export default function OwnerDashboard() {
                   <FileText className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-serif font-bold text-hm-black">View full report</p>
-                  <p className="font-sans text-sm text-hm-slate/70">Monthly earnings breakdown</p>
+                  <p className="font-serif font-bold text-hm-black">{t('client.dashboard.viewEarnings')}</p>
+                  <p className="font-sans text-sm text-hm-slate/70">{t('client.dashboard.viewEarningsDesc')}</p>
                 </div>
               </Link>
             </div>
@@ -490,11 +492,10 @@ export default function OwnerDashboard() {
             <Phone className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-2xl font-serif font-bold text-hm-black mb-2">
-            Your property is being set up
+            {t('client.dashboard.propertySetup')}
           </h2>
           <p className="font-sans text-hm-slate/70 max-w-md mx-auto">
-            Our team is preparing everything. You will receive an email as soon as your property is live.
-            In the meantime, feel free to contact your manager.
+            {t('client.dashboard.propertySetupDesc')}
           </p>
           <Link
             href="/client/messages"
@@ -502,7 +503,7 @@ export default function OwnerDashboard() {
             style={{ background: 'var(--hm-black)' }}
           >
             <MessageCircle className="h-5 w-5" />
-            Contact your manager
+            {t('client.dashboard.contactManager')}
           </Link>
         </div>
       )}

@@ -872,5 +872,35 @@
     "saving": "Speichere…",
     "setupTitle": "Setup",
     "setupSubtitle": "Ersteinrichtung deines Kontos"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Du hast einen ausstehenden Servicevertrag",
+      "pendingContractDesc": "Unterschreibe ihn, um deine Immobilie zu aktivieren und Buchungen zu erhalten.",
+      "pendingInvoice": "{n} offene Rechnung(en)",
+      "pendingInvoiceTotal": "Gesamt: {amount} — klicke für Details",
+      "earningsThisMonth": "Deine Einnahmen diesen Monat — netto",
+      "occupancy": "Auslastung diesen Monat",
+      "nextGuest": "Nächster Gast",
+      "noUpcoming": "Keine kommenden Buchungen",
+      "propertyCondition": "Zustand der Immobilie",
+      "issuesFlagged": "{n} Problem(e) gemeldet",
+      "allGood": "Alles in Ordnung",
+      "lastInspected": "Letzte Inspektion {date}",
+      "careTitle": "Pflege & Wartung",
+      "seeAll": "Alle anzeigen",
+      "upcomingVisits": "Geplante Besuche",
+      "openIssues": "Offene Probleme",
+      "quickActions": "Schnellaktionen",
+      "blockDates": "Daten blockieren",
+      "blockDatesDesc": "Zeitraum für dich reservieren",
+      "requestVisit": "Besuch anfordern",
+      "requestVisitDesc": "Reinigung, Reparaturen oder Kontrolle",
+      "viewEarnings": "Einnahmen ansehen",
+      "viewEarningsDesc": "Abrechnungen und Prognosen",
+      "propertySetup": "Deine Immobilie wird eingerichtet",
+      "propertySetupDesc": "Dein Manager bereitet deine Immobilie vor. Dein Dashboard wird hier angezeigt, sobald alles bereit ist.",
+      "contactManager": "Deinen Manager kontaktieren"
+    }
   }
 }

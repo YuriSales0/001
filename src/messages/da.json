@@ -864,5 +864,35 @@
     "saving": "Gemmer…",
     "setupTitle": "Setup",
     "setupSubtitle": "Første opsætning af din konto"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Du har en afventende servicekontrakt",
+      "pendingContractDesc": "Underskriv den for at aktivere din ejendom og begynde at modtage bookinger.",
+      "pendingInvoice": "{n} afventende faktura(er)",
+      "pendingInvoiceTotal": "I alt: {amount} — klik for detaljer",
+      "earningsThisMonth": "Dine indtægter denne måned — netto",
+      "occupancy": "Belægning denne måned",
+      "nextGuest": "Næste gæst",
+      "noUpcoming": "Ingen kommende bookinger",
+      "propertyCondition": "Ejendommens tilstand",
+      "issuesFlagged": "{n} problem(er) rapporteret",
+      "allGood": "Alt i orden",
+      "lastInspected": "Sidst inspiceret {date}",
+      "careTitle": "Pleje & vedligeholdelse",
+      "seeAll": "Se alle",
+      "upcomingVisits": "Planlagte besøg",
+      "openIssues": "Åbne problemer",
+      "quickActions": "Hurtige handlinger",
+      "blockDates": "Bloker datoer",
+      "blockDatesDesc": "Reserver tid til dig selv",
+      "requestVisit": "Anmod om et besøg",
+      "requestVisitDesc": "Rengøring, reparationer eller kontrol",
+      "viewEarnings": "Se indtægter",
+      "viewEarningsDesc": "Opgørelser og prognoser",
+      "propertySetup": "Din ejendom er ved at blive konfigureret",
+      "propertySetupDesc": "Din Manager forbereder din ejendom. Du ser dit dashboard her, når alt er klar.",
+      "contactManager": "Kontakt din Manager"
+    }
   }
 }

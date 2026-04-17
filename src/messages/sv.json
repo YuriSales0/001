@@ -864,5 +864,35 @@
     "saving": "Sparar…",
     "setupTitle": "Setup",
     "setupSubtitle": "Första konfigurationen av ditt konto"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Du har ett väntande serviceavtal",
+      "pendingContractDesc": "Signera det för att aktivera din fastighet och börja ta emot bokningar.",
+      "pendingInvoice": "{n} väntande faktura/fakturor",
+      "pendingInvoiceTotal": "Totalt: {amount} — klicka för detaljer",
+      "earningsThisMonth": "Dina intäkter denna månad — netto",
+      "occupancy": "Beläggning denna månad",
+      "nextGuest": "Nästa gäst",
+      "noUpcoming": "Inga kommande bokningar",
+      "propertyCondition": "Fastighetens skick",
+      "issuesFlagged": "{n} problem rapporterat/rapporterade",
+      "allGood": "Allt bra",
+      "lastInspected": "Senast inspekterad {date}",
+      "careTitle": "Skötsel & underhåll",
+      "seeAll": "Visa alla",
+      "upcomingVisits": "Planerade besök",
+      "openIssues": "Öppna problem",
+      "quickActions": "Snabbåtgärder",
+      "blockDates": "Blockera datum",
+      "blockDatesDesc": "Reservera tid för dig själv",
+      "requestVisit": "Begär ett besök",
+      "requestVisitDesc": "Städning, reparationer eller kontroll",
+      "viewEarnings": "Visa intäkter",
+      "viewEarningsDesc": "Utdrag och prognoser",
+      "propertySetup": "Din fastighet håller på att konfigureras",
+      "propertySetupDesc": "Din Manager förbereder din fastighet. Du ser ditt dashboard här när allt är klart.",
+      "contactManager": "Kontakta din Manager"
+    }
   }
 }

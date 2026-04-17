@@ -872,5 +872,35 @@
     "saving": "Saving…",
     "setupTitle": "Setup",
     "setupSubtitle": "Initial account setup"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "You have a pending service agreement",
+      "pendingContractDesc": "Sign it to activate your property and start receiving bookings.",
+      "pendingInvoice": "You have {n} pending invoice(s)",
+      "pendingInvoiceTotal": "Total: {amount} — click to view details",
+      "earningsThisMonth": "Your earnings this month — net",
+      "occupancy": "Occupancy this month",
+      "nextGuest": "Next guest",
+      "noUpcoming": "No upcoming bookings",
+      "propertyCondition": "Property condition",
+      "issuesFlagged": "{n} issue(s) flagged",
+      "allGood": "All good",
+      "lastInspected": "Last inspected {date}",
+      "careTitle": "Care & maintenance",
+      "seeAll": "See all",
+      "upcomingVisits": "Upcoming visits",
+      "openIssues": "Open issues",
+      "quickActions": "Quick actions",
+      "blockDates": "Block dates",
+      "blockDatesDesc": "Reserve time for yourself",
+      "requestVisit": "Request a visit",
+      "requestVisitDesc": "Cleaning, repairs or check",
+      "viewEarnings": "View earnings",
+      "viewEarningsDesc": "Statements and projections",
+      "propertySetup": "Your property is being set up",
+      "propertySetupDesc": "Your Manager is preparing your property. You'll see your dashboard here once everything is ready.",
+      "contactManager": "Contact your Manager"
+    }
   }
 }

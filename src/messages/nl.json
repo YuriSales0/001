@@ -864,5 +864,35 @@
     "saving": "Opslaan…",
     "setupTitle": "Setup",
     "setupSubtitle": "Eerste configuratie van je account"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Je hebt een servicecontract klaarstaan",
+      "pendingContractDesc": "Onderteken het om je woning te activeren en boekingen te ontvangen.",
+      "pendingInvoice": "{n} openstaande factuur/facturen",
+      "pendingInvoiceTotal": "Totaal: {amount} — klik voor details",
+      "earningsThisMonth": "Je inkomsten deze maand — netto",
+      "occupancy": "Bezetting deze maand",
+      "nextGuest": "Volgende gast",
+      "noUpcoming": "Geen komende boekingen",
+      "propertyCondition": "Staat van de woning",
+      "issuesFlagged": "{n} probleem/problemen gemeld",
+      "allGood": "Alles in orde",
+      "lastInspected": "Laatst geïnspecteerd {date}",
+      "careTitle": "Zorg & onderhoud",
+      "seeAll": "Alles bekijken",
+      "upcomingVisits": "Geplande bezoeken",
+      "openIssues": "Open problemen",
+      "quickActions": "Snelle acties",
+      "blockDates": "Data blokkeren",
+      "blockDatesDesc": "Reserveer tijd voor jezelf",
+      "requestVisit": "Bezoek aanvragen",
+      "requestVisitDesc": "Schoonmaak, reparaties of controle",
+      "viewEarnings": "Inkomsten bekijken",
+      "viewEarningsDesc": "Overzichten en prognoses",
+      "propertySetup": "Je woning wordt ingericht",
+      "propertySetupDesc": "Je Manager bereidt je woning voor. Je dashboard verschijnt hier zodra alles klaar is.",
+      "contactManager": "Neem contact op met je Manager"
+    }
   }
 }

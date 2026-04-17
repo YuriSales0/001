@@ -872,5 +872,35 @@
     "saving": "A guardar…",
     "setupTitle": "Setup",
     "setupSubtitle": "Configuração inicial da tua conta"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Tens um contrato de serviço pendente",
+      "pendingContractDesc": "Assina-o para activar a tua propriedade e começar a receber reservas.",
+      "pendingInvoice": "Tens {n} factura(s) pendente(s)",
+      "pendingInvoiceTotal": "Total: {amount} — clica para ver detalhes",
+      "earningsThisMonth": "Os teus ganhos este mês — líquido",
+      "occupancy": "Ocupação este mês",
+      "nextGuest": "Próximo hóspede",
+      "noUpcoming": "Sem reservas futuras",
+      "propertyCondition": "Estado da propriedade",
+      "issuesFlagged": "{n} problema(s) sinalizado(s)",
+      "allGood": "Tudo em ordem",
+      "lastInspected": "Última inspecção {date}",
+      "careTitle": "Cuidado e manutenção",
+      "seeAll": "Ver tudo",
+      "upcomingVisits": "Visitas agendadas",
+      "openIssues": "Problemas abertos",
+      "quickActions": "Acções rápidas",
+      "blockDates": "Bloquear datas",
+      "blockDatesDesc": "Reserva tempo para ti",
+      "requestVisit": "Pedir uma visita",
+      "requestVisitDesc": "Limpeza, reparações ou verificação",
+      "viewEarnings": "Ver ganhos",
+      "viewEarningsDesc": "Extractos e projecções",
+      "propertySetup": "A tua propriedade está a ser configurada",
+      "propertySetupDesc": "O teu Manager está a preparar a tua propriedade. Verás o teu dashboard aqui quando tudo estiver pronto.",
+      "contactManager": "Contactar o teu Manager"
+    }
   }
 }

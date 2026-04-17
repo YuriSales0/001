@@ -43,11 +43,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     loadMessages(locale).then(setMessages)
   }, [locale])
 
-  // On mount: read cookie, then override with session language if authenticated
+  // On mount: session language is the source of truth.
+  // Cookie is only a cache for unauthenticated pages.
   useEffect(() => {
-    const cookieLocale = readCookieLocale()
-    if (cookieLocale !== 'en') setLocaleState(cookieLocale)
-
     fetch('/api/auth/session')
       .then(res => res.json())
       .then(session => {
@@ -55,10 +53,16 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         if (lang && ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da'].includes(lang)) {
           setLocaleState(lang)
           writeCookieLocale(lang)
+          return
         }
+        // Not authenticated — fall back to cookie
+        const cookieLocale = readCookieLocale()
+        if (cookieLocale !== 'en') setLocaleState(cookieLocale)
       })
       .catch(() => {
-        // Not authenticated or fetch failed — keep cookie locale
+        // Offline or not authenticated — use cookie
+        const cookieLocale = readCookieLocale()
+        if (cookieLocale !== 'en') setLocaleState(cookieLocale)
       })
   }, [])
 
