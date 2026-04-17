@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CheckCircle2, Star, ArrowRight } from "lucide-react"
+import { CheckCircle2, Star, ArrowRight, Loader2 } from "lucide-react"
 import { PlanBadge } from "@/components/hm/plan-badge"
 import { useLocale } from "@/i18n/provider"
+import { showToast } from "@/components/hm/toast"
 
 type PlanId = "STARTER" | "BASIC" | "MID" | "PREMIUM"
 
@@ -259,14 +260,7 @@ export default function OwnerPlan() {
               {/* CTA */}
               {!isCurrent && isUpgrade && (
                 <div className="px-6 pb-5" style={{ background: 'var(--hm-ivory)' }}>
-                  <a
-                    href="mailto:hello@hostmasters.es?subject=Upgrade%20my%20plan"
-                    className="flex items-center justify-center gap-2 w-full rounded-lg py-3 font-sans font-semibold text-sm text-white transition-opacity hover:opacity-90"
-                    style={{ background: isPremium ? 'var(--hm-gold)' : 'var(--hm-black)', minHeight: '48px' }}
-                  >
-                    {t('plan.upgradeTo')} {plan.label}
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
+                  <UpgradeButton planId={plan.id} planLabel={plan.label} isPremium={isPremium} t={t} />
                 </div>
               )}
             </div>
@@ -296,5 +290,47 @@ export default function OwnerPlan() {
         {t('plan.happyToHelp')}
       </div>
     </div>
+  )
+}
+
+function UpgradeButton({ planId, planLabel, isPremium, t }: {
+  planId: string; planLabel: string; isPremium: boolean; t: (k: string) => string
+}) {
+  const [loading, setLoading] = useState(false)
+
+  const handleUpgrade = async () => {
+    setLoading(true)
+    try {
+      const meRes = await fetch('/api/me')
+      const me = await meRes.json()
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId, userId: me.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        showToast(data.error ?? 'Could not start checkout', 'error')
+        return
+      }
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch {
+      showToast('Connection error — please try again', 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleUpgrade}
+      disabled={loading}
+      className="flex items-center justify-center gap-2 w-full rounded-lg py-3 font-sans font-semibold text-sm text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+      style={{ background: isPremium ? 'var(--hm-gold)' : 'var(--hm-black)', minHeight: '48px' }}
+    >
+      {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{t('plan.upgradeTo')} {planLabel} <ArrowRight className="h-4 w-4" /></>}
+    </button>
   )
 }

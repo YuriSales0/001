@@ -55,10 +55,13 @@ export function t(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let current: any = messages
   for (const part of parts) {
-    current = current?.[part]
-    if (current === undefined) return key
+    if (current === null || current === undefined) return key
+    current = current[part]
   }
-  return typeof current === 'string' ? current : key
+  if (current === null || current === undefined) return key
+  if (typeof current === 'string') return current
+  if (typeof current === 'number' || typeof current === 'boolean') return String(current)
+  return key
 }
 
 /** Synchronously load messages for server components (uses require) */

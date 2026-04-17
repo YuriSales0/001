@@ -11,28 +11,31 @@ export function getStripe(): Stripe {
   return _stripe
 }
 
-export const PLANS = {
+export const STRIPE_PLANS = {
+  STARTER: {
+    name: 'Starter',
+    price: 0,
+    priceId: null,
+    commission: 22,
+  },
   BASIC: {
     name: 'Basic',
     price: 89,
-    priceId: process.env.STRIPE_BASIC_PRICE_ID || 'price_basic',
-    features: [
-      'Property dashboard',
-      'Monthly reports',
-      'Email notifications',
-      'Calendar view',
-    ],
+    priceId: process.env.STRIPE_BASIC_PRICE_ID || null,
+    commission: 20,
+  },
+  MID: {
+    name: 'Mid',
+    price: 159,
+    priceId: process.env.STRIPE_MID_PRICE_ID || null,
+    commission: 17,
   },
   PREMIUM: {
     name: 'Premium',
-    price: 149,
-    priceId: process.env.STRIPE_PREMIUM_PRICE_ID || 'price_premium',
-    features: [
-      'Everything in Basic',
-      'Priority support',
-      'Advanced analytics',
-      'Multi-language support',
-      'Custom branding',
-    ],
+    price: 269,
+    priceId: process.env.STRIPE_PREMIUM_PRICE_ID || null,
+    commission: 13,
   },
 } as const
+
+export type StripePlanId = keyof typeof STRIPE_PLANS

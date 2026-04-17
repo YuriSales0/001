@@ -122,7 +122,7 @@ export default function CrewEarningsPage() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-xl border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">{t('crew.earnings.thisMonth')}</div>
           <div className="text-2xl font-bold text-gray-900 mt-1">{fmtEUR(currentEarnings)}</div>
