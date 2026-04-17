@@ -67,7 +67,8 @@
     "administration": "Administration",
     "ownerReports": "Ejerrapporter",
     "crmPipeline": "CRM Pipeline",
-    "marketing": "Marketing"
+    "marketing": "Marketing",
+    "aiPricing": "AI-prisfastsættelse"
   },
   "owner": {
     "welcome": "Velkommen tilbage",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Kunne ikke opdatere",
       "loadFailed": "Kunne ikke indlæse referral-data.",
       "tryAgain": "Prøv igen"
+    },
+    "dashboardPage": {
+      "refresh": "Opdater",
+      "loadFailed": "Kunne ikke indlæse data",
+      "noneIn7Days": "Ingen de næste 7 dage"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "Ingen afsluttede opgaver endnu",
       "loading": "Indlæser…",
       "loadFailed": "Kunne ikke indlæse data. Prøv at opdatere."
+    },
+    "detail": {
+      "backToTasks": "Tilbage til opgaver",
+      "selectTask": "Vælg en opgave for at se detaljer",
+      "checkoutReport": "Check-out-rapport",
+      "checkoutReportDesc": "Ejeren underrettes automatisk ved indsendelse.",
+      "propertyCondition": "Ejendommens tilstand",
+      "conditionGood": "God",
+      "conditionMinor": "Mindre problemer",
+      "conditionMajor": "Alvorlige problemer",
+      "observedIssues": "Observerede problemer",
+      "observedPlaceholder": "f.eks. lampe i stuen i stykker, langsomt afløb i badeværelset…",
+      "damages": "Skader der kræver opfølgning",
+      "damagesPlaceholder": "Beskriv skaden, estimeret omkostning hvis muligt…",
+      "internalNotes": "Interne noter til kontoret",
+      "internalNotesPlaceholder": "Noget kontoret bør vide…",
+      "submitCheckout": "Indsend check-out-rapport",
+      "markComplete": "Marker opgave som afsluttet",
+      "taskCompleted": "Opgave afsluttet",
+      "startTask": "Start opgave"
     }
   },
   "finance": {
@@ -893,6 +919,11 @@
       "propertySetup": "Din ejendom er ved at blive konfigureret",
       "propertySetupDesc": "Din Manager forbereder din ejendom. Du ser dit dashboard her, når alt er klar.",
       "contactManager": "Kontakt din Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Administrationsaftale",
+      "houseRules": "Husregler",
+      "ownerGuide": "Velkomstguide til ejere"
     }
   }
 }

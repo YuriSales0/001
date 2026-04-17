@@ -10,6 +10,7 @@ import {
 import { AlertBanner } from "@/components/hm/alert-banner"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 import { ManagerEmptyState } from "@/components/hm/manager-empty-state"
+import { useLocale } from "@/i18n/provider"
 
 type DashboardStats = {
   propertiesCount: number
@@ -31,6 +32,7 @@ const fmtDate = (s: string) =>
   new Date(s).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
 
 export default function ManagerDashboard() {
+  const { t } = useLocale()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [error, setError] = useState(false)
   const [lastRefresh, setLastRefresh] = useState(new Date())
@@ -67,14 +69,14 @@ export default function ManagerDashboard() {
           className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 border rounded-lg px-3 py-2 transition-colors hm-animate-in hm-stagger-1"
         >
           <RefreshCw className="h-3.5 w-3.5" />
-          Refresh
+          {t('manager.dashboardPage.refresh')}
           <span className="text-gray-300 ml-1">
             {lastRefresh.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
           </span>
         </button>
       </div>
 
-      {error && <p className="text-sm text-red-500 text-center p-4">Failed to load data</p>}
+      {error && <p className="text-sm text-red-500 text-center p-4">{t('manager.dashboardPage.loadFailed')}</p>}
 
       {/* Empty state for new Managers with no clients yet */}
       {stats && stats.clientsCount === 0 && !error && (
@@ -198,7 +200,7 @@ export default function ManagerDashboard() {
           </div>
           <div className="divide-y max-h-64 overflow-auto">
             {!stats?.upcomingCheckIns.length && (
-              <div className="p-4 text-sm text-gray-400 text-center">None in the next 7 days</div>
+              <div className="p-4 text-sm text-gray-400 text-center">{t('manager.dashboardPage.noneIn7Days')}</div>
             )}
             {stats?.upcomingCheckIns.map(r => (
               <div key={r.id} className="px-4 py-3 flex items-center justify-between text-sm">
@@ -221,7 +223,7 @@ export default function ManagerDashboard() {
           </div>
           <div className="divide-y max-h-64 overflow-auto">
             {!stats?.upcomingCheckOuts.length && (
-              <div className="p-4 text-sm text-gray-400 text-center">None in the next 7 days</div>
+              <div className="p-4 text-sm text-gray-400 text-center">{t('manager.dashboardPage.noneIn7Days')}</div>
             )}
             {stats?.upcomingCheckOuts.map(r => (
               <div key={r.id} className="px-4 py-3 flex items-center justify-between text-sm">

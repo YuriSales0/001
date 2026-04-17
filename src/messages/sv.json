@@ -67,7 +67,8 @@
     "administration": "Administration",
     "ownerReports": "Ägarrapporter",
     "crmPipeline": "CRM-Pipeline",
-    "marketing": "Marknadsföring"
+    "marketing": "Marknadsföring",
+    "aiPricing": "AI-prissättning"
   },
   "owner": {
     "welcome": "Välkommen tillbaka",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Kunde inte uppdatera",
       "loadFailed": "Kunde inte ladda referral-data.",
       "tryAgain": "Försök igen"
+    },
+    "dashboardPage": {
+      "refresh": "Uppdatera",
+      "loadFailed": "Kunde inte ladda data",
+      "noneIn7Days": "Inga de närmaste 7 dagarna"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "Inga avslutade uppgifter ännu",
       "loading": "Laddar…",
       "loadFailed": "Kunde inte ladda data. Försök ladda om."
+    },
+    "detail": {
+      "backToTasks": "Tillbaka till uppgifter",
+      "selectTask": "Välj en uppgift för att se detaljer",
+      "checkoutReport": "Check-out-rapport",
+      "checkoutReportDesc": "Ägaren meddelas automatiskt vid inskickning.",
+      "propertyCondition": "Fastighetens skick",
+      "conditionGood": "Bra",
+      "conditionMinor": "Mindre problem",
+      "conditionMajor": "Allvarliga problem",
+      "observedIssues": "Observerade problem",
+      "observedPlaceholder": "t.ex. lampa sönder i vardagsrummet, långsamt avlopp i badrummet…",
+      "damages": "Skador som behöver uppföljning",
+      "damagesPlaceholder": "Beskriv skadan, kostnadsuppskattning om möjligt…",
+      "internalNotes": "Interna anteckningar till kontoret",
+      "internalNotesPlaceholder": "Något kontoret borde veta…",
+      "submitCheckout": "Skicka check-out-rapport",
+      "markComplete": "Markera uppgift som klar",
+      "taskCompleted": "Uppgift avslutad",
+      "startTask": "Starta uppgift"
     }
   },
   "finance": {
@@ -893,6 +919,11 @@
       "propertySetup": "Din fastighet håller på att konfigureras",
       "propertySetupDesc": "Din Manager förbereder din fastighet. Du ser ditt dashboard här när allt är klart.",
       "contactManager": "Kontakta din Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Förvaltningsavtal",
+      "houseRules": "Husregler",
+      "ownerGuide": "Välkomstguide för ägare"
     }
   }
 }

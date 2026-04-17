@@ -67,7 +67,8 @@
     "administration": "Administración",
     "ownerReports": "Informes de Propietarios",
     "crmPipeline": "Pipeline CRM",
-    "marketing": "Marketing"
+    "marketing": "Marketing",
+    "aiPricing": "AI Pricing"
   },
   "owner": {
     "welcome": "Bienvenido de nuevo",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Error al actualizar",
       "loadFailed": "Error al cargar los datos de referencia.",
       "tryAgain": "Reintentar"
+    },
+    "dashboardPage": {
+      "refresh": "Actualizar",
+      "loadFailed": "Error al cargar datos",
+      "noneIn7Days": "Ninguno en los próximos 7 días"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "Todavía sin tareas completadas",
       "loading": "Cargando…",
       "loadFailed": "Error al cargar los datos. Prueba a actualizar."
+    },
+    "detail": {
+      "backToTasks": "Volver a las tareas",
+      "selectTask": "Selecciona una tarea para ver los detalles",
+      "checkoutReport": "Informe de check-out",
+      "checkoutReportDesc": "El propietario es notificado automáticamente al enviar.",
+      "propertyCondition": "Estado de la propiedad",
+      "conditionGood": "Bueno",
+      "conditionMinor": "Problemas menores",
+      "conditionMajor": "Problemas graves",
+      "observedIssues": "Problemas observados",
+      "observedPlaceholder": "ej: lámpara rota en el salón, desagüe lento en el baño…",
+      "damages": "Daños que requieren seguimiento",
+      "damagesPlaceholder": "Describe el daño, estimación de coste si posible…",
+      "internalNotes": "Notas internas para la oficina",
+      "internalNotesPlaceholder": "Algo que la oficina deba saber…",
+      "submitCheckout": "Enviar informe de check-out",
+      "markComplete": "Marcar tarea como completada",
+      "taskCompleted": "Tarea completada",
+      "startTask": "Iniciar tarea"
     }
   },
   "finance": {
@@ -901,6 +927,11 @@
       "propertySetup": "Tu propiedad se está configurando",
       "propertySetupDesc": "Tu Manager está preparando tu propiedad. Verás tu panel aquí cuando todo esté listo.",
       "contactManager": "Contactar con tu Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Contrato de Gestión",
+      "houseRules": "Normas de la Casa",
+      "ownerGuide": "Guía de Bienvenida"
     }
   }
 }

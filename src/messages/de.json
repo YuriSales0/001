@@ -67,7 +67,8 @@
     "administration": "Verwaltung",
     "ownerReports": "Eigentümerberichte",
     "crmPipeline": "CRM-Pipeline",
-    "marketing": "Marketing"
+    "marketing": "Marketing",
+    "aiPricing": "KI-Preisgestaltung"
   },
   "owner": {
     "welcome": "Willkommen zurück",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Aktualisierung fehlgeschlagen",
       "loadFailed": "Empfehlungsdaten konnten nicht geladen werden.",
       "tryAgain": "Erneut versuchen"
+    },
+    "dashboardPage": {
+      "refresh": "Aktualisieren",
+      "loadFailed": "Daten konnten nicht geladen werden",
+      "noneIn7Days": "Keine in den nächsten 7 Tagen"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "Noch keine abgeschlossenen Aufgaben",
       "loading": "Lädt…",
       "loadFailed": "Daten konnten nicht geladen werden. Bitte aktualisieren."
+    },
+    "detail": {
+      "backToTasks": "Zurück zu den Aufgaben",
+      "selectTask": "Wähle eine Aufgabe, um Details zu sehen",
+      "checkoutReport": "Check-out-Bericht",
+      "checkoutReportDesc": "Der Eigentümer wird beim Absenden automatisch benachrichtigt.",
+      "propertyCondition": "Zustand der Immobilie",
+      "conditionGood": "Gut",
+      "conditionMinor": "Kleine Mängel",
+      "conditionMajor": "Schwere Mängel",
+      "observedIssues": "Festgestellte Probleme",
+      "observedPlaceholder": "z.B. Lampe im Wohnzimmer kaputt, Abfluss im Bad langsam…",
+      "damages": "Schäden mit Nachverfolgung",
+      "damagesPlaceholder": "Beschreibe den Schaden, Kostenschätzung falls bekannt…",
+      "internalNotes": "Interne Notizen fürs Büro",
+      "internalNotesPlaceholder": "Was das Büro wissen sollte…",
+      "submitCheckout": "Check-out-Bericht absenden",
+      "markComplete": "Aufgabe als erledigt markieren",
+      "taskCompleted": "Aufgabe abgeschlossen",
+      "startTask": "Aufgabe starten"
     }
   },
   "finance": {
@@ -901,6 +927,11 @@
       "propertySetup": "Deine Immobilie wird eingerichtet",
       "propertySetupDesc": "Dein Manager bereitet deine Immobilie vor. Dein Dashboard wird hier angezeigt, sobald alles bereit ist.",
       "contactManager": "Deinen Manager kontaktieren"
+    },
+    "profileDocs": {
+      "managementAgreement": "Verwaltungsvertrag",
+      "houseRules": "Hausordnung",
+      "ownerGuide": "Eigentümer-Willkommensführer"
     }
   }
 }

@@ -67,7 +67,8 @@
     "administration": "Administration",
     "ownerReports": "Owner Reports",
     "crmPipeline": "CRM Pipeline",
-    "marketing": "Marketing"
+    "marketing": "Marketing",
+    "aiPricing": "AI Pricing"
   },
   "owner": {
     "welcome": "Welcome back",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Failed to update",
       "loadFailed": "Failed to load referral data.",
       "tryAgain": "Try again"
+    },
+    "dashboardPage": {
+      "refresh": "Refresh",
+      "loadFailed": "Failed to load data",
+      "noneIn7Days": "None in the next 7 days"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "No completed tasks yet",
       "loading": "Loading…",
       "loadFailed": "Failed to load data. Try refreshing."
+    },
+    "detail": {
+      "backToTasks": "Back to tasks",
+      "selectTask": "Select a task to see details",
+      "checkoutReport": "Check-out report",
+      "checkoutReportDesc": "The owner is notified automatically when you submit.",
+      "propertyCondition": "Property condition",
+      "conditionGood": "Good",
+      "conditionMinor": "Minor issues",
+      "conditionMajor": "Major issues",
+      "observedIssues": "Observed issues",
+      "observedPlaceholder": "e.g. broken lamp in living room, slow drain in bathroom…",
+      "damages": "Damages requiring follow-up",
+      "damagesPlaceholder": "Describe any damage, cost estimate if known…",
+      "internalNotes": "Internal notes for the office",
+      "internalNotesPlaceholder": "Anything the office should know…",
+      "submitCheckout": "Submit check-out report",
+      "markComplete": "Mark task complete",
+      "taskCompleted": "Task completed",
+      "startTask": "Start task"
     }
   },
   "finance": {
@@ -901,6 +927,11 @@
       "propertySetup": "Your property is being set up",
       "propertySetupDesc": "Your Manager is preparing your property. You'll see your dashboard here once everything is ready.",
       "contactManager": "Contact your Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Property Management Agreement",
+      "houseRules": "House Rules",
+      "ownerGuide": "Owner Welcome Guide"
     }
   }
 }

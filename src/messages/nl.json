@@ -67,7 +67,8 @@
     "administration": "Administratie",
     "ownerReports": "Eigenaarsrapporten",
     "crmPipeline": "CRM-Pipeline",
-    "marketing": "Marketing"
+    "marketing": "Marketing",
+    "aiPricing": "AI-prijsbepaling"
   },
   "owner": {
     "welcome": "Welkom terug",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Bijwerken mislukt",
       "loadFailed": "Referral-gegevens konden niet worden geladen.",
       "tryAgain": "Opnieuw proberen"
+    },
+    "dashboardPage": {
+      "refresh": "Vernieuwen",
+      "loadFailed": "Gegevens konden niet worden geladen",
+      "noneIn7Days": "Geen in de komende 7 dagen"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "Nog geen voltooide taken",
       "loading": "Laden…",
       "loadFailed": "Gegevens konden niet worden geladen. Probeer te verversen."
+    },
+    "detail": {
+      "backToTasks": "Terug naar taken",
+      "selectTask": "Selecteer een taak om details te zien",
+      "checkoutReport": "Check-out rapport",
+      "checkoutReportDesc": "De eigenaar wordt automatisch op de hoogte gesteld bij verzending.",
+      "propertyCondition": "Staat van de woning",
+      "conditionGood": "Goed",
+      "conditionMinor": "Kleine problemen",
+      "conditionMajor": "Grote problemen",
+      "observedIssues": "Waargenomen problemen",
+      "observedPlaceholder": "bijv. lamp kapot in woonkamer, trage afvoer in badkamer…",
+      "damages": "Schade voor opvolging",
+      "damagesPlaceholder": "Beschrijf de schade, schatting van kosten indien bekend…",
+      "internalNotes": "Interne notities voor kantoor",
+      "internalNotesPlaceholder": "Iets dat het kantoor moet weten…",
+      "submitCheckout": "Check-out rapport verzenden",
+      "markComplete": "Taak als voltooid markeren",
+      "taskCompleted": "Taak voltooid",
+      "startTask": "Taak starten"
     }
   },
   "finance": {
@@ -893,6 +919,11 @@
       "propertySetup": "Je woning wordt ingericht",
       "propertySetupDesc": "Je Manager bereidt je woning voor. Je dashboard verschijnt hier zodra alles klaar is.",
       "contactManager": "Neem contact op met je Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Beheerovereenkomst",
+      "houseRules": "Huisregels",
+      "ownerGuide": "Welkomstgids voor eigenaren"
     }
   }
 }

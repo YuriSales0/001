@@ -377,7 +377,7 @@ export default function CrewHome() {
                 disabled={saving}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 text-white py-3 font-semibold hover:bg-amber-600 disabled:opacity-50"
               >
-                <PlayCircle className="h-5 w-5" /> Start task
+                <PlayCircle className="h-5 w-5" /> {t('crew.detail.startTask')}
               </button>
             )}
 
@@ -387,7 +387,7 @@ export default function CrewHome() {
                 <div className="px-4 py-3 border-b bg-gray-50 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <ClipboardCheck className="h-4 w-4 text-navy-700" />
-                    <span className="font-semibold text-navy-900 text-sm">Checklist</span>
+                    <span className="font-semibold text-navy-900 text-sm">{t("crew.checklist")}</span>
                   </div>
                   <span className="text-xs text-gray-500">{checklistDone}/{checklistTotal}</span>
                 </div>
@@ -484,19 +484,19 @@ export default function CrewHome() {
               <div className="rounded-xl border bg-white p-5 space-y-4">
                 <div>
                   <h3 className="font-semibold text-navy-900 flex items-center gap-2">
-                    <Camera className="h-4 w-4" /> Check-out report
+                    <Camera className="h-4 w-4" /> {t("crew.detail.checkoutReport")}
                   </h3>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    The owner is notified automatically when you submit.
+                    {t("crew.detail.checkoutReportDesc")}
                   </p>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Property condition</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.propertyCondition")}</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { v: "good",  l: "Good",  c: "border-green-300 hover:bg-green-50" },
-                      { v: "minor", l: "Minor issues", c: "border-amber-300 hover:bg-amber-50" },
-                      { v: "major", l: "Major issues", c: "border-red-300 hover:bg-red-50" },
+                      { v: "good",  l: t("crew.detail.conditionGood"),  c: "border-green-300 hover:bg-green-50" },
+                      { v: "minor", l: t("crew.detail.conditionMinor"), c: "border-amber-300 hover:bg-amber-50" },
+                      { v: "major", l: t("crew.detail.conditionMajor"), c: "border-red-300 hover:bg-red-50" },
                     ].map(o => (
                       <button
                         key={o.v}
@@ -511,13 +511,13 @@ export default function CrewHome() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Observed issues</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.observedIssues")}</label>
                   <textarea
                     rows={2}
                     maxLength={500}
                     value={checkout.issues}
                     onChange={e => setCheckout(c => ({ ...c, issues: e.target.value }))}
-                    placeholder="e.g. broken lamp in living room, slow drain in bathroom…"
+                    placeholder={t("crew.detail.observedPlaceholder")}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
                   <div className="text-right text-xs text-gray-400 mt-1">
@@ -525,13 +525,13 @@ export default function CrewHome() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Damages requiring follow-up</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.damages")}</label>
                   <textarea
                     rows={2}
                     maxLength={500}
                     value={checkout.damages}
                     onChange={e => setCheckout(c => ({ ...c, damages: e.target.value }))}
-                    placeholder="Describe any damage, cost estimate if known…"
+                    placeholder={t("crew.detail.damagesPlaceholder")}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
                   <div className="text-right text-xs text-gray-400 mt-1">
@@ -539,13 +539,13 @@ export default function CrewHome() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Internal notes for the office</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.internalNotes")}</label>
                   <textarea
                     rows={2}
                     maxLength={500}
                     value={checkout.notes}
                     onChange={e => setCheckout(c => ({ ...c, notes: e.target.value }))}
-                    placeholder="Anything the office should know…"
+                    placeholder={t("crew.detail.internalNotesPlaceholder")}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
                   <div className="text-right text-xs text-gray-400 mt-1">
@@ -557,7 +557,7 @@ export default function CrewHome() {
                   disabled={saving || (checklistTotal > 0 && !allChecklistDone) || !hasMinPhotos}
                   className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
                 >
-                  <Save className="h-5 w-5" /> Submit check-out report
+                  <Save className="h-5 w-5" /> {t("crew.detail.submitCheckout")}
                 </button>
                 {checklistTotal > 0 && !allChecklistDone && (
                   <p className="text-xs text-amber-700 flex items-center gap-1">
@@ -580,7 +580,7 @@ export default function CrewHome() {
                   disabled={saving || (checklistTotal > 0 && !allChecklistDone) || !hasMinPhotos}
                   className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
                 >
-                  <CheckCircle2 className="h-5 w-5" /> Mark task complete
+                  <CheckCircle2 className="h-5 w-5" /> {t("crew.detail.markComplete")}
                 </button>
                 {!hasMinPhotos && (
                   <p className="text-xs text-amber-700 flex items-center gap-1">
@@ -593,7 +593,7 @@ export default function CrewHome() {
             {selected.status === "COMPLETED" && (
               <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
                 <div className="flex items-center gap-2 font-semibold mb-1">
-                  <CheckCircle2 className="h-4 w-4" /> Task completed
+                  <CheckCircle2 className="h-4 w-4" /> {t("crew.detail.taskCompleted")}
                 </div>
                 {selected.notes && <p className="text-xs whitespace-pre-wrap">{selected.notes}</p>}
               </div>

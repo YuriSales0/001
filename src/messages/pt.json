@@ -67,7 +67,8 @@
     "administration": "Administração",
     "ownerReports": "Relatórios de Proprietários",
     "crmPipeline": "Pipeline CRM",
-    "marketing": "Marketing"
+    "marketing": "Marketing",
+    "aiPricing": "AI Pricing"
   },
   "owner": {
     "welcome": "Bem-vindo de volta",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Erro ao atualizar",
       "loadFailed": "Erro ao carregar dados de referência.",
       "tryAgain": "Tentar novamente"
+    },
+    "dashboardPage": {
+      "refresh": "Atualizar",
+      "loadFailed": "Erro ao carregar dados",
+      "noneIn7Days": "Nenhum nos próximos 7 dias"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "Ainda sem tarefas concluídas",
       "loading": "A carregar…",
       "loadFailed": "Erro ao carregar dados. Tenta atualizar."
+    },
+    "detail": {
+      "backToTasks": "Voltar às tarefas",
+      "selectTask": "Seleciona uma tarefa para ver os detalhes",
+      "checkoutReport": "Relatório de check-out",
+      "checkoutReportDesc": "O proprietário é notificado automaticamente ao submeter.",
+      "propertyCondition": "Estado da propriedade",
+      "conditionGood": "Bom",
+      "conditionMinor": "Problemas menores",
+      "conditionMajor": "Problemas graves",
+      "observedIssues": "Problemas observados",
+      "observedPlaceholder": "ex: candeeiro partido na sala, ralo lento na casa de banho…",
+      "damages": "Danos que precisam de follow-up",
+      "damagesPlaceholder": "Descreve o dano, estimativa de custo se possível…",
+      "internalNotes": "Notas internas para o escritório",
+      "internalNotesPlaceholder": "Algo que o escritório deva saber…",
+      "submitCheckout": "Submeter relatório de check-out",
+      "markComplete": "Marcar tarefa como concluída",
+      "taskCompleted": "Tarefa concluída",
+      "startTask": "Iniciar tarefa"
     }
   },
   "finance": {
@@ -901,6 +927,11 @@
       "propertySetup": "A tua propriedade está a ser configurada",
       "propertySetupDesc": "O teu Manager está a preparar a tua propriedade. Verás o teu dashboard aqui quando tudo estiver pronto.",
       "contactManager": "Contactar o teu Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Contrato de Gestão",
+      "houseRules": "Regras da Casa",
+      "ownerGuide": "Guia de Boas-Vindas"
     }
   }
 }

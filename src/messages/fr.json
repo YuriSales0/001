@@ -67,7 +67,8 @@
     "administration": "Administration",
     "ownerReports": "Rapports Propriétaires",
     "crmPipeline": "Pipeline CRM",
-    "marketing": "Marketing"
+    "marketing": "Marketing",
+    "aiPricing": "Tarification IA"
   },
   "owner": {
     "welcome": "Bienvenue",
@@ -217,6 +218,11 @@
       "linkUpdateFailed": "Échec de la mise à jour",
       "loadFailed": "Impossible de charger les données de parrainage.",
       "tryAgain": "Réessayer"
+    },
+    "dashboardPage": {
+      "refresh": "Rafraîchir",
+      "loadFailed": "Impossible de charger les données",
+      "noneIn7Days": "Aucun dans les 7 prochains jours"
     }
   },
   "admin": {
@@ -364,6 +370,26 @@
       "noTasksYet": "Aucune tâche terminée pour l'instant",
       "loading": "Chargement…",
       "loadFailed": "Impossible de charger les données. Essaie de rafraîchir."
+    },
+    "detail": {
+      "backToTasks": "Retour aux tâches",
+      "selectTask": "Sélectionne une tâche pour voir les détails",
+      "checkoutReport": "Rapport de check-out",
+      "checkoutReportDesc": "Le propriétaire est notifié automatiquement à l'envoi.",
+      "propertyCondition": "État du bien",
+      "conditionGood": "Bon",
+      "conditionMinor": "Problèmes mineurs",
+      "conditionMajor": "Problèmes majeurs",
+      "observedIssues": "Problèmes observés",
+      "observedPlaceholder": "ex : lampe cassée au salon, évacuation lente dans la salle de bains…",
+      "damages": "Dommages nécessitant un suivi",
+      "damagesPlaceholder": "Décris le dommage, estimation du coût si possible…",
+      "internalNotes": "Notes internes pour le bureau",
+      "internalNotesPlaceholder": "Ce que le bureau devrait savoir…",
+      "submitCheckout": "Envoyer le rapport de check-out",
+      "markComplete": "Marquer la tâche comme terminée",
+      "taskCompleted": "Tâche terminée",
+      "startTask": "Démarrer la tâche"
     }
   },
   "finance": {
@@ -893,6 +919,11 @@
       "propertySetup": "Ton bien est en cours de configuration",
       "propertySetupDesc": "Ton Manager prépare ton bien. Tu verras ton tableau de bord ici quand tout sera prêt.",
       "contactManager": "Contacter ton Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Contrat de gestion",
+      "houseRules": "Règles de la maison",
+      "ownerGuide": "Guide de bienvenue propriétaire"
     }
   }
 }
