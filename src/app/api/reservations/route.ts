@@ -5,6 +5,7 @@ import { calcCommission, payoutDateFrom } from '@/lib/finance'
 import { pickLeastBusyCrew, buildChecklist, autoTasksForPlan } from '@/lib/crew'
 import { notifyAdmin } from '@/lib/notify'
 import { requireRole } from '@/lib/session'
+import { notify } from '@/lib/notifications'
 
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
@@ -238,6 +239,17 @@ export async function POST(request: NextRequest) {
     await prisma.pricingDataPoint.createMany({ data: nights }).catch(e =>
       console.error('PricingDataPoint collection error:', e),
     )
+
+    // Notify property owner about new booking
+    if (property.ownerId) {
+      notify({
+        userId: property.ownerId,
+        type: 'BOOKING_RECEIVED',
+        title: `New booking: ${guestName}`,
+        body: `${new Date(checkIn).toLocaleDateString('en-GB')} → ${new Date(checkOut).toLocaleDateString('en-GB')} · €${amount}`,
+        link: '/client/bookings',
+      }).catch(() => {})
+    }
 
     return NextResponse.json(reservation, { status: 201 })
   } catch (error) {

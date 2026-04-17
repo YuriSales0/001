@@ -4,6 +4,7 @@ import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
 import { verificationEmail } from '@/lib/email-verification'
+import { notify } from '@/lib/notifications'
 
 const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -59,6 +60,17 @@ export async function POST(req: NextRequest) {
       subject: 'Confirm your HostMasters account',
       html: verificationEmail({ name: name ?? normalizedEmail, verifyUrl }),
     }).catch(err => console.error('Verification email failed:', err))
+
+    // Notify Manager if client was referred
+    if (managerId) {
+      notify({
+        userId: managerId,
+        type: 'CLIENT_REGISTERED',
+        title: 'New client registered',
+        body: `${name ?? normalizedEmail} signed up via your referral link`,
+        link: '/manager/clients',
+      }).catch(() => {})
+    }
 
     return NextResponse.json({ ok: true, id: user.id, verificationSent: true })
   } catch (e) {

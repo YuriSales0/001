@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
-import { notifyMany } from '@/lib/notifications'
+import { notify, notifyMany } from '@/lib/notifications'
 
 /**
  * POST /api/tasks/[id]/intervention — Manager opens an intervention
@@ -92,6 +92,14 @@ export async function PATCH(
       resolvedAt: new Date(),
     },
   })
+
+  notify({
+    userId: intervention.managerId,
+    type: 'INTERVENTION_RESOLVED',
+    title: status === 'ESCALATED' ? '⚠️ Intervention escalated' : '✅ Intervention resolved',
+    body: resolution?.slice(0, 200) ?? 'Captain handled the issue',
+    link: '/manager/dashboard',
+  }).catch(() => {})
 
   return NextResponse.json(updated)
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail, ownerStatementEmail, invoicePaidEmail } from '@/lib/email'
+import { notify } from '@/lib/notifications'
 
 const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -177,6 +178,16 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
           }).catch(e => console.error('Invoice email error:', e))
         }
       }
+    }
+
+    if (status === 'PAID' && payout.property?.owner?.id) {
+      notify({
+        userId: payout.property.owner.id,
+        type: 'PAYOUT_COMPLETED',
+        title: `Payout received: €${payout.netAmount.toFixed(0)}`,
+        body: payout.property.name ?? 'Your property',
+        link: '/client/earnings',
+      }).catch(() => {})
     }
 
     return NextResponse.json(payout)

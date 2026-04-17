@@ -23,6 +23,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const guard = await requireRole(['ADMIN', 'CREW', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
+  const isCaptainOrAdmin = me.role === 'ADMIN' || me.isSuperUser || (me as unknown as { isCaptain?: boolean }).isCaptain === true
   try {
     const existing = await prisma.task.findUnique({
       where: { id: params.id },
@@ -82,19 +83,32 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           break
         case 'IN_PROGRESS':
           break
-        case 'SUBMITTED':
+        case 'SUBMITTED': {
           if (me.role !== 'CREW') return NextResponse.json({ error: 'Only Crew can submit' }, { status: 403 })
+          // Photos mandatory for CHECK_OUT and CLEANING
+          if (['CHECK_OUT', 'CLEANING'].includes(existing.type) && (existing.photos?.length ?? 0) < 2) {
+            return NextResponse.json({ error: 'Minimum 2 photos required before submitting' }, { status: 400 })
+          }
           data.submittedAt = now
+          // Auto-set amount from crew rate if not already set
+          if (!existing.amount && existing.assigneeId) {
+            const crew = await prisma.user.findUnique({
+              where: { id: existing.assigneeId },
+              select: { crewTaskRate: true },
+            })
+            if (crew?.crewTaskRate) data.amount = crew.crewTaskRate
+          }
           break
+        }
         case 'APPROVED':
-          if (me.role !== 'ADMIN' && !me.isSuperUser) {
+          if (!isCaptainOrAdmin) {
             return NextResponse.json({ error: 'Only Captain/Admin can approve' }, { status: 403 })
           }
           data.approvedAt = now
           data.captainId = me.id
           break
         case 'REJECTED':
-          if (me.role !== 'ADMIN' && !me.isSuperUser) {
+          if (!isCaptainOrAdmin) {
             return NextResponse.json({ error: 'Only Captain/Admin can reject' }, { status: 403 })
           }
           data.rejectedAt = now

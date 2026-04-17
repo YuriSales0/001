@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { notify } from '@/lib/notifications'
 
 /**
  * PATCH /api/crew-payouts/[id] — Admin marks a CrewPayout as PAID (or FAILED)
@@ -36,6 +37,16 @@ export async function PATCH(
       failedReason: status === 'FAILED' ? (failedReason ?? 'Unknown') : undefined,
     },
   })
+
+  if (status === 'PAID') {
+    notify({
+      userId: payout.crewId,
+      type: 'CREW_PAYOUT_PAID',
+      title: `Payout received: €${updated.finalAmount.toFixed(0)}`,
+      body: `${updated.taskCount} task(s) — week of ${updated.weekStart.toISOString().slice(0, 10)}`,
+      link: '/crew/earnings',
+    }).catch(() => {})
+  }
 
   return NextResponse.json(updated)
 }

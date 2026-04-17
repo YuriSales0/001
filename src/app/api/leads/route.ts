@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { notify } from '@/lib/notifications'
 
 function stripTags(s: string | null | undefined): string | null {
   if (!s) return null
@@ -75,6 +76,16 @@ export async function POST(request: NextRequest) {
     },
     include: LEAD_INCLUDE,
   })
+
+  if (resolvedManagerId) {
+    notify({
+      userId: resolvedManagerId,
+      type: 'NEW_LEAD',
+      title: 'New lead in your pipeline',
+      body: `${cleanName}${lead.email ? ` (${lead.email})` : ''} — ${lead.source}`,
+      link: '/crm',
+    }).catch(() => {})
+  }
 
   return NextResponse.json(lead, { status: 201 })
 }
