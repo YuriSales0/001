@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Providers } from "@/components/providers";
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { cookies } from 'next/headers'
-import { SuperuserBar } from '@/components/hm/superuser-bar'
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { SuperuserBar } from "@/components/hm/superuser-bar";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -22,6 +22,12 @@ export const metadata: Metadata = {
   title: "Hostmaster — Costa Tropical Property Management",
   description:
     "Professional short-term rental management on the Costa Tropical. Mastering your coastal stay — bookings, finances, maintenance and 24/7 care for international owners.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "HostMasters",
+  },
 };
 
 export default async function RootLayout({
@@ -29,21 +35,28 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions)
-  const isSuperUser = (session?.user as { isSuperUser?: boolean })?.isSuperUser === true
-
-  let viewAs: { userId: string; name: string | null; role: string } | null = null
+  const session = await getServerSession(authOptions);
+  const isSuperUser =
+    (session?.user as { isSuperUser?: boolean })?.isSuperUser === true;
+  let viewAs: { userId: string; name: string | null; role: string } | null = null;
   if (isSuperUser) {
-    const raw = cookies().get('hm_view_as')?.value
+    const raw = cookies().get("hm_view_as")?.value;
     if (raw) {
       try {
-        viewAs = JSON.parse(raw)
+        viewAs = JSON.parse(raw);
       } catch {}
     }
   }
-
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#0f172a" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="HostMasters" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -52,7 +65,7 @@ export default async function RootLayout({
           <SuperuserBar
             realUser={{
               name: (session?.user as { name?: string | null })?.name ?? null,
-              email: session?.user?.email ?? '',
+              email: session?.user?.email ?? "",
             }}
             viewAs={viewAs}
           />
