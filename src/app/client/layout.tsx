@@ -45,7 +45,7 @@ export default async function ClientLayout({ children }: { children: React.React
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--hm-ivory)' }}>
       {/* Sidebar — client-side toggle handled via CSS peer trick */}
-      <input type="checkbox" id="sidebar-toggle" className="peer hidden" />
+      <input type="checkbox" id="sidebar-toggle" className="peer hidden" autoComplete="off" defaultChecked={false} />
 
       {/* Mobile overlay */}
       <label

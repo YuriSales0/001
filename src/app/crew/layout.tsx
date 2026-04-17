@@ -29,7 +29,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <input type="checkbox" id="crew-sidebar-toggle" className="peer hidden" />
+      <input type="checkbox" id="crew-sidebar-toggle" className="peer hidden" autoComplete="off" defaultChecked={false} />
 
       {/* Mobile overlay */}
       <label
