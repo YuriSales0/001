@@ -953,5 +953,23 @@
     "statusActive": "Activo · con datos reales",
     "errorConnection": "Error de conexión. Inténtalo de nuevo.",
     "errorNotConfigured": "Añade ANTHROPIC_API_KEY en Vercel para activar"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Propiedad aprobada: {name}",
+    "propertyApprovedBody": "Tu propiedad ha sido aprobada. Firma el contrato de servicio para activarla.",
+    "propertyActiveTitle": "¡Tu propiedad está activa!",
+    "propertyActiveBody": "Contrato firmado y propiedad activada. Bienvenido a HostMasters.",
+    "contractSignedTitle": "Contrato firmado",
+    "contractSignedBody": "Tu contrato de servicio ha sido firmado con éxito.",
+    "bookingReceivedTitle": "Nueva reserva: {guest}",
+    "payoutCompletedTitle": "Pago recibido: {amount}",
+    "taskAssignedTitle": "Nueva tarea: {title}",
+    "taskAssignedBody": "{property} — confirma en 30 min",
+    "taskApprovedTitle": "Tarea aprobada",
+    "taskRejectedTitle": "Tarea rechazada",
+    "interventionResolvedTitle": "Intervención resuelta",
+    "clientRegisteredTitle": "Nuevo cliente registrado",
+    "newLeadTitle": "Nuevo lead en tu pipeline",
+    "crewPayoutPaidTitle": "Pago recibido: {amount}"
   }
 }

@@ -55,8 +55,8 @@ export default function CrewEarningsPage() {
   const monthlyRate = profile?.crewMonthlyRate ?? 0
   const taskRate = profile?.crewTaskRate ?? 0
 
-  const completedTasks = tasks.filter(t => t.status === 'COMPLETED')
-  const pendingTasks = tasks.filter(t => t.status !== 'COMPLETED')
+  const completedTasks = tasks.filter(t => t.status === 'COMPLETED' || t.status === 'APPROVED')
+  const pendingTasks = tasks.filter(t => t.status !== 'COMPLETED' && t.status !== 'APPROVED')
 
   // Group by month
   const byMonth: Record<string, Task[]> = {}

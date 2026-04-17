@@ -46,9 +46,9 @@ export default function RegisterPage() {
         setError(data.error || t("common.error"))
         return
       }
-      // Set locale to selected language
+      // Set locale to selected language — cookie persists through redirect
       setLocale(form.language as Locale)
-      router.push("/login?registered=1")
+      router.push(`/login?registered=1&lang=${form.language}`)
     } finally {
       setLoading(false)
     }

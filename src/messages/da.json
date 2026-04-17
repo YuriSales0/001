@@ -945,5 +945,23 @@
     "statusActive": "Aktiv · med rigtige data",
     "errorConnection": "Forbindelsesfejl. Prøv igen.",
     "errorNotConfigured": "Tilføj ANTHROPIC_API_KEY i Vercel"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Ejendom godkendt: {name}",
+    "propertyApprovedBody": "Din ejendom er godkendt. Underskriv servicekontrakten for at aktivere.",
+    "propertyActiveTitle": "Din ejendom er nu aktiv!",
+    "propertyActiveBody": "Kontrakt underskrevet og ejendom aktiveret. Velkommen til HostMasters.",
+    "contractSignedTitle": "Kontrakt underskrevet",
+    "contractSignedBody": "Din servicekontrakt er underskrevet.",
+    "bookingReceivedTitle": "Ny booking: {guest}",
+    "payoutCompletedTitle": "Udbetaling modtaget: {amount}",
+    "taskAssignedTitle": "Ny opgave: {title}",
+    "taskAssignedBody": "{property} — bekræft inden 30 min",
+    "taskApprovedTitle": "Opgave godkendt",
+    "taskRejectedTitle": "Opgave afvist",
+    "interventionResolvedTitle": "Intervention løst",
+    "clientRegisteredTitle": "Ny kunde registreret",
+    "newLeadTitle": "Ny lead i din pipeline",
+    "crewPayoutPaidTitle": "Udbetaling modtaget: {amount}"
   }
 }

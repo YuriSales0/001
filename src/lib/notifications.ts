@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import type { NotificationType } from '@prisma/client'
+import { loadMessagesSync, t as tRaw, type Locale } from '@/i18n'
 
 type NotifyParams = {
   userId: string
@@ -25,6 +26,27 @@ export async function notify(params: NotifyParams): Promise<void> {
     })
   } catch (err) {
     console.error('notify() failed:', err)
+  }
+}
+
+/**
+ * Translate a string using a user's language preference from DB.
+ * Falls back to the raw key if translation not found.
+ */
+export async function tForUser(userId: string, key: string, replacements?: Record<string, string>): Promise<string> {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { language: true } })
+    const locale = (user?.language ?? 'en') as Locale
+    const msgs = loadMessagesSync(locale)
+    let text = tRaw(msgs, key)
+    if (replacements) {
+      for (const [k, v] of Object.entries(replacements)) {
+        text = text.replace(`{${k}}`, v)
+      }
+    }
+    return text
+  } catch {
+    return key
   }
 }
 

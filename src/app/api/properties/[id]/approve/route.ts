@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
-import { notify } from '@/lib/notifications'
+import { notify, tForUser } from '@/lib/notifications'
 
 /**
  * POST /api/properties/[id]/approve
@@ -53,13 +53,13 @@ export async function POST(
     }),
   ])
 
-  notify({
-    userId: property.ownerId,
-    type: 'PROPERTY_APPROVED',
-    title: `Property approved: ${property.name}`,
-    body: 'Your property has been approved. Please sign the service contract to activate it.',
-    link: '/client/properties',
-  }).catch(() => {})
+  // Translated notification
+  Promise.all([
+    tForUser(property.ownerId, 'notifications.propertyApprovedTitle', { name: property.name }),
+    tForUser(property.ownerId, 'notifications.propertyApprovedBody'),
+  ]).then(([title, body]) =>
+    notify({ userId: property.ownerId, type: 'PROPERTY_APPROVED', title, body, link: '/client/properties' })
+  ).catch(() => {})
 
   return NextResponse.json({ ...updated, contractId: contract.id })
 }

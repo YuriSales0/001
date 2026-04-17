@@ -48,6 +48,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     onboardingCompleted: false,
   }
 
+  // Transfer zone from application to user (both roles use it)
+  if (app.zone) userData.managerZone = app.zone
+
   if (app.role === 'MANAGER') {
     userData.managerSubscriptionShare = body.managerSubscriptionShare ?? DEFAULT_MANAGER_SUB_SHARE
     userData.managerCommissionShare = body.managerCommissionShare ?? DEFAULT_MANAGER_COMM_SHARE

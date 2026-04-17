@@ -945,5 +945,23 @@
     "statusActive": "Aktiv · med riktig data",
     "errorConnection": "Anslutningsfel. Försök igen.",
     "errorNotConfigured": "Lägg till ANTHROPIC_API_KEY i Vercel"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Fastighet godkänd: {name}",
+    "propertyApprovedBody": "Din fastighet har godkänts. Signera serviceavtalet för att aktivera.",
+    "propertyActiveTitle": "Din fastighet är nu aktiv!",
+    "propertyActiveBody": "Avtal signerat och fastighet aktiverad. Välkommen till HostMasters.",
+    "contractSignedTitle": "Avtal signerat",
+    "contractSignedBody": "Ditt serviceavtal har signerats.",
+    "bookingReceivedTitle": "Ny bokning: {guest}",
+    "payoutCompletedTitle": "Utbetalning mottagen: {amount}",
+    "taskAssignedTitle": "Ny uppgift: {title}",
+    "taskAssignedBody": "{property} — bekräfta inom 30 min",
+    "taskApprovedTitle": "Uppgift godkänd",
+    "taskRejectedTitle": "Uppgift avvisad",
+    "interventionResolvedTitle": "Intervention löst",
+    "clientRegisteredTitle": "Ny kund registrerad",
+    "newLeadTitle": "Ny lead i din pipeline",
+    "crewPayoutPaidTitle": "Utbetalning mottagen: {amount}"
   }
 }

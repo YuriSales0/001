@@ -194,6 +194,17 @@ export async function POST(request: NextRequest) {
       })),
     })
 
+    // Notify assigned crew about their new tasks
+    if (assigneeId) {
+      notify({
+        userId: assigneeId,
+        type: 'TASK_ASSIGNED',
+        title: `New tasks: ${guestName}`,
+        body: `${autoTasks.length} task(s) for ${reservation.property.name} — confirm within 30 min`,
+        link: '/crew',
+      }).catch(() => {})
+    }
+
     if (!assigneeId) {
       await notifyAdmin({
         subject: '⚠️ Reservation created without crew assignment',

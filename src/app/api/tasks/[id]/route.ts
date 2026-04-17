@@ -104,12 +104,18 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           if (!isCaptainOrAdmin) {
             return NextResponse.json({ error: 'Only Captain/Admin can approve' }, { status: 403 })
           }
+          if (me.id === existing.assigneeId) {
+            return NextResponse.json({ error: 'Cannot approve your own task' }, { status: 403 })
+          }
           data.approvedAt = now
           data.captainId = me.id
           break
         case 'REJECTED':
           if (!isCaptainOrAdmin) {
             return NextResponse.json({ error: 'Only Captain/Admin can reject' }, { status: 403 })
+          }
+          if (me.id === existing.assigneeId) {
+            return NextResponse.json({ error: 'Cannot reject your own task' }, { status: 403 })
           }
           data.rejectedAt = now
           data.captainId = me.id

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
-import { notify } from '@/lib/notifications'
+import { notify, tForUser } from '@/lib/notifications'
 
 /**
  * POST /api/contracts/[id]/sign
@@ -55,13 +55,12 @@ export async function POST(
         data: { status: 'ACTIVE' },
       }),
     ])
-    notify({
-      userId: me.id,
-      type: 'PROPERTY_ACTIVE',
-      title: 'Your property is now live!',
-      body: 'Contract signed and property activated. Welcome to HostMasters.',
-      link: '/client/dashboard',
-    }).catch(() => {})
+    Promise.all([
+      tForUser(me.id, 'notifications.propertyActiveTitle'),
+      tForUser(me.id, 'notifications.propertyActiveBody'),
+    ]).then(([title, body]) =>
+      notify({ userId: me.id, type: 'PROPERTY_ACTIVE', title, body, link: '/client/dashboard' })
+    ).catch(() => {})
 
     return NextResponse.json({
       ok: true,
@@ -77,13 +76,12 @@ export async function POST(
     data: { signedByUser: true, signedAt: now, status: 'ACTIVE' },
   })
 
-  notify({
-    userId: me.id,
-    type: 'CONTRACT_READY',
-    title: 'Contract signed',
-    body: 'Your service agreement has been signed successfully.',
-    link: '/client/properties',
-  }).catch(() => {})
+  Promise.all([
+    tForUser(me.id, 'notifications.contractSignedTitle'),
+    tForUser(me.id, 'notifications.contractSignedBody'),
+  ]).then(([title, body]) =>
+    notify({ userId: me.id, type: 'CONTRACT_READY', title, body, link: '/client/properties' })
+  ).catch(() => {})
 
   return NextResponse.json({ ok: true, contractSigned: true, contractId: updated.id })
 }

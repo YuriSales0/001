@@ -945,5 +945,23 @@
     "statusActive": "Actief · met echte data",
     "errorConnection": "Verbindingsfout. Probeer opnieuw.",
     "errorNotConfigured": "Voeg ANTHROPIC_API_KEY toe in Vercel"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Woning goedgekeurd: {name}",
+    "propertyApprovedBody": "Je woning is goedgekeurd. Onderteken het servicecontract om te activeren.",
+    "propertyActiveTitle": "Je woning is nu actief!",
+    "propertyActiveBody": "Contract getekend en woning geactiveerd. Welkom bij HostMasters.",
+    "contractSignedTitle": "Contract getekend",
+    "contractSignedBody": "Je servicecontract is succesvol ondertekend.",
+    "bookingReceivedTitle": "Nieuwe boeking: {guest}",
+    "payoutCompletedTitle": "Uitbetaling ontvangen: {amount}",
+    "taskAssignedTitle": "Nieuwe taak: {title}",
+    "taskAssignedBody": "{property} — bevestig binnen 30 min",
+    "taskApprovedTitle": "Taak goedgekeurd",
+    "taskRejectedTitle": "Taak afgekeurd",
+    "interventionResolvedTitle": "Interventie opgelost",
+    "clientRegisteredTitle": "Nieuwe klant geregistreerd",
+    "newLeadTitle": "Nieuwe lead in je pipeline",
+    "crewPayoutPaidTitle": "Uitbetaling ontvangen: {amount}"
   }
 }
