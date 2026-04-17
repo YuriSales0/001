@@ -11,6 +11,24 @@
   display: none;
 }
 
+/* ── HM Loading Screen ── */
+.hm-logo-pulse {
+  animation: hm-pulse 2s ease-in-out infinite;
+}
+@keyframes hm-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+}
+
+.hm-loading-bar {
+  width: 30%;
+  animation: hm-slide 1.4s ease-in-out infinite;
+}
+@keyframes hm-slide {
+  0% { transform: translateX(-140%); }
+  100% { transform: translateX(470%); }
+}
+
 /* ──────────────────────────────────────────
    HostMasters Brand Tokens
    ────────────────────────────────────────── */
