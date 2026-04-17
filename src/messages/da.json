@@ -925,5 +925,25 @@
       "houseRules": "Husregler",
       "ownerGuide": "Velkomstguide til ejere"
     }
+  },
+  "aiChat": {
+    "placeholder": {
+      "CREW": "f.eks. Hvilke opgaver har jeg denne uge?",
+      "MANAGER": "f.eks. Hvordan er belægningen hos mine kunder?",
+      "ADMIN": "f.eks. Hvilke anomalier er aktive?",
+      "CLIENT": "f.eks. Hvordan performer min ejendom?",
+      "default": "Stil dit spørgsmål…"
+    },
+    "welcome": {
+      "CREW": "Hej! Jeg kan hjælpe dig med opgaver, tjeklister, check-out-rapporter og feltprocedurer.",
+      "MANAGER": "Hej! Jeg kan hjælpe med din kundeportefølje, udbetalinger, CRM og rapporter.",
+      "ADMIN": "Hej! Jeg kan hjælpe med alt — drift, økonomi, AI-prissætning, anomalimonitor.",
+      "CLIENT": "Hej! Jeg kan hjælpe dig med at forstå dine indtægter, bookinger, plan og vedligeholdelse."
+    },
+    "title": "HM-Assistent",
+    "statusPending": "Konfiguration afventer",
+    "statusActive": "Aktiv · med rigtige data",
+    "errorConnection": "Forbindelsesfejl. Prøv igen.",
+    "errorNotConfigured": "Tilføj ANTHROPIC_API_KEY i Vercel"
   }
 }

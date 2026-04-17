@@ -925,5 +925,25 @@
       "houseRules": "Huisregels",
       "ownerGuide": "Welkomstgids voor eigenaren"
     }
+  },
+  "aiChat": {
+    "placeholder": {
+      "CREW": "bijv. Welke taken heb ik deze week?",
+      "MANAGER": "bijv. Hoe is de bezetting van mijn klanten?",
+      "ADMIN": "bijv. Welke anomalieën zijn actief?",
+      "CLIENT": "bijv. Hoe presteert mijn woning?",
+      "default": "Stel je vraag…"
+    },
+    "welcome": {
+      "CREW": "Hoi! Ik kan je helpen met taken, checklists, check-out rapporten en procedures.",
+      "MANAGER": "Hoi! Ik kan je helpen met je klantenportfolio, uitbetalingen, CRM en rapporten.",
+      "ADMIN": "Hoi! Ik kan overal bij helpen — operatie, financiën, AI-pricing, anomalie-monitor.",
+      "CLIENT": "Hoi! Ik kan je helpen je inkomsten, boekingen, plan en onderhoud te begrijpen."
+    },
+    "title": "HM-Assistent",
+    "statusPending": "Configuratie in afwachting",
+    "statusActive": "Actief · met echte data",
+    "errorConnection": "Verbindingsfout. Probeer opnieuw.",
+    "errorNotConfigured": "Voeg ANTHROPIC_API_KEY toe in Vercel"
   }
 }

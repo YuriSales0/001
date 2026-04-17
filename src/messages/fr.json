@@ -925,5 +925,25 @@
       "houseRules": "Règles de la maison",
       "ownerGuide": "Guide de bienvenue propriétaire"
     }
+  },
+  "aiChat": {
+    "placeholder": {
+      "CREW": "ex : Quelles tâches ai-je cette semaine ?",
+      "MANAGER": "ex : Comment est le taux d'occupation de mes clients ?",
+      "ADMIN": "ex : Quelles anomalies sont actives ?",
+      "CLIENT": "ex : Comment performe mon bien ?",
+      "default": "Pose ta question…"
+    },
+    "welcome": {
+      "CREW": "Salut ! Je peux t'aider avec les tâches, checklists, rapports de check-out et procédures terrain.",
+      "MANAGER": "Salut ! Je peux t'aider avec ton portefeuille clients, paiements, CRM et rapports.",
+      "ADMIN": "Salut ! Je peux aider avec tout — opérations, finances, pricing IA, moniteur d'anomalies.",
+      "CLIENT": "Salut ! Je peux t'aider à comprendre tes revenus, réservations, plan et maintenance."
+    },
+    "title": "Assistant HM",
+    "statusPending": "Configuration en attente",
+    "statusActive": "Actif · avec données réelles",
+    "errorConnection": "Erreur de connexion. Réessaie.",
+    "errorNotConfigured": "Ajoute ANTHROPIC_API_KEY dans Vercel pour activer"
   }
 }
