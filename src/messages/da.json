@@ -963,5 +963,29 @@
     "clientRegisteredTitle": "Ny kunde registreret",
     "newLeadTitle": "Ny lead i din pipeline",
     "crewPayoutPaidTitle": "Udbetaling modtaget: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Servicekontrakt — HostMasters Costa Tropical",
+    "signed": "Underskrevet",
+    "agreementSigned": "Kontrakt underskrevet",
+    "on": "den",
+    "bySigningAgree": "Ved at underskrive accepterer du ovenstående vilkår.",
+    "signAgreement": "Underskriv kontrakt",
+    "signing": "Underskriver…",
+    "signError": "Underskriftsfejl. Prøv igen.",
+    "networkError": "Netværksfejl. Prøv igen.",
+    "print": "Udskriv / PDF",
+    "draft": "Kladde",
+    "active": "Aktiv",
+    "expired": "Udløbet",
+    "terminated": "Opsagt",
+    "contractsTitle": "Mine Kontrakter",
+    "contractsEmpty": "Ingen kontrakter endnu. De dukker op her, når din Manager opretter dem.",
+    "startDate": "Startdato",
+    "endDate": "Slutdato",
+    "noEndDate": "Ubestemt",
+    "myContract": "Min Kontrakt",
+    "noContract": "Ingen kontrakt tilgængelig. Kontakt din Admin.",
+    "type": "Type"
   }
 }

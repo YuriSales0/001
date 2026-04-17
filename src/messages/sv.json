@@ -963,5 +963,29 @@
     "clientRegisteredTitle": "Ny kund registrerad",
     "newLeadTitle": "Ny lead i din pipeline",
     "crewPayoutPaidTitle": "Utbetalning mottagen: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Serviceavtal — HostMasters Costa Tropical",
+    "signed": "Signerat",
+    "agreementSigned": "Avtal signerat",
+    "on": "den",
+    "bySigningAgree": "Genom att signera godkänner du villkoren ovan.",
+    "signAgreement": "Signera avtal",
+    "signing": "Signerar…",
+    "signError": "Signeringsfel. Försök igen.",
+    "networkError": "Nätverksfel. Försök igen.",
+    "print": "Skriv ut / PDF",
+    "draft": "Utkast",
+    "active": "Aktivt",
+    "expired": "Utgånget",
+    "terminated": "Avslutat",
+    "contractsTitle": "Mina Avtal",
+    "contractsEmpty": "Inga avtal ännu. De dyker upp här när din Manager ordnar dem.",
+    "startDate": "Startdatum",
+    "endDate": "Slutdatum",
+    "noEndDate": "Tillsvidare",
+    "myContract": "Mitt Avtal",
+    "noContract": "Inget avtal tillgängligt. Kontakta din Admin.",
+    "type": "Typ"
   }
 }

@@ -963,5 +963,29 @@
     "clientRegisteredTitle": "Nieuwe klant geregistreerd",
     "newLeadTitle": "Nieuwe lead in je pipeline",
     "crewPayoutPaidTitle": "Uitbetaling ontvangen: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Servicecontract — HostMasters Costa Tropical",
+    "signed": "Getekend",
+    "agreementSigned": "Contract getekend",
+    "on": "op",
+    "bySigningAgree": "Door te tekenen ga je akkoord met bovenstaande voorwaarden.",
+    "signAgreement": "Contract tekenen",
+    "signing": "Tekenen…",
+    "signError": "Tekenen mislukt. Probeer opnieuw.",
+    "networkError": "Netwerkfout. Probeer opnieuw.",
+    "print": "Afdrukken / PDF",
+    "draft": "Concept",
+    "active": "Actief",
+    "expired": "Verlopen",
+    "terminated": "Beëindigd",
+    "contractsTitle": "Mijn Contracten",
+    "contractsEmpty": "Nog geen contracten. Ze verschijnen hier zodra je Manager ze klaarzet.",
+    "startDate": "Startdatum",
+    "endDate": "Einddatum",
+    "noEndDate": "Onbepaald",
+    "myContract": "Mijn Contract",
+    "noContract": "Nog geen contract beschikbaar. Neem contact op met je Admin.",
+    "type": "Type"
   }
 }

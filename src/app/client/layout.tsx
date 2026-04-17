@@ -28,7 +28,8 @@ export default async function ClientLayout({ children }: { children: React.React
     { href: '/client/bookings',   label: t(msgs, 'owner.myReservations'),    icon: CalendarDays },
     { href: '/client/care',       label: t(msgs, 'common.maintenance'),      icon: Wrench },
     { href: '/client/tax',        label: t(msgs, 'owner.taxCompliance'),     icon: FileText },
-    { href: '/client/plan',       label: t(msgs, 'common.myPlan'),           icon: Star },
+    { href: '/client/contracts',   label: t(msgs, 'contracts.myContract'),    icon: FileText },
+    { href: '/client/plan',        label: t(msgs, 'common.myPlan'),           icon: Star },
     { href: '/client/messages',   label: t(msgs, 'owner.contactManager'),    icon: MessageCircle },
   ]
 

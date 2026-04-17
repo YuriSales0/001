@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Users, Percent, TrendingUp } from "lucide-react"
+import { ProfileContractSection } from "@/components/hm/profile-contract-section"
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -184,6 +185,9 @@ export default function ManagerProfilePage() {
           </button>
         </div>
       </form>
+
+      {/* Contract */}
+      <ProfileContractSection />
     </div>
   )
 }

@@ -971,5 +971,29 @@
     "clientRegisteredTitle": "New client registered",
     "newLeadTitle": "New lead in your pipeline",
     "crewPayoutPaidTitle": "Payout received: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Service Agreement — HostMasters Costa Tropical",
+    "signed": "Signed",
+    "agreementSigned": "Agreement signed",
+    "on": "on",
+    "bySigningAgree": "By signing, you agree to the terms above.",
+    "signAgreement": "Sign Agreement",
+    "signing": "Signing…",
+    "signError": "Failed to sign. Please try again.",
+    "networkError": "Network error. Please try again.",
+    "print": "Print / PDF",
+    "draft": "Draft",
+    "active": "Active",
+    "expired": "Expired",
+    "terminated": "Terminated",
+    "contractsTitle": "My Contracts",
+    "contractsEmpty": "No contracts yet. Your contracts will appear here once your Manager sets them up.",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "noEndDate": "Indefinite",
+    "myContract": "My Contract",
+    "noContract": "No contract available yet. Contact your Admin.",
+    "type": "Type"
   }
 }

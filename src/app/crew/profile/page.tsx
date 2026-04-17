@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Wrench, Percent, TrendingUp, Star, Shield, Zap, AlertTriangle } from "lucide-react"
+import { ProfileContractSection } from "@/components/hm/profile-contract-section"
 
 type ScoreData = {
   currentScore: number
@@ -109,6 +110,9 @@ export default function CrewProfilePage() {
           <div className="ml-auto text-xs text-gray-400">Set by Admin</div>
         </div>
       )}
+
+      {/* Contract */}
+      <ProfileContractSection />
 
       {/* Photo + identity */}
       <form onSubmit={save} className="rounded-xl border bg-white p-5 space-y-5">
