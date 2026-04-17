@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
+import { NotificationBell } from "@/components/hm/notification-bell"
 import { cn } from "@/lib/utils"
 import { useLocale } from "@/i18n/provider"
 
@@ -286,7 +287,8 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
             <ChevronRight className="h-3.5 w-3.5" />
             <span className="capitalize">{pathname.split("/").filter(Boolean).pop() || "dashboard"}</span>
           </div>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <NotificationBell />
             <Link href={profileHref}
               className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
               {user?.image ? (

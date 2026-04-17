@@ -4,6 +4,7 @@ import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
 import { AiChat } from '@/components/hm/ai-chat'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
+import { NotificationBell } from '@/components/hm/notification-bell'
 import { loadMessagesSync, t, type Locale } from '@/i18n'
 
 export const dynamic = 'force-dynamic'
@@ -110,7 +111,8 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
             <ChevronRight className="h-3.5 w-3.5" />
             <span>{t(msgs, 'common.crewPortal')}</span>
           </div>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <NotificationBell />
             <Link href="/crew/profile"
               className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
               {user.image ? (

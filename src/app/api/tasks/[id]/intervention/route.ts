@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { notifyMany } from '@/lib/notifications'
 
 /**
  * POST /api/tasks/[id]/intervention — Manager opens an intervention
@@ -36,6 +37,18 @@ export async function POST(
       reason: body.reason.slice(0, 2000),
     },
   })
+
+  // Notify all Admins (Captains) about the intervention
+  const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+  notifyMany(
+    admins.map(a => a.id),
+    {
+      type: 'INTERVENTION_OPENED',
+      title: '🚨 Intervention opened',
+      body: `Manager flagged task at ${task.property.owner ? 'property' : 'unknown'}: ${body.reason.slice(0, 100)}`,
+      link: '/tasks',
+    },
+  ).catch(() => {})
 
   return NextResponse.json(intervention, { status: 201 })
 }

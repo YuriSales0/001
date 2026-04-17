@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
 import { AiChat } from '@/components/hm/ai-chat'
+import { NotificationBell } from '@/components/hm/notification-bell'
 import { loadMessagesSync, t, type Locale } from '@/i18n'
 
 export const dynamic = 'force-dynamic'
@@ -134,6 +135,7 @@ export default async function ClientLayout({ children }: { children: React.React
             <span>{t(msgs, 'common.clientPortal')}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
+            <NotificationBell />
             <Link href="/client/profile"
               className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
               {user.image ? (

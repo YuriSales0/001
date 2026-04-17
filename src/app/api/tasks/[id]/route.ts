@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/session'
 import { sendEmail, taskCompletedEmail } from '@/lib/email'
 import { crewScoreEngine } from '@/lib/crew-score'
 import { updateCrewPropertyRelationship } from '@/lib/crew-property'
+import { notify } from '@/lib/notifications'
 
 // Valid status transitions
 const VALID_TRANSITIONS: Record<string, string[]> = {
@@ -139,13 +140,56 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       },
     })
 
-    // ── Post-transition side effects ──
+    // ── Post-transition side effects + in-app notifications ──
 
-    // APPROVED → score + relationship + notify owner
+    // NOTIFIED → tell the Crew they have a new task
+    if (newStatus === 'NOTIFIED' && task.assignee) {
+      notify({
+        userId: task.assignee.id,
+        type: 'TASK_ASSIGNED',
+        title: `New task: ${task.title}`,
+        body: `${task.property.name} — confirm within 30 min`,
+        link: '/crew',
+      }).catch(() => {})
+    }
+
+    // SUBMITTED → tell Captain/Admin there's work to review
+    if (newStatus === 'SUBMITTED') {
+      const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+      for (const a of admins) {
+        notify({
+          userId: a.id,
+          type: 'TASK_SUBMITTED',
+          title: `Task submitted for review`,
+          body: `${task.title} at ${task.property.name}`,
+          link: '/tasks',
+        }).catch(() => {})
+      }
+    }
+
+    // APPROVED → score + relationship + notify owner + notify crew
     if (newStatus === 'APPROVED' && existing.assigneeId) {
       crewScoreEngine.applyDelta(existing.assigneeId, 'TASK_ON_TIME', params.id).catch(console.error)
       crewScoreEngine.applyDelta(existing.assigneeId, 'VALIDATED_NO_REPAIR', params.id).catch(console.error)
       updateCrewPropertyRelationship(existing.assigneeId, existing.propertyId, existing.type, true).catch(console.error)
+
+      // Notify crew member
+      notify({
+        userId: existing.assigneeId,
+        type: 'TASK_APPROVED',
+        title: 'Task approved ✅',
+        body: `${existing.title} at ${existing.property.name} — score +25`,
+        link: '/crew',
+      }).catch(() => {})
+
+      // Notify owner
+      notify({
+        userId: existing.property.owner.id,
+        type: 'VISIT_COMPLETED',
+        title: `Visit completed at ${existing.property.name}`,
+        body: existing.title,
+        link: '/client/dashboard',
+      }).catch(() => {})
 
       if (existing.property.owner.email) {
         sendEmail({
@@ -163,17 +207,31 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       }
     }
 
-    // REJECTED → score penalty + relationship
+    // REJECTED → score penalty + relationship + notify crew
     if (newStatus === 'REJECTED' && existing.assigneeId) {
       crewScoreEngine.applyDelta(existing.assigneeId, 'COMPLAINT', params.id).catch(console.error)
       updateCrewPropertyRelationship(existing.assigneeId, existing.propertyId, existing.type, false).catch(console.error)
+      notify({
+        userId: existing.assigneeId,
+        type: 'TASK_REJECTED',
+        title: 'Task rejected ❌',
+        body: `${existing.title} at ${existing.property.name} — review captain feedback`,
+        link: '/crew',
+      }).catch(() => {})
     }
 
-    // REDISTRIBUTED → penalty for not completing
+    // REDISTRIBUTED → penalty + notify previous crew
     if (newStatus === 'REDISTRIBUTED' && existing.assigneeId) {
       const wasConfirmed = existing.status === 'CONFIRMED' || existing.status === 'IN_PROGRESS'
       const reason = wasConfirmed ? 'ACCEPTED_NOT_DONE' : 'NOT_ACCEPTED'
       crewScoreEngine.applyDelta(existing.assigneeId, reason, params.id).catch(console.error)
+      notify({
+        userId: existing.assigneeId,
+        type: 'TASK_REDISTRIBUTED',
+        title: 'Task reassigned',
+        body: `${existing.title} was redistributed — score impact: ${crewScoreEngine.SCORE_TABLE[reason]}`,
+        link: '/crew',
+      }).catch(() => {})
     }
 
     // Legacy: auto-activate/complete reservations on COMPLETED status

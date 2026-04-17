@@ -12,15 +12,11 @@ export async function notifyAdmin({ subject, message }: { subject: string; messa
       select: { id: true, email: true },
     })
 
-    // Persist in Notification table if it exists (best-effort)
+    // Persist in Notification table
     try {
-      // @ts-expect-error — notification model may not exist yet
-      if (prisma.notification) {
-        // @ts-expect-error dynamic access
-        await prisma.notification.createMany({
-          data: admins.map(a => ({ userId: a.id, title: subject, body: message })),
-        })
-      }
+      await prisma.notification.createMany({
+        data: admins.map(a => ({ userId: a.id, type: 'GENERAL' as const, title: subject, body: message })),
+      })
     } catch {
       /* ignore */
     }

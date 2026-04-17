@@ -213,6 +213,7 @@ model User {
   captainTasks         Task[]                     @relation("CaptainTasks")
   managerInterventions CrewIntervention[]         @relation("ManagerInterventions")
   captainInterventions CrewIntervention[]         @relation("CaptainInterventions")
+  notifications        Notification[]
 }
 
 model Account {
@@ -979,4 +980,56 @@ model RecruitApplication {
 
   @@index([role, status])
   @@index([createdAt])
+}
+
+// ─── Notifications ──────────────────────────────────────────────────────────
+
+enum NotificationType {
+  // Tasks
+  TASK_ASSIGNED
+  TASK_CONFIRMED
+  TASK_SUBMITTED
+  TASK_APPROVED
+  TASK_REJECTED
+  TASK_REDISTRIBUTED
+  // Crew
+  CREW_PAYOUT_READY
+  CREW_PAYOUT_PAID
+  CREW_SCORE_CHANGE
+  CREW_LEVEL_UP
+  CREW_LEVEL_DOWN
+  // Manager
+  NEW_LEAD
+  CLIENT_REGISTERED
+  CLIENT_PROPERTY_APPROVED
+  COMMISSION_PAID
+  // Client
+  PROPERTY_APPROVED
+  CONTRACT_READY
+  PROPERTY_ACTIVE
+  BOOKING_RECEIVED
+  PAYOUT_COMPLETED
+  VISIT_COMPLETED
+  TAX_DEADLINE
+  // System
+  INTERVENTION_OPENED
+  INTERVENTION_RESOLVED
+  AI_ALERT
+  GENERAL
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType @default(GENERAL)
+  title     String
+  body      String?          @db.Text
+  link      String?
+  read      Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt])
 }
