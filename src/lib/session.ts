@@ -13,6 +13,7 @@ export type EffectiveUser = {
   name: string | null
   image?: string | null
   isSuperUser: boolean
+  isCaptain: boolean
 }
 
 export async function getCurrentUser(): Promise<EffectiveUser | null> {
@@ -26,6 +27,7 @@ export async function getCurrentUser(): Promise<EffectiveUser | null> {
     name: (session.user as { name?: string | null }).name ?? null,
     image: (session.user as { image?: string | null }).image ?? null,
     isSuperUser: (session.user as { isSuperUser?: boolean }).isSuperUser ?? false,
+    isCaptain: (session.user as { isCaptain?: boolean }).isCaptain ?? false,
   }
 }
 
@@ -41,7 +43,7 @@ export async function resolveEffectiveUser(realUser: EffectiveUser): Promise<Eff
     const { userId } = JSON.parse(viewAs) as { userId: string }
     const impersonated = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, role: true, language: true, name: true, image: true },
+      select: { id: true, email: true, role: true, language: true, name: true, image: true, isCaptain: true },
     })
     if (!impersonated) return realUser
     return {
@@ -52,6 +54,7 @@ export async function resolveEffectiveUser(realUser: EffectiveUser): Promise<Eff
       name: impersonated.name,
       image: impersonated.image ?? null,
       isSuperUser: false,
+      isCaptain: impersonated.isCaptain,
     }
   } catch {
     return realUser

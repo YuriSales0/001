@@ -66,11 +66,15 @@ export async function findBestCrew(propertyId: string): Promise<Candidate | null
   if (candidates.length > 0) return candidates[0]
 
   // 4. Fallback: any available Crew with no prior relationship (highest global score)
+  // Include crew with no score yet (new members) or score not SUSPENDED
   const fallback = await prisma.user.findFirst({
     where: {
       role: 'CREW',
       onboardingCompleted: true,
-      crewScore: { level: { not: 'SUSPENDED' } },
+      OR: [
+        { crewScore: null },
+        { crewScore: { level: { not: 'SUSPENDED' } } },
+      ],
     },
     include: { crewScore: { select: { currentScore: true } } },
     orderBy: { crewScore: { currentScore: 'desc' } },

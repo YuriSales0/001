@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { type TaskType, Platform } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { calcCommission, payoutDateFrom } from '@/lib/finance'
-import { pickLeastBusyCrew, buildChecklist, autoTasksForPlan } from '@/lib/crew'
+import { buildChecklist, autoTasksForPlan } from '@/lib/crew'
+import { findBestCrew } from '@/lib/crew-assignment'
 import { notifyAdmin } from '@/lib/notify'
 import { requireRole } from '@/lib/session'
 import { notify } from '@/lib/notifications'
@@ -137,7 +138,8 @@ export async function POST(request: NextRequest) {
     })
 
     // ── Auto-tasks ──────────────────────────────────────────────────────────
-    const assigneeId = await pickLeastBusyCrew()
+    const bestCrew = await findBestCrew(propertyId)
+    const assigneeId = bestCrew?.userId ?? null
     const plan = ownerPlan ?? 'STARTER'
 
     // 1 day before check-in for pre-stay inspection / shopping
@@ -177,13 +179,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const now = new Date()
     await prisma.task.createMany({
       data: autoTasks.map(t => ({
         propertyId,
         type: t.type,
         title: t.title,
         dueDate: t.dueDate,
-        assigneeId: assigneeId ?? null,
+        assigneeId,
+        status: assigneeId ? 'NOTIFIED' as const : 'PENDING' as const,
+        notifiedAt: assigneeId ? now : null,
         checklist: buildChecklist(t.type),
         notes: '',
       })),

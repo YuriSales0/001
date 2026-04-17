@@ -23,7 +23,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const guard = await requireRole(['ADMIN', 'CREW', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
-  const isCaptainOrAdmin = me.role === 'ADMIN' || me.isSuperUser || (me as unknown as { isCaptain?: boolean }).isCaptain === true
+  const isCaptainOrAdmin = me.role === 'ADMIN' || me.isSuperUser || me.isCaptain
   try {
     const existing = await prisma.task.findUnique({
       where: { id: params.id },
