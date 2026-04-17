@@ -232,13 +232,13 @@ export function PlatformDemo() {
         </div>
 
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(201,168,76,0.2)", background: "#1a2332" }}>
-          {/* Tab bar */}
-          <div className="flex border-b overflow-x-auto" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
+          {/* Tab bar — scrollable on mobile */}
+          <div className="flex border-b overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-px" style={{ borderColor: "rgba(255,255,255,0.1)", WebkitOverflowScrolling: 'touch' }}>
             {TABS.map(({ key, icon: Icon }) => (
               <button
                 key={key}
                 onClick={() => setActive(key)}
-                className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
+                className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 snap-start shrink-0 min-w-[120px] justify-center ${
                   active === key
                     ? "text-white border-[#C9A84C]"
                     : "text-gray-500 border-transparent hover:text-gray-300"
@@ -253,7 +253,7 @@ export function PlatformDemo() {
           {/* Content */}
           <div className="grid md:grid-cols-2 gap-0">
             {/* Left: description */}
-            <div className="p-8 flex flex-col justify-center">
+            <div className="p-5 sm:p-8 flex flex-col justify-center">
               <h3 className="text-xl font-bold text-white mb-3">
                 {t(`demo.${active}.title`)}
               </h3>
