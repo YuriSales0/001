@@ -5,6 +5,7 @@ import { ALL_CHECKS, type CheckResult } from '@/lib/ai-monitor/checks'
 import { analyzeAlert } from '@/lib/ai-monitor/ai-analysis'
 import { autoFix } from '@/lib/ai-monitor/auto-fix'
 import { sendAlertEmail, sendWebhook, shouldNotify } from '@/lib/ai-monitor/notifier'
+import { notifyMany } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300
@@ -158,6 +159,18 @@ export async function GET(request: NextRequest) {
     .map(p => p.alert)
 
   if (toNotify.length > 0) {
+    // In-app notifications for all Admins
+    const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+    const adminIds = admins.map(a => a.id)
+    for (const alert of toNotify) {
+      notifyMany(adminIds, {
+        type: 'AI_ALERT',
+        title: `🤖 ${alert.severity}: ${alert.checkType.replace(/_/g, ' ')}`,
+        body: alert.message,
+        link: '/ai-monitor',
+      }).catch(() => {})
+    }
+
     const adminEmail = process.env.ADMIN_EMAIL
     if (adminEmail) await sendAlertEmail(adminEmail, toNotify, now)
 

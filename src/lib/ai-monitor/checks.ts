@@ -383,6 +383,104 @@ const lead_staleContact: CheckFn = async (now) => {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// CATEGORY: CREW HEALTH
+// ─────────────────────────────────────────────────────────────────
+
+const crew_scoreDrop: CheckFn = async () => {
+  // Crew whose score dropped 50+ points in the last 30 days
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 3600 * 1000)
+  const events = await prisma.crewScoreEvent.findMany({
+    where: { createdAt: { gte: thirtyDaysAgo }, delta: { lt: 0 } },
+    select: { crewScoreId: true, delta: true },
+  })
+  const dropByScore: Record<string, number> = {}
+  for (const e of events) {
+    dropByScore[e.crewScoreId] = (dropByScore[e.crewScoreId] ?? 0) + e.delta
+  }
+  const severe = Object.entries(dropByScore).filter(([, d]) => d <= -50)
+  if (severe.length === 0) return null
+  return {
+    checkType: 'CREW_SCORE_DROP',
+    severity: 'HIGH',
+    message: `${severe.length} crew member(s) lost 50+ score points in the last 30 days`,
+    count: severe.length,
+    details: { crewScoreIds: severe.map(([id]) => id).slice(0, 20) },
+  }
+}
+
+const crew_suspended: CheckFn = async () => {
+  const count = await prisma.crewScore.count({ where: { level: 'SUSPENDED' } })
+  if (count === 0) return null
+  return {
+    checkType: 'CREW_SUSPENDED',
+    severity: 'HIGH',
+    message: `${count} crew member(s) currently SUSPENDED (score <50) — cannot receive tasks`,
+    count,
+  }
+}
+
+const crew_completionRate: CheckFn = async () => {
+  // Crew with totalTasks >= 5 but approval rate < 80%
+  const scores = await prisma.crewScore.findMany({
+    where: { totalTasks: { gte: 5 } },
+    select: { userId: true, totalTasks: true, totalApproved: true, totalRejected: true },
+  })
+  const lowRate = scores.filter(s => s.totalTasks > 0 && (s.totalApproved / s.totalTasks) < 0.8)
+  if (lowRate.length === 0) return null
+  return {
+    checkType: 'CREW_LOW_APPROVAL_RATE',
+    severity: 'MEDIUM',
+    message: `${lowRate.length} crew member(s) with <80% task approval rate (5+ tasks)`,
+    count: lowRate.length,
+    details: { userIds: lowRate.map(s => s.userId).slice(0, 20) },
+  }
+}
+
+const crew_propertyRisk: CheckFn = async () => {
+  // Active risk alerts on crew-property relationships
+  const count = await prisma.crewPropertyRelationship.count({
+    where: { aiAlertActive: true },
+  })
+  if (count === 0) return null
+  return {
+    checkType: 'CREW_PROPERTY_RISK',
+    severity: 'HIGH',
+    message: `${count} crew-property relationship(s) with active AI risk alert — substitution recommended`,
+    count,
+  }
+}
+
+const crew_payoutStuck: CheckFn = async (now) => {
+  // CrewPayouts stuck in PENDING for more than 3 days
+  const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 3600 * 1000)
+  const count = await prisma.crewPayout.count({
+    where: { status: 'PENDING', createdAt: { lt: threeDaysAgo } },
+  })
+  if (count === 0) return null
+  return {
+    checkType: 'CREW_PAYOUT_STUCK',
+    severity: 'HIGH',
+    message: `${count} crew payout(s) stuck in PENDING for 3+ days — crew not paid`,
+    count,
+  }
+}
+
+const crew_interventionsOpen: CheckFn = async (now) => {
+  // Interventions open for more than 24h
+  const oneDayAgo = new Date(now.getTime() - 24 * 3600 * 1000)
+  const count = await prisma.crewIntervention.count({
+    where: { status: 'OPEN', createdAt: { lt: oneDayAgo } },
+  })
+  if (count === 0) return null
+  return {
+    checkType: 'CREW_INTERVENTION_STALE',
+    severity: 'MEDIUM',
+    message: `${count} intervention(s) open for 24h+ without resolution`,
+    count,
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // ALL CHECKS REGISTRY
 // ─────────────────────────────────────────────────────────────────
 
@@ -415,6 +513,13 @@ export const ALL_CHECKS: CheckFn[] = [
   tax_dueIn7Days,
   // CRM (1)
   lead_staleContact,
+  // Crew Health (6)
+  crew_scoreDrop,
+  crew_suspended,
+  crew_completionRate,
+  crew_propertyRisk,
+  crew_payoutStuck,
+  crew_interventionsOpen,
 ]
 
-// Total: 21 checks (up from 9 in old monitor)
+// Total: 27 checks
