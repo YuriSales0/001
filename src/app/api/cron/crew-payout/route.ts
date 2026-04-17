@@ -67,30 +67,40 @@ export async function POST() {
     const bonusAmount = Math.round(totalAmount * bonusRate * 100) / 100
     const finalAmount = Math.round((totalAmount + bonusAmount) * 100) / 100
 
-    // Check if payout already exists for this crew+week
-    const existing = await prisma.crewPayout.findUnique({
-      where: { crewId_weekStart: { crewId, weekStart } },
-    })
-    if (existing) continue
+    // Atomic check-and-create to prevent duplicate payouts from concurrent runs
+    try {
+      const payout = await prisma.$transaction(async (tx) => {
+        const existing = await tx.crewPayout.findUnique({
+          where: { crewId_weekStart: { crewId, weekStart } },
+        })
+        if (existing) return null
 
-    const payout = await prisma.crewPayout.create({
-      data: {
-        crewId,
-        weekStart,
-        weekEnd,
-        taskCount: crewTasks.length,
-        totalAmount,
-        bonusAmount,
-        finalAmount,
-        status: 'PENDING',
-      },
-    })
+        const created = await tx.crewPayout.create({
+          data: {
+            crewId,
+            weekStart,
+            weekEnd,
+            taskCount: crewTasks.length,
+            totalAmount,
+            bonusAmount,
+            finalAmount,
+            status: 'PENDING',
+          },
+        })
 
-    // Link tasks to this payout
-    await prisma.task.updateMany({
-      where: { id: { in: crewTasks.map(t => t.id) } },
-      data: { crewPayoutId: payout.id },
-    })
+        await tx.task.updateMany({
+          where: { id: { in: crewTasks.map(t => t.id) } },
+          data: { crewPayoutId: created.id },
+        })
+
+        return created
+      })
+
+      if (!payout) continue
+    } catch (err) {
+      console.error(`[CrewPayout] Failed for crew ${crewId}:`, err)
+      continue
+    }
 
     payouts.push({
       crewId,
