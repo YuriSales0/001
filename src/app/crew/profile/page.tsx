@@ -1,7 +1,16 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Camera, Save, Lock, Wrench, Percent } from "lucide-react"
+import { Camera, Save, Lock, Wrench, Percent, TrendingUp, Star, Shield, Zap, AlertTriangle } from "lucide-react"
+
+type ScoreData = {
+  currentScore: number
+  level: string
+  totalTasks: number
+  totalApproved: number
+  totalRejected: number
+  history: { delta: number; reason: string; createdAt: string }[]
+}
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -20,11 +29,16 @@ export default function CrewProfilePage() {
   const [pw, setPw] = useState({ current: "", next: "", confirm: "" })
   const [pwError, setPwError] = useState("")
   const [pwSaved, setPwSaved] = useState(false)
+  const [score, setScore] = useState<ScoreData | null>(null)
 
   useEffect(() => {
-    fetch("/api/profile").then(r => { if (!r.ok) throw new Error(); return r.json() }).then(d => {
+    Promise.all([
+      fetch("/api/profile").then(r => { if (!r.ok) throw new Error(); return r.json() }),
+      fetch("/api/crew-score").then(r => r.ok ? r.json() : null),
+    ]).then(([d, s]) => {
       setProfile(d)
       setForm({ name: d.name ?? "", phone: d.phone ?? "", bio: d.bio ?? "", image: d.image ?? "" })
+      setScore(s)
       setLoading(false)
     }).catch(() => { setError("Failed to load profile"); setLoading(false) })
   }, [])
@@ -70,6 +84,9 @@ export default function CrewProfilePage() {
         <h1 className="text-2xl font-bold text-navy-900">My Profile</h1>
         <p className="text-sm text-gray-500">Crew · Field Operations</p>
       </div>
+
+      {/* Performance Score */}
+      {score && <ScoreSection score={score} />}
 
       {/* Role info */}
       <div className="rounded-xl border bg-emerald-50 border-emerald-100 p-4 flex gap-4">
@@ -175,6 +192,129 @@ export default function CrewProfilePage() {
           </button>
         </div>
       </form>
+    </div>
+  )
+}
+
+const LEVEL_META: Record<string, { label: string; icon: typeof Star; color: string; bg: string; min: number; next: number | null; bonus: string }> = {
+  SUSPENDED: { label: 'Suspended', icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', min: 0, next: 50, bonus: 'No tasks assigned' },
+  BASIC:     { label: 'Basic',     icon: Shield,        color: 'text-blue-600', bg: 'bg-blue-50', min: 50, next: 150, bonus: 'Standard tasks' },
+  VERIFIED:  { label: 'Verified',  icon: Zap,           color: 'text-amber-600', bg: 'bg-amber-50', min: 150, next: 300, bonus: '+5% rate bonus' },
+  EXPERT:    { label: 'Expert',    icon: TrendingUp,    color: 'text-green-600', bg: 'bg-green-50', min: 300, next: 500, bonus: '+10% rate bonus + premium properties' },
+  ELITE:     { label: 'Elite',     icon: Star,          color: 'text-yellow-600', bg: 'bg-yellow-50', min: 500, next: null, bonus: '+15% rate bonus + independent inspections' },
+}
+
+const REASON_LABELS: Record<string, { label: string; emoji: string }> = {
+  TASK_ON_TIME: { label: 'Task on time', emoji: '✅' },
+  VALIDATED_NO_REPAIR: { label: 'Validated without issues', emoji: '🏆' },
+  OWNER_POSITIVE: { label: 'Owner positive review', emoji: '⭐' },
+  PEAK_AVAILABILITY: { label: 'Peak availability', emoji: '📅' },
+  NOT_ACCEPTED: { label: 'Task not accepted', emoji: '⚠️' },
+  ACCEPTED_NOT_DONE: { label: 'Accepted but not done', emoji: '❌' },
+  COMPLAINT: { label: 'Complaint received', emoji: '🔴' },
+  UNREPORTED_DAMAGE: { label: 'Unreported damage', emoji: '🚨' },
+}
+
+function ScoreSection({ score }: { score: ScoreData }) {
+  const config = LEVEL_META[score.level] ?? LEVEL_META.BASIC
+  const Icon = config.icon
+  const progress = config.next
+    ? Math.min(100, ((score.currentScore - config.min) / (config.next - config.min)) * 100)
+    : 100
+  const approvalRate = score.totalTasks > 0
+    ? Math.round((score.totalApproved / score.totalTasks) * 100)
+    : 100
+
+  const nextLevel = score.level === 'SUSPENDED' ? 'BASIC' : score.level === 'BASIC' ? 'VERIFIED' : score.level === 'VERIFIED' ? 'EXPERT' : score.level === 'EXPERT' ? 'ELITE' : null
+
+  return (
+    <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className={`h-11 w-11 rounded-xl flex items-center justify-center ${config.bg}`}>
+              <Icon className={`h-5 w-5 ${config.color}`} />
+            </div>
+            <div>
+              <p className={`text-sm font-bold ${config.color}`}>{config.label}</p>
+              <p className="text-xs text-gray-500">{config.bonus}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-3xl font-bold text-navy-900">{score.currentScore}</p>
+            <p className="text-xs text-gray-400">points</p>
+          </div>
+        </div>
+
+        {/* Progress to next level */}
+        {config.next && nextLevel && (
+          <div className="mb-4">
+            <div className="flex justify-between text-[10px] text-gray-400 mb-1">
+              <span>{config.label} ({config.min})</span>
+              <span>{LEVEL_META[nextLevel]?.label} ({config.next})</span>
+            </div>
+            <div className="h-2 rounded-full bg-gray-100">
+              <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: '#C9A84C' }} />
+            </div>
+            <p className="text-[10px] text-gray-500 mt-1">{config.next - score.currentScore} points to next level</p>
+          </div>
+        )}
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          <div className="rounded-lg bg-gray-50 p-3 text-center">
+            <p className="text-lg font-bold text-navy-900">{score.totalTasks}</p>
+            <p className="text-[10px] text-gray-500">Total tasks</p>
+          </div>
+          <div className="rounded-lg bg-green-50 p-3 text-center">
+            <p className="text-lg font-bold text-green-700">{approvalRate}%</p>
+            <p className="text-[10px] text-gray-500">Approval rate</p>
+          </div>
+          <div className="rounded-lg bg-red-50 p-3 text-center">
+            <p className="text-lg font-bold text-red-600">{score.totalRejected}</p>
+            <p className="text-[10px] text-gray-500">Rejected</p>
+          </div>
+        </div>
+
+        {/* Incentive box */}
+        <div className="rounded-lg p-3 mb-4" style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.15)' }}>
+          <p className="text-xs font-bold text-gray-800 mb-1">How your score works for you</p>
+          <ul className="text-[11px] text-gray-600 space-y-1">
+            <li>• <strong>Good work on a property = trust score goes up</strong> — you get priority for future tasks there</li>
+            <li>• <strong>Higher global score = access to premium properties</strong> with better rates</li>
+            <li>• <strong>Level up = rate bonus</strong> — Verified +5%, Expert +10%, Elite +15%</li>
+            <li>• <strong>Owners can mark you as favourite</strong> — you always get called first</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Recent history */}
+      {score.history.length > 0 && (
+        <div className="border-t">
+          <div className="px-5 py-3 bg-gray-50">
+            <p className="text-xs font-semibold text-gray-700">Recent score changes</p>
+          </div>
+          <div className="divide-y max-h-60 overflow-y-auto">
+            {score.history.slice(0, 10).map((e, i) => {
+              const meta = REASON_LABELS[e.reason] ?? { label: e.reason, emoji: '📋' }
+              return (
+                <div key={i} className="px-5 py-2.5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{meta.emoji}</span>
+                    <div>
+                      <p className="text-xs text-gray-700">{meta.label}</p>
+                      <p className="text-[10px] text-gray-400">{new Date(e.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</p>
+                    </div>
+                  </div>
+                  <span className={`text-xs font-bold ${e.delta > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                    {e.delta > 0 ? '+' : ''}{e.delta}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

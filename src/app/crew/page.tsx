@@ -7,6 +7,7 @@ import {
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 import { showToast } from "@/components/hm/toast"
 import { useLocale } from "@/i18n/provider"
+import { CrewScoreCard } from "@/components/hm/crew-score-card"
 
 type ChecklistItem = { text: string; done: boolean }
 type Task = {
@@ -218,6 +219,8 @@ export default function CrewHome() {
             dateClass="text-xs text-gray-500 mt-0.5"
           />
         </div>
+
+        <CrewScoreCard />
 
         <div className="flex border-b hm-animate-in hm-stagger-2">
           {[
