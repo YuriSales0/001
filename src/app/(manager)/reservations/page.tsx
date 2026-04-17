@@ -507,7 +507,7 @@ export default function ReservationsPage() {
                 <div className="col-span-2">
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Property *</label>
                   <select value={form.propertyId} onChange={e=>setForm(f=>({...f,propertyId:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
                     <option value="">Select a property…</option>
                     {properties.map(p=><option key={p.id} value={p.id}>{p.name} · {p.city}</option>)}
                   </select>
@@ -515,12 +515,12 @@ export default function ReservationsPage() {
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Guest name *</label>
                   <input type="text" value={form.guestName} onChange={e=>setForm(f=>({...f,guestName:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" placeholder="Full name"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="Full name"/>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Platform</label>
                   <select value={form.platform} onChange={e=>setForm(f=>({...f,platform:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
                     <option value="AIRBNB">Airbnb</option>
                     <option value="BOOKING">Booking.com</option>
                     <option value="DIRECT">Direct</option>
@@ -530,27 +530,27 @@ export default function ReservationsPage() {
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Guest email</label>
                   <input type="email" value={form.guestEmail} onChange={e=>setForm(f=>({...f,guestEmail:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" placeholder="optional"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="optional"/>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Phone</label>
                   <input type="tel" value={form.guestPhone} onChange={e=>setForm(f=>({...f,guestPhone:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" placeholder="optional"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="optional"/>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Check-in *</label>
                   <input type="date" value={form.checkIn} onChange={e=>setForm(f=>({...f,checkIn:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Check-out *</label>
                   <input type="date" value={form.checkOut} onChange={e=>setForm(f=>({...f,checkOut:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Amount (€) *</label>
                   <input type="number" min="0" step="0.01" value={form.amount} onChange={e=>setForm(f=>({...f,amount:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" placeholder="0.00"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="0.00"/>
                 </div>
               </div>
 
@@ -561,7 +561,7 @@ export default function ReservationsPage() {
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">Nationality</label>
                     <select value={form.guestNationality} onChange={e=>setForm(f=>({...f,guestNationality:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
                       <option value="">Unknown</option>
                       {[
                         {v:"GB",l:"🇬🇧 United Kingdom"},{v:"DE",l:"🇩🇪 Germany"},{v:"FR",l:"🇫🇷 France"},
@@ -576,7 +576,7 @@ export default function ReservationsPage() {
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">Guest type</label>
                     <select value={form.guestAgeGroup} onChange={e=>setForm(f=>({...f,guestAgeGroup:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
                       <option value="">Unknown</option>
                       <option value="YOUNG_COUPLE">Young couple</option>
                       <option value="FAMILY">Family</option>
@@ -589,12 +589,12 @@ export default function ReservationsPage() {
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">Group size</label>
                     <input type="number" min="1" max="20" value={form.guestGroupSize} onChange={e=>setForm(f=>({...f,guestGroupSize:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" placeholder="e.g. 4"/>
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="e.g. 4"/>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">Language</label>
                     <select value={form.guestLanguage} onChange={e=>setForm(f=>({...f,guestLanguage:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
                       <option value="">Unknown</option>
                       <option value="en">English</option>
                       <option value="es">Spanish</option>

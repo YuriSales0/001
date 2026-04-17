@@ -77,7 +77,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <input
               required value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -86,7 +86,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 required type="number" step="0.01" min="0" value={form.amount}
                 onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
               />
             </div>
             <div>
@@ -94,7 +94,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 type="date" value={form.dueDate}
                 onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <textarea
               rows={2} value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none"
             />
           </div>
           {err && <p className="text-xs text-red-600">{err}</p>}
