@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { notify } from '@/lib/notifications'
 
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW', 'CLIENT'])
@@ -127,6 +128,17 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // Notify assigned crew
+    if (task.assignee) {
+      notify({
+        userId: task.assignee.id,
+        type: 'TASK_ASSIGNED',
+        title: `New task: ${task.title ?? type}`,
+        body: `${task.property?.name ?? 'Property'} — ${new Date(dueDate).toLocaleDateString('en-GB')}`,
+        link: '/crew',
+      }).catch(() => {})
+    }
 
     return NextResponse.json(task, { status: 201 })
   } catch (error) {

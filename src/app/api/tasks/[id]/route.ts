@@ -80,6 +80,16 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         case 'CONFIRMED':
           if (me.role !== 'CREW') return NextResponse.json({ error: 'Only Crew can confirm' }, { status: 403 })
           data.confirmedAt = now
+          // Notify owner that crew accepted the task
+          if (existing.property.owner.id) {
+            notify({
+              userId: existing.property.owner.id,
+              type: 'TASK_CONFIRMED',
+              title: `Crew confirmed: ${existing.title}`,
+              body: `${me.name ?? 'Crew member'} accepted the task at ${existing.property.name}`,
+              link: '/client/care',
+            }).catch(() => {})
+          }
           break
         case 'IN_PROGRESS':
           break

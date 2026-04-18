@@ -14,7 +14,11 @@ type NotifyParams = {
  * Creates a notification for a user. Fire-and-forget safe — never throws.
  */
 export async function notify(params: NotifyParams): Promise<void> {
+  if (!params.userId || !params.title) return
   try {
+    // Validate user exists before creating notification
+    const exists = await prisma.user.findUnique({ where: { id: params.userId }, select: { id: true } })
+    if (!exists) return
     await prisma.notification.create({
       data: {
         userId: params.userId,
@@ -39,6 +43,11 @@ export async function tForUser(userId: string, key: string, replacements?: Recor
     const locale = (user?.language ?? 'en') as Locale
     const msgs = loadMessagesSync(locale)
     let text = tRaw(msgs, key)
+    // If translation returned the raw key, fall back to English
+    if (text === key && locale !== 'en') {
+      const enMsgs = loadMessagesSync('en')
+      text = tRaw(enMsgs, key)
+    }
     if (replacements) {
       for (const [k, v] of Object.entries(replacements)) {
         text = text.replace(`{${k}}`, v)
