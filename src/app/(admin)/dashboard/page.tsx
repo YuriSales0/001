@@ -125,7 +125,7 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="p-6 space-y-6" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between">
         <DashboardGreeting />

@@ -174,7 +174,7 @@ export default function ClientTaxPage() {
                 <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" style={{ color: "var(--hm-gold)" }} />
                 <span className="text-hm-slate flex-1">{feat.t}</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shrink-0"
-                      style={{ background: feat.f === "Premium" ? "rgba(201,168,76,0.2)" : "rgba(27,79,138,0.1)",
+                      style={{ background: feat.f === "Premium" ? "rgba(176,138,62,0.2)" : "rgba(27,79,138,0.1)",
                                color: feat.f === "Premium" ? "var(--hm-gold-dk)" : "var(--hm-blue)" }}>
                   {feat.f}
                 </span>
@@ -218,7 +218,7 @@ export default function ClientTaxPage() {
           </p>
         </div>
         <span className="rounded-full px-3 py-1.5 text-xs font-semibold" style={{
-          background: isPremium ? "rgba(201,168,76,0.15)" : "rgba(27,79,138,0.1)",
+          background: isPremium ? "rgba(176,138,62,0.15)" : "rgba(27,79,138,0.1)",
           color: isPremium ? "var(--hm-gold-dk)" : "var(--hm-blue)",
         }}>
           {isPremium ? "Premium · Full service" : "Mid · Tracking & alerts"}

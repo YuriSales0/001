@@ -84,7 +84,7 @@ export default function ManagerReferralPage() {
 
   if (loading) {
     return (
-      <div className="p-6 space-y-6 animate-pulse" style={{ fontFamily: "system-ui, sans-serif" }}>
+      <div className="p-6 space-y-6 animate-pulse">
         <div className="h-10 rounded bg-gray-100 w-64" />
         <div className="h-32 rounded-xl bg-gray-100" />
         <div className="grid grid-cols-2 gap-3">
@@ -97,7 +97,7 @@ export default function ManagerReferralPage() {
 
   if (error || !data) {
     return (
-      <div className="p-6" style={{ fontFamily: "system-ui, sans-serif" }}>
+      <div className="p-6">
         <p className="text-sm text-red-500 text-center p-4 rounded-lg bg-red-50">
           {t('manager.referralPage.loadFailed')} <button onClick={load} className="underline">{t('manager.referralPage.tryAgain')}</button>
         </p>
@@ -106,7 +106,7 @@ export default function ManagerReferralPage() {
   }
 
   return (
-    <div className="p-6 space-y-6" style={{ fontFamily: "system-ui, sans-serif" }}>
+    <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-navy-900">{t('manager.referralPage.title')}</h1>
         <p className="text-sm text-gray-500 mt-0.5">
@@ -116,9 +116,9 @@ export default function ManagerReferralPage() {
 
       {/* Main referral card */}
       <div className="rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #0B1E3A 0%, #1F3A66 100%)" }}>
-        <div className="absolute inset-0 opacity-20" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.2) 0%, transparent 70%)" }} />
+        <div className="absolute inset-0 opacity-20" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(176,138,62,0.2) 0%, transparent 70%)" }} />
         <div className="relative p-6 sm:p-8">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium mb-4" style={{ background: "rgba(201,168,76,0.15)", color: "#B08A3E", border: "1px solid rgba(201,168,76,0.25)" }}>
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium mb-4" style={{ background: "rgba(176,138,62,0.15)", color: "#B08A3E", border: "1px solid rgba(176,138,62,0.25)" }}>
             <Link2 className="h-3.5 w-3.5" />
             {t('manager.referralPage.personalLink')}
           </div>

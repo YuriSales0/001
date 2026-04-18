@@ -13,6 +13,7 @@ import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
 import { NotificationBell } from "@/components/hm/notification-bell"
 import { cn } from "@/lib/utils"
+import { HmLogo } from "@/components/hm/hm-logo"
 import { useLocale } from "@/i18n/provider"
 
 type NavItem = { href: string; label: string; icon: React.ElementType }
@@ -154,11 +155,12 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
       >
         <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
           <Link href={dashboardHref} className="flex items-center gap-2">
-            <span className="text-base font-bold tracking-tight text-white">
+            <HmLogo size={24} onDark />
+            <span className="text-sm font-semibold tracking-tight text-white">
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#B08A3E' }}>
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
               {badgeLabel}
             </span>
           </Link>
@@ -248,7 +250,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
                 ? "text-white"
                 : "text-white/60 hover:bg-white/5 hover:text-white"
             )}
-            style={pathname === profileHref ? { background: 'rgba(201,168,76,0.15)', color: '#B08A3E' } : {}}
+            style={pathname === profileHref ? { background: 'rgba(176,138,62,0.15)', color: '#B08A3E' } : {}}
           >
             <User className="h-4 w-4 shrink-0" />
             {t('common.myProfile')}

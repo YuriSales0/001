@@ -92,7 +92,7 @@ export default function AdminRecruitPage() {
   }
 
   return (
-    <div className="p-6 space-y-6" style={{ fontFamily: "system-ui, sans-serif" }}>
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-navy-900">Recruiting</h1>
@@ -147,7 +147,7 @@ export default function AdminRecruitPage() {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(201,168,76,0.15)" }}>
+                      <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(176,138,62,0.15)" }}>
                         <Icon className="h-4 w-4" style={{ color: "#B08A3E" }} />
                       </div>
                       <div>
@@ -215,7 +215,7 @@ function ApplicationDetail({
       {/* Header */}
       <div className="px-6 py-4 border-b flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(201,168,76,0.15)" }}>
+          <div className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(176,138,62,0.15)" }}>
             <Icon className="h-5 w-5" style={{ color: "#B08A3E" }} />
           </div>
           <div>

@@ -51,7 +51,7 @@ export default function ManagerInviteClientPage() {
 
   if (sent) {
     return (
-      <div className="p-6 max-w-xl mx-auto" style={{ fontFamily: "system-ui, sans-serif" }}>
+      <div className="p-6 max-w-xl mx-auto">
         <div className="rounded-2xl border bg-white p-8 text-center">
           <div className="mx-auto h-14 w-14 rounded-full bg-green-50 flex items-center justify-center mb-4">
             <CheckCircle2 className="h-7 w-7 text-green-600" />
@@ -84,7 +84,7 @@ export default function ManagerInviteClientPage() {
   }
 
   return (
-    <div className="p-6 max-w-xl mx-auto" style={{ fontFamily: "system-ui, sans-serif" }}>
+    <div className="p-6 max-w-xl mx-auto">
       <Link href="/manager/clients" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 mb-4">
         <ArrowLeft className="h-4 w-4" /> {t('manager.inviteClient.back')}
       </Link>

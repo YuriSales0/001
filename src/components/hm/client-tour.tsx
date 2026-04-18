@@ -200,7 +200,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
             width: spot.width,
             height: spot.height,
             borderColor: "#B08A3E",
-            boxShadow: "0 0 0 4px rgba(201,168,76,0.2), 0 0 24px rgba(201,168,76,0.15)",
+            boxShadow: "0 0 0 4px rgba(176,138,62,0.2), 0 0 24px rgba(176,138,62,0.15)",
           }}
         />
 
@@ -210,7 +210,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
             className="rounded-xl shadow-2xl overflow-hidden transition-transform duration-300"
             style={{
               background: "#0B1E3A",
-              border: "1px solid rgba(201,168,76,0.25)",
+              border: "1px solid rgba(176,138,62,0.25)",
               transform: animating ? "translateY(8px)" : "translateY(0)",
             }}
           >
@@ -224,7 +224,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
 
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
-                <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(201,168,76,0.15)" }}>
+                <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(176,138,62,0.15)" }}>
                   <Icon className="h-3.5 w-3.5" style={{ color: "#B08A3E" }} />
                 </div>
                 <h3 className="text-sm font-bold text-white">{title}</h3>
@@ -279,7 +279,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
         >
           <div className="p-8 sm:p-10 text-center" style={{ background: "#0B1E3A" }}>
             <div className="h-16 w-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-                 style={{ background: "rgba(201,168,76,0.15)" }}>
+                 style={{ background: "rgba(176,138,62,0.15)" }}>
               <Icon className="h-8 w-8" style={{ color: "#B08A3E" }} />
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">{title}</h2>

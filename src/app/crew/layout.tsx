@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
-import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
+import { ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
+import { HmLogo } from '@/components/hm/hm-logo'
 import { AiChat } from '@/components/hm/ai-chat'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
 import { NotificationBell } from '@/components/hm/notification-bell'
@@ -43,15 +44,12 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
         {/* Logo */}
         <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
           <Link href="/crew" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-                 style={{ background: '#B08A3E' }}>
-              <Building2 className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-bold text-white text-sm">
+            <HmLogo size={24} onDark />
+            <span className="font-semibold text-white text-sm tracking-tight">
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#B08A3E' }}>
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
               Crew
             </span>
           </Link>

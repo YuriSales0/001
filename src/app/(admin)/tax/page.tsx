@@ -89,7 +89,7 @@ export default function AdminTaxPage() {
   }
 
   return (
-    <div className="p-6 space-y-6" style={{ fontFamily: "system-ui, sans-serif" }}>
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>

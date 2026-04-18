@@ -110,7 +110,7 @@ function FinanceMock({ t }: { t: (k: string) => string }) {
       <div className="rounded-xl overflow-hidden border" style={{ borderColor: "#E8E3D8" }}>
         <div className="px-4 py-3 flex justify-between items-center" style={{ background: "#FAFAF8" }}>
           <span className="text-sm font-semibold" style={{ color: "#0B1E3A" }}>July 2026 Statement</span>
-          <span className="text-xs rounded-full px-2.5 py-0.5 font-medium" style={{ background: "rgba(201,168,76,0.15)", color: "#B08A3E" }}>PDF ↓</span>
+          <span className="text-xs rounded-full px-2.5 py-0.5 font-medium" style={{ background: "rgba(176,138,62,0.15)", color: "#B08A3E" }}>PDF ↓</span>
         </div>
         <div className="divide-y" style={{ borderColor: "#f3f4f6" }}>
           {[
@@ -196,7 +196,7 @@ function CommMock({ t }: { t: (k: string) => string }) {
           </div>
         </div>
         {/* AI assistant hint */}
-        <div className="px-4 py-3 flex items-center gap-2 border-t" style={{ borderColor: "#E8E3D8", background: "rgba(201,168,76,0.05)" }}>
+        <div className="px-4 py-3 flex items-center gap-2 border-t" style={{ borderColor: "#E8E3D8", background: "rgba(176,138,62,0.05)" }}>
           <Star className="h-4 w-4" style={{ color: "#B08A3E" }} />
           <span className="text-xs text-gray-500">AI Assistant available 24/7 for instant answers</span>
         </div>
@@ -231,7 +231,7 @@ export function PlatformDemo() {
           <p className="mt-4 text-gray-400 text-lg">{t('demo.subtitle')}</p>
         </div>
 
-        <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(201,168,76,0.2)", background: "#142B4D" }}>
+        <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(176,138,62,0.2)", background: "#142B4D" }}>
           {/* Tab bar — scrollable on mobile */}
           <div className="flex border-b overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-px" style={{ borderColor: "rgba(255,255,255,0.1)", WebkitOverflowScrolling: 'touch' }}>
             {TABS.map(({ key, icon: Icon }) => (

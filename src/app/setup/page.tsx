@@ -316,7 +316,7 @@ export default function SetupPage() {
   )
 
   return (
-    <div className="flex h-[calc(100vh-64px)]" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="flex h-[calc(100vh-64px)]">
       {/* Sidebar */}
       <div className="w-72 border-r bg-white flex flex-col shrink-0">
         <div className="px-4 py-3 border-b bg-gray-50">

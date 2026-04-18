@@ -39,7 +39,7 @@ export function ManagerRecruitSection() {
         {/* ── Header ── */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium mb-6"
-               style={{ background: "rgba(201,168,76,0.15)", color: "#B08A3E", border: "1px solid rgba(201,168,76,0.25)" }}>
+               style={{ background: "rgba(176,138,62,0.15)", color: "#B08A3E", border: "1px solid rgba(176,138,62,0.25)" }}>
             <Briefcase className="h-3.5 w-3.5" />
             Become a Manager
           </div>
@@ -73,10 +73,10 @@ export function ManagerRecruitSection() {
 
         {/* ── Earnings Simulator ── */}
         <div className="rounded-2xl overflow-hidden mb-16"
-             style={{ background: "linear-gradient(135deg, #0B1E3A 0%, #142B4D 100%)", border: "1px solid rgba(201,168,76,0.2)" }}>
+             style={{ background: "linear-gradient(135deg, #0B1E3A 0%, #142B4D 100%)", border: "1px solid rgba(176,138,62,0.2)" }}>
           <div className="p-8 sm:p-10">
             <div className="flex items-center gap-2 mb-6">
-              <div className="h-9 w-9 rounded-lg flex items-center justify-center" style={{ background: "rgba(201,168,76,0.15)" }}>
+              <div className="h-9 w-9 rounded-lg flex items-center justify-center" style={{ background: "rgba(176,138,62,0.15)" }}>
                 <DollarSign className="h-5 w-5" style={{ color: "#B08A3E" }} />
               </div>
               <div>
@@ -122,7 +122,7 @@ export function ManagerRecruitSection() {
               />
             </div>
 
-            <div className="rounded-lg p-3 text-center" style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.15)" }}>
+            <div className="rounded-lg p-3 text-center" style={{ background: "rgba(176,138,62,0.08)", border: "1px solid rgba(176,138,62,0.15)" }}>
               <p className="text-sm text-gray-300">
                 Annual projection: <strong className="text-white text-lg">{fmtEUR(earnings.total * 12)}</strong>/year
                 {clients >= 10 && <span className="ml-2 text-xs" style={{ color: "#B08A3E" }}>+ one-time acquisition bonuses (€50–€150 per client)</span>}
@@ -162,7 +162,7 @@ export function ManagerRecruitSection() {
         <div className="grid md:grid-cols-5 gap-6">
           {/* Manager CTA — spans 3 cols */}
           <div className="md:col-span-3 rounded-2xl p-8 sm:p-10"
-               style={{ background: "linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(201,168,76,0.04) 100%)", border: "1px solid rgba(201,168,76,0.25)" }}>
+               style={{ background: "linear-gradient(135deg, rgba(176,138,62,0.12) 0%, rgba(176,138,62,0.04) 100%)", border: "1px solid rgba(176,138,62,0.25)" }}>
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>Manager</p>
             <h3 className="text-2xl font-bold text-white mb-3">Ready to build your portfolio?</h3>
             <p className="text-sm text-gray-400 mb-6">
@@ -227,7 +227,7 @@ export function ManagerRecruitSection() {
 function ModelCard({ icon: Icon, title, desc }: { icon: React.ElementType; title: string; desc: string }) {
   return (
     <div className="rounded-xl p-6" style={{ background: "#142B4D", border: "1px solid rgba(255,255,255,0.06)" }}>
-      <div className="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style={{ background: "rgba(201,168,76,0.12)" }}>
+      <div className="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style={{ background: "rgba(176,138,62,0.12)" }}>
         <Icon className="h-5 w-5" style={{ color: "#B08A3E" }} />
       </div>
       <h4 className="font-bold text-white mb-2">{title}</h4>
@@ -240,8 +240,8 @@ function EarningCard({ label, value, sub, highlight }: { label: string; value: s
   return (
     <div className={`rounded-xl p-4 ${highlight ? '' : ''}`}
          style={{
-           background: highlight ? "rgba(201,168,76,0.12)" : "rgba(255,255,255,0.04)",
-           border: highlight ? "1px solid rgba(201,168,76,0.3)" : "1px solid rgba(255,255,255,0.06)",
+           background: highlight ? "rgba(176,138,62,0.12)" : "rgba(255,255,255,0.04)",
+           border: highlight ? "1px solid rgba(176,138,62,0.3)" : "1px solid rgba(255,255,255,0.06)",
          }}>
       <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">{label}</p>
       <p className={`text-xl font-bold ${highlight ? 'text-[#B08A3E]' : 'text-white'}`}>{value}</p>

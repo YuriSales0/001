@@ -210,7 +210,7 @@ export default function CrewHome() {
   const allChecklistDone = checklistTotal > 0 && checklistDone === checklistTotal
 
   return (
-    <div className="flex h-[calc(100vh-3.25rem)]" style={{ fontFamily: "system-ui, sans-serif" }}>
+    <div className="flex h-[calc(100vh-3.25rem)]">
       {/* List */}
       <aside className={`w-full lg:w-80 border-r bg-white flex flex-col shrink-0 ${selected ? 'hidden lg:flex' : 'flex'}`}>
         <div className="px-4 py-3 border-b hm-animate-in hm-stagger-1">

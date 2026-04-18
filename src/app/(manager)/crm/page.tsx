@@ -298,7 +298,7 @@ export default function CRMPage() {
   const byStage = (stage: LeadStage) => filtered.filter(l => l.status === stage)
 
   return (
-    <div className="h-[calc(100vh-64px)] flex flex-col" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="h-[calc(100vh-64px)] flex flex-col">
       {/* Page header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between gap-4 flex-wrap shrink-0">
         <div>

@@ -187,7 +187,7 @@ export default function OwnerBookings() {
       {/* Block dates form */}
       {blocking && (
         <div className="rounded-hm border border-hm-gold/40 p-5"
-             style={{ background: 'var(--hm-gold)', opacity: undefined, backgroundColor: 'rgba(201,168,76,0.08)' }}>
+             style={{ background: 'var(--hm-gold)', opacity: undefined, backgroundColor: 'rgba(176,138,62,0.08)' }}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-serif font-bold text-hm-black">Block dates for personal use</h3>
             <button onClick={() => setBlocking(false)} className="text-hm-slate/60 hover:text-hm-slate">

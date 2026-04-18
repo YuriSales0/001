@@ -9,7 +9,7 @@ import { JoinHostMasters } from "@/components/hm/join-hostmasters"
 
 export default function CareersPage() {
   return (
-    <div className="min-h-screen" style={{ fontFamily: "system-ui, -apple-system, sans-serif", background: "#071328" }}>
+    <div className="min-h-screen font-sans" style={{ background: "#071328" }}>
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-[#0B1E3A]/90 backdrop-blur-md" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">

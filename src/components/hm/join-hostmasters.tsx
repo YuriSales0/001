@@ -79,9 +79,9 @@ function JoinCard({
     <button
       onClick={onClick}
       className="text-left rounded-2xl p-8 border transition-all hover:shadow-lg hover:scale-[1.01] group"
-      style={{ background: "#142B4D", borderColor: "rgba(201,168,76,0.2)" }}
+      style={{ background: "#142B4D", borderColor: "rgba(176,138,62,0.2)" }}
     >
-      <div className="h-12 w-12 rounded-xl flex items-center justify-center mb-5" style={{ background: "rgba(201,168,76,0.15)" }}>
+      <div className="h-12 w-12 rounded-xl flex items-center justify-center mb-5" style={{ background: "rgba(176,138,62,0.15)" }}>
         <Icon className="h-6 w-6" style={{ color: "#B08A3E" }} />
       </div>
       <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#B08A3E" }}>
@@ -171,7 +171,7 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
     <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
       <div
         className="w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl my-8"
-        style={{ background: "#0B1E3A", border: "1px solid rgba(201,168,76,0.2)" }}
+        style={{ background: "#0B1E3A", border: "1px solid rgba(176,138,62,0.2)" }}
         onClick={e => e.stopPropagation()}
       >
         <div className="p-6 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
@@ -253,7 +253,7 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
                         onClick={() => toggleArray("languages", l.code)}
                         className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors border`}
                         style={{
-                          background: form.languages.includes(l.code) ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.03)",
+                          background: form.languages.includes(l.code) ? "rgba(176,138,62,0.15)" : "rgba(255,255,255,0.03)",
                           borderColor: form.languages.includes(l.code) ? "#B08A3E" : "rgba(255,255,255,0.08)",
                           color: form.languages.includes(l.code) ? "#B08A3E" : "rgba(255,255,255,0.6)",
                         }}
@@ -289,7 +289,7 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
                         onClick={() => toggleArray("skills", s.code)}
                         className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors border`}
                         style={{
-                          background: form.skills.includes(s.code) ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.03)",
+                          background: form.skills.includes(s.code) ? "rgba(176,138,62,0.15)" : "rgba(255,255,255,0.03)",
                           borderColor: form.skills.includes(s.code) ? "#B08A3E" : "rgba(255,255,255,0.08)",
                           color: form.skills.includes(s.code) ? "#B08A3E" : "rgba(255,255,255,0.6)",
                         }}

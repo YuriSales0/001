@@ -141,7 +141,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
             <div className="p-8 sm:p-10 text-center" style={{ background: "#0B1E3A" }}>
               {Icon && (
                 <div className="h-16 w-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-                     style={{ background: "rgba(201,168,76,0.15)" }}>
+                     style={{ background: "rgba(176,138,62,0.15)" }}>
                   <Icon className="h-8 w-8" style={{ color: "#B08A3E" }} />
                 </div>
               )}
@@ -220,7 +220,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
       {spotStyle && (
         <div
           className="absolute rounded-xl border-2 pointer-events-none transition-all duration-500"
-          style={{ ...spotStyle, borderColor: "#B08A3E", boxShadow: "0 0 0 4px rgba(201,168,76,0.15)" }}
+          style={{ ...spotStyle, borderColor: "#B08A3E", boxShadow: "0 0 0 4px rgba(176,138,62,0.15)" }}
         />
       )}
 
@@ -233,7 +233,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
           transform: !spotStyle ? "translate(-50%, -50%)" : animating ? "translateY(10px)" : "translateY(0)",
         }}
       >
-        <div className="rounded-xl shadow-2xl overflow-hidden" style={{ background: "#0B1E3A", border: "1px solid rgba(201,168,76,0.2)" }}>
+        <div className="rounded-xl shadow-2xl overflow-hidden" style={{ background: "#0B1E3A", border: "1px solid rgba(176,138,62,0.2)" }}>
           {/* Progress */}
           <div className="px-5 pt-4 flex items-center gap-3">
             <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">

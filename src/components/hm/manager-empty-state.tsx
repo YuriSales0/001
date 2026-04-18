@@ -15,9 +15,9 @@ export function ManagerEmptyState() {
     <div className="space-y-6">
       {/* Hero welcome */}
       <div className="rounded-2xl overflow-hidden relative" style={{ background: "linear-gradient(135deg, #0B1E3A 0%, #1F3A66 100%)" }}>
-        <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.15) 0%, transparent 70%)" }} />
+        <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(176,138,62,0.15) 0%, transparent 70%)" }} />
         <div className="relative p-8 sm:p-10">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium mb-4" style={{ background: "rgba(201,168,76,0.15)", color: "#B08A3E", border: "1px solid rgba(201,168,76,0.25)" }}>
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium mb-4" style={{ background: "rgba(176,138,62,0.15)", color: "#B08A3E", border: "1px solid rgba(176,138,62,0.25)" }}>
             <Sparkles className="h-3.5 w-3.5" />
             {t('manager.welcome.badge')}
           </div>
@@ -76,7 +76,7 @@ export function ManagerEmptyState() {
         <div className="space-y-2 text-sm">
           <Link href="/manager/profile" className="flex items-center justify-between gap-2 rounded-lg border px-4 py-3 hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(201,168,76,0.15)" }}>
+              <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(176,138,62,0.15)" }}>
                 <MessageCircle className="h-4 w-4" style={{ color: "#B08A3E" }} />
               </div>
               <div>
@@ -88,7 +88,7 @@ export function ManagerEmptyState() {
           </Link>
           <Link href="/manager/messages" className="flex items-center justify-between gap-2 rounded-lg border px-4 py-3 hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(201,168,76,0.15)" }}>
+              <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(176,138,62,0.15)" }}>
                 <MessageCircle className="h-4 w-4" style={{ color: "#B08A3E" }} />
               </div>
               <div>
@@ -119,7 +119,7 @@ function StepCard({
     <div className="rounded-xl border bg-white p-5 flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <span className="text-2xl font-bold text-gray-300">{number.toString().padStart(2, "0")}</span>
-        <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(201,168,76,0.15)" }}>
+        <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(176,138,62,0.15)" }}>
           <Icon className="h-4 w-4" style={{ color: "#B08A3E" }} />
         </div>
       </div>

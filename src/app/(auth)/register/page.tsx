@@ -59,7 +59,7 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#0B1E3A" }}>
       {/* Background glow */}
       <div className="absolute inset-0 opacity-30"
-           style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%)" }} />
+           style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(176,138,62,0.12) 0%, transparent 70%)" }} />
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
@@ -68,7 +68,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(201,168,76,0.15)" }}>
+        <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
           <div className="p-8">
             <h1 className="text-2xl font-bold text-white text-center mb-1">{t("auth.createAccount")}</h1>
             <p className="text-sm text-gray-400 text-center mb-8">{t("auth.registerSubtitle")}</p>
@@ -137,7 +137,7 @@ export default function RegisterPage() {
                       onClick={() => { setForm({ ...form, language: lang.code }); setLocale(lang.code) }}
                       className="rounded-lg border px-3 py-2.5 text-center text-sm transition-all"
                       style={{
-                        background: form.language === lang.code ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.03)",
+                        background: form.language === lang.code ? "rgba(176,138,62,0.15)" : "rgba(255,255,255,0.03)",
                         borderColor: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.08)",
                         color: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.5)",
                       }}

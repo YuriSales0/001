@@ -64,7 +64,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
             <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#B08A3E' }}>
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
               Admin
             </span>
           </Link>
@@ -90,7 +90,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
                     ? "text-white"
                     : "text-white/60 hover:bg-white/5 hover:text-white"
                 )}
-                style={isActive ? { background: 'rgba(201,168,76,0.15)', color: '#B08A3E' } : {}}
+                style={isActive ? { background: 'rgba(176,138,62,0.15)', color: '#B08A3E' } : {}}
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 {link.label}
@@ -110,7 +110,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
                 ? "text-white"
                 : "text-white/60 hover:bg-white/5 hover:text-white"
             )}
-            style={pathname === "/profile" ? { background: 'rgba(201,168,76,0.15)', color: '#B08A3E' } : {}}
+            style={pathname === "/profile" ? { background: 'rgba(176,138,62,0.15)', color: '#B08A3E' } : {}}
           >
             <User className="h-4 w-4 shrink-0" />
             {t('common.myProfile')}

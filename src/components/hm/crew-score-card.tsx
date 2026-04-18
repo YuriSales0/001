@@ -86,7 +86,7 @@ export function CrewScoreCard() {
       </div>
 
       {/* Incentive message */}
-      <div className="rounded-lg p-2 text-[10px] leading-snug" style={{ background: 'rgba(201,168,76,0.08)' }}>
+      <div className="rounded-lg p-2 text-[10px] leading-snug" style={{ background: 'rgba(176,138,62,0.08)' }}>
         <p className="font-semibold text-gray-700">Higher score = more tasks for you</p>
         <p className="text-gray-500 mt-0.5">
           Good work on a property builds trust. The platform prioritises you for future tasks at properties where you performed well.

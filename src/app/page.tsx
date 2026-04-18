@@ -170,7 +170,7 @@ export default function LandingPage() {
                 style={{ background: "#fff", borderColor: "#E8E3D8" }}
               >
                 <div className="h-12 w-12 rounded-xl flex items-center justify-center mb-5"
-                     style={{ background: "rgba(201,168,76,0.12)" }}>
+                     style={{ background: "rgba(176,138,62,0.12)" }}>
                   <Icon className="h-6 w-6" style={{ color: "#B08A3E" }} />
                 </div>
                 <h3 className="text-xl font-bold mb-3" style={{ color: "#0B1E3A" }}>
@@ -330,7 +330,7 @@ export default function LandingPage() {
       <section className="py-16 sm:py-20" style={{ background: "#071328" }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10"
-               style={{ background: "linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.02) 100%)", border: "1px solid rgba(201,168,76,0.15)" }}>
+               style={{ background: "linear-gradient(135deg, rgba(176,138,62,0.08) 0%, rgba(176,138,62,0.02) 100%)", border: "1px solid rgba(176,138,62,0.15)" }}>
             <div className="flex-1">
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "#B08A3E" }}>
                 {t('landing.join.badge')}

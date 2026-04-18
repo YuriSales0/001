@@ -60,7 +60,7 @@ export default function ManagerDashboard() {
   })
 
   return (
-    <div className="p-4 sm:p-6 space-y-6" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="p-4 sm:p-6 space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <DashboardGreeting />

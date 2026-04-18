@@ -30,7 +30,7 @@ export function AiToolsShowcase() {
             >
               <div
                 className="h-11 w-11 rounded-xl flex items-center justify-center mb-4 transition-colors group-hover:scale-110"
-                style={{ background: "rgba(201,168,76,0.1)" }}
+                style={{ background: "rgba(176,138,62,0.1)" }}
               >
                 <Icon className="h-5 w-5" style={{ color: "#B08A3E" }} />
               </div>

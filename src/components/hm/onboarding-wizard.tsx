@@ -137,7 +137,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
         <div className="bg-[#0B1E3A] px-6 py-5">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-base font-bold text-white">Host<span style={{ color: '#B08A3E' }}>Masters</span></span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider" style={{ background: 'rgba(201,168,76,0.2)', color: '#B08A3E' }}>
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider" style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
               {t('onboarding.setupTitle')}
             </span>
           </div>
@@ -172,7 +172,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                     className="rounded-xl border-2 p-3 text-center transition-all"
                     style={{
                       borderColor: selectedLang === lang.code ? '#B08A3E' : 'rgba(0,0,0,0.08)',
-                      background: selectedLang === lang.code ? 'rgba(201,168,76,0.08)' : 'transparent',
+                      background: selectedLang === lang.code ? 'rgba(176,138,62,0.08)' : 'transparent',
                     }}
                   >
                     <span className="text-2xl block mb-1">{lang.flag}</span>

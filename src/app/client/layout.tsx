@@ -3,9 +3,10 @@ import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import {
-  Home, TrendingUp, CalendarDays, Star, MessageCircle, Building2,
+  Home, TrendingUp, CalendarDays, Star, MessageCircle,
   Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles, FileText,
 } from 'lucide-react'
+import { HmLogo } from '@/components/hm/hm-logo'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
 import { AiChat } from '@/components/hm/ai-chat'
 import { NotificationBell } from '@/components/hm/notification-bell'
@@ -61,13 +62,10 @@ export default async function ClientLayout({ children }: { children: React.React
       >
         {/* Logo */}
         <div className="flex h-14 items-center justify-between border-b px-4"
-             style={{ borderColor: 'rgba(201,168,76,0.2)' }}>
+             style={{ borderColor: 'rgba(176,138,62,0.2)' }}>
           <Link href="/client/dashboard" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-                 style={{ background: 'var(--hm-gold)' }}>
-              <Building2 className="h-4 w-4" style={{ color: 'var(--hm-black)' }} />
-            </div>
-            <span className="font-bold text-white text-sm">
+            <HmLogo size={24} onDark />
+            <span className="font-semibold text-white text-sm tracking-tight">
               Host<span style={{ color: 'var(--hm-gold)' }}>Masters</span>
             </span>
           </Link>
@@ -94,7 +92,7 @@ export default async function ClientLayout({ children }: { children: React.React
         </nav>
 
         {/* Profile + user */}
-        <div className="border-t p-3 space-y-1" style={{ borderColor: 'rgba(201,168,76,0.2)' }}>
+        <div className="border-t p-3 space-y-1" style={{ borderColor: 'rgba(176,138,62,0.2)' }}>
           <Link
             href="/client/profile"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors"

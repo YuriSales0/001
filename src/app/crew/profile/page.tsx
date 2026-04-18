@@ -281,7 +281,7 @@ function ScoreSection({ score }: { score: ScoreData }) {
         </div>
 
         {/* Incentive box */}
-        <div className="rounded-lg p-3 mb-4" style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.15)' }}>
+        <div className="rounded-lg p-3 mb-4" style={{ background: 'rgba(176,138,62,0.08)', border: '1px solid rgba(176,138,62,0.15)' }}>
           <p className="text-xs font-bold text-gray-800 mb-1">How your score works for you</p>
           <ul className="text-[11px] text-gray-600 space-y-1">
             <li>• <strong>Good work on a property = trust score goes up</strong> — you get priority for future tasks there</li>

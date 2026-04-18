@@ -36,14 +36,14 @@ export default function VerifyEmailPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#0B1E3A" }}>
       <div className="absolute inset-0 opacity-30"
-           style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%)" }} />
+           style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(176,138,62,0.12) 0%, transparent 70%)" }} />
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/"><HmLogo size={40} variant="compact" onDark /></Link>
         </div>
 
         <div className="rounded-2xl overflow-hidden shadow-2xl p-8 text-center"
-             style={{ background: "#142B4D", border: "1px solid rgba(201,168,76,0.15)" }}>
+             style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
           {state.status === "loading" && (
             <>
               <Loader2 className="h-10 w-10 text-gray-400 animate-spin mx-auto mb-4" />
