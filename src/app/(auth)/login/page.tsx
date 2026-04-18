@@ -1,9 +1,10 @@
 "use client"
+import { HmLogo } from "@/components/hm/hm-logo"
 
 import { useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Building2, ArrowRight, MailCheck } from "lucide-react"
+import { ArrowRight, MailCheck } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 
 export default function LoginPage() {
@@ -75,14 +76,7 @@ export default function LoginPage() {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "#B08A3E" }}>
-              <Building2 className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-white">
-              Host<span style={{ color: "#B08A3E" }}>Masters</span>
-            </span>
-          </Link>
+          <Link href="/"><HmLogo size={40} variant="compact" onDark /></Link>
         </div>
 
         {/* Card */}

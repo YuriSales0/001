@@ -1,9 +1,10 @@
 "use client"
+import { HmLogo } from "@/components/hm/hm-logo"
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { CheckCircle2, XCircle, Loader2, Building2 } from "lucide-react"
+import { CheckCircle2, XCircle, Loader2 } from "lucide-react"
 
 type State =
   | { status: "loading" }
@@ -38,14 +39,7 @@ export default function VerifyEmailPage() {
            style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%)" }} />
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "#B08A3E" }}>
-              <Building2 className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-white">
-              Host<span style={{ color: "#B08A3E" }}>Masters</span>
-            </span>
-          </Link>
+          <Link href="/"><HmLogo size={40} variant="compact" onDark /></Link>
         </div>
 
         <div className="rounded-2xl overflow-hidden shadow-2xl p-8 text-center"

@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import {
-  Building2,
   ArrowRight,
   CheckCircle2,
   TrendingDown,
@@ -20,6 +19,7 @@ import { LanguageSelector } from "@/components/hm/language-selector"
 import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
 import { ReferralTracker } from "@/components/hm/referral-tracker"
+import { HmLogo } from "@/components/hm/hm-logo"
 
 /* ── Plan data from finance.ts ── */
 const plans = [
@@ -40,13 +40,8 @@ export default function LandingPage() {
       {/* ───────── Header ───────── */}
       <header className="sticky top-0 z-50 border-b bg-hm-paper/90 backdrop-blur-md" style={{ borderColor: 'var(--hm-cream-dark)' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: '#0B1E3A' }}>
-              <Building2 className="h-[18px] w-[18px]" style={{ color: '#B08A3E' }} />
-            </div>
-            <span className="text-lg font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
-              Host<span style={{ color: "#B08A3E" }}>Masters</span>
-            </span>
+          <Link href="/">
+            <HmLogo size={32} variant="compact" />
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: 'var(--hm-stone)' }}>
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
@@ -396,12 +391,7 @@ export default function LandingPage() {
       <footer className="border-t border-gray-100 bg-white py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded-full flex items-center justify-center" style={{ background: "#B08A3E" }}>
-              <Building2 className="h-3 w-3 text-white" />
-            </div>
-            <span className="text-sm font-bold" style={{ color: "#0B1E3A" }}>
-              Host<span style={{ color: "#B08A3E" }}>Masters</span>
-            </span>
+            <HmLogo size={22} variant="compact" />
             <span className="text-xs text-gray-400 ml-2">Costa Tropical · España</span>
           </div>
           <p className="text-xs text-gray-400">
