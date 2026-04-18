@@ -1,13 +1,14 @@
 /**
  * HostMasters Meridian Logo — SVG monogram
  *
- * Constructed on a 10×10 grid:
- * - Frame: 0.5u stroke, inset 0.5u
- * - H/M bars: 0.5u wide, 5.3u tall
- * - Meridian line: y=5.75u, 0.2u height (gold)
+ * Faithful reproduction from Brand Guidelines "La Malla":
+ * - Grid: 10×10 units
+ * - Frame: 0.5u stroke, inset 0.5u from edge
+ * - H/M bars: 0.5u wide, ~5.3u tall
+ * - Meridian: y=5.75u from top, 0.2u height, gold, full width
+ * - M diagonal: 0.5u stroke, miter join, peaks at center-top
+ * - Padding: 1.5u top, 2.25u bottom
  * - Ratio: 1:1 square
- *
- * Variants: mark (solo), compact (with wordmark), full (with tagline)
  */
 
 type LogoProps = {
@@ -20,13 +21,12 @@ type LogoProps = {
 export function HmLogo({ size = 32, variant = 'mark', className, onDark }: LogoProps) {
   const navy = onDark ? '#F6F2EA' : '#0B1E3A'
   const gold = '#B08A3E'
-  const scale = size / 100
 
   if (variant === 'compact') {
     return (
-      <span className={`inline-flex items-center gap-2 ${className ?? ''}`}>
+      <span className={`inline-flex items-center gap-2 shrink-0 ${className ?? ''}`}>
         <HmMark size={size} navy={navy} gold={gold} />
-        <span className="font-semibold tracking-tight" style={{ color: onDark ? '#F6F2EA' : '#0B1E3A', fontSize: size * 0.55 }}>
+        <span className="font-semibold tracking-tight" style={{ color: onDark ? '#F6F2EA' : '#0B1E3A', fontSize: size * 0.5 }}>
           Host<span style={{ color: gold }}>Masters</span>
         </span>
       </span>
@@ -37,6 +37,32 @@ export function HmLogo({ size = 32, variant = 'mark', className, onDark }: LogoP
 }
 
 function HmMark({ size, navy, gold, className }: { size: number; navy: string; gold: string; className?: string }) {
+  // All coordinates on a 100-unit viewBox (10×10 grid × 10)
+  const sw = 4           // stroke/bar width (0.5u × 8 scaled)
+  const frame = 5        // frame inset
+  const frameW = 90      // frame size
+  const frameSw = 3.5    // frame stroke
+
+  // Glyph area
+  const top = 17         // 1.5u padding from frame top + frame
+  const bot = 78         // bottom of bars
+  const barH = bot - top // bar height
+
+  // H position (left half)
+  const hL = 20          // H left bar x
+  const hR = 35          // H right bar x
+  const hMid = 46        // H crossbar y center
+
+  // M position (right half)
+  const mL = 50          // M left bar x
+  const mR = 76          // M right bar x
+  const mPeakY = top     // M diagonal peak y
+  const mPeakX = (mL + mR + sw) / 2  // M center x
+
+  // Meridian
+  const merY = 60        // meridian y (5.75u from top ≈ 60 on 100-grid)
+  const merH = 2.5       // meridian height
+
   return (
     <svg
       width={size}
@@ -45,33 +71,46 @@ function HmMark({ size, navy, gold, className }: { size: number; navy: string; g
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      aria-label="HostMasters"
     >
-      {/* Frame — inset 5u, stroke 5u */}
-      <rect x="7.5" y="7.5" width="85" height="85" rx="2" stroke={navy} strokeWidth="5" fill="none" />
+      {/* Frame — square, sharp corners */}
+      <rect
+        x={frame} y={frame}
+        width={frameW} height={frameW}
+        stroke={navy} strokeWidth={frameSw}
+        fill="none" strokeLinejoin="miter"
+      />
 
-      {/* H — left vertical */}
-      <rect x="22" y="22" width="5" height="53" fill={navy} />
-      {/* H — right vertical */}
-      <rect x="37" y="22" width="5" height="53" fill={navy} />
-      {/* H — horizontal bar */}
-      <rect x="22" y="46" width="20" height="5" fill={navy} />
+      {/* ── H ── */}
+      {/* Left vertical */}
+      <rect x={hL} y={top} width={sw} height={barH} fill={navy} />
+      {/* Right vertical */}
+      <rect x={hR} y={top} width={sw} height={barH} fill={navy} />
+      {/* Crossbar */}
+      <rect x={hL} y={hMid} width={hR - hL + sw} height={sw} fill={navy} />
 
-      {/* M — left vertical */}
-      <rect x="52" y="22" width="5" height="53" fill={navy} />
-      {/* M — right vertical */}
-      <rect x="73" y="22" width="5" height="53" fill={navy} />
-      {/* M — left diagonal */}
-      <polygon points="52,22 57,22 65,45 60,45" fill={navy} />
-      {/* M — right diagonal */}
-      <polygon points="73,22 78,22 70,45 65,45" fill={navy} />
+      {/* ── M ── */}
+      {/* Left vertical */}
+      <rect x={mL} y={top} width={sw} height={barH} fill={navy} />
+      {/* Right vertical */}
+      <rect x={mR} y={top} width={sw} height={barH} fill={navy} />
+      {/* Left diagonal (top-left to center peak) */}
+      <polygon
+        points={`${mL},${top} ${mL + sw},${top} ${mPeakX + sw / 2},${top + barH * 0.42} ${mPeakX - sw / 2},${top + barH * 0.42}`}
+        fill={navy}
+      />
+      {/* Right diagonal (top-right to center peak) */}
+      <polygon
+        points={`${mR + sw},${top} ${mR},${top} ${mPeakX - sw / 2},${top + barH * 0.42} ${mPeakX + sw / 2},${top + barH * 0.42}`}
+        fill={navy}
+      />
 
-      {/* Meridian — gold line at y=57.5 */}
-      <rect x="5" y="56" width="90" height="2.5" fill={gold} rx="1" />
+      {/* ── Meridian — gold line crossing full width ── */}
+      <rect x={frame - 1} y={merY} width={frameW + 2} height={merH} fill={gold} />
     </svg>
   )
 }
 
-/** Favicon-size mark — simplified for 16-32px */
 export function HmFavicon({ size = 16 }: { size?: number }) {
   return <HmMark size={size} navy="#0B1E3A" gold="#B08A3E" />
 }
