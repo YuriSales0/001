@@ -1,8 +1,10 @@
 "use client"
 
 import { useEffect, useState, useRef, useCallback } from "react"
-import { Bell, Check, CheckCheck, X } from "lucide-react"
+import { Bell, Check, CheckCheck, X, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useLocale } from "@/i18n/provider"
+import Link from "next/link"
 
 type Notification = {
   id: string
@@ -28,18 +30,19 @@ const TYPE_ICON: Record<string, string> = {
   AI_ALERT: "🤖", GENERAL: "🔔",
 }
 
-function timeAgo(date: string): string {
+function timeAgo(date: string, t: (k: string) => string): string {
   const ms = Date.now() - new Date(date).getTime()
   const min = Math.floor(ms / 60000)
-  if (min < 1) return "just now"
-  if (min < 60) return `${min}m ago`
+  if (min < 1) return t('notifBell.justNow')
+  if (min < 60) return `${min}m`
   const hr = Math.floor(min / 60)
-  if (hr < 24) return `${hr}h ago`
+  if (hr < 24) return `${hr}h`
   const d = Math.floor(hr / 24)
-  return `${d}d ago`
+  return `${d}d`
 }
 
 export function NotificationBell() {
+  const { t } = useLocale()
   const [open, setOpen] = useState(false)
   const [items, setItems] = useState<Notification[]>([])
   const [unread, setUnread] = useState(0)
@@ -96,33 +99,44 @@ export function NotificationBell() {
 
   return (
     <div ref={ref} className="relative">
+      {/* Bell button — prominent with border */}
       <button
         onClick={() => { setOpen(o => !o); if (!open) load() }}
-        className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
-        aria-label="Notifications"
+        className={cn(
+          "relative flex items-center justify-center h-10 w-10 rounded-xl border transition-all",
+          open
+            ? "bg-gray-100 border-gray-300"
+            : "bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-sm"
+        )}
+        aria-label={t('notifBell.title')}
       >
-        <Bell className="h-5 w-5 text-gray-600" />
+        <Bell className={cn("h-[18px] w-[18px]", unread > 0 ? "text-gray-900" : "text-gray-500")} />
         {unread > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 h-5 min-w-[20px] flex items-center justify-center rounded-full text-[10px] font-bold text-white px-1"
-                style={{ background: "#C9A84C" }}>
+          <span
+            className="absolute -top-1 -right-1 h-5 min-w-[20px] flex items-center justify-center rounded-full text-[10px] font-bold text-white px-1 animate-pulse"
+            style={{ background: "#C9A84C" }}
+          >
             {unread > 99 ? "99+" : unread}
           </span>
         )}
       </button>
 
+      {/* Dropdown panel */}
       {open && (
-        <div className="absolute right-0 sm:right-0 top-full mt-2 w-[calc(100vw-1rem)] sm:w-96 max-w-[24rem] rounded-xl border bg-white shadow-2xl z-50 overflow-hidden"
-             style={{ maxHeight: "70vh" }}>
+        <div
+          className="absolute right-0 top-full mt-2 w-[calc(100vw-1rem)] sm:w-96 max-w-[24rem] rounded-xl border border-gray-200 bg-white shadow-2xl z-50 overflow-hidden"
+          style={{ maxHeight: "70vh" }}
+        >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
-            <h3 className="text-sm font-bold text-gray-900">Notifications</h3>
+            <h3 className="text-sm font-bold text-gray-900">{t('notifBell.title')}</h3>
             <div className="flex items-center gap-2">
               {unread > 0 && (
                 <button
                   onClick={markAllRead}
                   className="text-[11px] font-semibold text-gray-500 hover:text-gray-900 flex items-center gap-1"
                 >
-                  <CheckCheck className="h-3.5 w-3.5" /> Mark all read
+                  <CheckCheck className="h-3.5 w-3.5" /> {t('notifBell.markAllRead')}
                 </button>
               )}
               <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600">
@@ -132,11 +146,11 @@ export function NotificationBell() {
           </div>
 
           {/* List */}
-          <div className="overflow-y-auto" style={{ maxHeight: "22rem" }}>
+          <div className="overflow-y-auto" style={{ maxHeight: "calc(70vh - 100px)" }}>
             {items.length === 0 && (
               <div className="p-8 text-center text-sm text-gray-400">
-                <Bell className="h-8 w-8 mx-auto text-gray-300 mb-2" />
-                No notifications yet
+                <Bell className="h-8 w-8 mx-auto text-gray-200 mb-2" />
+                {t('notifBell.empty')}
               </div>
             )}
             {items.map(n => (
@@ -156,7 +170,7 @@ export function NotificationBell() {
                   {n.body && (
                     <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>
                   )}
-                  <p className="text-[10px] text-gray-400 mt-1">{timeAgo(n.createdAt)}</p>
+                  <p className="text-[10px] text-gray-400 mt-1">{timeAgo(n.createdAt, t)}</p>
                 </div>
                 {!n.read && (
                   <span className="mt-1.5 h-2 w-2 rounded-full shrink-0" style={{ background: "#C9A84C" }} />

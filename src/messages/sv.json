@@ -987,5 +987,11 @@
     "myContract": "Mitt Avtal",
     "noContract": "Inget avtal tillgängligt. Kontakta din Admin.",
     "type": "Typ"
+  },
+  "notifBell": {
+    "title": "Aviseringar",
+    "markAllRead": "Markera alla som lästa",
+    "empty": "Inga aviseringar ännu",
+    "justNow": "just nu"
   }
 }

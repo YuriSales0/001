@@ -987,5 +987,11 @@
     "myContract": "Min Kontrakt",
     "noContract": "Ingen kontrakt tilgængelig. Kontakt din Admin.",
     "type": "Type"
+  },
+  "notifBell": {
+    "title": "Notifikationer",
+    "markAllRead": "Markér alle som læst",
+    "empty": "Ingen notifikationer endnu",
+    "justNow": "lige nu"
   }
 }

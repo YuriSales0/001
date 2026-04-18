@@ -995,5 +995,11 @@
     "myContract": "O meu Contrato",
     "noContract": "Nenhum contrato disponível. Contacta o Admin.",
     "type": "Tipo"
+  },
+  "notifBell": {
+    "title": "Notificações",
+    "markAllRead": "Marcar todas como lidas",
+    "empty": "Sem notificações ainda",
+    "justNow": "agora mesmo"
   }
 }

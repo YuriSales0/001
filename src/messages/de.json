@@ -995,5 +995,11 @@
     "myContract": "Mein Vertrag",
     "noContract": "Noch kein Vertrag verfügbar. Kontaktiere deinen Admin.",
     "type": "Typ"
+  },
+  "notifBell": {
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "empty": "Noch keine Benachrichtigungen",
+    "justNow": "gerade eben"
   }
 }
