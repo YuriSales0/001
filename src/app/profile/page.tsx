@@ -76,7 +76,7 @@ export default function AdminProfilePage() {
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center"
-                 style={{ border: '3px solid #C9A84C' }}>
+                 style={{ border: '3px solid #B08A3E' }}>
               {form.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={form.image} alt="" className="h-full w-full object-cover" />
@@ -86,7 +86,7 @@ export default function AdminProfilePage() {
             </div>
             <button type="button" onClick={() => fileRef.current?.click()}
               className="absolute -bottom-1 -right-1 rounded-full p-1.5 text-white shadow"
-              style={{ background: '#C9A84C' }}>
+              style={{ background: '#B08A3E' }}>
               <Camera className="h-3.5 w-3.5" />
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />

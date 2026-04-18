@@ -44,14 +44,14 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
         <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
           <Link href="/crew" className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-                 style={{ background: '#C9A84C' }}>
+                 style={{ background: '#B08A3E' }}>
               <Building2 className="h-4 w-4 text-white" />
             </div>
             <span className="font-bold text-white text-sm">
-              Host<span style={{ color: '#C9A84C' }}>Masters</span>
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
             <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
+                  style={{ background: 'rgba(201,168,76,0.2)', color: '#B08A3E' }}>
               Crew
             </span>
           </Link>
@@ -85,7 +85,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
               <img src={user.image} alt="" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
             ) : (
               <div className="flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 text-[11px] font-bold"
-                   style={{ background: '#C9A84C', color: '#111827' }}>
+                   style={{ background: '#B08A3E', color: '#0B1E3A' }}>
                 {initials}
               </div>
             )}
@@ -120,7 +120,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
                 <img src={user.image} alt="" className="h-6 w-6 rounded-full object-cover" />
               ) : (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
-                     style={{ background: '#C9A84C', color: '#111827' }}>
+                     style={{ background: '#B08A3E', color: '#0B1E3A' }}>
                   {initials}
                 </div>
               )}

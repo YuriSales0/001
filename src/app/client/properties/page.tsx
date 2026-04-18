@@ -61,7 +61,7 @@ function HouseRulesSelector({ selected, onChange }: { selected: string[]; onChan
                     type="checkbox"
                     checked={selected.includes(rule.key)}
                     onChange={() => toggle(rule.key)}
-                    className="accent-[#C9A84C]"
+                    className="accent-[#B08A3E]"
                   />
                   <span>{rule.icon}</span>
                   <span className="text-gray-700">{ruleLabel(rule, locale)}</span>

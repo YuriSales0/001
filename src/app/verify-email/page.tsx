@@ -33,23 +33,23 @@ export default function VerifyEmailPage() {
   }, [token])
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#111827" }}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#0B1E3A" }}>
       <div className="absolute inset-0 opacity-30"
            style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%)" }} />
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
-            <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "#C9A84C" }}>
+            <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "#B08A3E" }}>
               <Building2 className="h-5 w-5 text-white" />
             </div>
             <span className="text-2xl font-bold text-white">
-              Host<span style={{ color: "#C9A84C" }}>Masters</span>
+              Host<span style={{ color: "#B08A3E" }}>Masters</span>
             </span>
           </Link>
         </div>
 
         <div className="rounded-2xl overflow-hidden shadow-2xl p-8 text-center"
-             style={{ background: "#1a2332", border: "1px solid rgba(201,168,76,0.15)" }}>
+             style={{ background: "#142B4D", border: "1px solid rgba(201,168,76,0.15)" }}>
           {state.status === "loading" && (
             <>
               <Loader2 className="h-10 w-10 text-gray-400 animate-spin mx-auto mb-4" />
@@ -71,7 +71,7 @@ export default function VerifyEmailPage() {
               <Link
                 href="/login?verified=1"
                 className="inline-flex items-center justify-center w-full rounded-lg py-3 text-sm font-semibold"
-                style={{ background: "#C9A84C", color: "#111827" }}
+                style={{ background: "#B08A3E", color: "#0B1E3A" }}
               >
                 Continue to sign in
               </Link>

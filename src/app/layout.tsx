@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter_Tight, Cormorant_Garamond } from 'next/font/google'
 import { Providers } from "@/components/providers";
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,15 +7,19 @@ import { cookies } from 'next/headers'
 import { SuperuserBar } from '@/components/hm/superuser-bar'
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter-tight',
+  display: 'swap',
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -45,7 +49,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${interTight.variable} ${cormorant.variable} antialiased`}
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>

@@ -114,7 +114,7 @@ export function NotificationBell() {
         {unread > 0 && (
           <span
             className="absolute -top-1 -right-1 h-5 min-w-[20px] flex items-center justify-center rounded-full text-[10px] font-bold text-white px-1 animate-pulse"
-            style={{ background: "#C9A84C" }}
+            style={{ background: "#B08A3E" }}
           >
             {unread > 99 ? "99+" : unread}
           </span>
@@ -173,7 +173,7 @@ export function NotificationBell() {
                   <p className="text-[10px] text-gray-400 mt-1">{timeAgo(n.createdAt, t)}</p>
                 </div>
                 {!n.read && (
-                  <span className="mt-1.5 h-2 w-2 rounded-full shrink-0" style={{ background: "#C9A84C" }} />
+                  <span className="mt-1.5 h-2 w-2 rounded-full shrink-0" style={{ background: "#B08A3E" }} />
                 )}
               </button>
             ))}

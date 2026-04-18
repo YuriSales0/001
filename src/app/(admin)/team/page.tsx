@@ -111,7 +111,7 @@ export default function TeamPage() {
         </div>
         <button
           onClick={() => setShowInviteModal(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-[#C9A84C] text-[#111827] px-4 py-2 text-sm font-bold hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-[#B08A3E] text-[#0B1E3A] px-4 py-2 text-sm font-bold hover:opacity-90 transition-opacity"
         >
           <Mail className="h-4 w-4" />
           Send invite
@@ -507,7 +507,7 @@ function InviteModal({
           <button type="button" onClick={onClose} disabled={submitting} className="rounded-lg border bg-white px-4 py-2 text-sm hover:bg-gray-100 disabled:opacity-50">
             Cancel
           </button>
-          <button onClick={submit} disabled={submitting || !email.trim()} className="inline-flex items-center gap-1.5 rounded-lg bg-[#C9A84C] text-[#111827] px-5 py-2 text-sm font-bold hover:opacity-90 disabled:opacity-50">
+          <button onClick={submit} disabled={submitting || !email.trim()} className="inline-flex items-center gap-1.5 rounded-lg bg-[#B08A3E] text-[#0B1E3A] px-5 py-2 text-sm font-bold hover:opacity-90 disabled:opacity-50">
             {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</> : <><Mail className="h-4 w-4" /> Send invite</>}
           </button>
         </div>

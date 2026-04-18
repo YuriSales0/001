@@ -150,15 +150,15 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
           "fixed inset-y-0 left-0 z-50 flex w-56 flex-col text-white transition-transform duration-200 lg:static lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
-        style={{ background: '#111827' }}
+        style={{ background: '#0B1E3A' }}
       >
         <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
           <Link href={dashboardHref} className="flex items-center gap-2">
             <span className="text-base font-bold tracking-tight text-white">
-              Host<span style={{ color: '#C9A84C' }}>Masters</span>
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
             <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
+                  style={{ background: 'rgba(201,168,76,0.2)', color: '#B08A3E' }}>
               {badgeLabel}
             </span>
           </Link>
@@ -248,7 +248,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
                 ? "text-white"
                 : "text-white/60 hover:bg-white/5 hover:text-white"
             )}
-            style={pathname === profileHref ? { background: 'rgba(201,168,76,0.15)', color: '#C9A84C' } : {}}
+            style={pathname === profileHref ? { background: 'rgba(201,168,76,0.15)', color: '#B08A3E' } : {}}
           >
             <User className="h-4 w-4 shrink-0" />
             {t('common.myProfile')}
@@ -259,7 +259,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
               <img src={user.image} alt="" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
             ) : (
               <div className="flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 text-[11px] font-bold"
-                   style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                   style={{ background: '#B08A3E', color: '#1e3a5f' }}>
                 {initials}
               </div>
             )}
@@ -296,7 +296,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
                 <img src={user.image} alt="" className="h-6 w-6 rounded-full object-cover" />
               ) : (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
-                     style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                     style={{ background: '#B08A3E', color: '#1e3a5f' }}>
                   {initials}
                 </div>
               )}

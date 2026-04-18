@@ -64,7 +64,7 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
     w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
       <title>${contract.title}</title>
       <style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a1a1a;line-height:1.7}
-      h1{font-size:22px;border-bottom:2px solid #C9A84C;padding-bottom:8px}
+      h1{font-size:22px;border-bottom:2px solid #B08A3E;padding-bottom:8px}
       .meta{font-size:13px;color:#666;margin-bottom:24px}
       .signed{margin-top:32px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px}
       </style></head><body>

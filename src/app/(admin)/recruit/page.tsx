@@ -148,7 +148,7 @@ export default function AdminRecruitPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(201,168,76,0.15)" }}>
-                        <Icon className="h-4 w-4" style={{ color: "#C9A84C" }} />
+                        <Icon className="h-4 w-4" style={{ color: "#B08A3E" }} />
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-navy-900">{app.name}</p>
@@ -216,7 +216,7 @@ function ApplicationDetail({
       <div className="px-6 py-4 border-b flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(201,168,76,0.15)" }}>
-            <Icon className="h-5 w-5" style={{ color: "#C9A84C" }} />
+            <Icon className="h-5 w-5" style={{ color: "#B08A3E" }} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-navy-900">{app.name}</h3>
@@ -231,7 +231,7 @@ function ApplicationDetail({
         ) : (
           <button
             onClick={() => setShowConvertModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#C9A84C] text-[#111827] px-4 py-2 text-sm font-bold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#B08A3E] text-[#0B1E3A] px-4 py-2 text-sm font-bold hover:opacity-90 transition-opacity"
           >
             <UserPlus className="h-4 w-4" />
             Convert to {app.role === "MANAGER" ? "Manager" : "Crew"}
@@ -580,7 +580,7 @@ function ConvertModal({
           <button
             onClick={submit}
             disabled={submitting}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#C9A84C] text-[#111827] px-5 py-2 text-sm font-bold hover:opacity-90 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#B08A3E] text-[#0B1E3A] px-5 py-2 text-sm font-bold hover:opacity-90 disabled:opacity-50"
           >
             {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Creating…</> : <><UserPlus className="h-4 w-4" /> Create user & send invite</>}
           </button>

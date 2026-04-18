@@ -66,7 +66,7 @@ export function CrewScoreCard() {
           <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
             <div
               className="h-full rounded-full transition-all"
-              style={{ width: `${progress}%`, background: '#C9A84C' }}
+              style={{ width: `${progress}%`, background: '#B08A3E' }}
             />
           </div>
           <p className="text-[10px] text-gray-400 mt-0.5">

@@ -242,7 +242,7 @@ export default function ClientTaxPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <SummaryCard icon={Clock} label="Upcoming (60d)" value={upcoming.length} color="#C9A84C" />
+        <SummaryCard icon={Clock} label="Upcoming (60d)" value={upcoming.length} color="#B08A3E" />
         <SummaryCard icon={AlertTriangle} label="Action required" value={actionRequired.length} color="#A32D2D" />
         <SummaryCard icon={CheckCircle2} label="Completed" value={completed.length} color="#2A7A4F" />
         <SummaryCard icon={FileText} label="Total tracked" value={obligations.length} color="#1B4F8A" />

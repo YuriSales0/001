@@ -46,11 +46,11 @@ export default function LeadCapturePage() {
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
           <div className="h-9 w-9 rounded-full flex items-center justify-center"
-               style={{ background: '#C9A84C' }}>
+               style={{ background: '#B08A3E' }}>
             <Building2 className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-bold text-white">
-            Host<span style={{ color: '#C9A84C' }}>Masters</span>
+            Host<span style={{ color: '#B08A3E' }}>Masters</span>
           </span>
         </div>
 
@@ -129,7 +129,7 @@ export default function LeadCapturePage() {
                   type="submit"
                   disabled={submitting || !name.trim()}
                   className="w-full rounded-lg py-3 text-sm font-bold text-white disabled:opacity-50 transition-opacity"
-                  style={{ background: '#C9A84C' }}
+                  style={{ background: '#B08A3E' }}
                 >
                   {submitting ? 'A enviar…' : 'Enviar contacto'}
                 </button>

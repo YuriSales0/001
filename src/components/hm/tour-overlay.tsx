@@ -106,7 +106,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
           {/* Progress */}
           <div className="mb-4 flex items-center gap-3">
             <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#C9A84C" }} />
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#B08A3E" }} />
             </div>
             <span className="text-xs text-white/40">{current + 1}/{steps.length}</span>
           </div>
@@ -128,7 +128,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
           {/* Progress */}
           <div className="mb-6 flex items-center gap-3">
             <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#C9A84C" }} />
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#B08A3E" }} />
             </div>
             <span className="text-xs text-white/40">{current + 1}/{steps.length}</span>
           </div>
@@ -138,11 +138,11 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
             className="rounded-2xl overflow-hidden shadow-2xl transition-transform duration-300"
             style={{ transform: animating ? "translateY(20px)" : "translateY(0)" }}
           >
-            <div className="p-8 sm:p-10 text-center" style={{ background: "#111827" }}>
+            <div className="p-8 sm:p-10 text-center" style={{ background: "#0B1E3A" }}>
               {Icon && (
                 <div className="h-16 w-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
                      style={{ background: "rgba(201,168,76,0.15)" }}>
-                  <Icon className="h-8 w-8" style={{ color: "#C9A84C" }} />
+                  <Icon className="h-8 w-8" style={{ color: "#B08A3E" }} />
                 </div>
               )}
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">{title}</h2>
@@ -154,7 +154,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
                 if (feat === `tour.${role}.steps.${step.key}.features.${i}`) return null
                 return (
                   <div key={i} className="flex items-center gap-2 text-sm text-gray-300 mt-3 justify-center">
-                    <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: "#C9A84C" }} />
+                    <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: "#B08A3E" }} />
                     {feat}
                   </div>
                 )
@@ -162,7 +162,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
             </div>
 
             {/* Navigation */}
-            <div className="flex items-center justify-between px-8 py-5" style={{ background: "#0d1420" }}>
+            <div className="flex items-center justify-between px-8 py-5" style={{ background: "#071328" }}>
               {current > 0 ? (
                 <button onClick={goBack} className="flex items-center gap-1.5 text-sm text-white/50 hover:text-white transition-colors">
                   <ArrowLeft className="h-4 w-4" /> {t('tour.back')}
@@ -176,7 +176,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
               <button
                 onClick={goNext}
                 className="flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold transition-all hover:scale-[1.02]"
-                style={{ background: "#C9A84C", color: "#111827" }}
+                style={{ background: "#B08A3E", color: "#0B1E3A" }}
               >
                 {isLast ? t('tour.finish') : t('tour.next')}
                 {!isLast && <ArrowRight className="h-4 w-4" />}
@@ -220,7 +220,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
       {spotStyle && (
         <div
           className="absolute rounded-xl border-2 pointer-events-none transition-all duration-500"
-          style={{ ...spotStyle, borderColor: "#C9A84C", boxShadow: "0 0 0 4px rgba(201,168,76,0.15)" }}
+          style={{ ...spotStyle, borderColor: "#B08A3E", boxShadow: "0 0 0 4px rgba(201,168,76,0.15)" }}
         />
       )}
 
@@ -233,11 +233,11 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
           transform: !spotStyle ? "translate(-50%, -50%)" : animating ? "translateY(10px)" : "translateY(0)",
         }}
       >
-        <div className="rounded-xl shadow-2xl overflow-hidden" style={{ background: "#111827", border: "1px solid rgba(201,168,76,0.2)" }}>
+        <div className="rounded-xl shadow-2xl overflow-hidden" style={{ background: "#0B1E3A", border: "1px solid rgba(201,168,76,0.2)" }}>
           {/* Progress */}
           <div className="px-5 pt-4 flex items-center gap-3">
             <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#C9A84C" }} />
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#B08A3E" }} />
             </div>
             <span className="text-[10px] text-white/40">{current + 1}/{steps.length}</span>
           </div>
@@ -261,7 +261,7 @@ export function TourOverlay({ steps, role, onComplete, onStep }: TourOverlayProp
             <button
               onClick={goNext}
               className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all hover:scale-[1.02]"
-              style={{ background: "#C9A84C", color: "#111827" }}
+              style={{ background: "#B08A3E", color: "#0B1E3A" }}
             >
               {isLast ? t('tour.finish') : t('tour.next')}
               {!isLast && <ArrowRight className="h-3.5 w-3.5" />}

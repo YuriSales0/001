@@ -199,7 +199,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
             left: spot.left,
             width: spot.width,
             height: spot.height,
-            borderColor: "#C9A84C",
+            borderColor: "#B08A3E",
             boxShadow: "0 0 0 4px rgba(201,168,76,0.2), 0 0 24px rgba(201,168,76,0.15)",
           }}
         />
@@ -209,7 +209,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
           <div
             className="rounded-xl shadow-2xl overflow-hidden transition-transform duration-300"
             style={{
-              background: "#111827",
+              background: "#0B1E3A",
               border: "1px solid rgba(201,168,76,0.25)",
               transform: animating ? "translateY(8px)" : "translateY(0)",
             }}
@@ -217,7 +217,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
             {/* Progress bar */}
             <div className="px-4 pt-3 flex items-center gap-2">
               <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
-                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#C9A84C" }} />
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#B08A3E" }} />
               </div>
               <span className="text-[10px] text-white/40 shrink-0">{current + 1}/{STEPS.length}</span>
             </div>
@@ -225,7 +225,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(201,168,76,0.15)" }}>
-                  <Icon className="h-3.5 w-3.5" style={{ color: "#C9A84C" }} />
+                  <Icon className="h-3.5 w-3.5" style={{ color: "#B08A3E" }} />
                 </div>
                 <h3 className="text-sm font-bold text-white">{title}</h3>
               </div>
@@ -246,7 +246,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
               <button
                 onClick={goNext}
                 className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all hover:scale-[1.02]"
-                style={{ background: "#C9A84C", color: "#111827" }}
+                style={{ background: "#B08A3E", color: "#0B1E3A" }}
               >
                 {isLast ? t("tour.finish") : t("tour.next")}
                 {!isLast && <ArrowRight className="h-3 w-3" />}
@@ -268,7 +268,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
         {/* Progress */}
         <div className="mb-5 flex items-center gap-3">
           <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
-            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#C9A84C" }} />
+            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "#B08A3E" }} />
           </div>
           <span className="text-xs text-white/40">{current + 1}/{STEPS.length}</span>
         </div>
@@ -277,10 +277,10 @@ export function ClientTour({ onComplete }: ClientTourProps) {
           className="rounded-2xl overflow-hidden shadow-2xl transition-transform duration-300"
           style={{ transform: animating ? "translateY(16px)" : "translateY(0)" }}
         >
-          <div className="p-8 sm:p-10 text-center" style={{ background: "#111827" }}>
+          <div className="p-8 sm:p-10 text-center" style={{ background: "#0B1E3A" }}>
             <div className="h-16 w-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
                  style={{ background: "rgba(201,168,76,0.15)" }}>
-              <Icon className="h-8 w-8" style={{ color: "#C9A84C" }} />
+              <Icon className="h-8 w-8" style={{ color: "#B08A3E" }} />
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">{title}</h2>
             <p className="text-gray-400 leading-relaxed max-w-md mx-auto">{desc}</p>
@@ -291,14 +291,14 @@ export function ClientTour({ onComplete }: ClientTourProps) {
               if (feat === `tour.CLIENT.steps.${step.key}.features.${i}`) return null
               return (
                 <div key={i} className="flex items-center gap-2 text-sm text-gray-300 mt-3 justify-center">
-                  <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: "#C9A84C" }} />
+                  <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: "#B08A3E" }} />
                   {feat}
                 </div>
               )
             })}
           </div>
 
-          <div className="flex items-center justify-between px-8 py-5" style={{ background: "#0d1420" }}>
+          <div className="flex items-center justify-between px-8 py-5" style={{ background: "#071328" }}>
             {current > 0 ? (
               <button onClick={goBack} className="flex items-center gap-1.5 text-sm text-white/50 hover:text-white transition-colors">
                 <ArrowLeft className="h-4 w-4" /> {t("tour.back")}
@@ -312,7 +312,7 @@ export function ClientTour({ onComplete }: ClientTourProps) {
             <button
               onClick={goNext}
               className="flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold transition-all hover:scale-[1.02]"
-              style={{ background: "#C9A84C", color: "#111827" }}
+              style={{ background: "#B08A3E", color: "#0B1E3A" }}
             >
               {isLast ? t("tour.finish") : t("tour.next")}
               {!isLast && <ArrowRight className="h-4 w-4" />}

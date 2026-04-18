@@ -131,13 +131,13 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
   const confirmIdx = stepLabels.length - 1
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111827] bg-opacity-95 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1E3A] bg-opacity-95 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="bg-[#111827] px-6 py-5">
+        <div className="bg-[#0B1E3A] px-6 py-5">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-base font-bold text-white">Host<span style={{ color: '#C9A84C' }}>Masters</span></span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider" style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
+            <span className="text-base font-bold text-white">Host<span style={{ color: '#B08A3E' }}>Masters</span></span>
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider" style={{ background: 'rgba(201,168,76,0.2)', color: '#B08A3E' }}>
               {t('onboarding.setupTitle')}
             </span>
           </div>
@@ -146,8 +146,8 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           <div className="flex gap-1.5 mt-4">
             {stepLabels.map((s, i) => (
               <div key={i} className="flex-1">
-                <div className={`h-1 rounded-full transition-colors ${i <= step ? 'bg-[#C9A84C]' : 'bg-white/10'}`} />
-                <p className={`text-[9px] mt-1 truncate ${i <= step ? 'text-[#C9A84C]' : 'text-white/30'}`}>{s}</p>
+                <div className={`h-1 rounded-full transition-colors ${i <= step ? 'bg-[#B08A3E]' : 'bg-white/10'}`} />
+                <p className={`text-[9px] mt-1 truncate ${i <= step ? 'text-[#B08A3E]' : 'text-white/30'}`}>{s}</p>
               </div>
             ))}
           </div>
@@ -159,7 +159,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {step === 0 && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-1">
-                <Globe className="h-5 w-5 text-[#C9A84C]" />
+                <Globe className="h-5 w-5 text-[#B08A3E]" />
                 {t('onboarding.languageStep')}
               </div>
               <p className="text-xs text-gray-500 mb-4">{t('onboarding.languageStepDesc')}</p>
@@ -171,12 +171,12 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                     onClick={() => pickLanguage(lang.code)}
                     className="rounded-xl border-2 p-3 text-center transition-all"
                     style={{
-                      borderColor: selectedLang === lang.code ? '#C9A84C' : 'rgba(0,0,0,0.08)',
+                      borderColor: selectedLang === lang.code ? '#B08A3E' : 'rgba(0,0,0,0.08)',
                       background: selectedLang === lang.code ? 'rgba(201,168,76,0.08)' : 'transparent',
                     }}
                   >
                     <span className="text-2xl block mb-1">{lang.flag}</span>
-                    <span className={`text-xs font-semibold ${selectedLang === lang.code ? 'text-[#C9A84C]' : 'text-gray-600'}`}>
+                    <span className={`text-xs font-semibold ${selectedLang === lang.code ? 'text-[#B08A3E]' : 'text-gray-600'}`}>
                       {lang.label}
                     </span>
                   </button>
@@ -216,12 +216,12 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <button onClick={() => setContractType('MONTHLY')}
-                  className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'MONTHLY' ? 'border-[#C9A84C] bg-[#C9A84C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                  className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'MONTHLY' ? 'border-[#B08A3E] bg-[#B08A3E]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                   <div className="text-sm font-semibold">{t('onboarding.crewMonthly')}</div>
                   <div className="text-xs text-gray-500 mt-1">{t('onboarding.crewMonthlySub')}</div>
                 </button>
                 <button onClick={() => setContractType('FREELANCER')}
-                  className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'FREELANCER' ? 'border-[#C9A84C] bg-[#C9A84C]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                  className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'FREELANCER' ? 'border-[#B08A3E] bg-[#B08A3E]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                   <div className="text-sm font-semibold">{t('onboarding.crewFreelancer')}</div>
                   <div className="text-xs text-gray-500 mt-1">{t('onboarding.crewFreelancerSub')}</div>
                 </button>
@@ -294,7 +294,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                   <label key={skill} className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm cursor-pointer hover:bg-gray-50">
                     <input type="checkbox" checked={skills.includes(skill)}
                       onChange={e => setSkills(e.target.checked ? [...skills, skill] : skills.filter(s => s !== skill))}
-                      className="accent-[#C9A84C]" />
+                      className="accent-[#B08A3E]" />
                     {t(`crew.taskTypes.${skill}`) || skill.replace(/_/g, ' ')}
                   </label>
                 ))}
@@ -312,10 +312,10 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
               {data && data.pendingContracts.length > 0 ? (
                 <div className="space-y-3">
                   {data.pendingContracts.map(c => (
-                    <label key={c.id} className="flex items-start gap-3 rounded-xl border-2 p-4 cursor-pointer hover:border-[#C9A84C]/50 transition-colors">
+                    <label key={c.id} className="flex items-start gap-3 rounded-xl border-2 p-4 cursor-pointer hover:border-[#B08A3E]/50 transition-colors">
                       <input type="checkbox" checked={acceptedContracts.includes(c.id)}
                         onChange={e => setAcceptedContracts(e.target.checked ? [...acceptedContracts, c.id] : acceptedContracts.filter(id => id !== c.id))}
-                        className="mt-0.5 accent-[#C9A84C]" />
+                        className="mt-0.5 accent-[#B08A3E]" />
                       <div>
                         <div className="text-sm font-semibold">{c.title}</div>
                         <div className="text-xs text-gray-500 mt-0.5">{t('onboarding.contractAccept')}</div>
@@ -357,7 +357,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
             </button>
           ) : <div />}
           <button onClick={next} disabled={saving || (step === profileIdx && !name)}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#111827] text-white px-5 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50">
+            className="inline-flex items-center gap-2 rounded-lg bg-[#0B1E3A] text-white px-5 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50">
             {saving ? t('onboarding.saving') : step === confirmIdx ? t('onboarding.finish') : t('onboarding.next')}
             {!saving && step < confirmIdx && <ArrowRight className="h-4 w-4" />}
           </button>

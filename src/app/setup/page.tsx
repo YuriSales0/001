@@ -339,7 +339,7 @@ export default function SetupPage() {
                 <div className="text-xs text-gray-400">{setup.ownerName}</div>
                 <div className="mt-2 flex items-center gap-2">
                   <div className="flex-1 h-1.5 rounded-full bg-gray-200">
-                    <div className="h-full rounded-full" style={{ width: `${pct}%`, background: '#C9A84C' }} />
+                    <div className="h-full rounded-full" style={{ width: `${pct}%`, background: '#B08A3E' }} />
                   </div>
                   <span className="text-xs text-gray-500">{pct}%</span>
                   {overdue > 0 && <span className="text-xs text-red-600 font-semibold">{overdue} late</span>}
@@ -401,7 +401,7 @@ export default function SetupPage() {
                     className="h-full rounded-full transition-all"
                     style={{
                       width: `${Math.round((selectedSetup.steps.filter(s => s.status === "COMPLETE").length / selectedSetup.steps.length) * 100)}%`,
-                      background: '#C9A84C',
+                      background: '#B08A3E',
                     }}
                   />
                 </div>

@@ -55,7 +55,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#111827" }}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#0B1E3A" }}>
       {/* Background glow */}
       <div className="absolute inset-0 opacity-30"
            style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.12) 0%, transparent 70%)" }} />
@@ -64,17 +64,17 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
-            <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "#C9A84C" }}>
+            <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "#B08A3E" }}>
               <Building2 className="h-5 w-5 text-white" />
             </div>
             <span className="text-2xl font-bold text-white">
-              Host<span style={{ color: "#C9A84C" }}>Masters</span>
+              Host<span style={{ color: "#B08A3E" }}>Masters</span>
             </span>
           </Link>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#1a2332", border: "1px solid rgba(201,168,76,0.15)" }}>
+        <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(201,168,76,0.15)" }}>
           <div className="p-8">
             <h1 className="text-2xl font-bold text-white text-center mb-1">{t("auth.createAccount")}</h1>
             <p className="text-sm text-gray-400 text-center mb-8">{t("auth.registerSubtitle")}</p>
@@ -144,8 +144,8 @@ export default function RegisterPage() {
                       className="rounded-lg border px-3 py-2.5 text-center text-sm transition-all"
                       style={{
                         background: form.language === lang.code ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.03)",
-                        borderColor: form.language === lang.code ? "#C9A84C" : "rgba(255,255,255,0.08)",
-                        color: form.language === lang.code ? "#C9A84C" : "rgba(255,255,255,0.5)",
+                        borderColor: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.08)",
+                        color: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.5)",
                       }}
                     >
                       <span className="text-lg block mb-0.5">{lang.flag}</span>
@@ -165,7 +165,7 @@ export default function RegisterPage() {
                 type="submit"
                 disabled={loading}
                 className="w-full flex items-center justify-center gap-2 rounded-lg py-3.5 text-sm font-semibold transition-all hover:scale-[1.01] disabled:opacity-50"
-                style={{ background: "#C9A84C", color: "#111827" }}
+                style={{ background: "#B08A3E", color: "#0B1E3A" }}
               >
                 {loading ? t("auth.creating") : t("auth.createAccount")}
                 {!loading && <ArrowRight className="h-4 w-4" />}
@@ -176,7 +176,7 @@ export default function RegisterPage() {
           <div className="border-t px-8 py-4 text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
             <p className="text-sm text-gray-500">
               {t("auth.hasAccount")}{" "}
-              <Link href="/login" className="font-semibold transition-colors" style={{ color: "#C9A84C" }}>
+              <Link href="/login" className="font-semibold transition-colors" style={{ color: "#B08A3E" }}>
                 {t("auth.signIn")}
               </Link>
             </p>

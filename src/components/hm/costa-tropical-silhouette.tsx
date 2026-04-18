@@ -90,44 +90,44 @@ export function CostaTropicalSilhouette({ className }: { className?: string }) {
 
       {/* City markers */}
       {/* Nerja (far west) */}
-      <circle cx="80" cy="288" r="2.5" fill="#C9A84C" opacity="0.6" />
-      <text x="80" y="278" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Nerja</text>
+      <circle cx="80" cy="288" r="2.5" fill="#B08A3E" opacity="0.6" />
+      <text x="80" y="278" textAnchor="middle" fill="#B08A3E" opacity="0.4" fontSize="10" fontFamily="system-ui">Nerja</text>
 
       {/* La Herradura (in the bay) */}
-      <circle cx="270" cy="336" r="2.5" fill="#C9A84C" opacity="0.6" />
-      <text x="270" y="350" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">La Herradura</text>
+      <circle cx="270" cy="336" r="2.5" fill="#B08A3E" opacity="0.6" />
+      <text x="270" y="350" textAnchor="middle" fill="#B08A3E" opacity="0.4" fontSize="10" fontFamily="system-ui">La Herradura</text>
 
       {/* Almuñécar */}
-      <circle cx="420" cy="292" r="2.5" fill="#C9A84C" opacity="0.6" />
-      <text x="420" y="282" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Almuñécar</text>
+      <circle cx="420" cy="292" r="2.5" fill="#B08A3E" opacity="0.6" />
+      <text x="420" y="282" textAnchor="middle" fill="#B08A3E" opacity="0.4" fontSize="10" fontFamily="system-ui">Almuñécar</text>
 
       {/* Salobreña */}
-      <circle cx="660" cy="289" r="2.5" fill="#C9A84C" opacity="0.6" />
-      <text x="660" y="279" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Salobreña</text>
+      <circle cx="660" cy="289" r="2.5" fill="#B08A3E" opacity="0.6" />
+      <text x="660" y="279" textAnchor="middle" fill="#B08A3E" opacity="0.4" fontSize="10" fontFamily="system-ui">Salobreña</text>
 
       {/* Motril */}
-      <circle cx="880" cy="292" r="2.5" fill="#C9A84C" opacity="0.6" />
-      <text x="880" y="282" textAnchor="middle" fill="#C9A84C" opacity="0.4" fontSize="10" fontFamily="system-ui">Motril</text>
+      <circle cx="880" cy="292" r="2.5" fill="#B08A3E" opacity="0.6" />
+      <text x="880" y="282" textAnchor="middle" fill="#B08A3E" opacity="0.4" fontSize="10" fontFamily="system-ui">Motril</text>
 
       {/* Torrenueva */}
-      <circle cx="1080" cy="304" r="2.5" fill="#C9A84C" opacity="0.6" />
-      <text x="1080" y="294" textAnchor="middle" fill="#C9A84C" opacity="0.35" fontSize="9" fontFamily="system-ui">Torrenueva</text>
+      <circle cx="1080" cy="304" r="2.5" fill="#B08A3E" opacity="0.6" />
+      <text x="1080" y="294" textAnchor="middle" fill="#B08A3E" opacity="0.35" fontSize="9" fontFamily="system-ui">Torrenueva</text>
 
       <defs>
         <linearGradient id="hm-mountain-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#C9A84C" />
-          <stop offset="100%" stopColor="#111827" />
+          <stop offset="0%" stopColor="#B08A3E" />
+          <stop offset="100%" stopColor="#0B1E3A" />
         </linearGradient>
         <linearGradient id="hm-coast-grad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="transparent" />
-          <stop offset="20%" stopColor="#C9A84C" />
-          <stop offset="80%" stopColor="#C9A84C" />
+          <stop offset="20%" stopColor="#B08A3E" />
+          <stop offset="80%" stopColor="#B08A3E" />
           <stop offset="100%" stopColor="transparent" />
         </linearGradient>
         <linearGradient id="hm-line-grad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="transparent" />
-          <stop offset="15%" stopColor="#C9A84C" />
-          <stop offset="85%" stopColor="#C9A84C" />
+          <stop offset="15%" stopColor="#B08A3E" />
+          <stop offset="85%" stopColor="#B08A3E" />
           <stop offset="100%" stopColor="transparent" />
         </linearGradient>
       </defs>

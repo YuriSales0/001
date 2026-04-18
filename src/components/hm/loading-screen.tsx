@@ -7,7 +7,7 @@
  */
 export function HmLoadingScreen() {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#111827]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B1E3A]">
       {/* Subtle background glow */}
       <div
         className="absolute inset-0 opacity-30"
@@ -22,7 +22,7 @@ export function HmLoadingScreen() {
         <div className="hm-logo-pulse relative">
           <div
             className="h-16 w-16 rounded-2xl flex items-center justify-center shadow-lg"
-            style={{ background: "#C9A84C" }}
+            style={{ background: "#B08A3E" }}
           >
             <svg
               width="32"
@@ -43,13 +43,13 @@ export function HmLoadingScreen() {
         {/* Wordmark */}
         <div className="text-center">
           <p className="text-xl font-bold text-white tracking-tight">
-            Host<span style={{ color: "#C9A84C" }}>Masters</span>
+            Host<span style={{ color: "#B08A3E" }}>Masters</span>
           </p>
         </div>
 
         {/* Loading bar */}
         <div className="w-40 h-1 rounded-full overflow-hidden bg-white/10">
-          <div className="hm-loading-bar h-full rounded-full" style={{ background: "#C9A84C" }} />
+          <div className="hm-loading-bar h-full rounded-full" style={{ background: "#B08A3E" }} />
         </div>
       </div>
     </div>
