@@ -1,8 +1,463 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check } from 'lucide-react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
+import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check, BarChart3, Users, TrendingUp, CreditCard, Filter, ChevronDown, ChevronUp } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
+import { useLocale } from '@/i18n/provider'
+
+// ─── Analytics Types ─────────────────────────────────────────────────────────
+type AnalyticsData = {
+  totalLeads: number
+  totalClients: number
+  activeSubscriptions: number
+  conversionRate: number
+  funnel: {
+    leads: number
+    contacted: number
+    registered: number
+    contractSigned: number
+  }
+  leadsBySource: { source: string; count: number }[]
+  planDistribution: { plan: string; count: number }[]
+  recentLeads: {
+    id: string
+    name: string
+    email: string | null
+    source: string
+    status: string
+    createdAt: string
+  }[]
+  convertedLeads: number
+}
+
+type PeriodKey = 'today' | '7d' | '30d' | '90d' | 'custom'
+
+const SOURCE_LABELS: Record<string, string> = {
+  CADASTRO: 'Registration',
+  NEWSLETTER: 'Newsletter',
+  ONLINE: 'Online',
+  PHONE: 'Phone',
+  WHATSAPP: 'WhatsApp',
+  WEBSITE: 'Website',
+  EMAIL: 'Email',
+  REFERRAL: 'Referral',
+  OTHER: 'Other',
+}
+
+const STATUS_LABEL_MAP: Record<string, string> = {
+  NEW: 'New',
+  CONTACTED: 'Contacted',
+  QUALIFIED: 'Qualified',
+  CONVERTED: 'Converted',
+  RETAINED: 'Retained',
+  LOST: 'Lost',
+  REMARKETING: 'Remarketing',
+}
+
+const PLAN_LABELS: Record<string, string> = {
+  STARTER: 'Starter',
+  BASIC: 'Basic',
+  MID: 'Mid',
+  PREMIUM: 'Premium',
+  NONE: 'No Plan',
+}
+
+const PLAN_COLORS: Record<string, string> = {
+  STARTER: 'bg-gray-300',
+  BASIC: 'bg-blue-400',
+  MID: 'bg-amber-400',
+  PREMIUM: 'bg-emerald-500',
+  NONE: 'bg-gray-200',
+}
+
+// ─── Analytics Dashboard ─────────────────────────────────────────────────────
+function AnalyticsDashboard() {
+  const { t } = useLocale()
+  const [data, setData] = useState<AnalyticsData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [period, setPeriod] = useState<PeriodKey>('30d')
+  const [customFrom, setCustomFrom] = useState('')
+  const [customTo, setCustomTo] = useState('')
+  const [showCustom, setShowCustom] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+
+  const dateRange = useMemo(() => {
+    const now = new Date()
+    let from: string | null = null
+    let to: string | null = null
+
+    if (period === 'today') {
+      from = now.toISOString().slice(0, 10)
+      to = from
+    } else if (period === '7d') {
+      const d = new Date(now)
+      d.setDate(d.getDate() - 7)
+      from = d.toISOString().slice(0, 10)
+    } else if (period === '30d') {
+      const d = new Date(now)
+      d.setDate(d.getDate() - 30)
+      from = d.toISOString().slice(0, 10)
+    } else if (period === '90d') {
+      const d = new Date(now)
+      d.setDate(d.getDate() - 90)
+      from = d.toISOString().slice(0, 10)
+    } else if (period === 'custom' && customFrom) {
+      from = customFrom
+      to = customTo || null
+    }
+
+    return { from, to }
+  }, [period, customFrom, customTo])
+
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    const params = new URLSearchParams()
+    if (dateRange.from) params.set('from', dateRange.from)
+    if (dateRange.to) params.set('to', dateRange.to)
+    const res = await fetch(`/api/admin/marketing-analytics?${params}`)
+    if (res.ok) setData(await res.json())
+    setLoading(false)
+  }, [dateRange])
+
+  useEffect(() => { fetchData() }, [fetchData])
+
+  const funnelSteps = useMemo(() => {
+    if (!data) return []
+    return [
+      { key: 'siteVisitors', label: t('admin.marketing.siteVisitors'), value: null as number | null, placeholder: true },
+      { key: 'leadsCreated', label: t('admin.marketing.leadsCreated'), value: data.funnel.leads, placeholder: false },
+      { key: 'contacted', label: t('admin.marketing.contacted'), value: data.funnel.contacted, placeholder: false },
+      { key: 'registered', label: t('admin.marketing.registered'), value: data.funnel.registered, placeholder: false },
+      { key: 'contractSigned', label: t('admin.marketing.contractSigned'), value: data.funnel.contractSigned, placeholder: false },
+    ]
+  }, [data, t])
+
+  const maxFunnel = useMemo(() => {
+    if (!data) return 1
+    return Math.max(data.funnel.leads, 1)
+  }, [data])
+
+  const totalPlanUsers = useMemo(() => {
+    if (!data) return 0
+    return data.planDistribution.reduce((s, p) => s + p.count, 0)
+  }, [data])
+
+  if (collapsed) {
+    return (
+      <div className="rounded-hm border border-hm-border bg-white p-4">
+        <button
+          onClick={() => setCollapsed(false)}
+          className="flex items-center gap-2 text-sm font-semibold text-hm-black hover:text-hm-gold transition-colors w-full"
+        >
+          <BarChart3 className="h-5 w-5" />
+          <span className="font-serif text-lg">{t('admin.marketing.analyticsOverview')}</span>
+          <ChevronDown className="h-4 w-4 ml-auto" />
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Section Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="h-6 w-6 text-hm-black" />
+          <h2 className="text-2xl font-serif font-bold text-hm-black">{t('admin.marketing.analyticsOverview')}</h2>
+        </div>
+        <button
+          onClick={() => setCollapsed(true)}
+          className="rounded-md p-1.5 text-gray-400 hover:text-hm-black hover:bg-gray-100 transition-colors"
+          title="Collapse"
+        >
+          <ChevronUp className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Period Filter */}
+      <div className="rounded-hm border border-hm-border bg-white p-4">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Filter className="h-4 w-4 text-gray-400" />
+          <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin.marketing.periodFilter')}</span>
+          <div className="flex gap-1.5 ml-2">
+            {([
+              { key: 'today' as PeriodKey, label: t('admin.marketing.today') },
+              { key: '7d' as PeriodKey, label: t('admin.marketing.last7Days') },
+              { key: '30d' as PeriodKey, label: t('admin.marketing.last30Days') },
+              { key: '90d' as PeriodKey, label: t('admin.marketing.last90Days') },
+              { key: 'custom' as PeriodKey, label: t('admin.marketing.customRange') },
+            ]).map(p => (
+              <button
+                key={p.key}
+                onClick={() => {
+                  setPeriod(p.key)
+                  if (p.key === 'custom') setShowCustom(true)
+                  else setShowCustom(false)
+                }}
+                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                  period === p.key
+                    ? 'bg-hm-black text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+          {showCustom && period === 'custom' && (
+            <div className="flex items-center gap-2 ml-4">
+              <label className="text-xs text-gray-500">{t('admin.marketing.from')}</label>
+              <input
+                type="date"
+                value={customFrom}
+                onChange={e => setCustomFrom(e.target.value)}
+                className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-hm-gold"
+              />
+              <label className="text-xs text-gray-500">{t('admin.marketing.to')}</label>
+              <input
+                type="date"
+                value={customTo}
+                onChange={e => setCustomTo(e.target.value)}
+                className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-hm-gold"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="rounded-hm border border-hm-border bg-white p-5 animate-pulse">
+              <div className="h-3 rounded bg-hm-sand w-24 mb-3" />
+              <div className="h-8 rounded bg-hm-sand w-16" />
+            </div>
+          ))}
+        </div>
+      ) : data ? (
+        <>
+          {/* KPI Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="rounded-hm border border-hm-border bg-white p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="rounded-md bg-blue-50 p-1.5">
+                  <Users className="h-4 w-4 text-blue-600" />
+                </div>
+                <span className="text-xs uppercase text-gray-500 font-medium">{t('admin.marketing.totalLeads')}</span>
+              </div>
+              <div className="text-3xl font-bold text-hm-black tabular-nums">{data.totalLeads}</div>
+            </div>
+            <div className="rounded-hm border border-hm-border bg-white p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="rounded-md bg-green-50 p-1.5">
+                  <Users className="h-4 w-4 text-green-600" />
+                </div>
+                <span className="text-xs uppercase text-gray-500 font-medium">{t('admin.marketing.registrations')}</span>
+              </div>
+              <div className="text-3xl font-bold text-hm-black tabular-nums">{data.totalClients}</div>
+            </div>
+            <div className="rounded-hm border border-hm-border bg-white p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="rounded-md bg-amber-50 p-1.5">
+                  <TrendingUp className="h-4 w-4 text-amber-600" />
+                </div>
+                <span className="text-xs uppercase text-gray-500 font-medium">{t('admin.marketing.conversionRate')}</span>
+              </div>
+              <div className="text-3xl font-bold text-hm-black tabular-nums">{data.conversionRate.toFixed(1)}%</div>
+            </div>
+            <div className="rounded-hm border border-hm-border bg-white p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="rounded-md bg-purple-50 p-1.5">
+                  <CreditCard className="h-4 w-4 text-purple-600" />
+                </div>
+                <span className="text-xs uppercase text-gray-500 font-medium">{t('admin.marketing.activeSubscriptions')}</span>
+              </div>
+              <div className="text-3xl font-bold text-hm-black tabular-nums">{data.activeSubscriptions}</div>
+            </div>
+          </div>
+
+          {/* Funnel + Plan Distribution Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Leads Funnel */}
+            <div className="lg:col-span-2 rounded-hm border border-hm-border bg-white p-5">
+              <h3 className="text-sm font-semibold text-hm-black uppercase tracking-wider mb-4">{t('admin.marketing.leadsFunnel')}</h3>
+              <div className="space-y-3">
+                {funnelSteps.map((step, i) => {
+                  const barWidth = step.placeholder
+                    ? 100
+                    : step.value !== null
+                      ? Math.max(4, (step.value / maxFunnel) * 100)
+                      : 0
+                  const prevValue = i > 0 && !funnelSteps[i - 1].placeholder
+                    ? funnelSteps[i - 1].value
+                    : null
+                  const dropOff = prevValue !== null && prevValue > 0 && step.value !== null && !step.placeholder
+                    ? ((1 - step.value / prevValue) * 100).toFixed(0)
+                    : null
+
+                  return (
+                    <div key={step.key}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-gray-700">{step.label}</span>
+                        <div className="flex items-center gap-2">
+                          {dropOff !== null && Number(dropOff) > 0 && (
+                            <span className="text-[10px] text-red-400 font-medium">-{dropOff}% {t('admin.marketing.dropOff')}</span>
+                          )}
+                          <span className="text-sm font-bold text-hm-black tabular-nums">
+                            {step.placeholder ? '---' : step.value}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-7 rounded-md bg-gray-50 overflow-hidden relative">
+                        {step.placeholder ? (
+                          <div className="h-full bg-gray-100 rounded-md flex items-center px-3">
+                            <span className="text-[10px] text-gray-400 italic">{t('admin.marketing.connectGA')}</span>
+                          </div>
+                        ) : (
+                          <div
+                            className="h-full rounded-md transition-all duration-500"
+                            style={{
+                              width: `${barWidth}%`,
+                              background: `linear-gradient(90deg, #1a1a1a ${Math.max(0, barWidth - 15)}%, #d4a853)`,
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Conversion by Plan */}
+            <div className="rounded-hm border border-hm-border bg-white p-5">
+              <h3 className="text-sm font-semibold text-hm-black uppercase tracking-wider mb-4">{t('admin.marketing.conversionByPlan')}</h3>
+              <div className="space-y-3">
+                {data.planDistribution
+                  .sort((a, b) => {
+                    const order = ['PREMIUM', 'MID', 'BASIC', 'STARTER', 'NONE']
+                    return order.indexOf(a.plan) - order.indexOf(b.plan)
+                  })
+                  .map(p => {
+                    const pct = totalPlanUsers > 0 ? ((p.count / totalPlanUsers) * 100) : 0
+                    return (
+                      <div key={p.plan}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-medium text-gray-700">
+                            {PLAN_LABELS[p.plan] ?? p.plan}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-gray-400">{pct.toFixed(0)}%</span>
+                            <span className="text-sm font-bold text-hm-black tabular-nums">{p.count}</span>
+                          </div>
+                        </div>
+                        <div className="h-5 rounded-md bg-gray-50 overflow-hidden">
+                          <div
+                            className={`h-full rounded-md transition-all duration-500 ${PLAN_COLORS[p.plan] ?? 'bg-gray-300'}`}
+                            style={{ width: `${Math.max(4, pct)}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                {data.planDistribution.length === 0 && (
+                  <p className="text-xs text-gray-400 text-center py-4">{t('admin.marketing.noLeadsYet')}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Lead Source + Recent Leads Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Lead Source Breakdown */}
+            <div className="rounded-hm border border-hm-border bg-white p-5">
+              <h3 className="text-sm font-semibold text-hm-black uppercase tracking-wider mb-4">{t('admin.marketing.leadSourceBreakdown')}</h3>
+              {data.leadsBySource.length > 0 ? (
+                <div className="space-y-2">
+                  {data.leadsBySource
+                    .sort((a, b) => b.count - a.count)
+                    .map(s => {
+                      const maxSource = data.leadsBySource.reduce((mx, x) => Math.max(mx, x.count), 1)
+                      const pct = (s.count / maxSource) * 100
+                      return (
+                        <div key={s.source} className="flex items-center gap-3">
+                          <span className="text-xs text-gray-600 w-24 shrink-0 truncate">{SOURCE_LABELS[s.source] ?? s.source}</span>
+                          <div className="flex-1 h-4 rounded bg-gray-50 overflow-hidden">
+                            <div
+                              className="h-full rounded bg-hm-black/80 transition-all duration-500"
+                              style={{ width: `${Math.max(6, pct)}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-bold text-hm-black tabular-nums w-8 text-right">{s.count}</span>
+                        </div>
+                      )
+                    })}
+                </div>
+              ) : (
+                <p className="text-xs text-gray-400 text-center py-4">{t('admin.marketing.noLeadsYet')}</p>
+              )}
+            </div>
+
+            {/* Recent Leads Table */}
+            <div className="lg:col-span-2 rounded-hm border border-hm-border bg-white overflow-hidden">
+              <div className="px-5 pt-5 pb-3">
+                <h3 className="text-sm font-semibold text-hm-black uppercase tracking-wider">{t('admin.marketing.recentLeads')}</h3>
+              </div>
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
+                  <tr>
+                    <th className="px-5 py-2.5">{t('admin.marketing.name')}</th>
+                    <th className="px-5 py-2.5">{t('admin.marketing.email')}</th>
+                    <th className="px-5 py-2.5">{t('admin.marketing.source')}</th>
+                    <th className="px-5 py-2.5">{t('admin.marketing.status')}</th>
+                    <th className="px-5 py-2.5">{t('admin.marketing.created')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.recentLeads.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="px-5 py-8 text-center text-xs text-gray-400">
+                        {t('admin.marketing.noLeadsYet')}
+                      </td>
+                    </tr>
+                  )}
+                  {data.recentLeads.map(lead => (
+                    <tr key={lead.id} className="border-t hover:bg-gray-50">
+                      <td className="px-5 py-2.5 font-medium text-hm-black">{lead.name}</td>
+                      <td className="px-5 py-2.5 text-gray-500 truncate max-w-[180px]">{lead.email ?? '---'}</td>
+                      <td className="px-5 py-2.5">
+                        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs">
+                          {SOURCE_LABELS[lead.source] ?? lead.source}
+                        </span>
+                      </td>
+                      <td className="px-5 py-2.5">
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                          lead.status === 'CONVERTED' ? 'bg-green-100 text-green-700' :
+                          lead.status === 'LOST' ? 'bg-red-100 text-red-600' :
+                          lead.status === 'CONTACTED' ? 'bg-blue-100 text-blue-700' :
+                          lead.status === 'QUALIFIED' ? 'bg-amber-100 text-amber-700' :
+                          'bg-gray-100 text-gray-600'
+                        }`}>
+                          {STATUS_LABEL_MAP[lead.status] ?? lead.status}
+                        </span>
+                      </td>
+                      <td className="px-5 py-2.5 text-gray-400 text-xs tabular-nums">
+                        {new Date(lead.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      {/* Divider */}
+      <div className="border-t border-hm-border" />
+    </div>
+  )
+}
 
 type Campaign = {
   id: string
@@ -338,6 +793,9 @@ export default function MarketingPage() {
 
   return (
     <div className="p-6 space-y-8">
+      {/* Analytics Dashboard */}
+      <AnalyticsDashboard />
+
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
