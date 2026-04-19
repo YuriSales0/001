@@ -283,7 +283,7 @@ export default function ReservationsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('common.reservations')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('common.reservations')}</h1>
           <p className="text-sm text-gray-500">{t('manager.reservations.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">

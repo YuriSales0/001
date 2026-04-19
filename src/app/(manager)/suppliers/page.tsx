@@ -101,7 +101,7 @@ export default function SuppliersPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-hm-black">{t('common.suppliers')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('common.suppliers')}</h1>
           <p className="text-sm text-gray-500">{t('manager.suppliers.subtitle')}</p>
         </div>
         <button

@@ -135,7 +135,7 @@ export default function RevenuePage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-hm-black">Revenue</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">Revenue</h1>
           <p className="text-sm text-gray-500">Financial overview and property performance.</p>
         </div>
         <select

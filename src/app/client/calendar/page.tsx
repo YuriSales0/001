@@ -202,7 +202,7 @@ export default function ClientCalendarPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{tr('common.calendar')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{tr('common.calendar')}</h1>
           <p className="text-sm text-gray-500">{tr('client.calendar.subtitle')}</p>
         </div>
         <select value={propertyFilter} onChange={e=>setPropertyFilter(e.target.value)}
