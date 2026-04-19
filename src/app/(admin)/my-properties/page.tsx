@@ -331,7 +331,7 @@ export default function PropertiesPage() {
                 <h2 className="text-base font-bold text-hm-black">Nova Propriedade</h2>
                 <p className="text-xs text-gray-500 mt-0.5">Como Admin, a propriedade fica ativa imediatamente.</p>
               </div>
-              <button onClick={() => setShowAdd(false)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+              <button onClick={() => setShowAdd(false)} className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
             <form onSubmit={submitAdd} className="p-5 space-y-4">
               {addError && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{addError}</div>}

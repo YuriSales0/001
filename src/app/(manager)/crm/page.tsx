@@ -1032,7 +1032,7 @@ x-integration-token: ${token}
             <h2 className="font-bold text-hm-black">Lead Integrations</h2>
             <p className="text-xs text-gray-500 mt-0.5">Capture leads from digital marketing channels</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600">
             <X className="h-5 w-5" />
           </button>
         </div>

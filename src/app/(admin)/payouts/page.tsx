@@ -35,7 +35,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <h2 className="text-lg font-bold text-hm-black">Como funciona — Payouts</h2>
-          <button onClick={onClose} className="rounded-md p-2 hover:bg-gray-100">
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>

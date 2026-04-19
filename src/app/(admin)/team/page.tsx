@@ -367,7 +367,7 @@ function InviteModal({
             <h3 className="text-lg font-bold text-hm-black">Send invite</h3>
             <p className="text-xs text-gray-500">Creates a user without password and emails a signup link.</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-700">
             <X className="h-5 w-5" />
           </button>
         </div>

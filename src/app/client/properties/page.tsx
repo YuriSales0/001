@@ -318,7 +318,7 @@ export default function ClientProperties() {
                 <h2 className="text-base font-bold text-hm-black">{t('client.properties.requestPropertyTitle')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('client.properties.requestPropertyDesc')}</p>
               </div>
-              <button onClick={() => setShowAdd(false)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+              <button onClick={() => setShowAdd(false)} className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
 
             <form onSubmit={submitRequest} className="p-5 space-y-4">

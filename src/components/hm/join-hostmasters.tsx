@@ -178,7 +178,7 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
           <h3 className="text-xl font-bold text-white">
             {role === "MANAGER" ? t("landing.join.manager.formTitle") : t("landing.join.crew.formTitle")}
           </h3>
-          <button onClick={onClose} className="text-white/40 hover:text-white">
+          <button onClick={onClose} aria-label="Close" className="text-white/40 hover:text-white">
             <X className="h-5 w-5" />
           </button>
         </div>

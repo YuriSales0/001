@@ -202,7 +202,7 @@ function DayPanel({
             className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-800">
             <Plus className="h-3.5 w-3.5"/> {t('manager.calendar.createTask')}
           </button>
-          <button onClick={onClose} className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
             <X className="h-4 w-4"/>
           </button>
         </div>

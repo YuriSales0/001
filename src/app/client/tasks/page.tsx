@@ -236,7 +236,7 @@ export default function ClientTasksPage() {
                 <h2 className="text-lg font-bold text-hm-black">{t('clientTasks.requestNew')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('clientTasks.modalNote')}</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="rounded-md p-1 hover:bg-gray-100">
+              <button onClick={() => setShowModal(false)} className="rounded-md p-2 hover:bg-gray-100">
                 <X className="h-5 w-5" />
               </button>
             </div>

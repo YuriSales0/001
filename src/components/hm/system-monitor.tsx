@@ -97,7 +97,7 @@ export function SystemMonitor() {
           <button
             onClick={e => { e.stopPropagation(); load(true) }}
             disabled={refreshing}
-            className="rounded p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50"
+            className="rounded p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50"
             title={t('monitor.checkNow')}
           >
             <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />

@@ -662,7 +662,7 @@ export function MarketMap() {
               <div className="font-bold text-sm leading-tight">{selectedProp.name}</div>
               <div className="text-[10px] text-white/50 mt-0.5">{selectedProp.bedrooms} quartos · zone {selectedProp.zoneId.replace('zone-', '')}</div>
             </div>
-            <button onClick={() => setSelectedProp(null)} className="rounded p-1 text-white/40 hover:text-white hover:bg-white/10">
+            <button onClick={() => setSelectedProp(null)} className="rounded p-2 text-white/40 hover:text-white hover:bg-white/10">
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -741,7 +741,7 @@ export function MarketMap() {
                 <span className="text-[10px] text-white/50">{selectedZone.propertyCount} propriedades</span>
               </div>
             </div>
-            <button onClick={() => setSelectedZone(null)} className="rounded p-1 text-white/40 hover:text-white hover:bg-white/10">
+            <button onClick={() => setSelectedZone(null)} className="rounded p-2 text-white/40 hover:text-white hover:bg-white/10">
               <X className="h-4 w-4" />
             </button>
           </div>

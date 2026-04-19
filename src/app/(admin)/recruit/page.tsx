@@ -440,7 +440,7 @@ function ConvertModal({
             <h3 className="text-lg font-bold text-hm-black">Convert to {isManager ? "Manager" : "Crew"}</h3>
             <p className="text-xs text-gray-500">Creates a user account, generates a contract, and sends an invite email.</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-700">
             <X className="h-5 w-5" />
           </button>
         </div>
