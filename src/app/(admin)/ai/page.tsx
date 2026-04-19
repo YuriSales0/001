@@ -8,7 +8,7 @@ import { Sparkles, TrendingUp, BarChart3, Calendar, AlertCircle, MapPin, Cpu, Ar
 const MarketMap = dynamic(
   () => import('@/components/market/market-map').then(m => m.MarketMap),
   { ssr: false, loading: () => (
-    <div className="h-[calc(100vh-10rem)] w-full flex items-center justify-center bg-[#0a0e1a] rounded-xl text-white/50 text-sm">
+    <div className="h-[calc(100vh-10rem)] w-full flex items-center justify-center bg-[#0a0e1a] rounded-hm text-white/50 text-sm">
       A preparar o mapa…
     </div>
   )},
@@ -150,7 +150,7 @@ export default function AIPage() {
             <>
               {/* KPI cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="rounded-xl border bg-white p-5">
+                <div className="rounded-hm border bg-white p-5">
                   <div className="text-xs uppercase text-gray-500">Noites recolhidas</div>
                   <div className="text-3xl font-bold text-hm-black mt-1">{totalPoints.toLocaleString()}</div>
                   <div className="text-xs text-gray-400 mt-1">dados de preço acumulados</div>

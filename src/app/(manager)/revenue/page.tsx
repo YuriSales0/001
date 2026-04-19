@@ -152,7 +152,7 @@ export default function RevenuePage() {
       {/* Stat strip */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {statCards.map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="rounded-xl border bg-white p-4 flex items-center gap-3">
+          <div key={label} className="rounded-hm border bg-white p-4 flex items-center gap-3">
             <div className={`rounded-lg p-2 ${bg}`}>
               <Icon className={`h-5 w-5 ${color}`} />
             </div>
@@ -168,11 +168,11 @@ export default function RevenuePage() {
       {loading ? (
         <div className="py-8 text-center text-sm text-gray-400">Loading…</div>
       ) : rows.length === 0 ? (
-        <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+        <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
           No revenue data for this period.
         </div>
       ) : (
-        <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="rounded-hm border bg-white overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3 border-b">
             <BarChart3 className="h-4 w-4 text-gray-400" />
             <span className="text-sm font-semibold text-hm-black">Revenue by property</span>

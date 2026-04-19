@@ -118,7 +118,7 @@ export default function TeamPage() {
         </button>
       </div>
 
-      <form onSubmit={submit} className="rounded-xl border bg-white p-6 space-y-3">
+      <form onSubmit={submit} className="rounded-hm border bg-white p-6 space-y-3">
         <div className="font-semibold text-hm-black flex items-center gap-2">
           <UserPlus className="h-4 w-4" /> Create user
         </div>
@@ -150,7 +150,7 @@ export default function TeamPage() {
         <p className="text-gray-500">Loading…</p>
       ) : (
         (['ADMIN', 'MANAGER', 'CREW', 'CLIENT'] as const).map(role => (
-          <div key={role} className="rounded-xl border bg-white overflow-hidden">
+          <div key={role} className="rounded-hm border bg-white overflow-hidden">
             <div className="px-4 py-2 bg-gray-50 text-xs uppercase font-semibold text-gray-600">
               {role} ({grouped[role].length})
             </div>

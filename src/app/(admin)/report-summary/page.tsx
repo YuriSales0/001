@@ -69,7 +69,7 @@ function DeltaBadge({ value }: { value: number | null }) {
 
 function KPI({ label, value, delta, sub }: { label: string; value: string; delta?: number | null; sub?: string }) {
   return (
-    <div className="rounded-xl border bg-white p-5">
+    <div className="rounded-hm border bg-white p-5">
       <div className="text-xs uppercase text-gray-500">{label}</div>
       <div className="text-2xl font-bold text-hm-black mt-1">{value}</div>
       <div className="flex items-center gap-2 mt-1">
@@ -109,7 +109,7 @@ export default function ReportsPage() {
   useEffect(() => { loadReport('current') }, [])
 
   const periodSelector = (
-    <div className="rounded-xl border bg-white p-4">
+    <div className="rounded-hm border bg-white p-4">
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex gap-1 rounded-lg bg-gray-100 p-1">
           {([
@@ -271,11 +271,11 @@ export default function ReportsPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-xl border bg-white p-5">
+          <div className="rounded-hm border bg-white p-5">
             <div className="text-xs uppercase text-gray-500 mb-3">Propriedades activas</div>
             <div className="text-3xl font-bold text-hm-black">{c.activeProperties}</div>
           </div>
-          <div className="rounded-xl border bg-white p-5">
+          <div className="rounded-hm border bg-white p-5">
             <div className="text-xs uppercase text-gray-500 mb-3">Clientes (owners)</div>
             <div className="text-3xl font-bold text-hm-black">{c.totalClients}</div>
           </div>
@@ -311,7 +311,7 @@ export default function ReportsPage() {
         {periodSelector}
 
         {/* Manager earnings highlight */}
-        <div className="rounded-xl border-2 border-[#B08A3E] bg-[#B08A3E]/5 p-5">
+        <div className="rounded-hm border-2 border-[#B08A3E] bg-[#B08A3E]/5 p-5">
           <div className="text-xs uppercase text-[#92681a] font-bold tracking-wider mb-3">A minha comissão</div>
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -343,7 +343,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Client breakdown */}
-        <div className="rounded-xl border bg-white p-5">
+        <div className="rounded-hm border bg-white p-5">
           <div className="text-xs uppercase text-gray-500 mb-3">Clientes na carteira</div>
           <div className="space-y-2">
             {c.clients.length === 0 && <div className="text-sm text-gray-400">Sem clientes atribuídos.</div>}
