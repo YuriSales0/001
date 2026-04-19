@@ -1429,5 +1429,27 @@
     "TRANSFER": "Transfer aeroporto",
     "SHOPPING": "Compras",
     "LAUNDRY": "Lavandaria"
+  },
+  "profile": {
+    "subtitle": "Os teus dados de conta e preferências",
+    "fullName": "Nome completo",
+    "changePassword": "Alterar palavra-passe",
+    "currentPassword": "Palavra-passe atual",
+    "newPassword": "Nova palavra-passe",
+    "confirmNew": "Confirmar nova",
+    "updatePassword": "Atualizar palavra-passe",
+    "savedSuccessfully": "Guardado com sucesso",
+    "saving": "A guardar…",
+    "saveChanges": "Guardar alterações",
+    "passwordUpdated": "Palavra-passe atualizada",
+    "passwordsDoNotMatch": "As palavras-passe não coincidem",
+    "passwordMinLength": "A palavra-passe deve ter pelo menos 8 caracteres",
+    "failedToSave": "Erro ao guardar",
+    "failedToUpdatePassword": "Erro ao atualizar a palavra-passe",
+    "loadFailed": "Erro ao carregar perfil",
+    "subscriptionPlan": "Plano de subscrição",
+    "viewPlanDetails": "Ver detalhes do plano",
+    "yourDocuments": "Os teus documentos",
+    "planSuffix": "plano"
   }
 }

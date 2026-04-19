@@ -247,6 +247,17 @@
       "messages": "Mensajes",
       "revenue": "Ingresos",
       "properties": "Propiedades"
+    },
+    "profile": {
+      "roleDesc": "Manager · Closer & Customer Success",
+      "responsibilities": "Responsabilidades del Manager",
+      "responsibilitiesDesc": "Actuas como Closer & Customer Success de HostMasters. Ganas una comision del 3% sobre cada suscripcion y contrato que gestionas, con el objetivo de aumentar el LTV del cliente y reducir el CAC.",
+      "yourCommissionRate": "Tu tasa de comision",
+      "setByAdmin": "Definido por el Admin",
+      "bio": "Bio profesional",
+      "bioPlaceholder": "Presentate a tus propietarios. Cual es tu experiencia? Como les ayudas?",
+      "personalCommission": "Comision personal (%)",
+      "readOnly": "— solo lectura"
     }
   },
   "admin": {
@@ -461,6 +472,36 @@
       "expertDesc": "+10% bonus + propiedades premium",
       "elite": "Elite",
       "eliteDesc": "+15% bonus + inspecciones independientes"
+    },
+    "profile": {
+      "roleDesc": "Crew · Operaciones de Campo",
+      "responsibilities": "Responsabilidades del Crew",
+      "responsibilitiesDesc": "Eres la columna vertebral operativa de HostMasters — gestionas check-ins, check-outs, limpieza, mantenimiento e inspecciones. Tu informe de trabajo tras cada visita se envia directamente al propietario.",
+      "yourTaskRate": "Tu tarifa por tarea",
+      "setByAdmin": "Definido por el Admin",
+      "bio": "Bio profesional",
+      "bioPlaceholder": "Presentate. Cual es tu especialidad? Anos de experiencia?",
+      "points": "puntos",
+      "pointsToNextLevel": "puntos para el siguiente nivel",
+      "totalTasks": "Total de tareas",
+      "approvalRate": "Tasa de aprobacion",
+      "rejected": "Rechazadas",
+      "howScoreWorks": "Como funciona tu puntuacion",
+      "scoreTip1": "Buen trabajo en una propiedad = sube tu puntuacion de confianza — tienes prioridad en tareas futuras alli",
+      "scoreTip2": "Puntuacion global mas alta = acceso a propiedades premium con mejores tarifas",
+      "scoreTip3": "Subir de nivel = bonus en tarifa — Verificado +5%, Expert +10%, Elite +15%",
+      "scoreTip4": "Los propietarios pueden marcarte como favorito — siempre te llaman primero",
+      "recentScoreChanges": "Cambios recientes en la puntuacion",
+      "scoreReasons": {
+        "taskOnTime": "Tarea a tiempo",
+        "validatedNoRepair": "Validada sin problemas",
+        "ownerPositive": "Valoracion positiva del propietario",
+        "peakAvailability": "Disponibilidad en pico",
+        "notAccepted": "Tarea no aceptada",
+        "acceptedNotDone": "Aceptada pero no completada",
+        "complaint": "Reclamacion recibida",
+        "unreportedDamage": "Dano no reportado"
+      }
     }
   },
   "finance": {
@@ -1388,5 +1429,27 @@
     "TRANSFER": "Transfer aeropuerto",
     "SHOPPING": "Compras",
     "LAUNDRY": "Lavandería"
+  },
+  "profile": {
+    "subtitle": "Tus datos de cuenta y preferencias",
+    "fullName": "Nombre completo",
+    "changePassword": "Cambiar contrasena",
+    "currentPassword": "Contrasena actual",
+    "newPassword": "Nueva contrasena",
+    "confirmNew": "Confirmar nueva",
+    "updatePassword": "Actualizar contrasena",
+    "savedSuccessfully": "Guardado correctamente",
+    "saving": "Guardando…",
+    "saveChanges": "Guardar cambios",
+    "passwordUpdated": "Contrasena actualizada",
+    "passwordsDoNotMatch": "Las contrasenas no coinciden",
+    "passwordMinLength": "La contrasena debe tener al menos 8 caracteres",
+    "failedToSave": "Error al guardar",
+    "failedToUpdatePassword": "Error al actualizar la contrasena",
+    "loadFailed": "Error al cargar el perfil",
+    "subscriptionPlan": "Plan de suscripcion",
+    "viewPlanDetails": "Ver detalles del plan",
+    "yourDocuments": "Tus documentos",
+    "planSuffix": "plan"
   }
 }
