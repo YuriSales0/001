@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Banknote, FileText } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type Payout = {
   id: string
@@ -30,6 +32,7 @@ const fmtEUR = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency'
 const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB')
 
 export default function ClientPayouts() {
+  const { t } = useLocale()
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading] = useState(true)
@@ -48,50 +51,60 @@ export default function ClientPayouts() {
   const totalIn = payouts.filter(p => p.status === 'SCHEDULED').reduce((s, p) => s + p.netAmount, 0)
   const totalOut = invoices.filter(i => i.status === 'SENT' || i.status === 'DRAFT').reduce((s, i) => s + i.amount, 0)
 
-  if (loading) return <div className="p-6 text-gray-500">Loading…</div>
+  if (loading) return (
+    <div className="p-6 space-y-6 animate-pulse">
+      <div className="h-10 rounded-hm bg-hm-sand w-64" />
+      <div className="h-48 rounded-hm bg-hm-sand" />
+    </div>
+  )
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-navy-900">My Payouts</h1>
-        <p className="text-sm text-gray-600">Earnings from your rentals and any service invoices.</p>
+        <h1 className="text-3xl font-serif font-bold text-hm-black">{t('client.payouts.title')}</h1>
+        <p className="text-sm text-gray-600">{t('client.payouts.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-xl border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500">Scheduled to receive</div>
+        <div className="rounded-hm border bg-white p-4">
+          <div className="text-xs uppercase text-gray-500">{t('client.payouts.scheduledReceive')}</div>
           <div className="text-2xl font-semibold text-green-700 mt-1">{fmtEUR(totalIn)}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500">Pending invoices to pay</div>
+        <div className="rounded-hm border bg-white p-4">
+          <div className="text-xs uppercase text-gray-500">{t('client.payouts.pendingInvoices')}</div>
           <div className="text-2xl font-semibold text-orange-600 mt-1">{fmtEUR(totalOut)}</div>
         </div>
       </div>
 
       <section>
-        <h2 className="text-lg font-semibold text-navy-900 mb-2">Rental payouts</h2>
-        <div className="rounded-xl border bg-white overflow-hidden">
-          <table className="w-full text-sm">
+        <h2 className="text-lg font-semibold text-hm-black mb-2">{t('client.payouts.rentalPayouts')}</h2>
+        <div className="rounded-hm border bg-white overflow-hidden">
+          <div className="overflow-x-auto">
+          <table className="min-w-[600px] w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
               <tr>
-                <th className="px-4 py-3">Property</th>
-                <th className="px-4 py-3">Guest</th>
-                <th className="px-4 py-3">Check-out</th>
-                <th className="px-4 py-3">Payout date</th>
-                <th className="px-4 py-3 text-right">Gross</th>
-                <th className="px-4 py-3 text-right">Commission</th>
-                <th className="px-4 py-3 text-right">Net</th>
-                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">{t('client.payouts.thProperty')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thGuest')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thCheckout')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thPayoutDate')}</th>
+                <th className="px-4 py-3 text-right">{t('client.payouts.thGross')}</th>
+                <th className="px-4 py-3 text-right">{t('client.payouts.thCommission')}</th>
+                <th className="px-4 py-3 text-right">{t('client.payouts.thNet')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thStatus')}</th>
               </tr>
             </thead>
             <tbody>
               {payouts.length === 0 && (
-                <tr><td colSpan={8} className="text-center py-8 text-gray-500">No payouts yet</td></tr>
+                <tr><td colSpan={8} className="py-12 text-center">
+                  <Banknote className="h-10 w-10 mx-auto text-gray-300 mb-2" />
+                  <p className="font-serif font-bold text-hm-black">{t('client.payouts.noPayouts')}</p>
+                  <p className="text-sm text-gray-500 mt-0.5">Payouts will appear here once bookings are completed.</p>
+                </td></tr>
               )}
               {payouts.map(p => (
                 <tr key={p.id} className="border-t">
-                  <td className="px-4 py-3">{p.property.name}</td>
-                  <td className="px-4 py-3">{p.reservation.guestName}</td>
+                  <td className="px-4 py-3 max-w-[180px]"><span className="block truncate" title={p.property.name}>{p.property.name}</span></td>
+                  <td className="px-4 py-3 max-w-[160px]"><span className="block truncate" title={p.reservation.guestName}>{p.reservation.guestName}</span></td>
                   <td className="px-4 py-3">{fmtDate(p.reservation.checkOut)}</td>
                   <td className="px-4 py-3">{fmtDate(p.scheduledFor)}</td>
                   <td className="px-4 py-3 text-right">{fmtEUR(p.grossAmount)}</td>
@@ -106,27 +119,33 @@ export default function ClientPayouts() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-navy-900 mb-2">Service invoices</h2>
-        <div className="rounded-xl border bg-white overflow-hidden">
-          <table className="w-full text-sm">
+        <h2 className="text-lg font-semibold text-hm-black mb-2">{t('client.payouts.serviceInvoices')}</h2>
+        <div className="rounded-hm border bg-white overflow-hidden">
+          <div className="overflow-x-auto">
+          <table className="min-w-[600px] w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
               <tr>
-                <th className="px-4 py-3">Date</th>
-                <th className="px-4 py-3">Description</th>
-                <th className="px-4 py-3">Property</th>
-                <th className="px-4 py-3">Issued by</th>
-                <th className="px-4 py-3">Due</th>
-                <th className="px-4 py-3 text-right">Amount</th>
-                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">{t('client.payouts.thDate')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thDescription')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thProperty')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thIssuedBy')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thDue')}</th>
+                <th className="px-4 py-3 text-right">{t('client.payouts.thAmount')}</th>
+                <th className="px-4 py-3">{t('client.payouts.thStatus')}</th>
               </tr>
             </thead>
             <tbody>
               {invoices.length === 0 && (
-                <tr><td colSpan={7} className="text-center py-8 text-gray-500">No invoices</td></tr>
+                <tr><td colSpan={7} className="py-12 text-center">
+                  <FileText className="h-10 w-10 mx-auto text-gray-300 mb-2" />
+                  <p className="font-serif font-bold text-hm-black">{t('client.payouts.noInvoices')}</p>
+                  <p className="text-sm text-gray-500 mt-0.5">Service invoices will be listed here when issued.</p>
+                </td></tr>
               )}
               {invoices.map(i => (
                 <tr key={i.id} className="border-t">
@@ -147,6 +166,7 @@ export default function ClientPayouts() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </section>
     </div>

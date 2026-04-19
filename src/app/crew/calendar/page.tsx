@@ -66,13 +66,13 @@ function DayPanel({
 }) {
   const label = day.toLocaleDateString(dateLoc,{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
   return (
-    <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-hm border bg-white shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
           <p className="text-sm font-bold text-gray-900">{events.length} tarefa{events.length!==1?'s':''}</p>
         </div>
-        <button onClick={onClose} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
+        <button onClick={onClose} aria-label="Close" className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
           <X className="h-4 w-4"/>
         </button>
       </div>
@@ -164,10 +164,10 @@ export default function CrewCalendarPage() {
   const MAX = 3
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">As Minhas Tarefas</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">As Minhas Tarefas</h1>
           <p className="text-sm text-gray-500">Tarefas atribuídas a mim esta semana</p>
         </div>
         <div className="flex items-center gap-2">
@@ -181,7 +181,7 @@ export default function CrewCalendarPage() {
         </div>
       </div>
 
-      {loading && <p className="text-sm text-gray-400">A carregar…</p>}
+      {loading && <div className="space-y-3 animate-pulse"><div className="h-6 rounded bg-hm-sand w-40" /><div className="h-32 rounded-hm bg-hm-sand" /></div>}
 
       <div className="overflow-x-auto -mx-6 px-6">
         <div className="grid grid-cols-7 gap-3 min-w-[700px]">

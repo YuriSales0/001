@@ -1,5 +1,8 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { CalendarDays, Home, User } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type BookingStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED"
 
@@ -18,11 +21,11 @@ interface BookingCardProps {
   className?: string
 }
 
-const STATUS_CONFIG: Record<BookingStatus, { label: string; bg: string; text: string }> = {
-  UPCOMING:   { label: "Upcoming",   bg: "bg-hm-blue/10",   text: "text-hm-blue"   },
-  ACTIVE:     { label: "Active",     bg: "bg-hm-gold/15",   text: "text-hm-gold-dk"},
-  COMPLETED:  { label: "Completed",  bg: "bg-hm-green/10",  text: "text-hm-green"  },
-  CANCELLED:  { label: "Cancelled",  bg: "bg-hm-red/10",    text: "text-hm-red"    },
+const STATUS_CONFIG: Record<BookingStatus, { labelKey: string; bg: string; text: string }> = {
+  UPCOMING:   { labelKey: "booking.status.upcoming",   bg: "bg-hm-blue/10",   text: "text-hm-blue"   },
+  ACTIVE:     { labelKey: "booking.status.active",     bg: "bg-hm-gold/15",   text: "text-hm-gold-dk"},
+  COMPLETED:  { labelKey: "booking.status.completed",  bg: "bg-hm-green/10",  text: "text-hm-green"  },
+  CANCELLED:  { labelKey: "booking.status.cancelled",  bg: "bg-hm-red/10",    text: "text-hm-red"    },
 }
 
 const FLAGS: Record<string, string> = {
@@ -40,6 +43,7 @@ export function BookingCard({
   id, propertyName, guestName, guestNationality,
   checkIn, checkOut, nights, grossAmount, status, channel, cleaningStatus, className,
 }: BookingCardProps) {
+  const { t } = useLocale()
   const cfg = STATUS_CONFIG[status]
 
   return (
@@ -58,7 +62,7 @@ export function BookingCard({
           </div>
         </div>
         <span className={cn("text-xs font-sans font-semibold rounded-full px-2.5 py-1", cfg.bg, cfg.text)}>
-          {cfg.label}
+          {t(cfg.labelKey)}
         </span>
       </div>
 
@@ -66,7 +70,7 @@ export function BookingCard({
         <CalendarDays className="h-4 w-4 text-hm-gold shrink-0" />
         <span>{fmtDate(checkIn)} → {fmtDate(checkOut)}</span>
         <span className="text-hm-slate/50">·</span>
-        <span>{nights} nights</span>
+        <span>{nights} {t('booking.nights')}</span>
       </div>
 
       <div className="flex items-center justify-between">
@@ -83,7 +87,7 @@ export function BookingCard({
               cleaningStatus === "confirmed" ? "bg-hm-blue/10 text-hm-blue" :
               "bg-amber-50 text-amber-700"
             )}>
-              Cleaning: {cleaningStatus}
+              {t('booking.cleaning')}: {t(`booking.cleaningStatus.${cleaningStatus}`)}
             </span>
           )}
         </div>

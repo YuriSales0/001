@@ -140,7 +140,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
       <button
         onClick={() => setOpen(v => !v)}
         className={`fixed bottom-14 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all ${
-          open ? 'bg-gray-800 rotate-90' : 'bg-navy-900 hover:bg-navy-800'
+          open ? 'bg-gray-800 rotate-90' : 'bg-hm-black hover:bg-hm-black/90'
         }`}
         title="Assistente HostMasters"
       >
@@ -160,7 +160,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
           style={{ width: 370, height: 520 }}
         >
           {/* Header */}
-          <div className="flex items-center gap-2.5 rounded-t-2xl border-b bg-navy-900 px-4 py-3">
+          <div className="flex items-center gap-2.5 rounded-t-2xl border-b bg-hm-black px-4 py-3">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10">
               <Bot className="h-4 w-4 text-white" />
             </div>
@@ -170,7 +170,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
                 {ready === false ? t('aiChat.statusPending') : ready === true ? t('aiChat.statusActive') : role}
               </p>
             </div>
-            <button onClick={() => setOpen(false)} className="text-white/40 hover:text-white transition-colors">
+            <button onClick={() => setOpen(false)} aria-label="Close" className="text-white/40 hover:text-white transition-colors">
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -188,7 +188,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
                 <div
                   className={`max-w-[88%] rounded-xl px-3 py-2 text-[13px] leading-relaxed ${
                     m.role === 'user'
-                      ? 'bg-navy-900 text-white rounded-br-sm'
+                      ? 'bg-hm-black text-white rounded-br-sm'
                       : 'bg-gray-50 text-gray-700 rounded-bl-sm border border-gray-100'
                   }`}
                   style={{ wordBreak: 'break-word' }}
@@ -229,12 +229,12 @@ export function AiChat({ role = 'ADMIN' }: Props) {
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
               placeholder={placeholder}
               disabled={loading}
-              className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 disabled:opacity-50"
+              className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold disabled:opacity-50"
             />
             <button
               onClick={send}
               disabled={loading || !input.trim()}
-              className="rounded-lg bg-navy-900 p-2 text-white hover:bg-navy-800 disabled:opacity-40 transition-colors"
+              className="rounded-lg bg-hm-black p-2 text-white hover:bg-hm-black/90 disabled:opacity-40 transition-colors"
             >
               <Send className="h-4 w-4" />
             </button>

@@ -132,31 +132,31 @@ function CreateModal({ properties, onClose, onCreated }: { properties: Property[
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-base font-bold">Nova visita de manutenção</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-4 w-4"/></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-4 w-4"/></button>
         </div>
         <div className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Tipo</label>
-              <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+              <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 <option value="MAINTENANCE_PREVENTIVE">Preventiva</option>
                 <option value="MAINTENANCE_CORRECTIVE">Correctiva</option>
               </select>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Data</label>
-              <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+              <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
             </div>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Propriedade</label>
-            <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+            <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Técnico responsável</label>
-            <select value={assigneeId} onChange={e => setAssigneeId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+            <select value={assigneeId} onChange={e => setAssigneeId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               <option value="">— Atribuir automaticamente —</option>
               {crew.map(c => <option key={c.id} value={c.id}>{c.name || c.email}</option>)}
             </select>
@@ -164,13 +164,13 @@ function CreateModal({ properties, onClose, onCreated }: { properties: Property[
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Título / motivo</label>
             <input value={title} onChange={e => setTitle(e.target.value)} placeholder={type === 'MAINTENANCE_CORRECTIVE' ? 'Ex: Torneira da cozinha com fuga' : 'Ex: Revisão trimestral — ar condicionado'}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Descrição (opcional)</label>
             <textarea rows={2} value={description} onChange={e => setDescription(e.target.value)}
               placeholder={type === 'MAINTENANCE_CORRECTIVE' ? 'Descreve o problema reportado…' : 'Instruções especiais para o técnico…'}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none"/>
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none"/>
           </div>
         </div>
         <div className="flex gap-3 px-6 py-4 border-t">
@@ -236,11 +236,11 @@ function CorrectivePanel({ task, onSubmitted }: { task: Task; onSubmitted: () =>
   if (submitted && existing) {
     return (
       <div className="space-y-4">
-        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 flex items-center gap-2">
+        <div className="rounded-hm border border-green-200 bg-green-50 px-4 py-3 flex items-center gap-2">
           <FileText className="h-4 w-4 text-green-600 shrink-0"/>
           <span className="text-sm text-green-700 font-semibold">Relatório corretivo submetido</span>
         </div>
-        <div className="rounded-xl border bg-white p-4 space-y-3">
+        <div className="rounded-hm border bg-white p-4 space-y-3">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-0.5">Problema</p>
             <p className="text-sm text-gray-800">{existing.problem}</p>
@@ -298,28 +298,28 @@ function CorrectivePanel({ task, onSubmitted }: { task: Task; onSubmitted: () =>
         <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Problema reportado *</label>
         <textarea rows={3} value={problem} onChange={e => setProblem(e.target.value)} disabled={isComplete}
           placeholder="Descreve o problema em detalhe…"
-          className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none disabled:bg-gray-50"/>
+          className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none disabled:bg-gray-50"/>
       </div>
 
       <div>
         <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Causa raiz identificada</label>
         <textarea rows={2} value={rootCause} onChange={e => setRootCause(e.target.value)} disabled={isComplete}
           placeholder="Ex: Junta de borracha gasta, corrosão na tubagem…"
-          className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none disabled:bg-gray-50"/>
+          className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none disabled:bg-gray-50"/>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Acção tomada</label>
           <select value={actionTaken} onChange={e => setActionTaken(e.target.value)} disabled={isComplete}
-            className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 disabled:bg-gray-50">
+            className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold disabled:bg-gray-50">
             {CORRECTIVE_ACTIONS.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
           </select>
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Custo (€)</label>
           <input type="number" min="0" step="0.01" value={cost} onChange={e => setCost(e.target.value)} disabled={isComplete}
-            className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 disabled:bg-gray-50"/>
+            className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold disabled:bg-gray-50"/>
         </div>
       </div>
 
@@ -328,7 +328,7 @@ function CorrectivePanel({ task, onSubmitted }: { task: Task; onSubmitted: () =>
           <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Nome / empresa do especialista</label>
           <input value={specialistName} onChange={e => setSpecialistName(e.target.value)} disabled={isComplete}
             placeholder="Ex: Canalizações Silva, Lda."
-            className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 disabled:bg-gray-50"/>
+            className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold disabled:bg-gray-50"/>
         </div>
       )}
 
@@ -355,7 +355,7 @@ function CorrectivePanel({ task, onSubmitted }: { task: Task; onSubmitted: () =>
             <div key={i} className="flex gap-2">
               <input value={url} onChange={e => setPhotoUrl(i, e.target.value)} disabled={isComplete}
                 placeholder="https://…"
-                className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 disabled:bg-gray-50 font-mono text-xs"/>
+                className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold disabled:bg-gray-50 font-mono text-xs"/>
               {!isComplete && photoUrls.length > 1 && (
                 <button onClick={() => removePhotoField(i)} className="p-2 text-gray-300 hover:text-red-500 rounded-lg">
                   <Trash2 className="h-4 w-4"/>
@@ -514,7 +514,7 @@ export default function MaintenancePage() {
             >
               {showCompleted ? '✓ Todas' : 'Activas'}
             </button>
-            <button onClick={() => setShowCreate(true)} className="rounded-lg bg-gray-900 text-white p-1.5 hover:bg-gray-800" title="Nova visita">
+            <button onClick={() => setShowCreate(true)} className="rounded-lg bg-gray-900 text-white p-2 hover:bg-gray-800" title="Nova visita">
               <Plus className="h-4 w-4"/>
             </button>
           </div>
@@ -583,7 +583,7 @@ export default function MaintenancePage() {
             </div>
 
             {selected.assignee && (
-              <div className="rounded-xl border bg-white px-4 py-3 mb-4 text-sm">
+              <div className="rounded-hm border bg-white px-4 py-3 mb-4 text-sm">
                 <span className="text-gray-500">Técnico:</span>
                 <span className="font-semibold text-gray-900 ml-2">{selected.assignee.name}</span>
               </div>
@@ -591,7 +591,7 @@ export default function MaintenancePage() {
 
             {/* ── CORRECTIVE: custom report form ── */}
             {selected.type === 'MAINTENANCE_CORRECTIVE' && (
-              <div className="rounded-xl border bg-white p-5">
+              <div className="rounded-hm border bg-white p-5">
                 <CorrectivePanel key={selected.id} task={selected} onSubmitted={() => load()} />
               </div>
             )}
@@ -605,7 +605,7 @@ export default function MaintenancePage() {
                 </div>
 
                 {(submitted === selected.id || (isComplete && !preventiveReport)) && (
-                  <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 mb-4 flex items-center gap-2">
+                  <div className="rounded-hm border border-green-200 bg-green-50 px-4 py-3 mb-4 flex items-center gap-2">
                     <FileText className="h-4 w-4 text-green-600 shrink-0"/>
                     <span className="text-sm text-green-700 font-semibold">Relatório preventivo submetido.</span>
                   </div>
@@ -613,7 +613,7 @@ export default function MaintenancePage() {
 
                 {/* Show submitted preventive report */}
                 {isComplete && preventiveReport && (
-                  <div className="rounded-xl border bg-white p-4 mb-4 space-y-3">
+                  <div className="rounded-hm border bg-white p-4 mb-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Relatório preventivo</h3>
                       <span className="text-xs text-gray-400">{preventiveReport.checkedCount}/{preventiveReport.totalCount} verificados</span>
@@ -652,7 +652,7 @@ export default function MaintenancePage() {
                 {!isComplete && sections.map(sec => (
                   <div key={sec.section} className="mb-4">
                     <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-2 px-1">{sec.section}</h3>
-                    <div className="rounded-xl border bg-white overflow-hidden divide-y">
+                    <div className="rounded-hm border bg-white overflow-hidden divide-y">
                       {sec.items.map(item => {
                         const state = checklist[item.id] ?? { checked: false, anomaly: false, note: '' }
                         const hasNote = expandedNote === item.id
@@ -684,7 +684,7 @@ export default function MaintenancePage() {
                               <div className="px-4 pb-3 pt-2 border-t border-gray-100 bg-gray-50">
                                 <textarea rows={2} value={state.note} onChange={e => setNote(item.id, e.target.value)}
                                   placeholder="Descreve a anomalia ou adiciona observações…"
-                                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none"/>
+                                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none"/>
                               </div>
                             )}
                           </div>
@@ -705,7 +705,7 @@ export default function MaintenancePage() {
                         <div key={i} className="flex gap-2">
                           <input value={url} onChange={e => setPhotoUrls(p => p.map((u, idx) => idx === i ? e.target.value : u))}
                             placeholder="https://…"
-                            className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 font-mono text-xs"/>
+                            className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold font-mono text-xs"/>
                           {photoUrls.length > 1 && (
                             <button onClick={() => setPhotoUrls(p => p.filter((_, idx) => idx !== i))} className="p-2 text-gray-300 hover:text-red-500 rounded-lg">
                               <Trash2 className="h-4 w-4"/>

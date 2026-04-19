@@ -166,7 +166,12 @@ export default function ClientReportsPage() {
   // Top months for bar chart (net)
   const maxNet = Math.max(...monthlyData.map(([, d]) => d.net), 1)
 
-  if (loading) return <div className="p-6 text-sm text-gray-400">A carregar…</div>
+  if (loading) return (
+    <div className="p-6 space-y-6 animate-pulse">
+      <div className="h-10 rounded-hm bg-hm-sand w-64" />
+      <div className="h-48 rounded-hm bg-hm-sand" />
+    </div>
+  )
   if (loadError) return <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
 
   return (
@@ -174,7 +179,7 @@ export default function ClientReportsPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Relatórios</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">Relatórios</h1>
           <p className="text-sm text-gray-500">
             Resumo financeiro e de ocupação das tuas propriedades
             {summary && <span className="text-gray-400"> · {summary.period} vs. {summary.previousPeriod}</span>}
@@ -184,7 +189,7 @@ export default function ClientReportsPage() {
           <select
             value={propFilter}
             onChange={e => setPropFilter(e.target.value)}
-            className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+            className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
           >
             <option value="ALL">Todas as propriedades</option>
             {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -228,9 +233,9 @@ export default function ClientReportsPage() {
             { label: 'Ocupação', value: `${summary.current.occupancy}%`, delta: summary.delta.occupancy, prev: `${summary.previous.occupancy}%` },
             { label: 'Preço médio', value: fmt(summary.current.avgPricePerNight), delta: null, prev: fmt(summary.previous.avgPricePerNight) },
           ].map(kpi => (
-            <div key={kpi.label} className="rounded-xl border bg-white p-4">
+            <div key={kpi.label} className="rounded-hm border bg-white p-4">
               <div className="text-xs uppercase text-gray-500">{kpi.label}</div>
-              <div className="text-xl font-bold text-navy-900 mt-1">{kpi.value}</div>
+              <div className="text-xl font-bold text-hm-black mt-1">{kpi.value}</div>
               <div className="flex items-center gap-1.5 mt-1">
                 {kpi.delta !== null && kpi.delta !== undefined && (
                   <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${kpi.delta > 0 ? 'text-green-600' : kpi.delta < 0 ? 'text-red-500' : 'text-gray-400'}`}>
@@ -247,16 +252,16 @@ export default function ClientReportsPage() {
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <Euro className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Receita Bruta</span>
           </div>
-          <div className="text-2xl font-bold text-navy-900">{fmt(totalGross)}</div>
+          <div className="text-2xl font-bold text-hm-black">{fmt(totalGross)}</div>
           <div className="text-xs text-gray-400 mt-0.5">total acumulado</div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <TrendingUp className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Receita Líquida</span>
@@ -265,21 +270,21 @@ export default function ClientReportsPage() {
           <div className="text-xs text-gray-400 mt-0.5">após comissão</div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <CalendarDays className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Noites Reservadas</span>
           </div>
-          <div className="text-2xl font-bold text-navy-900">{totalNights}</div>
+          <div className="text-2xl font-bold text-hm-black">{totalNights}</div>
           <div className="text-xs text-gray-400 mt-0.5">total</div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <BarChart3 className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Preço Médio/Noite</span>
           </div>
-          <div className="text-2xl font-bold text-navy-900">{fmt(avgNightly)}</div>
+          <div className="text-2xl font-bold text-hm-black">{fmt(avgNightly)}</div>
           <div className="text-xs text-gray-400 mt-0.5">gross / noite</div>
         </div>
       </div>
@@ -287,20 +292,20 @@ export default function ClientReportsPage() {
       {/* Occupancy by property */}
       {occupancyByProperty.length > 0 && (
         <section>
-          <h2 className="text-base font-semibold text-navy-900 mb-3 flex items-center gap-2">
+          <h2 className="text-base font-semibold text-hm-black mb-3 flex items-center gap-2">
             <Home className="h-4 w-4" />
             Ocupação este ano (por propriedade)
           </h2>
           <div className="space-y-3">
             {occupancyByProperty.map(p => (
-              <div key={p.id} className="rounded-xl border bg-white p-4">
+              <div key={p.id} className="rounded-hm border bg-white p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-navy-900">{p.name}</span>
-                  <span className="text-sm font-bold text-navy-900">{fmtPct(p.occupancy)}</span>
+                  <span className="text-sm font-medium text-hm-black">{p.name}</span>
+                  <span className="text-sm font-bold text-hm-black">{fmtPct(p.occupancy)}</span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-gray-100">
                   <div
-                    className="h-2 rounded-full bg-navy-900 transition-all"
+                    className="h-2 rounded-full bg-hm-black transition-all"
                     style={{ width: `${Math.min(p.occupancy, 100)}%` }}
                   />
                 </div>
@@ -313,31 +318,31 @@ export default function ClientReportsPage() {
 
       {/* Monthly breakdown */}
       <section>
-        <h2 className="text-base font-semibold text-navy-900 mb-3 flex items-center gap-2">
+        <h2 className="text-base font-semibold text-hm-black mb-3 flex items-center gap-2">
           <BarChart3 className="h-4 w-4" />
           Desempenho mensal (últimos 12 meses)
         </h2>
 
         {monthlyData.length === 0 ? (
-          <div className="rounded-xl border bg-white p-8 text-center text-gray-400 text-sm">
+          <div className="rounded-hm border bg-white p-8 text-center text-gray-400 text-sm">
             Sem dados de reservas ainda.
           </div>
         ) : (
           <>
             {/* Mini bar chart */}
-            <div className="rounded-xl border bg-white p-4 mb-4">
+            <div className="rounded-hm border bg-white p-4 mb-4">
               <div className="flex items-end gap-1 h-24">
                 {[...monthlyData].reverse().map(([key, d]) => (
                   <div key={key} className="flex-1 flex flex-col items-center gap-1 group relative">
                     <div
-                      className="w-full rounded-t bg-navy-900 min-h-[2px] transition-all"
+                      className="w-full rounded-t bg-hm-black min-h-[2px] transition-all"
                       style={{ height: `${(d.net / maxNet) * 88}px` }}
                     />
                     <span className="text-[9px] text-gray-400 rotate-45 origin-left whitespace-nowrap mt-1">
                       {monthLabel(key)}
                     </span>
                     {/* Tooltip */}
-                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-navy-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-hm-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
                       {monthLabel(key)}: {fmt(d.net)} líq.
                     </div>
                   </div>
@@ -346,7 +351,7 @@ export default function ClientReportsPage() {
             </div>
 
             {/* Table */}
-            <div className="rounded-xl border bg-white overflow-hidden">
+            <div className="rounded-hm border bg-white overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500 border-b">
                   <tr>
@@ -361,7 +366,7 @@ export default function ClientReportsPage() {
                 <tbody className="divide-y">
                   {monthlyData.map(([key, d]) => (
                     <tr key={key} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 font-medium text-navy-900 capitalize">{monthLabel(key)}</td>
+                      <td className="px-4 py-3 font-medium text-hm-black capitalize">{monthLabel(key)}</td>
                       <td className="px-4 py-3 text-center text-gray-600">{d.reservations}</td>
                       <td className="px-4 py-3 text-center text-gray-600">{d.nights}</td>
                       <td className="px-4 py-3 text-right text-gray-600">{fmt(d.gross)}</td>
@@ -372,7 +377,7 @@ export default function ClientReportsPage() {
                 </tbody>
                 <tfoot className="border-t bg-gray-50">
                   <tr>
-                    <td className="px-4 py-3 font-semibold text-navy-900">Total</td>
+                    <td className="px-4 py-3 font-semibold text-hm-black">Total</td>
                     <td className="px-4 py-3 text-center font-semibold">
                       {monthlyData.reduce((s, [, d]) => s + d.reservations, 0)}
                     </td>

@@ -73,7 +73,7 @@ export default function OperationsPage() {
       {/* Header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between shrink-0">
         <div>
-          <h1 className="text-xl font-bold text-navy-900">Operations</h1>
+          <h1 className="text-xl font-serif font-bold text-hm-black">Operations</h1>
           <p className="text-xs text-gray-500 mt-0.5">
             {activeCount} active · {upcomingCount} upcoming
           </p>
@@ -96,9 +96,9 @@ export default function OperationsPage() {
             return (
               <div
                 key={col.id}
-                className={`flex flex-col w-72 rounded-xl border-2 bg-white flex-shrink-0 ${col.color}`}
+                className={`flex flex-col w-72 rounded-hm border-2 bg-white flex-shrink-0 ${col.color}`}
               >
-                <div className={`px-3 py-2.5 rounded-t-xl border-b ${col.header} flex items-center justify-between`}>
+                <div className={`px-3 py-2.5 rounded-t-hm border-b ${col.header} flex items-center justify-between`}>
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-600">
                     {col.label}
                   </span>
@@ -189,7 +189,7 @@ export default function OperationsPage() {
                   <span className="text-xl">{FLAGS[selected.guestNationality] ?? "🌍"}</span>
                 )}
                 <div>
-                  <div className="font-bold text-navy-900">{selected.guestName}</div>
+                  <div className="font-bold text-hm-black">{selected.guestName}</div>
                   <div className="text-xs text-gray-400">{selected.property.name}</div>
                 </div>
               </div>
@@ -200,17 +200,17 @@ export default function OperationsPage() {
 
             <div className="p-5 space-y-5">
               {/* Dates */}
-              <div className="rounded-xl border bg-blue-50 border-blue-200 p-4">
+              <div className="rounded-hm border bg-blue-50 border-blue-200 p-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <div className="text-xs text-gray-500 mb-1">Check-in</div>
-                    <div className="font-bold text-navy-900">
+                    <div className="font-bold text-hm-black">
                       {new Date(selected.checkIn).toLocaleDateString("en-GB", { day: "2-digit", month: "long" })}
                     </div>
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 mb-1">Check-out</div>
-                    <div className="font-bold text-navy-900">
+                    <div className="font-bold text-hm-black">
                       {new Date(selected.checkOut).toLocaleDateString("en-GB", { day: "2-digit", month: "long" })}
                     </div>
                   </div>
@@ -251,7 +251,7 @@ export default function OperationsPage() {
                         { label: "Emergency", hours: sla.emergency },
                       ].map(item => (
                         <div key={item.label} className="rounded-lg bg-gray-50 border p-2">
-                          <div className="text-lg font-bold text-navy-900">{item.hours}h</div>
+                          <div className="text-lg font-bold text-hm-black">{item.hours}h</div>
                           <div className="text-[10px] text-gray-400">{item.label}</div>
                         </div>
                       ))}

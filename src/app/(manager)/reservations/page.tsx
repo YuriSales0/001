@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle, Play, CheckCheck, Ban } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type ReservationStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED"
 type Platform = "AIRBNB" | "BOOKING" | "DIRECT" | "OTHER"
@@ -29,11 +30,11 @@ const STATUS_COLOR: Record<ReservationStatus, string> = {
   COMPLETED: "bg-gray-100 text-gray-700",
   CANCELLED: "bg-red-100 text-red-700",
 }
-const STATUS_COLS: { id: ReservationStatus; label: string; border: string; header: string }[] = [
-  { id: "UPCOMING",  label: "Upcoming",  border: "border-blue-200",  header: "bg-blue-50" },
-  { id: "ACTIVE",    label: "Active",    border: "border-emerald-200",header: "bg-emerald-50" },
-  { id: "COMPLETED", label: "Completed", border: "border-gray-200",  header: "bg-gray-50" },
-  { id: "CANCELLED", label: "Cancelled", border: "border-red-200",   header: "bg-red-50" },
+const STATUS_COLS: { id: ReservationStatus; labelKey: string; border: string; header: string }[] = [
+  { id: "UPCOMING",  labelKey: "manager.reservations.upcoming",  border: "border-blue-200",  header: "bg-blue-50" },
+  { id: "ACTIVE",    labelKey: "manager.reservations.active",    border: "border-emerald-200",header: "bg-emerald-50" },
+  { id: "COMPLETED", labelKey: "manager.reservations.completed", border: "border-gray-200",  header: "bg-gray-50" },
+  { id: "CANCELLED", labelKey: "manager.reservations.cancelled", border: "border-red-200",   header: "bg-red-50" },
 ]
 const PLATFORM_COLOR: Record<string, string> = {
   AIRBNB:  "bg-rose-100 text-rose-800",
@@ -66,6 +67,7 @@ function daysUntil(s: string) {
 
 // ── Pipeline detail sidebar ───────────────────────────────────────────────────
 function PipelineDetail({ r, onClose }: { r: Reservation; onClose: ()=>void }) {
+  const { t } = useLocale()
   const plan = r.property.owner?.subscriptionPlan ?? "STARTER"
   const sla = PLAN_SLA[plan]
   const gross = r.grossAmount ?? r.amount
@@ -80,45 +82,45 @@ function PipelineDetail({ r, onClose }: { r: Reservation; onClose: ()=>void }) {
               <div className="text-xs text-gray-400">{r.property.name}</div>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><XCircle className="h-5 w-5"/></button>
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600"><XCircle className="h-5 w-5"/></button>
         </div>
         <div className="p-5 space-y-5">
           {/* Dates */}
-          <div className="rounded-xl border bg-blue-50 border-blue-200 p-4">
+          <div className="rounded-hm border bg-blue-50 border-blue-200 p-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <div className="text-xs text-gray-500 mb-1">Check-in</div>
+                <div className="text-xs text-gray-500 mb-1">{t('taskTypes.CHECK_IN')}</div>
                 <div className="font-bold text-gray-900">{fmtFull(r.checkIn)}</div>
               </div>
               <div>
-                <div className="text-xs text-gray-500 mb-1">Check-out</div>
+                <div className="text-xs text-gray-500 mb-1">{t('taskTypes.CHECK_OUT')}</div>
                 <div className="font-bold text-gray-900">{fmtFull(r.checkOut)}</div>
               </div>
             </div>
-            <div className="mt-2 text-xs text-gray-500">{nights(r.checkIn,r.checkOut)} nights · {r.channel??r.platform??'Direct'}</div>
+            <div className="mt-2 text-xs text-gray-500">{nights(r.checkIn,r.checkOut)} {t('manager.reservations.nights')} · {r.channel??r.platform??'Direct'}</div>
           </div>
           {/* Financials */}
           <div>
-            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">Financials</h3>
+            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('manager.reservations.financials')}</h3>
             <div className="space-y-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Gross booking</span>
+                <span className="text-gray-600">{t('manager.reservations.grossBooking')}</span>
                 <span className="font-semibold">{fmtMoney(gross)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">HostMasters commission (20%)</span>
+                <span className="text-gray-500">{t('manager.reservations.hmCommission')}</span>
                 <span className="text-emerald-600 font-semibold">{fmtMoney(gross*0.2)}</span>
               </div>
             </div>
           </div>
           {/* SLA */}
           <div>
-            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">SLA — {plan} Plan</h3>
+            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('manager.reservations.sla')} — {plan} Plan</h3>
             <div className="grid grid-cols-3 gap-2 text-center">
               {[
-                {label:"Guest response",hours:sla.guest},
-                {label:"Owner response",hours:sla.owner},
-                {label:"Emergency",hours:sla.emergency},
+                {label:t('manager.reservations.guestResponse'),hours:sla.guest},
+                {label:t('manager.reservations.ownerResponse'),hours:sla.owner},
+                {label:t('manager.reservations.emergency'),hours:sla.emergency},
               ].map(item=>(
                 <div key={item.label} className="rounded-lg bg-gray-50 border p-2">
                   <div className="text-lg font-bold text-gray-900">{item.hours}h</div>
@@ -129,19 +131,19 @@ function PipelineDetail({ r, onClose }: { r: Reservation; onClose: ()=>void }) {
           </div>
           {/* Lifecycle */}
           <div>
-            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">Full lifecycle</h3>
+            <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('manager.reservations.fullLifecycle')}</h3>
             <div className="space-y-1.5">
               {[
-                {label:"Booking confirmed → owner notified",done:true},
-                {label:"Guest welcome email sent",done:true},
-                {label:"Nuki access code generated",done:true},
-                {label:"48h before: cleaning confirmed",done:r.status!=="UPCOMING"},
-                {label:"Pre-stay inspection done",done:r.status==="ACTIVE"||r.status==="COMPLETED"},
-                {label:"Guest reminder sent",done:r.status!=="UPCOMING"},
-                {label:"Check-in: code activated",done:r.status==="ACTIVE"||r.status==="COMPLETED"},
-                {label:"Check-out: inspection + cleaning",done:r.status==="COMPLETED"},
-                {label:"Review request sent",done:r.status==="COMPLETED"},
-                {label:"Financials logged",done:r.status==="COMPLETED"},
+                {label:t('manager.reservations.lifecycle.bookingConfirmed'),done:true},
+                {label:t('manager.reservations.lifecycle.welcomeEmail'),done:true},
+                {label:t('manager.reservations.lifecycle.nukiCode'),done:true},
+                {label:t('manager.reservations.lifecycle.cleaningConfirmed'),done:r.status!=="UPCOMING"},
+                {label:t('manager.reservations.lifecycle.preStayInspection'),done:r.status==="ACTIVE"||r.status==="COMPLETED"},
+                {label:t('manager.reservations.lifecycle.guestReminder'),done:r.status!=="UPCOMING"},
+                {label:t('manager.reservations.lifecycle.checkInCode'),done:r.status==="ACTIVE"||r.status==="COMPLETED"},
+                {label:t('manager.reservations.lifecycle.checkOutInspection'),done:r.status==="COMPLETED"},
+                {label:t('manager.reservations.lifecycle.reviewRequest'),done:r.status==="COMPLETED"},
+                {label:t('manager.reservations.lifecycle.financialsLogged'),done:r.status==="COMPLETED"},
               ].map(item=>(
                 <div key={item.label} className="flex items-center gap-2 text-sm">
                   {item.done?(
@@ -162,6 +164,7 @@ function PipelineDetail({ r, onClose }: { r: Reservation; onClose: ()=>void }) {
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function ReservationsPage() {
+  const { t } = useLocale()
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -204,7 +207,7 @@ export default function ReservationsPage() {
     e.preventDefault()
     setCreateError("")
     if (!form.propertyId||!form.guestName||!form.checkIn||!form.checkOut||!form.amount) {
-      setCreateError("Fill in all required fields.")
+      setCreateError(t('manager.reservations.fillRequired'))
       return
     }
     setCreating(true)
@@ -225,7 +228,7 @@ export default function ReservationsPage() {
     })
     if (!res.ok) {
       const err = await res.json().catch(()=>({}))
-      setCreateError(err.error??"Failed to create reservation")
+      setCreateError(err.error??t('manager.reservations.failedToCreate'))
     } else {
       setShowCreate(false)
       setForm({propertyId:"",guestName:"",guestEmail:"",guestPhone:"",checkIn:"",checkOut:"",amount:"",platform:"DIRECT",guestNationality:"",guestAgeGroup:"",guestGroupSize:"",hasChildren:false,hasPets:false,guestLanguage:""})
@@ -276,12 +279,12 @@ export default function ReservationsPage() {
       .sort((a,b)=>new Date(a.checkIn).getTime()-new Date(b.checkIn).getTime())
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reservations</h1>
-          <p className="text-sm text-gray-500">Track and manage all guest reservations.</p>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('common.reservations')}</h1>
+          <p className="text-sm text-gray-500">{t('manager.reservations.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           {/* View toggle */}
@@ -289,12 +292,12 @@ export default function ReservationsPage() {
             <button onClick={()=>setView('list')}
               className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors ${
                 view==='list'?'bg-gray-900 text-white':'bg-white text-gray-600 hover:bg-gray-50'}`}>
-              <LayoutList className="h-4 w-4"/>List
+              <LayoutList className="h-4 w-4"/>{t('manager.reservations.list')}
             </button>
             <button onClick={()=>setView('pipeline')}
               className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors border-l ${
                 view==='pipeline'?'bg-gray-900 text-white':'bg-white text-gray-600 hover:bg-gray-50'}`}>
-              <Columns className="h-4 w-4"/>Pipeline
+              <Columns className="h-4 w-4"/>{t('manager.reservations.pipeline')}
             </button>
           </div>
           <button onClick={()=>setShowCreate(true)}
@@ -307,12 +310,12 @@ export default function ReservationsPage() {
       {/* Summary strip */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          {label:"Upcoming", value:upcoming,           icon:CalendarDays, color:"text-blue-600 bg-blue-50"},
-          {label:"Active",   value:active,             icon:Clock,        color:"text-emerald-600 bg-emerald-50"},
-          {label:"Completed",value:completed,           icon:User,         color:"text-gray-600 bg-gray-100"},
-          {label:"Revenue",  value:fmtMoney(totalRev),  icon:DollarSign,   color:"text-amber-600 bg-amber-50"},
+          {label:t('manager.reservations.upcoming'), value:upcoming,           icon:CalendarDays, color:"text-blue-600 bg-blue-50"},
+          {label:t('manager.reservations.active'),   value:active,             icon:Clock,        color:"text-emerald-600 bg-emerald-50"},
+          {label:t('manager.reservations.completed'),value:completed,           icon:User,         color:"text-gray-600 bg-gray-100"},
+          {label:t('common.revenue'),  value:fmtMoney(totalRev),  icon:DollarSign,   color:"text-amber-600 bg-amber-50"},
         ].map(({label,value,icon:Icon,color})=>(
-          <div key={label} className="rounded-xl border bg-white p-4 flex items-center gap-3">
+          <div key={label} className="rounded-hm border bg-white p-4 flex items-center gap-3">
             <div className={`rounded-lg p-2 ${color.split(" ")[1]}`}><Icon className={`h-5 w-5 ${color.split(" ")[0]}`}/></div>
             <div>
               <p className="text-xs text-gray-500">{label}</p>
@@ -329,25 +332,25 @@ export default function ReservationsPage() {
           <div className="flex flex-wrap gap-3">
             <select value={filterProperty} onChange={e=>setFilterProperty(e.target.value)}
               className="rounded-lg border bg-white px-3 py-2 text-sm">
-              <option value="all">All properties</option>
+              <option value="all">{t('manager.reservations.allProperties')}</option>
               {properties.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
             <select value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}
               className="rounded-lg border bg-white px-3 py-2 text-sm">
-              <option value="all">All statuses</option>
-              <option value="UPCOMING">Upcoming</option>
-              <option value="ACTIVE">Active</option>
-              <option value="COMPLETED">Completed</option>
-              <option value="CANCELLED">Cancelled</option>
+              <option value="all">{t('manager.reservations.allStatuses')}</option>
+              <option value="UPCOMING">{t('manager.reservations.upcoming')}</option>
+              <option value="ACTIVE">{t('manager.reservations.active')}</option>
+              <option value="COMPLETED">{t('manager.reservations.completed')}</option>
+              <option value="CANCELLED">{t('manager.reservations.cancelled')}</option>
             </select>
           </div>
           <div className="space-y-3">
-            {loading&&<div className="py-8 text-center text-sm text-gray-400">Loading…</div>}
+            {loading&&<div className="py-8 text-center text-sm text-gray-400">{t('common.loading')}</div>}
             {!loading&&filtered.length===0&&(
-              <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">No reservations match your filters.</div>
+              <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">{t('manager.reservations.noMatch')}</div>
             )}
             {filtered.map(r=>(
-              <div key={r.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
+              <div key={r.id} className="rounded-hm border bg-white p-4 hover:shadow-sm transition-shadow">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-start gap-3 flex-1 min-w-0">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
@@ -378,16 +381,16 @@ export default function ReservationsPage() {
                             onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'ACTIVE') }}
                             disabled={activating === r.id}
                             className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-emerald-700 disabled:opacity-50 transition-colors"
-                            title="Activar reserva"
+                            title={t('manager.reservations.activate')}
                           >
                             <Play className="h-3 w-3" />
-                            {activating === r.id ? '...' : 'Activar'}
+                            {activating === r.id ? '...' : t('manager.reservations.activate')}
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); cancelReservation(r.id, r.guestName) }}
                             disabled={activating === r.id}
                             className="inline-flex items-center gap-1 rounded-lg border border-red-200 text-red-500 px-2.5 py-1 text-[11px] font-semibold hover:bg-red-50 disabled:opacity-50 transition-colors"
-                            title="Cancelar reserva"
+                            title={t('manager.reservations.cancelReservation')}
                           >
                             <Ban className="h-3 w-3" />
                           </button>
@@ -399,16 +402,16 @@ export default function ReservationsPage() {
                             onClick={(e) => { e.stopPropagation(); changeReservationStatus(r.id, 'COMPLETED') }}
                             disabled={activating === r.id}
                             className="inline-flex items-center gap-1 rounded-lg bg-gray-600 text-white px-2.5 py-1 text-[11px] font-semibold hover:bg-gray-700 disabled:opacity-50 transition-colors"
-                            title="Marcar como concluída"
+                            title={t('manager.reservations.markCompleted')}
                           >
                             <CheckCheck className="h-3 w-3" />
-                            {activating === r.id ? '...' : 'Concluir'}
+                            {activating === r.id ? '...' : t('manager.reservations.complete')}
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); cancelReservation(r.id, r.guestName) }}
                             disabled={activating === r.id}
                             className="inline-flex items-center gap-1 rounded-lg border border-red-200 text-red-500 px-2.5 py-1 text-[11px] font-semibold hover:bg-red-50 disabled:opacity-50 transition-colors"
-                            title="Cancelar reserva"
+                            title={t('manager.reservations.cancelReservation')}
                           >
                             <Ban className="h-3 w-3" />
                           </button>
@@ -430,9 +433,9 @@ export default function ReservationsPage() {
             {STATUS_COLS.map(col=>{
               const items = byStatus(col.id)
               return (
-                <div key={col.id} className={`flex flex-col w-72 rounded-xl border-2 bg-white flex-shrink-0 ${col.border}`}>
-                  <div className={`px-3 py-2.5 rounded-t-xl border-b ${col.header} flex items-center justify-between`}>
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-600">{col.label}</span>
+                <div key={col.id} className={`flex flex-col w-72 rounded-hm border-2 bg-white flex-shrink-0 ${col.border}`}>
+                  <div className={`px-3 py-2.5 rounded-t-hm border-b ${col.header} flex items-center justify-between`}>
+                    <span className="text-xs font-bold uppercase tracking-wider text-gray-600">{t(col.labelKey)}</span>
                     <span className="text-xs font-bold bg-white text-gray-500 rounded-full px-2 py-0.5 border">{items.length}</span>
                   </div>
                   <div className="flex-1 overflow-y-auto max-h-[60vh] p-2 space-y-2">
@@ -477,7 +480,7 @@ export default function ReservationsPage() {
                       )
                     })}
                     {!loading&&items.length===0&&(
-                      <div className="text-center py-8 text-xs text-gray-300">No reservations</div>
+                      <div className="text-center py-8 text-xs text-gray-300">{t('manager.reservations.noReservations')}</div>
                     )}
                   </div>
                 </div>
@@ -496,31 +499,31 @@ export default function ReservationsPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl" onClick={e=>e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold">New reservation</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Auto-tasks will be generated on save.</p>
+                <h2 className="text-base font-bold">{t('manager.reservations.newReservation')}</h2>
+                <p className="text-xs text-gray-500 mt-0.5">{t('manager.reservations.autoTasksOnSave')}</p>
               </div>
-              <button onClick={()=>setShowCreate(false)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5"/></button>
+              <button onClick={()=>setShowCreate(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5"/></button>
             </div>
             <form onSubmit={submitCreate} className="p-5 space-y-4">
               {createError&&<div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{createError}</div>}
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Property *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.property')} *</label>
                   <select value={form.propertyId} onChange={e=>setForm(f=>({...f,propertyId:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
-                    <option value="">Select a property…</option>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
+                    <option value="">{t('manager.reservations.selectProperty')}</option>
                     {properties.map(p=><option key={p.id} value={p.id}>{p.name} · {p.city}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Guest name *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.guestName')} *</label>
                   <input type="text" value={form.guestName} onChange={e=>setForm(f=>({...f,guestName:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="Full name"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="Full name"/>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Platform</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.platform')}</label>
                   <select value={form.platform} onChange={e=>setForm(f=>({...f,platform:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                     <option value="AIRBNB">Airbnb</option>
                     <option value="BOOKING">Booking.com</option>
                     <option value="DIRECT">Direct</option>
@@ -528,40 +531,40 @@ export default function ReservationsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Guest email</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.guestEmail')}</label>
                   <input type="email" value={form.guestEmail} onChange={e=>setForm(f=>({...f,guestEmail:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="optional"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="optional"/>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Phone</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')}</label>
                   <input type="tel" value={form.guestPhone} onChange={e=>setForm(f=>({...f,guestPhone:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="optional"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="optional"/>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Check-in *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('taskTypes.CHECK_IN')} *</label>
                   <input type="date" value={form.checkIn} onChange={e=>setForm(f=>({...f,checkIn:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Check-out *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('taskTypes.CHECK_OUT')} *</label>
                   <input type="date" value={form.checkOut} onChange={e=>setForm(f=>({...f,checkOut:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Amount (€) *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.amount')} *</label>
                   <input type="number" min="0" step="0.01" value={form.amount} onChange={e=>setForm(f=>({...f,amount:e.target.value}))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="0.00"/>
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="0.00"/>
                 </div>
               </div>
 
               {/* Guest Profile — feeds AI Pricing engine */}
               <div className="border-t pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Guest profile (AI data)</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{t('manager.reservations.guestProfile')}</p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nationality</label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.nationality')}</label>
                     <select value={form.guestNationality} onChange={e=>setForm(f=>({...f,guestNationality:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                       <option value="">Unknown</option>
                       {[
                         {v:"GB",l:"🇬🇧 United Kingdom"},{v:"DE",l:"🇩🇪 Germany"},{v:"FR",l:"🇫🇷 France"},
@@ -574,9 +577,9 @@ export default function ReservationsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Guest type</label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.guestType')}</label>
                     <select value={form.guestAgeGroup} onChange={e=>setForm(f=>({...f,guestAgeGroup:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                       <option value="">Unknown</option>
                       <option value="YOUNG_COUPLE">Young couple</option>
                       <option value="FAMILY">Family</option>
@@ -587,14 +590,14 @@ export default function ReservationsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Group size</label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.reservations.groupSize')}</label>
                     <input type="number" min="1" max="20" value={form.guestGroupSize} onChange={e=>setForm(f=>({...f,guestGroupSize:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700" placeholder="e.g. 4"/>
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="e.g. 4"/>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Language</label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.language')}</label>
                     <select value={form.guestLanguage} onChange={e=>setForm(f=>({...f,guestLanguage:e.target.value}))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                       <option value="">Unknown</option>
                       <option value="en">English</option>
                       <option value="es">Spanish</option>
@@ -609,21 +612,21 @@ export default function ReservationsPage() {
                   <div className="flex items-center gap-4 col-span-2">
                     <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                       <input type="checkbox" checked={form.hasChildren} onChange={e=>setForm(f=>({...f,hasChildren:e.target.checked}))} className="accent-gray-900"/>
-                      Children
+                      {t('manager.reservations.children')}
                     </label>
                     <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                       <input type="checkbox" checked={form.hasPets} onChange={e=>setForm(f=>({...f,hasPets:e.target.checked}))} className="accent-gray-900"/>
-                      Pets
+                      {t('manager.reservations.pets')}
                     </label>
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-1">
-                <button type="button" onClick={()=>setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
+                <button type="button" onClick={()=>setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
                 <button type="submit" disabled={creating}
                   className="rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                  {creating?"Saving…":"Create reservation"}
+                  {creating?t('manager.reservations.saving'):t('manager.reservations.createReservation')}
                 </button>
               </div>
             </form>

@@ -50,7 +50,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
             </span>
             <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
                   style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
-              Crew
+              {t(msgs, 'common.crewPortal')}
             </span>
           </Link>
           <label htmlFor="crew-sidebar-toggle" className="lg:hidden cursor-pointer text-white/50 hover:text-white">
@@ -88,10 +88,10 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-white truncate">{user.name ?? 'Crew Member'}</p>
+              <p className="text-xs font-semibold text-white truncate">{user.name ?? t(msgs, 'common.crewPortal')}</p>
               <p className="text-[10px] text-white/40 truncate">{user.email}</p>
             </div>
-            <Link href="/api/auth/signout" title="Sign out" className="text-white/30 hover:text-white/70 transition-colors">
+            <Link href="/api/auth/signout" title={t(msgs, 'common.logout')} className="text-white/30 hover:text-white/70 transition-colors">
               <LogOut className="h-3.5 w-3.5" />
             </Link>
           </div>

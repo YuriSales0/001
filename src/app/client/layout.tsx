@@ -40,9 +40,11 @@ export default async function ClientLayout({ children }: { children: React.React
 
   const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { subscriptionPlan: true } })
   const hasAI = AI_PLANS.includes(dbUser?.subscriptionPlan ?? '')
-  const navLinks = hasAI
-    ? [...baseLinks, { href: '/client/ai', label: t(msgs, 'common.aiPricing'), icon: Sparkles }]
-    : baseLinks
+  const navLinks = [
+    ...baseLinks,
+    ...(hasAI ? [{ href: '/client/ai', label: t(msgs, 'common.aiPricing'), icon: Sparkles }] : []),
+    { href: '/client/intelligence', label: t(msgs, 'client.intelligence.title'), icon: TrendingUp },
+  ]
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--hm-ivory)' }}>
@@ -111,10 +113,10 @@ export default async function ClientLayout({ children }: { children: React.React
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-white truncate">{user.name ?? 'Client'}</p>
+              <p className="text-xs font-semibold text-white truncate">{user.name ?? t(msgs, 'common.clientPortal')}</p>
               <p className="text-[10px] text-white/40 truncate">{user.email}</p>
             </div>
-            <Link href="/api/auth/signout" title="Sign out" className="text-white/30 hover:text-white/70 transition-colors">
+            <Link href="/api/auth/signout" title={t(msgs, 'common.logout')} className="text-white/30 hover:text-white/70 transition-colors">
               <LogOut className="h-3.5 w-3.5" />
             </Link>
           </div>

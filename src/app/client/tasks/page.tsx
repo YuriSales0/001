@@ -126,16 +126,16 @@ export default function ClientTasksPage() {
   const overdueCount = tasks.filter(task => task.status !== 'COMPLETED' && new Date(task.dueDate) < now).length
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">{t('clientTasks.title')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('clientTasks.title')}</h1>
           <p className="text-sm text-gray-500">{t('clientTasks.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+          className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
         >
           <Plus className="h-4 w-4" />
           {t('clientTasks.requestTask')}
@@ -155,7 +155,7 @@ export default function ClientTasksPage() {
             onClick={() => setStatusFilter(f.value)}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               statusFilter === f.value
-                ? f.danger ? 'bg-red-600 text-white' : 'bg-navy-900 text-white'
+                ? f.danger ? 'bg-red-600 text-white' : 'bg-hm-black text-white'
                 : f.danger && overdueCount > 0 ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -170,7 +170,7 @@ export default function ClientTasksPage() {
       ) : loading ? (
         <p className="text-gray-400 text-sm">{t('common.loading')}</p>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border bg-white p-10 text-center">
+        <div className="rounded-hm border bg-white p-10 text-center">
           <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
             <Wrench className="h-6 w-6 text-gray-400" />
           </div>
@@ -178,7 +178,7 @@ export default function ClientTasksPage() {
           <p className="text-sm text-gray-500 mb-4">When you request a visit or maintenance, it will appear here.</p>
           <button
             onClick={() => setShowModal(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90"
           >
             <Plus className="h-4 w-4" />
             Request a visit
@@ -190,13 +190,13 @@ export default function ClientTasksPage() {
             const isOverdue   = task.status !== 'COMPLETED' && new Date(task.dueDate) < now
             const isCompleted = task.status === 'COMPLETED'
             return (
-              <div key={task.id} className={`rounded-xl border bg-white p-4 flex items-start gap-4 ${isOverdue ? 'border-red-200 bg-red-50/30' : ''}`}>
+              <div key={task.id} className={`rounded-hm border bg-white p-4 flex items-start gap-4 ${isOverdue ? 'border-red-200 bg-red-50/30' : ''}`}>
                 <span className={`inline-flex items-center justify-center h-9 w-9 rounded-full shrink-0 text-xs font-bold ${TYPE_COLORS[task.type] ?? 'bg-gray-100 text-gray-600'}`}>
                   {(TYPE_LABELS[task.type] ?? task.type).slice(0, 2).toUpperCase()}
                 </span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`font-semibold text-navy-900 ${isCompleted ? 'line-through text-gray-400' : ''}`}>{task.title}</span>
+                    <span className={`font-semibold text-hm-black ${isCompleted ? 'line-through text-gray-400' : ''}`}>{task.title}</span>
                     <span className={`text-xs rounded-full px-2 py-0.5 ${TYPE_COLORS[task.type] ?? 'bg-gray-100 text-gray-600'}`}>
                       {TYPE_LABELS[task.type] ?? task.type}
                     </span>
@@ -233,10 +233,10 @@ export default function ClientTasksPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-lg font-bold text-navy-900">{t('clientTasks.requestNew')}</h2>
+                <h2 className="text-lg font-bold text-hm-black">{t('clientTasks.requestNew')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('clientTasks.modalNote')}</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="rounded-md p-1 hover:bg-gray-100">
+              <button onClick={() => setShowModal(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -254,7 +254,7 @@ export default function ClientTasksPage() {
                   required
                   value={form.propertyId}
                   onChange={e => setForm(f => ({ ...f, propertyId: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                 >
                   {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
@@ -274,7 +274,7 @@ export default function ClientTasksPage() {
                         onClick={() => setForm(f => ({ ...f, type: mt.value }))}
                         className={`w-full text-left rounded-lg border px-3 py-2.5 transition-colors ${
                           form.type === mt.value
-                            ? 'border-navy-900 bg-navy-50 text-navy-900'
+                            ? 'border-navy-900 bg-navy-50 text-hm-black'
                             : 'border-gray-100 bg-white text-gray-500 hover:bg-gray-50'
                         }`}
                       >
@@ -302,7 +302,7 @@ export default function ClientTasksPage() {
                         form.type === 'TRANSFER'               ? t('clientTasks.placeholders.transfer') :
                         t('clientTasks.placeholders.default')
                       }
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                     />
                   </div>
 
@@ -315,7 +315,7 @@ export default function ClientTasksPage() {
                       value={form.description}
                       onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                       placeholder={t('clientTasks.notesPlaceholder')}
-                      className="flex-1 w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-navy-900"
+                      className="flex-1 w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-hm-gold"
                     />
                   </div>
 
@@ -328,7 +328,7 @@ export default function ClientTasksPage() {
                       required
                       value={form.dueDate}
                       onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                     />
                   </div>
 
@@ -354,7 +354,7 @@ export default function ClientTasksPage() {
               <button
                 onClick={submit}
                 disabled={submitting || !form.title || !form.dueDate || !form.propertyId}
-                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> {t('clientTasks.submitting')}</>

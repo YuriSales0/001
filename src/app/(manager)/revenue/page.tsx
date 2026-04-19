@@ -131,11 +131,11 @@ export default function RevenuePage() {
   ]
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Revenue</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">Revenue</h1>
           <p className="text-sm text-gray-500">Financial overview and property performance.</p>
         </div>
         <select
@@ -152,13 +152,13 @@ export default function RevenuePage() {
       {/* Stat strip */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {statCards.map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="rounded-xl border bg-white p-4 flex items-center gap-3">
+          <div key={label} className="rounded-hm border bg-white p-4 flex items-center gap-3">
             <div className={`rounded-lg p-2 ${bg}`}>
               <Icon className={`h-5 w-5 ${color}`} />
             </div>
             <div>
               <p className="text-xs text-gray-500">{label}</p>
-              <p className="text-lg font-bold text-navy-900">{value}</p>
+              <p className="text-lg font-bold text-hm-black">{value}</p>
             </div>
           </div>
         ))}
@@ -166,16 +166,16 @@ export default function RevenuePage() {
 
       {/* Table */}
       {loading ? (
-        <div className="py-8 text-center text-sm text-gray-400">Loading…</div>
+        <div className="space-y-4 animate-pulse py-4"><div className="h-8 rounded-hm bg-hm-sand w-48" /><div className="h-40 rounded-hm bg-hm-sand" /></div>
       ) : rows.length === 0 ? (
-        <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+        <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
           No revenue data for this period.
         </div>
       ) : (
-        <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="rounded-hm border bg-white overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3 border-b">
             <BarChart3 className="h-4 w-4 text-gray-400" />
-            <span className="text-sm font-semibold text-navy-900">Revenue by property</span>
+            <span className="text-sm font-semibold text-hm-black">Revenue by property</span>
             <span className="text-xs text-gray-400 ml-auto">{avgCommRate}% avg commission</span>
           </div>
           <div className="overflow-x-auto">
@@ -195,7 +195,7 @@ export default function RevenuePage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Building2 className="h-3.5 w-3.5 text-gray-400" />
-                        <span className="font-medium text-navy-900">{r.name}</span>
+                        <span className="font-medium text-hm-black">{r.name}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">{fmtMoney(r.revenue)}</td>
@@ -212,7 +212,7 @@ export default function RevenuePage() {
               </tbody>
               <tfoot>
                 <tr className="bg-gray-50 font-semibold">
-                  <td className="px-4 py-3 text-navy-900">Total</td>
+                  <td className="px-4 py-3 text-hm-black">Total</td>
                   <td className="px-4 py-3 text-right">{fmtMoney(totalRevenue)}</td>
                   <td className="px-4 py-3 text-right text-gray-600">{fmtMoney(totalCommission)}</td>
                   <td className="px-4 py-3 text-right text-emerald-700">{fmtMoney(totalNet)}</td>

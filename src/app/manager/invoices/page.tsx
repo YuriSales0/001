@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState, useCallback } from "react"
 import { InvoiceForm } from "@/components/invoice-form"
-import { Pencil, Trash2, X, CheckCircle } from "lucide-react"
+import { Pencil, Trash2, X, CheckCircle, FileText } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
 import { useEscapeKey } from "@/lib/use-escape-key"
@@ -65,7 +65,7 @@ function EditModal({ invoice, onClose, onSaved }: {
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="font-semibold text-gray-900">Edit invoice</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-4 w-4" /></button>
         </div>
         <form onSubmit={save} className="p-6 space-y-4">
           <div>
@@ -77,7 +77,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <input
               required value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -86,7 +86,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 required type="number" step="0.01" min="0" value={form.amount}
                 onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               />
             </div>
             <div>
@@ -94,7 +94,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 type="date" value={form.dueDate}
                 onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <textarea
               rows={2} value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none"
             />
           </div>
           {err && <p className="text-xs text-red-600">{err}</p>}
@@ -165,25 +165,25 @@ export default function ManagerInvoices() {
   )
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Invoices</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">Invoices</h1>
           <p className="text-sm text-gray-500 mt-0.5">Manage and send invoices to property owners</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Total invoices</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">{invoices.length}</p>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Paid</p>
           <p className="text-2xl font-bold text-green-700 mt-1">{fmt(totals.paid)}</p>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Pending</p>
           <p className="text-2xl font-bold text-orange-600 mt-1">{fmt(totals.pending)}</p>
         </div>
@@ -191,7 +191,7 @@ export default function ManagerInvoices() {
 
       <InvoiceForm onCreated={load} />
 
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-400 tracking-wide">
@@ -207,10 +207,14 @@ export default function ManagerInvoices() {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan={7} className="text-center py-10 text-gray-400">Loading…</td></tr>
+              <tr><td colSpan={7} className="py-10"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>
             )}
             {!loading && invoices.length === 0 && (
-              <tr><td colSpan={7} className="text-center py-10 text-gray-400">No invoices yet</td></tr>
+              <tr><td colSpan={7} className="py-12 text-center">
+                <FileText className="h-10 w-10 mx-auto text-gray-300 mb-2" />
+                <p className="font-serif font-bold text-hm-black">No invoices yet</p>
+                <p className="text-sm text-gray-500 mt-0.5">Create your first invoice using the form above.</p>
+              </td></tr>
             )}
             {invoices.map(i => (
               <tr key={i.id} className="border-t hover:bg-gray-50 transition-colors">

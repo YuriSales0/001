@@ -144,18 +144,18 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-navy-900">Reports</h1>
+        <h1 className="text-2xl font-serif font-bold text-hm-black">Reports</h1>
         <p className="text-sm text-gray-500">Generate and download property performance reports.</p>
       </div>
 
       {/* Generate panel */}
-      <div className="rounded-xl border bg-white p-5">
+      <div className="rounded-hm border bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <FileBarChart className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-semibold text-navy-900">Generate new report</span>
+          <span className="text-sm font-semibold text-hm-black">Generate new report</span>
         </div>
         <div className="flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-[160px]">
@@ -163,7 +163,7 @@ export default function ReportsPage() {
             <select
               value={selectedProperty}
               onChange={e => setSelectedProperty(e.target.value)}
-              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
             >
               <option value="">Select a property…</option>
               {properties.map(p => (
@@ -176,7 +176,7 @@ export default function ReportsPage() {
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(e.target.value)}
-              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
             >
               <option value="">Month…</option>
               {MONTHS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
@@ -187,7 +187,7 @@ export default function ReportsPage() {
             <select
               value={selectedYear}
               onChange={e => setSelectedYear(e.target.value)}
-              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+              className="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
             >
               {["2024", "2025", "2026"].map(y => <option key={y} value={y}>{y}</option>)}
             </select>
@@ -195,7 +195,7 @@ export default function ReportsPage() {
           <button
             onClick={handleGenerate}
             disabled={generating || !selectedProperty || !selectedMonth}
-            className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FileBarChart className="h-4 w-4" />
             {generating ? "Generating…" : "Generate"}
@@ -207,10 +207,10 @@ export default function ReportsPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* List */}
         <div className="lg:col-span-2 space-y-3">
-          <p className="text-sm font-semibold text-navy-900">Generated reports</p>
-          {loading && <div className="py-8 text-center text-sm text-gray-400">Loading…</div>}
+          <p className="text-sm font-semibold text-hm-black">Generated reports</p>
+          {loading && <div className="space-y-4 animate-pulse py-4"><div className="h-8 rounded-hm bg-hm-sand w-48" /><div className="h-40 rounded-hm bg-hm-sand" /></div>}
           {!loading && summaries.length === 0 && (
-            <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+            <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
               No reports yet. Generate one above.
             </div>
           )}
@@ -218,7 +218,7 @@ export default function ReportsPage() {
             <div
               key={i}
               onClick={() => setSelected(s)}
-              className={`rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow cursor-pointer ${
+              className={`rounded-hm border bg-white p-4 hover:shadow-sm transition-shadow cursor-pointer ${
                 selected?.propertyId === s.propertyId && selected?.month === s.month ? "ring-2 ring-navy-900" : ""
               }`}
             >
@@ -227,7 +227,7 @@ export default function ReportsPage() {
                   <FileBarChart className="h-4 w-4 text-gray-500" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-navy-900 truncate">{s.propertyName}</p>
+                  <p className="font-semibold text-hm-black truncate">{s.propertyName}</p>
                   <div className="flex items-center gap-3 text-xs text-gray-500 mt-0.5">
                     <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{s.month}</span>
                     <span>{s.reservations} reservations</span>
@@ -242,18 +242,18 @@ export default function ReportsPage() {
 
         {/* Preview */}
         <div className="space-y-3">
-          <p className="text-sm font-semibold text-navy-900">Preview</p>
+          <p className="text-sm font-semibold text-hm-black">Preview</p>
           {!selected ? (
-            <div className="rounded-xl border bg-white py-16 flex flex-col items-center justify-center text-center text-gray-400">
+            <div className="rounded-hm border bg-white py-16 flex flex-col items-center justify-center text-center text-gray-400">
               <FileBarChart className="h-8 w-8 mb-2" />
               <p className="text-sm">Select a report to preview.</p>
             </div>
           ) : (
-            <div className="rounded-xl border bg-white p-5 space-y-4">
+            <div className="rounded-hm border bg-white p-5 space-y-4">
               <div>
                 <div className="flex items-center gap-2 mb-0.5">
                   <Building2 className="h-4 w-4 text-gray-400" />
-                  <span className="font-bold text-navy-900">{selected.propertyName}</span>
+                  <span className="font-bold text-hm-black">{selected.propertyName}</span>
                 </div>
                 <p className="text-xs text-gray-500">{selected.month}</p>
               </div>
@@ -261,10 +261,10 @@ export default function ReportsPage() {
                 {[
                   { label: "Revenue",      value: fmtMoney(selected.revenue),                      color: "text-emerald-700" },
                   { label: "Commission",   value: fmtMoney(selected.revenue * 0.17),               color: "text-gray-700" },
-                  { label: "Net to owner", value: fmtMoney(selected.revenue * 0.83),               color: "text-navy-900" },
-                  { label: "Reservations", value: String(selected.reservations),                    color: "text-navy-900" },
-                  { label: "Nights",       value: String(selected.nights),                          color: "text-navy-900" },
-                  { label: "ADR",          value: selected.nights ? fmtMoney(selected.revenue / selected.nights) : "—", color: "text-navy-900" },
+                  { label: "Net to owner", value: fmtMoney(selected.revenue * 0.83),               color: "text-hm-black" },
+                  { label: "Reservations", value: String(selected.reservations),                    color: "text-hm-black" },
+                  { label: "Nights",       value: String(selected.nights),                          color: "text-hm-black" },
+                  { label: "ADR",          value: selected.nights ? fmtMoney(selected.revenue / selected.nights) : "—", color: "text-hm-black" },
                 ].map(({ label, value, color }) => (
                   <div key={label} className="rounded-lg bg-gray-50 p-3">
                     <p className="text-[10px] text-gray-500 uppercase tracking-wide">{label}</p>

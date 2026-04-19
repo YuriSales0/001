@@ -108,7 +108,7 @@ export default function ManagerMessagesPage() {
   return (
     <div className="flex flex-col">
       {error && <div className="p-4 text-center text-sm text-red-500">Failed to load data</div>}
-    <div className="flex h-[calc(100vh-80px)] max-h-[750px] rounded-xl border bg-white overflow-hidden">
+    <div className="flex h-[calc(100vh-80px)] max-h-[750px] rounded-hm border bg-white overflow-hidden">
       {/* ── Sidebar ── */}
       <aside className="w-64 border-r flex flex-col shrink-0">
         <div className="px-4 py-3 border-b bg-gray-50">
@@ -229,7 +229,7 @@ export default function ManagerMessagesPage() {
               <input value={text} onChange={e => setText(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
                 placeholder="Escreve uma mensagem…"
-                className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+                className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
               <button onClick={send} disabled={sending || !text.trim()}
                 className="rounded-full bg-gray-900 p-2.5 text-white hover:bg-gray-800 disabled:opacity-40">
                 {sending ? <Loader2 className="h-4 w-4 animate-spin"/> : <Send className="h-4 w-4"/>}

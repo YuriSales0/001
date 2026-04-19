@@ -95,26 +95,26 @@ function CampaignModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-navy-900">{isEdit ? 'Edit campaign' : 'New campaign'}</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <h2 className="text-lg font-bold text-hm-black">{isEdit ? 'Edit campaign' : 'New campaign'}</h2>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Name *</label>
             <input value={name} onChange={e => setName(e.target.value)} required
-              className="w-full rounded-md border px-3 py-2 text-sm"
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="e.g. Google Ads Spring 2026" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Channel</label>
-              <select value={channel} onChange={e => setChannel(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={channel} onChange={e => setChannel(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 {CHANNELS.map(c => <option key={c} value={c}>{CHANNEL_LABELS[c]}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Type</label>
-              <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 {TYPES.map(t => <option key={t} value={t}>{t.charAt(0) + t.slice(1).toLowerCase()}</option>)}
               </select>
             </div>
@@ -122,7 +122,7 @@ function CampaignModal({
           {isEdit && (
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-              <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
               </select>
             </div>
@@ -130,28 +130,28 @@ function CampaignModal({
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Budget (€)</label>
             <input type="number" min="0" step="0.01" value={budget} onChange={e => setBudget(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" placeholder="0" />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="0" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Start date</label>
-              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">End date</label>
-              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Target audience</label>
             <input value={targetAudience} onChange={e => setTargetAudience(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm"
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="e.g. Nordic property owners 35–60, Costa Tropical" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)}
-              rows={2} className="w-full rounded-md border px-3 py-2 text-sm resize-none" />
+              rows={2} className="w-full rounded-md border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
@@ -159,7 +159,7 @@ function CampaignModal({
               Cancel
             </button>
             <button type="submit" disabled={saving}
-              className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
+              className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Create campaign'}
             </button>
           </div>
@@ -194,26 +194,26 @@ function SpendModal({ campaign, onClose, onSaved }: { campaign: Campaign; onClos
       <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <div>
-            <h2 className="text-lg font-bold text-navy-900">Log spend</h2>
+            <h2 className="text-lg font-bold text-hm-black">Log spend</h2>
             <p className="text-xs text-gray-500 mt-0.5">{campaign.name}</p>
           </div>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Amount spent (€) *</label>
             <input type="number" min="0.01" step="0.01" value={amount} onChange={e => setAmount(e.target.value)}
-              required className="w-full rounded-md border px-3 py-2 text-sm" placeholder="0.00" autoFocus />
+              required className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="0.00" autoFocus />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Date</label>
             <input type="date" value={date} onChange={e => setDate(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
             <input value={description} onChange={e => setDescription(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm"
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="e.g. Google Ads — Apr 1–15" />
           </div>
           <div className="flex gap-3 pt-2">
@@ -222,7 +222,7 @@ function SpendModal({ campaign, onClose, onSaved }: { campaign: Campaign; onClos
               Cancel
             </button>
             <button type="submit" disabled={saving || !amount}
-              className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50">
+              className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50">
               {saving ? 'Saving…' : 'Log spend'}
             </button>
           </div>
@@ -250,13 +250,13 @@ function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => voi
       <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <div>
-            <h2 className="text-lg font-bold text-navy-900">QR Code</h2>
+            <h2 className="text-lg font-bold text-hm-black">QR Code</h2>
             <p className="text-xs text-gray-500 mt-0.5">{campaign.name}</p>
           </div>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <div className="p-6 flex flex-col items-center gap-4">
-          <div className="rounded-xl border p-3 bg-white shadow-sm">
+          <div className="rounded-hm border p-3 bg-white shadow-sm">
             <QRCodeSVG value={url} size={200} level="M" includeMargin />
           </div>
           <div className="w-full">
@@ -337,19 +337,19 @@ export default function MarketingPage() {
   const cpl = totals.leads > 0 ? totals.spent / totals.leads : null
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
-            <Megaphone className="h-7 w-7 text-navy-900" />
+          <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
+            <Megaphone className="h-7 w-7 text-hm-black" />
             Marketing
           </h1>
           <p className="text-sm text-gray-600 mt-1">Digital & physical campaigns · CPL per channel</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-1.5 rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800"
+          className="inline-flex items-center gap-1.5 rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90"
         >
           <Plus className="h-4 w-4" />
           New campaign
@@ -358,13 +358,13 @@ export default function MarketingPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500 mb-1">Total budget</div>
-          <div className="text-2xl font-bold text-navy-900">{fmtEUR(totals.budget)}</div>
+          <div className="text-2xl font-bold text-hm-black">{fmtEUR(totals.budget)}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500 mb-1">Spent</div>
-          <div className="text-2xl font-bold text-navy-900">{fmtEUR(totals.spent)}</div>
+          <div className="text-2xl font-bold text-hm-black">{fmtEUR(totals.spent)}</div>
           {totals.budget > 0 && (
             <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div
@@ -374,18 +374,18 @@ export default function MarketingPage() {
             </div>
           )}
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500 mb-1">Attributed leads</div>
-          <div className="text-2xl font-bold text-navy-900">{totals.leads}</div>
+          <div className="text-2xl font-bold text-hm-black">{totals.leads}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500 mb-1">Cost per lead</div>
-          <div className="text-2xl font-bold text-navy-900">{cpl !== null ? fmtEUR(cpl) : '—'}</div>
+          <div className="text-2xl font-bold text-hm-black">{cpl !== null ? fmtEUR(cpl) : '—'}</div>
         </div>
       </div>
 
       {/* Campaigns table */}
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
             <tr>
@@ -400,7 +400,7 @@ export default function MarketingPage() {
             </tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan={8} className="text-center py-8 text-gray-400">Loading…</td></tr>}
+            {loading && <tr><td colSpan={8} className="py-8"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>}
             {!loading && campaigns.length === 0 && (
               <tr>
                 <td colSpan={8} className="py-12 text-center">
@@ -416,7 +416,7 @@ export default function MarketingPage() {
               return (
                 <tr key={c.id} className="border-t hover:bg-gray-50">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-navy-900">{c.name}</div>
+                    <div className="font-medium text-hm-black">{c.name}</div>
                     {c.targetAudience && <div className="text-xs text-gray-400 truncate max-w-[200px]">{c.targetAudience}</div>}
                   </td>
                   <td className="px-4 py-3">

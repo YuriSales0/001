@@ -91,9 +91,9 @@ export default function CrewEarningsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="text-2xl font-serif font-bold text-gray-900 flex items-center gap-2">
           <Wallet className="h-6 w-6 text-gray-400" />
           {t('crew.earnings.title')}
         </h1>
@@ -107,7 +107,7 @@ export default function CrewEarningsPage() {
       </div>
 
       {/* 24h payout banner */}
-      <div className="rounded-xl border p-4 flex items-start gap-3" style={{ background: 'linear-gradient(90deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%)', borderColor: 'rgba(34,197,94,0.25)' }}>
+      <div className="rounded-hm border p-4 flex items-start gap-3" style={{ background: 'linear-gradient(90deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%)', borderColor: 'rgba(34,197,94,0.25)' }}>
         <div className="h-9 w-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(34,197,94,0.15)' }}>
           <Zap className="h-4.5 w-4.5 text-green-700" />
         </div>
@@ -123,7 +123,7 @@ export default function CrewEarningsPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">{t('crew.earnings.thisMonth')}</div>
           <div className="text-2xl font-bold text-gray-900 mt-1">{fmtEUR(currentEarnings)}</div>
           <div className="flex items-center gap-1 mt-1">
@@ -135,17 +135,17 @@ export default function CrewEarningsPage() {
             )}
           </div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">{t('crew.earnings.tasksThisMonth')}</div>
           <div className="text-2xl font-bold text-gray-900 mt-1">{currentMonthTasks}</div>
           <div className="text-xs text-gray-400 mt-1">{t('crew.earnings.tasksCompletedSuffix')}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">{t('crew.earnings.pending')}</div>
           <div className="text-2xl font-bold text-orange-600 mt-1">{pendingTasks.length}</div>
           <div className="text-xs text-gray-400 mt-1">{t('crew.earnings.pendingSuffix')}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">{t('crew.earnings.cumulative')}</div>
           <div className="text-2xl font-bold text-gray-900 mt-1">
             {fmtEUR(contractType === 'MONTHLY' ? monthlyRate * monthlyBreakdown.length : completedTasks.length * taskRate)}
@@ -155,7 +155,7 @@ export default function CrewEarningsPage() {
       </div>
 
       {/* Monthly breakdown */}
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="px-5 py-3 border-b bg-gray-50">
           <h2 className="text-sm font-semibold text-gray-700">{t('crew.earnings.byMonthTitle')}</h2>
         </div>
@@ -183,7 +183,7 @@ export default function CrewEarningsPage() {
       </div>
 
       {/* Recent completed tasks */}
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="px-5 py-3 border-b bg-gray-50">
           <h2 className="text-sm font-semibold text-gray-700">{t('crew.earnings.recentTitle')}</h2>
         </div>

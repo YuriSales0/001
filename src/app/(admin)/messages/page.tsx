@@ -66,18 +66,18 @@ export default function AdminMessagesPage() {
   return (
     <div className="p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">Mensagens</h1>
+        <h1 className="text-2xl font-serif font-bold text-gray-900">Mensagens</h1>
         <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
           <Lock className="h-3.5 w-3.5"/> Acesso só de leitura — {convs.length} conversa(s)
         </p>
       </div>
 
-      <div className="flex h-[calc(100vh-200px)] max-h-[650px] rounded-xl border bg-white overflow-hidden">
+      <div className="flex h-[calc(100vh-200px)] max-h-[650px] rounded-hm border bg-white overflow-hidden">
         {/* Sidebar */}
         <aside className="w-72 border-r flex flex-col shrink-0">
           <div className="p-3 border-b">
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pesquisar…"
-              className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+              className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
           </div>
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 && <div className="p-4 text-center text-sm text-gray-400">Sem conversas</div>}

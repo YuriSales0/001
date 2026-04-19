@@ -68,7 +68,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
               Admin
             </span>
           </Link>
-          <button className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
+          <button aria-label="Close" className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -141,7 +141,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
         {/* Topbar */}
         <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-white px-4 sm:px-6">
           <button
-            className="lg:hidden rounded-md p-1.5 hover:bg-gray-100"
+            className="lg:hidden rounded-md p-2 hover:bg-gray-100"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-5 w-5 text-gray-600" />

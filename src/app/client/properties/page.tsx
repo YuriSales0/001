@@ -26,17 +26,9 @@ type Property = {
   bookingConnected: boolean
 }
 
-const STATUS_BADGE: Record<string, { cls: string; label: string }> = {
-  PENDING_CLIENT:    { cls: 'bg-violet-100 text-violet-700', label: 'Aguarda confirmação' },
-  PENDING_APPROVAL:  { cls: 'bg-amber-100 text-amber-700',  label: 'Aguarda configuração' },
-  CONTRACT_PENDING:  { cls: 'bg-blue-100 text-blue-700',    label: 'Contrato pendente' },
-  ACTIVE:            { cls: 'bg-green-100 text-green-700',  label: 'Ativa' },
-  INACTIVE:          { cls: 'bg-gray-100 text-gray-500',    label: 'Inativa' },
-  MAINTENANCE:       { cls: 'bg-orange-100 text-orange-600',label: 'Em manutenção' },
-}
 
 function HouseRulesSelector({ selected, onChange }: { selected: string[]; onChange: (rules: string[]) => void }) {
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
   const rulesByCategory = getRulesByCategory()
 
   const toggle = (key: string) => {
@@ -71,12 +63,23 @@ function HouseRulesSelector({ selected, onChange }: { selected: string[]; onChan
           </div>
         )
       })}
-      <p className="text-xs text-gray-400">{selected.length} rule(s) selected</p>
+      <p className="text-xs text-gray-400">{selected.length} {t('client.properties.rulesSelectedCount')}</p>
     </div>
   )
 }
 
 export default function ClientProperties() {
+  const { t } = useLocale()
+
+  const STATUS_BADGE: Record<string, { cls: string; label: string }> = {
+    PENDING_CLIENT:    { cls: 'bg-violet-100 text-violet-700', label: t('client.properties.statusPendingClient') },
+    PENDING_APPROVAL:  { cls: 'bg-amber-100 text-amber-700',  label: t('client.properties.statusPendingApproval') },
+    CONTRACT_PENDING:  { cls: 'bg-blue-100 text-blue-700',    label: t('client.properties.statusContractPending') },
+    ACTIVE:            { cls: 'bg-green-100 text-green-700',  label: t('client.properties.statusActive') },
+    INACTIVE:          { cls: 'bg-gray-100 text-gray-500',    label: t('client.properties.statusInactive') },
+    MAINTENANCE:       { cls: 'bg-orange-100 text-orange-600',label: t('client.properties.statusMaintenance') },
+  }
+
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [showAdd, setShowAdd] = useState(false)
@@ -128,7 +131,7 @@ export default function ClientProperties() {
     e.preventDefault()
     setAddError('')
     if (!form.name || !form.address || !form.city) {
-      setAddError('Preenche nome, morada e cidade.')
+      setAddError(t('client.properties.fillRequired'))
       return
     }
     setAddLoading(true)
@@ -139,7 +142,7 @@ export default function ClientProperties() {
     })
     if (!res.ok) {
       const err = await res.json()
-      setAddError(err.error || 'Erro ao submeter.')
+      setAddError(err.error || t('client.properties.submitError'))
     } else {
       setAddSuccess(true)
       setForm({ name: '', address: '', city: '', postalCode: '', houseRules: [] })
@@ -149,74 +152,79 @@ export default function ClientProperties() {
     setAddLoading(false)
   }
 
-  if (loading) return <div className="p-6 text-sm text-gray-400">A carregar…</div>
+  if (loading) return (
+    <div className="p-6 space-y-6 animate-pulse">
+      <div className="h-10 rounded-hm bg-hm-sand w-64" />
+      <div className="h-48 rounded-hm bg-hm-sand" />
+    </div>
+  )
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">As Minhas Propriedades</h1>
-          <p className="text-sm text-gray-500">Acompanha e confirma as tuas propriedades.</p>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('client.properties.title')}</h1>
+          <p className="text-sm text-gray-500">{t('client.properties.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+          className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
         >
-          <Plus className="h-4 w-4" /> Solicitar Propriedade
+          <Plus className="h-4 w-4" /> {t('client.properties.addProperty')}
         </button>
       </div>
 
       {/* Banner: needs client confirmation */}
       {pendingClient.length > 0 && (
-        <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 flex items-start gap-3">
+        <div className="rounded-hm border border-violet-200 bg-violet-50 p-4 flex items-start gap-3">
           <CheckCircle2 className="h-5 w-5 text-violet-600 shrink-0 mt-0.5" />
           <div className="text-sm text-violet-800">
             <p className="font-semibold mb-0.5">
               {pendingClient.length === 1
-                ? '1 propriedade adicionada pelo gestor aguarda a tua confirmação'
-                : `${pendingClient.length} propriedades aguardam a tua confirmação`}
+                ? t('client.properties.pendingClientBanner1')
+                : t('client.properties.pendingClientBannerN').replace('{n}', String(pendingClient.length))}
             </p>
-            <p className="text-xs">Confirma que os dados estão corretos. Após confirmação o gestor configurará as integrações.</p>
+            <p className="text-xs">{t('client.properties.pendingClientBannerDesc')}</p>
           </div>
         </div>
       )}
 
       {/* Banner: contract pending — needs signature */}
       {contractPending.length > 0 && (
-        <div className="rounded-xl border-2 border-blue-300 bg-blue-50 p-4 flex items-start gap-3">
+        <div className="rounded-hm border-2 border-blue-300 bg-blue-50 p-4 flex items-start gap-3">
           <FileText className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
           <div className="text-sm text-blue-800">
             <p className="font-semibold mb-0.5">
               {contractPending.length === 1
-                ? 'Your property has been approved! Sign the service agreement to activate it.'
-                : `${contractPending.length} properties approved — sign the service agreements to activate them.`}
+                ? t('client.properties.contractBanner1')
+                : t('client.properties.contractBannerN').replace('{n}', String(contractPending.length))}
             </p>
-            <p className="text-xs">Review and sign the contract below to start receiving bookings.</p>
+            <p className="text-xs">{t('client.properties.contractBannerDesc')}</p>
           </div>
         </div>
       )}
 
       {/* Banner: pending OTA setup by admin */}
       {pendingApproval.length > 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
+        <div className="rounded-hm border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
           <Settings className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800">
             <p className="font-semibold mb-0.5">
               {pendingApproval.length === 1
-                ? '1 propriedade aguarda configuração de integrações'
-                : `${pendingApproval.length} propriedades aguardam configuração`}
+                ? t('client.properties.pendingApprovalBanner1')
+                : t('client.properties.pendingApprovalBannerN').replace('{n}', String(pendingApproval.length))}
             </p>
-            <p className="text-xs">O gestor está a configurar os calendários Airbnb e Booking.com. Ficará ativa em breve.</p>
+            <p className="text-xs">{t('client.properties.pendingApprovalBannerDesc')}</p>
           </div>
         </div>
       )}
 
       {properties.length === 0 && (
-        <div className="rounded-xl border bg-white p-10 text-center">
+        <div className="rounded-hm border bg-white p-10 text-center">
           <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-          <p className="text-gray-500 mb-3">Ainda sem propriedades.</p>
-          <button onClick={() => setShowAdd(true)} className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800">
-            Solicitar a primeira
+          <p className="text-gray-500 mb-3">{t('client.properties.noProperties')}</p>
+          <button onClick={() => setShowAdd(true)} className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90">
+            {t('client.properties.requestFirst')}
           </button>
         </div>
       )}
@@ -230,7 +238,7 @@ export default function ClientProperties() {
           const contract = contracts[p.id]
 
           return (
-            <div key={p.id} className={`rounded-xl border bg-white p-5 ${
+            <div key={p.id} className={`rounded-hm border bg-white p-5 ${
               isPendingClient ? 'border-violet-200'
                 : isPendingApproval ? 'border-amber-200'
                 : isContractPending ? 'border-blue-300 border-2'
@@ -239,7 +247,7 @@ export default function ClientProperties() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="text-base font-bold text-navy-900">{p.name}</h3>
+                    <h3 className="text-base font-bold text-hm-black truncate max-w-[250px]" title={p.name}>{p.name}</h3>
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${badge.cls}`}>{badge.label}</span>
                   </div>
                   <p className="text-sm text-gray-500 flex items-center gap-1">
@@ -250,23 +258,23 @@ export default function ClientProperties() {
                     <div className="flex items-center gap-4 mt-3">
                       <span className={`inline-flex items-center gap-1 text-xs ${p.airbnbConnected ? 'text-green-600' : 'text-gray-400'}`}>
                         {p.airbnbConnected ? <Check className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
-                        Airbnb {p.airbnbConnected ? 'conectado' : 'não conectado'}
+                        Airbnb {p.airbnbConnected ? t('client.properties.connected') : t('client.properties.notConnected')}
                       </span>
                       <span className={`inline-flex items-center gap-1 text-xs ${p.bookingConnected ? 'text-green-600' : 'text-gray-400'}`}>
                         {p.bookingConnected ? <Check className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
-                        Booking.com {p.bookingConnected ? 'conectado' : 'não conectado'}
+                        Booking.com {p.bookingConnected ? t('client.properties.connected') : t('client.properties.notConnected')}
                       </span>
                     </div>
                   )}
 
                   {isPendingClient && (
                     <p className="text-xs text-violet-600 mt-2">
-                      Adicionada pelo teu gestor — confirma que os dados estão corretos.
+                      {t('client.properties.addedByManager')}
                     </p>
                   )}
                   {isPendingApproval && (
                     <p className="text-xs text-amber-600 mt-2">
-                      Confirmada — o gestor está a configurar as integrações Airbnb e Booking.com.
+                      {t('client.properties.confirmedSetup')}
                     </p>
                   )}
                 </div>
@@ -279,7 +287,7 @@ export default function ClientProperties() {
                     className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-violet-600 text-white px-3 py-2 text-sm font-semibold hover:bg-violet-700 disabled:opacity-50"
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    {confirming === p.id ? 'A confirmar…' : 'Confirmar'}
+                    {confirming === p.id ? t('client.properties.confirming') : t('client.properties.confirm')}
                   </button>
                 )}
               </div>
@@ -288,7 +296,7 @@ export default function ClientProperties() {
               {isContractPending && (
                 <div className="mt-4">
                   {loadingContracts[p.id] ? (
-                    <div className="text-sm text-gray-400 py-4 text-center">Loading contract...</div>
+                    <div className="text-sm text-gray-400 py-4 text-center">{t('client.properties.loadingContract')}</div>
                   ) : contract ? (
                     <ContractViewer
                       contract={contract}
@@ -296,7 +304,7 @@ export default function ClientProperties() {
                     />
                   ) : (
                     <div className="rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-700">
-                      Your property has been approved. The service agreement is being prepared — please check back shortly.
+                      {t('client.properties.contractBeingPrepared')}
                     </div>
                   )}
                 </div>
@@ -312,49 +320,49 @@ export default function ClientProperties() {
           <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-navy-900">Solicitar Propriedade</h2>
-                <p className="text-xs text-gray-500 mt-0.5">O gestor irá configurar as integrações e ativar.</p>
+                <h2 className="text-base font-bold text-hm-black">{t('client.properties.requestPropertyTitle')}</h2>
+                <p className="text-xs text-gray-500 mt-0.5">{t('client.properties.requestPropertyDesc')}</p>
               </div>
-              <button onClick={() => setShowAdd(false)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+              <button onClick={() => setShowAdd(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
 
             <form onSubmit={submitRequest} className="p-5 space-y-4">
               {addError && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{addError}</div>}
               {addSuccess && (
                 <div className="rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm px-3 py-2 flex items-center gap-2">
-                  <Check className="h-4 w-4" /> Solicitação enviada! O gestor irá configurar em breve.
+                  <Check className="h-4 w-4" /> {t('client.properties.requestSubmitted')}
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Nome da propriedade *</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.propertyName')} *</label>
                 <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  placeholder="Ex: Apartamento T2 Cascais"
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                  placeholder={t('client.properties.propertyNamePlaceholder')}
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Morada *</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.addressField')} *</label>
                 <input type="text" value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
-                  placeholder="Rua, número"
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                  placeholder={t('client.properties.addressPlaceholder')}
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Cidade *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.city')} *</label>
                   <input type="text" value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
                     placeholder="Lisboa"
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Código Postal</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.postalCode')}</label>
                   <input type="text" value={form.postalCode} onChange={e => setForm(f => ({ ...f, postalCode: e.target.value }))}
                     placeholder="1000-001"
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-2">House Rules</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-2">{t('client.properties.houseRules')}</label>
                 <HouseRulesSelector
                   selected={form.houseRules}
                   onChange={rules => setForm(f => ({ ...f, houseRules: rules }))}
@@ -362,14 +370,14 @@ export default function ClientProperties() {
               </div>
 
               <div className="rounded-lg bg-gray-50 border p-3 text-xs text-gray-500">
-                Após o envio, o gestor irá conectar os calendários Airbnb e Booking.com e ativar a propriedade.
+                {t('client.properties.afterSubmit')}
               </div>
 
               <div className="flex justify-end gap-2 pt-1">
-                <button type="button" onClick={() => setShowAdd(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancelar</button>
+                <button type="button" onClick={() => setShowAdd(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
                 <button type="submit" disabled={addLoading}
-                  className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
-                  {addLoading ? 'A enviar…' : 'Enviar Solicitação'}
+                  className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50">
+                  {addLoading ? t('client.properties.submitting') : t('client.properties.submitRequest')}
                 </button>
               </div>
             </form>

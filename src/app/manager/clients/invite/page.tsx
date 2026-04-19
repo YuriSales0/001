@@ -56,7 +56,7 @@ export default function ManagerInviteClientPage() {
           <div className="mx-auto h-14 w-14 rounded-full bg-green-50 flex items-center justify-center mb-4">
             <CheckCircle2 className="h-7 w-7 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-navy-900 mb-1">{t('manager.inviteClient.sentTitle')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black mb-1">{t('manager.inviteClient.sentTitle')}</h1>
           <p className="text-sm text-gray-500 mb-6">
             {t('manager.inviteClient.sentBodyPrefix')} <strong>{sent.email}</strong> {t('manager.inviteClient.sentBodySuffix')}
           </p>
@@ -67,7 +67,7 @@ export default function ManagerInviteClientPage() {
           <div className="flex flex-wrap gap-2 justify-center">
             <button
               onClick={() => { setSent(null); setForm({ email: "", name: "", plan: "" }) }}
-              className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800"
+              className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90"
             >
               {t('manager.inviteClient.inviteAnother')}
             </button>
@@ -85,12 +85,12 @@ export default function ManagerInviteClientPage() {
 
   return (
     <div className="p-6 max-w-xl mx-auto">
-      <Link href="/manager/clients" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 mb-4">
+      <Link href="/manager/clients" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-hm-black mb-4">
         <ArrowLeft className="h-4 w-4" /> {t('manager.inviteClient.back')}
       </Link>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-navy-900 flex items-center gap-2">
+        <h1 className="text-2xl font-serif font-bold text-hm-black flex items-center gap-2">
           <UserPlus className="h-6 w-6" /> {t('manager.inviteClient.title')}
         </h1>
         <p className="text-sm text-gray-500 mt-1">
@@ -110,7 +110,7 @@ export default function ManagerInviteClientPage() {
               required
               value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
-              className="w-full rounded-lg border pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+              className="w-full rounded-lg border pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="owner@example.com"
               autoFocus
             />
@@ -124,7 +124,7 @@ export default function ManagerInviteClientPage() {
           <input
             value={form.name}
             onChange={e => setForm({ ...form, name: e.target.value })}
-            className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+            className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
             placeholder={t('manager.inviteClient.namePlaceholder')}
           />
         </div>
@@ -145,7 +145,7 @@ export default function ManagerInviteClientPage() {
                     : "border-gray-200 hover:bg-gray-50"
                 }`}
               >
-                <p className="text-sm font-semibold text-navy-900">{p.label}</p>
+                <p className="text-sm font-semibold text-hm-black">{p.label}</p>
                 <p className="text-[11px] text-gray-500">{p.fee} · {t('manager.inviteClient.planCommission')} {p.commission}</p>
               </button>
             ))}
@@ -161,7 +161,7 @@ export default function ManagerInviteClientPage() {
           <button
             type="submit"
             disabled={sending || !form.email.trim()}
-            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-5 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-5 py-2.5 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50"
           >
             {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
             {sending ? t('manager.inviteClient.sending') : t('manager.inviteClient.send')}

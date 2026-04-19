@@ -53,15 +53,15 @@ function useAdminNav(): NavEntry[] {
     {
       label: t('common.administration'), icon: Settings, items: [
         { href: "/team", label: t('common.team'), icon: Users },
-        { href: "/recruit", label: "Recruiting", icon: Briefcase },
+        { href: "/recruit", label: t('admin.recruiting'), icon: Briefcase },
         { href: "/my-properties", label: t('common.properties'), icon: Building2 },
         { href: "/integrations", label: t('common.integrations'), icon: Landmark },
       ],
     },
     {
-      label: "HostMasters AI", icon: Brain, items: [
-        { href: "/ai", label: "AI Pricing", icon: Sparkles },
-        { href: "/ai-monitor", label: "AI Monitor", icon: Activity },
+      label: t('admin.hmAi'), icon: Brain, items: [
+        { href: "/ai", label: t('common.aiPricing'), icon: Sparkles },
+        { href: "/ai-monitor", label: t('admin.aiMonitor'), icon: Activity },
       ],
     },
     { href: "/messages", label: t('common.messages'), icon: MessageCircle },
@@ -96,7 +96,7 @@ function useManagerNav(): NavEntry[] {
     {
       label: t('common.myPortfolio'), icon: Users, items: [
         { href: "/manager/clients", label: t('common.myOwners'), icon: Users },
-        { href: "/manager/referral", label: "My referral link", icon: Link2 },
+        { href: "/manager/referral", label: t('manager.referralPage.title'), icon: Link2 },
       ],
     },
     { href: "/manager/messages", label: t('common.messages'), icon: MessageCircle },
@@ -164,7 +164,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
               {badgeLabel}
             </span>
           </Link>
-          <button className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
+          <button aria-label="Close" className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -266,7 +266,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-white truncate">{user?.name ?? (isAdmin ? "Admin" : "Manager")}</p>
+              <p className="text-xs font-semibold text-white truncate">{user?.name ?? badgeLabel}</p>
               <p className="text-[10px] text-gray-400 truncate">{user?.email ?? ""}</p>
             </div>
             <Link href="/api/auth/signout" title="Sign out" className="text-white/30 hover:text-white/70 transition-colors">
@@ -279,7 +279,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
       <div className="flex flex-1 flex-col min-w-0">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-white px-4 sm:px-6">
           <button
-            className="lg:hidden rounded-md p-1.5 hover:bg-gray-100"
+            className="lg:hidden rounded-md p-2 hover:bg-gray-100"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-5 w-5 text-gray-600" />
@@ -302,7 +302,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
                   {initials}
                 </div>
               )}
-              <span className="hidden sm:block">{user?.name ?? (isAdmin ? "Admin" : "Manager")}</span>
+              <span className="hidden sm:block">{user?.name ?? badgeLabel}</span>
             </Link>
           </div>
         </header>

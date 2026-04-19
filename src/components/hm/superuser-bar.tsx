@@ -153,7 +153,7 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
           <button
             onClick={handleExit}
             disabled={loading}
-            className="ml-1 shrink-0 rounded px-2 py-0.5 text-[11px] font-semibold text-white transition-colors disabled:opacity-50"
+            className="ml-1 shrink-0 rounded px-2 py-0.5 text-[11px] font-semibold text-white transition-colors hover:brightness-110 disabled:opacity-50"
             style={{ background: '#dc2626' }}
           >
             Exit

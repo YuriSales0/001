@@ -111,7 +111,7 @@ export default function PricingPage() {
           <p className="text-sm font-semibold text-[#c9a96e] uppercase tracking-widest mb-3">
             Your Property in Coastal Spain, Managed with Care
           </p>
-          <h1 className="text-4xl font-bold text-[#1e3a5f] mb-4">
+          <h1 className="text-4xl font-serif font-bold text-[#1e3a5f] mb-4">
             Planos transparentes, sem surpresas
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">

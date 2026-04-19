@@ -221,7 +221,7 @@ export default function IntegrationsPage() {
   return (
     <div className="p-6 space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+        <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
           <Landmark className="h-7 w-7" />
           Integrações
         </h1>
@@ -232,16 +232,16 @@ export default function IntegrationsPage() {
 
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="rounded-xl border bg-white p-4 text-center">
+        <div className="rounded-hm border bg-white p-4 text-center">
           <div className="text-2xl font-bold text-green-600">0</div>
           <div className="text-xs text-gray-500 mt-1">Activas</div>
         </div>
-        <div className="rounded-xl border bg-white p-4 text-center">
+        <div className="rounded-hm border bg-white p-4 text-center">
           <div className="text-2xl font-bold text-amber-500">6</div>
           <div className="text-xs text-gray-500 mt-1">Planeadas</div>
         </div>
-        <div className="rounded-xl border bg-white p-4 text-center">
-          <div className="text-2xl font-bold text-navy-900">Q2–Q4</div>
+        <div className="rounded-hm border bg-white p-4 text-center">
+          <div className="text-2xl font-bold text-hm-black">Q2–Q4</div>
           <div className="text-xs text-gray-500 mt-1">2026</div>
         </div>
       </div>
@@ -252,10 +252,10 @@ export default function IntegrationsPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">{cat.category}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {cat.items.map(item => (
-              <div key={item.id} className="rounded-xl border bg-white p-5 space-y-3">
+              <div key={item.id} className="rounded-hm border bg-white p-5 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="font-semibold text-navy-900">{item.name}</div>
+                    <div className="font-semibold text-hm-black">{item.name}</div>
                     <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
                   </div>
                   {statusBadge(item.status)}

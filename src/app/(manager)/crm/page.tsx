@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
+import { useLocale } from "@/i18n/provider"
 import {
   Plus, X, Phone, Mail, Search, Clock, Copy, Check,
   Webhook, Code2, QrCode, MessageSquare, Zap, ChevronDown,
@@ -44,63 +45,63 @@ type Lead = {
 
 const BANT_QUESTIONS: {
   id: keyof BantAnswers
-  label: string
+  labelKey: string
   icon: string
-  options: { value: string; label: string; pts: number }[]
+  options: { value: string; labelKey: string; pts: number }[]
 }[] = [
   {
     id: "location",
-    label: "Property location",
+    labelKey: "manager.crm.bant.location",
     icon: "📍",
     options: [
-      { value: "in_zone",  label: "Costa Tropical — Motril to Nerja", pts: 20 },
-      { value: "nearby",   label: "Málaga province, nearby area",     pts: 8  },
-      { value: "unknown",  label: "Location not confirmed yet",        pts: 4  },
-      { value: "outside",  label: "Outside our operating zone",        pts: 0  },
+      { value: "in_zone",  labelKey: "manager.crm.bant.locationInZone", pts: 20 },
+      { value: "nearby",   labelKey: "manager.crm.bant.locationNearby",     pts: 8  },
+      { value: "unknown",  labelKey: "manager.crm.bant.locationUnknown",        pts: 4  },
+      { value: "outside",  labelKey: "manager.crm.bant.locationOutside",        pts: 0  },
     ],
   },
   {
     id: "availability",
-    label: "Annual availability",
+    labelKey: "manager.crm.bant.availability",
     icon: "📅",
     options: [
-      { value: "8plus",  label: "8+ months/year available",   pts: 20 },
-      { value: "5to7",   label: "5–7 months/year",            pts: 14 },
-      { value: "3to4",   label: "3–4 months/year",            pts: 8  },
-      { value: "under3", label: "Less than 3 months/year",    pts: 2  },
+      { value: "8plus",  labelKey: "manager.crm.bant.avail8plus",   pts: 20 },
+      { value: "5to7",   labelKey: "manager.crm.bant.avail5to7",            pts: 14 },
+      { value: "3to4",   labelKey: "manager.crm.bant.avail3to4",            pts: 8  },
+      { value: "under3", labelKey: "manager.crm.bant.availUnder3",    pts: 2  },
     ],
   },
   {
     id: "authority",
-    label: "Decision authority",
+    labelKey: "manager.crm.bant.authority",
     icon: "👤",
     options: [
-      { value: "sole_owner", label: "Direct sole owner",        pts: 20 },
-      { value: "co_owner",   label: "Co-owner (joint decision)", pts: 14 },
-      { value: "poa",        label: "Power of attorney",         pts: 10 },
-      { value: "other",      label: "Tenant / third party",      pts: 0  },
+      { value: "sole_owner", labelKey: "manager.crm.bant.authSoleOwner",        pts: 20 },
+      { value: "co_owner",   labelKey: "manager.crm.bant.authCoOwner", pts: 14 },
+      { value: "poa",        labelKey: "manager.crm.bant.authPoa",         pts: 10 },
+      { value: "other",      labelKey: "manager.crm.bant.authOther",      pts: 0  },
     ],
   },
   {
     id: "property",
-    label: "Property size",
+    labelKey: "manager.crm.bant.propertySize",
     icon: "🏠",
     options: [
-      { value: "3plus",  label: "3+ bedrooms (villa / large apt)", pts: 20 },
-      { value: "2bed",   label: "2 bedrooms",                      pts: 15 },
-      { value: "1bed",   label: "1 bedroom",                       pts: 8  },
-      { value: "studio", label: "Studio / 0 bedrooms",             pts: 4  },
+      { value: "3plus",  labelKey: "manager.crm.bant.prop3plus", pts: 20 },
+      { value: "2bed",   labelKey: "manager.crm.bant.prop2bed",                      pts: 15 },
+      { value: "1bed",   labelKey: "manager.crm.bant.prop1bed",                       pts: 8  },
+      { value: "studio", labelKey: "manager.crm.bant.propStudio",             pts: 4  },
     ],
   },
   {
     id: "timeline",
-    label: "Start timeline",
+    labelKey: "manager.crm.bant.timeline",
     icon: "⏱️",
     options: [
-      { value: "now",    label: "Ready now — within 1 month",  pts: 20 },
-      { value: "soon",   label: "1–3 months",                  pts: 14 },
-      { value: "medium", label: "3–6 months",                  pts: 8  },
-      { value: "long",   label: "6+ months or unsure",         pts: 3  },
+      { value: "now",    labelKey: "manager.crm.bant.timeNow",  pts: 20 },
+      { value: "soon",   labelKey: "manager.crm.bant.timeSoon",                  pts: 14 },
+      { value: "medium", labelKey: "manager.crm.bant.timeMedium",                  pts: 8  },
+      { value: "long",   labelKey: "manager.crm.bant.timeLong",         pts: 3  },
     ],
   },
 ]
@@ -131,20 +132,20 @@ function ScorePill({ score }: { score: number | null }) {
   )
 }
 
-const STAGES: { id: LeadStage; label: string; color: string; header: string }[] = [
-  { id: "NEW_LEAD",        label: "New Lead",        color: "border-gray-300",       header: "bg-gray-50" },
-  { id: "FIRST_CONTACT",  label: "First Contact",   color: "border-blue-200",       header: "bg-blue-50" },
-  { id: "CALL_SCHEDULED", label: "Call Scheduled",  color: "border-amber-200",      header: "bg-amber-50" },
-  { id: "QUALIFIED",      label: "Qualified",       color: "border-gold-200",       header: "bg-yellow-50" },
-  { id: "PROPOSAL_SENT",  label: "Proposal Sent",   color: "border-purple-200",     header: "bg-purple-50" },
-  { id: "CONTRACT_SIGNED",label: "Contract Signed", color: "border-green-200",      header: "bg-green-50" },
-  { id: "ACTIVE_OWNER",   label: "Active Owner",    color: "border-navy-200",       header: "bg-navy-50" },
+const STAGES: { id: LeadStage; labelKey: string; color: string; header: string }[] = [
+  { id: "NEW_LEAD",        labelKey: "manager.crm.stages.newLead",        color: "border-gray-300",       header: "bg-gray-50" },
+  { id: "FIRST_CONTACT",  labelKey: "manager.crm.stages.firstContact",   color: "border-blue-200",       header: "bg-blue-50" },
+  { id: "CALL_SCHEDULED", labelKey: "manager.crm.stages.callScheduled",  color: "border-amber-200",      header: "bg-amber-50" },
+  { id: "QUALIFIED",      labelKey: "manager.crm.stages.qualified",       color: "border-gold-200",       header: "bg-yellow-50" },
+  { id: "PROPOSAL_SENT",  labelKey: "manager.crm.stages.proposalSent",   color: "border-purple-200",     header: "bg-purple-50" },
+  { id: "CONTRACT_SIGNED",labelKey: "manager.crm.stages.contractSigned", color: "border-green-200",      header: "bg-green-50" },
+  { id: "ACTIVE_OWNER",   labelKey: "manager.crm.stages.activeOwner",    color: "border-navy-200",       header: "bg-navy-50" },
 ]
 
-const SOURCE_LABEL: Record<string, string> = {
-  CADASTRO: "Registration", NEWSLETTER: "Newsletter", ONLINE: "Online",
-  PHONE: "Phone", WHATSAPP: "WhatsApp", WEBSITE: "Website",
-  EMAIL: "Email", REFERRAL: "Referral", OTHER: "Other",
+const SOURCE_LABEL_KEY: Record<string, string> = {
+  CADASTRO: "manager.crm.sources.registration", NEWSLETTER: "manager.crm.sources.newsletter", ONLINE: "manager.crm.sources.online",
+  PHONE: "manager.crm.sources.phone", WHATSAPP: "manager.crm.sources.whatsapp", WEBSITE: "manager.crm.sources.website",
+  EMAIL: "manager.crm.sources.email", REFERRAL: "manager.crm.sources.referral", OTHER: "manager.crm.sources.other",
 }
 
 const FLAGS: Record<string, string> = {
@@ -166,6 +167,7 @@ function daysAgo(s: string) {
 }
 
 export default function CRMPage() {
+  const { t } = useLocale()
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQ, setSearchQ] = useState("")
@@ -302,7 +304,7 @@ export default function CRMPage() {
       {/* Page header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between gap-4 flex-wrap shrink-0">
         <div>
-          <h1 className="text-xl font-bold text-navy-900">CRM Pipeline</h1>
+          <h1 className="text-xl font-serif font-bold text-hm-black">{t('common.crmPipeline')}</h1>
           <p className="text-xs text-gray-500 mt-0.5">{leads.length} total leads</p>
         </div>
 
@@ -312,10 +314,10 @@ export default function CRMPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search leads…"
+              placeholder={t('manager.crm.searchLeads')}
               value={searchQ}
               onChange={e => setSearchQ(e.target.value)}
-              className="pl-8 pr-3 py-2 text-sm border rounded-lg w-48 focus:outline-none focus:ring-1 focus:ring-navy-400"
+              className="pl-8 pr-3 py-2 text-sm border rounded-lg w-48 focus:outline-none focus:ring-1 focus:ring-hm-gold"
             />
           </div>
 
@@ -327,7 +329,7 @@ export default function CRMPage() {
                 onClick={() => setLangFilter(lang)}
                 className={`px-3 py-2 font-medium transition-colors ${
                   langFilter === lang
-                    ? "bg-navy-900 text-white"
+                    ? "bg-hm-black text-white"
                     : "bg-white text-gray-600 hover:bg-gray-50"
                 }`}
               >
@@ -341,14 +343,14 @@ export default function CRMPage() {
             className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white text-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
           >
             <Zap className="h-4 w-4 text-amber-500" />
-            Integrations
+            {t('common.integrations')}
           </button>
           <button
             onClick={() => setAddOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 transition-colors"
           >
             <Plus className="h-4 w-4" />
-            Add lead
+            {t('manager.crm.addLead')}
           </button>
         </div>
       </div>
@@ -361,61 +363,61 @@ export default function CRMPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-6 m-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-navy-900">New Lead</h2>
-              <button onClick={() => setAddOpen(false)} className="text-gray-400 hover:text-gray-600">
+              <h2 className="font-bold text-hm-black">{t('manager.crm.newLead')}</h2>
+              <button onClick={() => setAddOpen(false)} aria-label="Close" className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Full name *</label>
+                <label className="block text-xs text-gray-500 mb-1">{t('manager.crm.fullName')} *</label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   placeholder="John Smith"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Email</label>
+                  <label className="block text-xs text-gray-500 mb-1">{t('manager.crm.email')}</label>
                   <input
                     type="email"
                     value={form.email}
                     onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Phone</label>
+                  <label className="block text-xs text-gray-500 mb-1">{t('common.phone')}</label>
                   <input
                     type="tel"
                     value={form.phone}
                     onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Source</label>
+                  <label className="block text-xs text-gray-500 mb-1">{t('manager.crm.source')}</label>
                   <select
                     value={form.source}
                     onChange={e => setForm(f => ({ ...f, source: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   >
-                    {Object.entries(SOURCE_LABEL).map(([k, v]) => (
-                      <option key={k} value={k}>{v}</option>
+                    {Object.entries(SOURCE_LABEL_KEY).map(([k, v]) => (
+                      <option key={k} value={k}>{t(v)}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Language</label>
+                  <label className="block text-xs text-gray-500 mb-1">{t('common.language')}</label>
                   <select
                     value={form.language}
                     onChange={e => setForm(f => ({ ...f, language: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   >
                     <option value="EN">🇬🇧 English</option>
                     <option value="DE">🇩🇪 Deutsch</option>
@@ -423,12 +425,12 @@ export default function CRMPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Notes</label>
+                <label className="block text-xs text-gray-500 mb-1">{t('common.notes')}</label>
                 <textarea
                   rows={3}
                   value={form.notes}
                   onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   placeholder="Initial notes…"
                 />
               </div>
@@ -438,14 +440,14 @@ export default function CRMPage() {
                 onClick={() => setAddOpen(false)}
                 className="px-4 py-2 rounded-lg border text-sm text-gray-600 hover:bg-gray-50"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 onClick={saveLead}
                 disabled={saving || !form.name.trim()}
-                className="px-4 py-2 rounded-lg bg-navy-900 text-white text-sm font-semibold hover:bg-navy-800 disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-hm-black text-white text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50"
               >
-                {saving ? "Saving…" : "Save lead"}
+                {saving ? t('manager.crm.saving') : t('manager.crm.saveLead')}
               </button>
             </div>
           </div>
@@ -461,7 +463,7 @@ export default function CRMPage() {
                 {selectedLead.nationality && (
                   <span className="text-xl">{FLAGS[selectedLead.nationality] ?? "🌍"}</span>
                 )}
-                <h2 className="font-bold text-navy-900">{selectedLead.name}</h2>
+                <h2 className="font-bold text-hm-black">{selectedLead.name}</h2>
                 {selectedLead.language && (
                   <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${
                     selectedLead.language === "EN" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
@@ -470,7 +472,7 @@ export default function CRMPage() {
                   </span>
                 )}
               </div>
-              <button onClick={() => setSelectedLead(null)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setSelectedLead(null)} aria-label="Close" className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -478,7 +480,7 @@ export default function CRMPage() {
             <div className="p-5 space-y-5">
               {/* Contact */}
               <div>
-                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">Contact</h3>
+                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('manager.crm.contact')}</h3>
                 <div className="space-y-2">
                   {selectedLead.email && (
                     <a href={`mailto:${selectedLead.email}`} className="flex items-center gap-2 text-sm text-navy-700 hover:underline">
@@ -497,7 +499,7 @@ export default function CRMPage() {
 
               {/* Stage */}
               <div>
-                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">Move to stage</h3>
+                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('manager.crm.moveToStage')}</h3>
                 <div className="grid grid-cols-2 gap-1.5">
                   {STAGES.map(s => (
                     <button
@@ -508,11 +510,11 @@ export default function CRMPage() {
                       }}
                       className={`rounded-lg border px-3 py-2 text-xs font-medium text-left transition-colors ${
                         selectedLead.status === s.id
-                          ? "bg-navy-900 text-white border-navy-900"
+                          ? "bg-hm-black text-white border-navy-900"
                           : "border-gray-200 text-gray-600 hover:border-gray-400"
                       }`}
                     >
-                      {s.label}
+                      {t(s.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -526,22 +528,22 @@ export default function CRMPage() {
 
               {/* Notes */}
               <div>
-                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">Notes</h3>
+                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('common.notes')}</h3>
                 <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                  {selectedLead.notes || <span className="text-gray-400 italic">No notes yet</span>}
+                  {selectedLead.notes || <span className="text-gray-400 italic">{t('manager.crm.noNotes')}</span>}
                 </p>
               </div>
 
               {/* Campaign attribution */}
               <div>
-                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">Campaign attribution</h3>
+                <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('manager.crm.campaignAttribution')}</h3>
                 <div className="space-y-1.5">
                   {selectedLead.leadAttributions.length === 0 && !attributing && (
-                    <p className="text-xs text-gray-400 italic">No campaign attributed yet.</p>
+                    <p className="text-xs text-gray-400 italic">{t('manager.crm.noCampaign')}</p>
                   )}
                   {selectedLead.leadAttributions.map(a => (
                     <div key={a.campaign.id} className="flex items-center justify-between rounded-lg bg-gray-50 border px-3 py-2">
-                      <span className="text-xs font-medium text-navy-900">{a.campaign.name}</span>
+                      <span className="text-xs font-medium text-hm-black">{a.campaign.name}</span>
                       <button
                         onClick={() => removeAttribution(selectedLead.id, a.campaign.id)}
                         className="text-gray-300 hover:text-red-500 transition-colors ml-2"
@@ -555,9 +557,9 @@ export default function CRMPage() {
                       <select
                         value={attrCampaignId}
                         onChange={e => setAttrCampaignId(e.target.value)}
-                        className="flex-1 rounded-lg border px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-navy-300"
+                        className="flex-1 rounded-lg border px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-hm-gold"
                       >
-                        <option value="">Select campaign…</option>
+                        <option value="">{t('manager.crm.selectCampaign')}</option>
                         {campaigns
                           .filter(c => !selectedLead.leadAttributions.some(a => a.campaign.id === c.id))
                           .map(c => <option key={c.id} value={c.id}>{c.name}</option>)
@@ -566,11 +568,11 @@ export default function CRMPage() {
                       <button
                         onClick={() => attrCampaignId && addAttribution(selectedLead.id, attrCampaignId)}
                         disabled={!attrCampaignId}
-                        className="rounded-lg bg-navy-900 text-white px-3 py-1.5 text-xs font-medium disabled:opacity-40"
+                        className="rounded-lg bg-hm-black text-white px-3 py-1.5 text-xs font-medium disabled:opacity-40"
                       >
-                        Add
+                        {t('common.add')}
                       </button>
-                      <button onClick={() => setAttributing(false)} className="text-gray-400 hover:text-gray-600 px-1">
+                      <button onClick={() => setAttributing(false)} aria-label="Close" className="text-gray-400 hover:text-gray-600 px-1">
                         <X className="h-4 w-4" />
                       </button>
                     </div>
@@ -580,7 +582,7 @@ export default function CRMPage() {
                         onClick={() => setAttributing(true)}
                         className="text-xs text-navy-600 hover:underline"
                       >
-                        + Attribute to campaign
+                        + {t('manager.crm.attributeToCampaign')}
                       </button>
                     )
                   )}
@@ -589,10 +591,10 @@ export default function CRMPage() {
 
               {/* Source + dates */}
               <div className="text-xs text-gray-400 space-y-1 pt-2 border-t">
-                <div>Source: {SOURCE_LABEL[selectedLead.source] ?? selectedLead.source}</div>
-                <div>Added: {fmtDate(selectedLead.createdAt)}</div>
+                <div>{t('manager.crm.source')}: {t(SOURCE_LABEL_KEY[selectedLead.source] ?? selectedLead.source)}</div>
+                <div>{t('manager.crm.added')}: {fmtDate(selectedLead.createdAt)}</div>
                 {selectedLead.followUpDate && (
-                  <div>Follow-up: {fmtDate(selectedLead.followUpDate)}</div>
+                  <div>{t('manager.crm.followUp')}: {fmtDate(selectedLead.followUpDate)}</div>
                 )}
               </div>
             </div>
@@ -609,7 +611,7 @@ export default function CRMPage() {
             return (
               <div
                 key={stage.id}
-                className={`flex flex-col w-60 rounded-xl border-2 bg-white flex-shrink-0 transition-all ${stage.color} ${
+                className={`flex flex-col w-60 rounded-hm border-2 bg-white flex-shrink-0 transition-all ${stage.color} ${
                   isDragTarget ? "ring-2 ring-gold-400 ring-offset-1 scale-[1.01]" : ""
                 }`}
                 onDragOver={e => { e.preventDefault(); setDraggingOver(stage.id) }}
@@ -624,7 +626,7 @@ export default function CRMPage() {
                 {/* Column header */}
                 <div className={`px-3 py-2.5 rounded-t-xl border-b ${stage.header} flex items-center justify-between`}>
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-600">
-                    {stage.label}
+                    {t(stage.labelKey)}
                   </span>
                   <span className="text-xs font-bold bg-white text-gray-500 rounded-full px-2 py-0.5 border">
                     {stageLeads.length}
@@ -678,7 +680,7 @@ export default function CRMPage() {
                           {daysAgo(lead.createdAt)}d ago
                         </div>
                         <span className="text-[10px] bg-gray-100 text-gray-500 rounded px-1.5 py-0.5">
-                          {SOURCE_LABEL[lead.source] ?? lead.source}
+                          {t(SOURCE_LABEL_KEY[lead.source] ?? lead.source)}
                         </span>
                       </div>
                       {lead.score !== null && (
@@ -690,7 +692,7 @@ export default function CRMPage() {
                   ))}
 
                   {!loading && stageLeads.length === 0 && (
-                    <div className="text-center py-8 text-xs text-gray-300">Drop here</div>
+                    <div className="text-center py-8 text-xs text-gray-300">{t('manager.crm.dropHere')}</div>
                   )}
                 </div>
               </div>
@@ -708,6 +710,7 @@ function BantPanel({ lead, onUpdate }: {
   lead: Lead
   onUpdate: (updated: Partial<Lead>) => void
 }) {
+  const { t } = useLocale()
   const [answers, setAnswers] = useState<BantAnswers>(lead.bantData ?? {})
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -739,7 +742,7 @@ function BantPanel({ lead, onUpdate }: {
       setTimeout(() => setSaved(false), 3000)
     } catch (e) {
       console.error("Failed to save score:", e)
-      alert("Failed to save — check console")
+      alert(t('manager.crm.failedToSaveScore'))
     } finally {
       setSaving(false)
     }
@@ -748,7 +751,7 @@ function BantPanel({ lead, onUpdate }: {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xs uppercase tracking-wider text-gray-400">Lead Qualification</h3>
+        <h3 className="text-xs uppercase tracking-wider text-gray-400">{t('manager.crm.leadQualification')}</h3>
         {currentScore !== null && (
           <ScorePill score={currentScore} />
         )}
@@ -778,7 +781,7 @@ function BantPanel({ lead, onUpdate }: {
         {BANT_QUESTIONS.map(q => (
           <div key={q.id}>
             <p className="text-xs font-medium text-gray-600 mb-1.5">
-              <span className="mr-1">{q.icon}</span>{q.label}
+              <span className="mr-1">{q.icon}</span>{t(q.labelKey)}
             </p>
             <div className="grid grid-cols-1 gap-1">
               {q.options.map(opt => {
@@ -793,7 +796,7 @@ function BantPanel({ lead, onUpdate }: {
                         : "border-gray-200 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
                     }`}
                   >
-                    <span>{opt.label}</span>
+                    <span>{t(opt.labelKey)}</span>
                     <span className={`font-bold shrink-0 ml-2 ${selected ? "text-yellow-400" : "text-gray-300"}`}>
                       +{opt.pts}
                     </span>
@@ -811,13 +814,13 @@ function BantPanel({ lead, onUpdate }: {
           disabled={saving || answeredCount === 0}
           className="flex-1 rounded-lg bg-gray-900 text-white py-2 text-sm font-semibold hover:bg-gray-700 disabled:opacity-40 transition-colors"
         >
-          {saving ? "Saving…" : saved ? "✓ Score saved" : "Save qualification"}
+          {saving ? t('manager.crm.saving') : saved ? t('manager.crm.scoreSaved') : t('manager.crm.saveQualification')}
         </button>
         {answers && Object.keys(answers).length > 0 && (
           <button
             onClick={() => { setAnswers({}); setSaved(false) }}
             className="rounded-lg border px-3 py-2 text-xs text-gray-500 hover:bg-gray-50"
-            title="Clear answers"
+            title={t('manager.crm.clearAnswers')}
           >
             Clear
           </button>
@@ -1026,10 +1029,10 @@ x-integration-token: ${token}
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b">
           <div>
-            <h2 className="font-bold text-navy-900">Lead Integrations</h2>
+            <h2 className="font-bold text-hm-black">Lead Integrations</h2>
             <p className="text-xs text-gray-500 mt-0.5">Capture leads from digital marketing channels</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -1049,7 +1052,7 @@ x-integration-token: ${token}
                     <Icon className="h-4 w-4 text-amber-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-navy-900">{sec.title}</p>
+                    <p className="text-sm font-semibold text-hm-black">{sec.title}</p>
                     <p className="text-xs text-gray-500">{sec.desc}</p>
                   </div>
                   <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />

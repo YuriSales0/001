@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
+import { Banknote } from "lucide-react"
 
 type Payout = {
   id: string
@@ -27,8 +28,8 @@ export default function ManagerPayouts() {
   }, [])
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-3xl font-bold text-navy-900">Payouts (my clients)</h1>
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <h1 className="text-3xl font-serif font-bold text-hm-black">Payouts (my clients)</h1>
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
@@ -39,14 +40,20 @@ export default function ManagerPayouts() {
             </tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan={6} className="text-center py-8 text-gray-400">Loading…</td></tr>}
+            {loading && <tr><td colSpan={6} className="py-8"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>}
             {error && <tr><td colSpan={6} className="text-center py-8"><p className="text-sm text-red-500">Failed to load data</p></td></tr>}
-            {!loading && !error && payouts.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-gray-500">No payouts</td></tr>}
+            {!loading && !error && payouts.length === 0 && (
+              <tr><td colSpan={6} className="py-12 text-center">
+                <Banknote className="h-10 w-10 mx-auto text-gray-300 mb-2" />
+                <p className="font-serif font-bold text-hm-black">No payouts</p>
+                <p className="text-sm text-gray-500 mt-0.5">Client payouts will appear here once bookings are completed.</p>
+              </td></tr>
+            )}
             {payouts.map(p => (
               <tr key={p.id} className="border-t">
-                <td className="px-4 py-3">{p.property.owner.name || p.property.owner.email}</td>
-                <td className="px-4 py-3">{p.property.name}</td>
-                <td className="px-4 py-3">{p.reservation.guestName}</td>
+                <td className="px-4 py-3 max-w-[160px]"><span className="block truncate" title={p.property.owner.name || p.property.owner.email}>{p.property.owner.name || p.property.owner.email}</span></td>
+                <td className="px-4 py-3 max-w-[180px]"><span className="block truncate" title={p.property.name}>{p.property.name}</span></td>
+                <td className="px-4 py-3 max-w-[160px]"><span className="block truncate" title={p.reservation.guestName}>{p.reservation.guestName}</span></td>
                 <td className="px-4 py-3">{fmtDate(p.scheduledFor)}</td>
                 <td className="px-4 py-3 text-right font-semibold">{fmtEUR(p.netAmount)}</td>
                 <td className="px-4 py-3"><span className="rounded-full bg-blue-100 text-blue-700 px-2 py-0.5 text-xs">{p.status}</span></td>

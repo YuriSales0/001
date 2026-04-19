@@ -89,16 +89,16 @@ export default function AdminTaxPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">{t('admin.tax')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('admin.tax')}</h1>
           <p className="text-sm text-gray-500 mt-0.5">{t('admin.taxSubtitle')}</p>
         </div>
         <button
           onClick={() => setShowNewModal(true)}
-          className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 transition-colors"
         >
           <Plus className="h-4 w-4" /> {t('admin.newObligation')}
         </button>
@@ -113,13 +113,13 @@ export default function AdminTaxPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3 bg-white rounded-xl border p-3">
+      <div className="flex flex-wrap items-center gap-3 bg-white rounded-hm border p-3">
         <Filter className="h-4 w-4 text-gray-400" />
-        <select value={filter} onChange={e => setFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
+        <select value={filter} onChange={e => setFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
           <option value="all">{t('admin.allStatuses')}</option>
           {STATUSES.map(s => <option key={s.value} value={s.value}>{t(s.labelKey)}</option>)}
         </select>
-        <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
+        <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
           <option value="">{t('admin.allClients')}</option>
           {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email}</option>)}
         </select>
@@ -130,7 +130,7 @@ export default function AdminTaxPage() {
       {loading ? (
         <div className="text-center py-10 text-sm text-gray-400">{t('common.loading')}</div>
       ) : visible.length === 0 ? (
-        <div className="bg-white rounded-xl border p-10 text-center">
+        <div className="bg-white rounded-hm border p-10 text-center">
           <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
             <FileText className="h-6 w-6 text-gray-400" />
           </div>
@@ -142,14 +142,14 @@ export default function AdminTaxPage() {
           </p>
           <button
             onClick={() => setShowNewModal(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90"
           >
             <Plus className="h-4 w-4" />
             Create first obligation
           </button>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border divide-y">
+        <div className="bg-white rounded-hm border divide-y">
           {visible.map(o => (
             <ObligationRow
               key={o.id}
@@ -191,12 +191,12 @@ export default function AdminTaxPage() {
 
 function StatCard({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: number; color: string }) {
   return (
-    <div className="rounded-xl border bg-white p-4">
+    <div className="rounded-hm border bg-white p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs uppercase tracking-wider text-gray-400 font-medium">{label}</span>
         <Icon className={`h-4 w-4 ${color}`} />
       </div>
-      <div className="text-2xl font-bold text-navy-900">{value}</div>
+      <div className="text-2xl font-bold text-hm-black">{value}</div>
     </div>
   )
 }
@@ -224,28 +224,28 @@ function ObligationRow({
   if (editing) {
     return (
       <div className="p-4 bg-gray-50 space-y-3">
-        <div className="font-semibold text-navy-900 text-sm">
+        <div className="font-semibold text-hm-black text-sm">
           {typeMeta ? t(typeMeta.labelKey) : o.type} · {o.user.name ?? o.user.email} · {o.periodLabel}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.status')}</label>
-            <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
+            <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               {STATUSES.map(s => <option key={s.value} value={s.value}>{t(s.labelKey)}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('crew.dueDate')}</label>
-            <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.documentUrl')}</label>
-          <input value={documentUrl} onChange={e => setDocumentUrl(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="https://..." />
+          <input value={documentUrl} onChange={e => setDocumentUrl(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="https://..." />
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.notes')}</label>
-          <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm" />
+          <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           <div className="text-right text-xs text-gray-400 mt-1">
             {notes.length}/500
           </div>
@@ -253,7 +253,7 @@ function ObligationRow({
         <div className="flex gap-2 justify-end">
           <button onClick={onCancel} className="rounded-lg border px-4 py-1.5 text-sm hover:bg-gray-100"><X className="h-3.5 w-3.5 inline mr-1" />{t('common.cancel')}</button>
           <button onClick={() => onSave({ status, dueDate: dueDate || null, notes, documentUrl })}
-            className="rounded-lg bg-navy-900 text-white px-4 py-1.5 text-sm font-semibold hover:bg-navy-800">
+            className="rounded-lg bg-hm-black text-white px-4 py-1.5 text-sm font-semibold hover:bg-hm-black/90">
             <Save className="h-3.5 w-3.5 inline mr-1" /> {t('common.save')}
           </button>
         </div>
@@ -266,7 +266,7 @@ function ObligationRow({
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="font-semibold text-navy-900 text-sm">{typeMeta ? t(typeMeta.labelKey) : o.type}</span>
+            <span className="font-semibold text-hm-black text-sm">{typeMeta ? t(typeMeta.labelKey) : o.type}</span>
             <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${statusMeta?.color}`}>
               {statusMeta ? t(statusMeta.labelKey) : o.status}
             </span>
@@ -281,7 +281,7 @@ function ObligationRow({
         <div className="text-right shrink-0">
           <p className="text-xs text-gray-500">{fmtDate(o.dueDate)}</p>
           {o.documentUrl && <a href={o.documentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">📎 {t('admin.document')}</a>}
-          <button onClick={onEdit} className="block ml-auto mt-1 text-xs text-navy-700 hover:text-navy-900">
+          <button onClick={onEdit} className="block ml-auto mt-1 text-xs text-navy-700 hover:text-hm-black">
             <Edit2 className="h-3 w-3 inline mr-0.5" /> {t('common.edit')}
           </button>
         </div>
@@ -337,13 +337,13 @@ function NewObligationModal({
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
         <div className="px-6 py-4 border-b flex items-center justify-between">
-          <h3 className="font-bold text-navy-900">{t('admin.newTaxObligation')}</h3>
-          <button onClick={onClose}><X className="h-4 w-4" /></button>
+          <h3 className="font-bold text-hm-black">{t('admin.newTaxObligation')}</h3>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700"><X className="h-4 w-4" /></button>
         </div>
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.client')}</label>
-            <select value={userId} onChange={e => { setUserId(e.target.value); setPropertyId("") }} className="w-full rounded-lg border px-3 py-2 text-sm">
+            <select value={userId} onChange={e => { setUserId(e.target.value); setPropertyId("") }} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               <option value="">{t('admin.selectClient')}</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email} ({c.subscriptionPlan ?? "—"})</option>)}
             </select>
@@ -351,7 +351,7 @@ function NewObligationModal({
           {userId && clientProperties.length > 0 && (
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.propertyOptional')}</label>
-              <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
+              <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 <option value="">{t('admin.noProperty')}</option>
                 {clientProperties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
@@ -359,23 +359,23 @@ function NewObligationModal({
           )}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.typeLabel')}</label>
-            <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
+            <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               {TYPES.map(ty => <option key={ty.value} value={ty.value}>{t(ty.labelKey)}</option>)}
             </select>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.period')}</label>
-              <input value={periodLabel} onChange={e => setPeriodLabel(e.target.value)} placeholder="e.g. Q1 2026, 2026, Once" className="w-full rounded-lg border px-3 py-2 text-sm" />
+              <input value={periodLabel} onChange={e => setPeriodLabel(e.target.value)} placeholder="e.g. Q1 2026, 2026, Once" className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">{t('crew.dueDate')}</label>
-              <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
+              <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.notesVisibleToClient')}</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm" />
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             <div className="text-right text-xs text-gray-400 mt-1">
               {notes.length}/500
             </div>
@@ -384,7 +384,7 @@ function NewObligationModal({
         <div className="px-6 py-4 border-t flex justify-end gap-2">
           <button onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
           <button onClick={submit} disabled={!userId || !periodLabel || saving}
-            className="rounded-lg bg-navy-900 text-white px-5 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
+            className="rounded-lg bg-hm-black text-white px-5 py-2 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
             {saving ? t('admin.creating') : t('admin.create')}
           </button>
         </div>

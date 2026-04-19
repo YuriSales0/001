@@ -118,7 +118,7 @@ export default function ClientMessagesPage() {
   if (!conv) {
     return (
       <div className="p-8 flex justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-navy-900" />
+        <Loader2 className="h-6 w-6 animate-spin text-hm-black" />
       </div>
     )
   }
@@ -127,11 +127,11 @@ export default function ClientMessagesPage() {
     <div className="flex flex-col h-[calc(100vh-120px)] max-h-[700px]">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b bg-white rounded-t-xl">
-        <div className="h-9 w-9 rounded-full bg-navy-900 flex items-center justify-center text-white text-sm font-bold">
+        <div className="h-9 w-9 rounded-full bg-hm-black flex items-center justify-center text-white text-sm font-bold">
           {(conv.manager.name ?? conv.manager.email)[0].toUpperCase()}
         </div>
         <div>
-          <div className="font-semibold text-navy-900 text-sm">
+          <div className="font-semibold text-hm-black text-sm">
             {conv.manager.name ?? conv.manager.email}
           </div>
           <div className="text-xs text-gray-500">Gestor</div>
@@ -152,7 +152,7 @@ export default function ClientMessagesPage() {
             <div key={m.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-xs rounded-2xl px-4 py-2 text-sm ${
                 isMe
-                  ? 'bg-navy-900 text-white rounded-br-sm'
+                  ? 'bg-hm-black text-white rounded-br-sm'
                   : 'bg-white border text-gray-800 rounded-bl-sm'
               }`}>
                 <p>{m.body}</p>
@@ -173,12 +173,12 @@ export default function ClientMessagesPage() {
           onChange={e => setText(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
           placeholder="Escreve uma mensagem…"
-          className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+          className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
         />
         <button
           onClick={send}
           disabled={sending || !text.trim()}
-          className="rounded-full bg-navy-900 p-2.5 text-white hover:bg-navy-800 disabled:opacity-40"
+          className="rounded-full bg-hm-black p-2.5 text-white hover:bg-hm-black/90 disabled:opacity-40"
         >
           {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
         </button>

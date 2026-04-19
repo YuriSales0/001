@@ -34,8 +34,8 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-navy-900">Como funciona — Payouts</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100">
+          <h2 className="text-lg font-bold text-hm-black">Como funciona — Payouts</h2>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -43,7 +43,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
 
           {/* Fluxo automático */}
           <div className="rounded-lg border p-4 space-y-2">
-            <h3 className="font-semibold text-navy-900 mb-3">Fluxo de pagamento</h3>
+            <h3 className="font-semibold text-hm-black mb-3">Fluxo de pagamento</h3>
             {[
               { label: 'Hóspede paga Airbnb / Booking', status: 'auto', note: 'Payout agendado automaticamente ao criar reserva' },
               { label: 'Dinheiro chega ao banco', status: 'manual', note: 'Admin clica "Mark paid" — futuro: Open Banking detecta automaticamente' },
@@ -57,7 +57,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
                   {row.status === 'auto' ? 'Auto' : 'Manual'}
                 </span>
                 <div>
-                  <div className="font-medium text-navy-900 text-xs">{row.label}</div>
+                  <div className="font-medium text-hm-black text-xs">{row.label}</div>
                   <div className="text-gray-500 text-xs">{row.note}</div>
                 </div>
               </div>
@@ -65,16 +65,16 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="rounded-lg border p-4 space-y-2">
-            <h3 className="font-semibold text-navy-900">Data de pagamento por plataforma</h3>
+            <h3 className="font-semibold text-hm-black">Data de pagamento por plataforma</h3>
             {Object.entries(PLATFORM_RULES).map(([platform, rule]) => (
               <div key={platform} className="flex items-center justify-between">
                 <span className="text-gray-600">{PLATFORM_LABELS[platform] ?? platform}</span>
-                <span className="font-medium text-navy-900">{rule}</span>
+                <span className="font-medium text-hm-black">{rule}</span>
               </div>
             ))}
           </div>
           <div className="rounded-lg border p-4 space-y-2">
-            <h3 className="font-semibold text-navy-900">Comissão por plano</h3>
+            <h3 className="font-semibold text-hm-black">Comissão por plano</h3>
             <div className="grid grid-cols-2 gap-1 text-xs">
               {[
                 { plan: 'STARTER', rate: '22%', price: 'Grátis' },
@@ -83,7 +83,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
                 { plan: 'PREMIUM', rate: '13%', price: '€269/mês' },
               ].map(r => (
                 <div key={r.plan} className="rounded-md bg-gray-50 px-3 py-2">
-                  <div className="font-semibold text-navy-900">{r.plan}</div>
+                  <div className="font-semibold text-hm-black">{r.plan}</div>
                   <div className="text-gray-500">{r.price}</div>
                   <div className="text-orange-600 font-bold">{r.rate}</div>
                 </div>
@@ -96,7 +96,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
           </p>
         </div>
         <div className="p-5 border-t">
-          <button onClick={onClose} className="w-full rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800">
+          <button onClick={onClose} className="w-full rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90">
             Fechar
           </button>
         </div>
@@ -159,14 +159,14 @@ function CreatePayoutModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-navy-900">Criar payout manual</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <h2 className="text-lg font-bold text-hm-black">Criar payout manual</h2>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           {error && <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Propriedade *</label>
-            <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" required>
+            <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required>
               <option value="">Seleccionar propriedade...</option>
               {properties.map(p => (
                 <option key={p.id} value={p.id}>{p.name} — {p.owner.name || p.owner.email}</option>
@@ -184,11 +184,11 @@ function CreatePayoutModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Valor recebido da plataforma (EUR) *</label>
-              <input type="number" min="1" step="0.01" value={grossAmount} onChange={e => setGrossAmount(e.target.value)} placeholder="0.00" className="w-full rounded-md border px-3 py-2 text-sm" required />
+              <input type="number" min="1" step="0.01" value={grossAmount} onChange={e => setGrossAmount(e.target.value)} placeholder="0.00" className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
-              <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 <option value="">Nenhuma</option>
                 {PLATFORMS.map(pl => <option key={pl} value={pl}>{PLATFORM_LABELS[pl] ?? pl}</option>)}
               </select>
@@ -196,11 +196,11 @@ function CreatePayoutModal({
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada *</label>
-            <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" required />
+            <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
-            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="ex: Ajuste manual — Jan 2026" className="w-full rounded-md border px-3 py-2 text-sm" />
+            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="ex: Ajuste manual — Jan 2026" className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           {gross > 0 && (
             <div className="rounded-lg bg-gray-50 border divide-y text-sm">
@@ -226,7 +226,7 @@ function CreatePayoutModal({
           )}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'A criar...' : 'Criar payout'}
             </button>
           </div>
@@ -283,15 +283,15 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-navy-900">Editar payout</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <h2 className="text-lg font-bold text-hm-black">Editar payout</h2>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           {error && <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Valor bruto (€)</label>
             <input type="number" step="0.01" min="0" value={grossAmount} onChange={e => setGrossAmount(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" required />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
             {gross > 0 && (
               <div className="mt-2 rounded-lg bg-gray-50 border divide-y text-sm">
                 <div className="flex justify-between px-3 py-2 text-orange-600">
@@ -308,11 +308,11 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada</label>
             <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" required />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
-            <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+            <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               <option value="">— Nenhuma —</option>
               {PLATFORMS.map(p => <option key={p} value={p}>{PLATFORM_LABELS[p] ?? p}</option>)}
             </select>
@@ -320,11 +320,11 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
             <input value={description} onChange={e => setDescription(e.target.value)} placeholder="Opcional"
-              className="w-full rounded-md border px-3 py-2 text-sm" />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'A guardar...' : 'Guardar'}
             </button>
           </div>
@@ -413,10 +413,10 @@ export default function PayoutsPage() {
   )
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-navy-900">Payouts</h1>
+          <h1 className="text-3xl font-serif font-bold text-hm-black">Payouts</h1>
           <p className="text-sm text-gray-600">Pagamentos automaticos por plataforma - comissao calculada por plano</p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -428,7 +428,7 @@ export default function PayoutsPage() {
             <Receipt className="h-4 w-4" />
             Invoices
           </Link>
-          <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-1.5 rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800">
+          <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-1.5 rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90">
             <Plus className="h-4 w-4" />
             Criar payout
           </button>
@@ -436,19 +436,19 @@ export default function PayoutsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">Agendado (liquido)</div>
-          <div className="text-2xl font-semibold text-navy-900 mt-1">{fmt(totals.scheduled)}</div>
+          <div className="text-2xl font-semibold text-hm-black mt-1">{fmt(totals.scheduled)}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">Comissao pendente</div>
-          <div className="text-2xl font-semibold text-navy-900 mt-1">{fmt(totals.commission)}</div>
+          <div className="text-2xl font-semibold text-hm-black mt-1">{fmt(totals.commission)}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">Payouts abertos</div>
-          <div className="text-2xl font-semibold text-navy-900 mt-1">{payouts.filter(p => p.status === 'SCHEDULED').length}</div>
+          <div className="text-2xl font-semibold text-hm-black mt-1">{payouts.filter(p => p.status === 'SCHEDULED').length}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4 flex flex-col">
+        <div className="rounded-hm border bg-white p-4 flex flex-col">
           <div className="text-xs uppercase text-gray-500 mb-1">Em atraso</div>
           <button
             onClick={() => setOverdueOnly(o => !o)}
@@ -467,8 +467,8 @@ export default function PayoutsPage() {
       </div>
 
       <form onSubmit={e => { e.preventDefault(); load(clientFilter) }} className="flex gap-2">
-        <input placeholder="Filtrar por cliente, email ou ID..." value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="flex-1 rounded-md border px-3 py-2 text-sm" />
-        <button type="submit" className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800">Filtrar</button>
+        <input placeholder="Filtrar por cliente, email ou ID..." value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="flex-1 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+        <button type="submit" className="rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90">Filtrar</button>
         {clientFilter && (
           <button type="button" onClick={() => { setClientFilter(''); load('') }} className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Limpar</button>
         )}
@@ -481,7 +481,7 @@ export default function PayoutsPage() {
         </div>
       )}
 
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
@@ -500,7 +500,7 @@ export default function PayoutsPage() {
             </tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan={11} className="text-center py-8 text-gray-500">A carregar...</td></tr>}
+            {loading && <tr><td colSpan={11} className="py-8"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>}
             {!loading && displayed.length === 0 && <tr><td colSpan={11} className="text-center py-8 text-gray-500">Sem payouts</td></tr>}
             {displayed.map(p => {
               const overdue = isOverdue(p)
@@ -550,7 +550,7 @@ export default function PayoutsPage() {
                           </button>
                           <button
                             onClick={() => setEditingPayout(p)}
-                            className="rounded-lg border p-1.5 text-gray-500 hover:bg-gray-50 hover:text-navy-900 transition-colors"
+                            className="rounded-lg border p-1.5 text-gray-500 hover:bg-gray-50 hover:text-hm-black transition-colors"
                             title="Editar"
                           >
                             <Pencil className="h-3.5 w-3.5" />

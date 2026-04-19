@@ -17,11 +17,11 @@ const PLAN_COLOR: Record<string, string> = {
   PREMIUM: "bg-amber-100 text-amber-800",
 }
 
-const PLAN_DESC: Record<string, string> = {
-  STARTER: "Essentials — Check-in, Check-out, Cleaning",
-  BASIC:   "Basic + Pre/Post Inspection",
-  MID:     "Mid + Extended support",
-  PREMIUM: "Full service — Inspection, Shopping, Transfer, Laundry",
+const PLAN_DESC_KEY: Record<string, string> = {
+  STARTER: "client.profileDocs.planDescStarter",
+  BASIC:   "client.profileDocs.planDescBasic",
+  MID:     "client.profileDocs.planDescMid",
+  PREMIUM: "client.profileDocs.planDescPremium",
 }
 
 async function downloadDoc(type: "management" | "rules" | "guide", ownerName: string) {
@@ -243,14 +243,14 @@ export default function ClientProfilePage() {
   const ownerName = profile?.name ?? profile?.email ?? "Owner"
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-8 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: 'var(--hm-black)' }}>{t('common.myProfile')}</h1>
+        <h1 className="text-2xl font-serif font-bold" style={{ color: 'var(--hm-black)' }}>{t('common.myProfile')}</h1>
         <p className="text-sm text-gray-500">{t('profile.subtitle')}</p>
       </div>
 
       {/* Photo + identity */}
-      <form onSubmit={save} className="rounded-xl border bg-white p-5 space-y-5">
+      <form onSubmit={save} className="rounded-hm border bg-white p-5 space-y-5">
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center"
@@ -263,7 +263,7 @@ export default function ClientProfilePage() {
               )}
             </div>
             <button type="button" onClick={() => fileRef.current?.click()}
-              className="absolute -bottom-1 -right-1 rounded-full p-1.5 text-white shadow"
+              className="absolute -bottom-1 -right-1 rounded-full p-2 text-white shadow hover:brightness-110"
               style={{ background: 'var(--hm-gold)' }}>
               <Camera className="h-3.5 w-3.5" />
             </button>
@@ -302,7 +302,7 @@ export default function ClientProfilePage() {
         <div className="flex items-center justify-between pt-1">
           {saved && <span className="text-sm font-medium" style={{ color: 'var(--hm-green)' }}>{t('profile.savedSuccessfully')}</span>}
           <button type="submit" disabled={saving}
-            className="ml-auto inline-flex items-center gap-2 rounded-xl text-white px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
+            className="ml-auto inline-flex items-center gap-2 rounded-xl text-white px-4 py-2.5 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
             style={{ background: 'var(--hm-black)' }}>
             <Save className="h-4 w-4" /> {saving ? t('profile.saving') : t('profile.saveChanges')}
           </button>
@@ -310,7 +310,7 @@ export default function ClientProfilePage() {
       </form>
 
       {/* Subscription plan */}
-      <div className="rounded-xl border bg-white p-5">
+      <div className="rounded-hm border bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <Star className="h-4 w-4" style={{ color: 'var(--hm-gold)' }} />
           <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>{t('profile.subscriptionPlan')}</span>
@@ -318,7 +318,7 @@ export default function ClientProfilePage() {
         <div className="flex items-center justify-between">
           <div>
             <span className={`rounded px-2.5 py-1 text-xs font-bold ${PLAN_COLOR[plan]}`}>{plan}</span>
-            <p className="text-xs text-gray-500 mt-1.5">{PLAN_DESC[plan]}</p>
+            <p className="text-xs text-gray-500 mt-1.5">{t(PLAN_DESC_KEY[plan])}</p>
           </div>
           <div className="text-right">
             <p className="text-xs text-gray-400">{t('common.status')}</p>
@@ -335,16 +335,16 @@ export default function ClientProfilePage() {
       </div>
 
       {/* Documents */}
-      <div className="rounded-xl border bg-white p-5">
+      <div className="rounded-hm border bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <FileText className="h-4 w-4 text-gray-400" />
           <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>{t('profile.yourDocuments')}</span>
         </div>
         <div className="space-y-3">
           {[
-            { type: "management" as const, title: "Property Management Agreement", desc: "Your signed management contract with HostMasters." },
-            { type: "rules" as const,      title: "House Rules",                   desc: "Rules and regulations for your property guests." },
-            { type: "guide" as const,      title: "Owner Welcome Guide",           desc: "Everything you need to know as a HostMasters owner." },
+            { type: "management" as const, title: t('client.profileDocs.managementAgreement'), desc: t('client.profileDocs.managementAgreementDesc') },
+            { type: "rules" as const,      title: t('client.profileDocs.houseRules'),           desc: t('client.profileDocs.houseRulesDesc') },
+            { type: "guide" as const,      title: t('client.profileDocs.ownerGuide'),           desc: t('client.profileDocs.ownerGuideDesc') },
           ].map(doc => (
             <div key={doc.type} className="flex items-center gap-3 rounded-lg border p-3 hover:bg-gray-50 transition-colors">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg flex-shrink-0"
@@ -367,7 +367,7 @@ export default function ClientProfilePage() {
       </div>
 
       {/* Password */}
-      <form onSubmit={savePassword} className="rounded-xl border bg-white p-5 space-y-4">
+      <form onSubmit={savePassword} className="rounded-hm border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
           <span className="text-sm font-semibold" style={{ color: 'var(--hm-black)' }}>{t('profile.changePassword')}</span>

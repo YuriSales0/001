@@ -153,11 +153,11 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
       {loading ? (
         <div className="text-sm text-gray-400 py-4 text-center">A carregar…</div>
       ) : items.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-gray-200 py-8 text-center">
+        <div className="rounded-hm border-2 border-dashed border-gray-200 py-8 text-center">
           <p className="text-sm text-gray-400 mb-3">Nenhum item configurado.</p>
           <button
             onClick={seedDefaults}
-            className="rounded-lg bg-navy-900 px-4 py-2 text-sm font-semibold text-white hover:bg-navy-800"
+            className="rounded-lg bg-hm-black px-4 py-2 text-sm font-semibold text-white hover:bg-hm-black/90"
           >
             Usar itens padrão
           </button>
@@ -172,14 +172,14 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">
                   {CATEGORY_LABELS[cat]}
                 </p>
-                <div className="rounded-xl border bg-white divide-y">
+                <div className="rounded-hm border bg-white divide-y">
                   {catItems.map(item => (
                     <div key={item.id} className="flex items-center gap-3 px-4 py-2.5">
                       <button
                         onClick={() => toggleActive(item)}
                         className={`shrink-0 h-4 w-4 rounded border-2 transition-colors ${
                           item.isActive
-                            ? 'bg-navy-900 border-navy-900'
+                            ? 'bg-hm-black border-navy-900'
                             : 'border-gray-300 bg-white'
                         }`}
                         title={item.isActive ? 'Desactivar' : 'Activar'}
@@ -189,7 +189,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
                       </span>
                       <button
                         onClick={() => deleteItem(item.id)}
-                        className="shrink-0 p-1 text-gray-300 hover:text-red-500 transition-colors rounded"
+                        className="shrink-0 p-2 text-gray-300 hover:text-red-500 transition-colors rounded"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -205,11 +205,11 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
             .map(cat => (
               <div key={cat}>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">{cat}</p>
-                <div className="rounded-xl border bg-white divide-y">
+                <div className="rounded-hm border bg-white divide-y">
                   {grouped[cat].map(item => (
                     <div key={item.id} className="flex items-center gap-3 px-4 py-2.5">
                       <span className="flex-1 text-sm text-gray-800">{item.label}</span>
-                      <button onClick={() => deleteItem(item.id)} className="p-1 text-gray-300 hover:text-red-500 rounded">
+                      <button onClick={() => deleteItem(item.id)} className="p-2 text-gray-300 hover:text-red-500 rounded">
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
@@ -221,13 +221,13 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
       )}
 
       {/* Add item form */}
-      <div className="rounded-xl border bg-gray-50 p-3">
+      <div className="rounded-hm border bg-gray-50 p-3">
         <p className="text-xs font-semibold text-gray-500 mb-2">Adicionar item</p>
         <div className="flex gap-2">
           <select
             value={newCategory}
             onChange={e => setNewCategory(e.target.value)}
-            className="rounded-lg border px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 bg-white"
+            className="rounded-lg border px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold bg-white"
           >
             <option value="exterior">Exterior</option>
             <option value="interior">Interior</option>
@@ -237,12 +237,12 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
             onChange={e => setNewLabel(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addItem()}
             placeholder="Ex: Porta da garagem"
-            className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 bg-white"
+            className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold bg-white"
           />
           <button
             onClick={addItem}
             disabled={adding || !newLabel.trim()}
-            className="rounded-lg bg-navy-900 px-3 py-2 text-white hover:bg-navy-800 disabled:opacity-50"
+            className="rounded-lg bg-hm-black px-3 py-2 text-white hover:bg-hm-black/90 disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -311,7 +311,7 @@ export default function SetupPage() {
   if (loading) return (
     <div className="p-6 space-y-4 animate-pulse">
       <div className="h-8 w-48 rounded bg-gray-100" />
-      <div className="h-64 rounded-xl bg-gray-100" />
+      <div className="h-64 rounded-hm bg-gray-100" />
     </div>
   )
 
@@ -320,7 +320,7 @@ export default function SetupPage() {
       {/* Sidebar */}
       <div className="w-72 border-r bg-white flex flex-col shrink-0">
         <div className="px-4 py-3 border-b bg-gray-50">
-          <h2 className="font-bold text-navy-900 text-sm">Properties</h2>
+          <h2 className="font-bold text-hm-black text-sm">Properties</h2>
           <p className="text-xs text-gray-400 mt-0.5">{setups.length} configuradas</p>
         </div>
         <div className="flex-1 overflow-y-auto divide-y">
@@ -356,13 +356,13 @@ export default function SetupPage() {
           <div className="max-w-2xl">
             <div className="flex items-start justify-between mb-5">
               <div>
-                <h1 className="text-xl font-bold text-navy-900">{selectedSetup.propertyName}</h1>
+                <h1 className="text-xl font-bold text-hm-black">{selectedSetup.propertyName}</h1>
                 <p className="text-sm text-gray-500">
                   Owner: {selectedSetup.ownerName} · Since {fmtDate(selectedSetup.startDate)}
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold text-navy-900">
+                <div className="text-2xl font-bold text-hm-black">
                   {Math.round((selectedSetup.steps.filter(s => s.status === "COMPLETE").length / selectedSetup.steps.length) * 100)}%
                 </div>
                 <div className="text-xs text-gray-400">setup completo</div>
@@ -375,7 +375,7 @@ export default function SetupPage() {
                 onClick={() => setActiveTab('timeline')}
                 className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
                   activeTab === 'timeline'
-                    ? 'border-navy-900 text-navy-900'
+                    ? 'border-navy-900 text-hm-black'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -385,7 +385,7 @@ export default function SetupPage() {
                 onClick={() => setActiveTab('config')}
                 className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
                   activeTab === 'config'
-                    ? 'border-navy-900 text-navy-900'
+                    ? 'border-navy-900 text-hm-black'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -415,7 +415,7 @@ export default function SetupPage() {
                     return (
                       <div
                         key={step.day}
-                        className={`rounded-xl border p-4 transition-colors ${cfg.bg} ${
+                        className={`rounded-hm border p-4 transition-colors ${cfg.bg} ${
                           step.status === "OVERDUE" ? "border-red-200" :
                           step.status === "COMPLETE" ? "border-green-200" :
                           step.status === "IN_PROGRESS" ? "border-blue-200" : "border-gray-200"

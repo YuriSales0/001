@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Users, Percent, TrendingUp } from "lucide-react"
 import { ProfileContractSection } from "@/components/hm/profile-contract-section"
+import { useLocale } from "@/i18n/provider"
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -10,6 +11,7 @@ interface Profile {
 }
 
 export default function ManagerProfilePage() {
+  const { t } = useLocale()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -27,7 +29,7 @@ export default function ManagerProfilePage() {
       setProfile(d)
       setForm({ name: d.name ?? "", phone: d.phone ?? "", bio: d.bio ?? "", image: d.image ?? "", commissionRate: d.commissionRate?.toString() ?? "" })
       setLoading(false)
-    }).catch(() => { setError("Failed to load profile"); setLoading(false) })
+    }).catch(() => { setError(t('profile.loadFailed')); setLoading(false) })
   }, [])
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,61 +48,61 @@ export default function ManagerProfilePage() {
       body: JSON.stringify({ ...form, commissionRate: form.commissionRate ? parseFloat(form.commissionRate) : undefined }),
     })
     if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000) }
-    else { const d = await res.json(); setError(d.error ?? "Failed to save") }
+    else { const d = await res.json(); setError(d.error ?? t('profile.failedToSave')) }
     setSaving(false)
   }
 
   const savePassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setPwError(""); setPwSaved(false)
-    if (pw.next !== pw.confirm) { setPwError("Passwords do not match"); return }
-    if (pw.next.length < 8) { setPwError("Password must be at least 8 characters"); return }
+    if (pw.next !== pw.confirm) { setPwError(t('profile.passwordsDoNotMatch')); return }
+    if (pw.next.length < 8) { setPwError(t('profile.passwordMinLength')); return }
     const res = await fetch("/api/profile", {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ currentPassword: pw.current, newPassword: pw.next }),
     })
     if (res.ok) { setPwSaved(true); setPw({ current: "", next: "", confirm: "" }); setTimeout(() => setPwSaved(false), 3000) }
-    else { const d = await res.json(); setPwError(d.error ?? "Failed to update password") }
+    else { const d = await res.json(); setPwError(d.error ?? t('profile.failedToUpdatePassword')) }
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Loading…</div>
+  if (loading) return <div className="p-8 text-sm text-gray-400">{t('common.loading')}</div>
 
   return (
-    <div className="space-y-6 p-6 max-w-2xl">
+    <div className="space-y-8 p-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-navy-900">My Profile</h1>
-        <p className="text-sm text-gray-500">Manager · Closer &amp; Customer Success</p>
+        <h1 className="text-2xl font-serif font-bold text-hm-black">{t('common.myProfile')}</h1>
+        <p className="text-sm text-gray-500">{t('manager.profile.roleDesc')}</p>
       </div>
 
       {/* Role info card */}
-      <div className="rounded-xl border bg-blue-50 border-blue-100 p-4 flex gap-4">
+      <div className="rounded-hm border bg-blue-50 border-blue-100 p-4 flex gap-4">
         <Users className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
         <div className="text-sm text-blue-800 space-y-1">
-          <p className="font-semibold">Manager responsibilities</p>
-          <p>You act as <strong>Closer &amp; Customer Success</strong> for HostMasters. You earn a <strong>3% commission</strong> on each subscription and contract you manage, with the goal of increasing client LTV and reducing CAC.</p>
+          <p className="font-semibold">{t('manager.profile.responsibilities')}</p>
+          <p>{t('manager.profile.responsibilitiesDesc')}</p>
         </div>
       </div>
 
       {/* Commission snapshot */}
       {profile?.commissionRate != null && (
-        <div className="rounded-xl border bg-white p-4 flex items-center gap-4">
+        <div className="rounded-hm border bg-white p-4 flex items-center gap-4">
           <div className="rounded-lg p-2 bg-emerald-50">
             <TrendingUp className="h-5 w-5 text-emerald-600" />
           </div>
           <div>
-            <p className="text-xs text-gray-500">Your commission rate</p>
-            <p className="text-2xl font-bold text-navy-900">{profile.commissionRate}%</p>
+            <p className="text-xs text-gray-500">{t('manager.profile.yourCommissionRate')}</p>
+            <p className="text-2xl font-bold text-hm-black">{profile.commissionRate}%</p>
           </div>
-          <div className="ml-auto text-xs text-gray-400">Set by Admin</div>
+          <div className="ml-auto text-xs text-gray-400">{t('manager.profile.setByAdmin')}</div>
         </div>
       )}
 
       {/* Photo + identity */}
-      <form onSubmit={save} className="rounded-xl border bg-white p-5 space-y-5">
+      <form onSubmit={save} className="rounded-hm border bg-white p-5 space-y-5">
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center"
-                 style={{ border: '3px solid #B08A3E' }}>
+                 style={{ border: '3px solid var(--hm-gold)' }}>
               {form.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={form.image} alt="" className="h-full w-full object-cover" />
@@ -109,14 +111,14 @@ export default function ManagerProfilePage() {
               )}
             </div>
             <button type="button" onClick={() => fileRef.current?.click()}
-              className="absolute -bottom-1 -right-1 rounded-full p-1.5 text-white shadow"
-              style={{ background: '#B08A3E' }}>
+              className="absolute -bottom-1 -right-1 rounded-full p-2 text-white shadow hover:brightness-110"
+              style={{ background: 'var(--hm-gold)' }}>
               <Camera className="h-3.5 w-3.5" />
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
           </div>
           <div>
-            <p className="font-semibold text-navy-900">{profile?.name ?? profile?.email}</p>
+            <p className="font-semibold text-hm-black">{profile?.name ?? profile?.email}</p>
             <p className="text-xs text-gray-500">{profile?.email}</p>
             <span className="mt-1 inline-block rounded px-2 py-0.5 text-[10px] font-bold bg-blue-100 text-blue-800">MANAGER</span>
           </div>
@@ -124,26 +126,26 @@ export default function ManagerProfilePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Full name</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('profile.fullName')}</label>
             <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Phone</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')}</label>
             <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="+34 600 000 000" />
           </div>
           <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Professional bio <span className="text-gray-400 font-normal">(visible to your clients)</span></label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.profile.bio')}</label>
             <textarea rows={4} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 resize-none"
-              placeholder="Introduce yourself to your property owners. What's your background? How do you help them?" />
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none"
+              placeholder={t('manager.profile.bioPlaceholder')} />
           </div>
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
-              <Percent className="h-3 w-3" /> Personal commission (%)
-              <span className="text-gray-400 font-normal">— read-only</span>
+              <Percent className="h-3 w-3" /> {t('manager.profile.personalCommission')}
+              <span className="text-gray-400 font-normal">{t('manager.profile.readOnly')}</span>
             </label>
             <input type="number" value={form.commissionRate} disabled
               className="w-full rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-500 cursor-not-allowed" />
@@ -152,36 +154,36 @@ export default function ManagerProfilePage() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
         <div className="flex items-center justify-between pt-1">
-          {saved && <span className="text-sm text-green-600 font-medium">Saved successfully</span>}
+          {saved && <span className="text-sm text-green-600 font-medium">{t('profile.savedSuccessfully')}</span>}
           <button type="submit" disabled={saving}
-            className="ml-auto inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
-            <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save changes"}
+            className="ml-auto inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50">
+            <Save className="h-4 w-4" /> {saving ? t('profile.saving') : t('profile.saveChanges')}
           </button>
         </div>
       </form>
 
       {/* Password */}
-      <form onSubmit={savePassword} className="rounded-xl border bg-white p-5 space-y-4">
+      <form onSubmit={savePassword} className="rounded-hm border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-semibold text-navy-900">Change password</span>
+          <span className="text-sm font-semibold text-hm-black">{t('profile.changePassword')}</span>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[["Current password", "current"], ["New password", "next"], ["Confirm new", "confirm"]].map(([label, key]) => (
+          {[[t('profile.currentPassword'), "current"], [t('profile.newPassword'), "next"], [t('profile.confirmNew'), "confirm"]].map(([label, key]) => (
             <div key={key}>
               <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
               <input type="password" value={pw[key as keyof typeof pw]}
                 onChange={e => setPw(p => ({ ...p, [key]: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
           ))}
         </div>
         {pwError && <p className="text-sm text-red-600">{pwError}</p>}
         <div className="flex items-center justify-between">
-          {pwSaved && <span className="text-sm text-green-600 font-medium">Password updated</span>}
+          {pwSaved && <span className="text-sm text-green-600 font-medium">{t('profile.passwordUpdated')}</span>}
           <button type="submit"
             className="ml-auto inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white text-gray-700 px-4 py-2.5 text-sm font-medium hover:bg-gray-50">
-            Update password
+            {t('profile.updatePassword')}
           </button>
         </div>
       </form>

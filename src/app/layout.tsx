@@ -23,9 +23,17 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Hostmaster — Costa Tropical Property Management",
+  title: "HostMasters — Costa Tropical Property Management",
   description:
-    "Professional short-term rental management on the Costa Tropical. Mastering your coastal stay — bookings, finances, maintenance and 24/7 care for international owners.",
+    "Professional short-term rental management on the Costa Tropical. Inspections, cleaning, maintenance, contracts, monthly returns.",
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default async function RootLayout({

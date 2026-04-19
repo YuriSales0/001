@@ -139,7 +139,7 @@ export function NotificationBell() {
                   <CheckCheck className="h-3.5 w-3.5" /> {t('notifBell.markAllRead')}
                 </button>
               )}
-              <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setOpen(false)} aria-label="Close" className="text-gray-400 hover:text-gray-600">
                 <X className="h-4 w-4" />
               </button>
             </div>

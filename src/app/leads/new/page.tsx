@@ -66,7 +66,7 @@ export default function LeadCapturePage() {
           ) : (
             <>
               <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Fala connosco</h1>
+                <h1 className="text-2xl font-serif font-bold text-gray-900">Fala connosco</h1>
                 <p className="text-sm text-gray-500 mt-1">
                   Gestão profissional de propriedades · Costa Tropical, Espanha
                 </p>
@@ -128,7 +128,7 @@ export default function LeadCapturePage() {
                 <button
                   type="submit"
                   disabled={submitting || !name.trim()}
-                  className="w-full rounded-lg py-3 text-sm font-bold text-white disabled:opacity-50 transition-opacity"
+                  className="w-full rounded-lg py-3 text-sm font-bold text-white disabled:opacity-50 transition-opacity hover:brightness-110"
                   style={{ background: '#B08A3E' }}
                 >
                   {submitting ? 'A enviar…' : 'Enviar contacto'}

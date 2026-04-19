@@ -11,22 +11,79 @@
   display: none;
 }
 
-/* ── HM Loading Screen ── */
-.hm-logo-pulse {
-  animation: hm-pulse 2s ease-in-out infinite;
+/* ── HM Loading Screen — Draw & Dissolve ── */
+
+/* Full cycle: 3s total. Draw in (0→60%), hold (60→75%), dissolve out (75→100%) */
+.hm-draw-logo {
+  animation: hm-cycle 3s ease-in-out infinite;
 }
-@keyframes hm-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.08); opacity: 0.85; }
+@keyframes hm-cycle {
+  0%       { opacity: 0; transform: scale(0.92); }
+  10%      { opacity: 1; transform: scale(1); }
+  70%      { opacity: 1; transform: scale(1); }
+  85%      { opacity: 0; transform: scale(1.06); }
+  100%     { opacity: 0; transform: scale(0.92); }
 }
 
-.hm-loading-bar {
-  width: 30%;
-  animation: hm-slide 1.4s ease-in-out infinite;
+/* Frame draws itself via stroke-dasharray */
+.hm-draw-frame {
+  stroke-dasharray: 360;
+  stroke-dashoffset: 360;
+  animation: hm-stroke 1.2s ease-out 0.1s forwards infinite;
 }
-@keyframes hm-slide {
-  0% { transform: translateX(-140%); }
-  100% { transform: translateX(470%); }
+@keyframes hm-stroke {
+  0%   { stroke-dashoffset: 360; }
+  50%  { stroke-dashoffset: 0; }
+  75%  { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* Bars appear sequentially — clip from top to bottom */
+.hm-draw-bar {
+  opacity: 0;
+  animation: hm-bar-in 3s ease-out infinite;
+}
+.hm-bar-1 { animation-delay: 0.2s; }
+.hm-bar-2 { animation-delay: 0.3s; }
+.hm-bar-3 { animation-delay: 0.45s; }
+.hm-bar-4 { animation-delay: 0.5s; }
+.hm-bar-5 { animation-delay: 0.6s; }
+.hm-bar-6 { animation-delay: 0.7s; }
+.hm-bar-7 { animation-delay: 0.75s; }
+
+@keyframes hm-bar-in {
+  0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+  15%  { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  70%  { opacity: 1; }
+  85%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Meridian — gold line sweeps in from left */
+.hm-draw-meridian {
+  opacity: 0;
+  transform-origin: left center;
+  animation: hm-meridian-in 3s ease-out 0.9s infinite;
+}
+@keyframes hm-meridian-in {
+  0%   { opacity: 0; transform: scaleX(0); }
+  12%  { opacity: 1; transform: scaleX(1); }
+  70%  { opacity: 1; }
+  85%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Wordmark fades in after logo draws, fades out with it */
+.hm-draw-wordmark {
+  opacity: 0;
+  animation: hm-word-in 3s ease-out 0.8s infinite;
+}
+@keyframes hm-word-in {
+  0%   { opacity: 0; transform: translateY(6px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  70%  { opacity: 1; }
+  85%  { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 0; }
 }
 
 /* ──────────────────────────────────────────

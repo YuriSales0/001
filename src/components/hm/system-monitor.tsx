@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ShieldCheck, AlertTriangle, Info, RefreshCw, ChevronDown, ChevronUp, CalendarDays, Wallet, BarChart3 } from 'lucide-react'
+import { useLocale } from '@/i18n/provider'
 import type { MonitorResult, MonitorSection } from '@/app/api/monitor/checks/route'
 
 type BySection = Record<MonitorSection, MonitorResult[]>
@@ -20,15 +21,16 @@ const SEVERITY_CONFIG = {
   INFO:   { color: 'text-gray-500',   bg: 'bg-gray-50',   border: 'border-gray-200',   icon: Info,          dot: 'bg-gray-400'   },
 }
 
-const SECTION_CONFIG: Record<MonitorSection, { label: string; icon: React.ElementType }> = {
-  reservations: { label: 'Alugueis',   icon: CalendarDays },
-  payouts:      { label: 'Payouts',    icon: Wallet },
-  reports:      { label: 'Relatórios', icon: BarChart3 },
+const SECTION_CONFIG: Record<MonitorSection, { labelKey: string; icon: React.ElementType }> = {
+  reservations: { labelKey: 'monitor.sections.reservations', icon: CalendarDays },
+  payouts:      { labelKey: 'monitor.sections.payouts',      icon: Wallet },
+  reports:      { labelKey: 'monitor.sections.reports',       icon: BarChart3 },
 }
 
 const SECTION_ORDER: MonitorSection[] = ['reservations', 'payouts', 'reports']
 
 export function SystemMonitor() {
+  const { t } = useLocale()
   const [data, setData] = useState<MonitorData | null>(null)
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState(false)
@@ -77,8 +79,8 @@ export function SystemMonitor() {
           )}
           <span className={`text-sm font-semibold ${hasIssues ? (highCount > 0 ? 'text-red-700' : 'text-amber-700') : 'text-gray-700'}`}>
             {hasIssues
-              ? `${issues.length} anomalia${issues.length > 1 ? 's' : ''} detectada${issues.length > 1 ? 's' : ''}${highCount > 0 ? ` · ${highCount} crítica${highCount > 1 ? 's' : ''}` : ''}`
-              : 'Sistema operacional — sem anomalias'}
+              ? `${issues.length} ${issues.length > 1 ? t('monitor.anomaliesDetected') : t('monitor.anomalyDetected')}${highCount > 0 ? ` · ${highCount} ${highCount > 1 ? t('monitor.criticalPlural') : t('monitor.critical')}` : ''}`
+              : t('monitor.allClear')}
           </span>
           {hasIssues && (
             <div className="flex items-center gap-1">
@@ -95,8 +97,8 @@ export function SystemMonitor() {
           <button
             onClick={e => { e.stopPropagation(); load(true) }}
             disabled={refreshing}
-            className="rounded p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50"
-            title="Verificar agora"
+            className="rounded p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50"
+            title={t('monitor.checkNow')}
           >
             <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
           </button>
@@ -114,12 +116,12 @@ export function SystemMonitor() {
           {SECTION_ORDER.map(section => {
             const sectionIssues = data.bySection[section] ?? []
             if (sectionIssues.length === 0) return null
-            const { label, icon: SectionIcon } = SECTION_CONFIG[section]
+            const { labelKey, icon: SectionIcon } = SECTION_CONFIG[section]
             return (
               <div key={section}>
                 <div className="flex items-center gap-1.5 px-4 py-1.5 bg-gray-50 border-b">
                   <SectionIcon className="h-3.5 w-3.5 text-gray-400" />
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{label}</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{t(labelKey)}</span>
                   <span className="ml-auto text-[10px] font-medium text-gray-400">{sectionIssues.length}</span>
                 </div>
                 <div className="divide-y">

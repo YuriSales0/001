@@ -72,7 +72,7 @@ export function ManagerEmptyState() {
 
       {/* Resources */}
       <div className="rounded-xl border bg-white p-6">
-        <h3 className="font-semibold text-navy-900 mb-3">{t('manager.welcome.helpTitle')}</h3>
+        <h3 className="font-semibold text-hm-black mb-3">{t('manager.welcome.helpTitle')}</h3>
         <div className="space-y-2 text-sm">
           <Link href="/manager/profile" className="flex items-center justify-between gap-2 rounded-lg border px-4 py-3 hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-3">
@@ -80,7 +80,7 @@ export function ManagerEmptyState() {
                 <MessageCircle className="h-4 w-4" style={{ color: "#B08A3E" }} />
               </div>
               <div>
-                <p className="font-semibold text-navy-900">{t('manager.welcome.helpProfileTitle')}</p>
+                <p className="font-semibold text-hm-black">{t('manager.welcome.helpProfileTitle')}</p>
                 <p className="text-xs text-gray-500">{t('manager.welcome.helpProfileDesc')}</p>
               </div>
             </div>
@@ -92,7 +92,7 @@ export function ManagerEmptyState() {
                 <MessageCircle className="h-4 w-4" style={{ color: "#B08A3E" }} />
               </div>
               <div>
-                <p className="font-semibold text-navy-900">{t('manager.welcome.helpContactTitle')}</p>
+                <p className="font-semibold text-hm-black">{t('manager.welcome.helpContactTitle')}</p>
                 <p className="text-xs text-gray-500">{t('manager.welcome.helpContactDesc')}</p>
               </div>
             </div>
@@ -123,7 +123,7 @@ function StepCard({
           <Icon className="h-4 w-4" style={{ color: "#B08A3E" }} />
         </div>
       </div>
-      <h3 className="font-semibold text-navy-900 mb-1">{title}</h3>
+      <h3 className="font-semibold text-hm-black mb-1">{title}</h3>
       <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">{description}</p>
       <Link
         href={href}
@@ -140,7 +140,7 @@ function InfoCard({ label, value, sub }: { label: string; value: string; sub: st
   return (
     <div className="rounded-xl border bg-white p-4">
       <p className="text-xs uppercase tracking-wider text-gray-400 font-medium mb-1">{label}</p>
-      <p className="text-xl font-bold text-navy-900">{value}</p>
+      <p className="text-xl font-bold text-hm-black">{value}</p>
       <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
     </div>
   )
