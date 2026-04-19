@@ -2,6 +2,15 @@ import { Resend } from 'resend'
 
 export const resend = new Resend(process.env.RESEND_API_KEY || 'placeholder')
 
+function escapeHtml(str: string): string {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 export async function sendEmail({
   to,
   subject,
@@ -11,12 +20,21 @@ export async function sendEmail({
   subject: string
   html: string
 }) {
-  return resend.emails.send({
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY not set, skipping email')
+    return null
+  }
+  const result = await resend.emails.send({
     from: process.env.EMAIL_FROM || 'Hostmaster <noreply@hostmaster.es>',
     to,
     subject,
     html,
   })
+  if (result.error) {
+    console.error('Resend error:', result.error)
+    throw new Error(`Email send failed: ${result.error.message}`)
+  }
+  return result
 }
 
 export function newBookingEmail(guestName: string, propertyName: string, checkIn: string, checkOut: string) {
@@ -25,8 +43,8 @@ export function newBookingEmail(guestName: string, propertyName: string, checkIn
       <h2 style="color: #1e3a5f;">New Booking Received</h2>
       <p>A new reservation has been made:</p>
       <table style="width: 100%; border-collapse: collapse;">
-        <tr><td style="padding: 8px; font-weight: bold;">Property:</td><td style="padding: 8px;">${propertyName}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Guest:</td><td style="padding: 8px;">${guestName}</td></tr>
+        <tr><td style="padding: 8px; font-weight: bold;">Property:</td><td style="padding: 8px;">${escapeHtml(propertyName)}</td></tr>
+        <tr><td style="padding: 8px; font-weight: bold;">Guest:</td><td style="padding: 8px;">${escapeHtml(guestName)}</td></tr>
         <tr><td style="padding: 8px; font-weight: bold;">Check-in:</td><td style="padding: 8px;">${checkIn}</td></tr>
         <tr><td style="padding: 8px; font-weight: bold;">Check-out:</td><td style="padding: 8px;">${checkOut}</td></tr>
       </table>
@@ -39,7 +57,7 @@ export function checkoutReminderEmail(guestName: string, propertyName: string, c
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #1e3a5f;">Checkout Tomorrow</h2>
-      <p><strong>${guestName}</strong> is checking out of <strong>${propertyName}</strong> tomorrow (${checkoutDate}).</p>
+      <p><strong>${escapeHtml(guestName)}</strong> is checking out of <strong>${escapeHtml(propertyName)}</strong> tomorrow (${checkoutDate}).</p>
       <p>Please ensure cleaning and inspection tasks are scheduled.</p>
       <p style="color: #666; margin-top: 20px;">— Hostmaster Team</p>
     </div>
@@ -62,12 +80,12 @@ export function taskCompletedEmail(opts: {
   return `
     <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1A1A1A;">
       <div style="border-bottom: 2px solid #C9A84C; padding-bottom: 12px; margin-bottom: 24px;">
-        <h2 style="color: #1A1A1A; margin: 0;">Visit completed at ${propertyName}</h2>
-        <p style="color: #777; margin: 4px 0 0 0; font-size: 13px;">${taskTitle} · ${taskType.replace(/_/g, ' ').toLowerCase()}</p>
+        <h2 style="color: #1A1A1A; margin: 0;">Visit completed at ${escapeHtml(propertyName)}</h2>
+        <p style="color: #777; margin: 4px 0 0 0; font-size: 13px;">${escapeHtml(taskTitle)} · ${escapeHtml(taskType.replace(/_/g, ' ').toLowerCase())}</p>
       </div>
-      ${conditionLabel ? `<p><strong>Status:</strong> ${conditionLabel}</p>` : ''}
-      ${issues ? `<p><strong>Notes from our team:</strong><br/>${issues.replace(/\n/g, '<br/>')}</p>` : ''}
-      ${notes ? `<p style="color: #555;">${notes.replace(/\n/g, '<br/>')}</p>` : ''}
+      ${conditionLabel ? `<p><strong>Status:</strong> ${escapeHtml(conditionLabel)}</p>` : ''}
+      ${issues ? `<p><strong>Notes from our team:</strong><br/>${escapeHtml(issues).replace(/\n/g, '<br/>')}</p>` : ''}
+      ${notes ? `<p style="color: #555;">${escapeHtml(notes).replace(/\n/g, '<br/>')}</p>` : ''}
       <p style="margin-top: 24px;">You can view the full report in your dashboard at any time.</p>
       <p style="color: #999; margin-top: 24px; font-size: 12px;">— HostMasters · Costa Tropical, Spain</p>
     </div>
@@ -78,7 +96,7 @@ export function monthlyReportEmail(propertyName: string, month: string, year: nu
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #1e3a5f;">Monthly Report Available</h2>
-      <p>Your monthly report for <strong>${propertyName}</strong> (${month} ${year}) is now available.</p>
+      <p>Your monthly report for <strong>${escapeHtml(propertyName)}</strong> (${escapeHtml(month)} ${year}) is now available.</p>
       <p>Log in to your dashboard to view and download the full report.</p>
       <p style="color: #666; margin-top: 20px;">— Hostmaster Team</p>
     </div>
@@ -102,8 +120,8 @@ export function monthlyStatementEmail(opts: {
   const fmt = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(n)
   const body = `
     <h2 style="margin:0 0 4px;font-size:22px;color:#111827;">Monthly Statement</h2>
-    <p style="margin:0 0 24px;font-size:13px;color:#999;">${opts.month} ${opts.year} · ${opts.propertyName}</p>
-    <p style="font-size:15px;color:#555;margin:0 0 24px;">Dear ${name},<br><br>Here is your financial summary for <strong>${opts.propertyName}</strong> in <strong>${opts.month} ${opts.year}</strong>.</p>
+    <p style="margin:0 0 24px;font-size:13px;color:#999;">${escapeHtml(opts.month)} ${opts.year} · ${escapeHtml(opts.propertyName)}</p>
+    <p style="font-size:15px;color:#555;margin:0 0 24px;">Dear ${escapeHtml(name)},<br><br>Here is your financial summary for <strong>${escapeHtml(opts.propertyName)}</strong> in <strong>${escapeHtml(opts.month)} ${opts.year}</strong>.</p>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
       <tr style="background:#f9f9f7;">
@@ -183,12 +201,12 @@ function invoiceTable(opts: {
       </tr>
       <tr>
         <td style="padding:14px 16px;font-size:13px;color:#555;font-family:monospace;">${shortId}</td>
-        <td style="padding:14px 16px;font-size:14px;color:#111;">${opts.description}</td>
+        <td style="padding:14px 16px;font-size:14px;color:#111;">${escapeHtml(opts.description)}</td>
         <td style="padding:14px 16px;font-size:18px;font-weight:700;color:#111827;text-align:right;">${fmtAmount}</td>
       </tr>
       ${opts.dueDate ? `<tr style="background:#fffbf0;"><td colspan="2" style="padding:10px 16px;font-size:13px;color:#92681a;">Due date</td><td style="padding:10px 16px;font-size:13px;color:#92681a;text-align:right;font-weight:600;">${new Date(opts.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>` : ''}
     </table>
-    ${opts.notes ? `<p style="font-size:13px;color:#666;border-left:3px solid #e0e0e0;padding-left:12px;margin:16px 0;">${opts.notes}</p>` : ''}
+    ${opts.notes ? `<p style="font-size:13px;color:#666;border-left:3px solid #e0e0e0;padding-left:12px;margin:16px 0;">${escapeHtml(opts.notes)}</p>` : ''}
   `
 }
 
@@ -205,7 +223,7 @@ export function invoiceCreatedEmail(opts: {
   const name = opts.clientName.split(' ')[0] || opts.clientName
   const body = `
     <h2 style="margin:0 0 8px;font-size:22px;color:#111827;">New invoice from HostMasters</h2>
-    <p style="margin:0 0 24px;font-size:15px;color:#555;">Dear ${name},</p>
+    <p style="margin:0 0 24px;font-size:15px;color:#555;">Dear ${escapeHtml(name)},</p>
     <p style="font-size:15px;color:#444;margin:0 0 8px;">Please find your invoice details below.</p>
     ${invoiceTable(opts)}
     <p style="font-size:14px;color:#555;">You can view your account and invoices at any time through your owner portal.</p>
@@ -232,7 +250,7 @@ export function invoicePaidEmail(opts: {
     <div style="text-align:center;padding:8px 0 24px;">
       <div style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:50%;width:56px;height:56px;line-height:56px;font-size:28px;">✓</div>
       <h2 style="margin:16px 0 4px;font-size:22px;color:#111827;">Payment confirmed</h2>
-      <p style="margin:0;font-size:15px;color:#555;">Thank you, ${name}</p>
+      <p style="margin:0;font-size:15px;color:#555;">Thank you, ${escapeHtml(name)}</p>
     </div>
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;margin:0 0 24px;">
       <tr>
@@ -243,7 +261,7 @@ export function invoicePaidEmail(opts: {
         </td>
       </tr>
     </table>
-    <p style="font-size:14px;color:#555;"><strong>Service:</strong> ${opts.description}</p>
+    <p style="font-size:14px;color:#555;"><strong>Service:</strong> ${escapeHtml(opts.description)}</p>
     <p style="font-size:14px;color:#777;margin:24px 0 0;">We appreciate your continued partnership. Your property is in good hands.</p>
     ${opts.dashboardUrl ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View your portal</a></p>` : ''}
     <p style="margin:32px 0 0;font-size:14px;color:#777;">Warm regards,<br>— The HostMasters Team</p>
@@ -278,17 +296,17 @@ export function ownerStatementEmail(opts: {
   const body = `
     <h2 style="margin:0 0 4px;font-size:22px;color:#111827;">Owner Statement</h2>
     <p style="margin:0 0 24px;font-size:13px;color:#999;">Statement #${shortId} · Issued ${fmtDate(opts.paidAt)}</p>
-    <p style="font-size:15px;color:#555;margin:0 0 24px;">Dear ${name},<br><br>Your payout for <strong>${opts.propertyName}</strong> has been processed. Please find the breakdown below.</p>
+    <p style="font-size:15px;color:#555;margin:0 0 24px;">Dear ${escapeHtml(name)},<br><br>Your payout for <strong>${escapeHtml(opts.propertyName)}</strong> has been processed. Please find the breakdown below.</p>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
       <tr style="background:#f9f9f7;">
         <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Reservation Details</td>
       </tr>
-      <tr><td style="padding:10px 16px;font-size:13px;color:#777;width:40%;">Property</td><td style="padding:10px 16px;font-size:13px;color:#111;font-weight:600;">${opts.propertyName}</td></tr>
-      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">Guest</td><td style="padding:10px 16px;font-size:13px;color:#111;">${opts.guestName}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:13px;color:#777;width:40%;">Property</td><td style="padding:10px 16px;font-size:13px;color:#111;font-weight:600;">${escapeHtml(opts.propertyName)}</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">Guest</td><td style="padding:10px 16px;font-size:13px;color:#111;">${escapeHtml(opts.guestName)}</td></tr>
       <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Check-in</td><td style="padding:10px 16px;font-size:13px;color:#111;">${fmtDate(opts.checkIn)}</td></tr>
       <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">Check-out</td><td style="padding:10px 16px;font-size:13px;color:#111;">${fmtDate(opts.checkOut)}</td></tr>
-      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Platform</td><td style="padding:10px 16px;font-size:13px;color:#111;">${platformLabel}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Platform</td><td style="padding:10px 16px;font-size:13px;color:#111;">${escapeHtml(platformLabel)}</td></tr>
     </table>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
@@ -328,13 +346,13 @@ export function subscriptionInvoiceEmail(opts: {
     <div style="text-align:center;padding:8px 0 24px;">
       <div style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:50%;width:56px;height:56px;line-height:56px;font-size:28px;">✓</div>
       <h2 style="margin:16px 0 4px;font-size:22px;color:#111827;">Thank you for your subscription</h2>
-      <p style="margin:0;font-size:15px;color:#555;">Payment confirmed, ${name}</p>
+      <p style="margin:0;font-size:15px;color:#555;">Payment confirmed, ${escapeHtml(name)}</p>
     </div>
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
       <tr style="background:#f9f9f7;">
         <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Invoice #${shortId}</td>
       </tr>
-      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Plan</td><td style="padding:10px 16px;font-size:13px;font-weight:600;color:#111;">HostMasters ${opts.plan}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Plan</td><td style="padding:10px 16px;font-size:13px;font-weight:600;color:#111;">HostMasters ${escapeHtml(opts.plan)}</td></tr>
       <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">Period</td><td style="padding:10px 16px;font-size:13px;color:#111;">${fmtDate(opts.periodStart)} – ${fmtDate(opts.periodEnd)}</td></tr>
       <tr><td style="padding:10px 16px;font-size:15px;font-weight:700;color:#111827;">Amount paid</td><td style="padding:10px 16px;font-size:18px;font-weight:700;color:#111827;text-align:right;">${fmt(opts.amount)}</td></tr>
     </table>

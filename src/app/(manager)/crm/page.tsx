@@ -186,9 +186,16 @@ export default function CRMPage() {
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
+    type ApiLead = Omit<Lead, "status" | "language" | "bantData" | "leadAttributions"> & {
+      status: string
+      language?: string
+      nationality?: string | null
+      bantData?: unknown
+      leadAttributions?: Lead["leadAttributions"]
+    }
     fetch("/api/leads")
       .then(r => r.ok ? r.json() : [])
-      .then((data: any[]) => {
+      .then((data: ApiLead[]) => {
         const mapped: Lead[] = data.map(l => ({
           ...l,
           status: (STATUS_TO_STAGE[l.status] ?? "NEW_LEAD") as LeadStage,
@@ -212,12 +219,19 @@ export default function CRMPage() {
       QUALIFIED: "QUALIFIED", PROPOSAL_SENT: "QUALIFIED",
       CONTRACT_SIGNED: "CONVERTED", ACTIVE_OWNER: "RETAINED",
     }
+    const oldStatus = leads.find(l => l.id === leadId)?.status
     setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: stage } : l))
-    await fetch(`/api/leads/${leadId}`, {
+    const res = await fetch(`/api/leads/${leadId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: reverseMap[stage] }),
     })
+    if (!res.ok) {
+      // Revert optimistic update
+      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: oldStatus ?? l.status } : l))
+      const { showToast } = await import('@/components/hm/toast')
+      showToast('Failed to update lead status', 'error')
+    }
   }
 
   const addAttribution = async (leadId: string, campaignId: string) => {
@@ -284,7 +298,7 @@ export default function CRMPage() {
   const byStage = (stage: LeadStage) => filtered.filter(l => l.status === stage)
 
   return (
-    <div className="h-[calc(100vh-64px)] flex flex-col" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="h-[calc(100vh-64px)] flex flex-col">
       {/* Page header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between gap-4 flex-wrap shrink-0">
         <div>

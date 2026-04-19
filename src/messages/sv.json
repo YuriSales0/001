@@ -1,6 +1,6 @@
 {
   "common": {
-    "dashboard": "Översikt",
+    "dashboard": "Instrumentpanel",
     "properties": "Fastigheter",
     "reservations": "Bokningar",
     "calendar": "Kalender",
@@ -12,7 +12,7 @@
     "logout": "Logga ut",
     "save": "Spara",
     "cancel": "Avbryt",
-    "delete": "Ta bort",
+    "delete": "Radera",
     "edit": "Redigera",
     "add": "Lägg till",
     "search": "Sök",
@@ -24,45 +24,396 @@
     "status": "Status",
     "active": "Aktiv",
     "inactive": "Inaktiv",
-    "maintenance": "Underhåll"
+    "maintenance": "Underhåll",
+    "confirm": "Bekräfta",
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "yes": "Ja",
+    "no": "Nej",
+    "close": "Stäng",
+    "actions": "Åtgärder",
+    "details": "Detaljer",
+    "date": "Datum",
+    "from": "Från",
+    "to": "Till",
+    "total": "Totalt",
+    "notes": "Anteckningar",
+    "description": "Beskrivning",
+    "name": "Namn",
+    "phone": "Telefon",
+    "address": "Adress",
+    "language": "Språk",
+    "updated": "Uppdaterad",
+    "created": "Skapad",
+    "deleted": "Raderad",
+    "error": "Något gick fel",
+    "tryAgain": "Försök Igen",
+    "required": "Obligatoriskt fält",
+    "invalidEmail": "Ogiltig e-postadress",
+    "myProfile": "Min Profil",
+    "myPlan": "Min Plan",
+    "clientPortal": "Kundportal",
+    "crewPortal": "Teamportal",
+    "messages": "Meddelanden",
+    "invoices": "Fakturor",
+    "payouts": "Utbetalningar",
+    "setup": "Inställning",
+    "team": "Team",
+    "integrations": "Integrationer",
+    "leads": "Leads",
+    "operations": "Drift",
+    "myPortfolio": "Min Portfölj",
+    "myOwners": "Mina Ägare",
+    "administration": "Administration",
+    "ownerReports": "Ägarrapporter",
+    "crmPipeline": "CRM-Pipeline",
+    "marketing": "Marknadsföring",
+    "aiPricing": "AI-prissättning"
   },
   "owner": {
     "welcome": "Välkommen tillbaka",
-    "monthlyEarnings": "Månatliga intäkter",
-    "nextBooking": "Nästa bokning",
-    "lastInspection": "Senaste inspektion",
-    "blockDates": "Blockera datum",
-    "contactManager": "Kontakta förvaltare",
-    "financialReport": "Finansiell rapport",
-    "downloadReport": "Ladda ner rapport",
-    "personalUse": "Blockera för personligt bruk",
-    "noUpcomingBookings": "Inga kommande bokningar"
+    "monthlyEarnings": "Månatliga Intäkter",
+    "nextBooking": "Nästa Bokning",
+    "lastInspection": "Senaste Inspektion",
+    "blockDates": "Blockera Datum",
+    "contactManager": "Kontakta Manager",
+    "financialReport": "Ekonomisk Rapport",
+    "downloadReport": "Ladda ner Rapport",
+    "personalUse": "Blockera för Personligt Bruk",
+    "noUpcomingBookings": "Inga kommande bokningar",
+    "myProperties": "Mina Fastigheter",
+    "myStatements": "Mina Utdrag",
+    "myReservations": "Mina Bokningar",
+    "propertyDetails": "Fastighetsdetaljer",
+    "earningsOverview": "Intäktsöversikt",
+    "occupancyCalendar": "Beläggningskalender",
+    "maintenanceRequests": "Underhållsförfrågningar",
+    "requestMaintenance": "Begär Underhåll",
+    "annualSummary": "Årssammanfattning",
+    "ytdEarnings": "Intäkter Hittills i År",
+    "payoutHistory": "Utbetalningshistorik",
+    "pendingPayout": "Väntande Utbetalning",
+    "paidOut": "Utbetald",
+    "taxCompliance": "Skatt & Efterlevnad"
   },
   "manager": {
     "overview": "Översikt",
-    "totalProperties": "Totala fastigheter",
-    "activeReservations": "Aktiva bokningar",
-    "pendingTasks": "Väntande uppgifter",
-    "monthlyRevenue": "Månatlig intäkt",
+    "totalProperties": "Totala Fastigheter",
+    "activeReservations": "Aktiva Bokningar",
+    "pendingTasks": "Väntande Uppgifter",
+    "monthlyRevenue": "Månatliga Intäkter",
     "upcoming": "Kommande",
     "completed": "Slutförd",
     "occupancyRate": "Beläggningsgrad",
     "avgDailyRate": "Snittdagspris",
     "revPAR": "RevPAR",
-    "addProperty": "Lägg till fastighet",
-    "addReservation": "Lägg till bokning",
-    "addTask": "Lägg till uppgift",
-    "addSupplier": "Lägg till leverantör",
-    "generateReport": "Generera rapport"
+    "addProperty": "Lägg till Fastighet",
+    "addReservation": "Lägg till Bokning",
+    "addTask": "Lägg till Uppgift",
+    "addSupplier": "Lägg till Leverantör",
+    "generateReport": "Generera Rapport",
+    "assignTask": "Tilldela Uppgift",
+    "checkIns": "Incheckningar",
+    "checkOuts": "Utcheckningar",
+    "todayActivity": "Dagens Aktivitet",
+    "weekOverview": "Veckoöversikt",
+    "ownerStatements": "Ägarutdrag",
+    "crewManagement": "Teamhantering",
+    "cleaningSchedule": "Städschema",
+    "inspectionReport": "Inspektionsrapport",
+    "performanceMetrics": "Prestationsmått",
+    "guestCommunication": "Gästkommunikation",
+    "welcome": {
+      "badge": "Välkommen till HostMasters",
+      "titleLine1": "Din Manager-portal är redo.",
+      "titleLine2": "Nu tar vi ombord din första kund.",
+      "description": "Du tjänar 15 % av månadsabonnemangen + 3 % av bruttohyrorna för varje kund du hanterar. Portföljbonusar börjar vid 10 fastigheter. Systemet sköter driften — du fokuserar på relationerna.",
+      "step1Title": "Lägg till din första kund",
+      "step1Desc": "Bjud in en fastighetsägare från ditt nätverk. Systemet skickar ett registreringsmeddelande och serviceavtalet.",
+      "step1Cta": "Lägg till kund",
+      "step2Title": "Hjälp hen med uppsättningen",
+      "step2Desc": "Ägaren laddar upp fastighetsuppgifter, foton, väljer husregler och signerar serviceavtalet.",
+      "step2Cta": "Visa flödet",
+      "step3Title": "Se din portfölj växa",
+      "step3Desc": "Följ intäkter, provisioner och portföljbonusar i realtid. Driften hanteras av HM-Crew.",
+      "step3Cta": "Till dashboard",
+      "infoPerClient": "Per kund (Mid)",
+      "infoPerClientSub": "15 % abo + 3 % hyra",
+      "infoAt10": "Vid 10 fastigheter",
+      "infoAt20": "Vid 20 fastigheter",
+      "infoAt30": "Vid 30 fastigheter",
+      "infoBonus": "Portföljbonus",
+      "helpTitle": "Behöver du hjälp att komma igång?",
+      "helpProfileTitle": "Granska din profil & ersättning",
+      "helpProfileDesc": "Kontrollera ditt område, dina andelar och avtalsdetaljer",
+      "helpContactTitle": "Kontakta din Admin",
+      "helpContactDesc": "Frågor om process, område eller provision"
+    },
+    "clientsPage": {
+      "title": "Mina kunder",
+      "thName": "Namn",
+      "thEmail": "E-post",
+      "thPhone": "Telefon",
+      "thId": "ID",
+      "loadFailed": "Kunde inte ladda data",
+      "emptyTitle": "Inga kunder ännu",
+      "emptyBody": "Bjud in din första kund för att börja hantera fastigheten.",
+      "inviteFirst": "+ Bjud in första kunden",
+      "inviteBtn": "Bjud in kund"
+    },
+    "inviteClient": {
+      "back": "Tillbaka till mina kunder",
+      "title": "Bjud in en kund",
+      "subtitle": "Skicka en registreringslänk. Den nya ägaren läggs automatiskt till i din portfölj.",
+      "emailLabel": "E-post",
+      "nameLabel": "Namn",
+      "namePlaceholder": "Fullständigt namn (valfritt)",
+      "planLabel": "Föreslaget paket",
+      "planHint": "(valfritt, kan ändras senare)",
+      "planCommission": "provision",
+      "warningTitle": "Innan du bjuder in",
+      "warningBody": "Se till att du har pratat med ägaren och att hen väntar detta e-postmeddelande. Kalla inbjudningar konverterar dåligt.",
+      "send": "Skicka inbjudan",
+      "sending": "Skickar…",
+      "cancel": "Avbryt",
+      "sendFailed": "Kunde inte skicka inbjudan",
+      "sentTitle": "Inbjudan skickad",
+      "sentBodyPrefix": "Vi har skickat e-post till",
+      "sentBodySuffix": "med registreringslänken. Kunden kopplas automatiskt till dig.",
+      "signupLinkLabel": "Registreringslänk (för referens)",
+      "inviteAnother": "Bjud in en till kund"
+    },
+    "referralPage": {
+      "title": "Min referral-länk",
+      "subtitle": "Dela denna länk med fastighetsägare i ditt område. Nya kunder som registrerar sig via länken kopplas automatiskt till dig.",
+      "personalLink": "Din personliga länk",
+      "territoryPrefix": "Område:",
+      "copyLink": "Kopiera länk",
+      "copied": "Kopierad!",
+      "share": "Dela",
+      "customize": "Anpassa",
+      "codeLabel": "Referral-kod",
+      "codeHint": "Endast bokstäver, siffror och bindestreck (3-40 tecken). Måste vara unik.",
+      "territoryLabel": "Område",
+      "territoryPlaceholder": "Almuñécar, Nerja osv.",
+      "save": "Spara",
+      "saving": "Sparar…",
+      "cancel": "Avbryt",
+      "statsClients": "Kunder i min portfölj",
+      "statsClientsHint": "Ägare registrerade via din länk eller tilldelade dig",
+      "statsLeads": "Leads i min pipeline",
+      "statsLeadsHint": "Öppna möjligheter du fortfarande kan konvertera till kunder",
+      "howTitle": "Så fungerar det",
+      "howStep1": "Dela din personliga länk med ägare — i samtal, via e-post, WhatsApp eller sociala medier.",
+      "howStep2Before": "När en prospekt besöker",
+      "howStep2After": " taggar vi dem automatiskt som dina.",
+      "howStep3": "Om de registrerar sig och blir kund kopplas de automatiskt till din portfölj.",
+      "howStep4": "Du börjar tjäna 15 % av deras abonnemang och 3 % av deras bruttohyra — månad efter månad.",
+      "pitchTitle": "Färdigt meddelande att skicka",
+      "pitchIntro": "Kopiera detta meddelande och anpassa det innan du skickar:",
+      "pitchCopy": "Kopiera meddelande",
+      "pitchCopied": "Meddelande kopierat",
+      "pitchBody": "Hej [Namn],\n\nJag vet att du äger en fastighet på Costa Tropical och tänkte att det kan vara intressant att se hur du kan få bättre avkastning utan huvudvärken.\n\nJag jobbar med HostMasters, en plattform som sköter allt — annonser, gästkommunikation, städning, underhåll och skatteplikter (Modelo 179, IRNR, NRU-registrering). Transparenta avgifter, dashboard med riktig data och AI-driven prissättning.\n\nTitta här: {url}\n\nJag förklarar gärna när det passar dig.\n\nVänliga hälsningar,\n[Ditt namn]",
+      "linkUpdated": "Referral-länk uppdaterad",
+      "linkUpdateFailed": "Kunde inte uppdatera",
+      "loadFailed": "Kunde inte ladda referral-data.",
+      "tryAgain": "Försök igen"
+    },
+    "dashboardPage": {
+      "refresh": "Uppdatera",
+      "loadFailed": "Kunde inte ladda data",
+      "noneIn7Days": "Inga de närmaste 7 dagarna"
+    }
+  },
+  "admin": {
+    "systemLive": "System Aktivt",
+    "hmRevenue": "HM Intäkter",
+    "openPayouts": "Öppna Utbetalningar",
+    "pendingInvoices": "Väntande Fakturor",
+    "overdueTasksAlert": "Varning Försenade Uppgifter",
+    "upcomingCheckIns": "Kommande Incheckningar",
+    "upcomingCheckOuts": "Kommande Utcheckningar",
+    "revenueBreakdown": "Intäktsfördelning",
+    "rentalVolume": "Hyresvolym",
+    "rentalCommission": "Hyreskommission",
+    "invoicesPaid": "Betalda Fakturor",
+    "totalRevenue": "Totala Intäkter",
+    "quickNav": "Snabbnavigering",
+    "userManagement": "Användarhantering",
+    "allProperties": "Alla Fastigheter",
+    "allReservations": "Alla Bokningar",
+    "systemSettings": "Systeminställningar",
+    "platformHealth": "Plattformsstatus",
+    "managerPerformance": "Managerprestanda",
+    "financialOverview": "Ekonomisk Översikt",
+    "subscriptionPlans": "Prenumerationsplaner",
+    "tax": "Skatt & Efterlevnad",
+    "taxSubtitle": "Hantera skatteförpliktelser för alla kunder",
+    "newObligation": "Ny förpliktelse",
+    "totalTracked": "Totalt spårat",
+    "actionRequired": "Åtgärd krävs",
+    "dueIn30d": "Förfaller inom 30 dagar",
+    "allStatuses": "Alla statusar",
+    "allClients": "Alla kunder",
+    "noObligationsMatch": "Inga förpliktelser matchar aktuella filter.",
+    "newTaxObligation": "Ny skatteförpliktelse",
+    "client": "Kund",
+    "selectClient": "— Välj kund —",
+    "propertyOptional": "Fastighet (valfritt)",
+    "noProperty": "— Ingen (förpliktelse på kundnivå) —",
+    "typeLabel": "Typ",
+    "period": "Period",
+    "notesVisibleToClient": "Anteckningar (synliga för kunden)",
+    "documentUrl": "Dokument-URL",
+    "document": "Dokument",
+    "create": "Skapa",
+    "creating": "Skapar…",
+    "failedToSave": "Kunde inte spara ändringar",
+    "failedToCreate": "Kunde inte skapa",
+    "taxType": {
+      "VUT_LICENSE": "VUT — Turistlicens",
+      "MODELO_179": "Modelo 179",
+      "IRNR_MODELO_210": "IRNR Modelo 210",
+      "NIE": "NIE",
+      "ENERGY_CERTIFICATE": "Energicertifikat",
+      "FISCAL_REPRESENTATIVE": "Skatteombud",
+      "IBI": "IBI",
+      "OTHER": "Övrigt"
+    },
+    "taxStatus": {
+      "NOT_STARTED": "Ej påbörjad",
+      "IN_PROGRESS": "Pågående",
+      "ACTION_REQUIRED": "Åtgärd krävs",
+      "COMPLETED": "Slutförd",
+      "EXPIRED": "Förfallen",
+      "NOT_APPLICABLE": "Ej tillämpligt"
+    }
+  },
+  "crew": {
+    "myTasks": "Mina Uppgifter",
+    "fieldOperations": "Fältoperationer",
+    "today": "Idag",
+    "open": "Öppen",
+    "done": "Klar",
+    "selectTask": "Välj en uppgift",
+    "startTask": "Starta Uppgift",
+    "markComplete": "Markera som Klar",
+    "submitReport": "Skicka Rapport",
+    "checklist": "Checklista",
+    "checkoutReport": "Utcheckningsrapport",
+    "propertyCondition": "Fastighetsskick",
+    "good": "Bra",
+    "minorIssues": "Mindre Problem",
+    "majorIssues": "Större Problem",
+    "observedIssues": "Observerade Problem",
+    "damages": "Skador",
+    "internalNotes": "Interna Anteckningar",
+    "uploadPhotos": "Ladda upp Foton",
+    "taskDetails": "Uppgiftsdetaljer",
+    "priority": "Prioritet",
+    "assignedTo": "Tilldelad till",
+    "dueDate": "Förfallodatum",
+    "taskTypes": {
+      "CLEANING": "Städning",
+      "MAINTENANCE_PREVENTIVE": "Förebyggande underhåll",
+      "MAINTENANCE_CORRECTIVE": "Avhjälpande underhåll",
+      "INSPECTION": "Inspektion",
+      "CHECK_IN": "Check-in",
+      "CHECK_OUT": "Check-out",
+      "TRANSFER": "Transport",
+      "SHOPPING": "Inköp",
+      "LAUNDRY": "Tvätt"
+    },
+    "home": {
+      "loading": "Laddar…",
+      "loadFailed": "Kunde inte ladda uppgifter. Försök ladda om.",
+      "allCaughtUp": "Allt klart!",
+      "allCaughtUpBody": "Inga avslutade uppgifter ännu. De dyker upp här när du är klar.",
+      "nothingToday": "Inget planerat idag",
+      "nothingTodayBody": "Kolla fliken Öppna för kommande uppgifter.",
+      "noOpen": "Inga öppna uppgifter",
+      "noOpenBody": "Nya uppgifter dyker upp här när de tilldelas dig.",
+      "photoEvidence": "Fotobevis",
+      "photoSubtitle": "Minst 2 foton krävs. De skickas till ägaren som arbetsbevis.",
+      "addPhoto": "Lägg till foto",
+      "min2BeforeSubmit": "Lägg till minst 2 foton innan du skickar.",
+      "min2BeforeComplete": "Lägg till minst 2 foton innan du markerar som klar.",
+      "photoUploadFailed": "Kunde inte ladda upp foto",
+      "photoProcessFailed": "Kunde inte bearbeta foto",
+      "photoRemoveFailed": "Kunde inte ta bort foto",
+      "completeChecklistFirst": "Slutför checklistan innan du skickar.",
+      "savingStatus": "Sparar…"
+    },
+    "earnings": {
+      "title": "Mina intäkter",
+      "contractLabel": "Avtal:",
+      "contractMonthly": "Månadsvis",
+      "contractFreelancer": "Frilans",
+      "perMonth": "/mån",
+      "perTask": "/uppgift",
+      "bannerTitle": "Utbetalning inom 24 h",
+      "bannerBodyMonthly": "Du får {amount}/mån — krediterat den 1:a varje månad.",
+      "bannerBodyFreelancer": "Så fort ägaren betalar utbetalningen för bokningen får du din andel inom 24 timmar via banköverföring genom plattformen. Ingen väntan på månadsskifte.",
+      "thisMonth": "Denna månad",
+      "tasksThisMonth": "Uppgifter denna månad",
+      "tasksCompletedSuffix": "avslutade",
+      "pending": "Väntande",
+      "pendingSuffix": "att slutföra",
+      "cumulative": "Totalt ackumulerat",
+      "totalTasksSuffix": "uppgifter totalt",
+      "byMonthTitle": "Intäkter per månad",
+      "thMonth": "Månad",
+      "thTasks": "Uppgifter",
+      "thValue": "Belopp",
+      "noData": "Inga data om avslutade uppgifter.",
+      "recentTitle": "Senaste avslutade uppgifter",
+      "noTasksYet": "Inga avslutade uppgifter ännu",
+      "loading": "Laddar…",
+      "loadFailed": "Kunde inte ladda data. Försök ladda om."
+    },
+    "detail": {
+      "backToTasks": "Tillbaka till uppgifter",
+      "selectTask": "Välj en uppgift för att se detaljer",
+      "checkoutReport": "Check-out-rapport",
+      "checkoutReportDesc": "Ägaren meddelas automatiskt vid inskickning.",
+      "propertyCondition": "Fastighetens skick",
+      "conditionGood": "Bra",
+      "conditionMinor": "Mindre problem",
+      "conditionMajor": "Allvarliga problem",
+      "observedIssues": "Observerade problem",
+      "observedPlaceholder": "t.ex. lampa sönder i vardagsrummet, långsamt avlopp i badrummet…",
+      "damages": "Skador som behöver uppföljning",
+      "damagesPlaceholder": "Beskriv skadan, kostnadsuppskattning om möjligt…",
+      "internalNotes": "Interna anteckningar till kontoret",
+      "internalNotesPlaceholder": "Något kontoret borde veta…",
+      "submitCheckout": "Skicka check-out-rapport",
+      "markComplete": "Markera uppgift som klar",
+      "taskCompleted": "Uppgift avslutad",
+      "startTask": "Starta uppgift"
+    }
   },
   "finance": {
-    "grossRevenue": "Bruttointäkt",
-    "totalExpenses": "Totala utgifter",
-    "commission": "Provision",
+    "grossRevenue": "Bruttointäkter",
+    "totalExpenses": "Totala Kostnader",
+    "commission": "Kommission",
     "ownerPayout": "Ägarutbetalning",
-    "income": "Inkomst",
-    "expenses": "Utgifter",
-    "statement": "Kontoutdrag"
+    "income": "Intäkter",
+    "expenses": "Kostnader",
+    "statement": "Utdrag",
+    "netRevenue": "Nettointäkter",
+    "platformFees": "Plattformsavgifter",
+    "cleaningFees": "Städavgifter",
+    "maintenanceCosts": "Underhållskostnader",
+    "monthlyFee": "Månadsavgift",
+    "annualFee": "Årsavgift",
+    "payoutDate": "Utbetalningsdatum",
+    "payoutStatus": "Utbetalningsstatus",
+    "paid": "Betald",
+    "pending": "Väntande",
+    "overdue": "Försenad",
+    "invoiceNumber": "Fakturanummer",
+    "billingPeriod": "Faktureringsperiod",
+    "taxReport": "Skatterapport"
   },
   "auth": {
     "signIn": "Logga in",
@@ -72,6 +423,575 @@
     "continueWithGoogle": "Fortsätt med Google",
     "orContinueWith": "Eller fortsätt med",
     "noAccount": "Har du inget konto?",
-    "hasAccount": "Har du redan ett konto?"
+    "hasAccount": "Har du redan ett konto?",
+    "forgotPassword": "Glömt lösenordet?",
+    "resetPassword": "Återställ Lösenord",
+    "newPassword": "Nytt Lösenord",
+    "confirmPassword": "Bekräfta Lösenord",
+    "verifyEmail": "Verifiera din e-post",
+    "resendVerification": "Skicka verifieringsmail igen",
+    "signOutConfirm": "Är du säker på att du vill logga ut?",
+    "createAccount": "Skapa ditt konto",
+    "registerSubtitle": "Fastighetsägare — börja hantera din investering på Costa Tropical.",
+    "namePlaceholder": "Ditt fullständiga namn",
+    "passwordPlaceholder": "Min. 6 tecken",
+    "creating": "Skapar...",
+    "nameRequired": "Namn krävs",
+    "welcomeBack": "Välkommen tillbaka",
+    "loginSubtitle": "Logga in på din ägarportal",
+    "invalidCredentials": "Ogiltiga inloggningsuppgifter. Kontrollera e-post och lösenord.",
+    "signingIn": "Loggar in..."
+  },
+  "tour": {
+    "next": "Nästa",
+    "back": "Tillbaka",
+    "skip": "Hoppa över turen",
+    "finish": "Börja använda HostMasters",
+    "saving": "Sparar...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Välkommen till HostMasters",
+          "desc": "Låt oss visa dig allt som din ägarportal kan göra. Denna snabba tur guidar dig genom alla tillgängliga verktyg."
+        },
+        "dashboard": {
+          "title": "Din Instrumentpanel",
+          "desc": "Din startskärm visar allt på en gång: månadens intäkter, beläggningsgrad, nästa gäst och fastighetens skick.",
+          "features": [
+            "Nettointäkter med månadsjämförelse",
+            "Beläggningsfält med procent",
+            "Nästa gäst med nationalitet",
+            "Fastighetsstatus",
+            "Snabbåtgärdsknappar"
+          ]
+        },
+        "earnings": {
+          "title": "Intäkter & Utbetalningar",
+          "desc": "Följ varje euro. Se dina bruttointäkter, vår kommission, städavgifter, underhållskostnader och din nettoutbetalning.",
+          "features": [
+            "Månatliga ekonomiska utdrag",
+            "Kommissionsfördelning per bokning",
+            "Utbetalningsschema och historik",
+            "Årssammanfattning",
+            "PDF-export på ditt språk"
+          ]
+        },
+        "bookings": {
+          "title": "Bokningar & Kalender",
+          "desc": "Se varje bokning på Airbnb, Booking.com och direktbokningar. Blockera datum för personligt bruk.",
+          "features": [
+            "Samlad kalender över alla plattformar",
+            "Gästdetaljer och nationalitet",
+            "Intäkt per bokning",
+            "Personlig datumblockering",
+            "Incheckning/utcheckning"
+          ]
+        },
+        "care": {
+          "title": "Skötsel & Underhåll",
+          "desc": "Din fastighet inspekteras efter varje utcheckning. Följ städningar, förebyggande underhåll och eventuella problem.",
+          "features": [
+            "Inspektionsrapporter efter utcheckning",
+            "Städschema",
+            "Förebyggande underhållslogg",
+            "Problemrapporter med foton",
+            "Begär besök med ett klick"
+          ]
+        },
+        "communication": {
+          "title": "Direkt Kommunikation",
+          "desc": "Skicka meddelanden till din fastighetsförvaltare direkt via plattformen. Inga borttappade mejl.",
+          "features": [
+            "Meddelanden i appen med din manager",
+            "Fullständig konversationshistorik",
+            "AI-assistent för snabba svar",
+            "Dela dokument och foton"
+          ]
+        },
+        "ai": {
+          "title": "AI-drivna Verktyg",
+          "desc": "HostMasters använder artificiell intelligens för att maximera dina intäkter. Dynamisk prissättning justerar ditt nattpris baserat på 7 marknadsfaktorer.",
+          "features": [
+            "AI Dynamisk Prissättning (upp till +25%)",
+            "24/7 AI-assistent med dina riktiga data",
+            "Dagliga automatiska kontroller",
+            "Marknadsintelligens"
+          ]
+        },
+        "reports": {
+          "title": "Rapporter & Dokument",
+          "desc": "Ladda ner detaljerade månadsutdrag som PDF på ditt föredragna språk.",
+          "features": [
+            "Månatliga PDF-utdrag",
+            "Rapporter på 9 språk",
+            "Årlig ekonomisk sammanfattning",
+            "Detalj på transaktionsnivå"
+          ]
+        },
+        "plan": {
+          "title": "Din Plan",
+          "desc": "Du kan se och uppgradera din prenumeration när som helst. Högre planer ger lägre kommission och AI-verktyg.",
+          "features": [
+            "4 planer: Starter, Basic, Mid, Premium",
+            "Lägre kommission med högre planer",
+            "AI-funktioner på Mid och Premium",
+            "Uppgradera när som helst"
+          ]
+        },
+        "done": {
+          "title": "Du är redo!",
+          "desc": "Din portal är klar. Utforska din instrumentpanel, kolla dina intäkter och kontakta din manager. Välkommen till HostMasters."
+        },
+        "sidebar": {
+          "title": "Din Navigation",
+          "desc": "Denna sidopanel ger dig snabb åtkomst till alla sektioner: instrumentpanel, intäkter, bokningar, underhåll, plan och direkt kommunikation."
+        },
+        "guest": {
+          "title": "Din Nästa Gäst",
+          "desc": "Se vem som anländer härnäst — med nationalitetsflagga, datum och vistelselängd. Alltid informerad."
+        },
+        "condition": {
+          "title": "Fastighetens Skick",
+          "desc": "Efter varje utcheckning inspekteras din fastighet. Se aktuellt skick här — grönt betyder allt bra."
+        },
+        "actions": {
+          "title": "Snabbåtgärder",
+          "desc": "Blockera datum, begär ett underhållsbesök eller se din fullständiga ekonomiska rapport — allt med ett klick."
+        }
+      }
+    }
+  },
+  "demo": {
+    "badge": "Plattformstur",
+    "title": "Allt du behöver, på ett ställe",
+    "subtitle": "En komplett förvaltningsplattform designad för internationella fastighetsägare.",
+    "tabs": {
+      "dashboard": "Ägarens Instrumentpanel",
+      "bookings": "Bokningar & Kalender",
+      "finance": "Ekonomiska Rapporter",
+      "care": "Skötsel & Underhåll",
+      "communication": "Kommunikation"
+    },
+    "dashboard": {
+      "title": "Din fastighet på ett ögonblick",
+      "desc": "Intäkter i realtid, beläggningsgrad, nästa gäst och fastighetsstatus — allt i en premium instrumentpanel.",
+      "features": [
+        "Nettointäkter denna månad",
+        "Beläggningsgrad med visuellt fält",
+        "Nästa gäst med nationalitetsflagga",
+        "Fastighetsstatus",
+        "Snabbåtgärder"
+      ]
+    },
+    "bookings": {
+      "title": "Full bokningsöversikt",
+      "desc": "Se varje bokning över alla plattformar. Blockera datum för personligt bruk.",
+      "features": [
+        "Samlad kalender",
+        "Gästdetaljer",
+        "Check-in/check-out datum",
+        "Intäkt per bokning",
+        "Datumblockering"
+      ]
+    },
+    "finance": {
+      "title": "Transparenta finanser till varje cent",
+      "desc": "Månadsutdrag med detaljerad uppdelning. Se exakt vad du tjänat och vad som debiterats.",
+      "features": [
+        "Bruttointäktsuppdelning",
+        "Kommissions- och avgiftsdetaljer",
+        "Nettoutbetalningsberäkning",
+        "PDF-rapporter på 9 språk",
+        "Årsöversikt"
+      ]
+    },
+    "care": {
+      "title": "Din fastighet, alltid omhändertagen",
+      "desc": "Följ varje städning, inspektion och underhållsbesök med foton och rapporter.",
+      "features": [
+        "Planerad städning efter varje vistelse",
+        "Förebyggande underhåll",
+        "Statusrapporter",
+        "Problemrapportering med foton",
+        "Begär besök"
+      ]
+    },
+    "communication": {
+      "title": "Direkt kontakt med ditt team",
+      "desc": "Kommunicera direkt med din förvaltare via plattformen. Allt dokumenterat.",
+      "features": [
+        "Meddelanden i appen",
+        "AI-assistent",
+        "Notifikationshistorik",
+        "Dokumentdelning",
+        "Flerspråkigt stöd"
+      ]
+    }
+  },
+  "aiTools": {
+    "badge": "Drivs av AI",
+    "title": "5 intelligenta verktyg som arbetar för dig",
+    "subtitle": "HostMasters är inte bara ett förvaltningsbolag — det är en teknikplattform.",
+    "tools": [
+      {
+        "name": "AI Dynamisk Prissättning",
+        "desc": "Algoritm som analyserar 7 faktorer för att sätta optimalt pris varje natt.",
+        "stat": "Upp till +25% intäkter",
+        "statLabel": "vs. fasta priser"
+      },
+      {
+        "name": "AI Teamassistent",
+        "desc": "Intelligent chattassistent tillgänglig i varje portal. Ställ frågor om intäkter, bokningar eller fastighetsstatus.",
+        "stat": "24/7",
+        "statLabel": "omedelbara svar"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Autonomt system som kör 9 dagliga kontroller på varje bokning, utbetalning och uppgift.",
+        "stat": "9 kontroller",
+        "statLabel": "varje dag, automatiskt"
+      },
+      {
+        "name": "Marknadsintelligens",
+        "desc": "Veckovis datainsamling från Airbnb och Booking.com i Costa Tropical-regionen.",
+        "stat": "50+ annonser",
+        "statLabel": "spåras varje vecka"
+      },
+      {
+        "name": "Prisanalys för Ägare",
+        "desc": "Din fastighets prisprestanda över tid. Säsongstrender, snitttariffer, beläggning.",
+        "stat": "Riktig data",
+        "statLabel": "inga uppskattningar"
+      }
+    ]
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problem",
+      "solution": "Lösning",
+      "plans": "Planer",
+      "enter": "Logga in",
+      "startFree": "Starta gratis"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Din fastighet förtjänar",
+      "titleGold": "mer än förvaltning.",
+      "title2": "Den förtjänar intelligens.",
+      "subtitle": "Du köpte på Costa Tropical för att investera — inte för att oroa dig för städning, svåra gäster eller felaktiga priser. HostMasters sköter allt med riktig data, AI-prissättning och full transparens.",
+      "cta": "Första månaden gratis på Premium",
+      "ctaSub": "Ingen bindning. Avsluta när du vill.",
+      "noLockin": "Ingen bindning",
+      "intlOwners": "Internationella ägare",
+      "aiPowered": "AI-driven prissättning"
+    },
+    "problem": {
+      "badge": "Problemet",
+      "title": "Att vara ägare på distans borde inte vara så svårt",
+      "items": [
+        {
+          "title": "Slumpmässig prissättning",
+          "desc": "Utan marknadsdata är prissättning gissningar. Du förlorar intäkter i högsäsong."
+        },
+        {
+          "title": "Noll insyn",
+          "desc": "Du vet inte vad som händer med din fastighet förrän du får ett klagomål."
+        },
+        {
+          "title": "Långsam kommunikation",
+          "desc": "Borttappade mejl, foton som aldrig kommer, rapporter bara när du insisterar."
+        },
+        {
+          "title": "Ogenomskinliga kommissioner",
+          "desc": "Du vet inte hur mycket som blir kvar. Dolda kostnader äter din lönsamhet."
+        }
+      ]
+    },
+    "solution": {
+      "badge": "Lösningen",
+      "title": "Förvaltning med intelligens, inte gissningar",
+      "subtitle": "Tre pelare som gör HostMasters annorlunda.",
+      "items": [
+        {
+          "title": "AI Dynamisk Prissättning",
+          "desc": "Algoritm som analyserar säsongsvariation, lokala evenemang, konkurrens och efterfrågan i realtid.",
+          "highlight": "Upp till +25% intäkter vs. fasta priser"
+        },
+        {
+          "title": "Dina egna data, inte uppskattningar",
+          "desc": "Instrumentpanel med riktig data från dina bokningar, intäkter och kostnader.",
+          "highlight": "Total transparens i siffrorna"
+        },
+        {
+          "title": "Marknadsintelligens",
+          "desc": "Tillgång till marknadsdata för Costa Tropical: beläggning per zon, snittpriser, trender.",
+          "highlight": "Beslut baserade på riktig data"
+        }
+      ]
+    },
+    "social": {
+      "badge": "Vad marknaden säger",
+      "title": "En plattform byggd för framtiden",
+      "items": [
+        {
+          "quote": "Korttidsuthyrningsmarknaden på Costa Tropical växer snabbt, men förvaltningen sker fortfarande manuellt. En plattform som kombinerar AI-prissättning med riktig data har enorm potential.",
+          "name": "Branschanalys",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Fastighetsägare som investerar i södra Spanien behöver transparens och teknik. Gapet mellan traditionella förvaltare och vad tekniken möjliggör är precis där innovation sker.",
+          "name": "Marknadsutsikter",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "Kombinationen av dynamiska prisalgoritmer, marknadsdata i realtid och transparenta ägarportaler representerar nästa generation av fastighetsförvaltning.",
+          "name": "Teknikperspektiv",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
+    "plans": {
+      "badge": "Planer",
+      "title": "Välj den servicenivå du behöver",
+      "subtitle": "Alla planer inkluderar full förvaltning. Ju mer du investerar, desto lägre kommission.",
+      "recommended": "Rekommenderad",
+      "monthlyFee": "/månad",
+      "annualFee": "/år",
+      "commission": "Kommission",
+      "startNow": "Starta nu",
+      "firstMonthFree": "Första månaden gratis",
+      "noMonthlyFee": "Ingen månadsavgift",
+      "starter": {
+        "features": [
+          "Fullständig STR-förvaltning",
+          "Airbnb, Booking.com & direktannonser",
+          "24/7 gästkommunikation",
+          "Månatligt ägarutdrag",
+          "Ägarinstrumentpanel",
+          "Städning: €70/byte"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Allt i Starter",
+          "Förebyggande underhåll (1x/månad)",
+          "Inspektion före & efter vistelse",
+          "Dokumenthantering",
+          "Flerspråkiga utdrag",
+          "Städning: €60/byte"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Allt i Basic",
+          "AI-prissättning + Smart Lock",
+          "Prioriterad respons: 12t ägare / 2t gäst",
+          "Utdrag på valfritt språk",
+          "Städning ingår ≥5 nätter"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Allt i Mid",
+          "Skatteefterlevnad (Modelo 179 + IRNR)",
+          "Gästtillägg: transfer, mat, tvätt",
+          "Nödsvar inom 4 timmar",
+          "Städning ingår ≥3 nätter"
+        ]
+      }
+    },
+    "finalCta": {
+      "title1": "Redo att ha",
+      "titleGold": "riktig kontroll",
+      "title2": "över din fastighet?",
+      "subtitle": "Börja med Premium-planen i 1 månad utan kostnad.",
+      "cta": "Starta 1 månad gratis",
+      "enterPortal": "Gå till portalen",
+      "disclaimer": "Ingen bindning · Inget kreditkort · Avsluta när som helst"
+    },
+    "footer": {
+      "tagline": "Premium korttidsuthyrningsförvaltning.",
+      "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Bli en del av teamet",
+      "title": "Bli en del av HostMasters",
+      "subtitle": "Vi bygger en plattform, inte bara ett förvaltningsbolag. Kom med som Manager eller Crew.",
+      "manager": {
+        "title": "Starta din förvaltningsverksamhet",
+        "tagline": "Du har det lokala nätverket och talar internationella ägares språk. Vi ger dig systemet.",
+        "point1": "15% av kundabonnemang + 3% av bruttouthyrning",
+        "point2": "Portföljbonusar: €150 vid 10, €400 vid 20, €750 vid 30 fastigheter",
+        "point3": "Exklusivt geografiskt område",
+        "point4": "Komplett plattform: CRM, fakturering, drift",
+        "cta": "Ansök som Manager",
+        "formTitle": "Manager-ansökan"
+      },
+      "crew": {
+        "title": "Stabilt arbete på Costa Tropical",
+        "tagline": "Professionellt arbete inom korttidsuthyrning med garanterad betalning och tydliga uppgifter.",
+        "point1": "Betalning inom 24 timmar via plattformen",
+        "point2": "Tydlig uppgiftslista i appen — ingen förvirring",
+        "point3": "Arbete året runt (inte bara sommarsäsongen)",
+        "point4": "Förebyggande underhåll + städning + incheckningar",
+        "cta": "Ansök som Crew",
+        "formTitle": "Crew-ansökan"
+      },
+      "form": {
+        "required": "Namn och e-post krävs",
+        "zone": "Föredraget område",
+        "languages": "Språk du talar",
+        "experience": "Erfarenhet (valfritt)",
+        "skills": "Färdigheter",
+        "availability": "Tillgänglighet",
+        "message": "Något mer vi borde veta? (valfritt)",
+        "submit": "Skicka ansökan",
+        "thanks": "Ansökan mottagen",
+        "thanksDesc": "Tack! Vi granskar din ansökan och kontaktar dig snart."
+      }
+    }
+  },
+  "onboarding": {
+    "languageStep": "Välj ditt språk",
+    "languageStepDesc": "Detta avgör språket för hela plattformen — e-post, fakturor, avtal, aviseringar och AI-assistans.",
+    "profileStep": "Din profil",
+    "fullName": "Fullständigt namn",
+    "fullNamePlaceholder": "Ditt namn",
+    "phonePlaceholder": "+34 600 000 000",
+    "crewContractStep": "Avtalstyp",
+    "crewMonthly": "Månadsvis",
+    "crewMonthlySub": "Fast månadsbelopp",
+    "crewFreelancer": "Frilans",
+    "crewFreelancerSub": "Per avslutad uppgift",
+    "crewMonthlyLabel": "Månadsbelopp (€)",
+    "crewTaskLabel": "Belopp per uppgift (€)",
+    "crewSkillsStep": "Färdigheter",
+    "crewSkillsDesc": "Välj vilka typer av uppgifter du kan utföra.",
+    "managerCompStep": "Ersättningsavtal",
+    "managerCompDescSet": "Värden angivna av Admin. Bekräfta villkoren.",
+    "managerCompDescEmpty": "Fyll i de värden du kommit överens om med din Admin.",
+    "managerSubShare": "% av kundens abonnemang",
+    "managerCommShare": "% av bruttohyresintäkter",
+    "clientPropertyStep": "Din fastighet",
+    "clientPropertyDesc": "Din fastighet konfigureras av Admin eller din Manager. Bekräfta dina uppgifter och acceptera serviceavtalet i nästa steg.",
+    "contractStep": "Serviceavtal",
+    "contractAccept": "Jag har läst och godkänner villkoren i detta avtal",
+    "contractNone": "Inga väntande avtal. Din Admin gör det tillgängligt snart.",
+    "confirmStep": "Allt klart",
+    "confirmCrewMonthly": "Månadsavtal konfigurerat.",
+    "confirmCrewFreelancer": "Frilansavtal konfigurerat.",
+    "confirmCrewSkills": "{n} färdighet(er) valda.",
+    "confirmManager": "Ersättning: {sub}% abonnemang + {comm}% provisioner.",
+    "confirmClient": "Din profil är konfigurerad. Välkommen till HostMasters.",
+    "confirmHint": "Klicka på \"Slutför\" för att gå in på plattformen. Du kan ändra dessa inställningar i din profil.",
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "finish": "Slutför",
+    "saving": "Sparar…",
+    "setupTitle": "Setup",
+    "setupSubtitle": "Första konfigurationen av ditt konto"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Du har ett väntande serviceavtal",
+      "pendingContractDesc": "Signera det för att aktivera din fastighet och börja ta emot bokningar.",
+      "pendingInvoice": "{n} väntande faktura/fakturor",
+      "pendingInvoiceTotal": "Totalt: {amount} — klicka för detaljer",
+      "earningsThisMonth": "Dina intäkter denna månad — netto",
+      "occupancy": "Beläggning denna månad",
+      "nextGuest": "Nästa gäst",
+      "noUpcoming": "Inga kommande bokningar",
+      "propertyCondition": "Fastighetens skick",
+      "issuesFlagged": "{n} problem rapporterat/rapporterade",
+      "allGood": "Allt bra",
+      "lastInspected": "Senast inspekterad {date}",
+      "careTitle": "Skötsel & underhåll",
+      "seeAll": "Visa alla",
+      "upcomingVisits": "Planerade besök",
+      "openIssues": "Öppna problem",
+      "quickActions": "Snabbåtgärder",
+      "blockDates": "Blockera datum",
+      "blockDatesDesc": "Reservera tid för dig själv",
+      "requestVisit": "Begär ett besök",
+      "requestVisitDesc": "Städning, reparationer eller kontroll",
+      "viewEarnings": "Visa intäkter",
+      "viewEarningsDesc": "Utdrag och prognoser",
+      "propertySetup": "Din fastighet håller på att konfigureras",
+      "propertySetupDesc": "Din Manager förbereder din fastighet. Du ser ditt dashboard här när allt är klart.",
+      "contactManager": "Kontakta din Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Förvaltningsavtal",
+      "houseRules": "Husregler",
+      "ownerGuide": "Välkomstguide för ägare"
+    }
+  },
+  "aiChat": {
+    "placeholder": {
+      "CREW": "t.ex. Vilka uppgifter har jag denna vecka?",
+      "MANAGER": "t.ex. Hur är beläggningen för mina kunder?",
+      "ADMIN": "t.ex. Vilka anomalier är aktiva?",
+      "CLIENT": "t.ex. Hur presterar min fastighet?",
+      "default": "Ställ din fråga…"
+    },
+    "welcome": {
+      "CREW": "Hej! Jag kan hjälpa dig med uppgifter, checklistor, check-out-rapporter och fältrutiner.",
+      "MANAGER": "Hej! Jag kan hjälpa med din kundportfölj, utbetalningar, CRM och rapporter.",
+      "ADMIN": "Hej! Jag kan hjälpa med allt — drift, ekonomi, AI-prissättning, anomalimonitor.",
+      "CLIENT": "Hej! Jag kan hjälpa dig förstå dina intäkter, bokningar, paket och underhåll."
+    },
+    "title": "HM-Assistent",
+    "statusPending": "Konfiguration väntar",
+    "statusActive": "Aktiv · med riktig data",
+    "errorConnection": "Anslutningsfel. Försök igen.",
+    "errorNotConfigured": "Lägg till ANTHROPIC_API_KEY i Vercel"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Fastighet godkänd: {name}",
+    "propertyApprovedBody": "Din fastighet har godkänts. Signera serviceavtalet för att aktivera.",
+    "propertyActiveTitle": "Din fastighet är nu aktiv!",
+    "propertyActiveBody": "Avtal signerat och fastighet aktiverad. Välkommen till HostMasters.",
+    "contractSignedTitle": "Avtal signerat",
+    "contractSignedBody": "Ditt serviceavtal har signerats.",
+    "bookingReceivedTitle": "Ny bokning: {guest}",
+    "payoutCompletedTitle": "Utbetalning mottagen: {amount}",
+    "taskAssignedTitle": "Ny uppgift: {title}",
+    "taskAssignedBody": "{property} — bekräfta inom 30 min",
+    "taskApprovedTitle": "Uppgift godkänd",
+    "taskRejectedTitle": "Uppgift avvisad",
+    "interventionResolvedTitle": "Intervention löst",
+    "clientRegisteredTitle": "Ny kund registrerad",
+    "newLeadTitle": "Ny lead i din pipeline",
+    "crewPayoutPaidTitle": "Utbetalning mottagen: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Serviceavtal — HostMasters Costa Tropical",
+    "signed": "Signerat",
+    "agreementSigned": "Avtal signerat",
+    "on": "den",
+    "bySigningAgree": "Genom att signera godkänner du villkoren ovan.",
+    "signAgreement": "Signera avtal",
+    "signing": "Signerar…",
+    "signError": "Signeringsfel. Försök igen.",
+    "networkError": "Nätverksfel. Försök igen.",
+    "print": "Skriv ut / PDF",
+    "draft": "Utkast",
+    "active": "Aktivt",
+    "expired": "Utgånget",
+    "terminated": "Avslutat",
+    "contractsTitle": "Mina Avtal",
+    "contractsEmpty": "Inga avtal ännu. De dyker upp här när din Manager ordnar dem.",
+    "startDate": "Startdatum",
+    "endDate": "Slutdatum",
+    "noEndDate": "Tillsvidare",
+    "myContract": "Mitt Avtal",
+    "noContract": "Inget avtal tillgängligt. Kontakta din Admin.",
+    "type": "Typ"
+  },
+  "notifBell": {
+    "title": "Aviseringar",
+    "markAllRead": "Markera alla som lästa",
+    "empty": "Inga aviseringar ännu",
+    "justNow": "just nu"
   }
 }

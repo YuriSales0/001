@@ -12,6 +12,9 @@ export const maxDuration = 300 // 5-minute timeout for batch sends
  *
  * Vercel automatically sends Authorization: Bearer <CRON_SECRET>.
  * Set CRON_SECRET in Vercel environment variables.
+ *
+ * Optimised: batches all queries upfront (3 queries instead of 3*N),
+ * then loops in-memory and sends emails serially.
  */
 export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
@@ -36,7 +39,7 @@ export async function GET(request: NextRequest) {
   ]
   const monthName = MONTH_NAMES[month]
 
-  // Get all active properties with owner info
+  // ── BATCH 1: Properties + owners ──────────────────────────────────────────
   const properties = await prisma.property.findMany({
     where: { status: 'ACTIVE' },
     include: {
@@ -44,39 +47,69 @@ export async function GET(request: NextRequest) {
     },
   })
 
+  if (properties.length === 0) {
+    return NextResponse.json({ month: monthName, year, total: 0, sent: 0, skipped: 0, errors: 0, results: [] })
+  }
+
+  const propertyIds = properties.map(p => p.id)
+
+  // ── BATCH 2-4: Existing reports + reservations + expenses (3 queries total) ──
+  const [existingReports, allReservations, allExpenses] = await Promise.all([
+    prisma.monthlyReport.findMany({
+      where: { propertyId: { in: propertyIds }, month, year },
+      select: { propertyId: true, sentAt: true },
+    }),
+    prisma.reservation.findMany({
+      where: {
+        propertyId: { in: propertyIds },
+        checkIn: { gte: monthStart, lt: monthEnd },
+        status: { not: 'CANCELLED' },
+      },
+      select: { propertyId: true, amount: true },
+    }),
+    prisma.expense.findMany({
+      where: {
+        propertyId: { in: propertyIds },
+        date: { gte: monthStart, lt: monthEnd },
+      },
+      select: { propertyId: true, amount: true },
+    }),
+  ])
+
+  // Group results by propertyId for O(1) lookup
+  const reportByProperty = new Map(existingReports.map(r => [r.propertyId, r]))
+  const reservationsByProperty = new Map<string, typeof allReservations>()
+  const expensesByProperty = new Map<string, typeof allExpenses>()
+
+  for (const r of allReservations) {
+    if (!reservationsByProperty.has(r.propertyId)) reservationsByProperty.set(r.propertyId, [])
+    reservationsByProperty.get(r.propertyId)!.push(r)
+  }
+  for (const e of allExpenses) {
+    if (!expensesByProperty.has(e.propertyId)) expensesByProperty.set(e.propertyId, [])
+    expensesByProperty.get(e.propertyId)!.push(e)
+  }
+
   const results: { propertyId: string; status: string; reason?: string }[] = []
 
+  // ── Process each property in-memory ──────────────────────────────────────
   for (const property of properties) {
     try {
-      // Check if already sent this month
-      const existing = await prisma.monthlyReport.findUnique({
-        where: { propertyId_month_year: { propertyId: property.id, month, year } },
-      })
+      if (!property.owner) {
+        results.push({ propertyId: property.id, status: 'skipped', reason: 'no owner' })
+        continue
+      }
+      const existing = reportByProperty.get(property.id)
       if (existing?.sentAt) {
         results.push({ propertyId: property.id, status: 'skipped', reason: 'already sent' })
         continue
       }
 
-      // Compute financials
-      const [reservations, expenses] = await Promise.all([
-        prisma.reservation.findMany({
-          where: {
-            propertyId: property.id,
-            checkIn: { gte: monthStart, lt: monthEnd },
-            status: { not: 'CANCELLED' },
-          },
-        }),
-        prisma.expense.findMany({
-          where: {
-            propertyId: property.id,
-            date: { gte: monthStart, lt: monthEnd },
-          },
-        }),
-      ])
+      const reservations = reservationsByProperty.get(property.id) ?? []
+      const expenses = expensesByProperty.get(property.id) ?? []
 
       const grossRevenue  = reservations.reduce((s, r) => s + r.amount, 0)
       const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0)
-      // Use plan-based commission rate (not the property's static field)
       const commissionRate = commissionRateForPlan(property.owner.subscriptionPlan) * 100
       const commission    = +(grossRevenue * commissionRate / 100).toFixed(2)
       const ownerPayout   = +(grossRevenue - totalExpenses - commission).toFixed(2)

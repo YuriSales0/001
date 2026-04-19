@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Users, Percent, TrendingUp } from "lucide-react"
+import { ProfileContractSection } from "@/components/hm/profile-contract-section"
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -22,11 +23,11 @@ export default function ManagerProfilePage() {
   const [pwSaved, setPwSaved] = useState(false)
 
   useEffect(() => {
-    fetch("/api/profile").then(r => r.json()).then(d => {
+    fetch("/api/profile").then(r => { if (!r.ok) throw new Error(); return r.json() }).then(d => {
       setProfile(d)
       setForm({ name: d.name ?? "", phone: d.phone ?? "", bio: d.bio ?? "", image: d.image ?? "", commissionRate: d.commissionRate?.toString() ?? "" })
       setLoading(false)
-    })
+    }).catch(() => { setError("Failed to load profile"); setLoading(false) })
   }, [])
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +100,7 @@ export default function ManagerProfilePage() {
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center"
-                 style={{ border: '3px solid #C9A84C' }}>
+                 style={{ border: '3px solid #B08A3E' }}>
               {form.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={form.image} alt="" className="h-full w-full object-cover" />
@@ -109,7 +110,7 @@ export default function ManagerProfilePage() {
             </div>
             <button type="button" onClick={() => fileRef.current?.click()}
               className="absolute -bottom-1 -right-1 rounded-full p-1.5 text-white shadow"
-              style={{ background: '#C9A84C' }}>
+              style={{ background: '#B08A3E' }}>
               <Camera className="h-3.5 w-3.5" />
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
@@ -184,6 +185,9 @@ export default function ManagerProfilePage() {
           </button>
         </div>
       </form>
+
+      {/* Contract */}
+      <ProfileContractSection />
     </div>
   )
 }

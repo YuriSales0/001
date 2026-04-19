@@ -38,21 +38,26 @@ export default function ManagerMessagesPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState(false)
   const [myId, setMyId] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const loadConvs = async () => {
-    const res = await fetch('/api/conversations')
-    if (res.ok) {
+    try {
+      const res = await fetch('/api/conversations')
+      if (!res.ok) throw new Error()
       const data: ConvSummary[] = await res.json()
       setConvs(data)
       if (!active && data.length > 0) setActive(data[0])
-    }
+    } catch { setError(true) }
   }
 
   const fetchMessages = async (convId: string) => {
-    const res = await fetch(`/api/conversations/${convId}/messages`)
-    if (res.ok) setMessages(await res.json())
+    try {
+      const res = await fetch(`/api/conversations/${convId}/messages`)
+      if (!res.ok) throw new Error()
+      setMessages(await res.json())
+    } catch { setError(true) }
   }
 
   useEffect(() => {
@@ -66,8 +71,18 @@ export default function ManagerMessagesPage() {
 
   useEffect(() => {
     if (!active) return
-    const id = setInterval(() => { fetchMessages(active.id); loadConvs() }, 4000)
-    return () => clearInterval(id)
+    const tick = () => {
+      if (!document.hidden) { fetchMessages(active.id); loadConvs() }
+    }
+    const id = setInterval(tick, 4000)
+    const onVisible = () => {
+      if (!document.hidden) { fetchMessages(active.id); loadConvs() }
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [active])
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
@@ -75,12 +90,14 @@ export default function ManagerMessagesPage() {
   const send = async () => {
     if (!active || active.readonly || !text.trim()) return
     setSending(true)
-    await fetch(`/api/conversations/${active.id}/messages`, {
+    const res = await fetch(`/api/conversations/${active.id}/messages`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ body: text }),
     })
-    setText(''); setSending(false)
+    setSending(false)
+    if (!res.ok) { alert('Failed to send message'); return }
+    setText('')
     fetchMessages(active.id); loadConvs()
   }
 
@@ -89,6 +106,8 @@ export default function ManagerMessagesPage() {
   const clientName = (c: ConvSummary) => c.client.name ?? c.client.email
 
   return (
+    <div className="flex flex-col">
+      {error && <div className="p-4 text-center text-sm text-red-500">Failed to load data</div>}
     <div className="flex h-[calc(100vh-80px)] max-h-[750px] rounded-xl border bg-white overflow-hidden">
       {/* ── Sidebar ── */}
       <aside className="w-64 border-r flex flex-col shrink-0">
@@ -210,7 +229,7 @@ export default function ManagerMessagesPage() {
               <input value={text} onChange={e => setText(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
                 placeholder="Escreve uma mensagem…"
-                className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
+                className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
               <button onClick={send} disabled={sending || !text.trim()}
                 className="rounded-full bg-gray-900 p-2.5 text-white hover:bg-gray-800 disabled:opacity-40">
                 {sending ? <Loader2 className="h-4 w-4 animate-spin"/> : <Send className="h-4 w-4"/>}
@@ -230,6 +249,7 @@ export default function ManagerMessagesPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }

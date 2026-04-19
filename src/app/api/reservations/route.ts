@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { type TaskType } from '@prisma/client'
+import { type TaskType, Platform } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { calcCommission, payoutDateFrom } from '@/lib/finance'
-import { pickLeastBusyCrew, buildChecklist, autoTasksForPlan } from '@/lib/crew'
+import { buildChecklist, autoTasksForPlan } from '@/lib/crew'
+import { findBestCrew } from '@/lib/crew-assignment'
 import { notifyAdmin } from '@/lib/notify'
+import { requireRole } from '@/lib/session'
+import { notify } from '@/lib/notifications'
 
 export async function GET(request: NextRequest) {
-  const { requireRole } = await import('@/lib/session')
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
@@ -35,6 +37,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { checkIn: 'desc' },
+      take: 500,
     })
 
     return NextResponse.json(reservations)
@@ -48,6 +51,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
   try {
     const body = await request.json()
     const {
@@ -70,15 +76,23 @@ export async function POST(request: NextRequest) {
     // Get owner's plan to calculate correct commission rate
     const property = await prisma.property.findUnique({
       where: { id: propertyId },
-      include: { owner: { select: { subscriptionPlan: true } } },
+      include: { owner: { select: { subscriptionPlan: true, managerId: true } } },
     })
+    if (!property) {
+      return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+    }
+    // MANAGER can only create reservations for properties owned by their managed clients
+    if (me.role === 'MANAGER' && property.owner?.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
     const ownerPlan = property?.owner?.subscriptionPlan ?? null
     const { commission, commissionRate, net } = calcCommission(amount, ownerPlan)
 
-    const platformEnum = (platform as string | undefined)?.toUpperCase() as
-      | 'AIRBNB' | 'BOOKING' | 'DIRECT' | 'OTHER' | undefined
-    const validPlatforms = ['AIRBNB', 'BOOKING', 'DIRECT', 'OTHER']
-    const platformValue = platformEnum && validPlatforms.includes(platformEnum) ? platformEnum : undefined
+    const platformUpper = typeof platform === 'string' ? platform.toUpperCase() : undefined
+    const platformValue: Platform | undefined =
+      platformUpper && (Object.values(Platform) as string[]).includes(platformUpper)
+        ? (platformUpper as Platform)
+        : undefined
 
     // Auto-calculate booking lead days
     const autoLeadDays = Math.max(0, Math.round((checkInDate.getTime() - Date.now()) / 86400000))
@@ -124,7 +138,8 @@ export async function POST(request: NextRequest) {
     })
 
     // ── Auto-tasks ──────────────────────────────────────────────────────────
-    const assigneeId = await pickLeastBusyCrew()
+    const bestCrew = await findBestCrew(propertyId)
+    const assigneeId = bestCrew?.userId ?? null
     const plan = ownerPlan ?? 'STARTER'
 
     // 1 day before check-in for pre-stay inspection / shopping
@@ -164,17 +179,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const now = new Date()
     await prisma.task.createMany({
       data: autoTasks.map(t => ({
         propertyId,
         type: t.type,
         title: t.title,
         dueDate: t.dueDate,
-        assigneeId: assigneeId ?? null,
+        assigneeId,
+        status: assigneeId ? 'NOTIFIED' as const : 'PENDING' as const,
+        notifiedAt: assigneeId ? now : null,
         checklist: buildChecklist(t.type),
         notes: '',
       })),
     })
+
+    // Notify assigned crew about their new tasks
+    if (assigneeId) {
+      notify({
+        userId: assigneeId,
+        type: 'TASK_ASSIGNED',
+        title: `New tasks: ${guestName}`,
+        body: `${autoTasks.length} task(s) for ${reservation.property.name} — confirm within 30 min`,
+        link: '/crew',
+      }).catch(() => {})
+    }
 
     if (!assigneeId) {
       await notifyAdmin({
@@ -226,6 +255,17 @@ export async function POST(request: NextRequest) {
     await prisma.pricingDataPoint.createMany({ data: nights }).catch(e =>
       console.error('PricingDataPoint collection error:', e),
     )
+
+    // Notify property owner about new booking
+    if (property.ownerId) {
+      notify({
+        userId: property.ownerId,
+        type: 'BOOKING_RECEIVED',
+        title: `New booking: ${guestName}`,
+        body: `${new Date(checkIn).toLocaleDateString('en-GB')} → ${new Date(checkOut).toLocaleDateString('en-GB')} · €${amount}`,
+        link: '/client/bookings',
+      }).catch(() => {})
+    }
 
     return NextResponse.json(reservation, { status: 201 })
   } catch (error) {

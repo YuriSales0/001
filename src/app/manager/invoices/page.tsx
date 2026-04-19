@@ -2,6 +2,9 @@
 import { useEffect, useState, useCallback } from "react"
 import { InvoiceForm } from "@/components/invoice-form"
 import { Pencil, Trash2, X, CheckCircle } from "lucide-react"
+import { ConfirmDialog } from "@/components/hm/confirm-dialog"
+import { showToast } from "@/components/hm/toast"
+import { useEscapeKey } from "@/lib/use-escape-key"
 
 type Invoice = {
   id: string
@@ -42,6 +45,8 @@ function EditModal({ invoice, onClose, onSaved }: {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
 
+  useEscapeKey(true, onClose)
+
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
     setBusy(true); setErr('')
@@ -72,7 +77,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <input
               required value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -81,7 +86,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 required type="number" step="0.01" min="0" value={form.amount}
                 onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
               />
             </div>
             <div>
@@ -89,7 +94,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 type="date" value={form.dueDate}
                 onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
               />
             </div>
           </div>
@@ -98,7 +103,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <textarea
               rows={2} value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none"
             />
           </div>
           {err && <p className="text-xs text-red-600">{err}</p>}
@@ -126,19 +131,27 @@ export default function ManagerInvoices() {
   }, [])
   useEffect(() => { load() }, [load])
 
+  const [confirmAction, setConfirmAction] = useState<
+    | { type: 'markPaid'; id: string; label: string }
+    | { type: 'delete'; id: string; label: string }
+    | null
+  >(null)
+
   const markPaid = async (id: string) => {
-    await fetch(`/api/invoices/${id}`, {
+    const res = await fetch(`/api/invoices/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'PAID' }),
     })
+    if (!res.ok) { showToast('Failed to mark invoice as paid', 'error'); return }
     load()
   }
 
   const deleteInvoice = async (id: string) => {
     setDeleting(id)
-    await fetch(`/api/invoices/${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE' })
     setDeleting(null)
+    if (!res.ok) { showToast('Failed to delete invoice', 'error'); return }
     load()
   }
 
@@ -179,7 +192,8 @@ export default function ManagerInvoices() {
       <InvoiceForm onCreated={load} />
 
       <div className="rounded-xl border bg-white overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-400 tracking-wide">
             <tr>
               <th className="px-4 py-3">Date</th>
@@ -221,7 +235,7 @@ export default function ManagerInvoices() {
                   <div className="flex items-center justify-end gap-1">
                     {i.status !== 'PAID' && i.status !== 'CANCELLED' && (
                       <button
-                        onClick={() => markPaid(i.id)}
+                        onClick={() => setConfirmAction({ type: 'markPaid', id: i.id, label: i.client.name || i.client.email })}
                         title="Mark as paid"
                         className="rounded-md p-1.5 text-green-600 hover:bg-green-50 transition-colors"
                       >
@@ -238,11 +252,7 @@ export default function ManagerInvoices() {
                       </button>
                     )}
                     <button
-                      onClick={() => {
-                        if (confirm(`Delete invoice for ${i.client.name || i.client.email}?`)) {
-                          deleteInvoice(i.id)
-                        }
-                      }}
+                      onClick={() => setConfirmAction({ type: 'delete', id: i.id, label: i.client.name || i.client.email })}
                       disabled={deleting === i.id}
                       title="Delete invoice"
                       className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-40"
@@ -255,6 +265,7 @@ export default function ManagerInvoices() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {editing && (
@@ -264,6 +275,31 @@ export default function ManagerInvoices() {
           onSaved={load}
         />
       )}
+
+      <ConfirmDialog
+        open={confirmAction?.type === 'markPaid'}
+        title="Mark invoice as paid"
+        message={confirmAction?.type === 'markPaid' ? `Mark invoice for ${confirmAction.label} as paid?` : ''}
+        confirmLabel="Mark paid"
+        onConfirm={() => {
+          if (confirmAction?.type === 'markPaid') markPaid(confirmAction.id)
+          setConfirmAction(null)
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
+
+      <ConfirmDialog
+        open={confirmAction?.type === 'delete'}
+        title="Delete invoice"
+        message={confirmAction?.type === 'delete' ? `Delete invoice for ${confirmAction.label}? This cannot be undone.` : ''}
+        confirmLabel="Delete"
+        variant="danger"
+        onConfirm={() => {
+          if (confirmAction?.type === 'delete') deleteInvoice(confirmAction.id)
+          setConfirmAction(null)
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
     </div>
   )
 }

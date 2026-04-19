@@ -36,8 +36,18 @@ export default function AdminMessagesPage() {
   useEffect(() => {
     if (!active) return
     fetchMessages(active.id)
-    const id = setInterval(() => fetchMessages(active.id), 4000)
-    return () => clearInterval(id)
+    const tick = () => {
+      if (!document.hidden) fetchMessages(active.id)
+    }
+    const id = setInterval(tick, 4000)
+    const onVisible = () => {
+      if (!document.hidden) fetchMessages(active.id)
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [active])
 
   const fetchMessages = async (id: string) => {
@@ -67,7 +77,7 @@ export default function AdminMessagesPage() {
         <aside className="w-72 border-r flex flex-col shrink-0">
           <div className="p-3 border-b">
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pesquisar…"
-              className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
+              className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
           </div>
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 && <div className="p-4 text-center text-sm text-gray-400">Sem conversas</div>}

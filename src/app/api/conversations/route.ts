@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 
 /** GET /api/conversations
  *  CLIENT  → returns their single conversation (creates if missing)
- *  MANAGER → returns all their client conversations + read-only list of others
+ *  MANAGER → returns only their own client conversations (scoped by managerId)
  *  ADMIN   → returns all conversations (read-only)
  */
 export async function GET(_req: NextRequest) {
@@ -42,6 +42,7 @@ export async function GET(_req: NextRequest) {
 
   if (me.role === 'MANAGER') {
     const convs = await prisma.conversation.findMany({
+      where: { managerId: me.id },
       include: {
         client:  { select: { id: true, name: true, email: true, image: true } },
         manager: { select: { id: true, name: true, email: true, image: true } },
@@ -57,19 +58,17 @@ export async function GET(_req: NextRequest) {
 
     // Annotate with unread count for this manager
     const withMeta = await Promise.all(convs.map(async c => {
-      const unread = c.managerId === me.id
-        ? await prisma.message.count({
-            where: {
-              conversationId: c.id,
-              senderId: { not: me.id },
-              readAt: null,
-            },
-          })
-        : 0
+      const unread = await prisma.message.count({
+        where: {
+          conversationId: c.id,
+          senderId: { not: me.id },
+          readAt: null,
+        },
+      })
       return {
         ...c,
         unreadCount: unread,
-        readonly: c.managerId !== me.id,
+        readonly: false,
       }
     }))
 

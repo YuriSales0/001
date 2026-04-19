@@ -18,6 +18,12 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   const campaign = await prisma.campaign.findUnique({ where: { id: params.id } })
   if (!campaign) return NextResponse.json({ error: 'Campaign not found' }, { status: 404 })
 
+  // MANAGER can only add spend to campaigns they created
+  const me = guard.user!
+  if (me.role === 'MANAGER' && campaign.createdById !== me.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const [spend] = await prisma.$transaction([
     prisma.campaignSpend.create({
       data: {

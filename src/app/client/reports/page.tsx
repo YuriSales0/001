@@ -67,6 +67,7 @@ export default function ClientReportsPage() {
     previous: { grossRevenue: number; commission: number; netReceived: number; reservations: number; occupancy: number; avgPricePerNight: number; totalNights: number }
     delta: Record<string, number | null>
   } | null>(null)
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     Promise.all([
@@ -75,21 +76,30 @@ export default function ClientReportsPage() {
       fetch('/api/properties').then(r => r.ok ? r.json() : []),
       fetch('/api/reports/summary').then(r => r.ok ? r.json() : null),
     ]).then(([res, pay, props, sum]) => {
-      setReservations(res)
-      setPayouts(pay)
-      setProperties(props)
+      setReservations(Array.isArray(res) ? res : [])
+      setPayouts(Array.isArray(pay) ? pay : [])
+      setProperties(Array.isArray(props) ? props : [])
       setSummary(sum)
+      setLoading(false)
+    }).catch(() => {
+      setLoadError(true)
       setLoading(false)
     })
   }, [])
 
   const filteredRes = useMemo(
-    () => propFilter === 'ALL' ? reservations : reservations.filter(r => r.property.id === propFilter),
+    () => {
+      const valid = reservations.filter(r => r && r.property)
+      return propFilter === 'ALL' ? valid : valid.filter(r => r.property.id === propFilter)
+    },
     [reservations, propFilter]
   )
 
   const filteredPay = useMemo(
-    () => propFilter === 'ALL' ? payouts : payouts.filter(p => p.property.id === propFilter),
+    () => {
+      const valid = payouts.filter(p => p && p.property && p.reservation)
+      return propFilter === 'ALL' ? valid : valid.filter(p => p.property.id === propFilter)
+    },
     [payouts, propFilter]
   )
 
@@ -105,6 +115,7 @@ export default function ClientReportsPage() {
     const map: Record<string, { gross: number; commission: number; net: number; nights: number; reservations: number }> = {}
 
     filteredPay.forEach(p => {
+      if (!p.reservation?.checkOut) return
       const k = monthKey(p.reservation.checkOut)
       if (!map[k]) map[k] = { gross: 0, commission: 0, net: 0, nights: 0, reservations: 0 }
       map[k].gross += p.grossAmount
@@ -113,6 +124,7 @@ export default function ClientReportsPage() {
     })
 
     filteredRes.forEach(r => {
+      if (!r.checkOut) return
       const k = monthKey(r.checkOut)
       if (!map[k]) map[k] = { gross: 0, commission: 0, net: 0, nights: 0, reservations: 0 }
       map[k].nights += nightsBetween(r.checkIn, r.checkOut)
@@ -131,6 +143,7 @@ export default function ClientReportsPage() {
 
     const byProp: Record<string, { name: string; nights: number }> = {}
     reservations.forEach(r => {
+      if (!r || !r.property) return
       const checkIn = new Date(r.checkIn)
       if (checkIn.getFullYear() !== thisYear) return
       if (!byProp[r.property.id]) byProp[r.property.id] = { name: r.property.name, nights: 0 }
@@ -154,6 +167,7 @@ export default function ClientReportsPage() {
   const maxNet = Math.max(...monthlyData.map(([, d]) => d.net), 1)
 
   if (loading) return <div className="p-6 text-sm text-gray-400">A carregar…</div>
+  if (loadError) return <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
 
   return (
     <div className="p-6 space-y-8">

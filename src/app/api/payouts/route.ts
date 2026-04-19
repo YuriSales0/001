@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
         reservation: { select: { id: true, guestName: true, checkIn: true, checkOut: true } },
       },
       orderBy: { scheduledFor: 'asc' },
+      take: 500,
     })
 
     return NextResponse.json(payouts)
@@ -68,6 +69,9 @@ export async function POST(request: NextRequest) {
     if (!propertyId || !grossAmount || !scheduledFor) {
       return NextResponse.json({ error: 'propertyId, grossAmount and scheduledFor are required' }, { status: 400 })
     }
+    if (grossAmount <= 0) {
+      return NextResponse.json({ error: 'grossAmount must be positive' }, { status: 400 })
+    }
 
     // Get owner's plan to calculate commission
     const property = await prisma.property.findUnique({
@@ -86,7 +90,7 @@ export async function POST(request: NextRequest) {
         commissionRate,
         netAmount: net,
         scheduledFor: new Date(scheduledFor),
-        platform: platform as never ?? null,
+        platform: (platform as "AIRBNB" | "BOOKING" | "DIRECT" | "OTHER") || null,
         description: description ?? null,
         status: 'SCHEDULED',
       },

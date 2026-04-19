@@ -116,10 +116,10 @@ function CreateTaskModal({
               value={propSearch}
               onChange={e=>setPropSearch(e.target.value)}
               placeholder="Pesquisa por nome de propriedade…"
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 mb-2"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 mb-2"
             />
             <select value={propertyId} onChange={e=>setPropertyId(e.target.value)}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
               {filteredProps.length===0
                 ? <option value="">— sem resultados —</option>
                 : filteredProps.map(p=>(
@@ -152,13 +152,13 @@ function CreateTaskModal({
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Título da tarefa</label>
                 <input value={title} onChange={e=>setTitle(e.target.value)}
                   placeholder="Ex: Limpeza pré-chegada"
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
               </div>
               <div className="flex-1 flex flex-col">
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Notas para a crew</label>
                 <textarea value={notes} onChange={e=>setNotes(e.target.value)}
                   placeholder="Instruções, códigos de acesso…"
-                  className="flex-1 min-h-[120px] w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gray-900"/>
+                  className="flex-1 min-h-[120px] w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-navy-700"/>
               </div>
             </div>
           </div>
@@ -166,7 +166,7 @@ function CreateTaskModal({
         <div className="flex gap-3 px-6 py-4 border-t">
           <button onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm hover:bg-gray-50">Cancelar</button>
           <button onClick={submit} disabled={submitting||!title||!propertyId}
-            className="flex-1 rounded-lg bg-gray-900 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50">
+            className="flex-1 rounded-lg bg-gray-900 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
             {submitting?'A criar…':'Criar tarefa'}
           </button>
         </div>

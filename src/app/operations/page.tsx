@@ -69,7 +69,7 @@ export default function OperationsPage() {
   const upcomingCount = byStatus("UPCOMING").length
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)]" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="flex flex-col h-[calc(100vh-64px)]">
       {/* Header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between shrink-0">
         <div>

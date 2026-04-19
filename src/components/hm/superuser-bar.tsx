@@ -80,7 +80,7 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
         {/* Badge */}
         <span
           className="shrink-0 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest"
-          style={{ background: '#C9A84C', color: '#1e1b4b' }}
+          style={{ background: '#B08A3E', color: '#1e1b4b' }}
         >
           SUPERUSER
         </span>
@@ -104,7 +104,7 @@ export function SuperuserBar({ realUser, viewAs }: Props) {
               <span className="text-white font-medium">{realUser.name ?? realUser.email}</span>{' '}
               <span
                 className="rounded px-1 py-0.5 text-[9px] font-bold uppercase"
-                style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}
+                style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}
               >
                 ADMIN
               </span>

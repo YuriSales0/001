@@ -1,7 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Building2, MapPin, Check, AlertCircle, Plus, X, Clock, CheckCircle2, Settings } from 'lucide-react'
+import { Building2, MapPin, Check, AlertCircle, Plus, X, Clock, CheckCircle2, Settings, FileText } from 'lucide-react'
+import { HOUSE_RULES, HOUSE_RULE_CATEGORIES, getRulesByCategory, ruleLabel, categoryLabel, type HouseRuleCategory } from '@/lib/house-rules'
+import { ContractViewer } from '@/components/hm/contract-viewer'
+import { useLocale } from '@/i18n/provider'
+
+type Contract = {
+  id: string
+  title: string
+  terms: string
+  signedByUser: boolean
+  signedAt: string | null
+  status: string
+}
 
 type Property = {
   id: string
@@ -15,32 +27,95 @@ type Property = {
 }
 
 const STATUS_BADGE: Record<string, { cls: string; label: string }> = {
-  PENDING_CLIENT:   { cls: 'bg-violet-100 text-violet-700', label: 'Aguarda confirmação' },
-  PENDING_APPROVAL: { cls: 'bg-amber-100 text-amber-700',  label: 'Aguarda configuração' },
-  ACTIVE:           { cls: 'bg-green-100 text-green-700',  label: 'Ativa' },
-  INACTIVE:         { cls: 'bg-gray-100 text-gray-500',    label: 'Inativa' },
-  MAINTENANCE:      { cls: 'bg-orange-100 text-orange-600',label: 'Em manutenção' },
+  PENDING_CLIENT:    { cls: 'bg-violet-100 text-violet-700', label: 'Aguarda confirmação' },
+  PENDING_APPROVAL:  { cls: 'bg-amber-100 text-amber-700',  label: 'Aguarda configuração' },
+  CONTRACT_PENDING:  { cls: 'bg-blue-100 text-blue-700',    label: 'Contrato pendente' },
+  ACTIVE:            { cls: 'bg-green-100 text-green-700',  label: 'Ativa' },
+  INACTIVE:          { cls: 'bg-gray-100 text-gray-500',    label: 'Inativa' },
+  MAINTENANCE:       { cls: 'bg-orange-100 text-orange-600',label: 'Em manutenção' },
+}
+
+function HouseRulesSelector({ selected, onChange }: { selected: string[]; onChange: (rules: string[]) => void }) {
+  const { locale } = useLocale()
+  const rulesByCategory = getRulesByCategory()
+
+  const toggle = (key: string) => {
+    onChange(selected.includes(key) ? selected.filter(k => k !== key) : [...selected, key])
+  }
+
+  return (
+    <div className="space-y-6">
+      {HOUSE_RULE_CATEGORIES.map(cat => {
+        const rules = rulesByCategory.get(cat.key) ?? []
+        const selectedInCat = rules.filter(r => selected.includes(r.key)).length
+        return (
+          <div key={cat.key}>
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-semibold text-gray-900">{categoryLabel(cat, locale)}</h4>
+              <span className="text-xs text-gray-400">{selectedInCat}/{rules.length}</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {rules.map(rule => (
+                <label key={rule.key} className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm cursor-pointer hover:bg-gray-50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(rule.key)}
+                    onChange={() => toggle(rule.key)}
+                    className="accent-[#B08A3E]"
+                  />
+                  <span>{rule.icon}</span>
+                  <span className="text-gray-700">{ruleLabel(rule, locale)}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+      })}
+      <p className="text-xs text-gray-400">{selected.length} rule(s) selected</p>
+    </div>
+  )
 }
 
 export default function ClientProperties() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [showAdd, setShowAdd] = useState(false)
-  const [form, setForm] = useState({ name: '', address: '', city: '', postalCode: '' })
+  const [form, setForm] = useState({ name: '', address: '', city: '', postalCode: '', houseRules: [] as string[] })
   const [addLoading, setAddLoading] = useState(false)
   const [addError, setAddError] = useState('')
   const [addSuccess, setAddSuccess] = useState(false)
   const [confirming, setConfirming] = useState<string | null>(null)
+  const [contracts, setContracts] = useState<Record<string, Contract>>({})
+  const [loadingContracts, setLoadingContracts] = useState<Record<string, boolean>>({})
 
   const load = () =>
     fetch('/api/properties')
       .then(r => r.ok ? r.json() : [])
-      .then((d: Property[]) => { setProperties(d); setLoading(false) })
+      .then((d: Property[]) => { setProperties(d); setLoading(false); return d })
+      .then((d: Property[]) => {
+        // Fetch contracts for CONTRACT_PENDING properties
+        d.filter(p => p.status === 'CONTRACT_PENDING').forEach(p => fetchContract(p.id))
+      })
+
+  const fetchContract = async (propertyId: string) => {
+    setLoadingContracts(prev => ({ ...prev, [propertyId]: true }))
+    try {
+      const res = await fetch(`/api/contracts?type=CLIENT_SERVICE&propertyId=${propertyId}`)
+      if (res.ok) {
+        const list: Contract[] = await res.json()
+        const unsigned = list.find(c => !c.signedByUser) ?? list[0]
+        if (unsigned) setContracts(prev => ({ ...prev, [propertyId]: unsigned }))
+      }
+    } finally {
+      setLoadingContracts(prev => ({ ...prev, [propertyId]: false }))
+    }
+  }
 
   useEffect(() => { load() }, [])
 
   const pendingClient = properties.filter(p => p.status === 'PENDING_CLIENT')
   const pendingApproval = properties.filter(p => p.status === 'PENDING_APPROVAL')
+  const contractPending = properties.filter(p => p.status === 'CONTRACT_PENDING')
 
   const confirmProperty = async (id: string) => {
     setConfirming(id)
@@ -60,14 +135,14 @@ export default function ClientProperties() {
     const res = await fetch('/api/properties', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: form.name, address: form.address, city: form.city, postalCode: form.postalCode || undefined }),
+      body: JSON.stringify({ name: form.name, address: form.address, city: form.city, postalCode: form.postalCode || undefined, houseRules: form.houseRules }),
     })
     if (!res.ok) {
       const err = await res.json()
       setAddError(err.error || 'Erro ao submeter.')
     } else {
       setAddSuccess(true)
-      setForm({ name: '', address: '', city: '', postalCode: '' })
+      setForm({ name: '', address: '', city: '', postalCode: '', houseRules: [] })
       await load()
       setTimeout(() => { setShowAdd(false); setAddSuccess(false) }, 2000)
     }
@@ -106,6 +181,21 @@ export default function ClientProperties() {
         </div>
       )}
 
+      {/* Banner: contract pending — needs signature */}
+      {contractPending.length > 0 && (
+        <div className="rounded-xl border-2 border-blue-300 bg-blue-50 p-4 flex items-start gap-3">
+          <FileText className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+          <div className="text-sm text-blue-800">
+            <p className="font-semibold mb-0.5">
+              {contractPending.length === 1
+                ? 'Your property has been approved! Sign the service agreement to activate it.'
+                : `${contractPending.length} properties approved — sign the service agreements to activate them.`}
+            </p>
+            <p className="text-xs">Review and sign the contract below to start receiving bookings.</p>
+          </div>
+        </div>
+      )}
+
       {/* Banner: pending OTA setup by admin */}
       {pendingApproval.length > 0 && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
@@ -136,10 +226,15 @@ export default function ClientProperties() {
           const badge = STATUS_BADGE[p.status] ?? { cls: 'bg-gray-100 text-gray-600', label: p.status }
           const isPendingClient = p.status === 'PENDING_CLIENT'
           const isPendingApproval = p.status === 'PENDING_APPROVAL'
+          const isContractPending = p.status === 'CONTRACT_PENDING'
+          const contract = contracts[p.id]
 
           return (
             <div key={p.id} className={`rounded-xl border bg-white p-5 ${
-              isPendingClient ? 'border-violet-200' : isPendingApproval ? 'border-amber-200' : ''
+              isPendingClient ? 'border-violet-200'
+                : isPendingApproval ? 'border-amber-200'
+                : isContractPending ? 'border-blue-300 border-2'
+                : ''
             }`}>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
@@ -188,6 +283,24 @@ export default function ClientProperties() {
                   </button>
                 )}
               </div>
+
+              {/* Contract signing for CONTRACT_PENDING */}
+              {isContractPending && (
+                <div className="mt-4">
+                  {loadingContracts[p.id] ? (
+                    <div className="text-sm text-gray-400 py-4 text-center">Loading contract...</div>
+                  ) : contract ? (
+                    <ContractViewer
+                      contract={contract}
+                      onSigned={() => load()}
+                    />
+                  ) : (
+                    <div className="rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-700">
+                      Your property has been approved. The service agreement is being prepared — please check back shortly.
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )
         })}
@@ -196,7 +309,7 @@ export default function ClientProperties() {
       {/* Solicitar Propriedade modal */}
       {showAdd && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowAdd(false)}>
-          <div className="w-full max-w-md rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
                 <h2 className="text-base font-bold text-navy-900">Solicitar Propriedade</h2>
@@ -238,6 +351,14 @@ export default function ClientProperties() {
                     placeholder="1000-001"
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-2">House Rules</label>
+                <HouseRulesSelector
+                  selected={form.houseRules}
+                  onChange={rules => setForm(f => ({ ...f, houseRules: rules }))}
+                />
               </div>
 
               <div className="rounded-lg bg-gray-50 border p-3 text-xs text-gray-500">

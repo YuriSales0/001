@@ -20,7 +20,10 @@ export async function GET(
   if (me.role === 'CLIENT' && conv.clientId !== me.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
-  // MANAGER: own conversations are writable, others are read-only (both allowed for GET)
+  // MANAGER can only see their own conversations
+  if (me.role === 'MANAGER' && conv.managerId !== me.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
 
   const messages = await prisma.message.findMany({
     where: { conversationId: params.id },

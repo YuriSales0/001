@@ -14,37 +14,20 @@ const DEFAULT_COMMISSION = 0.18
 const PAYOUT_DELAY_DAYS = 7
 
 async function main() {
-  // ── Admin ──────────────────────────────────────────────────────────────────
-  const adminEmail    = process.env.ADMIN_EMAIL    || 'admin@hostmaster.es'
-  const adminPassword = process.env.ADMIN_PASSWORD || 'changeme123'
-
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: { role: 'ADMIN', password: await bcrypt.hash(adminPassword, 10) },
-    create: {
-      email: adminEmail,
-      name: 'Hostmaster Admin',
-      role: 'ADMIN',
-      password: await bcrypt.hash(adminPassword, 10),
-      language: 'en',
-    },
-  })
-  console.log(`✓ admin:   ${adminEmail} / ${adminPassword}`)
-
   // ── Yuri (owner / superuser) ────────────────────────────────────────────
   await prisma.user.upsert({
     where: { email: 'yurisales968@gmail.com' },
-    update: { isSuperUser: true, role: 'ADMIN' },
+    update: { isSuperUser: true, role: 'ADMIN', password: await bcrypt.hash('asdasd123@', 12) },
     create: {
       email: 'yurisales968@gmail.com',
       name: 'Yuri Sales',
       role: 'ADMIN',
-      password: await bcrypt.hash('asdasd123@', 10),
+      password: await bcrypt.hash('asdasd123@', 12),
       language: 'pt',
       isSuperUser: true,
     },
   })
-  console.log('✓ owner:   yurisales968@gmail.com (superuser)')
+  console.log('✓ admin:   yurisales968@gmail.com (superuser)')
 
   // ── Demo Manager ──────────────────────────────────────────────────────────
   const manager = await prisma.user.upsert({
@@ -54,7 +37,7 @@ async function main() {
       email: 'manager@hostmaster.es',
       name: 'Ana García',
       role: 'MANAGER',
-      password: await bcrypt.hash('manager123', 10),
+      password: await bcrypt.hash('manager123', 12),
       language: 'es',
       subscriptionPlan: 'MID',
       subscriptionStatus: 'active',
@@ -70,7 +53,7 @@ async function main() {
       email: 'crew@hostmaster.es',
       name: 'Carlos Limpio',
       role: 'CREW',
-      password: await bcrypt.hash('crew123', 10),
+      password: await bcrypt.hash('crew123', 12),
       language: 'es',
     },
   })
@@ -84,7 +67,7 @@ async function main() {
       email: 'client@hostmaster.es',
       name: 'María Propietaria',
       role: 'CLIENT',
-      password: await bcrypt.hash('client123', 10),
+      password: await bcrypt.hash('client123', 12),
       language: 'es',
       managerId: manager.id,
       subscriptionPlan: 'BASIC',
@@ -125,13 +108,11 @@ async function main() {
     }
   }
 
-  // ── Clean up legacy default admin if email changed ────────────────────────
-  if (adminEmail !== 'admin@hostmaster.es') {
-    const stale = await prisma.user.findUnique({ where: { email: 'admin@hostmaster.es' } })
-    if (stale) {
-      await prisma.user.delete({ where: { email: 'admin@hostmaster.es' } })
-      console.log('Removed stale admin@hostmaster.es')
-    }
+  // ── Clean up legacy demo admin if it exists ────────────────────────────────
+  const staleAdmin = await prisma.user.findUnique({ where: { email: 'admin@hostmaster.es' } })
+  if (staleAdmin) {
+    await prisma.user.delete({ where: { email: 'admin@hostmaster.es' } })
+    console.log('Removed stale admin@hostmaster.es')
   }
 }
 

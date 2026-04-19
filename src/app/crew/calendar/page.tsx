@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, X, Clock, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { useLocale } from '@/i18n/provider'
 
 type CalEvent = {
   id: string; type: string; title: string; date: string
@@ -27,13 +28,19 @@ const COLORS: Record<string, string> = {
   PAYOUT:                 'bg-purple-100 text-purple-700 border-purple-200',
   BIRTHDAY:               'bg-pink-100 text-pink-700 border-pink-200',
 }
-const TYPE_LABELS: Record<string, string> = {
-  CHECK_IN: 'Check-in', CHECK_OUT: 'Check-out', CLEANING: 'Limpeza',
-  MAINTENANCE_PREVENTIVE: 'Manut. Prev.', MAINTENANCE_CORRECTIVE: 'Manut. Cor.',
-  INSPECTION: 'Inspecção', TRANSFER: 'Transfer', SHOPPING: 'Compras', LAUNDRY: 'Lavandaria',
-  TASK: 'Tarefa',
+function getWeekdayShort(loc: string): string[] {
+  const base = new Date(2024, 0, 1) // Monday
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(base)
+    d.setDate(d.getDate() + i)
+    return d.toLocaleDateString(loc, { weekday: 'short' })
+  })
 }
-const WEEKDAY_SHORT = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']
+
+const LOCALE_MAP: Record<string, string> = {
+  en: 'en-GB', pt: 'pt-PT', es: 'es-ES', de: 'de-DE',
+  nl: 'nl-NL', fr: 'fr-FR', sv: 'sv-SE', da: 'da-DK',
+}
 
 const dayKey = (d: Date) => d.toISOString().slice(0,10)
 
@@ -51,12 +58,13 @@ function getWeekDays(start: Date): Date[] {
 }
 
 function DayPanel({
-  day, events, onClose, onComplete,
+  day, events, onClose, onComplete, dateLoc, t,
 }: {
   day: Date; events: CalEvent[]
   onClose: ()=>void; onComplete: (e:CalEvent)=>void
+  dateLoc: string; t: (k: string) => string
 }) {
-  const label = day.toLocaleDateString('pt-PT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
+  const label = day.toLocaleDateString(dateLoc,{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
   return (
     <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
@@ -81,7 +89,7 @@ function DayPanel({
             return (
               <div key={e.id} className="flex items-center gap-3 px-5 py-3 text-sm">
                 <span className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${colorClass}`}>
-                  {(TYPE_LABELS[taskType]??taskType).slice(0,2).toUpperCase()}
+                  {(t(`crew.taskTypes.${taskType}`) || taskType).slice(0,2).toUpperCase()}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className={`font-medium truncate ${isCompleted?'line-through text-gray-400':''}`}>{e.title}</p>
@@ -108,6 +116,8 @@ function DayPanel({
 }
 
 export default function CrewCalendarPage() {
+  const { t, locale } = useLocale()
+  const dateLoc = LOCALE_MAP[locale] ?? 'en-GB'
   const [events, setEvents] = useState<CalEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [weekStart, setWeekStart] = useState(()=>getWeekStart(new Date()))
@@ -145,8 +155,8 @@ export default function CrewCalendarPage() {
 
   const weekLabel = (() => {
     const end = new Date(weekStart); end.setDate(weekStart.getDate()+6)
-    const s = weekStart.toLocaleDateString('pt-PT',{day:'2-digit',month:'short'})
-    const f = end.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'})
+    const s = weekStart.toLocaleDateString(dateLoc,{day:'2-digit',month:'short'})
+    const f = end.toLocaleDateString(dateLoc,{day:'2-digit',month:'short',year:'numeric'})
     return `${s} – ${f}`
   })()
 
@@ -189,13 +199,13 @@ export default function CrewCalendarPage() {
                     :isToday?'bg-blue-50 border-blue-200'
                     :'bg-white border-gray-100 hover:border-gray-300'}`}>
                   <span className={`text-[10px] font-semibold uppercase tracking-wider ${isExpanded?'text-white/60':isToday?'text-blue-500':'text-gray-500'}`}>
-                    {WEEKDAY_SHORT[i]}
+                    {getWeekdayShort(dateLoc)[i]}
                   </span>
                   <span className={`text-xl font-bold mt-0.5 ${isExpanded?'text-white':isToday?'text-blue-700':'text-gray-900'}`}>
                     {day.getDate()}
                   </span>
                   <span className={`text-[10px] mt-0.5 ${isExpanded?'text-white/60':isToday?'text-blue-500':'text-gray-400'}`}>
-                    {day.toLocaleDateString('pt-PT',{month:'short'})}
+                    {day.toLocaleDateString(dateLoc,{month:'short'})}
                   </span>
                   {items.length>0&&(
                     <span className={`mt-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
@@ -217,7 +227,7 @@ export default function CrewCalendarPage() {
                         className={`w-full flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[11px] font-medium text-left hover:opacity-80 ${colorClass} ${
                           isCompleted?'opacity-40':''} ${isOverdue?'ring-1 ring-red-400':''}`}>
                         <span className={`truncate ${isCompleted?'line-through':''}`}>
-                          {TYPE_LABELS[taskType]??e.title}
+                          {t(`crew.taskTypes.${taskType}`) || e.title}
                         </span>
                       </button>
                     )
@@ -241,6 +251,8 @@ export default function CrewCalendarPage() {
           events={eventsByDay[expandedDay]??[]}
           onClose={()=>setExpandedDay(null)}
           onComplete={completeTask}
+          dateLoc={dateLoc}
+          t={t}
         />
       )}
     </div>

@@ -9,19 +9,7 @@ import {
   Building2, X, User, ChevronRight,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const navLinks = [
-  { href: "/dashboard",     label: "Dashboard",    icon: Home },
-  { href: "/crm",           label: "CRM",          icon: BarChart3 },
-  { href: "/calendar",      label: "Calendar",     icon: Calendar },
-  { href: "/reservations",  label: "Reservations", icon: CalendarDays },
-  { href: "/maintenance",   label: "Maintenance",  icon: Wrench },
-  { href: "/setup",         label: "Setup",        icon: FileText },
-  { href: "/my-properties", label: "Properties",   icon: Building2 },
-  { href: "/payouts",       label: "Payouts",      icon: Wallet },
-  { href: "/team",          label: "Team",         icon: Users },
-  { href: "/messages",      label: "Messages",     icon: MessageCircle },
-]
+import { useLocale } from "@/i18n/provider"
 
 interface OwnerLayoutProps {
   children: React.ReactNode
@@ -31,6 +19,20 @@ interface OwnerLayoutProps {
 export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const { t } = useLocale()
+
+  const navLinks = [
+    { href: "/dashboard",     label: t('common.dashboard'),    icon: Home },
+    { href: "/crm",           label: "CRM",                    icon: BarChart3 },
+    { href: "/calendar",      label: t('common.calendar'),     icon: Calendar },
+    { href: "/reservations",  label: t('common.reservations'), icon: CalendarDays },
+    { href: "/maintenance",   label: t('common.maintenance'),  icon: Wrench },
+    { href: "/setup",         label: t('common.setup'),        icon: FileText },
+    { href: "/my-properties", label: t('common.properties'),   icon: Building2 },
+    { href: "/payouts",       label: t('common.payouts'),      icon: Wallet },
+    { href: "/team",          label: t('common.team'),         icon: Users },
+    { href: "/messages",      label: t('common.messages'),     icon: MessageCircle },
+  ]
 
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
@@ -55,14 +57,14 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
         <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-                 style={{ background: '#C9A84C' }}>
+                 style={{ background: '#B08A3E' }}>
               <Building2 className="h-4 w-4 text-white" />
             </div>
             <span className="font-bold text-white text-sm tracking-tight">
-              Host<span style={{ color: '#C9A84C' }}>Masters</span>
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
             <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
               Admin
             </span>
           </Link>
@@ -88,7 +90,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
                     ? "text-white"
                     : "text-white/60 hover:bg-white/5 hover:text-white"
                 )}
-                style={isActive ? { background: 'rgba(201,168,76,0.15)', color: '#C9A84C' } : {}}
+                style={isActive ? { background: 'rgba(176,138,62,0.15)', color: '#B08A3E' } : {}}
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 {link.label}
@@ -108,10 +110,10 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
                 ? "text-white"
                 : "text-white/60 hover:bg-white/5 hover:text-white"
             )}
-            style={pathname === "/profile" ? { background: 'rgba(201,168,76,0.15)', color: '#C9A84C' } : {}}
+            style={pathname === "/profile" ? { background: 'rgba(176,138,62,0.15)', color: '#B08A3E' } : {}}
           >
             <User className="h-4 w-4 shrink-0" />
-            My Profile
+            {t('common.myProfile')}
           </Link>
           <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
             {user?.image ? (
@@ -119,7 +121,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
               <img src={user.image} alt="" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
             ) : (
               <div className="flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 text-[11px] font-bold"
-                   style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                   style={{ background: '#B08A3E', color: '#1e3a5f' }}>
                 {initials}
               </div>
             )}
@@ -157,7 +159,7 @@ export default function OwnerLayout({ children, user }: OwnerLayoutProps) {
                 <img src={user.image} alt="" className="h-6 w-6 rounded-full object-cover" />
               ) : (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
-                     style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                     style={{ background: '#B08A3E', color: '#1e3a5f' }}>
                   {initials}
                 </div>
               )}

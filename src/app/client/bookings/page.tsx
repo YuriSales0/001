@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CalendarDays, List, Plus, X, AlertTriangle } from "lucide-react"
+import { CalendarDays, List, Plus, X, AlertTriangle, Loader2 } from "lucide-react"
+import { useEscapeKey } from "@/lib/use-escape-key"
 
 type Reservation = {
   id: string
@@ -50,6 +51,9 @@ export default function OwnerBookings() {
   const [blocking, setBlocking] = useState(false)
   const [blockForm, setBlockForm] = useState({ start: "", end: "", reason: "" })
   const [blocking_saving, setBlockingSaving] = useState(false)
+  const [error, setError] = useState("")
+
+  useEscapeKey(blocking, () => setBlocking(false))
 
   useEffect(() => {
     Promise.all([
@@ -58,6 +62,9 @@ export default function OwnerBookings() {
     ]).then(([r, b]) => {
       setReservations(r)
       setBlockedDates(b)
+    }).catch(() => {
+      setError("Failed to load bookings. Try refreshing.")
+    }).finally(() => {
       setLoading(false)
     })
   }, [])
@@ -65,27 +72,43 @@ export default function OwnerBookings() {
   const saveBlock = async () => {
     if (!blockForm.start || !blockForm.end) return
     setBlockingSaving(true)
-    const res = await fetch("/api/blocked-dates", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        startDate: blockForm.start,
-        endDate: blockForm.end,
-        reason: blockForm.reason || "Personal use",
-      }),
-    })
-    if (res.ok) {
-      const newBlock = await res.json()
-      setBlockedDates(prev => [...prev, newBlock])
-      setBlockForm({ start: "", end: "", reason: "" })
-      setBlocking(false)
+    setError("")
+    try {
+      const res = await fetch("/api/blocked-dates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startDate: blockForm.start,
+          endDate: blockForm.end,
+          reason: blockForm.reason || "Personal use",
+        }),
+      })
+      if (res.ok) {
+        const newBlock = await res.json()
+        setBlockedDates(prev => [...prev, newBlock])
+        setBlockForm({ start: "", end: "", reason: "" })
+        setBlocking(false)
+      } else {
+        setError("Failed to block dates. Please try again.")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setBlockingSaving(false)
     }
-    setBlockingSaving(false)
   }
 
   const removeBlock = async (id: string) => {
-    await fetch(`/api/blocked-dates/${id}`, { method: "DELETE" })
-    setBlockedDates(prev => prev.filter(b => b.id !== id))
+    try {
+      const res = await fetch(`/api/blocked-dates/${id}`, { method: "DELETE" })
+      if (res.ok) {
+        setBlockedDates(prev => prev.filter(b => b.id !== id))
+      } else {
+        setError("Failed to remove blocked dates.")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    }
   }
 
   const upcoming = reservations
@@ -109,6 +132,9 @@ export default function OwnerBookings() {
 
   return (
     <div className="space-y-8">
+      {error && (
+        <div className="rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3">{error}</div>
+      )}
       <div>
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">My Bookings</h1>
         <p className="mt-1 font-sans text-lg text-hm-slate/70">
@@ -161,7 +187,7 @@ export default function OwnerBookings() {
       {/* Block dates form */}
       {blocking && (
         <div className="rounded-hm border border-hm-gold/40 p-5"
-             style={{ background: 'var(--hm-gold)', opacity: undefined, backgroundColor: 'rgba(201,168,76,0.08)' }}>
+             style={{ background: 'var(--hm-gold)', opacity: undefined, backgroundColor: 'rgba(176,138,62,0.08)' }}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-serif font-bold text-hm-black">Block dates for personal use</h3>
             <button onClick={() => setBlocking(false)} className="text-hm-slate/60 hover:text-hm-slate">
@@ -202,10 +228,10 @@ export default function OwnerBookings() {
             <button
               onClick={saveBlock}
               disabled={blocking_saving || !blockForm.start || !blockForm.end}
-              className="rounded-lg px-6 py-2.5 font-sans font-semibold text-sm text-white disabled:opacity-50 transition-opacity hover:opacity-90"
+              className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2.5 font-sans font-semibold text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed transition-opacity hover:opacity-90"
               style={{ background: 'var(--hm-black)', minHeight: '44px' }}
             >
-              {blocking_saving ? "Saving…" : "Block these dates"}
+              {blocking_saving ? (<><Loader2 className="h-4 w-4 animate-spin" /> Saving…</>) : "Block these dates"}
             </button>
           </div>
         </div>
@@ -250,9 +276,17 @@ export default function OwnerBookings() {
         {shown.length === 0 ? (
           <div className="rounded-hm border border-hm-border p-12 text-center"
                style={{ background: 'var(--hm-sand)' }}>
-            <CalendarDays className="h-12 w-12 mx-auto mb-3 text-hm-slate/30" />
-            <p className="font-serif text-xl text-hm-black">
+            <div className="h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4"
+                 style={{ background: 'var(--hm-border)' }}>
+              <CalendarDays className="h-6 w-6 text-hm-slate/40" />
+            </div>
+            <h3 className="font-serif text-xl font-bold text-hm-black mb-1">
               {view === "upcoming" ? "No upcoming bookings" : "No bookings yet"}
+            </h3>
+            <p className="font-sans text-sm text-hm-slate/60 max-w-sm mx-auto">
+              {view === "upcoming"
+                ? "You have no upcoming reservations at the moment. New bookings from Airbnb, Booking.com and other platforms will appear here automatically."
+                : "Reservations from Airbnb, Booking.com and other platforms will appear here automatically once your property is listed."}
             </p>
           </div>
         ) : (

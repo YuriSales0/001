@@ -11,8 +11,25 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id },
-    select: { subscriptionPlan: true },
+    select: {
+      subscriptionPlan: true,
+      crewContractType: true,
+      crewMonthlyRate: true,
+      crewTaskRate: true,
+    },
   })
 
-  return NextResponse.json({ id, name, email, role, subscriptionPlan: user?.subscriptionPlan ?? null })
+  const base = { id, name, email, role, subscriptionPlan: user?.subscriptionPlan ?? null }
+
+  // Include crew-specific fields for CREW users
+  if (role === 'CREW') {
+    return NextResponse.json({
+      ...base,
+      crewContractType: user?.crewContractType ?? null,
+      crewMonthlyRate: user?.crewMonthlyRate ?? null,
+      crewTaskRate: user?.crewTaskRate ?? null,
+    })
+  }
+
+  return NextResponse.json(base)
 }

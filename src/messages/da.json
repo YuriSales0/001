@@ -1,0 +1,997 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "properties": "Ejendomme",
+    "reservations": "Reservationer",
+    "calendar": "Kalender",
+    "reports": "Rapporter",
+    "tasks": "Opgaver",
+    "suppliers": "Leverandører",
+    "revenue": "Omsætning",
+    "settings": "Indstillinger",
+    "logout": "Log ud",
+    "save": "Gem",
+    "cancel": "Annuller",
+    "delete": "Slet",
+    "edit": "Rediger",
+    "add": "Tilføj",
+    "search": "Søg",
+    "filter": "Filtrer",
+    "loading": "Indlæser...",
+    "noData": "Ingen data tilgængelig",
+    "viewAll": "Se alle",
+    "download": "Download",
+    "status": "Status",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "maintenance": "Vedligeholdelse",
+    "confirm": "Bekræft",
+    "back": "Tilbage",
+    "next": "Næste",
+    "yes": "Ja",
+    "no": "Nej",
+    "close": "Luk",
+    "actions": "Handlinger",
+    "details": "Detaljer",
+    "date": "Dato",
+    "from": "Fra",
+    "to": "Til",
+    "total": "Total",
+    "notes": "Noter",
+    "description": "Beskrivelse",
+    "name": "Navn",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "language": "Sprog",
+    "updated": "Opdateret",
+    "created": "Oprettet",
+    "deleted": "Slettet",
+    "error": "Noget gik galt",
+    "tryAgain": "Prøv Igen",
+    "required": "Påkrævet felt",
+    "invalidEmail": "Ugyldig e-mailadresse",
+    "myProfile": "Min Profil",
+    "myPlan": "Min Plan",
+    "clientPortal": "Kundeportal",
+    "crewPortal": "Crew Portal",
+    "messages": "Beskeder",
+    "invoices": "Fakturaer",
+    "payouts": "Udbetalinger",
+    "setup": "Opsætning",
+    "team": "Team",
+    "integrations": "Integrationer",
+    "leads": "Leads",
+    "operations": "Drift",
+    "myPortfolio": "Min Portefølje",
+    "myOwners": "Mine Ejere",
+    "administration": "Administration",
+    "ownerReports": "Ejerrapporter",
+    "crmPipeline": "CRM Pipeline",
+    "marketing": "Marketing",
+    "aiPricing": "AI-prisfastsættelse"
+  },
+  "owner": {
+    "welcome": "Velkommen tilbage",
+    "monthlyEarnings": "Månedlige Indtægter",
+    "nextBooking": "Næste Booking",
+    "lastInspection": "Seneste Inspektion",
+    "blockDates": "Bloker Datoer",
+    "contactManager": "Kontakt Manager",
+    "financialReport": "Finansiel Rapport",
+    "downloadReport": "Download Rapport",
+    "personalUse": "Bloker til Personlig Brug",
+    "noUpcomingBookings": "Ingen kommende bookinger",
+    "myProperties": "Mine Ejendomme",
+    "myStatements": "Mine Opgørelser",
+    "myReservations": "Mine Reservationer",
+    "propertyDetails": "Ejendomsdetaljer",
+    "earningsOverview": "Indtægtsoversigt",
+    "occupancyCalendar": "Belægningskalender",
+    "maintenanceRequests": "Vedligeholdelsesanmodninger",
+    "requestMaintenance": "Anmod om Vedligeholdelse",
+    "annualSummary": "Årssammendrag",
+    "ytdEarnings": "Indtægter i År",
+    "payoutHistory": "Udbetalingshistorik",
+    "pendingPayout": "Afventende Udbetaling",
+    "paidOut": "Udbetalt",
+    "taxCompliance": "Skat & Compliance"
+  },
+  "manager": {
+    "overview": "Oversigt",
+    "totalProperties": "Samlede Ejendomme",
+    "activeReservations": "Aktive Reservationer",
+    "pendingTasks": "Afventende Opgaver",
+    "monthlyRevenue": "Månedlig Omsætning",
+    "upcoming": "Kommende",
+    "completed": "Afsluttet",
+    "occupancyRate": "Belægningsgrad",
+    "avgDailyRate": "Gns. Dagspris",
+    "revPAR": "RevPAR",
+    "addProperty": "Tilføj Ejendom",
+    "addReservation": "Tilføj Reservation",
+    "addTask": "Tilføj Opgave",
+    "addSupplier": "Tilføj Leverandør",
+    "generateReport": "Generer Rapport",
+    "assignTask": "Tildel Opgave",
+    "checkIns": "Check-ins",
+    "checkOuts": "Check-outs",
+    "todayActivity": "Dagens Aktivitet",
+    "weekOverview": "Ugeoversigt",
+    "ownerStatements": "Ejeropgørelser",
+    "crewManagement": "Crew Styring",
+    "cleaningSchedule": "Rengøringsplan",
+    "inspectionReport": "Inspektionsrapport",
+    "performanceMetrics": "Præstationsmål",
+    "guestCommunication": "Gæstekommunikation",
+    "welcome": {
+      "badge": "Velkommen til HostMasters",
+      "titleLine1": "Dit Manager-portal er klar.",
+      "titleLine2": "Lad os få din første kunde ombord.",
+      "description": "Du tjener 15 % af månedsabonnementerne + 3 % af bruttolejen for hver kunde, du administrerer. Porteføljebonusser starter ved 10 ejendomme. Systemet håndterer driften — du fokuserer på relationerne.",
+      "step1Title": "Tilføj din første kunde",
+      "step1Desc": "Inviter en ejer fra dit netværk. Systemet sender et registreringslink og servicekontrakten.",
+      "step1Cta": "Tilføj kunde",
+      "step2Title": "Hjælp med opsætningen",
+      "step2Desc": "Ejeren uploader ejendomsoplysninger, billeder, vælger husregler og underskriver servicekontrakten.",
+      "step2Cta": "Se forløbet",
+      "step3Title": "Se din portefølje vokse",
+      "step3Desc": "Følg indtægter, provisioner og porteføljebonusser i realtid. Driften varetages af HM-Crew.",
+      "step3Cta": "Til dashboard",
+      "infoPerClient": "Pr. kunde (Mid)",
+      "infoPerClientSub": "15 % abo + 3 % leje",
+      "infoAt10": "Ved 10 ejendomme",
+      "infoAt20": "Ved 20 ejendomme",
+      "infoAt30": "Ved 30 ejendomme",
+      "infoBonus": "Porteføljebonus",
+      "helpTitle": "Har du brug for hjælp til at komme i gang?",
+      "helpProfileTitle": "Gennemgå din profil & aflønning",
+      "helpProfileDesc": "Tjek dit område, dine andele og kontraktdetaljer",
+      "helpContactTitle": "Kontakt din Admin",
+      "helpContactDesc": "Spørgsmål om proces, område eller provision"
+    },
+    "clientsPage": {
+      "title": "Mine kunder",
+      "thName": "Navn",
+      "thEmail": "E-mail",
+      "thPhone": "Telefon",
+      "thId": "ID",
+      "loadFailed": "Data kunne ikke indlæses",
+      "emptyTitle": "Ingen kunder endnu",
+      "emptyBody": "Inviter din første kunde for at begynde at administrere ejendommen.",
+      "inviteFirst": "+ Inviter første kunde",
+      "inviteBtn": "Inviter kunde"
+    },
+    "inviteClient": {
+      "back": "Tilbage til mine kunder",
+      "title": "Inviter en kunde",
+      "subtitle": "Send et registreringslink. Den nye ejer tilføjes automatisk til din portefølje.",
+      "emailLabel": "E-mail",
+      "nameLabel": "Navn",
+      "namePlaceholder": "Fulde navn (valgfrit)",
+      "planLabel": "Foreslået plan",
+      "planHint": "(valgfrit, kan ændres senere)",
+      "planCommission": "provision",
+      "warningTitle": "Inden du inviterer",
+      "warningBody": "Sørg for, at du har talt med ejeren og at vedkommende forventer denne e-mail. Kolde invitationer konverterer dårligt.",
+      "send": "Send invitation",
+      "sending": "Sender…",
+      "cancel": "Annuller",
+      "sendFailed": "Kunne ikke sende invitation",
+      "sentTitle": "Invitation sendt",
+      "sentBodyPrefix": "Vi har sendt en e-mail til",
+      "sentBodySuffix": "med registreringslinket. Kunden tilknyttes automatisk til dig.",
+      "signupLinkLabel": "Registreringslink (til reference)",
+      "inviteAnother": "Inviter en anden kunde"
+    },
+    "referralPage": {
+      "title": "Mit referral-link",
+      "subtitle": "Del dette link med ejendomsejere i dit område. Nye kunder, der registrerer sig via linket, tildeles dig automatisk.",
+      "personalLink": "Dit personlige link",
+      "territoryPrefix": "Område:",
+      "copyLink": "Kopiér link",
+      "copied": "Kopieret!",
+      "share": "Del",
+      "customize": "Tilpas",
+      "codeLabel": "Referral-kode",
+      "codeHint": "Kun bogstaver, tal og bindestreger (3-40 tegn). Skal være unik.",
+      "territoryLabel": "Område",
+      "territoryPlaceholder": "Almuñécar, Nerja osv.",
+      "save": "Gem",
+      "saving": "Gemmer…",
+      "cancel": "Annuller",
+      "statsClients": "Kunder i min portefølje",
+      "statsClientsHint": "Ejere registreret via dit link eller tildelt dig",
+      "statsLeads": "Leads i min pipeline",
+      "statsLeadsHint": "Åbne muligheder, du stadig kan omdanne til kunder",
+      "howTitle": "Sådan virker det",
+      "howStep1": "Del dit personlige link med ejere — i samtaler, e-mails, WhatsApp eller på sociale medier.",
+      "howStep2Before": "Når en kundeemne besøger",
+      "howStep2After": ", markerer vi dem automatisk som dine.",
+      "howStep3": "Hvis de registrerer sig og bliver kunde, tilføjes de automatisk til din portefølje.",
+      "howStep4": "Du begynder at tjene 15 % af deres abonnement og 3 % af deres bruttoleje — måned efter måned.",
+      "pitchTitle": "Klar-til-afsendelse besked",
+      "pitchIntro": "Kopiér denne besked og gør den personlig, før du sender:",
+      "pitchCopy": "Kopiér besked",
+      "pitchCopied": "Besked kopieret",
+      "pitchBody": "Hej [Navn],\n\nJeg ved, at du ejer en ejendom på Costa Tropical og tænkte, det kunne være interessant for dig at se, hvordan du får bedre afkast uden besværet.\n\nJeg arbejder med HostMasters, en platform, der klarer det hele — annoncer, gæstekommunikation, rengøring, vedligeholdelse og skattemæssige forpligtelser (Modelo 179, IRNR, NRU-registrering). Gennemsigtige priser, dashboard med rigtige data og AI-drevet prissætning.\n\nSe det her: {url}\n\nJeg forklarer gerne, når det passer dig.\n\nVenlig hilsen,\n[Dit navn]",
+      "linkUpdated": "Referral-link opdateret",
+      "linkUpdateFailed": "Kunne ikke opdatere",
+      "loadFailed": "Kunne ikke indlæse referral-data.",
+      "tryAgain": "Prøv igen"
+    },
+    "dashboardPage": {
+      "refresh": "Opdater",
+      "loadFailed": "Kunne ikke indlæse data",
+      "noneIn7Days": "Ingen de næste 7 dage"
+    }
+  },
+  "admin": {
+    "systemLive": "System Aktivt",
+    "hmRevenue": "HM Omsætning",
+    "openPayouts": "Åbne Udbetalinger",
+    "pendingInvoices": "Afventende Fakturaer",
+    "overdueTasksAlert": "Advarsel Forsinkede Opgaver",
+    "upcomingCheckIns": "Kommende Check-ins",
+    "upcomingCheckOuts": "Kommende Check-outs",
+    "revenueBreakdown": "Omsætningsfordeling",
+    "rentalVolume": "Udlejningsvolumen",
+    "rentalCommission": "Udlejningskommission",
+    "invoicesPaid": "Betalte Fakturaer",
+    "totalRevenue": "Samlet Omsætning",
+    "quickNav": "Hurtig Navigation",
+    "userManagement": "Brugerstyring",
+    "allProperties": "Alle Ejendomme",
+    "allReservations": "Alle Reservationer",
+    "systemSettings": "Systemindstillinger",
+    "platformHealth": "Platformstatus",
+    "managerPerformance": "Managerpræstation",
+    "financialOverview": "Finansiel Oversigt",
+    "subscriptionPlans": "Abonnementsplaner",
+    "tax": "Skat & Compliance",
+    "taxSubtitle": "Administrer skatteforpligtelser for alle kunder",
+    "newObligation": "Ny forpligtelse",
+    "totalTracked": "Samlet sporet",
+    "actionRequired": "Handling påkrævet",
+    "dueIn30d": "Forfalder inden for 30 dage",
+    "allStatuses": "Alle statusser",
+    "allClients": "Alle kunder",
+    "noObligationsMatch": "Ingen forpligtelser matcher de aktuelle filtre.",
+    "newTaxObligation": "Ny skatteforpligtelse",
+    "client": "Kunde",
+    "selectClient": "— Vælg kunde —",
+    "propertyOptional": "Ejendom (valgfri)",
+    "noProperty": "— Ingen (forpligtelse på kundeniveau) —",
+    "typeLabel": "Type",
+    "period": "Periode",
+    "notesVisibleToClient": "Noter (synlige for kunden)",
+    "documentUrl": "Dokument-URL",
+    "document": "Dokument",
+    "create": "Opret",
+    "creating": "Opretter…",
+    "failedToSave": "Kunne ikke gemme ændringer",
+    "failedToCreate": "Kunne ikke oprette",
+    "taxType": {
+      "VUT_LICENSE": "VUT — Turistlicens",
+      "MODELO_179": "Modelo 179",
+      "IRNR_MODELO_210": "IRNR Modelo 210",
+      "NIE": "NIE",
+      "ENERGY_CERTIFICATE": "Energicertifikat",
+      "FISCAL_REPRESENTATIVE": "Skatterepræsentant",
+      "IBI": "IBI",
+      "OTHER": "Andet"
+    },
+    "taxStatus": {
+      "NOT_STARTED": "Ikke påbegyndt",
+      "IN_PROGRESS": "I gang",
+      "ACTION_REQUIRED": "Handling påkrævet",
+      "COMPLETED": "Afsluttet",
+      "EXPIRED": "Udløbet",
+      "NOT_APPLICABLE": "Ikke relevant"
+    }
+  },
+  "crew": {
+    "myTasks": "Mine Opgaver",
+    "fieldOperations": "Feltoperationer",
+    "today": "I dag",
+    "open": "Åben",
+    "done": "Færdig",
+    "selectTask": "Vælg en opgave",
+    "startTask": "Start Opgave",
+    "markComplete": "Marker som Færdig",
+    "submitReport": "Indsend Rapport",
+    "checklist": "Tjekliste",
+    "checkoutReport": "Checkout Rapport",
+    "propertyCondition": "Ejendomstilstand",
+    "good": "God",
+    "minorIssues": "Mindre Problemer",
+    "majorIssues": "Større Problemer",
+    "observedIssues": "Observerede Problemer",
+    "damages": "Skader",
+    "internalNotes": "Interne Noter",
+    "uploadPhotos": "Upload Fotos",
+    "taskDetails": "Opgavedetaljer",
+    "priority": "Prioritet",
+    "assignedTo": "Tildelt til",
+    "dueDate": "Forfaldsdato",
+    "taskTypes": {
+      "CLEANING": "Rengøring",
+      "MAINTENANCE_PREVENTIVE": "Forebyggende vedligeholdelse",
+      "MAINTENANCE_CORRECTIVE": "Afhjælpende vedligeholdelse",
+      "INSPECTION": "Inspektion",
+      "CHECK_IN": "Check-in",
+      "CHECK_OUT": "Check-out",
+      "TRANSFER": "Transport",
+      "SHOPPING": "Indkøb",
+      "LAUNDRY": "Vask"
+    },
+    "home": {
+      "loading": "Indlæser…",
+      "loadFailed": "Kunne ikke indlæse opgaver. Prøv at opdatere.",
+      "allCaughtUp": "Alt er færdigt!",
+      "allCaughtUpBody": "Ingen afsluttede opgaver endnu. De dukker op her, når du er færdig.",
+      "nothingToday": "Intet planlagt i dag",
+      "nothingTodayBody": "Tjek fanen Åbne for kommende opgaver.",
+      "noOpen": "Ingen åbne opgaver",
+      "noOpenBody": "Nye opgaver dukker op her, når de tildeles dig.",
+      "photoEvidence": "Fotodokumentation",
+      "photoSubtitle": "Mindst 2 billeder kræves. De sendes til ejeren som dokumentation for arbejdet.",
+      "addPhoto": "Tilføj foto",
+      "min2BeforeSubmit": "Tilføj mindst 2 billeder, før du sender.",
+      "min2BeforeComplete": "Tilføj mindst 2 billeder, før du markerer som færdig.",
+      "photoUploadFailed": "Kunne ikke uploade foto",
+      "photoProcessFailed": "Kunne ikke behandle foto",
+      "photoRemoveFailed": "Kunne ikke fjerne foto",
+      "completeChecklistFirst": "Udfyld tjeklisten, før du sender.",
+      "savingStatus": "Gemmer…"
+    },
+    "earnings": {
+      "title": "Mine indtægter",
+      "contractLabel": "Kontrakt:",
+      "contractMonthly": "Månedsvis",
+      "contractFreelancer": "Freelancer",
+      "perMonth": "/md.",
+      "perTask": "/opgave",
+      "bannerTitle": "Udbetaling inden for 24 t.",
+      "bannerBodyMonthly": "Du modtager {amount}/md. — krediteret den 1. i hver måned.",
+      "bannerBodyFreelancer": "Så snart ejeren betaler udbetalingen for reservationen, modtager du din andel inden for 24 timer via bankoverførsel gennem platformen. Ingen ventetid til månedsskift.",
+      "thisMonth": "Denne måned",
+      "tasksThisMonth": "Opgaver denne måned",
+      "tasksCompletedSuffix": "afsluttet",
+      "pending": "Afventer",
+      "pendingSuffix": "at fuldføre",
+      "cumulative": "Akkumuleret i alt",
+      "totalTasksSuffix": "opgaver i alt",
+      "byMonthTitle": "Indtægter pr. måned",
+      "thMonth": "Måned",
+      "thTasks": "Opgaver",
+      "thValue": "Beløb",
+      "noData": "Ingen data om afsluttede opgaver.",
+      "recentTitle": "Senest afsluttede opgaver",
+      "noTasksYet": "Ingen afsluttede opgaver endnu",
+      "loading": "Indlæser…",
+      "loadFailed": "Kunne ikke indlæse data. Prøv at opdatere."
+    },
+    "detail": {
+      "backToTasks": "Tilbage til opgaver",
+      "selectTask": "Vælg en opgave for at se detaljer",
+      "checkoutReport": "Check-out-rapport",
+      "checkoutReportDesc": "Ejeren underrettes automatisk ved indsendelse.",
+      "propertyCondition": "Ejendommens tilstand",
+      "conditionGood": "God",
+      "conditionMinor": "Mindre problemer",
+      "conditionMajor": "Alvorlige problemer",
+      "observedIssues": "Observerede problemer",
+      "observedPlaceholder": "f.eks. lampe i stuen i stykker, langsomt afløb i badeværelset…",
+      "damages": "Skader der kræver opfølgning",
+      "damagesPlaceholder": "Beskriv skaden, estimeret omkostning hvis muligt…",
+      "internalNotes": "Interne noter til kontoret",
+      "internalNotesPlaceholder": "Noget kontoret bør vide…",
+      "submitCheckout": "Indsend check-out-rapport",
+      "markComplete": "Marker opgave som afsluttet",
+      "taskCompleted": "Opgave afsluttet",
+      "startTask": "Start opgave"
+    }
+  },
+  "finance": {
+    "grossRevenue": "Bruttoomsætning",
+    "totalExpenses": "Samlede Udgifter",
+    "commission": "Kommission",
+    "ownerPayout": "Ejerudbetaling",
+    "income": "Indtægter",
+    "expenses": "Udgifter",
+    "statement": "Opgørelse",
+    "netRevenue": "Nettoomsætning",
+    "platformFees": "Platformgebyrer",
+    "cleaningFees": "Rengøringsgebyrer",
+    "maintenanceCosts": "Vedligeholdelsesomkostninger",
+    "monthlyFee": "Månedligt Gebyr",
+    "annualFee": "Årligt Gebyr",
+    "payoutDate": "Udbetalingsdato",
+    "payoutStatus": "Udbetalingsstatus",
+    "paid": "Betalt",
+    "pending": "Afventende",
+    "overdue": "Forsinket",
+    "invoiceNumber": "Fakturanummer",
+    "billingPeriod": "Faktureringsperiode",
+    "taxReport": "Skatterapport"
+  },
+  "auth": {
+    "signIn": "Log ind",
+    "signUp": "Opret konto",
+    "email": "E-mail",
+    "password": "Adgangskode",
+    "continueWithGoogle": "Fortsæt med Google",
+    "orContinueWith": "Eller fortsæt med",
+    "noAccount": "Har du ikke en konto?",
+    "hasAccount": "Har du allerede en konto?",
+    "forgotPassword": "Glemt adgangskode?",
+    "resetPassword": "Nulstil Adgangskode",
+    "newPassword": "Ny Adgangskode",
+    "confirmPassword": "Bekræft Adgangskode",
+    "verifyEmail": "Bekræft din e-mail",
+    "resendVerification": "Gensend bekræftelsesmail",
+    "signOutConfirm": "Er du sikker på, at du vil logge ud?",
+    "createAccount": "Opret din konto",
+    "registerSubtitle": "Ejendomsejere — begynd at administrere din investering på Costa Tropical.",
+    "namePlaceholder": "Dit fulde navn",
+    "passwordPlaceholder": "Min. 6 tegn",
+    "creating": "Opretter...",
+    "nameRequired": "Navn er påkrævet",
+    "welcomeBack": "Velkommen tilbage",
+    "loginSubtitle": "Log ind på din ejerportal",
+    "invalidCredentials": "Ugyldige loginoplysninger. Kontroller e-mail og adgangskode.",
+    "signingIn": "Logger ind..."
+  },
+  "tour": {
+    "next": "Næste",
+    "back": "Tilbage",
+    "skip": "Spring rundvisning over",
+    "finish": "Begynd at bruge HostMasters",
+    "saving": "Gemmer...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Velkommen til HostMasters",
+          "desc": "Lad os vise dig alt, hvad din ejerportal kan. Denne hurtige rundvisning guider dig gennem alle tilgængelige værktøjer."
+        },
+        "dashboard": {
+          "title": "Dit Dashboard",
+          "desc": "Din startskærm viser alt på ét blik: månedens indtægter, belægningsgrad, din næste gæst og ejendommens tilstand.",
+          "features": [
+            "Nettoindtægter med månedlig sammenligning",
+            "Belægningsbjælke med procent",
+            "Næste gæst med nationalitet",
+            "Ejendomsstatus",
+            "Hurtige handlingsknapper"
+          ]
+        },
+        "earnings": {
+          "title": "Indtægter & Udbetalinger",
+          "desc": "Følg hver euro. Se din bruttoindkomst, vores kommission, rengøringsgebyrer, vedligeholdelsesomkostninger og din nettoudbetaling.",
+          "features": [
+            "Månedlige finansielle opgørelser",
+            "Kommissionsfordeling pr. booking",
+            "Udbetalingsplan og -historik",
+            "Årsopgørelse",
+            "PDF-eksport på dit sprog"
+          ]
+        },
+        "bookings": {
+          "title": "Bookinger & Kalender",
+          "desc": "Se hver reservation på Airbnb, Booking.com og direkte bookinger. Bloker datoer til personlig brug.",
+          "features": [
+            "Samlet kalender på tværs af alle platforme",
+            "Gæstedetaljer og nationalitet",
+            "Indtægt pr. reservation",
+            "Personlig datoblokering",
+            "Check-in / check-out sporing"
+          ]
+        },
+        "care": {
+          "title": "Pleje & Vedligeholdelse",
+          "desc": "Din ejendom inspiceres efter hver checkout. Følg rengøring, forebyggende vedligeholdelse og eventuelle problemer.",
+          "features": [
+            "Inspektionsrapporter efter checkout",
+            "Rengøringsplan",
+            "Forebyggende vedligeholdelseslog",
+            "Problemrapporter med fotos",
+            "Besøgsanmodning med ét klik"
+          ]
+        },
+        "communication": {
+          "title": "Direkte Kommunikation",
+          "desc": "Send beskeder til din ejendomsadministrator direkte via platformen. Ingen tabte e-mails.",
+          "features": [
+            "In-app beskeder med din manager",
+            "Fuld samtalehistorik",
+            "AI-assistent til hurtige svar",
+            "Dokument- og fotodeling"
+          ]
+        },
+        "ai": {
+          "title": "AI-drevne Værktøjer",
+          "desc": "HostMasters bruger kunstig intelligens til at maksimere dine indtægter. Dynamisk prissætning justerer din natpris baseret på 7 markedsfaktorer.",
+          "features": [
+            "AI Dynamisk Prissætning (op til +25%)",
+            "24/7 AI-assistent med dine rigtige data",
+            "Daglige automatiske ejendomstjek",
+            "Markedsintelligens"
+          ]
+        },
+        "reports": {
+          "title": "Rapporter & Dokumenter",
+          "desc": "Download detaljerede månedlige opgørelser som PDF på dit foretrukne sprog.",
+          "features": [
+            "Månedlige PDF-opgørelser",
+            "Rapporter på 7 sprog",
+            "Årlig finansiel oversigt",
+            "Detalje på transaktionsniveau"
+          ]
+        },
+        "plan": {
+          "title": "Din Plan",
+          "desc": "Du kan se og opgradere dit abonnement når som helst. Højere planer giver lavere kommission og AI-værktøjer.",
+          "features": [
+            "4 planer: Starter, Basic, Mid, Premium",
+            "Lavere kommission med højere planer",
+            "AI-funktioner på Mid og Premium",
+            "Opgrader når som helst"
+          ]
+        },
+        "done": {
+          "title": "Du er klar!",
+          "desc": "Din portal er klar. Udforsk dit dashboard, tjek dine indtægter og kontakt din manager. Velkommen til HostMasters."
+        },
+        "sidebar": {
+          "title": "Din Navigation",
+          "desc": "Denne sidebar giver dig hurtig adgang til alle sektioner: dashboard, indtægter, bookinger, vedligeholdelse, plan og direkte kommunikation."
+        },
+        "guest": {
+          "title": "Din Næste Gæst",
+          "desc": "Se hvem der ankommer næste gang — med nationalitetsflag, datoer og opholdslængde."
+        },
+        "condition": {
+          "title": "Ejendomstilstand",
+          "desc": "Efter hver checkout inspiceres din ejendom. Se den aktuelle tilstand her — grøn betyder alt er godt."
+        },
+        "actions": {
+          "title": "Hurtige Handlinger",
+          "desc": "Bloker datoer, anmod om et vedligeholdelsesbesøg eller se din fulde finansielle rapport — alt med ét klik."
+        }
+      }
+    }
+  },
+  "demo": {
+    "badge": "Platform Tour",
+    "title": "Alt hvad du behøver, ét sted",
+    "subtitle": "En komplet administrationsplatform designet til internationale ejendomsejere.",
+    "tabs": {
+      "dashboard": "Ejer Dashboard",
+      "bookings": "Bookinger & Kalender",
+      "finance": "Finansielle Rapporter",
+      "care": "Pleje & Vedligeholdelse",
+      "communication": "Kommunikation"
+    },
+    "dashboard": {
+      "title": "Din ejendom på ét blik",
+      "desc": "Realtidsindtægter, belægningsgrader, næste gæst og ejendomsstatus — alt i ét premium dashboard.",
+      "features": [
+        "Nettoindtægter denne måned",
+        "Belægningsgrad med visuel bjælke",
+        "Næste gæst med nationalitetsflag",
+        "Ejendomsstatus",
+        "Hurtige handlinger"
+      ]
+    },
+    "bookings": {
+      "title": "Fuld bookingoversigt",
+      "desc": "Se hver reservation på alle platforme. Bloker datoer til personlig brug.",
+      "features": [
+        "Samlet kalender",
+        "Gæstedetaljer",
+        "Check-in/check-out datoer",
+        "Indtægt pr. booking",
+        "Datoblokering"
+      ]
+    },
+    "finance": {
+      "title": "Transparente finanser til øren",
+      "desc": "Månedlige opgørelser med detaljeret opdeling. Se præcis hvad du har tjent.",
+      "features": [
+        "Bruttoindtægtsfordeling",
+        "Kommissions- og gebyrdetaljer",
+        "Nettoudbetalingsberegning",
+        "PDF-rapporter på 7 sprog",
+        "Årsopgørelse"
+      ]
+    },
+    "care": {
+      "title": "Din ejendom, altid velplejet",
+      "desc": "Følg hver rengøring, inspektion og vedligeholdelsesbesøg med fotos og rapporter.",
+      "features": [
+        "Planlagt rengøring efter hvert ophold",
+        "Forebyggende vedligeholdelse",
+        "Statusrapporter",
+        "Problemmeldinger med fotos",
+        "Anmod om besøg"
+      ]
+    },
+    "communication": {
+      "title": "Direkte linje til dit team",
+      "desc": "Kommuniker direkte med din administrator via platformen. Alt dokumenteret.",
+      "features": [
+        "In-app beskeder",
+        "AI-assistent",
+        "Notifikationshistorik",
+        "Dokumentdeling",
+        "Flersproget support"
+      ]
+    }
+  },
+  "aiTools": {
+    "badge": "Drevet af AI",
+    "title": "5 intelligente værktøjer der arbejder for dig",
+    "subtitle": "HostMasters er ikke bare et administrationsselskab — det er en teknologiplatform.",
+    "tools": [
+      {
+        "name": "AI Dynamisk Prissætning",
+        "desc": "Algoritme der analyserer 7 faktorer for at sætte den optimale pris for hver nat.",
+        "stat": "Op til +25% indtægter",
+        "statLabel": "vs. faste priser"
+      },
+      {
+        "name": "AI Teamassistent",
+        "desc": "Intelligent chatassistent tilgængelig i hver portal. Stil spørgsmål om indtægter, bookinger eller ejendomsstatus.",
+        "stat": "24/7",
+        "statLabel": "øjeblikkelige svar"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Autonomt system der kører 9 daglige tjek på hver reservation, udbetaling og opgave.",
+        "stat": "9 tjek",
+        "statLabel": "hver dag, automatisk"
+      },
+      {
+        "name": "Markedsintelligens",
+        "desc": "Ugentlig dataindsamling fra Airbnb og Booking.com i Costa Tropical-regionen.",
+        "stat": "50+ opslag",
+        "statLabel": "spores ugentligt"
+      },
+      {
+        "name": "Prisanalyse for Ejere",
+        "desc": "Din ejendoms prispræstation over tid. Sæsontrends, gennemsnitspriser, belægningsmønstre.",
+        "stat": "Rigtige data",
+        "statLabel": "ikke estimater"
+      }
+    ]
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problem",
+      "solution": "Løsning",
+      "plans": "Planer",
+      "enter": "Log ind",
+      "startFree": "Start gratis"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Din ejendom fortjener",
+      "titleGold": "mere end administration.",
+      "title2": "Den fortjener intelligens.",
+      "subtitle": "Du købte på Costa Tropical for at investere — ikke for at bekymre dig om rengøring, vanskelige gæster eller forkerte priser. HostMasters klarer alt med rigtige data, AI-prissætning og fuld gennemsigtighed.",
+      "cta": "1. måned gratis på Premium",
+      "ctaSub": "Ingen binding. Opsig når som helst.",
+      "noLockin": "Ingen binding",
+      "intlOwners": "Internationale ejere",
+      "aiPowered": "AI-drevet prissætning"
+    },
+    "problem": {
+      "badge": "Problemet",
+      "title": "At være fjernejer burde ikke være så svært",
+      "items": [
+        {
+          "title": "Tilfældig prissætning",
+          "desc": "Uden markedsdata er prissætning gætværk. Du taber indtægter i højsæsonen."
+        },
+        {
+          "title": "Nul indsigt",
+          "desc": "Du ved ikke hvad der sker med din ejendom før du får en klage."
+        },
+        {
+          "title": "Langsom kommunikation",
+          "desc": "Tabte e-mails, fotos der aldrig ankommer, rapporter kun når du insisterer."
+        },
+        {
+          "title": "Ugennemsigtige kommissioner",
+          "desc": "Du ved ikke hvor meget der er tilbage til dig. Skjulte omkostninger æder din rentabilitet."
+        }
+      ]
+    },
+    "solution": {
+      "badge": "Løsningen",
+      "title": "Administration med intelligens, ikke gætværk",
+      "subtitle": "Tre søjler der gør HostMasters anderledes.",
+      "items": [
+        {
+          "title": "AI Dynamisk Prissætning",
+          "desc": "Algoritme der analyserer sæsonvariation, lokale begivenheder, konkurrence og efterspørgsel i realtid.",
+          "highlight": "Op til +25% indtægter vs. faste priser"
+        },
+        {
+          "title": "Dine egne data, ikke estimater",
+          "desc": "Dashboard med rigtige data fra dine bookinger, indtægter og omkostninger.",
+          "highlight": "Total gennemsigtighed i tallene"
+        },
+        {
+          "title": "Markedsintelligens",
+          "desc": "Adgang til markedsdata for Costa Tropical: belægningsgrader pr. zone, gennemsnitspriser, trends.",
+          "highlight": "Beslutninger baseret på rigtige data"
+        }
+      ]
+    },
+    "social": {
+      "badge": "Hvad markedet siger",
+      "title": "En platform bygget til fremtiden",
+      "items": [
+        {
+          "quote": "Korttidsudlejningsmarkedet på Costa Tropical vokser hurtigt, men administrationen foregår stadig manuelt. En platform der kombinerer AI-prissætning med rigtige data har enormt potentiale.",
+          "name": "Brancheanalyse",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Ejendomsejere der investerer i Sydspanien har brug for gennemsigtighed og teknologi.",
+          "name": "Markedsudsigter",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "Kombinationen af dynamiske prisalgoritmer, realtids markedsdata og transparente ejerportaler repræsenterer næste generation af ejendomsadministration.",
+          "name": "Teknologiperspektiv",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
+    "plans": {
+      "badge": "Planer",
+      "title": "Vælg det serviceniveau du har brug for",
+      "subtitle": "Alle planer inkluderer fuld administration. Jo mere du investerer, jo lavere kommission.",
+      "recommended": "Anbefalet",
+      "monthlyFee": "/måned",
+      "annualFee": "/år",
+      "commission": "Kommission",
+      "startNow": "Start nu",
+      "firstMonthFree": "1. måned gratis",
+      "noMonthlyFee": "Intet månedligt gebyr",
+      "starter": {
+        "features": [
+          "Fuld STR-administration",
+          "Airbnb, Booking.com & direkte opslag",
+          "24/7 gæstekommunikation",
+          "Månedlig ejeropgørelse",
+          "Ejer dashboard",
+          "Rengøring: €70/skift"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Alt i Starter",
+          "Forebyggende vedligeholdelse (1x/måned)",
+          "Inspektion før & efter ophold",
+          "Dokumenthåndtering",
+          "Flersprogede opgørelser",
+          "Rengøring: €60/skift"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Alt i Basic",
+          "AI-prissætning + Smart Lock",
+          "Prioriteret respons: 12t ejer / 2t gæst",
+          "Opgørelse på ethvert sprog",
+          "Rengøring inkluderet ≥5 nætter"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Alt i Mid",
+          "Skatteoverholdelse (Modelo 179 + IRNR)",
+          "Gæstetilbud: transfer, dagligvarer, vask",
+          "Nødrespons inden for 4 timer",
+          "Rengøring inkluderet ≥3 nætter"
+        ]
+      }
+    },
+    "finalCta": {
+      "title1": "Klar til at have",
+      "titleGold": "reel kontrol",
+      "title2": "over din ejendom?",
+      "subtitle": "Start med Premium-planen i 1 måned uden omkostninger.",
+      "cta": "Start 1 måned gratis",
+      "enterPortal": "Gå til portalen",
+      "disclaimer": "Ingen binding · Intet kreditkort · Opsig når som helst"
+    },
+    "footer": {
+      "tagline": "Premium korttidsudlejningsadministration.",
+      "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Bliv en del af teamet",
+      "title": "Bliv en del af HostMasters",
+      "subtitle": "Vi bygger en platform, ikke bare et ejendomsforvaltningsselskab. Kom med som Manager eller Crew.",
+      "manager": {
+        "title": "Start din forvaltningsvirksomhed",
+        "tagline": "Du har det lokale netværk og taler internationale ejeres sprog. Vi giver dig systemet.",
+        "point1": "15% af kundeabonnementer + 3% af bruttoudlejning",
+        "point2": "Porteføljebonusser: €150 ved 10, €400 ved 20, €750 ved 30 ejendomme",
+        "point3": "Eksklusivt geografisk område",
+        "point4": "Komplet platform: CRM, fakturering, drift",
+        "cta": "Ansøg som Manager",
+        "formTitle": "Manager-ansøgning"
+      },
+      "crew": {
+        "title": "Stabilt arbejde på Costa Tropical",
+        "tagline": "Professionelt arbejde inden for korttidsudlejning med garanteret betaling og klare opgaver.",
+        "point1": "Betaling inden for 24 timer via platformen",
+        "point2": "Klar opgaveliste i appen — ingen forvirring",
+        "point3": "Arbejde hele året (ikke kun sommersæsonen)",
+        "point4": "Forebyggende vedligeholdelse + rengøring + check-ins",
+        "cta": "Ansøg som Crew",
+        "formTitle": "Crew-ansøgning"
+      },
+      "form": {
+        "required": "Navn og e-mail er påkrævet",
+        "zone": "Foretrukket zone",
+        "languages": "Sprog du taler",
+        "experience": "Erfaring (valgfri)",
+        "skills": "Færdigheder",
+        "availability": "Tilgængelighed",
+        "message": "Andet vi bør vide? (valgfri)",
+        "submit": "Send ansøgning",
+        "thanks": "Ansøgning modtaget",
+        "thanksDesc": "Tak! Vi gennemgår din ansøgning og kontakter dig snart."
+      }
+    }
+  },
+  "onboarding": {
+    "languageStep": "Vælg dit sprog",
+    "languageStepDesc": "Dette bestemmer sproget for hele platformen — e-mails, fakturaer, kontrakter, notifikationer og AI-assistance.",
+    "profileStep": "Din profil",
+    "fullName": "Fulde navn",
+    "fullNamePlaceholder": "Dit navn",
+    "phonePlaceholder": "+34 600 000 000",
+    "crewContractStep": "Kontrakttype",
+    "crewMonthly": "Månedsvis",
+    "crewMonthlySub": "Fast månedsbeløb",
+    "crewFreelancer": "Freelancer",
+    "crewFreelancerSub": "Pr. afsluttet opgave",
+    "crewMonthlyLabel": "Månedsbeløb (€)",
+    "crewTaskLabel": "Beløb pr. opgave (€)",
+    "crewSkillsStep": "Kompetencer",
+    "crewSkillsDesc": "Vælg de opgavetyper, du kan udføre.",
+    "managerCompStep": "Kompensationsaftale",
+    "managerCompDescSet": "Værdier fastsat af Admin. Bekræft venligst vilkårene.",
+    "managerCompDescEmpty": "Udfyld de værdier, der er aftalt med din Admin.",
+    "managerSubShare": "% af kundens abonnement",
+    "managerCommShare": "% af bruttolejeindtægt",
+    "clientPropertyStep": "Din ejendom",
+    "clientPropertyDesc": "Din ejendom konfigureres af Admin eller din Manager. Bekræft dine oplysninger og acceptér servicekontrakten i næste trin.",
+    "contractStep": "Servicekontrakt",
+    "contractAccept": "Jeg har læst og accepterer vilkårene i denne kontrakt",
+    "contractNone": "Ingen afventende kontrakter. Din Admin gør den tilgængelig snart.",
+    "confirmStep": "Alt er klar",
+    "confirmCrewMonthly": "Månedskontrakt konfigureret.",
+    "confirmCrewFreelancer": "Freelancerkontrakt konfigureret.",
+    "confirmCrewSkills": "{n} kompetence(r) valgt.",
+    "confirmManager": "Kompensation: {sub}% abonnementer + {comm}% provisioner.",
+    "confirmClient": "Din profil er konfigureret. Velkommen til HostMasters.",
+    "confirmHint": "Klik på \"Afslut\" for at gå ind på platformen. Du kan ændre disse indstillinger i din profil.",
+    "back": "Tilbage",
+    "next": "Næste",
+    "finish": "Afslut",
+    "saving": "Gemmer…",
+    "setupTitle": "Setup",
+    "setupSubtitle": "Første opsætning af din konto"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Du har en afventende servicekontrakt",
+      "pendingContractDesc": "Underskriv den for at aktivere din ejendom og begynde at modtage bookinger.",
+      "pendingInvoice": "{n} afventende faktura(er)",
+      "pendingInvoiceTotal": "I alt: {amount} — klik for detaljer",
+      "earningsThisMonth": "Dine indtægter denne måned — netto",
+      "occupancy": "Belægning denne måned",
+      "nextGuest": "Næste gæst",
+      "noUpcoming": "Ingen kommende bookinger",
+      "propertyCondition": "Ejendommens tilstand",
+      "issuesFlagged": "{n} problem(er) rapporteret",
+      "allGood": "Alt i orden",
+      "lastInspected": "Sidst inspiceret {date}",
+      "careTitle": "Pleje & vedligeholdelse",
+      "seeAll": "Se alle",
+      "upcomingVisits": "Planlagte besøg",
+      "openIssues": "Åbne problemer",
+      "quickActions": "Hurtige handlinger",
+      "blockDates": "Bloker datoer",
+      "blockDatesDesc": "Reserver tid til dig selv",
+      "requestVisit": "Anmod om et besøg",
+      "requestVisitDesc": "Rengøring, reparationer eller kontrol",
+      "viewEarnings": "Se indtægter",
+      "viewEarningsDesc": "Opgørelser og prognoser",
+      "propertySetup": "Din ejendom er ved at blive konfigureret",
+      "propertySetupDesc": "Din Manager forbereder din ejendom. Du ser dit dashboard her, når alt er klar.",
+      "contactManager": "Kontakt din Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Administrationsaftale",
+      "houseRules": "Husregler",
+      "ownerGuide": "Velkomstguide til ejere"
+    }
+  },
+  "aiChat": {
+    "placeholder": {
+      "CREW": "f.eks. Hvilke opgaver har jeg denne uge?",
+      "MANAGER": "f.eks. Hvordan er belægningen hos mine kunder?",
+      "ADMIN": "f.eks. Hvilke anomalier er aktive?",
+      "CLIENT": "f.eks. Hvordan performer min ejendom?",
+      "default": "Stil dit spørgsmål…"
+    },
+    "welcome": {
+      "CREW": "Hej! Jeg kan hjælpe dig med opgaver, tjeklister, check-out-rapporter og feltprocedurer.",
+      "MANAGER": "Hej! Jeg kan hjælpe med din kundeportefølje, udbetalinger, CRM og rapporter.",
+      "ADMIN": "Hej! Jeg kan hjælpe med alt — drift, økonomi, AI-prissætning, anomalimonitor.",
+      "CLIENT": "Hej! Jeg kan hjælpe dig med at forstå dine indtægter, bookinger, plan og vedligeholdelse."
+    },
+    "title": "HM-Assistent",
+    "statusPending": "Konfiguration afventer",
+    "statusActive": "Aktiv · med rigtige data",
+    "errorConnection": "Forbindelsesfejl. Prøv igen.",
+    "errorNotConfigured": "Tilføj ANTHROPIC_API_KEY i Vercel"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Ejendom godkendt: {name}",
+    "propertyApprovedBody": "Din ejendom er godkendt. Underskriv servicekontrakten for at aktivere.",
+    "propertyActiveTitle": "Din ejendom er nu aktiv!",
+    "propertyActiveBody": "Kontrakt underskrevet og ejendom aktiveret. Velkommen til HostMasters.",
+    "contractSignedTitle": "Kontrakt underskrevet",
+    "contractSignedBody": "Din servicekontrakt er underskrevet.",
+    "bookingReceivedTitle": "Ny booking: {guest}",
+    "payoutCompletedTitle": "Udbetaling modtaget: {amount}",
+    "taskAssignedTitle": "Ny opgave: {title}",
+    "taskAssignedBody": "{property} — bekræft inden 30 min",
+    "taskApprovedTitle": "Opgave godkendt",
+    "taskRejectedTitle": "Opgave afvist",
+    "interventionResolvedTitle": "Intervention løst",
+    "clientRegisteredTitle": "Ny kunde registreret",
+    "newLeadTitle": "Ny lead i din pipeline",
+    "crewPayoutPaidTitle": "Udbetaling modtaget: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Servicekontrakt — HostMasters Costa Tropical",
+    "signed": "Underskrevet",
+    "agreementSigned": "Kontrakt underskrevet",
+    "on": "den",
+    "bySigningAgree": "Ved at underskrive accepterer du ovenstående vilkår.",
+    "signAgreement": "Underskriv kontrakt",
+    "signing": "Underskriver…",
+    "signError": "Underskriftsfejl. Prøv igen.",
+    "networkError": "Netværksfejl. Prøv igen.",
+    "print": "Udskriv / PDF",
+    "draft": "Kladde",
+    "active": "Aktiv",
+    "expired": "Udløbet",
+    "terminated": "Opsagt",
+    "contractsTitle": "Mine Kontrakter",
+    "contractsEmpty": "Ingen kontrakter endnu. De dukker op her, når din Manager opretter dem.",
+    "startDate": "Startdato",
+    "endDate": "Slutdato",
+    "noEndDate": "Ubestemt",
+    "myContract": "Min Kontrakt",
+    "noContract": "Ingen kontrakt tilgængelig. Kontakt din Admin.",
+    "type": "Type"
+  },
+  "notifBell": {
+    "title": "Notifikationer",
+    "markAllRead": "Markér alle som læst",
+    "empty": "Ingen notifikationer endnu",
+    "justNow": "lige nu"
+  }
+}

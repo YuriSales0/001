@@ -311,7 +311,7 @@ export default function ReportsPage() {
         {periodSelector}
 
         {/* Manager earnings highlight */}
-        <div className="rounded-xl border-2 border-[#C9A84C] bg-[#C9A84C]/5 p-5">
+        <div className="rounded-xl border-2 border-[#B08A3E] bg-[#B08A3E]/5 p-5">
           <div className="text-xs uppercase text-[#92681a] font-bold tracking-wider mb-3">A minha comissão</div>
           <div className="grid grid-cols-3 gap-4">
             <div>

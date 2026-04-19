@@ -74,6 +74,17 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // CREW can only log expenses for properties where they have assigned tasks
+    if (me.role === 'CREW') {
+      const hasTask = await prisma.task.findFirst({
+        where: { propertyId, assigneeId: me.id },
+        select: { id: true },
+      })
+      if (!hasTask) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+
     const expense = await prisma.expense.create({
       data: {
         propertyId,

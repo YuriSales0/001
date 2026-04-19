@@ -10,8 +10,8 @@ export async function GET() {
   const me = guard.user!
 
   const now = new Date()
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-  const monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
+  const monthEnd   = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
   const in7 = new Date(now)
   in7.setDate(in7.getDate() + 7)
 

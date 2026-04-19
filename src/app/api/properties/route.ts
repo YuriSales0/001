@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { HOUSE_RULES } from '@/lib/house-rules'
 
 export async function GET(request: NextRequest) {
-  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const user = guard.user!
   try {
@@ -12,7 +13,20 @@ export async function GET(request: NextRequest) {
 
     const where: Record<string, unknown> = {}
     if (user.role === 'CLIENT') where.ownerId = user.id
-    else if (user.role === 'MANAGER') where.owner = { managerId: user.id }
+    else if (user.role === 'MANAGER') {
+      if (ownerId) {
+        const owner = await prisma.user.findUnique({
+          where: { id: ownerId },
+          select: { managerId: true },
+        })
+        if (owner?.managerId !== user.id) {
+          return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        }
+        where.ownerId = ownerId
+      } else {
+        where.owner = { managerId: user.id }
+      }
+    }
     else if (ownerId) where.ownerId = ownerId
 
     const properties = await prisma.property.findMany({
@@ -29,6 +43,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { createdAt: 'desc' },
+      take: 500,
     })
 
     return NextResponse.json(properties)
@@ -48,13 +63,35 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     let { ownerId } = body
-    const { name, address, city, postalCode, description, photos, commissionRate } = body
+    const { name, address, city, postalCode, description, photos, commissionRate, houseRules } = body
+
+    // Validate houseRules if provided
+    if (houseRules !== undefined) {
+      if (!Array.isArray(houseRules)) {
+        return NextResponse.json({ error: 'houseRules must be an array' }, { status: 400 })
+      }
+      const validKeys = new Set(HOUSE_RULES.map(r => r.key))
+      const invalid = houseRules.filter((k: string) => !validKeys.has(k))
+      if (invalid.length > 0) {
+        return NextResponse.json({ error: `Invalid house rule keys: ${invalid.join(', ')}` }, { status: 400 })
+      }
+    }
     if (me.role === 'CLIENT') ownerId = me.id
     // MANAGER creates for one of their clients — ownerId must be provided and be one of their clients
     if (me.role === 'MANAGER' && ownerId) {
-      const owner = await prisma.user.findUnique({ where: { id: ownerId }, select: { managerId: true } })
+      const owner = await prisma.user.findUnique({ where: { id: ownerId }, select: { managerId: true, role: true } })
       if (owner?.managerId !== me.id) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+    // ADMIN — validate ownerId refers to an existing CLIENT
+    if (me.role === 'ADMIN' && ownerId) {
+      const owner = await prisma.user.findUnique({ where: { id: ownerId }, select: { role: true } })
+      if (!owner) {
+        return NextResponse.json({ error: 'Owner not found' }, { status: 404 })
+      }
+      if (owner.role !== 'CLIENT') {
+        return NextResponse.json({ error: 'Owner must be a CLIENT user' }, { status: 400 })
       }
     }
 
@@ -80,8 +117,9 @@ export async function POST(request: NextRequest) {
         postalCode,
         description,
         photos: photos || [],
+        houseRules: houseRules ?? [],
         ownerId,
-        commissionRate: commissionRate ?? 17.0,
+        commissionRate: me.role === 'ADMIN' ? (commissionRate ?? 17.0) : 17.0,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         status: status as any,
       },

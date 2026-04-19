@@ -7,11 +7,14 @@ import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight, ChevronDown,
   BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
-  Target, Settings, Brain,
+  Target, Settings, Brain, Briefcase, Link2,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
+import { NotificationBell } from "@/components/hm/notification-bell"
 import { cn } from "@/lib/utils"
+import { HmLogo } from "@/components/hm/hm-logo"
+import { useLocale } from "@/i18n/provider"
 
 type NavItem = { href: string; label: string; icon: React.ElementType }
 type NavGroup = { label: string; icon: React.ElementType; items: NavItem[] }
@@ -21,78 +24,84 @@ function isGroup(entry: NavEntry): entry is NavGroup {
   return 'items' in entry
 }
 
-// ── Admin navigation (grouped) ──
-const adminNav: NavEntry[] = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
-  {
-    label: "Leads", icon: Target, items: [
-      { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
-      { href: "/marketing", label: "Marketing", icon: Megaphone },
-    ],
-  },
-  {
-    label: "Operations", icon: CalendarDays, items: [
-      { href: "/calendar", label: "Calendar", icon: Calendar },
-      { href: "/reservations", label: "Reservations", icon: CalendarDays },
-      { href: "/setup", label: "Setup", icon: FileText },
-      { href: "/maintenance", label: "Maintenance", icon: Wrench },
-    ],
-  },
-  {
-    label: "Finance", icon: Wallet, items: [
-      { href: "/payouts", label: "Payouts", icon: Wallet },
-      { href: "/manager/invoices", label: "Invoices", icon: Receipt },
-      { href: "/report-summary", label: "Reports", icon: FileBarChart },
-      { href: "/my-reports", label: "Owner Reports", icon: FileText },
-    ],
-  },
-  {
-    label: "Administration", icon: Settings, items: [
-      { href: "/team", label: "Team", icon: Users },
-      { href: "/my-properties", label: "Properties", icon: Building2 },
-      { href: "/integrations", label: "Integrations", icon: Landmark },
-    ],
-  },
-  {
-    label: "HostMasters AI", icon: Brain, items: [
-      { href: "/ai", label: "AI Pricing", icon: Sparkles },
-      { href: "/ai-monitor", label: "AI Monitor", icon: Activity },
-    ],
-  },
-  { href: "/messages", label: "Messages", icon: MessageCircle },
-]
+function useAdminNav(): NavEntry[] {
+  const { t } = useLocale()
+  return [
+    { href: "/dashboard", label: t('common.dashboard'), icon: Home },
+    {
+      label: t('common.leads'), icon: Target, items: [
+        { href: "/crm", label: t('common.crmPipeline'), icon: BarChart3 },
+        { href: "/marketing", label: t('common.marketing'), icon: Megaphone },
+      ],
+    },
+    {
+      label: t('common.operations'), icon: CalendarDays, items: [
+        { href: "/calendar", label: t('common.calendar'), icon: Calendar },
+        { href: "/reservations", label: t('common.reservations'), icon: CalendarDays },
+        { href: "/setup", label: t('common.setup'), icon: FileText },
+        { href: "/maintenance", label: t('common.maintenance'), icon: Wrench },
+      ],
+    },
+    {
+      label: t('finance.income'), icon: Wallet, items: [
+        { href: "/payouts", label: t('common.payouts'), icon: Wallet },
+        { href: "/manager/invoices", label: t('common.invoices'), icon: Receipt },
+        { href: "/report-summary", label: t('common.reports'), icon: FileBarChart },
+        { href: "/my-reports", label: t('common.ownerReports'), icon: FileText },
+      ],
+    },
+    {
+      label: t('common.administration'), icon: Settings, items: [
+        { href: "/team", label: t('common.team'), icon: Users },
+        { href: "/recruit", label: "Recruiting", icon: Briefcase },
+        { href: "/my-properties", label: t('common.properties'), icon: Building2 },
+        { href: "/integrations", label: t('common.integrations'), icon: Landmark },
+      ],
+    },
+    {
+      label: "HostMasters AI", icon: Brain, items: [
+        { href: "/ai", label: "AI Pricing", icon: Sparkles },
+        { href: "/ai-monitor", label: "AI Monitor", icon: Activity },
+      ],
+    },
+    { href: "/messages", label: t('common.messages'), icon: MessageCircle },
+  ]
+}
 
-// ── Manager navigation (grouped) ──
-const managerNav: NavEntry[] = [
-  { href: "/manager/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  {
-    label: "Leads", icon: Target, items: [
-      { href: "/crm", label: "CRM Pipeline", icon: BarChart3 },
-    ],
-  },
-  {
-    label: "Operations", icon: CalendarDays, items: [
-      { href: "/calendar", label: "Calendar", icon: Calendar },
-      { href: "/reservations", label: "Reservations", icon: CalendarDays },
-      { href: "/properties", label: "Properties", icon: Building2 },
-      { href: "/setup", label: "Setup", icon: FileText },
-      { href: "/maintenance", label: "Maintenance", icon: Wrench },
-    ],
-  },
-  {
-    label: "Finance", icon: Wallet, items: [
-      { href: "/manager/invoices", label: "Invoices", icon: Receipt },
-      { href: "/revenue", label: "Revenue", icon: TrendingUp },
-      { href: "/reports", label: "Reports", icon: FileBarChart },
-    ],
-  },
-  {
-    label: "My Portfolio", icon: Users, items: [
-      { href: "/manager/clients", label: "My Owners", icon: Users },
-    ],
-  },
-  { href: "/manager/messages", label: "Messages", icon: MessageCircle },
-]
+function useManagerNav(): NavEntry[] {
+  const { t } = useLocale()
+  return [
+    { href: "/manager/dashboard", label: t('common.dashboard'), icon: LayoutDashboard },
+    {
+      label: t('common.leads'), icon: Target, items: [
+        { href: "/crm", label: t('common.crmPipeline'), icon: BarChart3 },
+      ],
+    },
+    {
+      label: t('common.operations'), icon: CalendarDays, items: [
+        { href: "/calendar", label: t('common.calendar'), icon: Calendar },
+        { href: "/reservations", label: t('common.reservations'), icon: CalendarDays },
+        { href: "/properties", label: t('common.properties'), icon: Building2 },
+        { href: "/setup", label: t('common.setup'), icon: FileText },
+        { href: "/maintenance", label: t('common.maintenance'), icon: Wrench },
+      ],
+    },
+    {
+      label: t('finance.income'), icon: Wallet, items: [
+        { href: "/manager/invoices", label: t('common.invoices'), icon: Receipt },
+        { href: "/revenue", label: t('common.revenue'), icon: TrendingUp },
+        { href: "/reports", label: t('common.reports'), icon: FileBarChart },
+      ],
+    },
+    {
+      label: t('common.myPortfolio'), icon: Users, items: [
+        { href: "/manager/clients", label: t('common.myOwners'), icon: Users },
+        { href: "/manager/referral", label: "My referral link", icon: Link2 },
+      ],
+    },
+    { href: "/manager/messages", label: t('common.messages'), icon: MessageCircle },
+  ]
+}
 
 interface ManagerLayoutProps {
   children: React.ReactNode
@@ -104,11 +113,14 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const pathname = usePathname()
+  const { t } = useLocale()
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
     : role === "ADMIN" ? "AD" : "MG"
 
   const isAdmin = role === "ADMIN"
+  const adminNav = useAdminNav()
+  const managerNav = useManagerNav()
   const nav = isAdmin ? adminNav : managerNav
   const dashboardHref = isAdmin ? "/dashboard" : "/manager/dashboard"
   const profileHref = isAdmin ? "/profile" : "/manager/profile"
@@ -139,15 +151,16 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
           "fixed inset-y-0 left-0 z-50 flex w-56 flex-col text-white transition-transform duration-200 lg:static lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
-        style={{ background: '#111827' }}
+        style={{ background: '#0B1E3A' }}
       >
         <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
           <Link href={dashboardHref} className="flex items-center gap-2">
-            <span className="text-base font-bold tracking-tight text-white">
-              Host<span style={{ color: '#C9A84C' }}>Masters</span>
+            <HmLogo size={24} onDark />
+            <span className="text-sm font-semibold tracking-tight text-white">
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
               {badgeLabel}
             </span>
           </Link>
@@ -237,10 +250,10 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
                 ? "text-white"
                 : "text-white/60 hover:bg-white/5 hover:text-white"
             )}
-            style={pathname === profileHref ? { background: 'rgba(201,168,76,0.15)', color: '#C9A84C' } : {}}
+            style={pathname === profileHref ? { background: 'rgba(176,138,62,0.15)', color: '#B08A3E' } : {}}
           >
             <User className="h-4 w-4 shrink-0" />
-            My Profile
+            {t('common.myProfile')}
           </Link>
           <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
             {user?.image ? (
@@ -248,7 +261,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
               <img src={user.image} alt="" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
             ) : (
               <div className="flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 text-[11px] font-bold"
-                   style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                   style={{ background: '#B08A3E', color: '#1e3a5f' }}>
                 {initials}
               </div>
             )}
@@ -276,7 +289,8 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
             <ChevronRight className="h-3.5 w-3.5" />
             <span className="capitalize">{pathname.split("/").filter(Boolean).pop() || "dashboard"}</span>
           </div>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <NotificationBell />
             <Link href={profileHref}
               className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
               {user?.image ? (
@@ -284,7 +298,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
                 <img src={user.image} alt="" className="h-6 w-6 rounded-full object-cover" />
               ) : (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
-                     style={{ background: '#C9A84C', color: '#1e3a5f' }}>
+                     style={{ background: '#B08A3E', color: '#1e3a5f' }}>
                   {initials}
                 </div>
               )}

@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
       createdBy: { select: { id: true, name: true, email: true } },
     },
     orderBy: { createdAt: 'desc' },
+    take: 500,
   })
   return NextResponse.json(invoices)
 }
@@ -41,12 +42,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'clientId, description and amount required' }, { status: 400 })
     }
 
+    // Validate client exists and is a CLIENT
+    const client = await prisma.user.findUnique({ where: { id: clientId }, select: { id: true, role: true, managerId: true } })
+    if (!client) {
+      return NextResponse.json({ error: 'Client not found' }, { status: 404 })
+    }
+    if (client.role !== 'CLIENT') {
+      return NextResponse.json({ error: 'Target user must be a CLIENT' }, { status: 400 })
+    }
     // Manager can only invoice their own clients
-    if (me.role === 'MANAGER') {
-      const client = await prisma.user.findUnique({ where: { id: clientId } })
-      if (!client || client.managerId !== me.id) {
-        return NextResponse.json({ error: 'forbidden' }, { status: 403 })
-      }
+    if (me.role === 'MANAGER' && client.managerId !== me.id) {
+      return NextResponse.json({ error: 'forbidden' }, { status: 403 })
     }
 
     const invoice = await prisma.invoice.create({

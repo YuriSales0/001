@@ -12,6 +12,7 @@ declare module 'next-auth' {
       role: AppRole
       language: string
       isSuperUser: boolean
+      isCaptain: boolean
     }
   }
 }

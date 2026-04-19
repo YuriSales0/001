@@ -5,6 +5,7 @@ import {
   Building2, MapPin, RefreshCw, Link2, Check, Plus, X, Clock,
   CheckCircle2, AlertCircle, ExternalLink,
 } from 'lucide-react'
+import { getSelectedRuleLabels } from '@/lib/house-rules'
 
 type Property = {
   id: string
@@ -17,6 +18,7 @@ type Property = {
   bookingIcalUrl: string | null
   airbnbConnected: boolean
   bookingConnected: boolean
+  houseRules: string[]
   owner: { id: string; name: string | null; email: string }
 }
 
@@ -98,7 +100,10 @@ export default function PropertiesPage() {
   const sync = async (id: string) => {
     setSyncing(id)
     const res = await fetch(`/api/properties/${id}/sync`, { method: 'POST' })
-    if (res.ok) setLastSync(s => ({ ...s, [id]: res.json() as unknown as SyncResult }))
+    if (res.ok) {
+      const data = await res.json() as SyncResult
+      setLastSync(s => ({ ...s, [id]: data }))
+    }
     setSyncing(null)
   }
 
@@ -244,6 +249,20 @@ export default function PropertiesPage() {
                     )}
                   </div>
                 </div>
+
+                {/* House Rules — read-only display */}
+                {(p.houseRules ?? []).length > 0 && (
+                  <div className="px-6 pt-4 pb-2">
+                    <div className="text-sm font-semibold text-navy-900 mb-2">House Rules</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {getSelectedRuleLabels(p.houseRules).map(r => (
+                        <span key={r.key} className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700">
+                          <span>{r.icon}</span> {r.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* iCal integration — only for ACTIVE properties inline */}
                 {!isPending && (

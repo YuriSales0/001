@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { Info, X, AlertCircle, Receipt, Plus, Pencil, Trash2, Ban } from 'lucide-react'
 import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES, PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from '@/lib/finance'
+import { ConfirmDialog } from '@/components/hm/confirm-dialog'
+import { useEscapeKey } from '@/lib/use-escape-key'
 
 type Payout = {
   id: string
@@ -123,6 +125,8 @@ function CreatePayoutModal({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
+  useEscapeKey(true, onClose)
+
   const gross = parseFloat(grossAmount) || 0
   const selectedProp = properties.find(p => p.id === propertyId)
   const plan = selectedProp?.owner?.subscriptionPlan ?? null
@@ -222,7 +226,7 @@ function CreatePayoutModal({
           )}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50">
+            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'A criar...' : 'Criar payout'}
             </button>
           </div>
@@ -243,6 +247,8 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
   const [description, setDescription] = useState(payout.description ?? '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  useEscapeKey(true, onClose)
 
   const gross = parseFloat(grossAmount) || payout.grossAmount
   const rate = payout.commissionRate / 100
@@ -318,7 +324,7 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50">
+            <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? 'A guardar...' : 'Guardar'}
             </button>
           </div>
@@ -364,12 +370,14 @@ export default function PayoutsPage() {
 
   const [paying, setPaying] = useState<string | null>(null)
   const [editingPayout, setEditingPayout] = useState<Payout | null>(null)
+  const [confirmAction, setConfirmAction] = useState<
+    | { type: 'markPaid'; id: string; ownerName: string; amount: number }
+    | { type: 'cancel'; id: string; label: string; wasPaid: boolean }
+    | { type: 'delete'; id: string; label: string }
+    | null
+  >(null)
 
-  const cancelPayout = async (id: string, label: string, wasPaid: boolean) => {
-    const warning = wasPaid
-      ? `Cancelar payout PAGO de ${label}?\n\nIsto irá:\n- Mudar o estado para CANCELADO\n- Cancelar o invoice auto-gerado associado`
-      : `Cancelar payout agendado de ${label}?\n\nO payout ficará no estado CANCELADO.`
-    if (!confirm(warning)) return
+  const doCancelPayout = async (id: string) => {
     await fetch(`/api/payouts/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -378,14 +386,12 @@ export default function PayoutsPage() {
     load(clientFilter)
   }
 
-  const deletePayout = async (id: string, label: string) => {
-    if (!confirm(`Eliminar permanentemente o payout cancelado de ${label}?\n\nEsta acção não pode ser desfeita.`)) return
+  const doDeletePayout = async (id: string) => {
     await fetch(`/api/payouts/${id}`, { method: 'DELETE' })
     load(clientFilter)
   }
 
-  const markPaid = async (id: string, ownerName: string, amount: number) => {
-    if (!confirm(`Confirm payout to ${ownerName} of ${fmt(amount)}?\n\nThis will:\n- Mark payout as paid\n- Generate invoice automatically\n- Send Owner Statement by email`)) return
+  const doMarkPaid = async (id: string) => {
     setPaying(id)
     await fetch(`/api/payouts/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'PAID' }) })
     setPaying(null)
@@ -476,7 +482,8 @@ export default function PayoutsPage() {
       )}
 
       <div className="rounded-xl border bg-white overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
             <tr>
               <th className="px-4 py-3">Propriedade</th>
@@ -535,7 +542,7 @@ export default function PayoutsPage() {
                       {p.status === 'SCHEDULED' && (
                         <>
                           <button
-                            onClick={() => markPaid(p.id, p.property.owner.name || p.property.owner.email, p.netAmount)}
+                            onClick={() => setConfirmAction({ type: 'markPaid', id: p.id, ownerName: p.property.owner.name || p.property.owner.email, amount: p.netAmount })}
                             disabled={paying === p.id}
                             className="inline-flex items-center gap-1.5 text-xs rounded-lg bg-green-600 text-white px-3 py-1.5 hover:bg-green-700 disabled:opacity-50 font-medium transition-colors"
                           >
@@ -549,7 +556,7 @@ export default function PayoutsPage() {
                             <Pencil className="h-3.5 w-3.5" />
                           </button>
                           <button
-                            onClick={() => cancelPayout(p.id, p.property.owner.name || p.property.owner.email, false)}
+                            onClick={() => setConfirmAction({ type: 'cancel', id: p.id, label: p.property.owner.name || p.property.owner.email, wasPaid: false })}
                             className="rounded-lg border border-orange-200 p-1.5 text-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-colors"
                             title="Cancelar"
                           >
@@ -559,7 +566,7 @@ export default function PayoutsPage() {
                       )}
                       {p.status === 'PAID' && (
                         <button
-                          onClick={() => cancelPayout(p.id, p.property.owner.name || p.property.owner.email, true)}
+                          onClick={() => setConfirmAction({ type: 'cancel', id: p.id, label: p.property.owner.name || p.property.owner.email, wasPaid: true })}
                           className="inline-flex items-center gap-1.5 text-xs rounded-lg border border-orange-200 text-orange-600 px-3 py-1.5 hover:bg-orange-50 font-medium transition-colors"
                         >
                           <Ban className="h-3.5 w-3.5" />
@@ -568,7 +575,7 @@ export default function PayoutsPage() {
                       )}
                       {p.status === 'CANCELLED' && (
                         <button
-                          onClick={() => deletePayout(p.id, p.property.owner.name || p.property.owner.email)}
+                          onClick={() => setConfirmAction({ type: 'delete', id: p.id, label: p.property.owner.name || p.property.owner.email })}
                           className="inline-flex items-center gap-1.5 text-xs rounded-lg border border-red-200 text-red-500 px-3 py-1.5 hover:bg-red-50 font-medium transition-colors"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -582,6 +589,7 @@ export default function PayoutsPage() {
             })}
           </tbody>
         </table>
+        </div>
       </div>
 
       {showHowItWorks && <HowItWorksModal onClose={() => setShowHowItWorks(false)} />}
@@ -599,6 +607,61 @@ export default function PayoutsPage() {
           onSaved={() => load(clientFilter)}
         />
       )}
+
+      <ConfirmDialog
+        open={confirmAction?.type === 'markPaid'}
+        title="Confirmar pagamento"
+        message={
+          confirmAction?.type === 'markPaid'
+            ? `Confirm payout to ${confirmAction.ownerName} of ${fmt(confirmAction.amount)}?\n\nThis will:\n- Mark payout as paid\n- Generate invoice automatically\n- Send Owner Statement by email`
+            : ''
+        }
+        confirmLabel="Mark paid"
+        variant="default"
+        onConfirm={() => {
+          if (confirmAction?.type === 'markPaid') doMarkPaid(confirmAction.id)
+          setConfirmAction(null)
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
+
+      <ConfirmDialog
+        open={confirmAction?.type === 'cancel'}
+        title="Cancelar payout"
+        message={
+          confirmAction?.type === 'cancel'
+            ? confirmAction.wasPaid
+              ? `Cancelar payout PAGO de ${confirmAction.label}?\n\nIsto irá:\n- Mudar o estado para CANCELADO\n- Cancelar o invoice auto-gerado associado`
+              : `Cancelar payout agendado de ${confirmAction.label}?\n\nO payout ficará no estado CANCELADO.`
+            : ''
+        }
+        confirmLabel="Cancelar payout"
+        cancelLabel="Voltar"
+        variant="warning"
+        onConfirm={() => {
+          if (confirmAction?.type === 'cancel') doCancelPayout(confirmAction.id)
+          setConfirmAction(null)
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
+
+      <ConfirmDialog
+        open={confirmAction?.type === 'delete'}
+        title="Eliminar payout"
+        message={
+          confirmAction?.type === 'delete'
+            ? `Eliminar permanentemente o payout cancelado de ${confirmAction.label}?\n\nEsta acção não pode ser desfeita.`
+            : ''
+        }
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
+        variant="danger"
+        onConfirm={() => {
+          if (confirmAction?.type === 'delete') doDeletePayout(confirmAction.id)
+          setConfirmAction(null)
+        }}
+        onCancel={() => setConfirmAction(null)}
+      />
     </div>
   )
 }

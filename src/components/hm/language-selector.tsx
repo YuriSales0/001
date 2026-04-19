@@ -3,25 +3,17 @@
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { ChevronDown } from "lucide-react"
-
-const languages = [
-  { code: "en", label: "English",    flag: "🇬🇧" },
-  { code: "de", label: "Deutsch",    flag: "🇩🇪" },
-  { code: "sv", label: "Svenska",    flag: "🇸🇪" },
-  { code: "nl", label: "Nederlands", flag: "🇳🇱" },
-  { code: "no", label: "Norsk",      flag: "🇳🇴" },
-  { code: "da", label: "Dansk",      flag: "🇩🇰" },
-]
+import { useLocale } from "@/i18n/provider"
+import { LOCALES } from "@/i18n"
 
 interface LanguageSelectorProps {
-  current?: string
-  onChange?: (code: string) => void
   className?: string
 }
 
-export function LanguageSelector({ current = "en", onChange, className }: LanguageSelectorProps) {
+export function LanguageSelector({ className }: LanguageSelectorProps) {
+  const { locale, setLocale } = useLocale()
   const [open, setOpen] = useState(false)
-  const selected = languages.find(l => l.code === current) ?? languages[0]
+  const selected = LOCALES.find(l => l.code === locale) ?? LOCALES[0]
 
   return (
     <div className={cn("relative", className)}>
@@ -38,16 +30,16 @@ export function LanguageSelector({ current = "en", onChange, className }: Langua
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-full mt-1 z-20 min-w-[160px] rounded-hm border border-hm-border bg-hm-ivory shadow-lg">
-            {languages.map(lang => (
+            {LOCALES.map(lang => (
               <button
                 key={lang.code}
                 onClick={() => {
-                  onChange?.(lang.code)
+                  setLocale(lang.code)
                   setOpen(false)
                 }}
                 className={cn(
                   "flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-serif hover:bg-hm-sand transition-colors text-left",
-                  current === lang.code ? "text-hm-gold-dk font-semibold" : "text-hm-slate"
+                  locale === lang.code ? "text-hm-gold-dk font-semibold" : "text-hm-slate"
                 )}
               >
                 <span className="text-base">{lang.flag}</span>

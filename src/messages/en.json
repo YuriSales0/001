@@ -24,7 +24,51 @@
     "status": "Status",
     "active": "Active",
     "inactive": "Inactive",
-    "maintenance": "Maintenance"
+    "maintenance": "Maintenance",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "actions": "Actions",
+    "details": "Details",
+    "date": "Date",
+    "from": "From",
+    "to": "To",
+    "total": "Total",
+    "notes": "Notes",
+    "description": "Description",
+    "name": "Name",
+    "phone": "Phone",
+    "address": "Address",
+    "language": "Language",
+    "updated": "Updated successfully",
+    "created": "Created successfully",
+    "deleted": "Deleted successfully",
+    "error": "Something went wrong",
+    "tryAgain": "Try Again",
+    "required": "Required field",
+    "invalidEmail": "Invalid email address",
+    "myProfile": "My Profile",
+    "myPlan": "My Plan",
+    "clientPortal": "Client Portal",
+    "crewPortal": "Crew Portal",
+    "messages": "Messages",
+    "invoices": "Invoices",
+    "payouts": "Payouts",
+    "setup": "Setup",
+    "team": "Team",
+    "integrations": "Integrations",
+    "leads": "Leads",
+    "operations": "Operations",
+    "myPortfolio": "My Portfolio",
+    "myOwners": "My Owners",
+    "administration": "Administration",
+    "ownerReports": "Owner Reports",
+    "crmPipeline": "CRM Pipeline",
+    "marketing": "Marketing",
+    "aiPricing": "AI Pricing"
   },
   "owner": {
     "welcome": "Welcome back",
@@ -36,7 +80,21 @@
     "financialReport": "Financial Report",
     "downloadReport": "Download Report",
     "personalUse": "Block for Personal Use",
-    "noUpcomingBookings": "No upcoming bookings"
+    "noUpcomingBookings": "No upcoming bookings",
+    "myProperties": "My Properties",
+    "myStatements": "My Statements",
+    "myReservations": "My Reservations",
+    "propertyDetails": "Property Details",
+    "earningsOverview": "Earnings Overview",
+    "occupancyCalendar": "Occupancy Calendar",
+    "maintenanceRequests": "Maintenance Requests",
+    "requestMaintenance": "Request Maintenance",
+    "annualSummary": "Annual Summary",
+    "ytdEarnings": "Year-to-Date Earnings",
+    "payoutHistory": "Payout History",
+    "pendingPayout": "Pending Payout",
+    "paidOut": "Paid Out",
+    "taxCompliance": "Tax & Compliance"
   },
   "manager": {
     "overview": "Overview",
@@ -53,7 +111,286 @@
     "addReservation": "Add Reservation",
     "addTask": "Add Task",
     "addSupplier": "Add Supplier",
-    "generateReport": "Generate Report"
+    "generateReport": "Generate Report",
+    "assignTask": "Assign Task",
+    "checkIns": "Check-ins",
+    "checkOuts": "Check-outs",
+    "todayActivity": "Today's Activity",
+    "weekOverview": "Week Overview",
+    "ownerStatements": "Owner Statements",
+    "crewManagement": "Crew Management",
+    "cleaningSchedule": "Cleaning Schedule",
+    "inspectionReport": "Inspection Report",
+    "performanceMetrics": "Performance Metrics",
+    "guestCommunication": "Guest Communication",
+    "welcome": {
+      "badge": "Welcome to HostMasters",
+      "titleLine1": "Your Manager portal is ready.",
+      "titleLine2": "Let's get your first client on board.",
+      "description": "You earn 15% of monthly subscriptions + 3% of gross rental for every client you manage. Portfolio bonuses start at 10 properties. The system handles operations — you focus on relationships.",
+      "step1Title": "Add your first client",
+      "step1Desc": "Invite a property owner from your network. The system sends them a signup link and service agreement.",
+      "step1Cta": "Add client",
+      "step2Title": "Help them set up",
+      "step2Desc": "Owner uploads property info, photos, selects house rules, and signs the service agreement.",
+      "step2Cta": "Learn the flow",
+      "step3Title": "Watch your portfolio grow",
+      "step3Desc": "Track earnings, commissions, and portfolio bonuses in real time. Operations are handled by HM Crew.",
+      "step3Cta": "See dashboard",
+      "infoPerClient": "Per client (Mid)",
+      "infoPerClientSub": "15% sub + 3% rental",
+      "infoAt10": "At 10 properties",
+      "infoAt20": "At 20 properties",
+      "infoAt30": "At 30 properties",
+      "infoBonus": "Portfolio bonus",
+      "helpTitle": "Need help getting started?",
+      "helpProfileTitle": "Review your profile & compensation",
+      "helpProfileDesc": "Check your territory, shares, and contract details",
+      "helpContactTitle": "Contact your Admin",
+      "helpContactDesc": "Questions about process, territory, or commission"
+    },
+    "clientsPage": {
+      "title": "My Clients",
+      "thName": "Name",
+      "thEmail": "Email",
+      "thPhone": "Phone",
+      "thId": "ID",
+      "loadFailed": "Failed to load data",
+      "emptyTitle": "No clients yet",
+      "emptyBody": "Invite your first client to start managing their property.",
+      "inviteFirst": "+ Invite your first client",
+      "inviteBtn": "Invite client"
+    },
+    "inviteClient": {
+      "back": "Back to my clients",
+      "title": "Invite a client",
+      "subtitle": "Send a signup link. The new owner will be added to your portfolio automatically.",
+      "emailLabel": "Email",
+      "nameLabel": "Name",
+      "namePlaceholder": "Full name (optional)",
+      "planLabel": "Suggested plan",
+      "planHint": "(optional, they can change later)",
+      "planCommission": "commission",
+      "warningTitle": "Before you invite",
+      "warningBody": "Make sure you've talked to the owner and they expect this email. Cold invites have poor conversion.",
+      "send": "Send invite",
+      "sending": "Sending…",
+      "cancel": "Cancel",
+      "sendFailed": "Failed to send invite",
+      "sentTitle": "Invitation sent",
+      "sentBodyPrefix": "We emailed",
+      "sentBodySuffix": "with a signup link. The client will be assigned to you automatically.",
+      "signupLinkLabel": "Signup link (for your reference)",
+      "inviteAnother": "Invite another client"
+    },
+    "referralPage": {
+      "title": "My Referral Link",
+      "subtitle": "Share this link with property owners in your territory. New clients registering through it will be automatically assigned to you.",
+      "personalLink": "Your personal link",
+      "territoryPrefix": "Territory:",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "share": "Share",
+      "customize": "Customize",
+      "codeLabel": "Referral code",
+      "codeHint": "Only letters, numbers, and hyphens (3-40 chars). Must be unique.",
+      "territoryLabel": "Territory",
+      "territoryPlaceholder": "Almuñécar, Nerja, etc.",
+      "save": "Save",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "statsClients": "Clients in my portfolio",
+      "statsClientsHint": "Property owners registered through your link or assigned to you",
+      "statsLeads": "Leads in my pipeline",
+      "statsLeadsHint": "Open opportunities you can still convert into clients",
+      "howTitle": "How it works",
+      "howStep1": "Share your personal link with property owners — in conversations, emails, WhatsApp, or social media.",
+      "howStep2Before": "When a prospect visits",
+      "howStep2After": ", we automatically tag them as yours.",
+      "howStep3": "If they register and become a client, they're assigned to your portfolio automatically.",
+      "howStep4": "You start earning 15% of their subscription and 3% of their gross rental, month after month.",
+      "pitchTitle": "Ready-to-send pitch",
+      "pitchIntro": "Copy this message and personalise it before sending:",
+      "pitchCopy": "Copy message",
+      "pitchCopied": "Pitch copied to clipboard",
+      "pitchBody": "Hi [Name],\n\nI know you own a property on the Costa Tropical and might be interested in how to get better returns without the headaches.\n\nI work with HostMasters, a platform that handles everything — listing, guest comms, cleaning, maintenance, fiscal compliance (Modelo 179, IRNR, NRU registration). Transparent fees, real data dashboard, and AI-driven pricing.\n\nCheck it out here: {url}\n\nHappy to walk you through it whenever suits you.\n\nBest,\n[Your name]",
+      "linkUpdated": "Referral link updated",
+      "linkUpdateFailed": "Failed to update",
+      "loadFailed": "Failed to load referral data.",
+      "tryAgain": "Try again"
+    },
+    "dashboardPage": {
+      "refresh": "Refresh",
+      "loadFailed": "Failed to load data",
+      "noneIn7Days": "None in the next 7 days"
+    }
+  },
+  "admin": {
+    "systemLive": "System Live",
+    "hmRevenue": "HM Revenue",
+    "openPayouts": "Open Payouts",
+    "pendingInvoices": "Pending Invoices",
+    "overdueTasksAlert": "Overdue Tasks Alert",
+    "upcomingCheckIns": "Upcoming Check-ins",
+    "upcomingCheckOuts": "Upcoming Check-outs",
+    "revenueBreakdown": "Revenue Breakdown",
+    "rentalVolume": "Rental Volume",
+    "rentalCommission": "Rental Commission",
+    "invoicesPaid": "Invoices Paid",
+    "totalRevenue": "Total Revenue",
+    "quickNav": "Quick Navigation",
+    "userManagement": "User Management",
+    "allProperties": "All Properties",
+    "allReservations": "All Reservations",
+    "systemSettings": "System Settings",
+    "platformHealth": "Platform Health",
+    "managerPerformance": "Manager Performance",
+    "financialOverview": "Financial Overview",
+    "subscriptionPlans": "Subscription Plans",
+    "tax": "Tax & Compliance",
+    "taxSubtitle": "Manage fiscal obligations for all clients",
+    "newObligation": "New obligation",
+    "totalTracked": "Total tracked",
+    "actionRequired": "Action required",
+    "dueIn30d": "Due in 30 days",
+    "allStatuses": "All statuses",
+    "allClients": "All clients",
+    "noObligationsMatch": "No obligations match the current filters.",
+    "newTaxObligation": "New tax obligation",
+    "client": "Client",
+    "selectClient": "— Select client —",
+    "propertyOptional": "Property (optional)",
+    "noProperty": "— None (client-level obligation) —",
+    "typeLabel": "Type",
+    "period": "Period",
+    "notesVisibleToClient": "Notes (visible to client)",
+    "documentUrl": "Document URL",
+    "document": "Document",
+    "create": "Create",
+    "creating": "Creating…",
+    "failedToSave": "Failed to save changes",
+    "failedToCreate": "Failed to create",
+    "taxType": {
+      "VUT_LICENSE": "VUT — Tourist License",
+      "MODELO_179": "Modelo 179",
+      "IRNR_MODELO_210": "IRNR Modelo 210",
+      "NIE": "NIE",
+      "ENERGY_CERTIFICATE": "Energy Certificate",
+      "FISCAL_REPRESENTATIVE": "Fiscal Representative",
+      "IBI": "IBI",
+      "OTHER": "Other"
+    },
+    "taxStatus": {
+      "NOT_STARTED": "Not started",
+      "IN_PROGRESS": "In progress",
+      "ACTION_REQUIRED": "Action required",
+      "COMPLETED": "Completed",
+      "EXPIRED": "Expired",
+      "NOT_APPLICABLE": "N/A"
+    }
+  },
+  "crew": {
+    "myTasks": "My Tasks",
+    "fieldOperations": "Field Operations",
+    "today": "Today",
+    "open": "Open",
+    "done": "Done",
+    "selectTask": "Select a task",
+    "startTask": "Start Task",
+    "markComplete": "Mark Complete",
+    "submitReport": "Submit Report",
+    "checklist": "Checklist",
+    "checkoutReport": "Checkout Report",
+    "propertyCondition": "Property Condition",
+    "good": "Good",
+    "minorIssues": "Minor Issues",
+    "majorIssues": "Major Issues",
+    "observedIssues": "Observed Issues",
+    "damages": "Damages",
+    "internalNotes": "Internal Notes",
+    "uploadPhotos": "Upload Photos",
+    "taskDetails": "Task Details",
+    "priority": "Priority",
+    "assignedTo": "Assigned To",
+    "dueDate": "Due Date",
+    "taskTypes": {
+      "CLEANING": "Cleaning",
+      "MAINTENANCE_PREVENTIVE": "Preventive maintenance",
+      "MAINTENANCE_CORRECTIVE": "Corrective maintenance",
+      "INSPECTION": "Inspection",
+      "CHECK_IN": "Check-in",
+      "CHECK_OUT": "Check-out",
+      "TRANSFER": "Transfer",
+      "SHOPPING": "Shopping",
+      "LAUNDRY": "Laundry"
+    },
+    "home": {
+      "loading": "Loading…",
+      "loadFailed": "Failed to load tasks. Please try refreshing.",
+      "allCaughtUp": "All caught up!",
+      "allCaughtUpBody": "No completed tasks yet. They will appear here once you finish them.",
+      "nothingToday": "Nothing scheduled for today",
+      "nothingTodayBody": "Check the Open tab for upcoming tasks.",
+      "noOpen": "No open tasks",
+      "noOpenBody": "New tasks will appear here when assigned to you.",
+      "photoEvidence": "Photo evidence",
+      "photoSubtitle": "At least 2 photos required. These are sent to the owner as proof of work.",
+      "addPhoto": "Add photo",
+      "min2BeforeSubmit": "Add at least 2 photos before submitting.",
+      "min2BeforeComplete": "Add at least 2 photos before marking complete.",
+      "photoUploadFailed": "Failed to upload photo",
+      "photoProcessFailed": "Failed to process photo",
+      "photoRemoveFailed": "Failed to remove photo",
+      "completeChecklistFirst": "Complete the checklist before submitting.",
+      "savingStatus": "Saving…"
+    },
+    "earnings": {
+      "title": "My earnings",
+      "contractLabel": "Contract:",
+      "contractMonthly": "Monthly",
+      "contractFreelancer": "Freelancer",
+      "perMonth": "/month",
+      "perTask": "/task",
+      "bannerTitle": "Paid in 24h",
+      "bannerBodyMonthly": "You receive {amount}/month credited on day 1 of each month.",
+      "bannerBodyFreelancer": "Whenever the owner pays the reservation payout, you receive your share within 24h by bank transfer through the platform. No waiting for month-end.",
+      "thisMonth": "This month",
+      "tasksThisMonth": "Tasks this month",
+      "tasksCompletedSuffix": "completed",
+      "pending": "Pending",
+      "pendingSuffix": "to complete",
+      "cumulative": "Cumulative total",
+      "totalTasksSuffix": "tasks total",
+      "byMonthTitle": "Earnings by month",
+      "thMonth": "Month",
+      "thTasks": "Tasks",
+      "thValue": "Value",
+      "noData": "No completed task data.",
+      "recentTitle": "Last completed tasks",
+      "noTasksYet": "No completed tasks yet",
+      "loading": "Loading…",
+      "loadFailed": "Failed to load data. Try refreshing."
+    },
+    "detail": {
+      "backToTasks": "Back to tasks",
+      "selectTask": "Select a task to see details",
+      "checkoutReport": "Check-out report",
+      "checkoutReportDesc": "The owner is notified automatically when you submit.",
+      "propertyCondition": "Property condition",
+      "conditionGood": "Good",
+      "conditionMinor": "Minor issues",
+      "conditionMajor": "Major issues",
+      "observedIssues": "Observed issues",
+      "observedPlaceholder": "e.g. broken lamp in living room, slow drain in bathroom…",
+      "damages": "Damages requiring follow-up",
+      "damagesPlaceholder": "Describe any damage, cost estimate if known…",
+      "internalNotes": "Internal notes for the office",
+      "internalNotesPlaceholder": "Anything the office should know…",
+      "submitCheckout": "Submit check-out report",
+      "markComplete": "Mark task complete",
+      "taskCompleted": "Task completed",
+      "startTask": "Start task"
+    }
   },
   "finance": {
     "grossRevenue": "Gross Revenue",
@@ -62,7 +399,21 @@
     "ownerPayout": "Owner Payout",
     "income": "Income",
     "expenses": "Expenses",
-    "statement": "Statement"
+    "statement": "Statement",
+    "netRevenue": "Net Revenue",
+    "platformFees": "Platform Fees",
+    "cleaningFees": "Cleaning Fees",
+    "maintenanceCosts": "Maintenance Costs",
+    "monthlyFee": "Monthly Fee",
+    "annualFee": "Annual Fee",
+    "payoutDate": "Payout Date",
+    "payoutStatus": "Payout Status",
+    "paid": "Paid",
+    "pending": "Pending",
+    "overdue": "Overdue",
+    "invoiceNumber": "Invoice Number",
+    "billingPeriod": "Billing Period",
+    "taxReport": "Tax Report"
   },
   "auth": {
     "signIn": "Sign In",
@@ -72,6 +423,583 @@
     "continueWithGoogle": "Continue with Google",
     "orContinueWith": "Or continue with",
     "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "hasAccount": "Already have an account?",
+    "forgotPassword": "Forgot your password?",
+    "resetPassword": "Reset Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "verifyEmail": "Verify your email",
+    "resendVerification": "Resend verification email",
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "createAccount": "Create your account",
+    "registerSubtitle": "Property owners — start managing your Costa Tropical investment.",
+    "namePlaceholder": "Your full name",
+    "passwordPlaceholder": "Min. 6 characters",
+    "creating": "Creating...",
+    "nameRequired": "Name is required",
+    "welcomeBack": "Welcome back",
+    "loginSubtitle": "Sign in to your owner portal",
+    "invalidCredentials": "Invalid credentials. Check your email and password.",
+    "signingIn": "Signing in..."
+  },
+  "tour": {
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip tour",
+    "finish": "Start using HostMasters",
+    "saving": "Saving...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Welcome to HostMasters",
+          "desc": "Let us show you everything your owner portal can do. This quick tour will walk you through all the tools available to manage and monitor your property from anywhere in the world."
+        },
+        "dashboard": {
+          "title": "Your Dashboard",
+          "desc": "Your home screen shows everything at a glance: this month's earnings, occupancy rate, your next guest, and the condition of your property. Updated in real time.",
+          "features": [
+            "Net earnings with monthly comparison",
+            "Occupancy bar with percentage",
+            "Next guest with nationality",
+            "Property condition status",
+            "Quick action buttons"
+          ]
+        },
+        "earnings": {
+          "title": "Earnings & Payouts",
+          "desc": "Track every euro. See your gross income, our commission, cleaning fees, maintenance costs, and your net payout. Everything itemized, nothing hidden.",
+          "features": [
+            "Monthly financial statements",
+            "Commission breakdown by booking",
+            "Payout schedule and history",
+            "Year-to-date summary",
+            "PDF export in your language"
+          ]
+        },
+        "bookings": {
+          "title": "Bookings & Calendar",
+          "desc": "See every reservation across Airbnb, Booking.com, and direct bookings. Know who's coming, when, and how much each stay generates. Block dates for personal use anytime.",
+          "features": [
+            "Unified calendar across all platforms",
+            "Guest details and nationality",
+            "Revenue per reservation",
+            "Personal date blocking",
+            "Check-in / check-out tracking"
+          ]
+        },
+        "care": {
+          "title": "Care & Maintenance",
+          "desc": "Your property is inspected after every checkout. Track cleanings, preventive maintenance, and any issues — all with photos and reports. Request a visit anytime.",
+          "features": [
+            "Post-checkout inspection reports",
+            "Cleaning schedule tracking",
+            "Preventive maintenance log",
+            "Issue reports with photos",
+            "One-click visit requests"
+          ]
+        },
+        "communication": {
+          "title": "Direct Communication",
+          "desc": "Message your property manager directly through the platform. No lost emails, no phone tag. Everything documented and searchable. Your AI assistant is also available 24/7.",
+          "features": [
+            "In-app messaging with your manager",
+            "Full conversation history",
+            "AI assistant for instant answers",
+            "Document and photo sharing"
+          ]
+        },
+        "ai": {
+          "title": "AI-Powered Tools",
+          "desc": "HostMasters uses artificial intelligence to maximize your revenue. Dynamic pricing adjusts your nightly rate based on 7 market factors. Our AI monitor checks your property daily for anomalies.",
+          "features": [
+            "AI Dynamic Pricing (up to +25% revenue)",
+            "24/7 AI assistant with your real data",
+            "Daily automated property checks",
+            "Market intelligence & competitor tracking"
+          ]
+        },
+        "reports": {
+          "title": "Reports & Documents",
+          "desc": "Download detailed monthly statements as PDF in your preferred language. Annual summaries, tax-ready reports, and full transparency on every transaction.",
+          "features": [
+            "Monthly PDF statements",
+            "Reports in EN, PT, ES, DE",
+            "Annual financial summary",
+            "Transaction-level detail"
+          ]
+        },
+        "plan": {
+          "title": "Your Plan",
+          "desc": "You can view and upgrade your subscription plan at any time. Higher plans unlock lower commissions, AI pricing, smart lock integration, and priority support.",
+          "features": [
+            "4 plans: Starter, Basic, Mid, Premium",
+            "Lower commission with higher plans",
+            "AI features on Mid and Premium",
+            "Upgrade anytime, no lock-in"
+          ]
+        },
+        "profile": {
+          "title": "Let's set up your profile",
+          "desc": "Just a few details so we can personalize your experience.",
+          "nameLabel": "Full name",
+          "namePlaceholder": "Your name",
+          "phoneLabel": "Phone number",
+          "langLabel": "Preferred language"
+        },
+        "done": {
+          "title": "You're all set!",
+          "desc": "Your portal is ready. Explore your dashboard, check your earnings, and contact your manager anytime. Welcome to HostMasters."
+        },
+        "sidebar": {
+          "title": "Your Navigation",
+          "desc": "This sidebar gives you quick access to every section: dashboard, earnings, bookings, property care, your plan, and direct communication with your manager."
+        },
+        "guest": {
+          "title": "Your Next Guest",
+          "desc": "See who is arriving next — with nationality flag, dates, and stay duration. Always know what is coming."
+        },
+        "condition": {
+          "title": "Property Condition",
+          "desc": "After every checkout, your property is inspected. See the current condition status here — green means all good, flagged issues appear immediately."
+        },
+        "actions": {
+          "title": "Quick Actions",
+          "desc": "Block dates for personal use, request a maintenance visit, or view your full financial report — all with one click from your dashboard."
+        }
+      }
+    }
+  },
+  "demo": {
+    "badge": "Platform Tour",
+    "title": "Everything you need, in one place",
+    "subtitle": "A complete management platform designed for international property owners. See what awaits you inside.",
+    "tabs": {
+      "dashboard": "Owner Dashboard",
+      "bookings": "Bookings & Calendar",
+      "finance": "Financial Reports",
+      "care": "Care & Maintenance",
+      "communication": "Communication"
+    },
+    "dashboard": {
+      "title": "Your property at a glance",
+      "desc": "Real-time earnings, occupancy rates, next guest information, and property condition — all in one premium dashboard. No more calling your manager for updates.",
+      "features": [
+        "Net earnings this month",
+        "Occupancy rate with visual bar",
+        "Next guest with nationality flag",
+        "Property condition status",
+        "Quick actions: block dates, request visit, view reports"
+      ]
+    },
+    "bookings": {
+      "title": "Full booking visibility",
+      "desc": "See every reservation across all platforms — Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
+      "features": [
+        "Unified calendar across all OTAs",
+        "Guest details and nationality",
+        "Check-in / check-out dates",
+        "Revenue per booking",
+        "Personal date blocking"
+      ]
+    },
+    "finance": {
+      "title": "Transparent finances to the cent",
+      "desc": "Monthly statements with itemized breakdowns. See exactly what you earned, what was charged, and what's coming. Download PDF reports in your language.",
+      "features": [
+        "Gross revenue breakdown",
+        "Commission and fees detail",
+        "Net payout calculation",
+        "PDF reports in 4 languages",
+        "Year-to-date summary"
+      ]
+    },
+    "care": {
+      "title": "Your property, always cared for",
+      "desc": "Track every cleaning, inspection, and maintenance visit. See reports with photos. Know the condition of your property at all times, from anywhere.",
+      "features": [
+        "Scheduled cleaning after each stay",
+        "Preventive maintenance tracking",
+        "Post-checkout condition reports",
+        "Issue flagging with photos",
+        "Request visits anytime"
+      ]
+    },
+    "communication": {
+      "title": "Direct line to your team",
+      "desc": "Message your manager directly through the platform. No lost emails, no phone tag. Everything documented, everything transparent.",
+      "features": [
+        "In-app messaging with manager",
+        "AI assistant for instant answers",
+        "Notification history",
+        "Document sharing",
+        "Multi-language support"
+      ]
+    }
+  },
+  "aiTools": {
+    "badge": "Powered by AI",
+    "title": "5 intelligent tools working for you",
+    "subtitle": "HostMasters is not just a management company — it's a technology platform. Our AI tools work 24/7 to maximize your revenue and protect your property.",
+    "tools": [
+      {
+        "name": "AI Dynamic Pricing",
+        "desc": "Algorithm that analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings and occupancy — to set the optimal price for every single night.",
+        "stat": "Up to +25% revenue",
+        "statLabel": "vs. fixed pricing"
+      },
+      {
+        "name": "AI Team Assistant",
+        "desc": "Intelligent chat assistant available in every portal. Ask about your earnings, next bookings, property status or any question — get instant answers based on your real data.",
+        "stat": "24/7",
+        "statLabel": "instant answers"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Autonomous system that runs 9 daily checks on every reservation, payout and task. Detects anomalies before they become problems — missed check-ins, overdue payouts, inactive properties.",
+        "stat": "9 checks",
+        "statLabel": "every day, automatically"
+      },
+      {
+        "name": "Market Intelligence",
+        "desc": "Weekly scraping of Airbnb and Booking.com in the Costa Tropical region. Real competitor data: prices, ratings, occupancy. Interactive map with zone analysis and market positioning.",
+        "stat": "50+ listings",
+        "statLabel": "tracked weekly"
+      },
+      {
+        "name": "Client Pricing Analytics",
+        "desc": "Your property's pricing performance over time. Seasonal trends, average rates, occupancy patterns. Compare your prices against the market and identify optimization opportunities.",
+        "stat": "Real data",
+        "statLabel": "not estimates"
+      }
+    ]
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problem",
+      "solution": "Solution",
+      "plans": "Plans",
+      "enter": "Enter",
+      "startFree": "Start free"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Your property deserves",
+      "titleGold": "more than management.",
+      "title2": "It deserves intelligence.",
+      "subtitle": "You bought on the Costa Tropical to invest — not to worry about cleanings, difficult guests or misaligned prices. HostMasters handles everything with real data, AI pricing and total transparency.",
+      "cta": "1st month free on Premium plan",
+      "ctaSub": "No commitment. Cancel anytime.",
+      "noLockin": "No lock-in",
+      "intlOwners": "International owners",
+      "aiPowered": "AI-powered pricing"
+    },
+    "problem": {
+      "badge": "The problem",
+      "title": "Being a remote owner shouldn't be this hard",
+      "items": [
+        {
+          "title": "Random pricing",
+          "desc": "Without market data, pricing is guesswork. You lose revenue in peaks and can't attract in low seasons."
+        },
+        {
+          "title": "Zero visibility",
+          "desc": "You don't know what's happening at your property until you get a complaint or a surprise bill."
+        },
+        {
+          "title": "Slow communication",
+          "desc": "Lost emails, photos that never arrive, reports that only come when you insist."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don't know how much is left for you. Hidden costs eat your profitability without warning."
+        }
+      ]
+    },
+    "solution": {
+      "badge": "The solution",
+      "title": "Management with intelligence, not guesswork",
+      "subtitle": "Three pillars that make HostMasters different from any traditional property manager.",
+      "items": [
+        {
+          "title": "AI Dynamic Pricing",
+          "desc": "Algorithm that analyzes seasonality, local events, competition and real-time demand to set the optimal price for each night.",
+          "highlight": "Up to +25% revenue vs. fixed pricing"
+        },
+        {
+          "title": "Your own data, not estimates",
+          "desc": "Dashboard with real data from your bookings, revenue and costs. Detailed monthly reports to the cent — no surprises.",
+          "highlight": "Total transparency in numbers"
+        },
+        {
+          "title": "Market Intelligence",
+          "desc": "Access to Costa Tropical market data: occupancy rates by zone, average prices, demand trends and benchmarks.",
+          "highlight": "Decisions based on real data"
+        }
+      ]
+    },
+    "social": {
+      "badge": "What the market says",
+      "title": "A platform built for the future",
+      "items": [
+        {
+          "quote": "The short-term rental market on the Costa Tropical is growing fast, but most management is still done manually. A platform that combines AI pricing with real data has enormous potential to professionalize the sector.",
+          "name": "Industry Analysis",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Property owners investing in southern Spain need transparency and technology. The gap between what traditional managers offer and what technology enables is exactly where innovation happens.",
+          "name": "Market Outlook",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "The combination of dynamic pricing algorithms, real-time market data and transparent owner portals represents the next generation of property management — one that benefits both owners and guests.",
+          "name": "Technology Perspective",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
+    "plans": {
+      "badge": "Plans",
+      "title": "Choose the level of service you need",
+      "subtitle": "All plans include full management. The more you invest, the lower the commission and the more intelligent tools you get.",
+      "recommended": "Recommended",
+      "monthlyFee": "/month",
+      "annualFee": "/year",
+      "commission": "Commission",
+      "startNow": "Start now",
+      "firstMonthFree": "1st month free",
+      "noMonthlyFee": "No monthly fee",
+      "starter": {
+        "features": [
+          "Full STR management",
+          "Airbnb, Booking.com & direct listings",
+          "24/7 guest communications",
+          "Monthly owner statement",
+          "Owner dashboard",
+          "Cleaning: €70/turnover"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Everything in Starter",
+          "Preventive maintenance (1x/month)",
+          "Pre & post-stay inspection",
+          "Documentation management",
+          "Multi-language statements",
+          "Cleaning: €60/turnover"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Everything in Basic",
+          "AI pricing + Smart Lock",
+          "Priority response: 12h owner / 2h guest",
+          "Statement in any language",
+          "Cleaning included ≥5 nights"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Everything in Mid",
+          "Fiscal compliance (Modelo 179 + IRNR)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "Cleaning included ≥3 nights"
+        ]
+      }
+    },
+    "finalCta": {
+      "title1": "Ready to have",
+      "titleGold": "real control",
+      "title2": "over your property?",
+      "subtitle": "Start with the Premium plan for 1 month at no cost. See the difference that real data and AI pricing make to your revenue.",
+      "cta": "Start 1 month free",
+      "enterPortal": "Enter portal",
+      "disclaimer": "No commitment · No credit card · Cancel anytime"
+    },
+    "footer": {
+      "tagline": "Premium short-term rental management.",
+      "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Join Our Team",
+      "title": "Become part of HostMasters",
+      "subtitle": "We are building a platform, not just a management company. Join us as a Manager or as Crew.",
+      "manager": {
+        "title": "Launch your management business",
+        "tagline": "You have the local network and speak the languages of international owners. We give you the system.",
+        "point1": "15% of client subscriptions + 3% of gross rental",
+        "point2": "Portfolio bonuses: €150 at 10 props, €400 at 20, €750 at 30",
+        "point3": "Exclusive geographic territory",
+        "point4": "Full platform: CRM, billing, operations handled for you",
+        "cta": "Apply as Manager",
+        "formTitle": "Apply as Manager"
+      },
+      "crew": {
+        "title": "Stable work on the Costa Tropical",
+        "tagline": "Professional short-term rental work with guaranteed payment and clear tasks.",
+        "point1": "Payment within 24 hours via the platform",
+        "point2": "Clear task list in the app — no confusion",
+        "point3": "Year-round work (not just summer peak)",
+        "point4": "Preventive maintenance + cleaning + check-ins",
+        "cta": "Apply as Crew",
+        "formTitle": "Apply as Crew"
+      },
+      "form": {
+        "required": "Name and email are required",
+        "zone": "Preferred zone",
+        "languages": "Languages you speak",
+        "experience": "Experience (optional)",
+        "skills": "Skills",
+        "availability": "Availability",
+        "message": "Anything else we should know? (optional)",
+        "submit": "Submit application",
+        "thanks": "Application received",
+        "thanksDesc": "Thank you! We will review your application and contact you soon."
+      }
+    }
+  },
+  "onboarding": {
+    "languageStep": "Choose your language",
+    "languageStepDesc": "This sets the language for the entire platform — emails, invoices, contracts, notifications, and AI assistance.",
+    "profileStep": "Your profile",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Your name",
+    "phonePlaceholder": "+34 600 000 000",
+    "crewContractStep": "Contract type",
+    "crewMonthly": "Monthly",
+    "crewMonthlySub": "Fixed monthly rate",
+    "crewFreelancer": "Freelancer",
+    "crewFreelancerSub": "Per completed task",
+    "crewMonthlyLabel": "Monthly rate (€)",
+    "crewTaskLabel": "Per-task rate (€)",
+    "crewSkillsStep": "Skills",
+    "crewSkillsDesc": "Select the task types you can perform.",
+    "managerCompStep": "Compensation agreement",
+    "managerCompDescSet": "Values set by Admin. Please confirm the terms.",
+    "managerCompDescEmpty": "Fill in the values agreed with your Admin.",
+    "managerSubShare": "% of client subscription",
+    "managerCommShare": "% of gross rental revenue",
+    "clientPropertyStep": "Your property",
+    "clientPropertyDesc": "Your property will be set up by the Admin or your Manager. For now, confirm your personal details and accept the service agreement in the next step.",
+    "contractStep": "Service agreement",
+    "contractAccept": "I have read and accept the terms of this contract",
+    "contractNone": "No pending contracts. Your Admin will make yours available soon.",
+    "confirmStep": "All set",
+    "confirmCrewMonthly": "Monthly contract configured.",
+    "confirmCrewFreelancer": "Freelancer contract configured.",
+    "confirmCrewSkills": "{n} skill(s) selected.",
+    "confirmManager": "Compensation: {sub}% subscriptions + {comm}% commissions.",
+    "confirmClient": "Your profile is set up. Welcome to HostMasters.",
+    "confirmHint": "Click \"Finish\" to enter the platform. You can change these settings later in your profile.",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "saving": "Saving…",
+    "setupTitle": "Setup",
+    "setupSubtitle": "Initial account setup"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "You have a pending service agreement",
+      "pendingContractDesc": "Sign it to activate your property and start receiving bookings.",
+      "pendingInvoice": "You have {n} pending invoice(s)",
+      "pendingInvoiceTotal": "Total: {amount} — click to view details",
+      "earningsThisMonth": "Your earnings this month — net",
+      "occupancy": "Occupancy this month",
+      "nextGuest": "Next guest",
+      "noUpcoming": "No upcoming bookings",
+      "propertyCondition": "Property condition",
+      "issuesFlagged": "{n} issue(s) flagged",
+      "allGood": "All good",
+      "lastInspected": "Last inspected {date}",
+      "careTitle": "Care & maintenance",
+      "seeAll": "See all",
+      "upcomingVisits": "Upcoming visits",
+      "openIssues": "Open issues",
+      "quickActions": "Quick actions",
+      "blockDates": "Block dates",
+      "blockDatesDesc": "Reserve time for yourself",
+      "requestVisit": "Request a visit",
+      "requestVisitDesc": "Cleaning, repairs or check",
+      "viewEarnings": "View earnings",
+      "viewEarningsDesc": "Statements and projections",
+      "propertySetup": "Your property is being set up",
+      "propertySetupDesc": "Your Manager is preparing your property. You'll see your dashboard here once everything is ready.",
+      "contactManager": "Contact your Manager"
+    },
+    "profileDocs": {
+      "managementAgreement": "Property Management Agreement",
+      "houseRules": "House Rules",
+      "ownerGuide": "Owner Welcome Guide"
+    }
+  },
+  "aiChat": {
+    "placeholder": {
+      "CREW": "e.g. What tasks do I have this week?",
+      "MANAGER": "e.g. How is my portfolio occupancy?",
+      "ADMIN": "e.g. Any active anomalies?",
+      "CLIENT": "e.g. How is my property performing?",
+      "default": "Ask your question…"
+    },
+    "welcome": {
+      "CREW": "Hi! I can help you with tasks, checklists, checkout reports and field procedures.",
+      "MANAGER": "Hi! I can help with your client portfolio, payouts, CRM and reports.",
+      "ADMIN": "Hi! I can help with everything — operations, finance, AI pricing, anomaly monitor.",
+      "CLIENT": "Hi! I can help you understand your earnings, bookings, plan and maintenance."
+    },
+    "title": "HM Assistant",
+    "statusPending": "Setup pending",
+    "statusActive": "Active · with real data",
+    "errorConnection": "Connection error. Try again.",
+    "errorNotConfigured": "Add ANTHROPIC_API_KEY in Vercel to activate"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Property approved: {name}",
+    "propertyApprovedBody": "Your property has been approved. Please sign the service contract to activate it.",
+    "propertyActiveTitle": "Your property is now live!",
+    "propertyActiveBody": "Contract signed and property activated. Welcome to HostMasters.",
+    "contractSignedTitle": "Contract signed",
+    "contractSignedBody": "Your service agreement has been signed successfully.",
+    "bookingReceivedTitle": "New booking: {guest}",
+    "payoutCompletedTitle": "Payout received: {amount}",
+    "taskAssignedTitle": "New task: {title}",
+    "taskAssignedBody": "{property} — confirm within 30 min",
+    "taskApprovedTitle": "Task approved",
+    "taskRejectedTitle": "Task rejected",
+    "interventionResolvedTitle": "Intervention resolved",
+    "clientRegisteredTitle": "New client registered",
+    "newLeadTitle": "New lead in your pipeline",
+    "crewPayoutPaidTitle": "Payout received: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Service Agreement — HostMasters Costa Tropical",
+    "signed": "Signed",
+    "agreementSigned": "Agreement signed",
+    "on": "on",
+    "bySigningAgree": "By signing, you agree to the terms above.",
+    "signAgreement": "Sign Agreement",
+    "signing": "Signing…",
+    "signError": "Failed to sign. Please try again.",
+    "networkError": "Network error. Please try again.",
+    "print": "Print / PDF",
+    "draft": "Draft",
+    "active": "Active",
+    "expired": "Expired",
+    "terminated": "Terminated",
+    "contractsTitle": "My Contracts",
+    "contractsEmpty": "No contracts yet. Your contracts will appear here once your Manager sets them up.",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "noEndDate": "Indefinite",
+    "myContract": "My Contract",
+    "noContract": "No contract available yet. Contact your Admin.",
+    "type": "Type"
+  },
+  "notifBell": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "empty": "No notifications yet",
+    "justNow": "just now"
   }
 }

@@ -125,7 +125,7 @@ function temperatureBadge(t: MarketZone['temperature']) {
 
 const POI_ICONS: Record<POI['type'], { icon: typeof Waves; color: string }> = {
   beach:     { icon: Waves,    color: '#38bdf8' },
-  marina:    { icon: Anchor,   color: '#C9A84C' },
+  marina:    { icon: Anchor,   color: '#B08A3E' },
   landmark:  { icon: Landmark, color: '#f472b6' },
   viewpoint: { icon: Mountain, color: '#a3e635' },
 }
@@ -443,7 +443,7 @@ export function MarketMap() {
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-30">
           <div className="flex items-center gap-2 text-white/80 text-sm">
-            <div className="h-2 w-2 rounded-full bg-[#C9A84C] animate-pulse" />
+            <div className="h-2 w-2 rounded-full bg-[#B08A3E] animate-pulse" />
             A carregar inteligência de mercado…
           </div>
         </div>
@@ -452,20 +452,20 @@ export function MarketMap() {
       {/* ── TOP BAR ── */}
       <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between gap-3 p-3 pointer-events-none">
         {/* Brand + region */}
-        <div className="pointer-events-auto rounded-xl border border-white/10 bg-[#111827]/95 backdrop-blur-md px-4 py-2.5 shadow-2xl flex items-center gap-3">
+        <div className="pointer-events-auto rounded-xl border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md px-4 py-2.5 shadow-2xl flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#C9A84C] to-[#8a6d28] flex items-center justify-center">
-              <MapPin className="h-4 w-4 text-[#111827]" strokeWidth={3} />
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#B08A3E] to-[#8a6d28] flex items-center justify-center">
+              <MapPin className="h-4 w-4 text-[#0B1E3A]" strokeWidth={3} />
             </div>
             <div>
-              <div className="text-[9px] font-bold uppercase tracking-wider text-[#C9A84C]">Market Intelligence</div>
+              <div className="text-[9px] font-bold uppercase tracking-wider text-[#B08A3E]">Market Intelligence</div>
               <div className="text-sm font-bold text-white leading-tight">Costa Tropical</div>
             </div>
           </div>
           {data && (
             <div className="pl-3 ml-1 border-l border-white/10 text-[10px] text-white/60 leading-tight">
               <div>{data.count} propriedades</div>
-              <div className="text-[#C9A84C]">
+              <div className="text-[#B08A3E]">
                 {data.realCount} próprias · {data.competitorCount} scraped
                 {data.demoCount > 0 && <span className="text-amber-400"> · {data.demoCount} demo</span>}
               </div>
@@ -474,7 +474,7 @@ export function MarketMap() {
         </div>
 
         {/* Metric toggle */}
-        <div className="pointer-events-auto rounded-xl border border-white/10 bg-[#111827]/95 backdrop-blur-md p-1 shadow-2xl flex gap-0.5">
+        <div className="pointer-events-auto rounded-xl border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md p-1 shadow-2xl flex gap-0.5">
           {(Object.keys(METRIC_CONFIG) as Metric[]).map(m => {
             const active = metric === m
             const MIcon = METRIC_CONFIG[m].icon
@@ -483,7 +483,7 @@ export function MarketMap() {
                 key={m}
                 onClick={() => setMetric(m)}
                 className={`rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-colors flex items-center gap-1.5 ${
-                  active ? 'bg-[#C9A84C] text-[#111827]' : 'text-white/65 hover:bg-white/5 hover:text-white'
+                  active ? 'bg-[#B08A3E] text-[#0B1E3A]' : 'text-white/65 hover:bg-white/5 hover:text-white'
                 }`}
                 title={METRIC_CONFIG[m].label}
               >
@@ -495,7 +495,7 @@ export function MarketMap() {
         </div>
 
         {/* Layer controls */}
-        <div className="pointer-events-auto rounded-xl border border-white/10 bg-[#111827]/95 backdrop-blur-md p-1 shadow-2xl flex gap-0.5">
+        <div className="pointer-events-auto rounded-xl border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md p-1 shadow-2xl flex gap-0.5">
           {([
             { key: 'points',  label: 'Pins' },
             { key: 'heatmap', label: 'Heat' },
@@ -506,7 +506,7 @@ export function MarketMap() {
               key={opt.key}
               onClick={() => setViewMode(opt.key)}
               className={`rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-colors ${
-                viewMode === opt.key ? 'bg-white text-[#111827]' : 'text-white/65 hover:bg-white/5 hover:text-white'
+                viewMode === opt.key ? 'bg-white text-[#0B1E3A]' : 'text-white/65 hover:bg-white/5 hover:text-white'
               }`}
             >
               {opt.label}
@@ -517,7 +517,7 @@ export function MarketMap() {
 
       {/* ── LEFT PANEL: Stats ── */}
       {data && (
-        <div className="absolute top-20 left-3 z-10 w-64 rounded-xl border border-white/10 bg-[#111827]/95 backdrop-blur-md shadow-2xl text-white">
+        <div className="absolute top-20 left-3 z-10 w-64 rounded-xl border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md shadow-2xl text-white">
           <div className="px-4 py-3 border-b border-white/10">
             <div className="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-2">Mercado — 90 dias</div>
             <div className="grid grid-cols-2 gap-3">
@@ -531,7 +531,7 @@ export function MarketMap() {
               </div>
               <div>
                 <div className="text-[9px] uppercase text-white/40 tracking-wider">RevPAR</div>
-                <div className="text-lg font-bold mt-0.5 text-[#C9A84C]">{fmtEUR(data.stats.avgRevPAR)}</div>
+                <div className="text-lg font-bold mt-0.5 text-[#B08A3E]">{fmtEUR(data.stats.avgRevPAR)}</div>
               </div>
               <div>
                 <div className="text-[9px] uppercase text-white/40 tracking-wider">Total receita</div>
@@ -545,7 +545,7 @@ export function MarketMap() {
               <div className="text-[10px] font-bold uppercase tracking-wider text-white/50">
                 Top zonas · {cfg.short}
               </div>
-              <Flame className="h-3 w-3 text-[#C9A84C]" />
+              <Flame className="h-3 w-3 text-[#B08A3E]" />
             </div>
             <div className="space-y-1.5">
               {topZones.map((z, i) => {
@@ -564,7 +564,7 @@ export function MarketMap() {
                         {badge.label}
                       </span>
                     </div>
-                    <span className="text-xs font-bold text-[#C9A84C] shrink-0">{formatMetric(v, metric)}</span>
+                    <span className="text-xs font-bold text-[#B08A3E] shrink-0">{formatMetric(v, metric)}</span>
                   </button>
                 )
               })}
@@ -575,12 +575,12 @@ export function MarketMap() {
             <div className="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-2">Camadas</div>
             <div className="space-y-1.5 text-xs">
               <label className="flex items-center gap-2 cursor-pointer hover:text-white text-white/70">
-                <input type="checkbox" checked={showZones} onChange={e => setShowZones(e.target.checked)} className="accent-[#C9A84C]" />
+                <input type="checkbox" checked={showZones} onChange={e => setShowZones(e.target.checked)} className="accent-[#B08A3E]" />
                 <Layers className="h-3.5 w-3.5" />
                 Zonas
               </label>
               <label className="flex items-center gap-2 cursor-pointer hover:text-white text-white/70">
-                <input type="checkbox" checked={showPOIs} onChange={e => setShowPOIs(e.target.checked)} className="accent-[#C9A84C]" />
+                <input type="checkbox" checked={showPOIs} onChange={e => setShowPOIs(e.target.checked)} className="accent-[#B08A3E]" />
                 <Eye className="h-3.5 w-3.5" />
                 POIs (praias · landmarks)
               </label>
@@ -595,7 +595,7 @@ export function MarketMap() {
                   key={s}
                   onClick={() => setMapStyle(s)}
                   className={`flex-1 rounded-md px-2 py-1 text-[10px] font-semibold capitalize transition-colors ${
-                    mapStyle === s ? 'bg-[#C9A84C] text-[#111827]' : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                    mapStyle === s ? 'bg-[#B08A3E] text-[#0B1E3A]' : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
                   }`}
                 >
                   {s}
@@ -624,9 +624,9 @@ export function MarketMap() {
 
       {/* ── LEGEND (bottom left) ── */}
       {viewMode === 'points' && data && (
-        <div className="absolute bottom-3 left-3 z-10 rounded-xl border border-white/10 bg-[#111827]/95 backdrop-blur-md px-4 py-3 shadow-2xl text-white max-w-[260px]">
+        <div className="absolute bottom-3 left-3 z-10 rounded-xl border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md px-4 py-3 shadow-2xl text-white max-w-[260px]">
           <div className="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-2 flex items-center gap-1.5">
-            <cfg.icon className="h-3 w-3 text-[#C9A84C]" />
+            <cfg.icon className="h-3 w-3 text-[#B08A3E]" />
             {cfg.label}
           </div>
           <div className="h-2 rounded-full" style={{ background: 'linear-gradient(to right, rgb(59,130,246), rgb(34,197,94), rgb(201,168,76), rgb(249,115,22), rgb(220,38,38))' }} />
@@ -652,10 +652,10 @@ export function MarketMap() {
 
       {/* ── PROPERTY DETAIL DRAWER (right) ── */}
       {selectedProp && (
-        <div className="absolute top-20 right-3 z-20 w-80 rounded-xl border border-white/10 bg-[#111827]/95 backdrop-blur-md shadow-2xl text-white overflow-hidden animate-[slideIn_0.2s_ease-out]">
+        <div className="absolute top-20 right-3 z-20 w-80 rounded-xl border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md shadow-2xl text-white overflow-hidden animate-[slideIn_0.2s_ease-out]">
           <div className="px-4 py-3 border-b border-white/10 flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider text-[#C9A84C] font-bold mb-0.5">
+              <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider text-[#B08A3E] font-bold mb-0.5">
                 <Home className="h-3 w-3" />
                 Propriedade {selectedProp.isReal ? '· real' : '· demo'}
               </div>
@@ -678,7 +678,7 @@ export function MarketMap() {
             </div>
             <div>
               <div className="text-[9px] uppercase text-white/40 tracking-wider">RevPAR</div>
-              <div className="text-base font-bold mt-0.5 text-[#C9A84C]">{fmtEUR(selectedProp.revPAR)}</div>
+              <div className="text-base font-bold mt-0.5 text-[#B08A3E]">{fmtEUR(selectedProp.revPAR)}</div>
             </div>
             <div>
               <div className="text-[9px] uppercase text-white/40 tracking-wider">Score</div>
@@ -688,7 +688,7 @@ export function MarketMap() {
 
           <div className="px-4 py-3 border-t border-white/10 bg-white/[0.02]">
             <div className="text-[9px] uppercase text-white/40 tracking-wider mb-1">Receita últimos 90 dias</div>
-            <div className="text-xl font-bold text-[#C9A84C]">{fmtEUR(selectedProp.grossRevenue)}</div>
+            <div className="text-xl font-bold text-[#B08A3E]">{fmtEUR(selectedProp.grossRevenue)}</div>
           </div>
 
           {comparables.length > 0 && (
@@ -726,10 +726,10 @@ export function MarketMap() {
 
       {/* ── ZONE DETAIL POPUP ── */}
       {selectedZone && !selectedProp && (
-        <div className="absolute top-20 right-3 z-20 w-72 rounded-xl border border-white/10 bg-[#111827]/95 backdrop-blur-md shadow-2xl text-white overflow-hidden">
+        <div className="absolute top-20 right-3 z-20 w-72 rounded-xl border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md shadow-2xl text-white overflow-hidden">
           <div className="px-4 py-3 border-b border-white/10 flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider text-[#C9A84C] font-bold mb-0.5">
+              <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider text-[#B08A3E] font-bold mb-0.5">
                 <MapPin className="h-3 w-3" />
                 Zona
               </div>
@@ -757,7 +757,7 @@ export function MarketMap() {
             </div>
             <div>
               <div className="text-[9px] uppercase text-white/40 tracking-wider">RevPAR</div>
-              <div className="text-base font-bold mt-0.5 text-[#C9A84C]">{fmtEUR(selectedZone.revPAR)}</div>
+              <div className="text-base font-bold mt-0.5 text-[#B08A3E]">{fmtEUR(selectedZone.revPAR)}</div>
             </div>
             <div>
               <div className="text-[9px] uppercase text-white/40 tracking-wider">Market Score</div>
@@ -767,7 +767,7 @@ export function MarketMap() {
 
           <div className="px-4 py-3 border-t border-white/10 bg-white/[0.02]">
             <div className="text-[9px] uppercase text-white/40 tracking-wider mb-1">Receita total (90d)</div>
-            <div className="text-xl font-bold text-[#C9A84C]">{fmtEUR(selectedZone.totalRevenue)}</div>
+            <div className="text-xl font-bold text-[#B08A3E]">{fmtEUR(selectedZone.totalRevenue)}</div>
           </div>
         </div>
       )}
@@ -775,10 +775,10 @@ export function MarketMap() {
       {/* ── Hover tooltip ── */}
       {hovered && !selectedProp && (
         <div
-          className="pointer-events-none absolute z-30 rounded-lg border border-white/10 bg-[#111827]/95 backdrop-blur-md px-3 py-2 text-xs text-white shadow-2xl"
+          className="pointer-events-none absolute z-30 rounded-lg border border-white/10 bg-[#0B1E3A]/95 backdrop-blur-md px-3 py-2 text-xs text-white shadow-2xl"
           style={{ left: hovered.x + 14, top: hovered.y + 14 }}
         >
-          <div className="font-semibold text-[#C9A84C] mb-0.5 flex items-center gap-1.5">
+          <div className="font-semibold text-[#B08A3E] mb-0.5 flex items-center gap-1.5">
             {hovered.point.name}
             {!hovered.point.isReal && (
               <span className="rounded bg-amber-400/20 px-1 py-0.5 text-[8px] font-bold text-amber-300">DEMO</span>

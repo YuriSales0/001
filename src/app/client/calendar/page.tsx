@@ -202,7 +202,7 @@ export default function ClientCalendarPage() {
           <p className="text-sm text-gray-500">Todas as tarefas agendadas para as tuas propriedades</p>
         </div>
         <select value={propertyFilter} onChange={e=>setPropertyFilter(e.target.value)}
-          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900">
+          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
           <option value="ALL">Todas as propriedades</option>
           {properties.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
         </select>

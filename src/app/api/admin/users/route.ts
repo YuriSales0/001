@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
       manager: { select: { id: true, name: true, email: true } },
     },
     orderBy: { createdAt: 'desc' },
+    take: 500,
   })
   return NextResponse.json(users)
 }
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     if (!['ADMIN', 'MANAGER', 'CREW', 'CLIENT'].includes(role)) {
       return NextResponse.json({ error: 'invalid role' }, { status: 400 })
     }
-    const hash = await bcrypt.hash(password, 10)
+    const hash = await bcrypt.hash(password, 12)
     const user = await prisma.user.create({
       data: {
         email: email.toLowerCase(),

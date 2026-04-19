@@ -39,6 +39,10 @@ export async function POST(request: NextRequest) {
   // ── Fetch live context based on role ──
   const liveContext = await buildLiveContext(me.id, me.role as ChatRole)
 
+  // Detect user language for response
+  const userLang = me.language ?? 'en'
+  const langInstruction = userLang === 'en' ? '' : `IMPORTANT: Respond in the same language the user writes to you. If the user writes in English, respond in English. If they write in Portuguese, respond in Portuguese. Match their language exactly.`
+
   try {
     const client = new Anthropic()
 
@@ -53,7 +57,7 @@ export async function POST(request: NextRequest) {
         },
         {
           type: 'text',
-          text: `Dados em tempo real (${new Date().toLocaleDateString('pt-PT')}):\nUtilizador: ${me.name ?? me.email} (${me.role})\n\n${liveContext}\n\nLembra-te: sem emojis, sem headers (#), sem listas com hífens. Responde como numa mensagem curta a um colega. Se tens dados do utilizador acima, usa-os directamente na resposta.`,
+          text: `Live data (${new Date().toISOString().slice(0, 10)}):\nUser: ${me.name ?? me.email} (${me.role})\nUser language: ${userLang}\n\n${liveContext}\n\nRules: no emojis, no markdown headers (#), no bullet hyphens. Keep answers short, like a message to a colleague. Use the live data above directly in your answer.\n${langInstruction}`,
         },
       ],
       messages: [

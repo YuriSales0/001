@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { notify } from '@/lib/notifications'
 
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW', 'CLIENT'])
@@ -40,6 +41,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { dueDate: 'asc' },
+      take: 500,
     })
 
     return NextResponse.json(tasks)
@@ -53,7 +55,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW', 'CLIENT'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
   try {
@@ -68,14 +70,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate property exists and enforce scope per role
+    const prop = await prisma.property.findUnique({
+      where: { id: propertyId },
+      select: { ownerId: true, owner: { select: { managerId: true } } },
+    })
+    if (!prop) {
+      return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+    }
     // CLIENT can only create tasks for their own properties
     if (me.role === 'CLIENT') {
-      const prop = await import('@/lib/prisma').then(m =>
-        m.prisma.property.findUnique({ where: { id: propertyId }, select: { ownerId: true } })
-      )
-      if (prop?.ownerId !== me.id) {
+      if (prop.ownerId !== me.id) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
+      // CLIENT cannot pick a specific crew member
+      assigneeId = undefined
+    }
+    // MANAGER can only create tasks for properties of their managed clients
+    if (me.role === 'MANAGER' && prop.owner.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     if (!assigneeId) {
@@ -115,6 +128,17 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // Notify assigned crew
+    if (task.assignee) {
+      notify({
+        userId: task.assignee.id,
+        type: 'TASK_ASSIGNED',
+        title: `New task: ${task.title ?? type}`,
+        body: `${task.property?.name ?? 'Property'} — ${new Date(dueDate).toLocaleDateString('en-GB')}`,
+        link: '/crew',
+      }).catch(() => {})
+    }
 
     return NextResponse.json(task, { status: 201 })
   } catch (error) {

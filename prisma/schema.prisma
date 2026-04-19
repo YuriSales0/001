@@ -15,8 +15,9 @@ enum Role {
 }
 
 enum PropertyStatus {
-  PENDING_CLIENT
-  PENDING_APPROVAL
+  PENDING_CLIENT       // Owner a preencher dados
+  PENDING_APPROVAL     // Admin a aprovar
+  CONTRACT_PENDING     // Aprovada, à espera de assinatura do contrato
   ACTIVE
   INACTIVE
   MAINTENANCE
@@ -36,8 +37,42 @@ enum TaskType {
 
 enum TaskStatus {
   PENDING
+  NOTIFIED          // Crew was notified about task
+  CONFIRMED         // Crew confirmed they'll do it
   IN_PROGRESS
-  COMPLETED
+  SUBMITTED         // Crew submitted report + photos
+  APPROVED          // Captain approved the work
+  REJECTED          // Captain rejected — needs redo or redistribute
+  REDISTRIBUTED     // Reassigned to another crew member
+  COMPLETED         // Legacy — kept for backward compat
+}
+
+enum CrewScoreLevel {
+  SUSPENDED    // 0-49
+  BASIC        // 50-149
+  VERIFIED     // 150-299
+  EXPERT       // 300-499
+  ELITE        // 500+
+}
+
+enum CrewPayoutStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+}
+
+enum InterventionStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  ESCALATED
+}
+
+enum AiRiskLevel {
+  LOW
+  MEDIUM
+  HIGH
 }
 
 enum ReservationStatus {
@@ -137,6 +172,8 @@ model User {
   // Manager compensation (configurable per manager)
   managerSubscriptionShare  Float?    // % of client subscription fee (default: 10%)
   managerCommissionShare    Float?    // % of gross rental revenue (default: 2%)
+  referralCode              String?   @unique  // Manager personal referral code for landing link
+  managerZone               String?   // Territory/zone (e.g. "Almunecar", "Nerja")
   // Crew compensation
   crewContractType   String?   // MONTHLY | FREELANCER
   crewMonthlyRate    Float?    // €/month (if MONTHLY)
@@ -144,6 +181,8 @@ model User {
   crewHourlyRate     Float?    // €/hour (if FREELANCER, optional)
   crewSkills         String?   // JSON array: ["CLEANING","MAINTENANCE","CHECK_IN",...]
   crewAvailability   String?   // JSON: {"mon":true,"tue":true,...}
+  isCaptain          Boolean   @default(false) // Crew Captain (fixed supervisor, not gig)
+  stripeConnectId    String?   // Stripe Connect account for Crew payouts
   // Onboarding
   onboardingCompleted Boolean  @default(false)
   onboardingData      Json?    // wizard answers stored here
@@ -166,6 +205,15 @@ model User {
   managerConversations Conversation[] @relation("ManagerConversations")
   sentMessages         Message[]      @relation("SentMessages")
   campaigns            Campaign[]     @relation("CampaignCreator")
+  taxObligations       TaxObligation[]
+  // Crew system
+  crewScore            CrewScore?
+  crewRelationships    CrewPropertyRelationship[] @relation("CrewRelationships")
+  crewPayouts          CrewPayout[]               @relation("CrewPayouts")
+  captainTasks         Task[]                     @relation("CaptainTasks")
+  managerInterventions CrewIntervention[]         @relation("ManagerInterventions")
+  captainInterventions CrewIntervention[]         @relation("CaptainInterventions")
+  notifications        Notification[]
 }
 
 model Account {
@@ -203,6 +251,49 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum TaxObligationType {
+  VUT_LICENSE          // Licença turística (Junta de Andalucía)
+  MODELO_179           // Declaração trimestral de hóspedes (Agência Tributária)
+  IRNR_MODELO_210      // Imposto de renda não-residentes (trimestral)
+  NIE                  // Número de identificação de estrangeiro
+  ENERGY_CERTIFICATE   // Certificado energético (10 anos)
+  FISCAL_REPRESENTATIVE // Representante fiscal para não-residentes
+  IBI                  // Imposto sobre bens imóveis (anual)
+  OTHER
+}
+
+enum TaxObligationStatus {
+  NOT_STARTED    // Ainda não iniciado
+  IN_PROGRESS    // A tratar
+  ACTION_REQUIRED // Falta documento/acção do cliente
+  COMPLETED      // Feito para este período
+  EXPIRED        // Prazo passou sem acção
+  NOT_APPLICABLE // Não se aplica a este cliente
+}
+
+model TaxObligation {
+  id              String              @id @default(cuid())
+  userId          String              // CLIENT owner
+  propertyId      String?             // opcional: algumas obrigações são por propriedade
+  type            TaxObligationType
+  status          TaxObligationStatus @default(NOT_STARTED)
+  periodLabel     String              // ex: "Q1 2026", "2026", "Uma vez"
+  dueDate         DateTime?           // próximo prazo
+  completedAt     DateTime?
+  documentUrl     String?             // link para PDF/comprovativo
+  notes           String?             // nota interna do Admin/Manager
+  handledBy       String?             // ADMIN que tratou
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+
+  @@index([userId, type])
+  @@index([dueDate])
+  @@index([status])
+}
+
 model Property {
   id               String         @id @default(cuid())
   name             String
@@ -212,8 +303,10 @@ model Property {
   description      String?        @db.Text
   photos           String[]
   contractUrl      String?
-  smartLockId      String?
-  bedrooms         Int?
+  smartLockId          String?
+  smartLockInstalled   Boolean   @default(false)
+  smartLockProvider    String?   // e.g. "Nuki", "TTLock", "Yale"
+  bedrooms             Int?
   sizeSqm          Int?
   airbnbConnected   Boolean        @default(false)
   bookingConnected  Boolean        @default(false)
@@ -224,6 +317,7 @@ model Property {
   lastCleaningAt   DateTime?
   lastInspectionAt DateTime?
   status           PropertyStatus @default(PENDING_APPROVAL)
+  houseRules       String[]       // pre-defined rule keys, e.g. ["NO_SMOKING", "QUIET_22_08"]
   commissionRate   Float          @default(17.0)
   latitude         Float?
   longitude        Float?
@@ -242,6 +336,9 @@ model Property {
   invoices       Invoice[]
   pricingPoints  PricingDataPoint[]
   checklistItems PropertyChecklistItem[]
+  taxObligations     TaxObligation[]
+  contracts          Contract[]
+  crewRelationships  CrewPropertyRelationship[]
 }
 
 model Invoice {
@@ -369,14 +466,137 @@ model Task {
   description String?    @db.Text
   notes       String?    @db.Text
   checklist   Json?
+  photos      String[]   @default([])
   dueDate     DateTime
   assigneeId  String?
+  // Lifecycle timestamps
+  notifiedAt  DateTime?
+  confirmedAt DateTime?
+  submittedAt DateTime?
+  approvedAt  DateTime?
+  rejectedAt  DateTime?
+  // Captain & payout
+  captainId           String?
+  smartLockCode       String?
+  smartLockExpiresAt  DateTime?
+  amount              Float?    // payout amount for this task
+  scoreImpact         Int?      // score delta after approval/rejection
+  crewPayoutId        String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  property Property @relation(fields: [propertyId], references: [id])
-  assignee User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  property    Property         @relation(fields: [propertyId], references: [id])
+  assignee    User?            @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  captain     User?            @relation("CaptainTasks", fields: [captainId], references: [id])
+  crewPayout  CrewPayout?      @relation("PayoutTasks", fields: [crewPayoutId], references: [id])
+  interventions CrewIntervention[]
+
+  @@index([assigneeId, status])
+  @@index([crewPayoutId])
 }
+
+// ─── Crew System ────────────────────────────────────────────────────────────
+
+model CrewScore {
+  id            String         @id @default(cuid())
+  userId        String         @unique
+  currentScore  Int            @default(100)
+  level         CrewScoreLevel @default(BASIC)
+  totalTasks    Int            @default(0)
+  totalApproved Int            @default(0)
+  totalRejected Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history CrewScoreEvent[]
+}
+
+model CrewScoreEvent {
+  id          String   @id @default(cuid())
+  crewScoreId String
+  taskId      String?
+  delta       Int
+  reason      String
+  scoreBefore Int
+  scoreAfter  Int
+  createdAt   DateTime @default(now())
+
+  crewScore CrewScore @relation(fields: [crewScoreId], references: [id], onDelete: Cascade)
+
+  @@index([crewScoreId, createdAt])
+}
+
+model CrewPropertyRelationship {
+  id                 String      @id @default(cuid())
+  crewId             String
+  propertyId         String
+  totalTasks         Int         @default(0)
+  firstTaskAt        DateTime?
+  lastTaskAt         DateTime?
+  taskTypeBreakdown  Json?
+  propertyTrustScore Int         @default(50)
+  ownerApproved      Boolean     @default(false)
+  captainEndorsed    Boolean     @default(false)
+  incidentCount      Int         @default(0)
+  aiRiskLevel        AiRiskLevel @default(LOW)
+  aiAlertActive      Boolean     @default(false)
+  aiLastEvaluatedAt  DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  crew     User     @relation("CrewRelationships", fields: [crewId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([crewId, propertyId])
+  @@index([propertyId])
+}
+
+model CrewPayout {
+  id               String           @id @default(cuid())
+  crewId           String
+  weekStart        DateTime
+  weekEnd          DateTime
+  taskCount        Int              @default(0)
+  totalAmount      Float            @default(0)
+  bonusAmount      Float            @default(0)
+  finalAmount      Float            @default(0)
+  status           CrewPayoutStatus @default(PENDING)
+  stripeTransferId String?
+  statementSentAt  DateTime?
+  paidAt           DateTime?
+  failedReason     String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  crew  User   @relation("CrewPayouts", fields: [crewId], references: [id], onDelete: Cascade)
+  tasks Task[] @relation("PayoutTasks")
+
+  @@unique([crewId, weekStart])
+  @@index([status])
+}
+
+model CrewIntervention {
+  id         String             @id @default(cuid())
+  taskId     String
+  managerId  String
+  captainId  String?
+  reason     String             @db.Text
+  status     InterventionStatus @default(OPEN)
+  resolution String?            @db.Text
+  resolvedAt DateTime?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  task    Task  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  manager User  @relation("ManagerInterventions", fields: [managerId], references: [id])
+  captain User? @relation("CaptainInterventions", fields: [captainId], references: [id])
+
+  @@index([taskId])
+  @@index([status])
+}
+
+// ─── Suppliers ──────────────────────────────────────────────────────────────
 
 model Supplier {
   id        String       @id @default(cuid())
@@ -435,6 +655,7 @@ model Lead {
 
   owner           User? @relation("LeadOwner", fields: [ownerId], references: [id])
   assignedManager User? @relation("AssignedLeads", fields: [assignedManagerId], references: [id])
+  attributions    LeadAttribution[]
 }
 
 model Conversation {
@@ -500,23 +721,25 @@ model PricingDataPoint {
 // ─── Contracts ──────────────────────────────────────────────────────────────
 
 model Contract {
-  id            String   @id @default(cuid())
-  userId        String   // Manager, Crew, or Client
-  type          String   // MANAGER_AGREEMENT | CREW_MONTHLY | CREW_FREELANCER | CLIENT_SERVICE
+  id            String    @id @default(cuid())
+  userId        String    // Manager, Crew, or Client
+  propertyId    String?   // For CLIENT_SERVICE contracts, links to the property
+  type          String    // MANAGER_AGREEMENT | CREW_MONTHLY | CREW_FREELANCER | CLIENT_SERVICE
   title         String
-  terms         String   @db.Text  // contract content (markdown or HTML)
-  compensation  Json?    // structured: {monthlyRate, taskRate, commissionShare, subscriptionShare...}
+  terms         String    @db.Text  // contract content (markdown or HTML)
+  compensation  Json?     // structured: {monthlyRate, taskRate, commissionShare, subscriptionShare...}
   startDate     DateTime
   endDate       DateTime?
-  status        String   @default("ACTIVE") // DRAFT | ACTIVE | EXPIRED | TERMINATED
+  status        String    @default("ACTIVE") // DRAFT | ACTIVE | EXPIRED | TERMINATED
   signedAt      DateTime?
-  signedByUser  Boolean  @default(false)
-  signedByAdmin Boolean  @default(false)
-  notes         String?  @db.Text
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  signedByUser  Boolean   @default(false)
+  signedByAdmin Boolean   @default(false)
+  notes         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  user User @relation("ContractUser", fields: [userId], references: [id])
+  user     User      @relation("ContractUser", fields: [userId], references: [id])
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
 }
 
 // ─── App Settings (key-value store) ─────────────────────────────────────────
@@ -596,6 +819,7 @@ model CompetitorPrice {
 // ─── AI Monitoring ───────────────────────────────────────────────────────────
 
 enum AlertSeverity {
+  CRITICAL
   HIGH
   MEDIUM
   LOW
@@ -603,15 +827,23 @@ enum AlertSeverity {
 }
 
 model SystemAlert {
-  id         String        @id @default(cuid())
-  checkType  String        // PAYOUT_NO_INVOICE | INVOICE_PAID_NO_PAIDAT | COMMISSION_MISMATCH | CHECKIN_NO_TASK | PROPERTY_STALE
-  severity   AlertSeverity @default(MEDIUM)
-  entityId   String?       // ID da entidade afectada
-  entityType String?       // "Payout" | "Invoice" | "Reservation" | "Property"
-  message    String
-  details    Json?         // dados adicionais para o futuro modelo Claude
-  resolvedAt DateTime?
-  createdAt  DateTime      @default(now())
+  id            String        @id @default(cuid())
+  checkType     String        // PAYOUT_NO_INVOICE | INVOICE_PAID_NO_PAIDAT | COMMISSION_MISMATCH | CHECKIN_NO_TASK | PROPERTY_STALE | etc.
+  severity      AlertSeverity @default(MEDIUM)
+  entityId      String?       // ID da entidade afectada
+  entityType    String?       // "Payout" | "Invoice" | "Reservation" | "Property"
+  message       String
+  details       Json?         // dados adicionais para o futuro modelo Claude
+  aiAnalysis    String?       @db.Text // análise + sugestão de fix da Claude Haiku
+  autoFixedAt   DateTime?     // timestamp quando foi auto-corrigido
+  autoFixNotes  String?       @db.Text // o que foi feito no auto-fix
+  notifiedAt    DateTime?     // última vez que enviou email/webhook (para suppression)
+  resolvedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt @default(now())
+
+  @@index([severity, resolvedAt])
+  @@index([checkType, resolvedAt])
 }
 
 // ─── Marketing ───────────────────────────────────────────────────────────────
@@ -699,7 +931,106 @@ model LeadAttribution {
   campaignId   String
   attributedAt DateTime @default(now())
 
+  lead     Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
   @@unique([leadId, campaignId])
+}
+
+
+enum RecruitRole {
+  MANAGER
+  CREW
+}
+
+enum RecruitStatus {
+  NEW
+  CONTACTED
+  INTERVIEWING
+  ACCEPTED
+  REJECTED
+}
+
+model RecruitApplication {
+  id             String         @id @default(cuid())
+  role           RecruitRole
+  name           String
+  email          String
+  phone          String?
+  // Location
+  zone           String?        // e.g. "Almunecar", "Nerja", "Salobrena"
+  // Manager-specific
+  languages      String[]       // ["en", "sv", "no"]
+  experience     String?        @db.Text
+  // Crew-specific
+  skills         String[]       // ["CLEANING", "MAINTENANCE", "CHECK_IN"]
+  availability   String?        // "full-time" | "part-time" | "weekends"
+  // Common
+  message        String?        @db.Text
+  source         String?        // utm_source or "landing"
+  locale         String?        // browser locale when submitted
+  status             RecruitStatus  @default(NEW)
+  reviewedAt         DateTime?
+  reviewedById       String?
+  adminNotes         String?        @db.Text
+  convertedToUserId  String?        // set when converted into a real User via invite
+  convertedAt        DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([role, status])
+  @@index([createdAt])
+}
+
+// ─── Notifications ──────────────────────────────────────────────────────────
+
+enum NotificationType {
+  // Tasks
+  TASK_ASSIGNED
+  TASK_CONFIRMED
+  TASK_SUBMITTED
+  TASK_APPROVED
+  TASK_REJECTED
+  TASK_REDISTRIBUTED
+  // Crew
+  CREW_PAYOUT_READY
+  CREW_PAYOUT_PAID
+  CREW_SCORE_CHANGE
+  CREW_LEVEL_UP
+  CREW_LEVEL_DOWN
+  // Manager
+  NEW_LEAD
+  CLIENT_REGISTERED
+  CLIENT_PROPERTY_APPROVED
+  COMMISSION_PAID
+  // Client
+  PROPERTY_APPROVED
+  CONTRACT_READY
+  PROPERTY_ACTIVE
+  BOOKING_RECEIVED
+  PAYOUT_COMPLETED
+  VISIT_COMPLETED
+  TAX_DEADLINE
+  // System
+  INTERVENTION_OPENED
+  INTERVENTION_RESOLVED
+  AI_ALERT
+  GENERAL
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType @default(GENERAL)
+  title     String
+  body      String?          @db.Text
+  link      String?
+  read      Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt])
+  @@index([createdAt])
 }

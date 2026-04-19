@@ -23,6 +23,18 @@ const DEFAULT_CHECKLIST_ITEMS = [
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  // MANAGER can only access checklists for properties belonging to their clients
+  if (me.role === 'MANAGER') {
+    const prop = await prisma.property.findUnique({
+      where: { id: params.id },
+      select: { owner: { select: { managerId: true } } },
+    })
+    if (!prop || prop.owner?.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
 
   const items = await prisma.propertyChecklistItem.findMany({
     where: { propertyId: params.id },
@@ -34,6 +46,18 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
+
+  // MANAGER can only manage checklists for properties belonging to their clients
+  if (me.role === 'MANAGER') {
+    const prop = await prisma.property.findUnique({
+      where: { id: params.id },
+      select: { owner: { select: { managerId: true } } },
+    })
+    if (!prop || prop.owner?.managerId !== me.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
 
   const body = await request.json()
 

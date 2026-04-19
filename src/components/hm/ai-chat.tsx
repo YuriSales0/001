@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Bot, X, Send, Loader2, AlertCircle } from 'lucide-react'
+import { useLocale } from '@/i18n/provider'
 
 type Message = {
   role: 'user' | 'assistant'
@@ -12,16 +13,26 @@ type Props = {
   role?: string
 }
 
-const PLACEHOLDER: Record<string, string> = {
-  CREW:    'Ex: Que tarefas tenho esta semana?',
-  MANAGER: 'Ex: Como está a ocupação dos meus clientes?',
-  ADMIN:   'Ex: Quais anomalias estão activas?',
-  CLIENT:  'Ex: Como está a performance da minha propriedade?',
+const PLACEHOLDER_KEYS: Record<string, string> = {
+  CREW: 'aiChat.placeholder.CREW',
+  MANAGER: 'aiChat.placeholder.MANAGER',
+  ADMIN: 'aiChat.placeholder.ADMIN',
+  CLIENT: 'aiChat.placeholder.CLIENT',
+}
+
+/** Escape HTML entities so user/API content cannot inject tags */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }
 
 /** Lightweight markdown → HTML (bold, italic, lists, line breaks) */
 function renderMarkdown(text: string): string {
-  return text
+  return escapeHtml(text)
     // Strip common emojis that pollute the chat
     .replace(/[✅❌⚠️📅📍💰👤😊🔗✓📌🔴🟡🟢⭐🏠💡🎯📊📈📉🔧⚙️🚀💬📝🔔📢🏡🌊🏖️🛏️]/g, '')
     // Strip markdown headers → just bold text
@@ -46,6 +57,7 @@ function renderMarkdown(text: string): string {
 }
 
 export function AiChat({ role = 'ADMIN' }: Props) {
+  const { t } = useLocale()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>(() => {
     if (typeof window === 'undefined') return []
@@ -107,22 +119,20 @@ export function AiChat({ role = 'ADMIN' }: Props) {
       })
       const data = await res.json()
       setReady(data.ready ?? false)
-      setMessages(prev => [...prev, { role: 'assistant', content: data.answer ?? data.error ?? 'Erro ao obter resposta.' }])
+      setMessages(prev => [...prev, { role: 'assistant', content: data.answer ?? data.error ?? t('aiChat.errorConnection') }])
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Erro de ligação. Tenta novamente.' }])
+      setMessages(prev => [...prev, { role: 'assistant', content: t('aiChat.errorConnection') }])
     } finally {
       setLoading(false)
     }
   }
 
-  const placeholder = PLACEHOLDER[role] ?? 'Coloca a tua questão…'
+  const placeholder = t(PLACEHOLDER_KEYS[role] ?? 'aiChat.placeholder.default')
 
-  const welcomeByRole: Record<string, string> = useMemo(() => ({
-    CREW: 'Olá! Posso ajudar-te com tarefas, checklists, relatórios de checkout e procedimentos de campo.',
-    MANAGER: 'Olá! Posso ajudar com a tua carteira de clientes, payouts, CRM e relatórios.',
-    ADMIN: 'Olá! Posso ajudar com tudo — operações, financeiro, AI Pricing, monitor de anomalias.',
-    CLIENT: 'Olá! Posso ajudar-te a entender os teus ganhos, reservas, plano e manutenção.',
-  }), [])
+  const welcomeMessage = useMemo(() => {
+    const key = `aiChat.welcome.${role}`
+    return t(key)
+  }, [role, t])
 
   return (
     <>
@@ -155,9 +165,9 @@ export function AiChat({ role = 'ADMIN' }: Props) {
               <Bot className="h-4 w-4 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white">Assistente HM</p>
+              <p className="text-sm font-semibold text-white">{t('aiChat.title')}</p>
               <p className="text-[10px] text-white/50">
-                {ready === false ? 'Configuração pendente' : ready === true ? 'Activo · com dados reais' : role}
+                {ready === false ? t('aiChat.statusPending') : ready === true ? t('aiChat.statusActive') : role}
               </p>
             </div>
             <button onClick={() => setOpen(false)} className="text-white/40 hover:text-white transition-colors">
@@ -170,7 +180,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center text-gray-400 gap-2 px-4">
                 <Bot className="h-8 w-8 text-gray-200" />
-                <p className="text-xs leading-relaxed">{welcomeByRole[role] ?? welcomeByRole.ADMIN}</p>
+                <p className="text-xs leading-relaxed">{welcomeMessage}</p>
               </div>
             )}
             {messages.map((m, i) => (
@@ -206,7 +216,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
           {ready === false && messages.length > 0 && (
             <div className="mx-3 mb-2 flex items-center gap-1.5 rounded-lg bg-amber-50 border border-amber-200 px-3 py-1.5">
               <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-              <p className="text-[10px] text-amber-700">Adiciona <code className="font-mono">ANTHROPIC_API_KEY</code> no Vercel para activar</p>
+              <p className="text-[10px] text-amber-700">{t('aiChat.errorNotConfigured')}</p>
             </div>
           )}
 

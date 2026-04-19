@@ -3,22 +3,16 @@ import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import {
-  Home, TrendingUp, CalendarDays, Star, MessageCircle, Building2,
-  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles,
+  Home, TrendingUp, CalendarDays, Star, MessageCircle,
+  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles, FileText,
 } from 'lucide-react'
+import { HmLogo } from '@/components/hm/hm-logo'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
 import { AiChat } from '@/components/hm/ai-chat'
+import { NotificationBell } from '@/components/hm/notification-bell'
+import { loadMessagesSync, t, type Locale } from '@/i18n'
 
 export const dynamic = 'force-dynamic'
-
-const baseLinks = [
-  { href: '/client/dashboard',  label: 'My Home',     icon: Home },
-  { href: '/client/financials', label: 'My Earnings', icon: TrendingUp },
-  { href: '/client/bookings',   label: 'My Bookings', icon: CalendarDays },
-  { href: '/client/care',       label: 'Care',        icon: Wrench },
-  { href: '/client/plan',       label: 'My Plan',     icon: Star },
-  { href: '/client/messages',   label: 'Contact us',  icon: MessageCircle },
-]
 
 const AI_PLANS = ['MID', 'PREMIUM']
 
@@ -27,6 +21,18 @@ export default async function ClientLayout({ children }: { children: React.React
   if (!realUser) redirect('/login')
   if (!realUser.isSuperUser && realUser.role !== 'CLIENT') redirect('/me')
   const user = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
+  const msgs = loadMessagesSync((user.language as Locale) ?? 'en')
+
+  const baseLinks = [
+    { href: '/client/dashboard',  label: t(msgs, 'common.dashboard'),        icon: Home },
+    { href: '/client/financials', label: t(msgs, 'owner.monthlyEarnings'),   icon: TrendingUp },
+    { href: '/client/bookings',   label: t(msgs, 'owner.myReservations'),    icon: CalendarDays },
+    { href: '/client/care',       label: t(msgs, 'common.maintenance'),      icon: Wrench },
+    { href: '/client/tax',        label: t(msgs, 'owner.taxCompliance'),     icon: FileText },
+    { href: '/client/contracts',   label: t(msgs, 'contracts.myContract'),    icon: FileText },
+    { href: '/client/plan',        label: t(msgs, 'common.myPlan'),           icon: Star },
+    { href: '/client/messages',   label: t(msgs, 'owner.contactManager'),    icon: MessageCircle },
+  ]
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
@@ -35,13 +41,13 @@ export default async function ClientLayout({ children }: { children: React.React
   const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { subscriptionPlan: true } })
   const hasAI = AI_PLANS.includes(dbUser?.subscriptionPlan ?? '')
   const navLinks = hasAI
-    ? [...baseLinks, { href: '/client/ai', label: 'AI Pricing', icon: Sparkles }]
+    ? [...baseLinks, { href: '/client/ai', label: t(msgs, 'common.aiPricing'), icon: Sparkles }]
     : baseLinks
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--hm-ivory)' }}>
       {/* Sidebar — client-side toggle handled via CSS peer trick */}
-      <input type="checkbox" id="sidebar-toggle" className="peer hidden" />
+      <input type="checkbox" id="sidebar-toggle" className="peer hidden" autoComplete="off" defaultChecked={false} />
 
       {/* Mobile overlay */}
       <label
@@ -56,13 +62,10 @@ export default async function ClientLayout({ children }: { children: React.React
       >
         {/* Logo */}
         <div className="flex h-14 items-center justify-between border-b px-4"
-             style={{ borderColor: 'rgba(201,168,76,0.2)' }}>
+             style={{ borderColor: 'rgba(176,138,62,0.2)' }}>
           <Link href="/client/dashboard" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-                 style={{ background: 'var(--hm-gold)' }}>
-              <Building2 className="h-4 w-4" style={{ color: 'var(--hm-black)' }} />
-            </div>
-            <span className="font-bold text-white text-sm">
+            <HmLogo size={24} onDark />
+            <span className="font-semibold text-white text-sm tracking-tight">
               Host<span style={{ color: 'var(--hm-gold)' }}>Masters</span>
             </span>
           </Link>
@@ -72,7 +75,7 @@ export default async function ClientLayout({ children }: { children: React.React
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
+        <nav data-tour="sidebar-nav" className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
           {navLinks.map(link => {
             const Icon = link.icon
             return (
@@ -89,13 +92,13 @@ export default async function ClientLayout({ children }: { children: React.React
         </nav>
 
         {/* Profile + user */}
-        <div className="border-t p-3 space-y-1" style={{ borderColor: 'rgba(201,168,76,0.2)' }}>
+        <div className="border-t p-3 space-y-1" style={{ borderColor: 'rgba(176,138,62,0.2)' }}>
           <Link
             href="/client/profile"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors"
           >
             <User className="h-4 w-4 shrink-0" />
-            My Profile
+            {t(msgs, 'common.myProfile')}
           </Link>
           <div className="flex items-center gap-2.5 rounded-lg px-3 py-2">
             {user.image ? (
@@ -128,9 +131,10 @@ export default async function ClientLayout({ children }: { children: React.React
           <div className="flex items-center gap-1.5 text-sm text-gray-500">
             <span className="font-medium text-gray-800">HostMasters</span>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span>Client Portal</span>
+            <span>{t(msgs, 'common.clientPortal')}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
+            <NotificationBell />
             <Link href="/client/profile"
               className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
               {user.image ? (
@@ -142,7 +146,7 @@ export default async function ClientLayout({ children }: { children: React.React
                   {initials}
                 </div>
               )}
-              <span className="hidden sm:block">{user.name ?? 'My Profile'}</span>
+              <span className="hidden sm:block">{user.name ?? t(msgs, 'common.myProfile')}</span>
             </Link>
           </div>
         </header>

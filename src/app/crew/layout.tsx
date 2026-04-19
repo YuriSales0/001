@@ -1,24 +1,28 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
-import { Building2, ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
+import { ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
+import { HmLogo } from '@/components/hm/hm-logo'
 import { AiChat } from '@/components/hm/ai-chat'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
+import { NotificationBell } from '@/components/hm/notification-bell'
+import { loadMessagesSync, t, type Locale } from '@/i18n'
 
 export const dynamic = 'force-dynamic'
-
-const navLinks = [
-  { href: '/crew',          label: 'My Tasks',    icon: ClipboardList },
-  { href: '/crew/calendar', label: 'Calendar',    icon: Calendar },
-  { href: '/crew/earnings', label: 'Earnings',    icon: Wallet },
-  { href: '/crew/profile',  label: 'My Profile',  icon: User },
-]
 
 export default async function CrewLayout({ children }: { children: React.ReactNode }) {
   const realUser = await getCurrentUser()
   if (!realUser) redirect('/login')
   if (!realUser.isSuperUser && realUser.role !== 'CREW') redirect('/me')
   const user = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
+  const msgs = loadMessagesSync((user.language as Locale) ?? 'en')
+
+  const navLinks = [
+    { href: '/crew',          label: t(msgs, 'crew.myTasks'),      icon: ClipboardList },
+    { href: '/crew/calendar', label: t(msgs, 'common.calendar'),   icon: Calendar },
+    { href: '/crew/earnings', label: t(msgs, 'common.revenue'),    icon: Wallet },
+    { href: '/crew/profile',  label: t(msgs, 'common.myProfile'),  icon: User },
+  ]
 
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
@@ -26,7 +30,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <input type="checkbox" id="crew-sidebar-toggle" className="peer hidden" />
+      <input type="checkbox" id="crew-sidebar-toggle" className="peer hidden" autoComplete="off" defaultChecked={false} />
 
       {/* Mobile overlay */}
       <label
@@ -40,15 +44,12 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
         {/* Logo */}
         <div className="flex h-14 items-center justify-between border-b border-white/10 px-4">
           <Link href="/crew" className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-                 style={{ background: '#C9A84C' }}>
-              <Building2 className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-bold text-white text-sm">
-              Host<span style={{ color: '#C9A84C' }}>Masters</span>
+            <HmLogo size={24} onDark />
+            <span className="font-semibold text-white text-sm tracking-tight">
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ background: 'rgba(201,168,76,0.2)', color: '#C9A84C' }}>
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
               Crew
             </span>
           </Link>
@@ -82,7 +83,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
               <img src={user.image} alt="" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
             ) : (
               <div className="flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 text-[11px] font-bold"
-                   style={{ background: '#C9A84C', color: '#111827' }}>
+                   style={{ background: '#B08A3E', color: '#0B1E3A' }}>
                 {initials}
               </div>
             )}
@@ -106,9 +107,10 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
           <div className="flex items-center gap-1.5 text-sm text-gray-500">
             <span className="font-medium text-gray-800">HostMasters</span>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span>Crew Portal</span>
+            <span>{t(msgs, 'common.crewPortal')}</span>
           </div>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <NotificationBell />
             <Link href="/crew/profile"
               className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 transition-colors">
               {user.image ? (
@@ -116,11 +118,11 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
                 <img src={user.image} alt="" className="h-6 w-6 rounded-full object-cover" />
               ) : (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold"
-                     style={{ background: '#C9A84C', color: '#111827' }}>
+                     style={{ background: '#B08A3E', color: '#0B1E3A' }}>
                   {initials}
                 </div>
               )}
-              <span className="hidden sm:block">{user.name ?? 'My Profile'}</span>
+              <span className="hidden sm:block">{user.name ?? t(msgs, 'common.myProfile')}</span>
             </Link>
           </div>
         </header>

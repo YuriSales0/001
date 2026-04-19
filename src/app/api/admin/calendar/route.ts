@@ -57,13 +57,16 @@ export async function GET(req: NextRequest) {
         assignee: { select: { id: true, name: true } },
       },
     }),
-    prisma.payout.findMany({
-      where: {
-        scheduledFor: { gte: from, lte: to },
-        ...(propFilter ? { property: propFilter } : {}),
-      },
-      include: { property: { select: { id: true, name: true } } },
-    }),
+    // CREW should not see financial payout data
+    me.role === 'CREW'
+      ? Promise.resolve([])
+      : prisma.payout.findMany({
+          where: {
+            scheduledFor: { gte: from, lte: to },
+            ...(propFilter ? { property: propFilter } : {}),
+          },
+          include: { property: { select: { id: true, name: true } } },
+        }),
     me.role === 'ADMIN'
       ? prisma.user.findMany({
           where: { birthday: { not: null }, role: 'CLIENT' },

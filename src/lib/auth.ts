@@ -19,6 +19,11 @@ const devUsers: Array<{
   { id: 'client-1', name: 'Thomas Weber', email: 'client@hostmaster.es', role: 'CLIENT', language: 'en' },
 ]
 
+const secret = process.env.NEXTAUTH_SECRET
+if (!secret && process.env.NODE_ENV === 'production') {
+  throw new Error('NEXTAUTH_SECRET must be set in production')
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -38,6 +43,10 @@ export const authOptions: NextAuthOptions = {
             if (user?.password) {
               const ok = await bcrypt.compare(credentials.password, user.password)
               if (!ok) return null
+              // Block login if email is not verified (dev fallback password bypasses this)
+              if (!user.emailVerified && credentials.password !== 'dev') {
+                throw new Error('EMAIL_NOT_VERIFIED')
+              }
               return {
                 id: user.id,
                 name: user.name ?? email,
@@ -45,11 +54,15 @@ export const authOptions: NextAuthOptions = {
                 role: user.role as AppRole,
                 language: user.language,
                 isSuperUser: (user as unknown as { isSuperUser?: boolean }).isSuperUser ?? false,
+                isCaptain: (user as unknown as { isCaptain?: boolean }).isCaptain ?? false,
               }
             }
           }
-        } catch {
-          // fall through to dev fallback
+        } catch (err) {
+          if (err instanceof Error && err.message === 'EMAIL_NOT_VERIFIED') {
+            throw err
+          }
+          // fall through to dev fallback on infra errors
         }
 
         // Dev fallback — only when not in production
@@ -69,6 +82,7 @@ export const authOptions: NextAuthOptions = {
         token.role = (user as { role?: AppRole }).role || 'CLIENT'
         token.language = (user as { language?: string }).language || 'en'
         token.isSuperUser = (user as { isSuperUser?: boolean }).isSuperUser ?? false
+        token.isCaptain = (user as { isCaptain?: boolean }).isCaptain ?? false
       }
       return token
     },
@@ -78,11 +92,12 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as AppRole
         session.user.language = (token.language as string) || 'en'
         session.user.isSuperUser = token.isSuperUser as boolean
+        session.user.isCaptain = token.isCaptain as boolean
       }
       return session
     },
   },
   pages: { signIn: '/login' },
   session: { strategy: 'jwt' },
-  secret: process.env.NEXTAUTH_SECRET || 'dev-secret-hostmaster-2026',
+  secret: secret || 'dev-secret-hostmaster-2026',
 }

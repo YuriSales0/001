@@ -19,6 +19,7 @@ export async function GET() {
       role: true,
       name: true,
       phone: true,
+      language: true,
       crewContractType: true,
       crewMonthlyRate: true,
       crewTaskRate: true,
@@ -39,6 +40,7 @@ export async function GET() {
     currentData: {
       name: user.name,
       phone: user.phone,
+      language: user.language,
       crewContractType: user.crewContractType,
       crewMonthlyRate: user.crewMonthlyRate,
       crewTaskRate: user.crewTaskRate,
@@ -70,12 +72,9 @@ export async function POST(request: NextRequest) {
   if (data.phone) update.phone = data.phone
   if (data.language) update.language = data.language
 
-  // Crew-specific
+  // Crew-specific — CREW can set non-financial preferences but NOT their own rates
   if (me.role === 'CREW') {
-    if (data.contractType) update.crewContractType = data.contractType
-    if (data.monthlyRate !== undefined) update.crewMonthlyRate = Number(data.monthlyRate) || null
-    if (data.taskRate !== undefined) update.crewTaskRate = Number(data.taskRate) || null
-    if (data.hourlyRate !== undefined) update.crewHourlyRate = Number(data.hourlyRate) || null
+    // Compensation fields (contractType, monthlyRate, taskRate, hourlyRate) are ADMIN-only
     if (data.skills) update.crewSkills = JSON.stringify(data.skills)
     if (data.availability) update.crewAvailability = JSON.stringify(data.availability)
   }
@@ -86,9 +85,16 @@ export async function POST(request: NextRequest) {
     if (data.commissionShare !== undefined) update.managerCommissionShare = Number(data.commissionShare) || null
   }
 
-  // Sign pending contracts
+  // Sign pending contracts — only contracts belonging to this user
   if (data.signContractIds && Array.isArray(data.signContractIds)) {
     for (const contractId of data.signContractIds) {
+      const contract = await prisma.contract.findUnique({
+        where: { id: contractId as string },
+        select: { userId: true },
+      })
+      if (!contract || contract.userId !== me.id) {
+        return NextResponse.json({ error: 'Forbidden: contract does not belong to you' }, { status: 403 })
+      }
       await prisma.contract.update({
         where: { id: contractId as string },
         data: { signedByUser: true, signedAt: new Date() },

@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
 export async function GET(request: NextRequest) {
-  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT', 'CREW'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
   try {

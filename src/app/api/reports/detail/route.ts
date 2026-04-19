@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+  const me = guard.user!
 
   const { searchParams } = new URL(request.url)
   const propertyId = searchParams.get('propertyId')
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
         name: true,
         city: true,
         commissionRate: true,
-        owner: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true, email: true, managerId: true } },
       },
     }),
     prisma.reservation.findMany({
@@ -50,6 +51,11 @@ export async function GET(request: NextRequest) {
 
   if (!property) {
     return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+  }
+
+  // MANAGER can only view report details for properties belonging to their clients
+  if (me.role === 'MANAGER' && property.owner?.managerId !== me.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   const grossRevenue  = reservations.reduce((s, r) => s + r.amount, 0)

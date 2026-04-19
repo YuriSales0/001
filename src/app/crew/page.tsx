@@ -1,10 +1,13 @@
 "use client"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   Wrench, Calendar, MapPin, ClipboardCheck, CheckCircle2, PlayCircle,
-  AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save,
+  AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save, X, ImagePlus,
 } from "lucide-react"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
+import { showToast } from "@/components/hm/toast"
+import { useLocale } from "@/i18n/provider"
+import { CrewScoreCard } from "@/components/hm/crew-score-card"
 
 type ChecklistItem = { text: string; done: boolean }
 type Task = {
@@ -16,20 +19,29 @@ type Task = {
   description: string | null
   notes: string | null
   checklist: ChecklistItem[] | null
+  photos: string[]
   property: { id: string; name: string; address: string; city: string }
 }
 
-const TYPE_LABEL: Record<string, string> = {
-  CLEANING: "Cleaning",
-  MAINTENANCE_PREVENTIVE: "Preventive maintenance",
-  MAINTENANCE_CORRECTIVE: "Corrective maintenance",
-  INSPECTION: "Inspection",
-  CHECK_IN: "Check-in",
-  CHECK_OUT: "Check-out",
-  TRANSFER: "Transfer",
-  SHOPPING: "Shopping",
-  LAUNDRY: "Laundry",
+// Compress a File to a small JPEG data URL before upload
+async function compressPhoto(file: File, maxDim = 1280, quality = 0.72): Promise<string> {
+  const bitmap = await createImageBitmap(file)
+  const ratio = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height))
+  const w = Math.round(bitmap.width * ratio)
+  const h = Math.round(bitmap.height * ratio)
+  const canvas = document.createElement("canvas")
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext("2d")
+  if (!ctx) throw new Error("Canvas not supported")
+  ctx.drawImage(bitmap, 0, 0, w, h)
+  return canvas.toDataURL("image/jpeg", quality)
 }
+
+const TYPE_KEYS = [
+  'CLEANING', 'MAINTENANCE_PREVENTIVE', 'MAINTENANCE_CORRECTIVE', 'INSPECTION',
+  'CHECK_IN', 'CHECK_OUT', 'TRANSFER', 'SHOPPING', 'LAUNDRY',
+] as const
 
 const TYPE_COLOR: Record<string, string> = {
   CLEANING: "bg-blue-100 text-blue-700",
@@ -55,10 +67,14 @@ const dayKey = (s: string) => {
 }
 
 export default function CrewHome() {
+  const { t } = useLocale()
+  const typeLabel = (type: string) =>
+    (TYPE_KEYS as readonly string[]).includes(type) ? t(`crew.taskTypes.${type}`) : type
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<Task | null>(null)
   const [filter, setFilter] = useState<"open" | "today" | "done">("open")
+  const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [checkout, setCheckout] = useState({
     condition: "good",
@@ -66,17 +82,66 @@ export default function CrewHome() {
     damages: "",
     notes: "",
   })
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const uploadPhoto = async (file: File) => {
+    if (!selected) return
+    setUploadingPhoto(true)
+    try {
+      const dataUrl = await compressPhoto(file)
+      const res = await fetch(`/api/tasks/${selected.id}/photos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ photo: dataUrl }),
+      })
+      const result = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        showToast(result.error ?? t('crew.home.photoUploadFailed'), "error")
+        return
+      }
+      setTasks(prev => prev.map(t => t.id === selected.id ? { ...t, photos: result.photos } : t))
+      setSelected(s => s ? { ...s, photos: result.photos } : s)
+    } catch (err) {
+      console.error(err)
+      showToast(t('crew.home.photoProcessFailed'), "error")
+    } finally {
+      setUploadingPhoto(false)
+      if (fileInputRef.current) fileInputRef.current.value = ""
+    }
+  }
+
+  const removePhoto = async (index: number) => {
+    if (!selected) return
+    const res = await fetch(`/api/tasks/${selected.id}/photos?index=${index}`, {
+      method: "DELETE",
+    })
+    const result = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      showToast(result.error ?? t('crew.home.photoRemoveFailed'), "error")
+      return
+    }
+    setTasks(prev => prev.map(t => t.id === selected.id ? { ...t, photos: result.photos } : t))
+    setSelected(s => s ? { ...s, photos: result.photos } : s)
+  }
 
   const load = async () => {
     setLoading(true)
-    const res = await fetch("/api/tasks")
-    const data: Task[] = res.ok ? await res.json() : []
-    setTasks(data)
-    if (selected) {
-      const fresh = data.find(t => t.id === selected.id)
-      if (fresh) setSelected(fresh)
+    setError(null)
+    try {
+      const res = await fetch("/api/tasks")
+      if (!res.ok) throw new Error("Failed to load tasks")
+      const data: Task[] = await res.json()
+      setTasks(data)
+      if (selected) {
+        const fresh = data.find(t => t.id === selected.id)
+        if (fresh) setSelected(fresh)
+      }
+    } catch {
+      setError(t('crew.home.loadFailed'))
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -137,14 +202,17 @@ export default function CrewHome() {
   const completeRegular = () => patchTask({ status: "COMPLETED" })
 
   const isCheckout = selected?.type === "CHECK_OUT"
+  const requiresPhotos = selected?.type === "CHECK_OUT" || selected?.type === "CLEANING"
+  const photoCount = selected?.photos?.length ?? 0
+  const hasMinPhotos = !requiresPhotos || photoCount >= 2
   const checklistDone = selected?.checklist?.filter(c => c.done).length ?? 0
   const checklistTotal = selected?.checklist?.length ?? 0
   const allChecklistDone = checklistTotal > 0 && checklistDone === checklistTotal
 
   return (
-    <div className="flex h-[calc(100vh-3.25rem)]" style={{ fontFamily: "system-ui, sans-serif" }}>
+    <div className="flex h-[calc(100vh-3.25rem)]">
       {/* List */}
-      <aside className="w-80 border-r bg-white flex flex-col shrink-0">
+      <aside className={`w-full lg:w-80 border-r bg-white flex flex-col shrink-0 ${selected ? 'hidden lg:flex' : 'flex'}`}>
         <div className="px-4 py-3 border-b hm-animate-in hm-stagger-1">
           <DashboardGreeting
             headingClass="text-lg font-bold text-navy-900"
@@ -152,22 +220,24 @@ export default function CrewHome() {
           />
         </div>
 
+        <CrewScoreCard />
+
         <div className="flex border-b hm-animate-in hm-stagger-2">
           {[
-            { k: "today", l: `Today (${counts.today})` },
-            { k: "open",  l: `Open (${counts.open})` },
-            { k: "done",  l: `Done (${counts.done})` },
-          ].map(t => (
+            { k: "today", l: `${t('crew.today')} (${counts.today})` },
+            { k: "open",  l: `${t('crew.open')} (${counts.open})` },
+            { k: "done",  l: `${t('crew.done')} (${counts.done})` },
+          ].map(f => (
             <button
-              key={t.k}
-              onClick={() => setFilter(t.k as typeof filter)}
+              key={f.k}
+              onClick={() => setFilter(f.k as typeof filter)}
               className={`flex-1 px-3 py-2 text-xs font-semibold border-b-2 transition-colors ${
-                filter === t.k
+                filter === f.k
                   ? "border-navy-900 text-navy-900"
                   : "border-transparent text-gray-500 hover:text-navy-900"
               }`}
             >
-              {t.l}
+              {f.l}
             </button>
           ))}
         </div>
@@ -175,13 +245,42 @@ export default function CrewHome() {
         <div className="flex-1 overflow-y-auto divide-y hm-animate-in hm-stagger-3">
           {loading && (
             <div className="p-6 flex items-center gap-2 text-sm text-gray-400">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+              <Loader2 className="h-4 w-4 animate-spin" /> {t('crew.home.loading')}
             </div>
           )}
-          {!loading && visible.length === 0 && (
+          {!loading && error && (
+            <div className="p-6 text-center text-sm text-red-500">
+              <AlertTriangle className="h-8 w-8 mx-auto text-red-300 mb-1" />
+              {error}
+            </div>
+          )}
+          {!loading && !error && visible.length === 0 && (
             <div className="p-6 text-center text-sm text-gray-400">
-              <Calendar className="h-8 w-8 mx-auto text-gray-300 mb-1" />
-              No tasks here.
+              {filter === "done" ? (
+                <>
+                  <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-400" />
+                  </div>
+                  <p className="font-semibold text-gray-700 mb-0.5">{t('crew.home.allCaughtUp')}</p>
+                  <p className="text-xs text-gray-400">{t('crew.home.allCaughtUpBody')}</p>
+                </>
+              ) : filter === "today" ? (
+                <>
+                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                    <Calendar className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <p className="font-semibold text-gray-700 mb-0.5">{t('crew.home.nothingToday')}</p>
+                  <p className="text-xs text-gray-400">{t('crew.home.nothingTodayBody')}</p>
+                </>
+              ) : (
+                <>
+                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                    <Calendar className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <p className="font-semibold text-gray-700 mb-0.5">{t('crew.home.noOpen')}</p>
+                  <p className="text-xs text-gray-400">{t('crew.home.noOpenBody')}</p>
+                </>
+              )}
             </div>
           )}
           {visible.map(t => {
@@ -198,7 +297,7 @@ export default function CrewHome() {
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <span className="text-sm font-semibold text-navy-900 truncate">{t.title}</span>
                   <span className={`text-[10px] font-semibold rounded px-1.5 py-0.5 shrink-0 ${TYPE_COLOR[t.type] ?? "bg-gray-100 text-gray-700"}`}>
-                    {TYPE_LABEL[t.type]?.split(" ")[0] ?? t.type}
+                    {typeLabel(t.type).split(" ")[0]}
                   </span>
                 </div>
                 <div className="text-xs text-gray-500 truncate flex items-center gap-1">
@@ -224,7 +323,7 @@ export default function CrewHome() {
       </aside>
 
       {/* Detail */}
-      <main className="flex-1 overflow-y-auto bg-gray-50">
+      <main className={`flex-1 overflow-y-auto bg-gray-50 ${!selected ? 'hidden lg:block' : 'block'}`}>
         {!selected ? (
           <div className="h-full flex items-center justify-center text-gray-400 text-sm">
             <div className="text-center">
@@ -234,11 +333,18 @@ export default function CrewHome() {
           </div>
         ) : (
           <div className="max-w-2xl mx-auto p-6 space-y-5">
+            {/* Back button (mobile) */}
+            <button
+              onClick={() => setSelected(null)}
+              className="lg:hidden inline-flex items-center gap-1 text-sm text-gray-600 hover:text-navy-900 mb-2"
+            >
+              <span aria-hidden="true">&larr;</span> Back to tasks
+            </button>
             {/* Header */}
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className={`text-xs font-semibold rounded-full px-2.5 py-0.5 ${TYPE_COLOR[selected.type] ?? "bg-gray-100 text-gray-700"}`}>
-                  {TYPE_LABEL[selected.type] ?? selected.type}
+                  {typeLabel(selected.type)}
                 </span>
                 <span className={`text-xs font-semibold rounded-full px-2.5 py-0.5 ${
                   selected.status === "COMPLETED" ? "bg-green-100 text-green-700"
@@ -271,7 +377,7 @@ export default function CrewHome() {
                 disabled={saving}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 text-white py-3 font-semibold hover:bg-amber-600 disabled:opacity-50"
               >
-                <PlayCircle className="h-5 w-5" /> Start task
+                <PlayCircle className="h-5 w-5" /> {t('crew.detail.startTask')}
               </button>
             )}
 
@@ -281,7 +387,7 @@ export default function CrewHome() {
                 <div className="px-4 py-3 border-b bg-gray-50 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <ClipboardCheck className="h-4 w-4 text-navy-700" />
-                    <span className="font-semibold text-navy-900 text-sm">Checklist</span>
+                    <span className="font-semibold text-navy-900 text-sm">{t("crew.checklist")}</span>
                   </div>
                   <span className="text-xs text-gray-500">{checklistDone}/{checklistTotal}</span>
                 </div>
@@ -307,24 +413,90 @@ export default function CrewHome() {
               </div>
             )}
 
+            {/* Photo evidence — CHECK_OUT and CLEANING */}
+            {requiresPhotos && (
+              <div className="rounded-xl border bg-white p-5 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <h3 className="font-semibold text-navy-900 flex items-center gap-2">
+                      <Camera className="h-4 w-4" /> {t('crew.home.photoEvidence')}
+                      <span className={`text-xs font-bold ${hasMinPhotos ? "text-green-600" : "text-amber-600"}`}>
+                        {photoCount}/2+
+                      </span>
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {t('crew.home.photoSubtitle')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {(selected.photos ?? []).map((p, i) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden border bg-gray-100 group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
+                      {selected.status !== "COMPLETED" && (
+                        <button
+                          onClick={() => removePhoto(i)}
+                          className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label="Remove photo"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {selected.status !== "COMPLETED" && photoCount < 12 && (
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingPhoto}
+                      className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-navy-700 hover:bg-navy-50 flex flex-col items-center justify-center text-gray-500 transition-colors disabled:opacity-50"
+                    >
+                      {uploadingPhoto ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <>
+                          <ImagePlus className="h-5 w-5 mb-1" />
+                          <span className="text-[10px] font-semibold uppercase tracking-wider">{t('crew.home.addPhoto')}</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (file) uploadPhoto(file)
+                  }}
+                />
+              </div>
+            )}
+
             {/* Checkout report — only for CHECK_OUT */}
             {isCheckout && selected.status !== "COMPLETED" && (
               <div className="rounded-xl border bg-white p-5 space-y-4">
                 <div>
                   <h3 className="font-semibold text-navy-900 flex items-center gap-2">
-                    <Camera className="h-4 w-4" /> Check-out report
+                    <Camera className="h-4 w-4" /> {t("crew.detail.checkoutReport")}
                   </h3>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    The owner is notified automatically when you submit.
+                    {t("crew.detail.checkoutReportDesc")}
                   </p>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Property condition</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.propertyCondition")}</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { v: "good",  l: "Good",  c: "border-green-300 hover:bg-green-50" },
-                      { v: "minor", l: "Minor issues", c: "border-amber-300 hover:bg-amber-50" },
-                      { v: "major", l: "Major issues", c: "border-red-300 hover:bg-red-50" },
+                      { v: "good",  l: t("crew.detail.conditionGood"),  c: "border-green-300 hover:bg-green-50" },
+                      { v: "minor", l: t("crew.detail.conditionMinor"), c: "border-amber-300 hover:bg-amber-50" },
+                      { v: "major", l: t("crew.detail.conditionMajor"), c: "border-red-300 hover:bg-red-50" },
                     ].map(o => (
                       <button
                         key={o.v}
@@ -339,45 +511,62 @@ export default function CrewHome() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Observed issues</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.observedIssues")}</label>
                   <textarea
                     rows={2}
+                    maxLength={500}
                     value={checkout.issues}
                     onChange={e => setCheckout(c => ({ ...c, issues: e.target.value }))}
-                    placeholder="e.g. broken lamp in living room, slow drain in bathroom…"
+                    placeholder={t("crew.detail.observedPlaceholder")}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
+                  <div className="text-right text-xs text-gray-400 mt-1">
+                    {checkout.issues.length}/500
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Damages requiring follow-up</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.damages")}</label>
                   <textarea
                     rows={2}
+                    maxLength={500}
                     value={checkout.damages}
                     onChange={e => setCheckout(c => ({ ...c, damages: e.target.value }))}
-                    placeholder="Describe any damage, cost estimate if known…"
+                    placeholder={t("crew.detail.damagesPlaceholder")}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
+                  <div className="text-right text-xs text-gray-400 mt-1">
+                    {checkout.damages.length}/500
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Internal notes for the office</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t("crew.detail.internalNotes")}</label>
                   <textarea
                     rows={2}
+                    maxLength={500}
                     value={checkout.notes}
                     onChange={e => setCheckout(c => ({ ...c, notes: e.target.value }))}
-                    placeholder="Anything the office should know…"
+                    placeholder={t("crew.detail.internalNotesPlaceholder")}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
                   />
+                  <div className="text-right text-xs text-gray-400 mt-1">
+                    {checkout.notes.length}/500
+                  </div>
                 </div>
                 <button
                   onClick={submitCheckout}
-                  disabled={saving || (checklistTotal > 0 && !allChecklistDone)}
+                  disabled={saving || (checklistTotal > 0 && !allChecklistDone) || !hasMinPhotos}
                   className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
                 >
-                  <Save className="h-5 w-5" /> Submit check-out report
+                  <Save className="h-5 w-5" /> {t("crew.detail.submitCheckout")}
                 </button>
                 {checklistTotal > 0 && !allChecklistDone && (
                   <p className="text-xs text-amber-700 flex items-center gap-1">
-                    <AlertTriangle className="h-3.5 w-3.5" /> Complete the checklist before submitting.
+                    <AlertTriangle className="h-3.5 w-3.5" /> {t('crew.home.completeChecklistFirst')}
+                  </p>
+                )}
+                {!hasMinPhotos && (
+                  <p className="text-xs text-amber-700 flex items-center gap-1">
+                    <AlertTriangle className="h-3.5 w-3.5" /> {t('crew.home.min2BeforeSubmit')}
                   </p>
                 )}
               </div>
@@ -385,19 +574,26 @@ export default function CrewHome() {
 
             {/* Mark complete (non-checkout) */}
             {!isCheckout && selected.status !== "COMPLETED" && (
-              <button
-                onClick={completeRegular}
-                disabled={saving || (checklistTotal > 0 && !allChecklistDone)}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
-              >
-                <CheckCircle2 className="h-5 w-5" /> Mark task complete
-              </button>
+              <>
+                <button
+                  onClick={completeRegular}
+                  disabled={saving || (checklistTotal > 0 && !allChecklistDone) || !hasMinPhotos}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white py-3 font-semibold hover:bg-green-700 disabled:opacity-50"
+                >
+                  <CheckCircle2 className="h-5 w-5" /> {t("crew.detail.markComplete")}
+                </button>
+                {!hasMinPhotos && (
+                  <p className="text-xs text-amber-700 flex items-center gap-1">
+                    <AlertTriangle className="h-3.5 w-3.5" /> {t('crew.home.min2BeforeComplete')}
+                  </p>
+                )}
+              </>
             )}
 
             {selected.status === "COMPLETED" && (
               <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
                 <div className="flex items-center gap-2 font-semibold mb-1">
-                  <CheckCircle2 className="h-4 w-4" /> Task completed
+                  <CheckCircle2 className="h-4 w-4" /> {t("crew.detail.taskCompleted")}
                 </div>
                 {selected.notes && <p className="text-xs whitespace-pre-wrap">{selected.notes}</p>}
               </div>
@@ -405,7 +601,7 @@ export default function CrewHome() {
 
             {saving && (
               <div className="flex items-center gap-2 text-xs text-gray-500">
-                <Loader2 className="h-3 w-3 animate-spin" /> Saving…
+                <Loader2 className="h-3 w-3 animate-spin" /> {t('crew.home.savingStatus')}
               </div>
             )}
           </div>

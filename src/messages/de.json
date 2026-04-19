@@ -24,7 +24,51 @@
     "status": "Status",
     "active": "Aktiv",
     "inactive": "Inaktiv",
-    "maintenance": "Wartung"
+    "maintenance": "Wartung",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "yes": "Ja",
+    "no": "Nein",
+    "close": "Schließen",
+    "actions": "Aktionen",
+    "details": "Details",
+    "date": "Datum",
+    "from": "Von",
+    "to": "Bis",
+    "total": "Gesamt",
+    "notes": "Notizen",
+    "description": "Beschreibung",
+    "name": "Name",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "language": "Sprache",
+    "updated": "Erfolgreich aktualisiert",
+    "created": "Erfolgreich erstellt",
+    "deleted": "Erfolgreich gelöscht",
+    "error": "Etwas ist schiefgelaufen",
+    "tryAgain": "Erneut Versuchen",
+    "required": "Pflichtfeld",
+    "invalidEmail": "Ungültige E-Mail-Adresse",
+    "myProfile": "Mein Profil",
+    "myPlan": "Mein Plan",
+    "clientPortal": "Kundenportal",
+    "crewPortal": "Team-Portal",
+    "messages": "Nachrichten",
+    "invoices": "Rechnungen",
+    "payouts": "Auszahlungen",
+    "setup": "Einrichtung",
+    "team": "Team",
+    "integrations": "Integrationen",
+    "leads": "Leads",
+    "operations": "Betrieb",
+    "myPortfolio": "Mein Portfolio",
+    "myOwners": "Meine Eigentümer",
+    "administration": "Verwaltung",
+    "ownerReports": "Eigentümerberichte",
+    "crmPipeline": "CRM-Pipeline",
+    "marketing": "Marketing",
+    "aiPricing": "KI-Preisgestaltung"
   },
   "owner": {
     "welcome": "Willkommen zurück",
@@ -36,7 +80,21 @@
     "financialReport": "Finanzbericht",
     "downloadReport": "Bericht herunterladen",
     "personalUse": "Für persönliche Nutzung blockieren",
-    "noUpcomingBookings": "Keine bevorstehenden Buchungen"
+    "noUpcomingBookings": "Keine bevorstehenden Buchungen",
+    "myProperties": "Meine Immobilien",
+    "myStatements": "Meine Abrechnungen",
+    "myReservations": "Meine Reservierungen",
+    "propertyDetails": "Immobiliendetails",
+    "earningsOverview": "Einnahmenübersicht",
+    "occupancyCalendar": "Belegungskalender",
+    "maintenanceRequests": "Wartungsanfragen",
+    "requestMaintenance": "Wartung anfordern",
+    "annualSummary": "Jahresübersicht",
+    "ytdEarnings": "Bisherige Jahreseinnahmen",
+    "payoutHistory": "Auszahlungsverlauf",
+    "pendingPayout": "Ausstehende Auszahlung",
+    "paidOut": "Ausgezahlt",
+    "taxCompliance": "Steuern & Compliance"
   },
   "manager": {
     "overview": "Übersicht",
@@ -53,7 +111,286 @@
     "addReservation": "Reservierung hinzufügen",
     "addTask": "Aufgabe hinzufügen",
     "addSupplier": "Lieferant hinzufügen",
-    "generateReport": "Bericht erstellen"
+    "generateReport": "Bericht erstellen",
+    "assignTask": "Aufgabe zuweisen",
+    "checkIns": "Check-ins",
+    "checkOuts": "Check-outs",
+    "todayActivity": "Heutige Aktivität",
+    "weekOverview": "Wochenübersicht",
+    "ownerStatements": "Eigentümerabrechnungen",
+    "crewManagement": "Teamverwaltung",
+    "cleaningSchedule": "Reinigungsplan",
+    "inspectionReport": "Inspektionsbericht",
+    "performanceMetrics": "Leistungskennzahlen",
+    "guestCommunication": "Gästekommunikation",
+    "welcome": {
+      "badge": "Willkommen bei HostMasters",
+      "titleLine1": "Dein Manager-Portal ist bereit.",
+      "titleLine2": "Hol jetzt deinen ersten Kunden an Bord.",
+      "description": "Du erhältst 15 % der monatlichen Abos + 3 % der Bruttomieten für jeden Kunden, den du betreust. Portfolio-Boni starten ab 10 Immobilien. Das System übernimmt die Operations — du konzentrierst dich auf die Beziehungen.",
+      "step1Title": "Füge deinen ersten Kunden hinzu",
+      "step1Desc": "Lade einen Eigentümer aus deinem Netzwerk ein. Das System schickt ihm einen Anmeldelink und den Servicevertrag.",
+      "step1Cta": "Kunden hinzufügen",
+      "step2Title": "Hilf ihm beim Setup",
+      "step2Desc": "Der Eigentümer lädt die Objektdaten und Fotos hoch, wählt die Hausregeln aus und unterschreibt den Servicevertrag.",
+      "step2Cta": "Ablauf ansehen",
+      "step3Title": "Sieh dein Portfolio wachsen",
+      "step3Desc": "Verfolge Einnahmen, Provisionen und Portfolio-Boni in Echtzeit. Den operativen Teil übernimmt die HM-Crew.",
+      "step3Cta": "Zum Dashboard",
+      "infoPerClient": "Pro Kunde (Mid)",
+      "infoPerClientSub": "15 % Abo + 3 % Miete",
+      "infoAt10": "Bei 10 Immobilien",
+      "infoAt20": "Bei 20 Immobilien",
+      "infoAt30": "Bei 30 Immobilien",
+      "infoBonus": "Portfolio-Bonus",
+      "helpTitle": "Brauchst du Unterstützung beim Start?",
+      "helpProfileTitle": "Profil & Vergütung prüfen",
+      "helpProfileDesc": "Prüfe dein Gebiet, deine Anteile und Vertragsdetails",
+      "helpContactTitle": "Admin kontaktieren",
+      "helpContactDesc": "Fragen zu Ablauf, Gebiet oder Provision"
+    },
+    "clientsPage": {
+      "title": "Meine Kunden",
+      "thName": "Name",
+      "thEmail": "E-Mail",
+      "thPhone": "Telefon",
+      "thId": "ID",
+      "loadFailed": "Daten konnten nicht geladen werden",
+      "emptyTitle": "Noch keine Kunden",
+      "emptyBody": "Lade deinen ersten Kunden ein, um sein Objekt zu verwalten.",
+      "inviteFirst": "+ Ersten Kunden einladen",
+      "inviteBtn": "Kunden einladen"
+    },
+    "inviteClient": {
+      "back": "Zurück zu meinen Kunden",
+      "title": "Kunden einladen",
+      "subtitle": "Sende einen Anmeldelink. Der neue Eigentümer wird automatisch deinem Portfolio zugeordnet.",
+      "emailLabel": "E-Mail",
+      "nameLabel": "Name",
+      "namePlaceholder": "Vollständiger Name (optional)",
+      "planLabel": "Empfohlener Plan",
+      "planHint": "(optional, kann später geändert werden)",
+      "planCommission": "Provision",
+      "warningTitle": "Vor dem Einladen",
+      "warningBody": "Stell sicher, dass du mit dem Eigentümer gesprochen hast und er diese E-Mail erwartet. Kalte Einladungen konvertieren schlecht.",
+      "send": "Einladung senden",
+      "sending": "Sende…",
+      "cancel": "Abbrechen",
+      "sendFailed": "Einladung konnte nicht gesendet werden",
+      "sentTitle": "Einladung gesendet",
+      "sentBodyPrefix": "Wir haben eine E-Mail an",
+      "sentBodySuffix": "mit einem Anmeldelink gesendet. Der Kunde wird dir automatisch zugeordnet.",
+      "signupLinkLabel": "Anmeldelink (für deine Referenz)",
+      "inviteAnother": "Weiteren Kunden einladen"
+    },
+    "referralPage": {
+      "title": "Mein Empfehlungslink",
+      "subtitle": "Teile diesen Link mit Eigentümern in deinem Gebiet. Neue Kunden, die sich darüber registrieren, werden dir automatisch zugeordnet.",
+      "personalLink": "Dein persönlicher Link",
+      "territoryPrefix": "Gebiet:",
+      "copyLink": "Link kopieren",
+      "copied": "Kopiert!",
+      "share": "Teilen",
+      "customize": "Anpassen",
+      "codeLabel": "Empfehlungscode",
+      "codeHint": "Nur Buchstaben, Zahlen und Bindestriche (3-40 Zeichen). Muss eindeutig sein.",
+      "territoryLabel": "Gebiet",
+      "territoryPlaceholder": "Almuñécar, Nerja usw.",
+      "save": "Speichern",
+      "saving": "Speichere…",
+      "cancel": "Abbrechen",
+      "statsClients": "Kunden in meinem Portfolio",
+      "statsClientsHint": "Eigentümer, die über deinen Link registriert oder dir zugeordnet sind",
+      "statsLeads": "Leads in meiner Pipeline",
+      "statsLeadsHint": "Offene Chancen, die du noch in Kunden umwandeln kannst",
+      "howTitle": "So funktioniert es",
+      "howStep1": "Teile deinen persönlichen Link mit Eigentümern — in Gesprächen, per E-Mail, WhatsApp oder Social Media.",
+      "howStep2Before": "Sobald ein Interessent",
+      "howStep2After": " besucht, markieren wir ihn automatisch als deinen Kontakt.",
+      "howStep3": "Registriert er sich und wird Kunde, wird er automatisch deinem Portfolio zugeordnet.",
+      "howStep4": "Du verdienst 15 % seines Abos und 3 % seiner Bruttomieten — Monat für Monat.",
+      "pitchTitle": "Fertige Nachricht zum Senden",
+      "pitchIntro": "Kopiere diese Nachricht und passe sie vor dem Versand an:",
+      "pitchCopy": "Nachricht kopieren",
+      "pitchCopied": "Nachricht in die Zwischenablage kopiert",
+      "pitchBody": "Hallo [Name],\n\nich weiß, dass du eine Immobilie an der Costa Tropical besitzt und vielleicht daran interessiert bist, wie du bessere Renditen ohne den ganzen Stress erzielen kannst.\n\nIch arbeite mit HostMasters, einer Plattform, die sich um alles kümmert — Inserate, Gästekommunikation, Reinigung, Wartung und Steuerpflichten (Modelo 179, IRNR, NRU-Registrierung). Transparente Gebühren, ein Dashboard mit echten Daten und KI-gestütztes Pricing.\n\nSchau es dir hier an: {url}\n\nIch erkläre es dir gerne, wann es dir passt.\n\nViele Grüße,\n[Dein Name]",
+      "linkUpdated": "Empfehlungslink aktualisiert",
+      "linkUpdateFailed": "Aktualisierung fehlgeschlagen",
+      "loadFailed": "Empfehlungsdaten konnten nicht geladen werden.",
+      "tryAgain": "Erneut versuchen"
+    },
+    "dashboardPage": {
+      "refresh": "Aktualisieren",
+      "loadFailed": "Daten konnten nicht geladen werden",
+      "noneIn7Days": "Keine in den nächsten 7 Tagen"
+    }
+  },
+  "admin": {
+    "systemLive": "System aktiv",
+    "hmRevenue": "HM-Umsatz",
+    "openPayouts": "Offene Auszahlungen",
+    "pendingInvoices": "Ausstehende Rechnungen",
+    "overdueTasksAlert": "Überfällige Aufgaben",
+    "upcomingCheckIns": "Bevorstehende Check-ins",
+    "upcomingCheckOuts": "Bevorstehende Check-outs",
+    "revenueBreakdown": "Umsatzaufschlüsselung",
+    "rentalVolume": "Mietvolumen",
+    "rentalCommission": "Mietprovision",
+    "invoicesPaid": "Bezahlte Rechnungen",
+    "totalRevenue": "Gesamtumsatz",
+    "quickNav": "Schnellnavigation",
+    "userManagement": "Benutzerverwaltung",
+    "allProperties": "Alle Immobilien",
+    "allReservations": "Alle Reservierungen",
+    "systemSettings": "Systemeinstellungen",
+    "platformHealth": "Plattformstatus",
+    "managerPerformance": "Manager-Leistung",
+    "financialOverview": "Finanzübersicht",
+    "subscriptionPlans": "Abonnementpläne",
+    "tax": "Steuern & Compliance",
+    "taxSubtitle": "Steuerpflichten für alle Kunden verwalten",
+    "newObligation": "Neue Verpflichtung",
+    "totalTracked": "Insgesamt verfolgt",
+    "actionRequired": "Handlung erforderlich",
+    "dueIn30d": "Fällig in 30 Tagen",
+    "allStatuses": "Alle Status",
+    "allClients": "Alle Kunden",
+    "noObligationsMatch": "Keine Verpflichtungen entsprechen den aktuellen Filtern.",
+    "newTaxObligation": "Neue Steuerpflicht",
+    "client": "Kunde",
+    "selectClient": "— Kunde auswählen —",
+    "propertyOptional": "Immobilie (optional)",
+    "noProperty": "— Keine (Verpflichtung auf Kundenebene) —",
+    "typeLabel": "Typ",
+    "period": "Zeitraum",
+    "notesVisibleToClient": "Notizen (für Kunden sichtbar)",
+    "documentUrl": "Dokument-URL",
+    "document": "Dokument",
+    "create": "Erstellen",
+    "creating": "Wird erstellt…",
+    "failedToSave": "Änderungen konnten nicht gespeichert werden",
+    "failedToCreate": "Erstellen fehlgeschlagen",
+    "taxType": {
+      "VUT_LICENSE": "VUT — Touristenlizenz",
+      "MODELO_179": "Modelo 179",
+      "IRNR_MODELO_210": "IRNR Modelo 210",
+      "NIE": "NIE",
+      "ENERGY_CERTIFICATE": "Energieausweis",
+      "FISCAL_REPRESENTATIVE": "Steuervertreter",
+      "IBI": "IBI",
+      "OTHER": "Sonstige"
+    },
+    "taxStatus": {
+      "NOT_STARTED": "Nicht begonnen",
+      "IN_PROGRESS": "In Bearbeitung",
+      "ACTION_REQUIRED": "Handlung erforderlich",
+      "COMPLETED": "Abgeschlossen",
+      "EXPIRED": "Abgelaufen",
+      "NOT_APPLICABLE": "N/A"
+    }
+  },
+  "crew": {
+    "myTasks": "Meine Aufgaben",
+    "fieldOperations": "Einsätze vor Ort",
+    "today": "Heute",
+    "open": "Offen",
+    "done": "Erledigt",
+    "selectTask": "Aufgabe auswählen",
+    "startTask": "Aufgabe starten",
+    "markComplete": "Als erledigt markieren",
+    "submitReport": "Bericht einreichen",
+    "checklist": "Checkliste",
+    "checkoutReport": "Checkout-Bericht",
+    "propertyCondition": "Zustand der Immobilie",
+    "good": "Gut",
+    "minorIssues": "Kleine Mängel",
+    "majorIssues": "Schwere Mängel",
+    "observedIssues": "Festgestellte Mängel",
+    "damages": "Schäden",
+    "internalNotes": "Interne Notizen",
+    "uploadPhotos": "Fotos hochladen",
+    "taskDetails": "Aufgabendetails",
+    "priority": "Priorität",
+    "assignedTo": "Zugewiesen an",
+    "dueDate": "Fälligkeitsdatum",
+    "taskTypes": {
+      "CLEANING": "Reinigung",
+      "MAINTENANCE_PREVENTIVE": "Wartung (präventiv)",
+      "MAINTENANCE_CORRECTIVE": "Wartung (korrektiv)",
+      "INSPECTION": "Inspektion",
+      "CHECK_IN": "Check-in",
+      "CHECK_OUT": "Check-out",
+      "TRANSFER": "Transfer",
+      "SHOPPING": "Einkauf",
+      "LAUNDRY": "Wäscherei"
+    },
+    "home": {
+      "loading": "Lädt…",
+      "loadFailed": "Aufgaben konnten nicht geladen werden. Bitte aktualisieren.",
+      "allCaughtUp": "Alles erledigt!",
+      "allCaughtUpBody": "Noch keine abgeschlossenen Aufgaben. Sie erscheinen hier, sobald du fertig bist.",
+      "nothingToday": "Heute nichts geplant",
+      "nothingTodayBody": "Schau im Tab „Offen\" nach anstehenden Aufgaben.",
+      "noOpen": "Keine offenen Aufgaben",
+      "noOpenBody": "Neue Aufgaben erscheinen hier, sobald sie dir zugewiesen werden.",
+      "photoEvidence": "Fotonachweis",
+      "photoSubtitle": "Mindestens 2 Fotos erforderlich. Sie werden dem Eigentümer als Arbeitsnachweis gesendet.",
+      "addPhoto": "Foto hinzufügen",
+      "min2BeforeSubmit": "Füge mindestens 2 Fotos hinzu, bevor du absendest.",
+      "min2BeforeComplete": "Füge mindestens 2 Fotos hinzu, bevor du abschließt.",
+      "photoUploadFailed": "Foto-Upload fehlgeschlagen",
+      "photoProcessFailed": "Foto konnte nicht verarbeitet werden",
+      "photoRemoveFailed": "Foto konnte nicht entfernt werden",
+      "completeChecklistFirst": "Erledige erst die Checkliste, bevor du absendest.",
+      "savingStatus": "Speichere…"
+    },
+    "earnings": {
+      "title": "Meine Einnahmen",
+      "contractLabel": "Vertrag:",
+      "contractMonthly": "Monatlich",
+      "contractFreelancer": "Freelancer",
+      "perMonth": "/Monat",
+      "perTask": "/Aufgabe",
+      "bannerTitle": "Auszahlung innerhalb 24 h",
+      "bannerBodyMonthly": "Du erhältst {amount}/Monat — gutgeschrieben am 1. jedes Monats.",
+      "bannerBodyFreelancer": "Sobald der Eigentümer den Payout der Reservierung zahlt, erhältst du deinen Anteil innerhalb von 24 Stunden per Überweisung über die Plattform. Kein Warten aufs Monatsende.",
+      "thisMonth": "Dieser Monat",
+      "tasksThisMonth": "Aufgaben diesen Monat",
+      "tasksCompletedSuffix": "abgeschlossen",
+      "pending": "Offen",
+      "pendingSuffix": "zu erledigen",
+      "cumulative": "Gesamtsumme",
+      "totalTasksSuffix": "Aufgaben gesamt",
+      "byMonthTitle": "Einnahmen pro Monat",
+      "thMonth": "Monat",
+      "thTasks": "Aufgaben",
+      "thValue": "Betrag",
+      "noData": "Keine Daten zu abgeschlossenen Aufgaben.",
+      "recentTitle": "Zuletzt abgeschlossene Aufgaben",
+      "noTasksYet": "Noch keine abgeschlossenen Aufgaben",
+      "loading": "Lädt…",
+      "loadFailed": "Daten konnten nicht geladen werden. Bitte aktualisieren."
+    },
+    "detail": {
+      "backToTasks": "Zurück zu den Aufgaben",
+      "selectTask": "Wähle eine Aufgabe, um Details zu sehen",
+      "checkoutReport": "Check-out-Bericht",
+      "checkoutReportDesc": "Der Eigentümer wird beim Absenden automatisch benachrichtigt.",
+      "propertyCondition": "Zustand der Immobilie",
+      "conditionGood": "Gut",
+      "conditionMinor": "Kleine Mängel",
+      "conditionMajor": "Schwere Mängel",
+      "observedIssues": "Festgestellte Probleme",
+      "observedPlaceholder": "z.B. Lampe im Wohnzimmer kaputt, Abfluss im Bad langsam…",
+      "damages": "Schäden mit Nachverfolgung",
+      "damagesPlaceholder": "Beschreibe den Schaden, Kostenschätzung falls bekannt…",
+      "internalNotes": "Interne Notizen fürs Büro",
+      "internalNotesPlaceholder": "Was das Büro wissen sollte…",
+      "submitCheckout": "Check-out-Bericht absenden",
+      "markComplete": "Aufgabe als erledigt markieren",
+      "taskCompleted": "Aufgabe abgeschlossen",
+      "startTask": "Aufgabe starten"
+    }
   },
   "finance": {
     "grossRevenue": "Bruttoumsatz",
@@ -62,7 +399,21 @@
     "ownerPayout": "Eigentümerauszahlung",
     "income": "Einnahmen",
     "expenses": "Ausgaben",
-    "statement": "Abrechnung"
+    "statement": "Abrechnung",
+    "netRevenue": "Nettoumsatz",
+    "platformFees": "Plattformgebühren",
+    "cleaningFees": "Reinigungsgebühren",
+    "maintenanceCosts": "Wartungskosten",
+    "monthlyFee": "Monatliche Gebühr",
+    "annualFee": "Jährliche Gebühr",
+    "payoutDate": "Auszahlungsdatum",
+    "payoutStatus": "Auszahlungsstatus",
+    "paid": "Bezahlt",
+    "pending": "Ausstehend",
+    "overdue": "Überfällig",
+    "invoiceNumber": "Rechnungsnummer",
+    "billingPeriod": "Abrechnungszeitraum",
+    "taxReport": "Steuerbericht"
   },
   "auth": {
     "signIn": "Anmelden",
@@ -72,6 +423,583 @@
     "continueWithGoogle": "Mit Google fortfahren",
     "orContinueWith": "Oder fortfahren mit",
     "noAccount": "Noch kein Konto?",
-    "hasAccount": "Bereits ein Konto?"
+    "hasAccount": "Bereits ein Konto?",
+    "forgotPassword": "Passwort vergessen?",
+    "resetPassword": "Passwort zurücksetzen",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "verifyEmail": "E-Mail bestätigen",
+    "resendVerification": "Bestätigungsmail erneut senden",
+    "signOutConfirm": "Möchten Sie sich wirklich abmelden?",
+    "createAccount": "Konto erstellen",
+    "registerSubtitle": "Eigentümer — verwalten Sie Ihre Investition an der Costa Tropical.",
+    "namePlaceholder": "Ihr vollständiger Name",
+    "passwordPlaceholder": "Mind. 6 Zeichen",
+    "creating": "Wird erstellt...",
+    "nameRequired": "Name ist erforderlich",
+    "welcomeBack": "Willkommen zurück",
+    "loginSubtitle": "Melden Sie sich in Ihrem Eigentümerportal an",
+    "invalidCredentials": "Ungültige Anmeldedaten. Überprüfen Sie E-Mail und Passwort.",
+    "signingIn": "Anmeldung..."
+  },
+  "tour": {
+    "next": "Weiter",
+    "back": "Zurück",
+    "skip": "Tour überspringen",
+    "finish": "HostMasters jetzt nutzen",
+    "saving": "Wird gespeichert...",
+    "CLIENT": {
+      "steps": {
+        "welcome": {
+          "title": "Willkommen bei HostMasters",
+          "desc": "Lassen Sie uns Ihnen zeigen, was Ihr Eigentümerportal alles kann. Dieser kurze Rundgang führt Sie durch alle verfügbaren Tools, mit denen Sie Ihre Immobilie von überall auf der Welt verwalten und überwachen können."
+        },
+        "dashboard": {
+          "title": "Ihr Dashboard",
+          "desc": "Ihr Startbildschirm zeigt alles auf einen Blick: die Einnahmen dieses Monats, die Belegungsrate, Ihren nächsten Gast und den Zustand Ihrer Immobilie. In Echtzeit aktualisiert.",
+          "features": [
+            "Nettoeinnahmen mit Monatsvergleich",
+            "Belegungsbalken mit Prozentangabe",
+            "Nächster Gast mit Nationalität",
+            "Zustand der Immobilie",
+            "Schnellaktions-Schaltflächen"
+          ]
+        },
+        "earnings": {
+          "title": "Einnahmen und Auszahlungen",
+          "desc": "Verfolgen Sie jeden Euro. Sehen Sie Ihre Bruttoeinnahmen, unsere Provision, Reinigungskosten, Wartungskosten und Ihre Nettoauszahlung. Alles aufgeschlüsselt, nichts verborgen.",
+          "features": [
+            "Monatliche Finanzabrechnungen",
+            "Provisionsaufschlüsselung pro Buchung",
+            "Auszahlungsplan und -verlauf",
+            "Jahresübersicht bis dato",
+            "PDF-Export in Ihrer Sprache"
+          ]
+        },
+        "bookings": {
+          "title": "Buchungen und Kalender",
+          "desc": "Sehen Sie alle Reservierungen von Airbnb, Booking.com und Direktbuchungen. Erfahren Sie, wer kommt, wann und wie viel jeder Aufenthalt einbringt. Blockieren Sie jederzeit Termine für die persönliche Nutzung.",
+          "features": [
+            "Einheitlicher Kalender aller Plattformen",
+            "Gastdetails und Nationalität",
+            "Einnahmen pro Reservierung",
+            "Persönliche Terminblockierung",
+            "Check-in- / Check-out-Verfolgung"
+          ]
+        },
+        "care": {
+          "title": "Pflege und Wartung",
+          "desc": "Ihre Immobilie wird nach jedem Checkout inspiziert. Verfolgen Sie Reinigungen, vorbeugende Wartung und etwaige Probleme — alles mit Fotos und Berichten. Fordern Sie jederzeit einen Besuch an.",
+          "features": [
+            "Inspektionsberichte nach dem Checkout",
+            "Nachverfolgung des Reinigungsplans",
+            "Protokoll der vorbeugenden Wartung",
+            "Problemberichte mit Fotos",
+            "Besuchsanfrage mit einem Klick"
+          ]
+        },
+        "communication": {
+          "title": "Direkte Kommunikation",
+          "desc": "Schreiben Sie Ihrem Immobilienmanager direkt über die Plattform. Keine verlorenen E-Mails, kein Telefon-Ping-Pong. Alles dokumentiert und durchsuchbar. Ihr KI-Assistent ist ebenfalls rund um die Uhr verfügbar.",
+          "features": [
+            "In-App-Nachrichten mit Ihrem Manager",
+            "Vollständiger Gesprächsverlauf",
+            "KI-Assistent für sofortige Antworten",
+            "Dokumenten- und Fotofreigabe"
+          ]
+        },
+        "ai": {
+          "title": "KI-gestützte Tools",
+          "desc": "HostMasters nutzt künstliche Intelligenz, um Ihre Einnahmen zu maximieren. Die dynamische Preisgestaltung passt Ihren Nachtpreis anhand von 7 Marktfaktoren an. Unser KI-Monitor überprüft Ihre Immobilie täglich auf Auffälligkeiten.",
+          "features": [
+            "KI-Dynamische Preisgestaltung (bis zu +25% Einnahmen)",
+            "KI-Assistent 24/7 mit Ihren echten Daten",
+            "Tägliche automatisierte Immobilienprüfungen",
+            "Marktintelligenz und Wettbewerbsanalyse"
+          ]
+        },
+        "reports": {
+          "title": "Berichte und Dokumente",
+          "desc": "Laden Sie detaillierte monatliche Abrechnungen als PDF in Ihrer bevorzugten Sprache herunter. Jahresübersichten, steuerfertige Berichte und volle Transparenz bei jeder Transaktion.",
+          "features": [
+            "Monatliche PDF-Abrechnungen",
+            "Berichte in EN, PT, ES, DE",
+            "Jährliche Finanzübersicht",
+            "Detail auf Transaktionsebene"
+          ]
+        },
+        "plan": {
+          "title": "Ihr Plan",
+          "desc": "Sie können Ihren Abonnementplan jederzeit einsehen und upgraden. Höhere Pläne bieten niedrigere Provisionen, KI-Preisgestaltung, Smart-Lock-Integration und bevorzugten Support.",
+          "features": [
+            "4 Pläne: Starter, Basic, Mid, Premium",
+            "Niedrigere Provision bei höheren Plänen",
+            "KI-Funktionen bei Mid und Premium",
+            "Jederzeit upgraden, keine Bindung"
+          ]
+        },
+        "profile": {
+          "title": "Lassen Sie uns Ihr Profil einrichten",
+          "desc": "Nur ein paar Angaben, damit wir Ihr Erlebnis personalisieren können.",
+          "nameLabel": "Vollständiger Name",
+          "namePlaceholder": "Ihr Name",
+          "phoneLabel": "Telefonnummer",
+          "langLabel": "Bevorzugte Sprache"
+        },
+        "done": {
+          "title": "Alles bereit!",
+          "desc": "Ihr Portal ist einsatzbereit. Erkunden Sie Ihr Dashboard, prüfen Sie Ihre Einnahmen und kontaktieren Sie Ihren Manager jederzeit. Willkommen bei HostMasters."
+        },
+        "sidebar": {
+          "title": "Ihre Navigation",
+          "desc": "Diese Seitenleiste gibt Ihnen schnellen Zugriff auf alle Bereiche: Dashboard, Einnahmen, Buchungen, Pflege, Plan und direkte Kommunikation mit Ihrem Manager."
+        },
+        "guest": {
+          "title": "Ihr Nächster Gast",
+          "desc": "Sehen Sie, wer als Nächstes ankommt — mit Nationalitätsflagge, Daten und Aufenthaltsdauer. Immer im Bilde."
+        },
+        "condition": {
+          "title": "Zustand der Immobilie",
+          "desc": "Nach jedem Checkout wird Ihre Immobilie inspiziert. Sehen Sie hier den aktuellen Zustand — grün bedeutet alles in Ordnung."
+        },
+        "actions": {
+          "title": "Schnellaktionen",
+          "desc": "Blockieren Sie Termine, fordern Sie einen Wartungsbesuch an oder sehen Sie Ihren vollständigen Finanzbericht — alles mit einem Klick."
+        }
+      }
+    }
+  },
+  "demo": {
+    "badge": "Plattform-Tour",
+    "title": "Alles, was Sie brauchen, an einem Ort",
+    "subtitle": "Eine vollständige Verwaltungsplattform, entwickelt für internationale Immobilieneigentümer. Entdecken Sie, was Sie im Inneren erwartet.",
+    "tabs": {
+      "dashboard": "Eigentümer-Dashboard",
+      "bookings": "Buchungen & Kalender",
+      "finance": "Finanzberichte",
+      "care": "Pflege & Wartung",
+      "communication": "Kommunikation"
+    },
+    "dashboard": {
+      "title": "Ihre Immobilie auf einen Blick",
+      "desc": "Einnahmen in Echtzeit, Belegungsraten, Informationen zum nächsten Gast und Zustand der Immobilie — alles in einem Premium-Dashboard. Nie wieder Ihren Manager anrufen, um Updates zu erhalten.",
+      "features": [
+        "Nettoeinnahmen dieses Monats",
+        "Belegungsrate mit visueller Leiste",
+        "Nächster Gast mit Nationalitätsflagge",
+        "Zustand der Immobilie",
+        "Schnellaktionen: Termine blockieren, Besuch anfordern, Berichte ansehen"
+      ]
+    },
+    "bookings": {
+      "title": "Vollständige Buchungsübersicht",
+      "desc": "Sehen Sie jede Reservierung auf allen Plattformen — Airbnb, Booking.com und Direktbuchungen. Blockieren Sie Termine für die persönliche Nutzung. Lassen Sie sich nie wieder von einer Buchung überraschen.",
+      "features": [
+        "Einheitlicher Kalender aller OTAs",
+        "Gastdetails und Nationalität",
+        "Check-in- / Check-out-Daten",
+        "Einnahmen pro Buchung",
+        "Persönliche Terminblockierung"
+      ]
+    },
+    "finance": {
+      "title": "Transparente Finanzen auf den Cent genau",
+      "desc": "Monatliche Abrechnungen mit detaillierter Aufschlüsselung. Sehen Sie genau, was Sie verdient haben, was berechnet wurde und was kommt. Laden Sie PDF-Berichte in Ihrer Sprache herunter.",
+      "features": [
+        "Aufschlüsselung der Bruttoeinnahmen",
+        "Details zu Provisionen und Gebühren",
+        "Berechnung der Nettoauszahlung",
+        "PDF-Berichte in 4 Sprachen",
+        "Jahresübersicht bis dato"
+      ]
+    },
+    "care": {
+      "title": "Ihre Immobilie, stets bestens betreut",
+      "desc": "Verfolgen Sie jede Reinigung, Inspektion und Wartung. Sehen Sie Berichte mit Fotos. Kennen Sie den Zustand Ihrer Immobilie jederzeit, von überall.",
+      "features": [
+        "Geplante Reinigung nach jedem Aufenthalt",
+        "Nachverfolgung vorbeugender Wartung",
+        "Zustandsberichte nach dem Checkout",
+        "Problemmeldungen mit Fotos",
+        "Besichtigungen jederzeit anfordern"
+      ]
+    },
+    "communication": {
+      "title": "Direkter Draht zu Ihrem Team",
+      "desc": "Kommunizieren Sie direkt mit Ihrem Manager über die Plattform. Keine verlorenen E-Mails, kein Telefon-Ping-Pong. Alles dokumentiert, alles transparent.",
+      "features": [
+        "In-App-Nachrichten mit Ihrem Manager",
+        "KI-Assistent für sofortige Antworten",
+        "Benachrichtigungsverlauf",
+        "Dokumentenfreigabe",
+        "Mehrsprachiger Support"
+      ]
+    }
+  },
+  "aiTools": {
+    "badge": "KI-gestützt",
+    "title": "5 intelligente Tools, die für Sie arbeiten",
+    "subtitle": "HostMasters ist nicht nur ein Verwaltungsunternehmen — es ist eine Technologieplattform. Unsere KI-Tools arbeiten rund um die Uhr, um Ihre Einnahmen zu maximieren und Ihre Immobilie zu schützen.",
+    "tools": [
+      {
+        "name": "KI-Dynamische Preisgestaltung",
+        "desc": "Algorithmus, der 7 Faktoren analysiert — Saisonalität, Veranstaltungen, Wettbewerb, Nachfrage, Vorlaufzeit, Bewertungen und Belegung — um den optimalen Preis für jede einzelne Nacht festzulegen.",
+        "stat": "Bis zu +25% Einnahmen",
+        "statLabel": "ggü. Festpreisen"
+      },
+      {
+        "name": "KI-Team-Assistent",
+        "desc": "Intelligenter Chat-Assistent, verfügbar in jedem Portal. Fragen Sie nach Ihren Einnahmen, nächsten Buchungen, dem Zustand der Immobilie oder jeder anderen Frage — erhalten Sie sofortige Antworten auf Basis Ihrer echten Daten.",
+        "stat": "24/7",
+        "statLabel": "sofortige Antworten"
+      },
+      {
+        "name": "KI-Monitor",
+        "desc": "Autonomes System, das täglich 9 Prüfungen für jede Reservierung, Auszahlung und Aufgabe durchführt. Erkennt Anomalien, bevor sie zu Problemen werden — verpasste Check-ins, überfällige Auszahlungen, inaktive Immobilien.",
+        "stat": "9 Prüfungen",
+        "statLabel": "jeden Tag, automatisch"
+      },
+      {
+        "name": "Marktintelligenz",
+        "desc": "Wöchentliche Datenerhebung von Airbnb und Booking.com in der Region Costa Tropical. Echte Wettbewerbsdaten: Preise, Bewertungen, Belegung. Interaktive Karte mit Zonenanalyse und Marktpositionierung.",
+        "stat": "Über 50 Inserate",
+        "statLabel": "wöchentlich erfasst"
+      },
+      {
+        "name": "Preisanalyse für Eigentümer",
+        "desc": "Die Preisentwicklung Ihrer Immobilie im Zeitverlauf. Saisonale Trends, Durchschnittsraten, Belegungsmuster. Vergleichen Sie Ihre Preise mit dem Markt und erkennen Sie Optimierungspotenziale.",
+        "stat": "Echte Daten",
+        "statLabel": "keine Schätzungen"
+      }
+    ]
+  },
+  "landing": {
+    "nav": {
+      "problem": "Problem",
+      "solution": "Lösung",
+      "plans": "Pläne",
+      "enter": "Einloggen",
+      "startFree": "Gratis starten"
+    },
+    "badge": "Costa Tropical · España",
+    "hero": {
+      "title1": "Ihre Immobilie verdient",
+      "titleGold": "mehr als Verwaltung.",
+      "title2": "Sie verdient Intelligenz.",
+      "subtitle": "Sie haben an der Costa Tropical investiert — nicht um sich um Reinigungen, schwierige Gäste oder falsche Preise zu sorgen. HostMasters kümmert sich um alles mit echten Daten, KI-gestützter Preisgestaltung und voller Transparenz.",
+      "cta": "1. Monat gratis im Premium-Plan",
+      "ctaSub": "Keine Bindung. Jederzeit kündbar.",
+      "noLockin": "Keine Bindung",
+      "intlOwners": "Internationale Eigentümer",
+      "aiPowered": "KI-gestützte Preise"
+    },
+    "problem": {
+      "badge": "Das Problem",
+      "title": "Fernbesitzer zu sein sollte nicht so schwer sein",
+      "items": [
+        {
+          "title": "Zufällige Preise",
+          "desc": "Ohne Marktdaten sind Preise reines Raten. Sie verlieren Einnahmen in Spitzenzeiten und können in der Nebensaison nicht überzeugen."
+        },
+        {
+          "title": "Null Transparenz",
+          "desc": "Sie wissen nicht, was in Ihrer Immobilie passiert — bis eine Beschwerde oder eine überraschende Rechnung kommt."
+        },
+        {
+          "title": "Langsame Kommunikation",
+          "desc": "Verlorene E-Mails, Fotos die nie ankommen, Berichte die erst auf Nachfrage erscheinen."
+        },
+        {
+          "title": "Undurchsichtige Provisionen",
+          "desc": "Sie wissen nicht, wie viel für Sie übrig bleibt. Versteckte Kosten schmälern Ihre Rendite ohne Vorwarnung."
+        }
+      ]
+    },
+    "solution": {
+      "badge": "Die Lösung",
+      "title": "Verwaltung mit Intelligenz, nicht Vermutung",
+      "subtitle": "Drei Säulen, die HostMasters von jedem traditionellen Immobilienverwalter unterscheiden.",
+      "items": [
+        {
+          "title": "KI-Dynamische Preisgestaltung",
+          "desc": "Algorithmus, der Saisonalität, lokale Events, Wettbewerb und Echtzeit-Nachfrage analysiert, um den optimalen Preis für jede Nacht zu setzen.",
+          "highlight": "Bis zu +25% Einnahmen ggü. Festpreisen"
+        },
+        {
+          "title": "Ihre eigenen Daten, keine Schätzungen",
+          "desc": "Dashboard mit echten Daten aus Ihren Buchungen, Einnahmen und Kosten. Detaillierte Monatsberichte auf den Cent genau — keine Überraschungen.",
+          "highlight": "Volle Transparenz bei den Zahlen"
+        },
+        {
+          "title": "Marktintelligenz",
+          "desc": "Zugang zu Marktdaten der Costa Tropical: Belegungsraten nach Zone, Durchschnittspreise, Nachfragetrends und Benchmarks.",
+          "highlight": "Entscheidungen auf Basis echter Daten"
+        }
+      ]
+    },
+    "social": {
+      "badge": "Was der Markt sagt",
+      "title": "Eine Plattform für die Zukunft gebaut",
+      "items": [
+        {
+          "quote": "Der Kurzzeitvermietungsmarkt an der Costa Tropical wächst schnell, aber die meiste Verwaltung erfolgt noch manuell. Eine Plattform, die KI-Preisgestaltung mit echten Daten kombiniert, hat enormes Potenzial, den Sektor zu professionalisieren.",
+          "name": "Branchenanalyse",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Immobilienbesitzer, die in Südspanien investieren, brauchen Transparenz und Technologie. Die Lücke zwischen dem, was traditionelle Verwalter bieten, und dem, was Technologie ermöglicht, ist genau dort, wo Innovation entsteht.",
+          "name": "Marktausblick",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "Die Kombination aus dynamischen Preisalgorithmen, Echtzeit-Marktdaten und transparenten Eigentümerportalen repräsentiert die nächste Generation der Immobilienverwaltung — eine, die sowohl Eigentümern als auch Gästen zugutekommt.",
+          "name": "Technologie-Perspektive",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
+    "plans": {
+      "badge": "Pläne",
+      "title": "Wählen Sie das passende Serviceniveau",
+      "subtitle": "Alle Pläne beinhalten vollständige Verwaltung. Je mehr Sie investieren, desto geringer die Provision und desto mehr intelligente Tools erhalten Sie.",
+      "recommended": "Empfohlen",
+      "monthlyFee": "/Monat",
+      "annualFee": "/Jahr",
+      "commission": "Provision",
+      "startNow": "Jetzt starten",
+      "firstMonthFree": "1. Monat gratis",
+      "noMonthlyFee": "Keine monatliche Gebühr",
+      "starter": {
+        "features": [
+          "Komplette Kurzzeitvermietungs-Verwaltung",
+          "Airbnb, Booking.com & Direktinserate",
+          "24/7 Gästekommunikation",
+          "Monatliche Eigentümerabrechnung",
+          "Eigentümer-Dashboard",
+          "Reinigung: €70/Wechsel"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Alles aus Starter",
+          "Vorbeugende Wartung (1x/Monat)",
+          "Inspektion vor und nach dem Aufenthalt",
+          "Dokumentenmanagement",
+          "Mehrsprachige Abrechnungen",
+          "Reinigung: €60/Wechsel"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Alles aus Basic",
+          "KI-Preisgestaltung + Smart Lock",
+          "Prioritätsantwort: 12h Eigentümer / 2h Gast",
+          "Abrechnung in jeder Sprache",
+          "Reinigung inklusive ab 5 Nächten"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Alles aus Mid",
+          "Steuerkonformität (Modelo 179 + IRNR)",
+          "Gäste-Upsells: Transfers, Einkauf, Wäsche",
+          "Notfallreaktion innerhalb von 4h",
+          "Reinigung inklusive ab 3 Nächten"
+        ]
+      }
+    },
+    "finalCta": {
+      "title1": "Bereit für",
+      "titleGold": "echte Kontrolle",
+      "title2": "über Ihre Immobilie?",
+      "subtitle": "Starten Sie mit dem Premium-Plan für 1 Monat kostenlos. Erleben Sie den Unterschied, den echte Daten und KI-Preisgestaltung für Ihre Einnahmen machen.",
+      "cta": "1 Monat gratis starten",
+      "enterPortal": "Zum Portal",
+      "disclaimer": "Keine Bindung · Keine Kreditkarte · Jederzeit kündbar"
+    },
+    "footer": {
+      "tagline": "Premium-Verwaltung für Kurzzeitvermietung.",
+      "copyright": "© 2026 HostMasters."
+    },
+    "join": {
+      "badge": "Werde Teil des Teams",
+      "title": "Teil von HostMasters werden",
+      "subtitle": "Wir bauen eine Plattform, nicht nur ein Verwaltungsunternehmen. Komm als Manager oder Crew dazu.",
+      "manager": {
+        "title": "Starte dein Verwaltungsgeschäft",
+        "tagline": "Du hast das lokale Netzwerk und sprichst die Sprachen internationaler Eigentümer. Wir geben dir das System.",
+        "point1": "15% der Kundenabos + 3% der Brutto-Mieteinnahmen",
+        "point2": "Portfolio-Boni: €150 bei 10, €400 bei 20, €750 bei 30 Immobilien",
+        "point3": "Exklusives geografisches Gebiet",
+        "point4": "Komplette Plattform: CRM, Abrechnung, Betrieb",
+        "cta": "Als Manager bewerben",
+        "formTitle": "Manager-Bewerbung"
+      },
+      "crew": {
+        "title": "Stabile Arbeit an der Costa Tropical",
+        "tagline": "Professionelle Arbeit im Ferienvermietungssektor mit garantierter Bezahlung und klaren Aufgaben.",
+        "point1": "Zahlung innerhalb von 24 Stunden über die Plattform",
+        "point2": "Klare Aufgabenliste in der App — keine Verwirrung",
+        "point3": "Ganzjährige Arbeit (nicht nur Sommersaison)",
+        "point4": "Vorbeugende Wartung + Reinigung + Check-ins",
+        "cta": "Als Crew bewerben",
+        "formTitle": "Crew-Bewerbung"
+      },
+      "form": {
+        "required": "Name und E-Mail sind erforderlich",
+        "zone": "Bevorzugte Zone",
+        "languages": "Gesprochene Sprachen",
+        "experience": "Erfahrung (optional)",
+        "skills": "Fähigkeiten",
+        "availability": "Verfügbarkeit",
+        "message": "Sonst noch etwas? (optional)",
+        "submit": "Bewerbung absenden",
+        "thanks": "Bewerbung erhalten",
+        "thanksDesc": "Danke! Wir prüfen deine Bewerbung und melden uns bald."
+      }
+    }
+  },
+  "onboarding": {
+    "languageStep": "Wähle deine Sprache",
+    "languageStepDesc": "Das legt die Sprache der gesamten Plattform fest — E-Mails, Rechnungen, Verträge, Benachrichtigungen und KI-Assistenz.",
+    "profileStep": "Dein Profil",
+    "fullName": "Vollständiger Name",
+    "fullNamePlaceholder": "Dein Name",
+    "phonePlaceholder": "+34 600 000 000",
+    "crewContractStep": "Vertragsart",
+    "crewMonthly": "Monatlich",
+    "crewMonthlySub": "Festes Monatsgehalt",
+    "crewFreelancer": "Freelancer",
+    "crewFreelancerSub": "Pro erledigte Aufgabe",
+    "crewMonthlyLabel": "Monatsbetrag (€)",
+    "crewTaskLabel": "Betrag pro Aufgabe (€)",
+    "crewSkillsStep": "Fähigkeiten",
+    "crewSkillsDesc": "Wähle die Aufgabentypen, die du ausführen kannst.",
+    "managerCompStep": "Vergütungsvereinbarung",
+    "managerCompDescSet": "Vom Admin festgelegte Werte. Bitte bestätige die Konditionen.",
+    "managerCompDescEmpty": "Trage die mit dem Admin vereinbarten Werte ein.",
+    "managerSubShare": "% des Kundenabonnements",
+    "managerCommShare": "% der Bruttomieteinnahmen",
+    "clientPropertyStep": "Deine Immobilie",
+    "clientPropertyDesc": "Deine Immobilie wird vom Admin oder Manager eingerichtet. Bestätige deine Daten und akzeptiere den Servicevertrag im nächsten Schritt.",
+    "contractStep": "Servicevertrag",
+    "contractAccept": "Ich habe die Vertragsbedingungen gelesen und akzeptiere sie",
+    "contractNone": "Keine ausstehenden Verträge. Dein Admin stellt deinen Vertrag bald bereit.",
+    "confirmStep": "Alles bereit",
+    "confirmCrewMonthly": "Monatsvertrag eingerichtet.",
+    "confirmCrewFreelancer": "Freelancer-Vertrag eingerichtet.",
+    "confirmCrewSkills": "{n} Fähigkeit(en) ausgewählt.",
+    "confirmManager": "Vergütung: {sub}% Abonnements + {comm}% Provisionen.",
+    "confirmClient": "Dein Profil ist eingerichtet. Willkommen bei HostMasters.",
+    "confirmHint": "Klicke auf „Abschließen\", um die Plattform zu betreten. Du kannst diese Einstellungen später in deinem Profil ändern.",
+    "back": "Zurück",
+    "next": "Weiter",
+    "finish": "Abschließen",
+    "saving": "Speichere…",
+    "setupTitle": "Setup",
+    "setupSubtitle": "Ersteinrichtung deines Kontos"
+  },
+  "client": {
+    "dashboard": {
+      "pendingContract": "Du hast einen ausstehenden Servicevertrag",
+      "pendingContractDesc": "Unterschreibe ihn, um deine Immobilie zu aktivieren und Buchungen zu erhalten.",
+      "pendingInvoice": "{n} offene Rechnung(en)",
+      "pendingInvoiceTotal": "Gesamt: {amount} — klicke für Details",
+      "earningsThisMonth": "Deine Einnahmen diesen Monat — netto",
+      "occupancy": "Auslastung diesen Monat",
+      "nextGuest": "Nächster Gast",
+      "noUpcoming": "Keine kommenden Buchungen",
+      "propertyCondition": "Zustand der Immobilie",
+      "issuesFlagged": "{n} Problem(e) gemeldet",
+      "allGood": "Alles in Ordnung",
+      "lastInspected": "Letzte Inspektion {date}",
+      "careTitle": "Pflege & Wartung",
+      "seeAll": "Alle anzeigen",
+      "upcomingVisits": "Geplante Besuche",
+      "openIssues": "Offene Probleme",
+      "quickActions": "Schnellaktionen",
+      "blockDates": "Daten blockieren",
+      "blockDatesDesc": "Zeitraum für dich reservieren",
+      "requestVisit": "Besuch anfordern",
+      "requestVisitDesc": "Reinigung, Reparaturen oder Kontrolle",
+      "viewEarnings": "Einnahmen ansehen",
+      "viewEarningsDesc": "Abrechnungen und Prognosen",
+      "propertySetup": "Deine Immobilie wird eingerichtet",
+      "propertySetupDesc": "Dein Manager bereitet deine Immobilie vor. Dein Dashboard wird hier angezeigt, sobald alles bereit ist.",
+      "contactManager": "Deinen Manager kontaktieren"
+    },
+    "profileDocs": {
+      "managementAgreement": "Verwaltungsvertrag",
+      "houseRules": "Hausordnung",
+      "ownerGuide": "Eigentümer-Willkommensführer"
+    }
+  },
+  "aiChat": {
+    "placeholder": {
+      "CREW": "z.B. Welche Aufgaben habe ich diese Woche?",
+      "MANAGER": "z.B. Wie ist die Auslastung meiner Kunden?",
+      "ADMIN": "z.B. Welche Anomalien sind aktiv?",
+      "CLIENT": "z.B. Wie performt meine Immobilie?",
+      "default": "Stelle deine Frage…"
+    },
+    "welcome": {
+      "CREW": "Hallo! Ich kann dir mit Aufgaben, Checklisten, Check-out-Berichten und Abläufen helfen.",
+      "MANAGER": "Hallo! Ich kann dir mit deinem Kundenportfolio, Auszahlungen, CRM und Berichten helfen.",
+      "ADMIN": "Hallo! Ich kann bei allem helfen — Betrieb, Finanzen, KI-Pricing, Anomalie-Monitor.",
+      "CLIENT": "Hallo! Ich kann dir helfen, deine Einnahmen, Buchungen, dein Paket und Wartung zu verstehen."
+    },
+    "title": "HM-Assistent",
+    "statusPending": "Einrichtung ausstehend",
+    "statusActive": "Aktiv · mit Echtdaten",
+    "errorConnection": "Verbindungsfehler. Versuche es erneut.",
+    "errorNotConfigured": "ANTHROPIC_API_KEY in Vercel hinzufügen"
+  },
+  "notifications": {
+    "propertyApprovedTitle": "Immobilie genehmigt: {name}",
+    "propertyApprovedBody": "Deine Immobilie wurde genehmigt. Unterschreibe den Servicevertrag zur Aktivierung.",
+    "propertyActiveTitle": "Deine Immobilie ist jetzt live!",
+    "propertyActiveBody": "Vertrag unterschrieben und Immobilie aktiviert. Willkommen bei HostMasters.",
+    "contractSignedTitle": "Vertrag unterschrieben",
+    "contractSignedBody": "Dein Servicevertrag wurde erfolgreich unterschrieben.",
+    "bookingReceivedTitle": "Neue Buchung: {guest}",
+    "payoutCompletedTitle": "Auszahlung erhalten: {amount}",
+    "taskAssignedTitle": "Neue Aufgabe: {title}",
+    "taskAssignedBody": "{property} — bestätige innerhalb 30 Min.",
+    "taskApprovedTitle": "Aufgabe genehmigt",
+    "taskRejectedTitle": "Aufgabe abgelehnt",
+    "interventionResolvedTitle": "Intervention gelöst",
+    "clientRegisteredTitle": "Neuer Kunde registriert",
+    "newLeadTitle": "Neuer Lead in deiner Pipeline",
+    "crewPayoutPaidTitle": "Auszahlung erhalten: {amount}"
+  },
+  "contracts": {
+    "serviceAgreement": "Servicevertrag — HostMasters Costa Tropical",
+    "signed": "Unterschrieben",
+    "agreementSigned": "Vertrag unterschrieben",
+    "on": "am",
+    "bySigningAgree": "Mit der Unterschrift akzeptierst du die obigen Bedingungen.",
+    "signAgreement": "Vertrag unterschreiben",
+    "signing": "Unterschreibe…",
+    "signError": "Fehler beim Unterschreiben. Versuche es erneut.",
+    "networkError": "Netzwerkfehler. Versuche es erneut.",
+    "print": "Drucken / PDF",
+    "draft": "Entwurf",
+    "active": "Aktiv",
+    "expired": "Abgelaufen",
+    "terminated": "Beendet",
+    "contractsTitle": "Meine Verträge",
+    "contractsEmpty": "Noch keine Verträge. Sie erscheinen hier, sobald dein Manager sie einrichtet.",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum",
+    "noEndDate": "Unbefristet",
+    "myContract": "Mein Vertrag",
+    "noContract": "Noch kein Vertrag verfügbar. Kontaktiere deinen Admin.",
+    "type": "Typ"
+  },
+  "notifBell": {
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "empty": "Noch keine Benachrichtigungen",
+    "justNow": "gerade eben"
   }
 }
