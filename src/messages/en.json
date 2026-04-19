@@ -471,7 +471,14 @@
       "expert": "Expert",
       "expertDesc": "+10% rate bonus + premium properties",
       "elite": "Elite",
-      "eliteDesc": "+15% rate bonus + independent inspections"
+      "eliteDesc": "+15% rate bonus + independent inspections",
+      "pts": "pts",
+      "ptsTo": "pts to",
+      "nextLevel": "next level",
+      "tasks": "tasks",
+      "approved": "approved",
+      "incentiveTitle": "Higher score = more tasks for you",
+      "incentiveDesc": "Good work on a property builds trust. The platform prioritises you for future tasks at properties where you performed well."
     },
     "profile": {
       "roleDesc": "Crew · Field Operations",
@@ -525,7 +532,46 @@
     "overdue": "Overdue",
     "invoiceNumber": "Invoice Number",
     "billingPeriod": "Billing Period",
-    "taxReport": "Tax Report"
+    "taxReport": "Tax Report",
+    "report": {
+      "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+      },
+      "transfer": "Transfer",
+      "sent": "Sent",
+      "scheduled": "Scheduled",
+      "grossRentalIncome": "Gross rental income",
+      "hmCommission": "HostMasters commission",
+      "cleaningFees": "Cleaning fees",
+      "otherExpenses": "Other expenses",
+      "yourPayment": "Your payment"
+    },
+    "statement": {
+      "monthlyStatement": "Monthly Statement",
+      "downloadPdf": "Download PDF",
+      "bookingsThisMonth": "Bookings this month",
+      "grossRentalIncome": "Gross rental income",
+      "hmCommission": "HostMasters commission",
+      "cleaningFees": "Cleaning fees",
+      "otherExpenses": "Other expenses",
+      "yourNetPayment": "Your net payment",
+      "sepaTransfer": "SEPA Transfer",
+      "sent": "Sent",
+      "scheduled": "Scheduled",
+      "propertyCondition": "Property condition",
+      "lastInspection": "Last inspection"
+    }
   },
   "auth": {
     "signIn": "Sign In",
@@ -746,6 +792,32 @@
         "Document sharing",
         "Multi-language support"
       ]
+    },
+    "mock": {
+      "smartLock": "Smart Lock",
+      "connected": "Connected",
+      "allGood": "All good",
+      "inspected3d": "Inspected 3d ago",
+      "julyStatement": "July 2026 Statement",
+      "grossRentalIncome": "Gross rental income",
+      "hmCommission": "HM commission (17%)",
+      "cleaningFees": "Cleaning fees (3×)",
+      "maintenance": "Maintenance",
+      "monthlyPlanFee": "Monthly plan fee (Mid)",
+      "netPayout": "Net payout",
+      "taskCleaning": "Cleaning",
+      "taskInspection": "Inspection",
+      "taskMaintenance": "Maintenance",
+      "statusCompleted": "completed",
+      "statusScheduled": "scheduled",
+      "upcomingVisits": "Upcoming visits",
+      "openIssues": "Open issues",
+      "aiAssistant": "AI Assistant available 24/7 for instant answers",
+      "guest": "Guest",
+      "dates": "Dates",
+      "platform": "Platform",
+      "revenue": "Revenue",
+      "personalUse": "Personal use"
     }
   },
   "aiTools": {
@@ -1455,5 +1527,60 @@
     "viewPlanDetails": "View plan details",
     "yourDocuments": "Your documents",
     "planSuffix": "plan"
+  },
+  "booking": {
+    "status": {
+      "upcoming": "Upcoming",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "nights": "nights",
+    "cleaning": "Cleaning",
+    "cleaningStatus": {
+      "pending": "pending",
+      "confirmed": "confirmed",
+      "done": "done"
+    }
+  },
+  "admin": {
+    "setup": {
+      "setupStarted": "Setup started",
+      "complete": "complete",
+      "steps": {
+        "label": "steps",
+        "welcomeEmail": "Welcome email sent to owner",
+        "onboardingVisit": "Onboarding visit scheduled",
+        "physicalVisit": "Physical visit — inspection, inventory & photos",
+        "conditionReport": "Condition report sent to owner",
+        "smartLock": "Nuki smart lock installed & tested",
+        "profilesCreated": "Airbnb + Booking + VRBO profiles created",
+        "priceLabsActivated": "PriceLabs activated — minimum prices set",
+        "ownerApproves": "Owner approves listing",
+        "publishedChannels": "Published on all channels",
+        "cleaningTeamBriefed": "Cleaning team briefed",
+        "propertyFileCreated": "Property file created in system",
+        "setupComplete": "Setup complete — owner & Manoela notified"
+      },
+      "status": {
+        "pending": "Pending",
+        "inProgress": "In progress",
+        "complete": "Complete",
+        "overdue": "Overdue"
+      }
+    }
+  },
+  "monitor": {
+    "sections": {
+      "reservations": "Reservations",
+      "payouts": "Payouts",
+      "reports": "Reports"
+    },
+    "anomalyDetected": "anomaly detected",
+    "anomaliesDetected": "anomalies detected",
+    "critical": "critical",
+    "criticalPlural": "critical",
+    "allClear": "System operational — no anomalies",
+    "checkNow": "Check now"
   }
 }

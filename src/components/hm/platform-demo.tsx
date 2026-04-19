@@ -51,17 +51,17 @@ function DashboardMock({ t }: { t: (k: string) => string }) {
             <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
             <span className="text-[10px] uppercase tracking-wider text-gray-400">{t('demo.dashboard.features.3')}</span>
           </div>
-          <p className="font-semibold text-sm text-green-600">All good</p>
-          <p className="text-xs text-gray-400">Inspected 3d ago</p>
+          <p className="font-semibold text-sm text-green-600">{t('demo.mock.allGood')}</p>
+          <p className="text-xs text-gray-400">{t('demo.mock.inspected3d')}</p>
         </div>
         <div className="rounded-lg p-3 border" style={{ borderColor: "#E8E3D8" }}>
           <div className="flex items-center gap-2 mb-1">
             <Lock className="h-3.5 w-3.5" style={{ color: "#2A7A4F" }} />
-            <span className="text-[10px] uppercase tracking-wider text-gray-400">Smart Lock</span>
+            <span className="text-[10px] uppercase tracking-wider text-gray-400">{t('demo.mock.smartLock')}</span>
           </div>
           <div className="flex items-center gap-1.5 mt-1">
             <span className="h-2 w-2 rounded-full bg-green-500" />
-            <span className="text-xs text-green-600">Connected</span>
+            <span className="text-xs text-green-600">{t('demo.mock.connected')}</span>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@ function BookingsMock({ t }: { t: (k: string) => string }) {
   return (
     <div className="space-y-1">
       <div className="grid grid-cols-4 text-[10px] uppercase tracking-wider text-gray-400 px-3 py-2">
-        <span>Guest</span><span>Dates</span><span>Platform</span><span className="text-right">Revenue</span>
+        <span>{t('demo.mock.guest')}</span><span>{t('demo.mock.dates')}</span><span>{t('demo.mock.platform')}</span><span className="text-right">{t('demo.mock.revenue')}</span>
       </div>
       {bookings.map((b, i) => (
         <div key={i} className="grid grid-cols-4 items-center rounded-lg px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors" style={{ borderBottom: "1px solid #f3f4f6" }}>
@@ -98,7 +98,7 @@ function BookingsMock({ t }: { t: (k: string) => string }) {
         </div>
       ))}
       <div className="mt-3 rounded-lg p-3 text-center text-xs text-gray-400" style={{ background: "#FAFAF8", border: "1px dashed #E8E3D8" }}>
-        🔒 Aug 28 — Sep 4 · Personal use
+        🔒 Aug 28 — Sep 4 · {t('demo.mock.personalUse')}
       </div>
     </div>
   )
@@ -109,24 +109,24 @@ function FinanceMock({ t }: { t: (k: string) => string }) {
     <div className="space-y-4">
       <div className="rounded-xl overflow-hidden border" style={{ borderColor: "#E8E3D8" }}>
         <div className="px-4 py-3 flex justify-between items-center" style={{ background: "#FAFAF8" }}>
-          <span className="text-sm font-semibold" style={{ color: "#0B1E3A" }}>July 2026 Statement</span>
+          <span className="text-sm font-semibold" style={{ color: "#0B1E3A" }}>{t('demo.mock.julyStatement')}</span>
           <span className="text-xs rounded-full px-2.5 py-0.5 font-medium" style={{ background: "rgba(176,138,62,0.15)", color: "#B08A3E" }}>PDF ↓</span>
         </div>
         <div className="divide-y" style={{ borderColor: "#f3f4f6" }}>
           {[
-            { label: "Gross rental income", value: "€4,720", color: "#0B1E3A" },
-            { label: "HM commission (17%)", value: "−€802", color: "#A32D2D" },
-            { label: "Cleaning fees (3×)", value: "−€135", color: "#A32D2D" },
-            { label: "Maintenance", value: "−€45", color: "#A32D2D" },
-            { label: "Monthly plan fee (Mid)", value: "−€159", color: "#A32D2D" },
+            { labelKey: "demo.mock.grossRentalIncome", value: "€4,720", color: "#0B1E3A" },
+            { labelKey: "demo.mock.hmCommission", value: "−€802", color: "#A32D2D" },
+            { labelKey: "demo.mock.cleaningFees", value: "−€135", color: "#A32D2D" },
+            { labelKey: "demo.mock.maintenance", value: "−€45", color: "#A32D2D" },
+            { labelKey: "demo.mock.monthlyPlanFee", value: "−€159", color: "#A32D2D" },
           ].map((row, i) => (
             <div key={i} className="px-4 py-2.5 flex justify-between text-sm">
-              <span className="text-gray-600">{row.label}</span>
+              <span className="text-gray-600">{t(row.labelKey)}</span>
               <span className="font-medium" style={{ color: row.color }}>{row.value}</span>
             </div>
           ))}
           <div className="px-4 py-3 flex justify-between text-sm font-bold" style={{ background: "#FAFAF8" }}>
-            <span style={{ color: "#0B1E3A" }}>Net payout</span>
+            <span style={{ color: "#0B1E3A" }}>{t('demo.mock.netPayout')}</span>
             <span style={{ color: "#2A7A4F" }}>€3,579</span>
           </div>
         </div>
@@ -137,19 +137,19 @@ function FinanceMock({ t }: { t: (k: string) => string }) {
 
 function CareMock({ t }: { t: (k: string) => string }) {
   const visits = [
-    { type: "Cleaning", date: "Jul 22", status: "completed", icon: "✓" },
-    { type: "Inspection", date: "Jul 23", status: "completed", icon: "✓" },
-    { type: "Maintenance", date: "Jul 28", status: "scheduled", icon: "⏳" },
+    { typeKey: "demo.mock.taskCleaning", date: "Jul 22", statusKey: "demo.mock.statusCompleted", icon: "✓" },
+    { typeKey: "demo.mock.taskInspection", date: "Jul 23", statusKey: "demo.mock.statusCompleted", icon: "✓" },
+    { typeKey: "demo.mock.taskMaintenance", date: "Jul 28", statusKey: "demo.mock.statusScheduled", icon: "⏳" },
   ]
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-lg p-4 border" style={{ borderColor: "#E8E3D8" }}>
-          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">Upcoming visits</p>
+          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">{t('demo.mock.upcomingVisits')}</p>
           <p className="text-2xl font-bold" style={{ color: "#0B1E3A" }}>2</p>
         </div>
         <div className="rounded-lg p-4 border" style={{ borderColor: "#E8E3D8" }}>
-          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">Open issues</p>
+          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">{t('demo.mock.openIssues')}</p>
           <p className="text-2xl font-bold text-green-600">0</p>
         </div>
       </div>
@@ -157,14 +157,14 @@ function CareMock({ t }: { t: (k: string) => string }) {
         {visits.map((v, i) => (
           <div key={i} className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: i < visits.length -1 ? "1px solid #f3f4f6" : "none" }}>
             <div className="flex items-center gap-3">
-              <span className={`h-6 w-6 rounded-full flex items-center justify-center text-xs ${v.status === "completed" ? "bg-green-100 text-green-600" : "bg-amber-100 text-amber-600"}`}>{v.icon}</span>
+              <span className={`h-6 w-6 rounded-full flex items-center justify-center text-xs ${v.statusKey === "demo.mock.statusCompleted" ? "bg-green-100 text-green-600" : "bg-amber-100 text-amber-600"}`}>{v.icon}</span>
               <div>
-                <p className="text-sm font-medium" style={{ color: "#0B1E3A" }}>{v.type}</p>
+                <p className="text-sm font-medium" style={{ color: "#0B1E3A" }}>{t(v.typeKey)}</p>
                 <p className="text-xs text-gray-400">{v.date}</p>
               </div>
             </div>
-            <span className={`text-xs font-medium rounded-full px-2 py-0.5 ${v.status === "completed" ? "bg-green-50 text-green-600" : "bg-amber-50 text-amber-600"}`}>
-              {v.status}
+            <span className={`text-xs font-medium rounded-full px-2 py-0.5 ${v.statusKey === "demo.mock.statusCompleted" ? "bg-green-50 text-green-600" : "bg-amber-50 text-amber-600"}`}>
+              {t(v.statusKey)}
             </span>
           </div>
         ))}
@@ -198,7 +198,7 @@ function CommMock({ t }: { t: (k: string) => string }) {
         {/* AI assistant hint */}
         <div className="px-4 py-3 flex items-center gap-2 border-t" style={{ borderColor: "#E8E3D8", background: "rgba(176,138,62,0.05)" }}>
           <Star className="h-4 w-4" style={{ color: "#B08A3E" }} />
-          <span className="text-xs text-gray-500">AI Assistant available 24/7 for instant answers</span>
+          <span className="text-xs text-gray-500">{t('demo.mock.aiAssistant')}</span>
         </div>
       </div>
     </div>
