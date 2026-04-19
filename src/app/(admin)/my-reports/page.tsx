@@ -165,14 +165,14 @@ export default function ReportsPage() {
       {loading && (
         <div className="grid grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl bg-gray-100 animate-pulse" />
+            <div key={i} className="h-24 rounded-hm bg-gray-100 animate-pulse" />
           ))}
         </div>
       )}
 
       {/* No data */}
       {!loading && noData && (
-        <div className="rounded-xl border border-dashed border-gray-300 p-12 text-center">
+        <div className="rounded-hm border border-dashed border-gray-300 p-12 text-center">
           <FileText className="h-10 w-10 text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500 font-medium">No data for {MONTHS[month]} {year}</p>
           <p className="text-sm text-gray-400 mt-1">No reservations or expenses recorded for this period.</p>
@@ -183,7 +183,7 @@ export default function ReportsPage() {
       {!loading && report && !noData && (
         <>
           {/* Property + period info */}
-          <div className="rounded-xl border border-gray-200 bg-gray-50 px-5 py-4">
+          <div className="rounded-hm border border-gray-200 bg-gray-50 px-5 py-4">
             <p className="text-sm text-gray-500">
               <span className="font-semibold text-hm-black">{report.property.name}</span>
               {" — "}{MONTHS[month]} {year}
@@ -193,28 +193,28 @@ export default function ReportsPage() {
 
           {/* Summary cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <div className="rounded-hm border border-gray-200 bg-white p-5">
               <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">Gross Revenue</p>
               <p className="text-2xl font-bold text-hm-black">{fmtEUR(report.grossRevenue)}</p>
             </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <div className="rounded-hm border border-gray-200 bg-white p-5">
               <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">Total Expenses</p>
               <p className="text-2xl font-bold text-red-600">{fmtEUR(report.totalExpenses)}</p>
             </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-5">
+            <div className="rounded-hm border border-gray-200 bg-white p-5">
               <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">
                 Commission ({report.commissionRate}%)
               </p>
               <p className="text-2xl font-bold text-gray-600">{fmtEUR(report.commission)}</p>
             </div>
-            <div className="rounded-xl border bg-hm-black p-5">
+            <div className="rounded-hm border bg-hm-black p-5">
               <p className="text-xs uppercase tracking-wider text-gray-300 mb-1">Owner Payout</p>
               <p className="text-2xl font-bold text-white">{fmtEUR(report.ownerPayout)}</p>
             </div>
           </div>
 
           {/* Reservations table */}
-          <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+          <div className="rounded-hm border border-gray-200 bg-white overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
               <FileText className="h-4 w-4 text-navy-500" />
               <span className="font-semibold text-hm-black text-sm">
@@ -262,7 +262,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Expenses table */}
-          <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+          <div className="rounded-hm border border-gray-200 bg-white overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 bg-gray-50">
               <span className="font-semibold text-hm-black text-sm">
                 Expenses — {report.expenses.length} item{report.expenses.length !== 1 ? "s" : ""}
@@ -305,7 +305,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Final summary */}
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
+          <div className="rounded-hm border border-gray-200 bg-gray-50 p-5">
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Gross Revenue</span>

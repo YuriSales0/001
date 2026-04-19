@@ -84,9 +84,9 @@ export default function ClientTaxPage() {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="h-10 rounded bg-gray-100 w-64" />
-        <div className="h-40 rounded-xl bg-gray-100" />
+        <div className="h-40 rounded-hm bg-gray-100" />
         <div className="grid grid-cols-2 gap-4">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-32 rounded-xl bg-gray-100" />)}
+          {[...Array(4)].map((_, i) => <div key={i} className="h-32 rounded-hm bg-gray-100" />)}
         </div>
       </div>
     )
@@ -229,7 +229,7 @@ export default function ClientTaxPage() {
 
       {/* Action required alert */}
       {actionRequired.length > 0 && (
-        <div className="rounded-xl border-2 border-amber-300 p-5 flex items-start gap-4" style={{ background: "rgba(245,158,11,0.08)" }}>
+        <div className="rounded-hm border-2 border-amber-300 p-5 flex items-start gap-4" style={{ background: "rgba(245,158,11,0.08)" }}>
           <AlertTriangle className="h-6 w-6 shrink-0 text-amber-600" />
           <div className="flex-1">
             <p className="font-serif font-semibold text-hm-black">
@@ -315,7 +315,7 @@ function FineCard({ label, fine, detail }: { label: string; fine: string; detail
 
 function SummaryCard({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: number; color: string }) {
   return (
-    <div className="rounded-xl border border-hm-border p-4" style={{ background: "var(--hm-sand)" }}>
+    <div className="rounded-hm border border-hm-border p-4" style={{ background: "var(--hm-sand)" }}>
       <div className="flex items-center gap-2 mb-2">
         <Icon className="h-4 w-4" style={{ color }} />
         <span className="font-sans text-xs uppercase tracking-widest text-hm-slate/60">{label}</span>

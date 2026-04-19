@@ -175,15 +175,15 @@ export default function ManagerInvoices() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Total invoices</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">{invoices.length}</p>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Paid</p>
           <p className="text-2xl font-bold text-green-700 mt-1">{fmt(totals.paid)}</p>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Pending</p>
           <p className="text-2xl font-bold text-orange-600 mt-1">{fmt(totals.pending)}</p>
         </div>
@@ -191,7 +191,7 @@ export default function ManagerInvoices() {
 
       <InvoiceForm onCreated={load} />
 
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-400 tracking-wide">

@@ -75,7 +75,7 @@ export default function ManagerProfilePage() {
       </div>
 
       {/* Role info card */}
-      <div className="rounded-xl border bg-blue-50 border-blue-100 p-4 flex gap-4">
+      <div className="rounded-hm border bg-blue-50 border-blue-100 p-4 flex gap-4">
         <Users className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
         <div className="text-sm text-blue-800 space-y-1">
           <p className="font-semibold">{t('manager.profile.responsibilities')}</p>
@@ -85,7 +85,7 @@ export default function ManagerProfilePage() {
 
       {/* Commission snapshot */}
       {profile?.commissionRate != null && (
-        <div className="rounded-xl border bg-white p-4 flex items-center gap-4">
+        <div className="rounded-hm border bg-white p-4 flex items-center gap-4">
           <div className="rounded-lg p-2 bg-emerald-50">
             <TrendingUp className="h-5 w-5 text-emerald-600" />
           </div>
@@ -98,7 +98,7 @@ export default function ManagerProfilePage() {
       )}
 
       {/* Photo + identity */}
-      <form onSubmit={save} className="rounded-xl border bg-white p-5 space-y-5">
+      <form onSubmit={save} className="rounded-hm border bg-white p-5 space-y-5">
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center"
@@ -163,7 +163,7 @@ export default function ManagerProfilePage() {
       </form>
 
       {/* Password */}
-      <form onSubmit={savePassword} className="rounded-xl border bg-white p-5 space-y-4">
+      <form onSubmit={savePassword} className="rounded-hm border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
           <span className="text-sm font-semibold text-hm-black">{t('profile.changePassword')}</span>

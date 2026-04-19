@@ -223,7 +223,7 @@ export default function OwnerDashboard() {
       {/* Contract pending alert */}
       {hasContractPending && (
         <Link href="/client/properties"
-          className="flex items-center gap-3 rounded-xl border-2 border-blue-300 bg-blue-50 px-5 py-4 hover:bg-blue-100 transition-colors hm-animate-in hm-stagger-1">
+          className="flex items-center gap-3 rounded-hm border-2 border-blue-300 bg-blue-50 px-5 py-4 hover:bg-blue-100 transition-colors hm-animate-in hm-stagger-1">
           <FileText className="h-5 w-5 text-blue-600 shrink-0" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-blue-800">
@@ -240,7 +240,7 @@ export default function OwnerDashboard() {
       {/* Pending invoices alert */}
       {pendingInvoices.count > 0 && (
         <Link href="/client/payouts"
-          className="flex items-center gap-3 rounded-xl border-2 border-orange-200 bg-orange-50 px-5 py-4 hover:bg-orange-100 transition-colors hm-animate-in hm-stagger-2">
+          className="flex items-center gap-3 rounded-hm border-2 border-orange-200 bg-orange-50 px-5 py-4 hover:bg-orange-100 transition-colors hm-animate-in hm-stagger-2">
           <AlertTriangle className="h-5 w-5 text-orange-500 shrink-0" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-orange-800">

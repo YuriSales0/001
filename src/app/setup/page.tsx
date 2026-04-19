@@ -153,7 +153,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
       {loading ? (
         <div className="text-sm text-gray-400 py-4 text-center">A carregar…</div>
       ) : items.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-gray-200 py-8 text-center">
+        <div className="rounded-hm border-2 border-dashed border-gray-200 py-8 text-center">
           <p className="text-sm text-gray-400 mb-3">Nenhum item configurado.</p>
           <button
             onClick={seedDefaults}
@@ -172,7 +172,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">
                   {CATEGORY_LABELS[cat]}
                 </p>
-                <div className="rounded-xl border bg-white divide-y">
+                <div className="rounded-hm border bg-white divide-y">
                   {catItems.map(item => (
                     <div key={item.id} className="flex items-center gap-3 px-4 py-2.5">
                       <button
@@ -205,7 +205,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
             .map(cat => (
               <div key={cat}>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1.5">{cat}</p>
-                <div className="rounded-xl border bg-white divide-y">
+                <div className="rounded-hm border bg-white divide-y">
                   {grouped[cat].map(item => (
                     <div key={item.id} className="flex items-center gap-3 px-4 py-2.5">
                       <span className="flex-1 text-sm text-gray-800">{item.label}</span>
@@ -221,7 +221,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
       )}
 
       {/* Add item form */}
-      <div className="rounded-xl border bg-gray-50 p-3">
+      <div className="rounded-hm border bg-gray-50 p-3">
         <p className="text-xs font-semibold text-gray-500 mb-2">Adicionar item</p>
         <div className="flex gap-2">
           <select
@@ -311,7 +311,7 @@ export default function SetupPage() {
   if (loading) return (
     <div className="p-6 space-y-4 animate-pulse">
       <div className="h-8 w-48 rounded bg-gray-100" />
-      <div className="h-64 rounded-xl bg-gray-100" />
+      <div className="h-64 rounded-hm bg-gray-100" />
     </div>
   )
 
@@ -415,7 +415,7 @@ export default function SetupPage() {
                     return (
                       <div
                         key={step.day}
-                        className={`rounded-xl border p-4 transition-colors ${cfg.bg} ${
+                        className={`rounded-hm border p-4 transition-colors ${cfg.bg} ${
                           step.status === "OVERDUE" ? "border-red-200" :
                           step.status === "COMPLETE" ? "border-green-200" :
                           step.status === "IN_PROGRESS" ? "border-blue-200" : "border-gray-200"

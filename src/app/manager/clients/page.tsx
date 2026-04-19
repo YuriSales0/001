@@ -23,8 +23,8 @@ export default function ManagerClients() {
       <h1 className="text-3xl font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
       <div className="space-y-4 animate-pulse">
         <div className="h-8 rounded bg-gray-100 w-48" />
-        <div className="h-40 rounded-xl bg-gray-100" />
-        <div className="h-40 rounded-xl bg-gray-100" />
+        <div className="h-40 rounded-hm bg-gray-100" />
+        <div className="h-40 rounded-hm bg-gray-100" />
       </div>
     </div>
   )
@@ -42,7 +42,7 @@ export default function ManagerClients() {
           </Link>
         )}
       </div>
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">

@@ -108,7 +108,7 @@ export default function ManagerMessagesPage() {
   return (
     <div className="flex flex-col">
       {error && <div className="p-4 text-center text-sm text-red-500">Failed to load data</div>}
-    <div className="flex h-[calc(100vh-80px)] max-h-[750px] rounded-xl border bg-white overflow-hidden">
+    <div className="flex h-[calc(100vh-80px)] max-h-[750px] rounded-hm border bg-white overflow-hidden">
       {/* ── Sidebar ── */}
       <aside className="w-64 border-r flex flex-col shrink-0">
         <div className="px-4 py-3 border-b bg-gray-50">
