@@ -95,7 +95,7 @@ export default function AdminRecruitPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-hm-black">Recruiting</h1>
+        <h1 className="text-2xl font-serif font-bold text-hm-black">Recruiting</h1>
         <p className="text-sm text-gray-500 mt-0.5">Applications from Managers and Crew.</p>
       </div>
 

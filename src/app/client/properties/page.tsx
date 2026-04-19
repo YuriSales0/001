@@ -158,7 +158,7 @@ export default function ClientProperties() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-hm-black">{t('client.properties.title')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('client.properties.title')}</h1>
           <p className="text-sm text-gray-500">{t('client.properties.subtitle')}</p>
         </div>
         <button
@@ -318,7 +318,7 @@ export default function ClientProperties() {
                 <h2 className="text-base font-bold text-hm-black">{t('client.properties.requestPropertyTitle')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('client.properties.requestPropertyDesc')}</p>
               </div>
-              <button onClick={() => setShowAdd(false)} className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+              <button onClick={() => setShowAdd(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
 
             <form onSubmit={submitRequest} className="p-5 space-y-4">

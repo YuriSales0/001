@@ -341,7 +341,7 @@ export default function MarketingPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
+          <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
             <Megaphone className="h-7 w-7 text-hm-black" />
             Marketing
           </h1>

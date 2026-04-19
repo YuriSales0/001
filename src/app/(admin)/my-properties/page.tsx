@@ -177,7 +177,7 @@ export default function PropertiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-hm-black">Propriedades</h1>
+          <h1 className="text-3xl font-serif font-bold text-hm-black">Propriedades</h1>
           <p className="text-sm text-gray-600">Gere propriedades, aprova pedidos e conecta calendários OTA.</p>
         </div>
         <button
@@ -331,7 +331,7 @@ export default function PropertiesPage() {
                 <h2 className="text-base font-bold text-hm-black">Nova Propriedade</h2>
                 <p className="text-xs text-gray-500 mt-0.5">Como Admin, a propriedade fica ativa imediatamente.</p>
               </div>
-              <button onClick={() => setShowAdd(false)} className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+              <button onClick={() => setShowAdd(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
             <form onSubmit={submitAdd} className="p-5 space-y-4">
               {addError && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{addError}</div>}
@@ -391,7 +391,7 @@ export default function PropertiesPage() {
                 <h2 className="text-base font-bold text-hm-black">Aprovar Propriedade</h2>
                 <p className="text-sm text-gray-500">{approveState.property.name} · {approveState.property.owner.name ?? approveState.property.owner.email}</p>
               </div>
-              <button onClick={() => setApproveState(null)} className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+              <button onClick={() => setApproveState(null)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
 
             <div className="p-5 space-y-5">

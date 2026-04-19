@@ -20,7 +20,7 @@ export default function ManagerClients() {
   }, [])
   if (loading) return (
     <div className="p-6 space-y-4">
-      <h1 className="text-3xl font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
+      <h1 className="text-3xl font-serif font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
       <div className="space-y-4 animate-pulse">
         <div className="h-8 rounded bg-gray-100 w-48" />
         <div className="h-40 rounded-hm bg-gray-100" />
@@ -32,7 +32,7 @@ export default function ManagerClients() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h1 className="text-3xl font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
+        <h1 className="text-3xl font-serif font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
         {clients.length > 0 && (
           <Link
             href="/manager/clients/invite"

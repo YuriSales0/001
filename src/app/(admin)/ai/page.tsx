@@ -100,7 +100,7 @@ export default function AIPage() {
       {/* Header + Tabs */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
+          <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
             <Sparkles className="h-7 w-7 text-amber-500" />
             AI Pricing Intelligence
           </h1>

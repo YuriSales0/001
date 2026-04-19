@@ -93,7 +93,7 @@ export default function AdminTaxPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-hm-black">{t('admin.tax')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('admin.tax')}</h1>
           <p className="text-sm text-gray-500 mt-0.5">{t('admin.taxSubtitle')}</p>
         </div>
         <button

@@ -210,7 +210,7 @@ export default function SuppliersPage() {
                 <h2 className="text-base font-bold text-hm-black">{t('manager.suppliers.newSupplier')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('manager.suppliers.addVendor')}</p>
               </div>
-              <button onClick={() => setShowCreate(false)} className="rounded-md p-2 hover:bg-gray-100">
+              <button onClick={() => setShowCreate(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100">
                 <X className="h-5 w-5" />
               </button>
             </div>

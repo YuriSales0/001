@@ -66,7 +66,7 @@ export default function AdminMessagesPage() {
   return (
     <div className="p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">Mensagens</h1>
+        <h1 className="text-2xl font-serif font-bold text-gray-900">Mensagens</h1>
         <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
           <Lock className="h-3.5 w-3.5"/> Acesso só de leitura — {convs.length} conversa(s)
         </p>

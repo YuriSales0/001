@@ -55,7 +55,7 @@ export default function ClientPayouts() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-hm-black">{t('client.payouts.title')}</h1>
+        <h1 className="text-3xl font-serif font-bold text-hm-black">{t('client.payouts.title')}</h1>
         <p className="text-sm text-gray-600">{t('client.payouts.subtitle')}</p>
       </div>
 

@@ -525,7 +525,7 @@ export default function ClientCarePage() {
                 <h2 className="font-serif text-lg font-bold text-hm-black">{t('client.care.requestVisit')}</h2>
                 <p className="font-sans text-sm text-hm-slate/70 mt-0.5">{t('client.care.requestSubtitle')}</p>
               </div>
-              <button onClick={() => setShowRequest(false)} className="text-hm-slate/40 hover:text-hm-slate">
+              <button onClick={() => setShowRequest(false)} aria-label="Close" className="text-hm-slate/40 hover:text-hm-slate">
                 <X className="h-5 w-5" />
               </button>
             </div>

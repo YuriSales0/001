@@ -164,7 +164,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
               {badgeLabel}
             </span>
           </Link>
-          <button className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
+          <button aria-label="Close" className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4" />
           </button>
         </div>

@@ -130,7 +130,7 @@ export default function ClientTasksPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-hm-black">{t('clientTasks.title')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('clientTasks.title')}</h1>
           <p className="text-sm text-gray-500">{t('clientTasks.subtitle')}</p>
         </div>
         <button
@@ -236,7 +236,7 @@ export default function ClientTasksPage() {
                 <h2 className="text-lg font-bold text-hm-black">{t('clientTasks.requestNew')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('clientTasks.modalNote')}</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="rounded-md p-2 hover:bg-gray-100">
+              <button onClick={() => setShowModal(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100">
                 <X className="h-5 w-5" />
               </button>
             </div>

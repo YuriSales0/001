@@ -170,7 +170,7 @@ export function AiChat({ role = 'ADMIN' }: Props) {
                 {ready === false ? t('aiChat.statusPending') : ready === true ? t('aiChat.statusActive') : role}
               </p>
             </div>
-            <button onClick={() => setOpen(false)} className="text-white/40 hover:text-white transition-colors">
+            <button onClick={() => setOpen(false)} aria-label="Close" className="text-white/40 hover:text-white transition-colors">
               <X className="h-4 w-4" />
             </button>
           </div>

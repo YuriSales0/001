@@ -143,7 +143,7 @@ export default async function AiMonitorPage() {
       <div>
         <div className="flex items-center gap-2 mb-1">
           <ShieldCheck className="h-5 w-5 text-navy-700" />
-          <h1 className="text-2xl font-bold text-hm-black">AI Monitor</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">AI Monitor</h1>
         </div>
         <p className="text-sm text-gray-500">
           Verificação automática de consistência da base de dados · Sem ligação Claude API por agora — só lógica de detecção

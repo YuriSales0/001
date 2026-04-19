@@ -78,7 +78,7 @@ export default function ClientAIPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="text-2xl font-serif font-bold text-gray-900 flex items-center gap-2">
           <Sparkles className="h-6 w-6 text-amber-500" />
           AI Pricing Intelligence
         </h1>

@@ -174,7 +174,7 @@ export default function ClientReportsPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-hm-black">Relatórios</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">Relatórios</h1>
           <p className="text-sm text-gray-500">
             Resumo financeiro e de ocupação das tuas propriedades
             {summary && <span className="text-gray-400"> · {summary.period} vs. {summary.previousPeriod}</span>}

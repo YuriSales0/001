@@ -416,7 +416,7 @@ export default function PayoutsPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-hm-black">Payouts</h1>
+          <h1 className="text-3xl font-serif font-bold text-hm-black">Payouts</h1>
           <p className="text-sm text-gray-600">Pagamentos automaticos por plataforma - comissao calculada por plano</p>
         </div>
         <div className="flex gap-2 flex-wrap">

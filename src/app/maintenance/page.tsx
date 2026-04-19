@@ -514,7 +514,7 @@ export default function MaintenancePage() {
             >
               {showCompleted ? '✓ Todas' : 'Activas'}
             </button>
-            <button onClick={() => setShowCreate(true)} className="rounded-lg bg-gray-900 text-white p-1.5 hover:bg-gray-800" title="Nova visita">
+            <button onClick={() => setShowCreate(true)} className="rounded-lg bg-gray-900 text-white p-2 hover:bg-gray-800" title="Nova visita">
               <Plus className="h-4 w-4"/>
             </button>
           </div>

@@ -221,7 +221,7 @@ export default function IntegrationsPage() {
   return (
     <div className="p-6 space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
+        <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
           <Landmark className="h-7 w-7" />
           Integrações
         </h1>

@@ -472,7 +472,7 @@ export default function CRMPage() {
                   </span>
                 )}
               </div>
-              <button onClick={() => setSelectedLead(null)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setSelectedLead(null)} aria-label="Close" className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -572,7 +572,7 @@ export default function CRMPage() {
                       >
                         {t('common.add')}
                       </button>
-                      <button onClick={() => setAttributing(false)} className="text-gray-400 hover:text-gray-600 px-1">
+                      <button onClick={() => setAttributing(false)} aria-label="Close" className="text-gray-400 hover:text-gray-600 px-1">
                         <X className="h-4 w-4" />
                       </button>
                     </div>

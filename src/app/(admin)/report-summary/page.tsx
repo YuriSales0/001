@@ -167,7 +167,7 @@ export default function ReportsPage() {
 
   if (loading) return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
+      <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
         <BarChart3 className="h-7 w-7 text-gray-400" /> Reports
       </h1>
       {periodSelector}
@@ -239,7 +239,7 @@ export default function ReportsPage() {
       <div className="p-6 space-y-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
+            <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
               <BarChart3 className="h-7 w-7 text-gray-400" />
               Reports
             </h1>
@@ -293,7 +293,7 @@ export default function ReportsPage() {
       <div className="p-6 space-y-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
+            <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
               <BarChart3 className="h-7 w-7 text-gray-400" />
               O meu Report
             </h1>

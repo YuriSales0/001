@@ -36,7 +36,7 @@ export default function ClientIntelligencePage() {
     <div className="space-y-6">
       <div>
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold text-hm-black">{t('client.intelligence.title')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('client.intelligence.title')}</h1>
           <span className="rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
                 style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>Beta</span>
         </div>
