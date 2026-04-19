@@ -414,6 +414,24 @@ export default function LandingPage() {
                 ))}
               </div>
 
+              {/* AI Features highlight */}
+              <div className="mt-6 pt-6 border-t" style={{ borderColor: 'rgba(176,138,62,0.15)' }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Brain className="h-5 w-5" style={{ color: '#B08A3E' }} />
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#B08A3E' }}>
+                    Powered by AI
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }, (_, i) => (
+                    <div key={i} className="flex items-center gap-2.5">
+                      <Zap className="h-4 w-4 shrink-0" style={{ color: '#B08A3E' }} />
+                      <span className="text-sm text-gray-300">{t(`landing.journey.feat${i + 11}`)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(176,138,62,0.15)' }}>
                 <p className="text-lg sm:text-xl font-bold text-center" style={{ color: '#B08A3E' }}>
                   {t('landing.journey.cta')}
