@@ -207,43 +207,45 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
             </>
           )}
 
-          {/* Role step 1: Crew Contract */}
+          {/* Role step 1: Crew Contract — READ ONLY (set by Admin) */}
           {step === roleStep1Idx && role === 'CREW' && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
                 {t('onboarding.crewContractStep')}
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button onClick={() => setContractType('MONTHLY')}
-                  className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'MONTHLY' ? 'border-[#B08A3E] bg-[#B08A3E]/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <div className="text-sm font-semibold">{t('onboarding.crewMonthly')}</div>
-                  <div className="text-xs text-gray-500 mt-1">{t('onboarding.crewMonthlySub')}</div>
-                </button>
-                <button onClick={() => setContractType('FREELANCER')}
-                  className={`rounded-xl border-2 p-4 text-left transition-colors ${contractType === 'FREELANCER' ? 'border-[#B08A3E] bg-[#B08A3E]/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                  <div className="text-sm font-semibold">{t('onboarding.crewFreelancer')}</div>
-                  <div className="text-xs text-gray-500 mt-1">{t('onboarding.crewFreelancerSub')}</div>
-                </button>
+              <p className="text-xs text-gray-500 mb-3">
+                Your contract terms have been set by the Admin. Please review and confirm.
+              </p>
+              <div className="rounded-xl border bg-gray-50 p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Contract type</span>
+                  <span className="text-sm font-semibold text-navy-900">
+                    {contractType === 'MONTHLY' ? t('onboarding.crewMonthly') : t('onboarding.crewFreelancer')}
+                  </span>
+                </div>
+                {contractType === 'MONTHLY' && monthlyRate && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">{t('onboarding.crewMonthlyLabel')}</span>
+                    <span className="text-sm font-semibold text-navy-900">€{monthlyRate}</span>
+                  </div>
+                )}
+                {contractType === 'FREELANCER' && taskRate && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">{t('onboarding.crewTaskLabel')}</span>
+                    <span className="text-sm font-semibold text-navy-900">€{taskRate}</span>
+                  </div>
+                )}
+                {!monthlyRate && !taskRate && (
+                  <p className="text-xs text-amber-600">
+                    Rates not yet configured. Contact your Admin.
+                  </p>
+                )}
               </div>
-              {contractType === 'MONTHLY' && (
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.crewMonthlyLabel')}</label>
-                  <input type="number" value={monthlyRate} onChange={e => setMonthlyRate(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="ex: 1200" />
-                </div>
-              )}
-              {contractType === 'FREELANCER' && (
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.crewTaskLabel')}</label>
-                  <input type="number" value={taskRate} onChange={e => setTaskRate(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="ex: 35" />
-                </div>
-              )}
             </>
           )}
 
-          {/* Role step 1: Manager Compensation */}
+          {/* Role step 1: Manager Compensation — READ ONLY (set by Admin) */}
           {step === roleStep1Idx && role === 'MANAGER' && (
             <>
               <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
@@ -251,21 +253,32 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                 {t('onboarding.managerCompStep')}
               </div>
               <p className="text-xs text-gray-500 mb-3">
-                {subscriptionShare ? t('onboarding.managerCompDescSet') : t('onboarding.managerCompDescEmpty')}
+                {t('onboarding.managerCompDescSet')}
               </p>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.managerSubShare')}</label>
-                  <input type="number" min="0" max="50" value={subscriptionShare} onChange={e => setSubscriptionShare(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm" />
-                  <p className="text-[10px] text-gray-400 mt-0.5">Ex: MID (€159/mo) → €{(159 * parseFloat(subscriptionShare || '0') / 100).toFixed(0)}/mo</p>
+              <div className="rounded-xl border bg-gray-50 p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">{t('onboarding.managerSubShare')}</span>
+                  <span className="text-sm font-semibold text-navy-900">
+                    {subscriptionShare ? `${subscriptionShare}%` : '—'}
+                  </span>
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">{t('onboarding.managerCommShare')}</label>
-                  <input type="number" min="0" max="10" step="0.5" value={commissionShare} onChange={e => setCommissionShare(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm" />
-                  <p className="text-[10px] text-gray-400 mt-0.5">Ex: €2000 bruto → €{(2000 * parseFloat(commissionShare || '0') / 100).toFixed(0)}</p>
+                {subscriptionShare && (
+                  <p className="text-[10px] text-gray-400">Ex: MID client (€159/mo) → €{(159 * parseFloat(subscriptionShare) / 100).toFixed(0)}/mo for you</p>
+                )}
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">{t('onboarding.managerCommShare')}</span>
+                  <span className="text-sm font-semibold text-navy-900">
+                    {commissionShare ? `${commissionShare}%` : '—'}
+                  </span>
                 </div>
+                {commissionShare && (
+                  <p className="text-[10px] text-gray-400">Ex: €2,000 gross rental → €{(2000 * parseFloat(commissionShare) / 100).toFixed(0)} for you</p>
+                )}
+                {!subscriptionShare && !commissionShare && (
+                  <p className="text-xs text-amber-600">
+                    Compensation not yet configured. Contact your Admin.
+                  </p>
+                )}
               </div>
             </>
           )}

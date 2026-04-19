@@ -85,10 +85,10 @@ export function DashboardGreeting({
 
   useEffect(() => {
     if (nameOverride) return
-    fetch("/api/auth/session")
-      .then(r => r.json())
-      .then(s => {
-        const n = s?.user?.name?.split(" ")[0]
+    fetch("/api/me")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        const n = data?.name?.split(" ")[0]
         if (n) setName(n)
       })
       .catch(() => {})

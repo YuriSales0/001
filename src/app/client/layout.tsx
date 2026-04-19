@@ -40,9 +40,11 @@ export default async function ClientLayout({ children }: { children: React.React
 
   const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { subscriptionPlan: true } })
   const hasAI = AI_PLANS.includes(dbUser?.subscriptionPlan ?? '')
-  const navLinks = hasAI
-    ? [...baseLinks, { href: '/client/ai', label: t(msgs, 'common.aiPricing'), icon: Sparkles }]
-    : baseLinks
+  const navLinks = [
+    ...baseLinks,
+    ...(hasAI ? [{ href: '/client/ai', label: t(msgs, 'common.aiPricing'), icon: Sparkles }] : []),
+    { href: '/client/intelligence', label: 'Market Intelligence', icon: TrendingUp },
+  ]
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--hm-ivory)' }}>
