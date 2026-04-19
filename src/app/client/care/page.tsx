@@ -7,6 +7,7 @@ import {
 } from "lucide-react"
 import { useEscapeKey } from "@/lib/use-escape-key"
 import { showToast } from "@/components/hm/toast"
+import { useLocale } from "@/i18n/provider"
 
 type Property = { id: string; name: string }
 
@@ -62,33 +63,6 @@ type CorrectiveReport = {
   submittedAt?: string
 }
 
-const TYPE_LABEL: Record<string, string> = {
-  CLEANING: "Cleaning",
-  MAINTENANCE_PREVENTIVE: "Preventive maintenance",
-  MAINTENANCE_CORRECTIVE: "Corrective maintenance",
-  INSPECTION: "Inspection",
-  CHECK_IN: "Check-in",
-  CHECK_OUT: "Check-out",
-  TRANSFER: "Airport transfer",
-  SHOPPING: "Shopping",
-  LAUNDRY: "Laundry",
-}
-
-const TYPE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
-  CLEANING: Sparkles,
-  MAINTENANCE_PREVENTIVE: ShieldCheck,
-  MAINTENANCE_CORRECTIVE: Wrench,
-  INSPECTION: ShieldCheck,
-  CHECK_IN: Calendar,
-  CHECK_OUT: Camera,
-}
-
-const REQUEST_TYPES = [
-  { value: "MAINTENANCE_CORRECTIVE", label: "Repair / fix",       hint: "Something is broken or not working" },
-  { value: "CLEANING",               label: "Extra cleaning",     hint: "An additional cleaning visit" },
-  { value: "INSPECTION",             label: "Property check",     hint: "Walk through and inspect the property" },
-]
-
 const fmtDate = (s: string) =>
   new Date(s).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
 
@@ -102,12 +76,13 @@ const fmtRelative = (s: string) => {
   return `${Math.floor(days / 30)} months ago`
 }
 
-const CORRECTIVE_ACTION_LABELS: Record<string, string> = {
-  repaired:       'Reparado pelo técnico',
-  specialist:     'Especialista contactado',
-  temporary_fix:  'Solução temporária',
-  pending_parts:  'Aguarda peças',
-  no_action:      'Sem acção necessária',
+const TYPE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+  CLEANING: Sparkles,
+  MAINTENANCE_PREVENTIVE: ShieldCheck,
+  MAINTENANCE_CORRECTIVE: Wrench,
+  INSPECTION: ShieldCheck,
+  CHECK_IN: Calendar,
+  CHECK_OUT: Camera,
 }
 
 function parseReport(notes: string | null): CheckoutReport | PreventiveReport | CorrectiveReport | null {
@@ -123,6 +98,7 @@ function parseReport(notes: string | null): CheckoutReport | PreventiveReport | 
 }
 
 export default function ClientCarePage() {
+  const { t } = useLocale()
   const [tasks, setTasks] = useState<Task[]>([])
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [properties, setProperties] = useState<Property[]>([])
@@ -141,6 +117,32 @@ export default function ClientCarePage() {
   const [reqError, setReqError] = useState("")
 
   useEscapeKey(showRequest, () => setShowRequest(false))
+
+  const TYPE_LABEL: Record<string, string> = {
+    CLEANING: t('taskTypes.CLEANING'),
+    MAINTENANCE_PREVENTIVE: t('taskTypes.MAINTENANCE_PREVENTIVE'),
+    MAINTENANCE_CORRECTIVE: t('taskTypes.MAINTENANCE_CORRECTIVE'),
+    INSPECTION: t('taskTypes.INSPECTION'),
+    CHECK_IN: t('taskTypes.CHECK_IN'),
+    CHECK_OUT: t('taskTypes.CHECK_OUT'),
+    TRANSFER: t('taskTypes.TRANSFER'),
+    SHOPPING: t('taskTypes.SHOPPING'),
+    LAUNDRY: t('taskTypes.LAUNDRY'),
+  }
+
+  const REQUEST_TYPES = [
+    { value: "MAINTENANCE_CORRECTIVE", label: t('client.care.repair'),       hint: t('client.care.repairDesc') },
+    { value: "CLEANING",               label: t('client.care.extraCleaning'),     hint: t('client.care.extraCleaningDesc') },
+    { value: "INSPECTION",             label: t('client.care.propertyCheck'),     hint: t('client.care.propertyCheckDesc') },
+  ]
+
+  const CORRECTIVE_ACTION_LABELS: Record<string, string> = {
+    repaired:       t('client.care.correctiveRepaired'),
+    specialist:     t('client.care.correctiveSpecialist'),
+    temporary_fix:  t('client.care.correctiveTempFix'),
+    pending_parts:  t('client.care.correctivePendingParts'),
+    no_action:      t('client.care.correctiveNoAction'),
+  }
 
   const load = async () => {
     setLoading(true)
@@ -198,7 +200,7 @@ export default function ClientCarePage() {
     e.preventDefault()
     setReqError("")
     if (!reqForm.propertyId || !reqForm.title || !reqForm.dueDate) {
-      setReqError("Please fill in all required fields.")
+      setReqError(t('client.care.fillRequired'))
       return
     }
     setRequesting(true)
@@ -216,15 +218,15 @@ export default function ClientCarePage() {
       })
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
-        setReqError(err.error ?? "Could not send request.")
+        setReqError(err.error ?? t('client.care.couldNotSend'))
       } else {
         setShowRequest(false)
         setReqForm(f => ({ ...f, title: "", description: "", dueDate: "" }))
-        showToast('Request sent successfully', 'success')
+        showToast(t('client.care.requestSent'), 'success')
         await load()
       }
     } catch {
-      setReqError("Network error. Please try again.")
+      setReqError(t('client.care.networkError'))
     } finally {
       setRequesting(false)
     }
@@ -241,7 +243,7 @@ export default function ClientCarePage() {
 
   if (loadError) {
     return (
-      <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
+      <div className="p-4 text-sm text-red-500">{t('client.care.loadFailed')}</div>
     )
   }
 
@@ -250,9 +252,9 @@ export default function ClientCarePage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">Care & maintenance</h1>
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">{t('client.care.title')}</h1>
           <p className="mt-1 font-sans text-lg text-hm-slate/70">
-            Every visit, every report, every fix — all in one place.
+            {t('client.care.subtitle')}
           </p>
         </div>
         <button
@@ -261,7 +263,7 @@ export default function ClientCarePage() {
           style={{ background: "var(--hm-gold-dk)", minHeight: "44px" }}
         >
           <Plus className="h-4 w-4" />
-          Request a visit
+          {t('client.care.requestVisit')}
         </button>
       </div>
 
@@ -271,7 +273,7 @@ export default function ClientCarePage() {
              style={{ background: "rgba(163,45,45,0.05)" }}>
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle className="h-5 w-5 text-hm-red" />
-            <h2 className="font-serif font-bold text-hm-black">Recent issues flagged by our team</h2>
+            <h2 className="font-serif font-bold text-hm-black">{t('client.care.issuesFlagged')}</h2>
           </div>
           <div className="space-y-2">
             {issuesNeedingAttention.map(({ task, report }) => {
@@ -293,7 +295,7 @@ export default function ClientCarePage() {
                       )}
                       {preventive && (
                         <p className="font-sans text-sm text-hm-slate mt-1">
-                          {preventive.anomalyCount} anomalia{preventive.anomalyCount !== 1 ? 's' : ''} detectada{preventive.anomalyCount !== 1 ? 's' : ''}
+                          {preventive.anomalyCount} {preventive.anomalyCount !== 1 ? t('client.care.anomaliesDetected') : t('client.care.anomalyDetected')}
                         </p>
                       )}
                       {checkout?.issues && (
@@ -303,7 +305,7 @@ export default function ClientCarePage() {
                     <span className={`text-xs font-sans font-semibold rounded-full px-2 py-0.5 shrink-0 ${
                       isMajorCheckout || isCorrectiveUnresolved ? "bg-hm-red/10 text-hm-red" : "bg-hm-gold/15 text-hm-gold-dk"
                     }`}>
-                      {isCorrectiveUnresolved ? "Pendente" : isPreventiveAnomaly ? "Anomalia" : isMajorCheckout ? "Major" : "Minor"}
+                      {isCorrectiveUnresolved ? t('client.care.pendingStatus') : isPreventiveAnomaly ? t('client.care.anomalyStatus') : isMajorCheckout ? t('client.care.majorIssues') : t('client.care.minorIssues')}
                     </span>
                   </div>
                 </div>
@@ -316,8 +318,8 @@ export default function ClientCarePage() {
       {/* Upcoming visits */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-serif text-xl font-bold text-hm-black">Upcoming visits</h2>
-          <span className="font-sans text-sm text-hm-slate/60">{upcoming.length} scheduled</span>
+          <h2 className="font-serif text-xl font-bold text-hm-black">{t('client.care.upcoming')}</h2>
+          <span className="font-sans text-sm text-hm-slate/60">{upcoming.length} {t('client.care.scheduled')}</span>
         </div>
 
         {upcoming.length === 0 ? (
@@ -327,9 +329,9 @@ export default function ClientCarePage() {
                  style={{ background: "rgba(var(--hm-green-rgb, 76,140,74), 0.15)" }}>
               <ShieldCheck className="h-6 w-6" style={{ color: "var(--hm-green)" }} />
             </div>
-            <h3 className="font-serif text-lg font-bold text-hm-black mb-1">Your property is in good shape</h3>
+            <h3 className="font-serif text-lg font-bold text-hm-black mb-1">{t('client.care.goodShape')}</h3>
             <p className="font-sans text-sm text-hm-slate/60 mb-4 max-w-sm mx-auto">
-              No visits are currently scheduled. Need something looked at? Request a maintenance visit and our team will take care of it.
+              {t('client.care.noScheduledDesc')}
             </p>
             <button
               onClick={() => setShowRequest(true)}
@@ -337,33 +339,33 @@ export default function ClientCarePage() {
               style={{ background: "var(--hm-gold-dk)" }}
             >
               <Plus className="h-4 w-4" />
-              Request maintenance
+              {t('client.care.requestMaintenance')}
             </button>
           </div>
         ) : (
           <div className="space-y-2">
-            {upcoming.slice(0, 6).map(t => {
-              const Icon = TYPE_ICON[t.type] ?? Wrench
-              const overdue = new Date(t.dueDate) < new Date()
+            {upcoming.slice(0, 6).map(tk => {
+              const Icon = TYPE_ICON[tk.type] ?? Wrench
+              const overdue = new Date(tk.dueDate) < new Date()
               return (
-                <div key={t.id} className="rounded-hm border border-hm-border p-4 flex items-start gap-4"
+                <div key={tk.id} className="rounded-hm border border-hm-border p-4 flex items-start gap-4"
                      style={{ background: "var(--hm-sand)" }}>
                   <div className="h-10 w-10 rounded-full flex items-center justify-center shrink-0"
                        style={{ background: "var(--hm-gold)" }}>
                     <Icon className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-serif font-semibold text-hm-black">{t.title}</p>
+                    <p className="font-serif font-semibold text-hm-black">{tk.title}</p>
                     <p className="font-sans text-sm text-hm-slate/70">
-                      {TYPE_LABEL[t.type] ?? t.type} · {t.property.name}
+                      {TYPE_LABEL[tk.type] ?? tk.type} · {tk.property.name}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
                     <p className={`font-sans text-sm font-semibold ${overdue ? "text-hm-red" : "text-hm-black"}`}>
-                      {fmtDate(t.dueDate)}
+                      {fmtDate(tk.dueDate)}
                     </p>
                     <p className="font-sans text-xs text-hm-slate/60 capitalize">
-                      {t.status.replace("_", " ").toLowerCase()}
+                      {tk.status.replace("_", " ").toLowerCase()}
                     </p>
                   </div>
                 </div>
@@ -375,7 +377,7 @@ export default function ClientCarePage() {
 
       {/* Recent visit history */}
       <div>
-        <h2 className="font-serif text-xl font-bold text-hm-black mb-4">Recent visit history</h2>
+        <h2 className="font-serif text-xl font-bold text-hm-black mb-4">{t('client.care.recentHistory')}</h2>
         {completed.length === 0 ? (
           <div className="rounded-hm border border-hm-border p-10 text-center"
                style={{ background: "var(--hm-sand)" }}>
@@ -383,21 +385,21 @@ export default function ClientCarePage() {
                  style={{ background: "var(--hm-border)" }}>
               <FileText className="h-6 w-6 text-hm-slate/40" />
             </div>
-            <h3 className="font-serif text-lg font-bold text-hm-black mb-1">No visits completed yet</h3>
+            <h3 className="font-serif text-lg font-bold text-hm-black mb-1">{t('client.care.noCompletedTitle')}</h3>
             <p className="font-sans text-sm text-hm-slate/60 max-w-sm mx-auto">
-              Once our team completes a visit, the full report will appear here with photos and details.
+              {t('client.care.noCompletedDesc')}
             </p>
           </div>
         ) : (
           <div className="space-y-2">
-            {completed.map(t => {
-              const Icon = TYPE_ICON[t.type] ?? CheckCircle2
-              const report = parseReport(t.notes)
+            {completed.map(tk => {
+              const Icon = TYPE_ICON[tk.type] ?? CheckCircle2
+              const report = parseReport(tk.notes)
               const preventive = (report && 'type' in report && report.type === 'preventive') ? report as PreventiveReport : null
               const corrective = (report && 'type' in report && report.type === 'corrective') ? report as CorrectiveReport : null
               const checkout   = (report && 'condition' in report) ? report as CheckoutReport : null
               return (
-                <div key={t.id} className="rounded-hm border border-hm-border p-4"
+                <div key={tk.id} className="rounded-hm border border-hm-border p-4"
                      style={{ background: "var(--hm-sand)" }}>
                   <div className="flex items-start gap-4">
                     <div className="h-10 w-10 rounded-full flex items-center justify-center shrink-0"
@@ -406,30 +408,29 @@ export default function ClientCarePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <p className="font-serif font-semibold text-hm-black">{t.title}</p>
-                        <span className="font-sans text-xs text-hm-slate/60">{fmtRelative(t.dueDate)}</span>
+                        <p className="font-serif font-semibold text-hm-black">{tk.title}</p>
+                        <span className="font-sans text-xs text-hm-slate/60">{fmtRelative(tk.dueDate)}</span>
                       </div>
                       <p className="font-sans text-sm text-hm-slate/70">
-                        {TYPE_LABEL[t.type] ?? t.type} · {t.property.name}
-                        {t.assignee && ` · by ${t.assignee.name ?? t.assignee.email}`}
+                        {TYPE_LABEL[tk.type] ?? tk.type} · {tk.property.name}
+                        {tk.assignee && ` · ${t('client.care.by')} ${tk.assignee.name ?? tk.assignee.email}`}
                       </p>
 
-                      {/* Preventive report */}
                       {preventive && (
                         <div className="mt-3 rounded-lg border border-hm-border p-3 bg-white space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="font-sans text-xs font-semibold text-hm-green">
-                              ✓ {preventive.checkedCount}/{preventive.totalCount} itens verificados
+                              ✓ {preventive.checkedCount}/{preventive.totalCount} {t('client.care.itemsVerified')}
                             </span>
                             {preventive.anomalyCount > 0 && (
                               <span className="font-sans text-xs font-semibold text-hm-gold-dk">
-                                ⚠ {preventive.anomalyCount} anomalia{preventive.anomalyCount !== 1 ? 's' : ''}
+                                ⚠ {preventive.anomalyCount} {preventive.anomalyCount !== 1 ? t('client.care.anomaliesDetected') : t('client.care.anomalyDetected')}
                               </span>
                             )}
                           </div>
                           {preventive.sections?.flatMap(sec => sec.items.filter(i => i.anomaly)).length > 0 && (
                             <div>
-                              <p className="font-sans text-xs text-hm-slate/60 mb-1">Anomalias detectadas:</p>
+                              <p className="font-sans text-xs text-hm-slate/60 mb-1">{t('client.care.anomaliesLabel')}</p>
                               {preventive.sections.flatMap(sec => sec.items.filter(i => i.anomaly)).map((item, i) => (
                                 <p key={i} className="font-sans text-xs text-hm-slate">⚠ {item.label}{item.note ? ` — ${item.note}` : ''}</p>
                               ))}
@@ -449,13 +450,12 @@ export default function ClientCarePage() {
                         </div>
                       )}
 
-                      {/* Corrective report */}
                       {corrective && (
                         <div className="mt-3 rounded-lg border border-hm-border p-3 bg-white space-y-2">
                           <p className="font-sans text-sm text-hm-slate">{corrective.problem}</p>
                           <div className="flex flex-wrap gap-3">
                             <span className={`font-sans text-xs font-semibold rounded-full px-2 py-0.5 ${corrective.resolved ? 'bg-hm-green/10 text-hm-green' : 'bg-hm-red/10 text-hm-red'}`}>
-                              {corrective.resolved ? 'Resolvido' : 'Pendente'}
+                              {corrective.resolved ? t('client.care.resolved') : t('client.care.pendingStatus')}
                             </span>
                             <span className="font-sans text-xs text-hm-slate/60">
                               {CORRECTIVE_ACTION_LABELS[corrective.actionTaken] ?? corrective.actionTaken}
@@ -465,7 +465,7 @@ export default function ClientCarePage() {
                             )}
                           </div>
                           {corrective.rootCause && (
-                            <p className="font-sans text-xs text-hm-slate/70">Causa: {corrective.rootCause}</p>
+                            <p className="font-sans text-xs text-hm-slate/70">{t('client.care.cause')} {corrective.rootCause}</p>
                           )}
                           {corrective.photoUrls && corrective.photoUrls.length > 0 && (
                             <div className="grid grid-cols-3 gap-1.5 pt-1">
@@ -481,7 +481,6 @@ export default function ClientCarePage() {
                         </div>
                       )}
 
-                      {/* Checkout / legacy report */}
                       {checkout && (
                         <div className="mt-3 rounded-lg border border-hm-border p-3 bg-white">
                           <span className={`inline-flex items-center text-xs font-sans font-semibold rounded-full px-2 py-0.5 ${
@@ -489,10 +488,9 @@ export default function ClientCarePage() {
                               : checkout.condition === "minor" ? "bg-hm-gold/15 text-hm-gold-dk"
                               : "bg-hm-red/10 text-hm-red"
                           }`}>
-                            {checkout.condition === "good" ? "Good condition" : checkout.condition === "minor" ? "Minor issues" : "Major issues"}
+                            {checkout.condition === "good" ? t('client.care.goodCondition') : checkout.condition === "minor" ? t('client.care.minorIssues') : t('client.care.majorIssues')}
                           </span>
                           {checkout.issues && <p className="font-sans text-sm text-hm-slate mt-1 whitespace-pre-wrap">{checkout.issues}</p>}
-                          {checkout.damages && <p className="font-sans text-xs text-hm-slate/70 mt-1"><strong>Damages:</strong> {checkout.damages}</p>}
                         </div>
                       )}
                     </div>
@@ -510,8 +508,8 @@ export default function ClientCarePage() {
           <div className="w-full max-w-lg rounded-hm shadow-xl" style={{ background: "var(--hm-ivory)" }} onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-hm-border">
               <div>
-                <h2 className="font-serif text-lg font-bold text-hm-black">Request a visit</h2>
-                <p className="font-sans text-sm text-hm-slate/70 mt-0.5">We will get back to you within hours.</p>
+                <h2 className="font-serif text-lg font-bold text-hm-black">{t('client.care.requestVisit')}</h2>
+                <p className="font-sans text-sm text-hm-slate/70 mt-0.5">{t('client.care.requestSubtitle')}</p>
               </div>
               <button onClick={() => setShowRequest(false)} className="text-hm-slate/40 hover:text-hm-slate">
                 <X className="h-5 w-5" />
@@ -524,7 +522,7 @@ export default function ClientCarePage() {
               {properties.length > 1 && (
                 <div>
                   <label className="block font-sans text-xs font-semibold uppercase tracking-widest text-hm-slate/60 mb-1.5">
-                    Property
+                    {t('client.care.property')}
                   </label>
                   <select
                     required
@@ -538,49 +536,49 @@ export default function ClientCarePage() {
               )}
               <div>
                 <label className="block font-sans text-xs font-semibold uppercase tracking-widest text-hm-slate/60 mb-1.5">
-                  What do you need?
+                  {t('client.care.whatDoYouNeed')}
                 </label>
                 <div className="grid grid-cols-1 gap-2">
-                  {REQUEST_TYPES.map(t => (
+                  {REQUEST_TYPES.map(rt => (
                     <button
-                      key={t.value}
+                      key={rt.value}
                       type="button"
-                      onClick={() => setReqForm(f => ({ ...f, type: t.value }))}
+                      onClick={() => setReqForm(f => ({ ...f, type: rt.value }))}
                       className={`text-left rounded-lg border px-4 py-3 transition-colors ${
-                        reqForm.type === t.value
+                        reqForm.type === rt.value
                           ? "border-hm-gold bg-hm-gold/5"
                           : "border-hm-border bg-white hover:bg-hm-sand"
                       }`}
                     >
-                      <div className="font-serif font-semibold text-hm-black">{t.label}</div>
-                      <div className="font-sans text-xs text-hm-slate/60 mt-0.5">{t.hint}</div>
+                      <div className="font-serif font-semibold text-hm-black">{rt.label}</div>
+                      <div className="font-sans text-xs text-hm-slate/60 mt-0.5">{rt.hint}</div>
                     </button>
                   ))}
                 </div>
               </div>
               <div>
                 <label className="block font-sans text-xs font-semibold uppercase tracking-widest text-hm-slate/60 mb-1.5">
-                  Title *
+                  {t('client.care.titleField')} *
                 </label>
                 <input
                   type="text"
                   required
                   value={reqForm.title}
                   onChange={e => setReqForm(f => ({ ...f, title: e.target.value }))}
-                  placeholder="e.g. Kitchen tap is dripping"
+                  placeholder={t('client.care.titlePlaceholder')}
                   className="w-full rounded-lg border border-hm-border bg-white px-3 py-2.5 font-sans text-sm text-hm-black focus:outline-none focus:ring-2 focus:ring-hm-gold"
                 />
               </div>
               <div>
                 <label className="block font-sans text-xs font-semibold uppercase tracking-widest text-hm-slate/60 mb-1.5">
-                  Notes for our team
+                  {t('client.care.notesForTeam')}
                 </label>
                 <textarea
                   rows={3}
                   maxLength={500}
                   value={reqForm.description}
                   onChange={e => setReqForm(f => ({ ...f, description: e.target.value }))}
-                  placeholder="Photos? Specific location? Any context that helps."
+                  placeholder={t('client.care.notesPlaceholder')}
                   className="w-full rounded-lg border border-hm-border bg-white px-3 py-2.5 font-sans text-sm text-hm-black focus:outline-none focus:ring-2 focus:ring-hm-gold"
                 />
                 <div className="text-right text-xs text-gray-400 mt-1">
@@ -589,7 +587,7 @@ export default function ClientCarePage() {
               </div>
               <div>
                 <label className="block font-sans text-xs font-semibold uppercase tracking-widest text-hm-slate/60 mb-1.5">
-                  Preferred date *
+                  {t('client.care.preferredDate')} *
                 </label>
                 <input
                   type="date"
@@ -602,12 +600,12 @@ export default function ClientCarePage() {
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={() => setShowRequest(false)}
                         className="rounded-lg border border-hm-border px-4 py-2.5 font-sans text-sm hover:bg-hm-sand">
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button type="submit" disabled={requesting}
                         className="inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-sans font-semibold text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{ background: "var(--hm-black)" }}>
-                  {requesting ? (<><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>) : "Send request"}
+                  {requesting ? (<><Loader2 className="h-4 w-4 animate-spin" /> {t('client.care.sending')}</>) : t('client.care.sendRequest')}
                 </button>
               </div>
             </form>

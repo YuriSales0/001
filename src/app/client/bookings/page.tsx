@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { CalendarDays, List, Plus, X, AlertTriangle, Loader2 } from "lucide-react"
 import { useEscapeKey } from "@/lib/use-escape-key"
+import { useLocale } from "@/i18n/provider"
 
 type Reservation = {
   id: string
@@ -34,18 +35,26 @@ const FLAGS: Record<string, string> = {
   NL:"🇳🇱", DE:"🇩🇪", FR:"🇫🇷", ES:"🇪🇸",
 }
 
-const STATUS_PILL: Record<string, { label: string; cls: string }> = {
-  UPCOMING:  { label: "Upcoming",  cls: "bg-hm-blue/10 text-hm-blue" },
-  ACTIVE:    { label: "Active",    cls: "bg-hm-gold/15 text-hm-gold-dk" },
-  COMPLETED: { label: "Completed", cls: "bg-hm-green/10 text-hm-green" },
-  CANCELLED: { label: "Cancelled", cls: "bg-hm-red/10 text-hm-red" },
+const STATUS_PILL_CLS: Record<string, string> = {
+  UPCOMING:  "bg-hm-blue/10 text-hm-blue",
+  ACTIVE:    "bg-hm-gold/15 text-hm-gold-dk",
+  COMPLETED: "bg-hm-green/10 text-hm-green",
+  CANCELLED: "bg-hm-red/10 text-hm-red",
 }
 
 export default function OwnerBookings() {
+  const { t } = useLocale()
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [blockedDates, setBlockedDates] = useState<BlockedDate[]>([])
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<"all" | "upcoming">("upcoming")
+
+  const STATUS_LABELS: Record<string, string> = {
+    UPCOMING:  t('client.bookings.upcoming'),
+    ACTIVE:    t('client.bookings.active'),
+    COMPLETED: t('client.bookings.completed'),
+    CANCELLED: t('client.bookings.cancelled'),
+  }
 
   // Block dates form
   const [blocking, setBlocking] = useState(false)
@@ -63,7 +72,7 @@ export default function OwnerBookings() {
       setReservations(r)
       setBlockedDates(b)
     }).catch(() => {
-      setError("Failed to load bookings. Try refreshing.")
+      setError(t('client.bookings.failedToLoad'))
     }).finally(() => {
       setLoading(false)
     })
@@ -89,10 +98,10 @@ export default function OwnerBookings() {
         setBlockForm({ start: "", end: "", reason: "" })
         setBlocking(false)
       } else {
-        setError("Failed to block dates. Please try again.")
+        setError(t('client.bookings.failedToBlock'))
       }
     } catch {
-      setError("Network error. Please try again.")
+      setError(t('client.bookings.networkError'))
     } finally {
       setBlockingSaving(false)
     }
@@ -104,10 +113,10 @@ export default function OwnerBookings() {
       if (res.ok) {
         setBlockedDates(prev => prev.filter(b => b.id !== id))
       } else {
-        setError("Failed to remove blocked dates.")
+        setError(t('client.bookings.failedToRemove'))
       }
     } catch {
-      setError("Network error. Please try again.")
+      setError(t('client.bookings.networkError'))
     }
   }
 
@@ -136,9 +145,9 @@ export default function OwnerBookings() {
         <div className="rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3">{error}</div>
       )}
       <div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">My Bookings</h1>
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">{t('client.bookings.title')}</h1>
         <p className="mt-1 font-sans text-lg text-hm-slate/70">
-          View all reservations and block dates for personal use.
+          {t('client.bookings.subtitle')}
         </p>
       </div>
 
@@ -156,7 +165,7 @@ export default function OwnerBookings() {
           >
             <span className="flex items-center gap-1.5">
               <CalendarDays className="h-4 w-4" />
-              Upcoming
+              {t('client.bookings.upcoming')}
             </span>
           </button>
           <button
@@ -169,7 +178,7 @@ export default function OwnerBookings() {
           >
             <span className="flex items-center gap-1.5">
               <List className="h-4 w-4" />
-              All ({reservations.length})
+              {t('client.bookings.all')} ({reservations.length})
             </span>
           </button>
         </div>
@@ -180,7 +189,7 @@ export default function OwnerBookings() {
           style={{ background: 'var(--hm-gold-dk)', minHeight: '44px' }}
         >
           <Plus className="h-4 w-4" />
-          Block dates for personal use
+          {t('client.bookings.blockDates')}
         </button>
       </div>
 
@@ -189,14 +198,14 @@ export default function OwnerBookings() {
         <div className="rounded-hm border border-hm-gold/40 p-5"
              style={{ background: 'var(--hm-gold)', opacity: undefined, backgroundColor: 'rgba(176,138,62,0.08)' }}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-serif font-bold text-hm-black">Block dates for personal use</h3>
+            <h3 className="font-serif font-bold text-hm-black">{t('client.bookings.blockTitle')}</h3>
             <button onClick={() => setBlocking(false)} className="text-hm-slate/60 hover:text-hm-slate">
               <X className="h-5 w-5" />
             </button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block font-sans text-sm text-hm-slate/70 mb-1">From</label>
+              <label className="block font-sans text-sm text-hm-slate/70 mb-1">{t('client.bookings.from')}</label>
               <input
                 type="date"
                 value={blockForm.start}
@@ -205,7 +214,7 @@ export default function OwnerBookings() {
               />
             </div>
             <div>
-              <label className="block font-sans text-sm text-hm-slate/70 mb-1">To</label>
+              <label className="block font-sans text-sm text-hm-slate/70 mb-1">{t('client.bookings.to')}</label>
               <input
                 type="date"
                 value={blockForm.end}
@@ -214,10 +223,10 @@ export default function OwnerBookings() {
               />
             </div>
             <div>
-              <label className="block font-sans text-sm text-hm-slate/70 mb-1">Reason (optional)</label>
+              <label className="block font-sans text-sm text-hm-slate/70 mb-1">{t('client.bookings.reasonOptional')}</label>
               <input
                 type="text"
-                placeholder="Personal use"
+                placeholder={t('client.bookings.personalUse')}
                 value={blockForm.reason}
                 onChange={e => setBlockForm(f => ({ ...f, reason: e.target.value }))}
                 className="w-full rounded-lg border border-hm-border px-3 py-2.5 font-sans text-sm text-hm-black bg-hm-ivory focus:outline-none focus:ring-2 focus:ring-hm-gold"
@@ -231,7 +240,7 @@ export default function OwnerBookings() {
               className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2.5 font-sans font-semibold text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed transition-opacity hover:opacity-90"
               style={{ background: 'var(--hm-black)', minHeight: '44px' }}
             >
-              {blocking_saving ? (<><Loader2 className="h-4 w-4 animate-spin" /> Saving…</>) : "Block these dates"}
+              {blocking_saving ? (<><Loader2 className="h-4 w-4 animate-spin" /> {t('client.bookings.saving')}</>) : t('client.bookings.blockTheseDates')}
             </button>
           </div>
         </div>
@@ -240,7 +249,7 @@ export default function OwnerBookings() {
       {/* Blocked dates list */}
       {blockedDates.length > 0 && (
         <div>
-          <h2 className="font-serif text-lg font-bold text-hm-black mb-3">Your blocked dates</h2>
+          <h2 className="font-serif text-lg font-bold text-hm-black mb-3">{t('client.bookings.yourBlockedDates')}</h2>
           <div className="space-y-2">
             {blockedDates.map(b => (
               <div key={b.id}
@@ -270,7 +279,7 @@ export default function OwnerBookings() {
       {/* Reservations list */}
       <div>
         <h2 className="font-serif text-xl font-bold text-hm-black mb-4">
-          {view === "upcoming" ? "Upcoming bookings" : "All bookings"}
+          {view === "upcoming" ? t('client.bookings.upcomingBookings') : t('client.bookings.allBookings')}
         </h2>
 
         {shown.length === 0 ? (
@@ -281,18 +290,19 @@ export default function OwnerBookings() {
               <CalendarDays className="h-6 w-6 text-hm-slate/40" />
             </div>
             <h3 className="font-serif text-xl font-bold text-hm-black mb-1">
-              {view === "upcoming" ? "No upcoming bookings" : "No bookings yet"}
+              {view === "upcoming" ? t('client.bookings.noUpcoming') : t('client.bookings.noBookings')}
             </h3>
             <p className="font-sans text-sm text-hm-slate/60 max-w-sm mx-auto">
               {view === "upcoming"
-                ? "You have no upcoming reservations at the moment. New bookings from Airbnb, Booking.com and other platforms will appear here automatically."
-                : "Reservations from Airbnb, Booking.com and other platforms will appear here automatically once your property is listed."}
+                ? t('client.bookings.noUpcomingDesc')
+                : t('client.bookings.noBookingsDesc')}
             </p>
           </div>
         ) : (
           <div className="space-y-3">
             {shown.map(r => {
-              const cfg = STATUS_PILL[r.status]
+              const cls = STATUS_PILL_CLS[r.status]
+              const statusLabel = STATUS_LABELS[r.status]
               return (
                 <div key={r.id}
                      className="rounded-hm border border-hm-border p-5"
@@ -303,13 +313,13 @@ export default function OwnerBookings() {
                       <div>
                         <p className="font-serif font-bold text-hm-black text-lg">{r.guestName}</p>
                         <p className="font-sans text-sm text-hm-slate/70">
-                          {fmtDate(r.checkIn)} → {fmtDate(r.checkOut)} · {r.nights} nights
+                          {fmtDate(r.checkIn)} → {fmtDate(r.checkOut)} · {r.nights} {t('client.bookings.nights')}
                         </p>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className={`inline-block rounded-full px-3 py-1 text-xs font-sans font-semibold ${cfg.cls}`}>
-                        {cfg.label}
+                      <span className={`inline-block rounded-full px-3 py-1 text-xs font-sans font-semibold ${cls}`}>
+                        {statusLabel}
                       </span>
                       <p className="font-serif font-bold text-hm-black mt-1">{fmtEUR(r.grossAmount)}</p>
                     </div>

@@ -390,6 +390,18 @@
       "markComplete": "Taak als voltooid markeren",
       "taskCompleted": "Taak voltooid",
       "startTask": "Taak starten"
+    },
+    "score": {
+      "suspended": "Suspended",
+      "suspendedDesc": "No tasks assigned",
+      "basic": "Basic",
+      "basicDesc": "Standard tasks",
+      "verified": "Verified",
+      "verifiedDesc": "+5% rate bonus",
+      "expert": "Expert",
+      "expertDesc": "+10% rate bonus + premium properties",
+      "elite": "Elite",
+      "eliteDesc": "+15% rate bonus + independent inspections"
     }
   },
   "finance": {
@@ -921,9 +933,116 @@
       "contactManager": "Neem contact op met je Manager"
     },
     "profileDocs": {
-      "managementAgreement": "Beheerovereenkomst",
-      "houseRules": "Huisregels",
-      "ownerGuide": "Welkomstgids voor eigenaren"
+      "managementAgreement": "Property Management Agreement",
+      "managementAgreementDesc": "Your signed management contract with HostMasters.",
+      "houseRules": "House Rules",
+      "houseRulesDesc": "Rules and regulations for your property guests.",
+      "ownerGuide": "Owner Welcome Guide",
+      "ownerGuideDesc": "Everything you need to know as a HostMasters owner.",
+      "planDescStarter": "Essentials — Check-in, Check-out, Cleaning",
+      "planDescBasic": "Basic + Pre/Post Inspection",
+      "planDescMid": "Mid + Extended support",
+      "planDescPremium": "Full service — Inspection, Shopping, Transfer, Laundry"
+    },
+    "plan": {
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium",
+      "feat_fullStr": "Full STR management",
+      "feat_listings": "Airbnb, Booking.com & direct listings",
+      "feat_guestComms": "24/7 guest communications",
+      "feat_monthlyStatement": "Monthly owner statement",
+      "feat_dashboard": "Owner dashboard",
+      "feat_cleaningStarter": "Cleaning fee: €70/turnover",
+      "feat_everything": "Everything in {plan}",
+      "feat_preventive": "Preventive maintenance (1x/month)",
+      "feat_inspection": "Pre-stay & post-stay inspection",
+      "feat_docMgmt": "Documentation management",
+      "feat_cleaningBasic": "Cleaning fee: €60/turnover",
+      "feat_aiPricing": "AI pricing + Smart Lock integration",
+      "feat_priority12h": "Priority response: 12h owner / 2h guest",
+      "feat_anyLanguage": "Statement in any language",
+      "feat_cleaningMid": "Cleaning: €45 if <5n / included ≥5n",
+      "feat_fiscal": "Modelo 179 + IRNR fiscal compliance",
+      "feat_upsells": "Guest upsells: transfers, grocery & laundry",
+      "feat_emergency4h": "Emergency response within 4 hours",
+      "feat_cleaningPremium": "Cleaning: €35 if <3n / included ≥3n"
+    },
+    "care": {
+      "title": "Care & Maintenance",
+      "requestVisit": "Request a visit",
+      "repair": "Repair / fix",
+      "repairDesc": "Something is broken or not working",
+      "extraCleaning": "Extra cleaning",
+      "extraCleaningDesc": "An additional cleaning visit",
+      "propertyCheck": "Property check",
+      "propertyCheckDesc": "Walk through and inspect the property",
+      "recent": "Recent visits",
+      "upcoming": "Upcoming",
+      "noVisits": "No visits yet"
+    },
+    "payouts": {
+      "title": "My Payouts",
+      "subtitle": "Earnings from your rentals and any service invoices.",
+      "scheduledReceive": "Scheduled to receive",
+      "pendingInvoices": "Pending invoices to pay",
+      "rentalPayouts": "Rental payouts"
+    },
+    "bookings": {
+      "upcoming": "Upcoming",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "properties": {
+      "title": "My Properties",
+      "subtitle": "Track and confirm your properties.",
+      "addProperty": "Request Property",
+      "rulesSelected": "{n} rule(s) selected",
+      "statusPendingClient": "Awaiting confirmation",
+      "statusPendingApproval": "Awaiting setup",
+      "statusContractPending": "Contract pending",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "statusMaintenance": "Under maintenance"
+    },
+    "tax": {
+      "vut": "VUT — Tourist Licence",
+      "modelo179": "Modelo 179 — Quarterly Guest Report",
+      "irnr": "IRNR — Non-Resident Income Tax",
+      "nie": "NIE — Foreign ID Number",
+      "energyCert": "Energy Performance Certificate",
+      "fiscalRep": "Fiscal Representative",
+      "ibi": "IBI — Property Tax",
+      "other": "Other",
+      "notStarted": "Not started",
+      "inProgress": "In progress",
+      "actionRequired": "Action required",
+      "statusCompleted": "Completed",
+      "statusExpired": "Expired",
+      "notApplicable": "N/A"
+    },
+    "intelligence": {
+      "title": "Market Intelligence",
+      "subtitle": "Costa Tropical short-term rental market data. Updated weekly.",
+      "monitoring": "HostMasters is monitoring the market for you",
+      "monitoringDesc": "Your property data contributes to our dataset. The more properties we manage, the more accurate our pricing and occupancy predictions become.",
+      "avgPrice": "Avg. nightly price",
+      "avgOccupancy": "Avg. occupancy",
+      "listingsTracked": "Listings tracked",
+      "costaAvg": "Costa Tropical average",
+      "allListings": "Across all monitored listings",
+      "weeklyInsight": "Weekly insight",
+      "dataCollection": "Data collection in progress",
+      "dataCollectionDesc": "We are building the Costa Tropical dataset. Market intelligence will appear here as data becomes available.",
+      "howItWorks": "How it works",
+      "phase1": "Phase 1 — Now",
+      "phase1Desc": "Weekly market scraping. Average prices, occupancy rates, and competitor analysis.",
+      "phase2": "Phase 2 — Coming",
+      "phase2Desc": "AI-powered pricing recommendations based on seasonality, events, and your property data.",
+      "phase3": "Phase 3 — Future",
+      "phase3Desc": "Automated dynamic pricing. The system adjusts your nightly rate in real-time."
     }
   },
   "aiChat": {
@@ -993,5 +1112,16 @@
     "markAllRead": "Alles als gelezen markeren",
     "empty": "Nog geen meldingen",
     "justNow": "zojuist"
+  },
+  "taskTypes": {
+    "CLEANING": "Cleaning",
+    "MAINTENANCE_PREVENTIVE": "Preventive maintenance",
+    "MAINTENANCE_CORRECTIVE": "Corrective maintenance",
+    "INSPECTION": "Inspection",
+    "CHECK_IN": "Check-in",
+    "CHECK_OUT": "Check-out",
+    "TRANSFER": "Airport transfer",
+    "SHOPPING": "Shopping",
+    "LAUNDRY": "Laundry"
   }
 }

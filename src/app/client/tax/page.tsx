@@ -6,6 +6,7 @@ import {
   FileText, AlertTriangle, CheckCircle2, Clock, Lock,
   Shield, ArrowRight, Download, Calendar as CalendarIcon,
 } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type Obligation = {
   id: string
@@ -19,37 +20,6 @@ type Obligation = {
   property: { id: string; name: string } | null
 }
 
-const TYPE_LABEL: Record<string, string> = {
-  VUT_LICENSE: "VUT — Tourist License",
-  MODELO_179: "Modelo 179 — Quarterly Guest Report",
-  IRNR_MODELO_210: "IRNR — Non-Resident Income Tax",
-  NIE: "NIE — Foreign ID Number",
-  ENERGY_CERTIFICATE: "Energy Performance Certificate",
-  FISCAL_REPRESENTATIVE: "Fiscal Representative",
-  IBI: "IBI — Property Tax",
-  OTHER: "Other",
-}
-
-const TYPE_DESC: Record<string, string> = {
-  VUT_LICENSE: "Mandatory license from Junta de Andalucía to operate short-term rentals",
-  MODELO_179: "Quarterly declaration of guests to Spanish Tax Agency — €20 fine per guest not reported",
-  IRNR_MODELO_210: "19% income tax on rental earnings (24% for non-EU residents), filed quarterly",
-  NIE: "Required for all non-resident owners — foundation of your Spanish fiscal identity",
-  ENERGY_CERTIFICATE: "Mandatory for all rentals, valid for 10 years (up to €6,000 fine without it)",
-  FISCAL_REPRESENTATIVE: "Mandatory for non-EU residents — receives official notifications",
-  IBI: "Annual property tax from the local city council",
-  OTHER: "Other fiscal obligation",
-}
-
-const STATUS_COLOR: Record<string, { bg: string; text: string; label: string }> = {
-  NOT_STARTED:     { bg: "bg-gray-100",   text: "text-gray-600",   label: "Not started" },
-  IN_PROGRESS:     { bg: "bg-blue-100",   text: "text-blue-700",   label: "In progress" },
-  ACTION_REQUIRED: { bg: "bg-amber-100",  text: "text-amber-700",  label: "Action required" },
-  COMPLETED:       { bg: "bg-green-100",  text: "text-green-700",  label: "Completed" },
-  EXPIRED:         { bg: "bg-red-100",    text: "text-red-700",    label: "Expired" },
-  NOT_APPLICABLE:  { bg: "bg-gray-50",    text: "text-gray-400",   label: "N/A" },
-}
-
 const fmtDate = (s: string | null) =>
   s ? new Date(s).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—"
 
@@ -60,9 +30,41 @@ const daysUntil = (s: string | null): number | null => {
 }
 
 export default function ClientTaxPage() {
+  const { t } = useLocale()
   const [obligations, setObligations] = useState<Obligation[]>([])
   const [plan, setPlan] = useState<string>("STARTER")
   const [loading, setLoading] = useState(true)
+
+  const TYPE_LABEL: Record<string, string> = {
+    VUT_LICENSE: t('client.tax.vut'),
+    MODELO_179: t('client.tax.modelo179'),
+    IRNR_MODELO_210: t('client.tax.irnr'),
+    NIE: t('client.tax.nie'),
+    ENERGY_CERTIFICATE: t('client.tax.energyCert'),
+    FISCAL_REPRESENTATIVE: t('client.tax.fiscalRep'),
+    IBI: t('client.tax.ibi'),
+    OTHER: t('client.tax.other'),
+  }
+
+  const TYPE_DESC: Record<string, string> = {
+    VUT_LICENSE: t('client.tax.descVut'),
+    MODELO_179: t('client.tax.descModelo179'),
+    IRNR_MODELO_210: t('client.tax.descIrnr'),
+    NIE: t('client.tax.descNie'),
+    ENERGY_CERTIFICATE: t('client.tax.descEnergyCert'),
+    FISCAL_REPRESENTATIVE: t('client.tax.descFiscalRep'),
+    IBI: t('client.tax.descIbi'),
+    OTHER: t('client.tax.descOther'),
+  }
+
+  const STATUS_COLOR: Record<string, { bg: string; text: string; label: string }> = {
+    NOT_STARTED:     { bg: "bg-gray-100",   text: "text-gray-600",   label: t('client.tax.notStarted') },
+    IN_PROGRESS:     { bg: "bg-blue-100",   text: "text-blue-700",   label: t('client.tax.inProgress') },
+    ACTION_REQUIRED: { bg: "bg-amber-100",  text: "text-amber-700",  label: t('client.tax.actionRequired') },
+    COMPLETED:       { bg: "bg-green-100",  text: "text-green-700",  label: t('client.tax.statusCompleted') },
+    EXPIRED:         { bg: "bg-red-100",    text: "text-red-700",    label: t('client.tax.statusExpired') },
+    NOT_APPLICABLE:  { bg: "bg-gray-50",    text: "text-gray-400",   label: t('client.tax.notApplicable') },
+  }
 
   useEffect(() => {
     Promise.all([
@@ -96,10 +98,10 @@ export default function ClientTaxPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">
-            Tax & Compliance
+            {t('client.tax.title')}
           </h1>
           <p className="mt-1 font-sans text-hm-slate/70 text-base">
-            Stay on top of every fiscal obligation for your property in Spain.
+            {t('client.tax.subtitle')}
           </p>
         </div>
 
@@ -110,42 +112,42 @@ export default function ClientTaxPage() {
               <AlertTriangle className="h-5 w-5 text-red-600" />
             </div>
             <div>
-              <h2 className="font-serif font-bold text-hm-black text-lg">What unmanaged compliance costs you</h2>
+              <h2 className="font-serif font-bold text-hm-black text-lg">{t('client.tax.riskTitle')}</h2>
               <p className="font-sans text-sm text-hm-slate/70 mt-0.5">
-                Real fines from the Junta de Andalucía and Agencia Tributaria for short-term rental owners in 2025.
+                {t('client.tax.riskDesc')}
               </p>
             </div>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <FineCard
-              label="No VUT licence"
-              fine="€3,000 – €30,000"
-              detail="Operating without registered tourist licence (Decreto 28/2016, Junta de Andalucía)"
+              label={t('client.tax.fineNoVut')}
+              fine={t('client.tax.fineNoVutAmount')}
+              detail={t('client.tax.fineNoVutDetail')}
             />
             <FineCard
-              label="No NRU registration"
-              fine="Listing removed"
-              detail="Mandatory since 1 Jul 2025 — Airbnb / Booking de-list properties without it"
+              label={t('client.tax.fineNoNru')}
+              fine={t('client.tax.fineNoNruAmount')}
+              detail={t('client.tax.fineNoNruDetail')}
             />
             <FineCard
-              label="Modelo 179 not filed"
-              fine="€20 per guest"
-              detail="Quarterly guest report. A property with 80 guests/year = €1,600+ in penalties"
+              label={t('client.tax.fineModelo179')}
+              fine={t('client.tax.fineModelo179Amount')}
+              detail={t('client.tax.fineModelo179Detail')}
             />
             <FineCard
-              label="No Energy Certificate"
-              fine="up to €6,000"
-              detail="Mandatory for any rental — fine on top of being unable to advertise legally"
+              label={t('client.tax.fineNoCert')}
+              fine={t('client.tax.fineNoCertAmount')}
+              detail={t('client.tax.fineNoCertDetail')}
             />
             <FineCard
-              label="IRNR not filed"
-              fine="50% – 150% of tax owed"
-              detail="Non-resident income tax (Modelo 210) — penalties stack quarterly + interest"
+              label={t('client.tax.fineIrnr')}
+              fine={t('client.tax.fineIrnrAmount')}
+              detail={t('client.tax.fineIrnrDetail')}
             />
             <FineCard
-              label="No fiscal representative (non-EU)"
-              fine="€1,000 – €6,000"
-              detail="Mandatory for UK / Norwegian / Swiss owners — Spanish state must reach you"
+              label={t('client.tax.fineNoFiscalRep')}
+              fine={t('client.tax.fineNoFiscalRepAmount')}
+              detail={t('client.tax.fineNoFiscalRepDetail')}
             />
           </div>
         </div>
@@ -156,23 +158,23 @@ export default function ClientTaxPage() {
             <Shield className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-2xl font-serif font-bold text-hm-black mb-2">
-            Unlock Tax &amp; Compliance tracking
+            {t('client.tax.unlockTitle')}
           </h2>
           <p className="font-sans text-hm-slate/70 max-w-md mx-auto mb-6">
-            Stop carrying the risk yourself. Track VUT, NRU, Modelo 179, IRNR, NIE and energy certificate in one place — with deadline alerts months before fines hit.
+            {t('client.tax.unlockDesc')}
           </p>
           <div className="max-w-md mx-auto text-left mb-6 space-y-2">
             {[
-              { f: "Mid", t: "Deadline tracking for every Spanish fiscal obligation" },
-              { f: "Mid", t: "Document vault for licences and certificates" },
-              { f: "Mid", t: "Automatic alerts 60 / 30 / 7 days before each deadline" },
-              { f: "Premium", t: "Full service — Modelo 179 + IRNR filed by our certified tax advisor" },
-              { f: "Premium", t: "NRU registration handled for you" },
-              { f: "Premium", t: "Fiscal representative service for non-EU residents" },
+              { f: "Mid", txt: t('client.tax.featMidDeadline') },
+              { f: "Mid", txt: t('client.tax.featMidVault') },
+              { f: "Mid", txt: t('client.tax.featMidAlerts') },
+              { f: "Premium", txt: t('client.tax.featPremiumFiled') },
+              { f: "Premium", txt: t('client.tax.featPremiumNru') },
+              { f: "Premium", txt: t('client.tax.featPremiumFiscalRep') },
             ].map((feat, i) => (
               <div key={i} className="flex items-start gap-2 text-sm">
                 <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" style={{ color: "var(--hm-gold)" }} />
-                <span className="text-hm-slate flex-1">{feat.t}</span>
+                <span className="text-hm-slate flex-1">{feat.txt}</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shrink-0"
                       style={{ background: feat.f === "Premium" ? "rgba(176,138,62,0.2)" : "rgba(27,79,138,0.1)",
                                color: feat.f === "Premium" ? "var(--hm-gold-dk)" : "var(--hm-blue)" }}>
@@ -185,10 +187,10 @@ export default function ClientTaxPage() {
             className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-sans font-semibold text-white transition-opacity hover:opacity-90"
             style={{ background: "var(--hm-black)" }}
           >
-            See plans <ArrowRight className="h-4 w-4" />
+            {t('client.tax.seePlans')} <ArrowRight className="h-4 w-4" />
           </Link>
           <p className="text-xs text-hm-slate/50 mt-3">
-            Mid €159/mo · Premium €269/mo — both are tax-deductible against your rental income.
+            {t('client.tax.planPrices')}
           </p>
         </div>
       </div>
@@ -211,17 +213,17 @@ export default function ClientTaxPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">
-            Tax & Compliance
+            {t('client.tax.title')}
           </h1>
           <p className="mt-1 font-sans text-hm-slate/70 text-base">
-            Your Spanish fiscal obligations at a glance.
+            {t('client.tax.subtitleFull')}
           </p>
         </div>
         <span className="rounded-full px-3 py-1.5 text-xs font-semibold" style={{
           background: isPremium ? "rgba(176,138,62,0.15)" : "rgba(27,79,138,0.1)",
           color: isPremium ? "var(--hm-gold-dk)" : "var(--hm-blue)",
         }}>
-          {isPremium ? "Premium · Full service" : "Mid · Tracking & alerts"}
+          {isPremium ? t('client.tax.premiumFullService') : t('client.tax.midTracking')}
         </span>
       </div>
 
@@ -231,10 +233,10 @@ export default function ClientTaxPage() {
           <AlertTriangle className="h-6 w-6 shrink-0 text-amber-600" />
           <div className="flex-1">
             <p className="font-serif font-semibold text-hm-black">
-              {actionRequired.length} obligation{actionRequired.length > 1 ? "s" : ""} require{actionRequired.length === 1 ? "s" : ""} attention
+              {t('client.tax.obligationsAttention').replace('{count}', String(actionRequired.length))}
             </p>
             <p className="font-sans text-sm text-hm-slate/70 mt-0.5">
-              Contact your manager to resolve pending items before they expire.
+              {t('client.tax.contactManagerResolve')}
             </p>
           </div>
         </div>
@@ -242,25 +244,25 @@ export default function ClientTaxPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <SummaryCard icon={Clock} label="Upcoming (60d)" value={upcoming.length} color="#B08A3E" />
-        <SummaryCard icon={AlertTriangle} label="Action required" value={actionRequired.length} color="#A32D2D" />
-        <SummaryCard icon={CheckCircle2} label="Completed" value={completed.length} color="#2A7A4F" />
-        <SummaryCard icon={FileText} label="Total tracked" value={obligations.length} color="#1B4F8A" />
+        <SummaryCard icon={Clock} label={t('client.tax.upcoming60d')} value={upcoming.length} color="#B08A3E" />
+        <SummaryCard icon={AlertTriangle} label={t('client.tax.actionRequired')} value={actionRequired.length} color="#A32D2D" />
+        <SummaryCard icon={CheckCircle2} label={t('client.tax.statusCompleted')} value={completed.length} color="#2A7A4F" />
+        <SummaryCard icon={FileText} label={t('client.tax.totalTracked')} value={obligations.length} color="#1B4F8A" />
       </div>
 
       {/* Obligations list */}
       <div className="rounded-hm border border-hm-border overflow-hidden" style={{ background: "var(--hm-sand)" }}>
         <div className="px-6 py-4 border-b border-hm-border">
-          <h2 className="font-serif font-bold text-hm-black text-lg">All obligations</h2>
+          <h2 className="font-serif font-bold text-hm-black text-lg">{t('client.tax.allObligations')}</h2>
         </div>
         {obligations.length === 0 ? (
           <div className="p-10 text-center font-sans text-hm-slate/60">
-            No obligations tracked yet. Your manager will set these up for you.
+            {t('client.tax.noObligations')}
           </div>
         ) : (
           <div className="divide-y divide-hm-border">
             {obligations.map(o => (
-              <ObligationRow key={o.id} obligation={o} />
+              <ObligationRow key={o.id} obligation={o} typeLabel={TYPE_LABEL} typeDesc={TYPE_DESC} statusColor={STATUS_COLOR} />
             ))}
           </div>
         )}
@@ -274,10 +276,9 @@ export default function ClientTaxPage() {
               <Shield className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="font-serif font-bold text-white">Premium fiscal service</h3>
+              <h3 className="font-serif font-bold text-white">{t('client.tax.premiumServiceTitle')}</h3>
               <p className="font-sans text-sm text-white/60 mt-1">
-                Your Modelo 179, IRNR and fiscal representative are handled by our team in coordination with a certified Spanish tax advisor.
-                If you need anything, message your manager directly.
+                {t('client.tax.premiumServiceDesc')}
               </p>
             </div>
           </div>
@@ -289,9 +290,9 @@ export default function ClientTaxPage() {
               <Lock className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1">
-              <p className="font-serif font-semibold text-hm-black">Want us to file for you?</p>
+              <p className="font-serif font-semibold text-hm-black">{t('client.tax.wantUsFiled')}</p>
               <p className="font-sans text-sm text-hm-slate/70">
-                Upgrade to Premium — we handle Modelo 179 and IRNR with a certified Spanish tax advisor.
+                {t('client.tax.wantUsFiledDesc')}
               </p>
             </div>
             <ArrowRight className="h-5 w-5 text-hm-gold-dk" />
@@ -324,8 +325,14 @@ function SummaryCard({ icon: Icon, label, value, color }: { icon: React.ElementT
   )
 }
 
-function ObligationRow({ obligation: o }: { obligation: Obligation }) {
-  const statusMeta = STATUS_COLOR[o.status] ?? STATUS_COLOR.NOT_STARTED
+function ObligationRow({ obligation: o, typeLabel, typeDesc, statusColor }: {
+  obligation: Obligation
+  typeLabel: Record<string, string>
+  typeDesc: Record<string, string>
+  statusColor: Record<string, { bg: string; text: string; label: string }>
+}) {
+  const { t } = useLocale()
+  const statusMeta = statusColor[o.status] ?? statusColor.NOT_STARTED
   const days = daysUntil(o.dueDate)
   const isUrgent = days !== null && days <= 14 && o.status !== "COMPLETED"
 
@@ -334,14 +341,14 @@ function ObligationRow({ obligation: o }: { obligation: Obligation }) {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <span className="font-serif font-semibold text-hm-black">{TYPE_LABEL[o.type] ?? o.type}</span>
+            <span className="font-serif font-semibold text-hm-black">{typeLabel[o.type] ?? o.type}</span>
             <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${statusMeta.bg} ${statusMeta.text}`}>
               {statusMeta.label}
             </span>
             <span className="text-xs text-hm-slate/60">· {o.periodLabel}</span>
             {o.property && <span className="text-xs text-hm-slate/50">· {o.property.name}</span>}
           </div>
-          <p className="font-sans text-xs text-hm-slate/70 mb-2">{TYPE_DESC[o.type] ?? ""}</p>
+          <p className="font-sans text-xs text-hm-slate/70 mb-2">{typeDesc[o.type] ?? ""}</p>
           {o.notes && (
             <p className="font-sans text-xs text-hm-slate/60 italic border-l-2 border-hm-border pl-2 mt-1">{o.notes}</p>
           )}
@@ -354,18 +361,18 @@ function ObligationRow({ obligation: o }: { obligation: Obligation }) {
               </div>
               {days !== null && (
                 <p className={`text-xs mt-0.5 font-semibold ${isUrgent ? "text-hm-red" : "text-hm-slate/60"}`}>
-                  {days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? "Today" : `${days}d left`}
+                  {days < 0 ? `${Math.abs(days)}d ${t('client.tax.overdue')}` : days === 0 ? t('client.tax.todayLabel') : `${days}d ${t('client.tax.daysLeft')}`}
                 </p>
               )}
             </>
           )}
           {o.status === "COMPLETED" && o.completedAt && (
-            <p className="text-xs text-hm-green">Completed {fmtDate(o.completedAt)}</p>
+            <p className="text-xs text-hm-green">{t('client.tax.completedOn')} {fmtDate(o.completedAt)}</p>
           )}
           {o.documentUrl && (
             <a href={o.documentUrl} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs text-hm-gold-dk hover:underline mt-1">
-              <Download className="h-3 w-3" /> Document
+              <Download className="h-3 w-3" /> {t('client.tax.document')}
             </a>
           )}
         </div>

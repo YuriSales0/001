@@ -17,11 +17,11 @@ const PLAN_COLOR: Record<string, string> = {
   PREMIUM: "bg-amber-100 text-amber-800",
 }
 
-const PLAN_DESC: Record<string, string> = {
-  STARTER: "Essentials — Check-in, Check-out, Cleaning",
-  BASIC:   "Basic + Pre/Post Inspection",
-  MID:     "Mid + Extended support",
-  PREMIUM: "Full service — Inspection, Shopping, Transfer, Laundry",
+const PLAN_DESC_KEY: Record<string, string> = {
+  STARTER: "client.profileDocs.planDescStarter",
+  BASIC:   "client.profileDocs.planDescBasic",
+  MID:     "client.profileDocs.planDescMid",
+  PREMIUM: "client.profileDocs.planDescPremium",
 }
 
 async function downloadDoc(type: "management" | "rules" | "guide", ownerName: string) {
@@ -318,7 +318,7 @@ export default function ClientProfilePage() {
         <div className="flex items-center justify-between">
           <div>
             <span className={`rounded px-2.5 py-1 text-xs font-bold ${PLAN_COLOR[plan]}`}>{plan}</span>
-            <p className="text-xs text-gray-500 mt-1.5">{PLAN_DESC[plan]}</p>
+            <p className="text-xs text-gray-500 mt-1.5">{t(PLAN_DESC_KEY[plan])}</p>
           </div>
           <div className="text-right">
             <p className="text-xs text-gray-400">{t('common.status')}</p>
@@ -342,9 +342,9 @@ export default function ClientProfilePage() {
         </div>
         <div className="space-y-3">
           {[
-            { type: "management" as const, title: "Property Management Agreement", desc: "Your signed management contract with HostMasters." },
-            { type: "rules" as const,      title: "House Rules",                   desc: "Rules and regulations for your property guests." },
-            { type: "guide" as const,      title: "Owner Welcome Guide",           desc: "Everything you need to know as a HostMasters owner." },
+            { type: "management" as const, title: t('client.profileDocs.managementAgreement'), desc: t('client.profileDocs.managementAgreementDesc') },
+            { type: "rules" as const,      title: t('client.profileDocs.houseRules'),           desc: t('client.profileDocs.houseRulesDesc') },
+            { type: "guide" as const,      title: t('client.profileDocs.ownerGuide'),           desc: t('client.profileDocs.ownerGuideDesc') },
           ].map(doc => (
             <div key={doc.type} className="flex items-center gap-3 rounded-lg border p-3 hover:bg-gray-50 transition-colors">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg flex-shrink-0"
