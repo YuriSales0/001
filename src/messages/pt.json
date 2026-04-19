@@ -471,7 +471,14 @@
       "expert": "Expert",
       "expertDesc": "+10% bónus + propriedades premium",
       "elite": "Elite",
-      "eliteDesc": "+15% bónus + inspecções independentes"
+      "eliteDesc": "+15% bónus + inspecções independentes",
+      "pts": "pts",
+      "ptsTo": "pts para",
+      "nextLevel": "próximo nível",
+      "tasks": "tarefas",
+      "approved": "aprovadas",
+      "incentiveTitle": "Score mais alto = mais tarefas para ti",
+      "incentiveDesc": "Bom trabalho numa propriedade constrói confiança. A plataforma dá-te prioridade em tarefas futuras nas propriedades onde tiveste bom desempenho."
     },
     "profile": {
       "roleDesc": "Crew · Operações de Campo",
@@ -525,7 +532,46 @@
     "overdue": "Em atraso",
     "invoiceNumber": "Número da Fatura",
     "billingPeriod": "Período de Faturação",
-    "taxReport": "Relatório Fiscal"
+    "taxReport": "Relatório Fiscal",
+    "report": {
+      "months": {
+        "january": "Janeiro",
+        "february": "Fevereiro",
+        "march": "Março",
+        "april": "Abril",
+        "may": "Maio",
+        "june": "Junho",
+        "july": "Julho",
+        "august": "Agosto",
+        "september": "Setembro",
+        "october": "Outubro",
+        "november": "Novembro",
+        "december": "Dezembro"
+      },
+      "transfer": "Transferência",
+      "sent": "Enviado",
+      "scheduled": "Agendado",
+      "grossRentalIncome": "Receita bruta de aluguer",
+      "hmCommission": "Comissão HostMasters",
+      "cleaningFees": "Taxas de limpeza",
+      "otherExpenses": "Outras despesas",
+      "yourPayment": "O seu pagamento"
+    },
+    "statement": {
+      "monthlyStatement": "Extrato Mensal",
+      "downloadPdf": "Descarregar PDF",
+      "bookingsThisMonth": "Reservas deste mês",
+      "grossRentalIncome": "Receita bruta de aluguer",
+      "hmCommission": "Comissão HostMasters",
+      "cleaningFees": "Taxas de limpeza",
+      "otherExpenses": "Outras despesas",
+      "yourNetPayment": "O seu pagamento líquido",
+      "sepaTransfer": "Transferência SEPA",
+      "sent": "Enviado",
+      "scheduled": "Agendado",
+      "propertyCondition": "Estado da propriedade",
+      "lastInspection": "Última inspeção"
+    }
   },
   "auth": {
     "signIn": "Entrar",
@@ -746,6 +792,32 @@
         "Partilha de documentos",
         "Suporte multilingue"
       ]
+    },
+    "mock": {
+      "smartLock": "Smart Lock",
+      "connected": "Conectado",
+      "allGood": "Tudo bem",
+      "inspected3d": "Inspecionado há 3 dias",
+      "julyStatement": "Extrato Julho 2026",
+      "grossRentalIncome": "Receita bruta de aluguer",
+      "hmCommission": "Comissão HM (17%)",
+      "cleaningFees": "Taxas de limpeza (3×)",
+      "maintenance": "Manutenção",
+      "monthlyPlanFee": "Mensalidade (Mid)",
+      "netPayout": "Pagamento líquido",
+      "taskCleaning": "Limpeza",
+      "taskInspection": "Inspeção",
+      "taskMaintenance": "Manutenção",
+      "statusCompleted": "concluído",
+      "statusScheduled": "agendado",
+      "upcomingVisits": "Próximas visitas",
+      "openIssues": "Questões abertas",
+      "aiAssistant": "Assistente IA disponível 24/7 para respostas instantâneas",
+      "guest": "Hóspede",
+      "dates": "Datas",
+      "platform": "Plataforma",
+      "revenue": "Receita",
+      "personalUse": "Uso pessoal"
     }
   },
   "aiTools": {
@@ -1451,5 +1523,60 @@
     "viewPlanDetails": "Ver detalhes do plano",
     "yourDocuments": "Os teus documentos",
     "planSuffix": "plano"
+  },
+  "booking": {
+    "status": {
+      "upcoming": "Próxima",
+      "active": "Ativa",
+      "completed": "Concluída",
+      "cancelled": "Cancelada"
+    },
+    "nights": "noites",
+    "cleaning": "Limpeza",
+    "cleaningStatus": {
+      "pending": "pendente",
+      "confirmed": "confirmada",
+      "done": "concluída"
+    }
+  },
+  "admin": {
+    "setup": {
+      "setupStarted": "Configuração iniciada",
+      "complete": "concluído",
+      "steps": {
+        "label": "passos",
+        "welcomeEmail": "Email de boas-vindas enviado ao proprietário",
+        "onboardingVisit": "Visita de onboarding agendada",
+        "physicalVisit": "Visita física — inspeção, inventário e fotos",
+        "conditionReport": "Relatório de estado enviado ao proprietário",
+        "smartLock": "Smart lock Nuki instalado e testado",
+        "profilesCreated": "Perfis Airbnb + Booking + VRBO criados",
+        "priceLabsActivated": "PriceLabs ativado — preços mínimos definidos",
+        "ownerApproves": "Proprietário aprova o anúncio",
+        "publishedChannels": "Publicado em todos os canais",
+        "cleaningTeamBriefed": "Equipa de limpeza informada",
+        "propertyFileCreated": "Ficha da propriedade criada no sistema",
+        "setupComplete": "Configuração concluída — proprietário e Manoela notificados"
+      },
+      "status": {
+        "pending": "Pendente",
+        "inProgress": "Em progresso",
+        "complete": "Concluído",
+        "overdue": "Em atraso"
+      }
+    }
+  },
+  "monitor": {
+    "sections": {
+      "reservations": "Reservas",
+      "payouts": "Pagamentos",
+      "reports": "Relatórios"
+    },
+    "anomalyDetected": "anomalia detetada",
+    "anomaliesDetected": "anomalias detetadas",
+    "critical": "crítica",
+    "criticalPlural": "críticas",
+    "allClear": "Sistema operacional — sem anomalias",
+    "checkNow": "Verificar agora"
   }
 }

@@ -22,7 +22,7 @@ interface SetupTimelineProps {
   className?: string
 }
 
-const SETUP_STEP_KEYS: Omit<SetupStep, "status" | "title"> & { titleKey: string }[] = [
+const SETUP_STEP_KEYS: (Omit<SetupStep, "status" | "title"> & { titleKey: string })[] = [
   { day: 1,  titleKey: "admin.setup.steps.welcomeEmail" },
   { day: 2,  titleKey: "admin.setup.steps.onboardingVisit" },
   { day: 5,  titleKey: "admin.setup.steps.physicalVisit" },

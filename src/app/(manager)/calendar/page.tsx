@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, useRef } from "react"
+import { useLocale } from "@/i18n/provider"
 import {
   LogIn, LogOut, Wrench, Lock, Wallet,
   Plus, AlertCircle, CheckCircle2, X,
@@ -27,11 +28,11 @@ const MANUAL_TASK_TYPES = [
   'INSPECTION','TRANSFER','SHOPPING','LAUNDRY',
 ] as const
 
-const TYPE_LABELS: Record<string, string> = {
-  MAINTENANCE_CORRECTIVE: 'Manutenção Correctiva', MAINTENANCE_PREVENTIVE: 'Manutenção Preventiva',
-  CLEANING: 'Limpeza', INSPECTION: 'Inspecção', TRANSFER: 'Transfer Aeroporto',
-  SHOPPING: 'Compras Pré-chegada', LAUNDRY: 'Lavandaria',
-  CHECK_IN: 'Check-in', CHECK_OUT: 'Check-out',
+const TYPE_LABEL_KEYS: Record<string, string> = {
+  MAINTENANCE_CORRECTIVE: 'taskTypes.MAINTENANCE_CORRECTIVE', MAINTENANCE_PREVENTIVE: 'taskTypes.MAINTENANCE_PREVENTIVE',
+  CLEANING: 'taskTypes.CLEANING', INSPECTION: 'taskTypes.INSPECTION', TRANSFER: 'taskTypes.TRANSFER',
+  SHOPPING: 'taskTypes.SHOPPING', LAUNDRY: 'taskTypes.LAUNDRY',
+  CHECK_IN: 'taskTypes.CHECK_IN', CHECK_OUT: 'taskTypes.CHECK_OUT',
 }
 const ICONS: Record<CalEvent['type'], React.ElementType> = {
   CHECK_IN: LogIn, CHECK_OUT: LogOut, BLOCKED: Lock,
@@ -55,7 +56,7 @@ const TASK_COLORS: Record<string, string> = {
   LAUNDRY: 'border-pink-200 bg-pink-50 text-pink-700',
 }
 const TYPES: CalEvent['type'][] = ['CHECK_IN','CHECK_OUT','BLOCKED','TASK','PAYOUT']
-const WEEKDAY_SHORT = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']
+const WEEKDAY_KEYS = ['manager.calendar.mon','manager.calendar.tue','manager.calendar.wed','manager.calendar.thu','manager.calendar.fri','manager.calendar.sat','manager.calendar.sun']
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const dayKey = (d: Date) => d.toISOString().slice(0,10)
@@ -79,6 +80,7 @@ function CreateTaskModal({
 }: {
   date: string; properties: Property[]; onClose: ()=>void; onCreated: ()=>void
 }) {
+  const { t } = useLocale()
   const [type, setType] = useState<string>(MANUAL_TASK_TYPES[0])
   const [propertyId, setPropertyId] = useState(properties[0]?.id??'')
   const [propSearch, setPropSearch] = useState('')
