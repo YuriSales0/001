@@ -85,7 +85,7 @@ function JoinCard({
         <Icon className="h-6 w-6" style={{ color: "#B08A3E" }} />
       </div>
       <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#B08A3E" }}>
-        {role === "MANAGER" ? "Manager" : "Crew"}
+        {role === "MANAGER" ? t("landing.join.manager.roleLabel") : t("landing.join.crew.roleLabel")}
       </p>
       <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
       <p className="text-sm text-gray-400 leading-relaxed mb-5">{tagline}</p>
