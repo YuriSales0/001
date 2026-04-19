@@ -247,6 +247,17 @@
       "messages": "Mensagens",
       "revenue": "Receitas",
       "properties": "Propriedades"
+    },
+    "profile": {
+      "roleDesc": "Manager · Closer & Customer Success",
+      "responsibilities": "Responsabilidades do Manager",
+      "responsibilitiesDesc": "Atua como Closer & Customer Success da HostMasters. Ganha uma comissão de 3% sobre cada subscrição e contrato que gere, com o objetivo de aumentar o LTV do cliente e reduzir o CAC.",
+      "yourCommissionRate": "A sua taxa de comissão",
+      "setByAdmin": "Definido pelo Admin",
+      "bio": "Bio profissional",
+      "bioPlaceholder": "Apresente-se aos seus proprietários. Qual é o seu percurso? Como os ajuda?",
+      "personalCommission": "Comissão pessoal (%)",
+      "readOnly": "— apenas leitura"
     }
   },
   "admin": {
@@ -461,6 +472,36 @@
       "expertDesc": "+10% bónus + propriedades premium",
       "elite": "Elite",
       "eliteDesc": "+15% bónus + inspecções independentes"
+    },
+    "profile": {
+      "roleDesc": "Crew · Operações de Campo",
+      "responsibilities": "Responsabilidades da Crew",
+      "responsibilitiesDesc": "És a espinha dorsal operacional da HostMasters — geres check-ins, check-outs, limpezas, manutenção e inspeções. O teu relatório de trabalho após cada visita é enviado diretamente ao proprietário.",
+      "yourTaskRate": "A tua taxa por tarefa",
+      "setByAdmin": "Definido pelo Admin",
+      "bio": "Bio profissional",
+      "bioPlaceholder": "Apresenta-te. Qual é a tua especialidade? Anos de experiência?",
+      "points": "pontos",
+      "pointsToNextLevel": "pontos para o próximo nível",
+      "totalTasks": "Total de tarefas",
+      "approvalRate": "Taxa de aprovação",
+      "rejected": "Rejeitadas",
+      "howScoreWorks": "Como o teu score funciona para ti",
+      "scoreTip1": "Bom trabalho numa propriedade = score de confiança sobe — tens prioridade em tarefas futuras lá",
+      "scoreTip2": "Score global mais alto = acesso a propriedades premium com melhores taxas",
+      "scoreTip3": "Subir de nível = bónus na taxa — Verificado +5%, Expert +10%, Elite +15%",
+      "scoreTip4": "Proprietários podem marcar-te como favorito — és sempre chamado primeiro",
+      "recentScoreChanges": "Alterações recentes no score",
+      "scoreReasons": {
+        "taskOnTime": "Tarefa a tempo",
+        "validatedNoRepair": "Validada sem problemas",
+        "ownerPositive": "Avaliação positiva do proprietário",
+        "peakAvailability": "Disponibilidade em pico",
+        "notAccepted": "Tarefa não aceite",
+        "acceptedNotDone": "Aceite mas não concluída",
+        "complaint": "Reclamação recebida",
+        "unreportedDamage": "Dano não reportado"
+      }
     }
   },
   "finance": {
