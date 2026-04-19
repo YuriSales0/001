@@ -126,7 +126,7 @@ export default function ReportsPage() {
           <select
             value={propertyId}
             onChange={e => setPropertyId(e.target.value)}
-            className="rounded-lg border border-gray-200 px-3 py-2 text-sm bg-white text-hm-black focus:outline-none focus:ring-2 focus:ring-navy-300"
+            className="rounded-lg border border-gray-200 px-3 py-2 text-sm bg-white text-hm-black focus:outline-none focus:ring-2 focus:ring-hm-gold"
           >
             {properties.length === 0 && <option value="">No properties</option>}
             {properties.map(p => (
@@ -138,7 +138,7 @@ export default function ReportsPage() {
         <select
           value={year}
           onChange={e => setYear(Number(e.target.value))}
-          className="rounded-lg border border-gray-200 px-3 py-2 text-sm bg-white text-hm-black focus:outline-none focus:ring-2 focus:ring-navy-300"
+          className="rounded-lg border border-gray-200 px-3 py-2 text-sm bg-white text-hm-black focus:outline-none focus:ring-2 focus:ring-hm-gold"
         >
           {years.map(y => <option key={y} value={y}>{y}</option>)}
         </select>

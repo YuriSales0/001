@@ -77,7 +77,7 @@ export default function AdminMessagesPage() {
         <aside className="w-72 border-r flex flex-col shrink-0">
           <div className="p-3 border-b">
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pesquisar…"
-              className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+              className="w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
           </div>
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 && <div className="p-4 text-center text-sm text-gray-400">Sem conversas</div>}

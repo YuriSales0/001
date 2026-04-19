@@ -285,7 +285,7 @@ export default function TasksPage() {
                 <h2 className="text-base font-bold text-hm-black">{t('manager.tasks.newTask')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('manager.tasks.dispatchSubtitle')}</p>
               </div>
-              <button onClick={() => setShowCreate(false)} className="rounded-md p-1 hover:bg-gray-100">
+              <button onClick={() => setShowCreate(false)} className="rounded-md p-2 hover:bg-gray-100">
                 <X className="h-5 w-5" />
               </button>
             </div>

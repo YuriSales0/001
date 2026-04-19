@@ -109,7 +109,7 @@ function CreateTaskModal({
             <h2 className="text-base font-bold">{t('manager.calendar.newTask')}</h2>
             <p className="text-xs text-gray-500 mt-0.5">{date}</p>
           </div>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-4 w-4"/></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-4 w-4"/></button>
         </div>
         <div className="p-6 space-y-5">
           <div>
@@ -118,10 +118,10 @@ function CreateTaskModal({
               value={propSearch}
               onChange={e=>setPropSearch(e.target.value)}
               placeholder={t('manager.calendar.searchProperty')}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 mb-2"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold mb-2"
             />
             <select value={propertyId} onChange={e=>setPropertyId(e.target.value)}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               {filteredProps.length===0
                 ? <option value="">{t('manager.calendar.noResults')}</option>
                 : filteredProps.map(p=>(
@@ -154,13 +154,13 @@ function CreateTaskModal({
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{t('manager.calendar.taskTitle')}</label>
                 <input value={title} onChange={e=>setTitle(e.target.value)}
                   placeholder="Ex: Limpeza pré-chegada"
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
               </div>
               <div className="flex-1 flex flex-col">
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{t('manager.calendar.crewNotes')}</label>
                 <textarea value={notes} onChange={e=>setNotes(e.target.value)}
                   placeholder="Instruções, códigos de acesso…"
-                  className="flex-1 min-h-[120px] w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-navy-700"/>
+                  className="flex-1 min-h-[120px] w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-hm-gold"/>
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@ function DayPanel({
             className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-800">
             <Plus className="h-3.5 w-3.5"/> {t('manager.calendar.createTask')}
           </button>
-          <button onClick={onClose} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
+          <button onClick={onClose} className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
             <X className="h-4 w-4"/>
           </button>
         </div>

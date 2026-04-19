@@ -170,7 +170,7 @@ export default function ClientTasksPage() {
       ) : loading ? (
         <p className="text-gray-400 text-sm">{t('common.loading')}</p>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border bg-white p-10 text-center">
+        <div className="rounded-hm border bg-white p-10 text-center">
           <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
             <Wrench className="h-6 w-6 text-gray-400" />
           </div>
@@ -190,7 +190,7 @@ export default function ClientTasksPage() {
             const isOverdue   = task.status !== 'COMPLETED' && new Date(task.dueDate) < now
             const isCompleted = task.status === 'COMPLETED'
             return (
-              <div key={task.id} className={`rounded-xl border bg-white p-4 flex items-start gap-4 ${isOverdue ? 'border-red-200 bg-red-50/30' : ''}`}>
+              <div key={task.id} className={`rounded-hm border bg-white p-4 flex items-start gap-4 ${isOverdue ? 'border-red-200 bg-red-50/30' : ''}`}>
                 <span className={`inline-flex items-center justify-center h-9 w-9 rounded-full shrink-0 text-xs font-bold ${TYPE_COLORS[task.type] ?? 'bg-gray-100 text-gray-600'}`}>
                   {(TYPE_LABELS[task.type] ?? task.type).slice(0, 2).toUpperCase()}
                 </span>

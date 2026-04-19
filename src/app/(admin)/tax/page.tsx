@@ -115,11 +115,11 @@ export default function AdminTaxPage() {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 bg-white rounded-hm border p-3">
         <Filter className="h-4 w-4 text-gray-400" />
-        <select value={filter} onChange={e => setFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
+        <select value={filter} onChange={e => setFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
           <option value="all">{t('admin.allStatuses')}</option>
           {STATUSES.map(s => <option key={s.value} value={s.value}>{t(s.labelKey)}</option>)}
         </select>
-        <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
+        <select value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
           <option value="">{t('admin.allClients')}</option>
           {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email}</option>)}
         </select>
@@ -230,22 +230,22 @@ function ObligationRow({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.status')}</label>
-            <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
+            <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               {STATUSES.map(s => <option key={s.value} value={s.value}>{t(s.labelKey)}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('crew.dueDate')}</label>
-            <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.documentUrl')}</label>
-          <input value={documentUrl} onChange={e => setDocumentUrl(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" placeholder="https://..." />
+          <input value={documentUrl} onChange={e => setDocumentUrl(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="https://..." />
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t('common.notes')}</label>
-          <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm" />
+          <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           <div className="text-right text-xs text-gray-400 mt-1">
             {notes.length}/500
           </div>
@@ -338,12 +338,12 @@ function NewObligationModal({
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
         <div className="px-6 py-4 border-b flex items-center justify-between">
           <h3 className="font-bold text-hm-black">{t('admin.newTaxObligation')}</h3>
-          <button onClick={onClose}><X className="h-4 w-4" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700"><X className="h-4 w-4" /></button>
         </div>
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.client')}</label>
-            <select value={userId} onChange={e => { setUserId(e.target.value); setPropertyId("") }} className="w-full rounded-lg border px-3 py-2 text-sm">
+            <select value={userId} onChange={e => { setUserId(e.target.value); setPropertyId("") }} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               <option value="">{t('admin.selectClient')}</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email} ({c.subscriptionPlan ?? "—"})</option>)}
             </select>
@@ -351,7 +351,7 @@ function NewObligationModal({
           {userId && clientProperties.length > 0 && (
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.propertyOptional')}</label>
-              <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
+              <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 <option value="">{t('admin.noProperty')}</option>
                 {clientProperties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
@@ -359,23 +359,23 @@ function NewObligationModal({
           )}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.typeLabel')}</label>
-            <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm">
+            <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               {TYPES.map(ty => <option key={ty.value} value={ty.value}>{t(ty.labelKey)}</option>)}
             </select>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.period')}</label>
-              <input value={periodLabel} onChange={e => setPeriodLabel(e.target.value)} placeholder="e.g. Q1 2026, 2026, Once" className="w-full rounded-lg border px-3 py-2 text-sm" />
+              <input value={periodLabel} onChange={e => setPeriodLabel(e.target.value)} placeholder="e.g. Q1 2026, 2026, Once" className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">{t('crew.dueDate')}</label>
-              <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
+              <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t('admin.notesVisibleToClient')}</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm" />
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} maxLength={500} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             <div className="text-right text-xs text-gray-400 mt-1">
               {notes.length}/500
             </div>

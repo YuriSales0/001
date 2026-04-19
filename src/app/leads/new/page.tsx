@@ -128,7 +128,7 @@ export default function LeadCapturePage() {
                 <button
                   type="submit"
                   disabled={submitting || !name.trim()}
-                  className="w-full rounded-lg py-3 text-sm font-bold text-white disabled:opacity-50 transition-opacity"
+                  className="w-full rounded-lg py-3 text-sm font-bold text-white disabled:opacity-50 transition-opacity hover:brightness-110"
                   style={{ background: '#B08A3E' }}
                 >
                   {submitting ? 'A enviar…' : 'Enviar contacto'}

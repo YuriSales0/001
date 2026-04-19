@@ -96,25 +96,25 @@ function CampaignModal({
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-5 border-b">
           <h2 className="text-lg font-bold text-hm-black">{isEdit ? 'Edit campaign' : 'New campaign'}</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Name *</label>
             <input value={name} onChange={e => setName(e.target.value)} required
-              className="w-full rounded-md border px-3 py-2 text-sm"
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="e.g. Google Ads Spring 2026" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Channel</label>
-              <select value={channel} onChange={e => setChannel(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={channel} onChange={e => setChannel(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 {CHANNELS.map(c => <option key={c} value={c}>{CHANNEL_LABELS[c]}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Type</label>
-              <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 {TYPES.map(t => <option key={t} value={t}>{t.charAt(0) + t.slice(1).toLowerCase()}</option>)}
               </select>
             </div>
@@ -122,7 +122,7 @@ function CampaignModal({
           {isEdit && (
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-              <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
               </select>
             </div>
@@ -130,28 +130,28 @@ function CampaignModal({
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Budget (€)</label>
             <input type="number" min="0" step="0.01" value={budget} onChange={e => setBudget(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" placeholder="0" />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="0" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Start date</label>
-              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">End date</label>
-              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" />
+              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Target audience</label>
             <input value={targetAudience} onChange={e => setTargetAudience(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm"
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="e.g. Nordic property owners 35–60, Costa Tropical" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)}
-              rows={2} className="w-full rounded-md border px-3 py-2 text-sm resize-none" />
+              rows={2} className="w-full rounded-md border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
@@ -197,23 +197,23 @@ function SpendModal({ campaign, onClose, onSaved }: { campaign: Campaign; onClos
             <h2 className="text-lg font-bold text-hm-black">Log spend</h2>
             <p className="text-xs text-gray-500 mt-0.5">{campaign.name}</p>
           </div>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Amount spent (€) *</label>
             <input type="number" min="0.01" step="0.01" value={amount} onChange={e => setAmount(e.target.value)}
-              required className="w-full rounded-md border px-3 py-2 text-sm" placeholder="0.00" autoFocus />
+              required className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="0.00" autoFocus />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Date</label>
             <input type="date" value={date} onChange={e => setDate(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
             <input value={description} onChange={e => setDescription(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm"
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="e.g. Google Ads — Apr 1–15" />
           </div>
           <div className="flex gap-3 pt-2">
@@ -253,7 +253,7 @@ function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => voi
             <h2 className="text-lg font-bold text-hm-black">QR Code</h2>
             <p className="text-xs text-gray-500 mt-0.5">{campaign.name}</p>
           </div>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <div className="p-6 flex flex-col items-center gap-4">
           <div className="rounded-hm border p-3 bg-white shadow-sm">

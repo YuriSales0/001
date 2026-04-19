@@ -66,13 +66,13 @@ function DayPanel({
 }) {
   const label = day.toLocaleDateString(dateLoc,{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
   return (
-    <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-hm border bg-white shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
           <p className="text-sm font-bold text-gray-900">{events.length} tarefa{events.length!==1?'s':''}</p>
         </div>
-        <button onClick={onClose} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
+        <button onClick={onClose} className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
           <X className="h-4 w-4"/>
         </button>
       </div>

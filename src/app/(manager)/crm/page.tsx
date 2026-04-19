@@ -317,7 +317,7 @@ export default function CRMPage() {
               placeholder={t('manager.crm.searchLeads')}
               value={searchQ}
               onChange={e => setSearchQ(e.target.value)}
-              className="pl-8 pr-3 py-2 text-sm border rounded-lg w-48 focus:outline-none focus:ring-1 focus:ring-navy-400"
+              className="pl-8 pr-3 py-2 text-sm border rounded-lg w-48 focus:outline-none focus:ring-1 focus:ring-hm-gold"
             />
           </div>
 
@@ -364,7 +364,7 @@ export default function CRMPage() {
           <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-6 m-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold text-hm-black">{t('manager.crm.newLead')}</h2>
-              <button onClick={() => setAddOpen(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setAddOpen(false)} aria-label="Close" className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -375,7 +375,7 @@ export default function CRMPage() {
                   type="text"
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   placeholder="John Smith"
                 />
               </div>
@@ -386,7 +386,7 @@ export default function CRMPage() {
                     type="email"
                     value={form.email}
                     onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   />
                 </div>
                 <div>
@@ -395,7 +395,7 @@ export default function CRMPage() {
                     type="tel"
                     value={form.phone}
                     onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   />
                 </div>
               </div>
@@ -405,7 +405,7 @@ export default function CRMPage() {
                   <select
                     value={form.source}
                     onChange={e => setForm(f => ({ ...f, source: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   >
                     {Object.entries(SOURCE_LABEL_KEY).map(([k, v]) => (
                       <option key={k} value={k}>{t(v)}</option>
@@ -417,7 +417,7 @@ export default function CRMPage() {
                   <select
                     value={form.language}
                     onChange={e => setForm(f => ({ ...f, language: e.target.value }))}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   >
                     <option value="EN">🇬🇧 English</option>
                     <option value="DE">🇩🇪 Deutsch</option>
@@ -430,7 +430,7 @@ export default function CRMPage() {
                   rows={3}
                   value={form.notes}
                   onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-navy-400"
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-hm-gold"
                   placeholder="Initial notes…"
                 />
               </div>
@@ -557,7 +557,7 @@ export default function CRMPage() {
                       <select
                         value={attrCampaignId}
                         onChange={e => setAttrCampaignId(e.target.value)}
-                        className="flex-1 rounded-lg border px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-navy-300"
+                        className="flex-1 rounded-lg border px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-hm-gold"
                       >
                         <option value="">{t('manager.crm.selectCampaign')}</option>
                         {campaigns

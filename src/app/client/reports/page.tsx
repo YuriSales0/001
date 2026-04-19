@@ -228,7 +228,7 @@ export default function ClientReportsPage() {
             { label: 'Ocupação', value: `${summary.current.occupancy}%`, delta: summary.delta.occupancy, prev: `${summary.previous.occupancy}%` },
             { label: 'Preço médio', value: fmt(summary.current.avgPricePerNight), delta: null, prev: fmt(summary.previous.avgPricePerNight) },
           ].map(kpi => (
-            <div key={kpi.label} className="rounded-xl border bg-white p-4">
+            <div key={kpi.label} className="rounded-hm border bg-white p-4">
               <div className="text-xs uppercase text-gray-500">{kpi.label}</div>
               <div className="text-xl font-bold text-hm-black mt-1">{kpi.value}</div>
               <div className="flex items-center gap-1.5 mt-1">
@@ -247,7 +247,7 @@ export default function ClientReportsPage() {
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <Euro className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Receita Bruta</span>
@@ -256,7 +256,7 @@ export default function ClientReportsPage() {
           <div className="text-xs text-gray-400 mt-0.5">total acumulado</div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <TrendingUp className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Receita Líquida</span>
@@ -265,7 +265,7 @@ export default function ClientReportsPage() {
           <div className="text-xs text-gray-400 mt-0.5">após comissão</div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <CalendarDays className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Noites Reservadas</span>
@@ -274,7 +274,7 @@ export default function ClientReportsPage() {
           <div className="text-xs text-gray-400 mt-0.5">total</div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <BarChart3 className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide font-medium">Preço Médio/Noite</span>
@@ -293,7 +293,7 @@ export default function ClientReportsPage() {
           </h2>
           <div className="space-y-3">
             {occupancyByProperty.map(p => (
-              <div key={p.id} className="rounded-xl border bg-white p-4">
+              <div key={p.id} className="rounded-hm border bg-white p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-hm-black">{p.name}</span>
                   <span className="text-sm font-bold text-hm-black">{fmtPct(p.occupancy)}</span>
@@ -319,13 +319,13 @@ export default function ClientReportsPage() {
         </h2>
 
         {monthlyData.length === 0 ? (
-          <div className="rounded-xl border bg-white p-8 text-center text-gray-400 text-sm">
+          <div className="rounded-hm border bg-white p-8 text-center text-gray-400 text-sm">
             Sem dados de reservas ainda.
           </div>
         ) : (
           <>
             {/* Mini bar chart */}
-            <div className="rounded-xl border bg-white p-4 mb-4">
+            <div className="rounded-hm border bg-white p-4 mb-4">
               <div className="flex items-end gap-1 h-24">
                 {[...monthlyData].reverse().map(([key, d]) => (
                   <div key={key} className="flex-1 flex flex-col items-center gap-1 group relative">
@@ -346,7 +346,7 @@ export default function ClientReportsPage() {
             </div>
 
             {/* Table */}
-            <div className="rounded-xl border bg-white overflow-hidden">
+            <div className="rounded-hm border bg-white overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500 border-b">
                   <tr>

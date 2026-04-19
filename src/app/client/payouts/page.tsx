@@ -60,11 +60,11 @@ export default function ClientPayouts() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">{t('client.payouts.scheduledReceive')}</div>
           <div className="text-2xl font-semibold text-green-700 mt-1">{fmtEUR(totalIn)}</div>
         </div>
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="text-xs uppercase text-gray-500">{t('client.payouts.pendingInvoices')}</div>
           <div className="text-2xl font-semibold text-orange-600 mt-1">{fmtEUR(totalOut)}</div>
         </div>
@@ -72,8 +72,9 @@ export default function ClientPayouts() {
 
       <section>
         <h2 className="text-lg font-semibold text-hm-black mb-2">{t('client.payouts.rentalPayouts')}</h2>
-        <div className="rounded-xl border bg-white overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="rounded-hm border bg-white overflow-hidden">
+          <div className="overflow-x-auto">
+          <table className="min-w-[600px] w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
               <tr>
                 <th className="px-4 py-3">{t('client.payouts.thProperty')}</th>
@@ -108,13 +109,15 @@ export default function ClientPayouts() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </section>
 
       <section>
         <h2 className="text-lg font-semibold text-hm-black mb-2">{t('client.payouts.serviceInvoices')}</h2>
-        <div className="rounded-xl border bg-white overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="rounded-hm border bg-white overflow-hidden">
+          <div className="overflow-x-auto">
+          <table className="min-w-[600px] w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
               <tr>
                 <th className="px-4 py-3">{t('client.payouts.thDate')}</th>
@@ -149,6 +152,7 @@ export default function ClientPayouts() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </section>
     </div>

@@ -111,12 +111,12 @@ export default function AdminRecruitPage() {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 bg-white rounded-hm border p-3">
         <Filter className="h-4 w-4 text-gray-400" />
-        <select value={roleFilter} onChange={e => setRoleFilter(e.target.value as typeof roleFilter)} className="rounded-lg border px-3 py-1.5 text-sm">
+        <select value={roleFilter} onChange={e => setRoleFilter(e.target.value as typeof roleFilter)} className="rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
           <option value="ALL">All roles</option>
           <option value="MANAGER">Managers</option>
           <option value="CREW">Crew</option>
         </select>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm">
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
           <option value="ALL">All statuses</option>
           {Object.entries(STATUS_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
         </select>
@@ -349,7 +349,7 @@ function ApplicationDetail({
           rows={3}
           maxLength={2000}
           placeholder="Private notes (not shown to applicant)…"
-          className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+          className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
         />
         <div className="flex justify-end mt-2">
           <button

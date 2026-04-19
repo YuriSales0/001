@@ -137,18 +137,18 @@ export default function ReportsPage() {
                 <label className="block text-[10px] uppercase text-gray-500 mb-0.5">Período</label>
                 <div className="flex gap-1">
                   <input type="date" value={fromDate} onChange={e => setFromDate(e.target.value)}
-                    className="rounded-md border px-2 py-1 text-xs" />
+                    className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                   <input type="date" value={toDate} onChange={e => setToDate(e.target.value)}
-                    className="rounded-md border px-2 py-1 text-xs" />
+                    className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
               </div>
               <div>
                 <label className="block text-[10px] uppercase text-gray-500 mb-0.5">Comparar com</label>
                 <div className="flex gap-1">
                   <input type="date" value={compareFrom} onChange={e => setCompareFrom(e.target.value)}
-                    className="rounded-md border px-2 py-1 text-xs" />
+                    className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                   <input type="date" value={compareTo} onChange={e => setCompareTo(e.target.value)}
-                    className="rounded-md border px-2 py-1 text-xs" />
+                    className="rounded-md border px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
               </div>
               <button

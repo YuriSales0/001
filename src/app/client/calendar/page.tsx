@@ -64,7 +64,7 @@ function DayPanel({
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
           <p className="text-sm font-bold text-gray-900">{tasks.length} {tr('common.tasks').toLowerCase()}</p>
         </div>
-        <button onClick={onClose} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
+        <button onClick={onClose} aria-label="Close" className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
           <X className="h-4 w-4"/>
         </button>
       </div>
@@ -114,7 +114,7 @@ function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
               {task.title}
             </h2>
           </div>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5"/></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5"/></button>
         </div>
         <div className="p-5 space-y-3 text-sm">
           <div className="flex items-center gap-2 text-gray-600">
@@ -206,7 +206,7 @@ export default function ClientCalendarPage() {
           <p className="text-sm text-gray-500">{tr('client.calendar.subtitle')}</p>
         </div>
         <select value={propertyFilter} onChange={e=>setPropertyFilter(e.target.value)}
-          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
+          className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
           <option value="ALL">{tr('client.calendar.allProperties')}</option>
           {properties.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
@@ -214,9 +214,9 @@ export default function ClientCalendarPage() {
 
       {/* Week navigation */}
       <div className="flex items-center gap-2">
-        <button onClick={prevWeek} className="rounded-lg border p-2 hover:bg-gray-50"><ChevronLeft className="h-4 w-4"/></button>
+        <button onClick={prevWeek} aria-label="Previous" className="rounded-lg border p-2 hover:bg-gray-50"><ChevronLeft className="h-4 w-4"/></button>
         <span className="text-sm font-medium min-w-[200px] text-center">{weekLabel}</span>
-        <button onClick={nextWeek} className="rounded-lg border p-2 hover:bg-gray-50"><ChevronRight className="h-4 w-4"/></button>
+        <button onClick={nextWeek} aria-label="Next" className="rounded-lg border p-2 hover:bg-gray-50"><ChevronRight className="h-4 w-4"/></button>
         <button onClick={()=>setWeekStart(getWeekStart(new Date()))}
           className="ml-2 rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">{tr('manager.calendar.today')}</button>
       </div>

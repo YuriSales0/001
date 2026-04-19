@@ -110,7 +110,7 @@ export default function ManagerInviteClientPage() {
               required
               value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
-              className="w-full rounded-lg border pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+              className="w-full rounded-lg border pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="owner@example.com"
               autoFocus
             />
@@ -124,7 +124,7 @@ export default function ManagerInviteClientPage() {
           <input
             value={form.name}
             onChange={e => setForm({ ...form, name: e.target.value })}
-            className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+            className="w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
             placeholder={t('manager.inviteClient.namePlaceholder')}
           />
         </div>

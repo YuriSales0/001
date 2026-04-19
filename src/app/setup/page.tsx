@@ -189,7 +189,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
                       </span>
                       <button
                         onClick={() => deleteItem(item.id)}
-                        className="shrink-0 p-1 text-gray-300 hover:text-red-500 transition-colors rounded"
+                        className="shrink-0 p-2 text-gray-300 hover:text-red-500 transition-colors rounded"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -209,7 +209,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
                   {grouped[cat].map(item => (
                     <div key={item.id} className="flex items-center gap-3 px-4 py-2.5">
                       <span className="flex-1 text-sm text-gray-800">{item.label}</span>
-                      <button onClick={() => deleteItem(item.id)} className="p-1 text-gray-300 hover:text-red-500 rounded">
+                      <button onClick={() => deleteItem(item.id)} className="p-2 text-gray-300 hover:text-red-500 rounded">
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>

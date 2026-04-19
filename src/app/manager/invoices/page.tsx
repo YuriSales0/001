@@ -65,7 +65,7 @@ function EditModal({ invoice, onClose, onSaved }: {
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="font-semibold text-gray-900">Edit invoice</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-4 w-4" /></button>
         </div>
         <form onSubmit={save} className="p-6 space-y-4">
           <div>
@@ -77,7 +77,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <input
               required value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -86,7 +86,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 required type="number" step="0.01" min="0" value={form.amount}
                 onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               />
             </div>
             <div>
@@ -94,7 +94,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               <input
                 type="date" value={form.dueDate}
                 onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             <textarea
               rows={2} value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 resize-none"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none"
             />
           </div>
           {err && <p className="text-xs text-red-600">{err}</p>}

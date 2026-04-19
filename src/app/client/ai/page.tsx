@@ -48,7 +48,7 @@ export default function ClientAIPage() {
             para maximizar a tua receita na Costa Tropical.
           </p>
         </div>
-        <div className="rounded-xl border bg-white p-5 text-left space-y-3">
+        <div className="rounded-hm border bg-white p-5 text-left space-y-3">
           {[
             'Análise de preços de concorrência (Airbnb, Booking)',
             'Sugestões por dia da semana e sazonalidade',
@@ -88,7 +88,7 @@ export default function ClientAIPage() {
       </div>
 
       {stats.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-gray-200 p-12 text-center">
+        <div className="rounded-hm border-2 border-dashed border-gray-200 p-12 text-center">
           <Sparkles className="h-10 w-10 text-gray-300 mx-auto mb-3" />
           <h3 className="font-semibold text-gray-700 mb-1">Dados em recolha</h3>
           <p className="text-sm text-gray-500">
@@ -97,7 +97,7 @@ export default function ClientAIPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="rounded-xl border bg-white p-5">
+          <div className="rounded-hm border bg-white p-5">
             <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gray-400" />
               Sazonalidade — preço médio/noite
@@ -121,7 +121,7 @@ export default function ClientAIPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border bg-amber-50 border-amber-200 p-5 flex flex-col justify-between">
+          <div className="rounded-hm border bg-amber-50 border-amber-200 p-5 flex flex-col justify-between">
             <div>
               <h3 className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />

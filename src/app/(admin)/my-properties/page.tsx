@@ -279,7 +279,7 @@ export default function PropertiesPage() {
                           placeholder="https://www.airbnb.com/calendar/ical/..."
                           value={draft.airbnb}
                           onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...draft, airbnb: e.target.value } }))}
-                          className="w-full rounded-md border px-3 py-2 text-sm"
+                          className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                         />
                         <p className="text-xs text-gray-400 mt-1">Airbnb → Anúncio → Disponibilidade → Exportar calendário</p>
                       </div>
@@ -291,7 +291,7 @@ export default function PropertiesPage() {
                           placeholder="https://admin.booking.com/hotel/.../ical?..."
                           value={draft.booking}
                           onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...draft, booking: e.target.value } }))}
-                          className="w-full rounded-md border px-3 py-2 text-sm"
+                          className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                         />
                         <p className="text-xs text-gray-400 mt-1">Booking.com Extranet → Tarifas → Sincronizar calendários</p>
                       </div>
@@ -391,7 +391,7 @@ export default function PropertiesPage() {
                 <h2 className="text-base font-bold text-hm-black">Aprovar Propriedade</h2>
                 <p className="text-sm text-gray-500">{approveState.property.name} · {approveState.property.owner.name ?? approveState.property.owner.email}</p>
               </div>
-              <button onClick={() => setApproveState(null)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+              <button onClick={() => setApproveState(null)} className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
 
             <div className="p-5 space-y-5">

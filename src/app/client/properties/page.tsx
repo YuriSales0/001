@@ -171,7 +171,7 @@ export default function ClientProperties() {
 
       {/* Banner: needs client confirmation */}
       {pendingClient.length > 0 && (
-        <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 flex items-start gap-3">
+        <div className="rounded-hm border border-violet-200 bg-violet-50 p-4 flex items-start gap-3">
           <CheckCircle2 className="h-5 w-5 text-violet-600 shrink-0 mt-0.5" />
           <div className="text-sm text-violet-800">
             <p className="font-semibold mb-0.5">
@@ -186,7 +186,7 @@ export default function ClientProperties() {
 
       {/* Banner: contract pending — needs signature */}
       {contractPending.length > 0 && (
-        <div className="rounded-xl border-2 border-blue-300 bg-blue-50 p-4 flex items-start gap-3">
+        <div className="rounded-hm border-2 border-blue-300 bg-blue-50 p-4 flex items-start gap-3">
           <FileText className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
           <div className="text-sm text-blue-800">
             <p className="font-semibold mb-0.5">
@@ -201,7 +201,7 @@ export default function ClientProperties() {
 
       {/* Banner: pending OTA setup by admin */}
       {pendingApproval.length > 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
+        <div className="rounded-hm border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
           <Settings className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800">
             <p className="font-semibold mb-0.5">
@@ -215,7 +215,7 @@ export default function ClientProperties() {
       )}
 
       {properties.length === 0 && (
-        <div className="rounded-xl border bg-white p-10 text-center">
+        <div className="rounded-hm border bg-white p-10 text-center">
           <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-3" />
           <p className="text-gray-500 mb-3">{t('client.properties.noProperties')}</p>
           <button onClick={() => setShowAdd(true)} className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90">
@@ -233,7 +233,7 @@ export default function ClientProperties() {
           const contract = contracts[p.id]
 
           return (
-            <div key={p.id} className={`rounded-xl border bg-white p-5 ${
+            <div key={p.id} className={`rounded-hm border bg-white p-5 ${
               isPendingClient ? 'border-violet-200'
                 : isPendingApproval ? 'border-amber-200'
                 : isContractPending ? 'border-blue-300 border-2'

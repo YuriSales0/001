@@ -111,7 +111,7 @@ export default function ManagerProfilePage() {
               )}
             </div>
             <button type="button" onClick={() => fileRef.current?.click()}
-              className="absolute -bottom-1 -right-1 rounded-full p-1.5 text-white shadow"
+              className="absolute -bottom-1 -right-1 rounded-full p-2 text-white shadow hover:brightness-110"
               style={{ background: 'var(--hm-gold)' }}>
               <Camera className="h-3.5 w-3.5" />
             </button>

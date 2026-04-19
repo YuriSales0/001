@@ -123,18 +123,18 @@ export default function TeamPage() {
           <UserPlus className="h-4 w-4" /> Create user
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
-          <input type="email" required placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
-          <input type="password" required minLength={6} placeholder="Password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
-          <input placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
-          <select value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="rounded-md border px-3 py-2 text-sm">
+          <input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+          <input type="email" required placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+          <input type="password" required minLength={6} placeholder="Password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+          <input placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+          <select value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
             <option value="MANAGER">Manager (Customer Success)</option>
             <option value="CREW">Crew (operations)</option>
             <option value="CLIENT">Client (property owner)</option>
             <option value="ADMIN">Admin</option>
           </select>
           {form.role === 'CLIENT' && (
-            <select value={form.managerId} onChange={e => setForm({ ...form, managerId: e.target.value })} className="rounded-md border px-3 py-2 text-sm">
+            <select value={form.managerId} onChange={e => setForm({ ...form, managerId: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               <option value="">Assign manager…</option>
               {managers.map(m => <option key={m.id} value={m.id}>{m.name || m.email}</option>)}
             </select>
@@ -422,14 +422,14 @@ function InviteModal({
                 <div>
                   <label className="block text-xs text-gray-600 mb-1">% of subscription</label>
                   <div className="relative">
-                    <input type="number" step="0.5" min="0" max="100" value={subShare} onChange={e => setSubShare(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm pr-8" />
+                    <input type="number" step="0.5" min="0" max="100" value={subShare} onChange={e => setSubShare(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm pr-8 focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">%</span>
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs text-gray-600 mb-1">% of gross rental</label>
                   <div className="relative">
-                    <input type="number" step="0.5" min="0" max="100" value={commShare} onChange={e => setCommShare(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm pr-8" />
+                    <input type="number" step="0.5" min="0" max="100" value={commShare} onChange={e => setCommShare(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm pr-8 focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">%</span>
                   </div>
                 </div>
@@ -442,17 +442,17 @@ function InviteModal({
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Contract type</p>
               <div className="grid grid-cols-2 gap-2 mb-3">
-                <button type="button" onClick={() => setCrewContractType("MONTHLY")} className={`rounded-lg border px-3 py-2.5 text-sm font-semibold ${crewContractType === "MONTHLY" ? "border-navy-700 bg-navy-50 text-hm-black" : "border-gray-200 text-gray-600"}`}>
+                <button type="button" onClick={() => setCrewContractType("MONTHLY")} className={`rounded-lg border px-3 py-2.5 text-sm font-semibold transition-colors ${crewContractType === "MONTHLY" ? "border-navy-700 bg-navy-50 text-hm-black" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
                   Monthly
                 </button>
-                <button type="button" onClick={() => setCrewContractType("FREELANCER")} className={`rounded-lg border px-3 py-2.5 text-sm font-semibold ${crewContractType === "FREELANCER" ? "border-navy-700 bg-navy-50 text-hm-black" : "border-gray-200 text-gray-600"}`}>
+                <button type="button" onClick={() => setCrewContractType("FREELANCER")} className={`rounded-lg border px-3 py-2.5 text-sm font-semibold transition-colors ${crewContractType === "FREELANCER" ? "border-navy-700 bg-navy-50 text-hm-black" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
                   Per task
                 </button>
               </div>
               {crewContractType === "MONTHLY" ? (
-                <input type="number" step="1" min="0" placeholder="Monthly rate (€)" value={crewMonthlyRate} onChange={e => setCrewMonthlyRate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
+                <input type="number" step="1" min="0" placeholder="Monthly rate (€)" value={crewMonthlyRate} onChange={e => setCrewMonthlyRate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
               ) : (
-                <input type="number" step="1" min="0" placeholder="Per-task rate (€)" value={crewTaskRate} onChange={e => setCrewTaskRate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm" />
+                <input type="number" step="1" min="0" placeholder="Per-task rate (€)" value={crewTaskRate} onChange={e => setCrewTaskRate(e.target.value)} className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
               )}
             </div>
           )}
@@ -462,13 +462,13 @@ function InviteModal({
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Plan & Manager</p>
               <div className="grid grid-cols-2 gap-3">
-                <select value={subscriptionPlan} onChange={e => setSubscriptionPlan(e.target.value as typeof subscriptionPlan)} className="rounded-lg border px-3 py-2 text-sm">
+                <select value={subscriptionPlan} onChange={e => setSubscriptionPlan(e.target.value as typeof subscriptionPlan)} className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                   <option value="STARTER">Starter (€0)</option>
                   <option value="BASIC">Basic (€89)</option>
                   <option value="MID">Mid (€159)</option>
                   <option value="PREMIUM">Premium (€269)</option>
                 </select>
-                <select value={managerId} onChange={e => setManagerId(e.target.value)} className="rounded-lg border px-3 py-2 text-sm">
+                <select value={managerId} onChange={e => setManagerId(e.target.value)} className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                   <option value="">— No manager —</option>
                   {managers.map(m => <option key={m.id} value={m.id}>{m.name || m.email}</option>)}
                 </select>

@@ -190,7 +190,7 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
             </div>
             <h4 className="text-lg font-bold text-white mb-2">{t("landing.join.form.thanks")}</h4>
             <p className="text-sm text-gray-400 mb-6">{t("landing.join.form.thanksDesc")}</p>
-            <button onClick={onClose} className="rounded-lg bg-[#B08A3E] text-[#0B1E3A] px-6 py-2.5 text-sm font-semibold">
+            <button onClick={onClose} className="rounded-lg bg-[#B08A3E] text-[#0B1E3A] px-6 py-2.5 text-sm font-semibold hover:brightness-110">
               {t("common.close")}
             </button>
           </div>

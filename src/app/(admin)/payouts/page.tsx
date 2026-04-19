@@ -35,7 +35,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <h2 className="text-lg font-bold text-hm-black">Como funciona — Payouts</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100">
+          <button onClick={onClose} className="rounded-md p-2 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -160,13 +160,13 @@ function CreatePayoutModal({
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <h2 className="text-lg font-bold text-hm-black">Criar payout manual</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           {error && <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Propriedade *</label>
-            <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" required>
+            <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required>
               <option value="">Seleccionar propriedade...</option>
               {properties.map(p => (
                 <option key={p.id} value={p.id}>{p.name} — {p.owner.name || p.owner.email}</option>
@@ -184,11 +184,11 @@ function CreatePayoutModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Valor recebido da plataforma (EUR) *</label>
-              <input type="number" min="1" step="0.01" value={grossAmount} onChange={e => setGrossAmount(e.target.value)} placeholder="0.00" className="w-full rounded-md border px-3 py-2 text-sm" required />
+              <input type="number" min="1" step="0.01" value={grossAmount} onChange={e => setGrossAmount(e.target.value)} placeholder="0.00" className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
-              <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+              <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                 <option value="">Nenhuma</option>
                 {PLATFORMS.map(pl => <option key={pl} value={pl}>{PLATFORM_LABELS[pl] ?? pl}</option>)}
               </select>
@@ -196,11 +196,11 @@ function CreatePayoutModal({
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada *</label>
-            <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" required />
+            <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
-            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="ex: Ajuste manual — Jan 2026" className="w-full rounded-md border px-3 py-2 text-sm" />
+            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="ex: Ajuste manual — Jan 2026" className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           {gross > 0 && (
             <div className="rounded-lg bg-gray-50 border divide-y text-sm">
@@ -284,14 +284,14 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <h2 className="text-lg font-bold text-hm-black">Editar payout</h2>
-          <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           {error && <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Valor bruto (€)</label>
             <input type="number" step="0.01" min="0" value={grossAmount} onChange={e => setGrossAmount(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" required />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
             {gross > 0 && (
               <div className="mt-2 rounded-lg bg-gray-50 border divide-y text-sm">
                 <div className="flex justify-between px-3 py-2 text-orange-600">
@@ -308,11 +308,11 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada</label>
             <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm" required />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
-            <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm">
+            <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
               <option value="">— Nenhuma —</option>
               {PLATFORMS.map(p => <option key={p} value={p}>{PLATFORM_LABELS[p] ?? p}</option>)}
             </select>
@@ -320,7 +320,7 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
             <input value={description} onChange={e => setDescription(e.target.value)} placeholder="Opcional"
-              className="w-full rounded-md border px-3 py-2 text-sm" />
+              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
@@ -467,7 +467,7 @@ export default function PayoutsPage() {
       </div>
 
       <form onSubmit={e => { e.preventDefault(); load(clientFilter) }} className="flex gap-2">
-        <input placeholder="Filtrar por cliente, email ou ID..." value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="flex-1 rounded-md border px-3 py-2 text-sm" />
+        <input placeholder="Filtrar por cliente, email ou ID..." value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="flex-1 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
         <button type="submit" className="rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90">Filtrar</button>
         {clientFilter && (
           <button type="button" onClick={() => { setClientFilter(''); load('') }} className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Limpar</button>

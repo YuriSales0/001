@@ -92,7 +92,7 @@ export default function CrewProfilePage() {
       {score && <ScoreSection score={score} />}
 
       {/* Role info */}
-      <div className="rounded-xl border bg-emerald-50 border-emerald-100 p-4 flex gap-4">
+      <div className="rounded-hm border bg-emerald-50 border-emerald-100 p-4 flex gap-4">
         <Wrench className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
         <div className="text-sm text-emerald-800 space-y-1">
           <p className="font-semibold">{t('crew.profile.responsibilities')}</p>
@@ -101,7 +101,7 @@ export default function CrewProfilePage() {
       </div>
 
       {profile?.commissionRate != null && (
-        <div className="rounded-xl border bg-white p-4 flex items-center gap-4">
+        <div className="rounded-hm border bg-white p-4 flex items-center gap-4">
           <div className="rounded-lg p-2 bg-amber-50">
             <Percent className="h-5 w-5 text-amber-600" />
           </div>
@@ -117,7 +117,7 @@ export default function CrewProfilePage() {
       <ProfileContractSection />
 
       {/* Photo + identity */}
-      <form onSubmit={save} className="rounded-xl border bg-white p-5 space-y-5">
+      <form onSubmit={save} className="rounded-hm border bg-white p-5 space-y-5">
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center"
@@ -130,7 +130,7 @@ export default function CrewProfilePage() {
               )}
             </div>
             <button type="button" onClick={() => fileRef.current?.click()}
-              className="absolute -bottom-1 -right-1 rounded-full p-1.5 text-white shadow"
+              className="absolute -bottom-1 -right-1 rounded-full p-2 text-white shadow hover:brightness-110"
               style={{ background: 'var(--hm-gold)' }}>
               <Camera className="h-3.5 w-3.5" />
             </button>
@@ -174,7 +174,7 @@ export default function CrewProfilePage() {
       </form>
 
       {/* Password */}
-      <form onSubmit={savePassword} className="rounded-xl border bg-white p-5 space-y-4">
+      <form onSubmit={savePassword} className="rounded-hm border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
           <span className="text-sm font-semibold text-hm-black">{t('profile.changePassword')}</span>
@@ -257,7 +257,7 @@ function ScoreSection({ score }: { score: ScoreData }) {
   const nextLevel = score.level === 'SUSPENDED' ? 'BASIC' : score.level === 'BASIC' ? 'VERIFIED' : score.level === 'VERIFIED' ? 'EXPERT' : score.level === 'EXPERT' ? 'ELITE' : null
 
   return (
-    <div className="rounded-xl border bg-white overflow-hidden">
+    <div className="rounded-hm border bg-white overflow-hidden">
       <div className="p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">

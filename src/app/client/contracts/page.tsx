@@ -33,7 +33,7 @@ export default function ClientContractsPage() {
   if (loading) return (
     <div className="space-y-4 animate-pulse">
       <div className="h-10 rounded bg-gray-100 w-48" />
-      <div className="h-64 rounded-xl bg-gray-100" />
+      <div className="h-64 rounded-hm bg-gray-100" />
     </div>
   )
 
@@ -44,7 +44,7 @@ export default function ClientContractsPage() {
       </div>
 
       {contracts.length === 0 ? (
-        <div className="rounded-xl border p-10 text-center" style={{ background: 'var(--hm-sand)' }}>
+        <div className="rounded-hm border p-10 text-center" style={{ background: 'var(--hm-sand)' }}>
           <FileText className="h-10 w-10 text-gray-300 mx-auto mb-3" />
           <p className="text-sm text-gray-500">{t('contracts.contractsEmpty')}</p>
         </div>

@@ -279,7 +279,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
       <div className="flex flex-1 flex-col min-w-0">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-white px-4 sm:px-6">
           <button
-            className="lg:hidden rounded-md p-1.5 hover:bg-gray-100"
+            className="lg:hidden rounded-md p-2 hover:bg-gray-100"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-5 w-5 text-gray-600" />
