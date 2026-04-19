@@ -49,7 +49,7 @@ export function InvoiceForm({ onCreated }: { onCreated?: () => void }) {
 
   return (
     <form onSubmit={submit} className="rounded-xl border bg-white p-6 space-y-3">
-      <div className="font-semibold text-navy-900">New invoice (corrective maintenance / pre-agreed service)</div>
+      <div className="font-semibold text-hm-black">New invoice (corrective maintenance / pre-agreed service)</div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <select required value={form.clientId} onChange={e => setForm({ ...form, clientId: e.target.value, propertyId: "" })} className="rounded-md border px-3 py-2 text-sm">
           <option value="">Select client…</option>
@@ -63,8 +63,8 @@ export function InvoiceForm({ onCreated }: { onCreated?: () => void }) {
         <input required type="number" step="0.01" placeholder="Amount (EUR)" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
         <input type="date" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })} className="rounded-md border px-3 py-2 text-sm" />
       </div>
-      {msg && <p className="text-sm text-navy-900">{msg}</p>}
-      <button type="submit" disabled={busy} className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800 disabled:opacity-50">
+      {msg && <p className="text-sm text-hm-black">{msg}</p>}
+      <button type="submit" disabled={busy} className="rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90 disabled:opacity-50">
         {busy ? 'Sending…' : 'Send invoice'}
       </button>
     </form>

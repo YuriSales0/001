@@ -22,7 +22,7 @@ export function ConfirmDialog({
   if (!open) return null
   const confirmBg = variant === "danger" ? "bg-red-600 hover:bg-red-700"
                   : variant === "warning" ? "bg-amber-600 hover:bg-amber-700"
-                  : "bg-navy-900 hover:bg-navy-800"
+                  : "bg-hm-black hover:bg-hm-black/90"
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onCancel}>
@@ -33,7 +33,7 @@ export function ConfirmDialog({
               <AlertTriangle className="h-5 w-5 text-red-600" />
             </div>
           )}
-          <h3 className="font-bold text-navy-900 text-lg mb-2">{title}</h3>
+          <h3 className="font-bold text-hm-black text-lg mb-2">{title}</h3>
           <p className="text-sm text-gray-600 whitespace-pre-line">{message}</p>
         </div>
         <div className="px-6 py-4 border-t flex justify-end gap-2 bg-gray-50">

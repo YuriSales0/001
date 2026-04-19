@@ -100,7 +100,7 @@ export default function AIPage() {
       {/* Header + Tabs */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
             <Sparkles className="h-7 w-7 text-amber-500" />
             AI Pricing Intelligence
           </h1>
@@ -115,7 +115,7 @@ export default function AIPage() {
         <button
           onClick={() => setTab('pricing')}
           className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-            tab === 'pricing' ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            tab === 'pricing' ? 'bg-white text-hm-black shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
         >
           <BarChart3 className="h-4 w-4" />
@@ -124,7 +124,7 @@ export default function AIPage() {
         <button
           onClick={() => setTab('engine')}
           className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-            tab === 'engine' ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            tab === 'engine' ? 'bg-white text-hm-black shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
         >
           <Cpu className="h-4 w-4" />
@@ -133,7 +133,7 @@ export default function AIPage() {
         <button
           onClick={() => setTab('market')}
           className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-            tab === 'market' ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            tab === 'market' ? 'bg-white text-hm-black shadow-sm' : 'text-gray-500 hover:text-gray-700'
           }`}
         >
           <MapPin className="h-4 w-4" />
@@ -152,12 +152,12 @@ export default function AIPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="rounded-xl border bg-white p-5">
                   <div className="text-xs uppercase text-gray-500">Noites recolhidas</div>
-                  <div className="text-3xl font-bold text-navy-900 mt-1">{totalPoints.toLocaleString()}</div>
+                  <div className="text-3xl font-bold text-hm-black mt-1">{totalPoints.toLocaleString()}</div>
                   <div className="text-xs text-gray-400 mt-1">dados de preço acumulados</div>
                 </div>
                 <div className="rounded-xl border bg-white p-5">
                   <div className="text-xs uppercase text-gray-500">Preço médio/noite</div>
-                  <div className="text-3xl font-bold text-navy-900 mt-1">
+                  <div className="text-3xl font-bold text-hm-black mt-1">
                     {totalPoints > 0
                       ? `€${(byMonth.reduce((s, m) => s + (m._avg.priceCharged ?? 0) * m._count, 0) / Math.max(totalPoints, 1)).toFixed(0)}`
                       : '—'}
@@ -192,7 +192,7 @@ export default function AIPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* By month */}
                   <div className="rounded-xl border bg-white p-5">
-                    <h3 className="font-semibold text-navy-900 mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-hm-black mb-4 flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-gray-400" />
                       Preço médio por mês
                     </h3>
@@ -218,7 +218,7 @@ export default function AIPage() {
 
                   {/* By day of week */}
                   <div className="rounded-xl border bg-white p-5">
-                    <h3 className="font-semibold text-navy-900 mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-hm-black mb-4 flex items-center gap-2">
                       <BarChart3 className="h-4 w-4 text-gray-400" />
                       Preço médio por dia da semana
                     </h3>
@@ -244,7 +244,7 @@ export default function AIPage() {
 
                   {/* By platform */}
                   <div className="rounded-xl border bg-white p-5">
-                    <h3 className="font-semibold text-navy-900 mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-hm-black mb-4 flex items-center gap-2">
                       <TrendingUp className="h-4 w-4 text-gray-400" />
                       Preço médio por plataforma
                     </h3>
@@ -253,7 +253,7 @@ export default function AIPage() {
                         <div key={p.platform ?? 'direct'} className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3">
                           <span className="text-sm font-medium text-gray-700">{p.platform ?? 'Direct'}</span>
                           <div className="text-right">
-                            <div className="text-sm font-bold text-navy-900">€{(p._avg.priceCharged ?? 0).toFixed(0)}/noite</div>
+                            <div className="text-sm font-bold text-hm-black">€{(p._avg.priceCharged ?? 0).toFixed(0)}/noite</div>
                             <div className="text-xs text-gray-400">{p._count} noites</div>
                           </div>
                         </div>
@@ -263,7 +263,7 @@ export default function AIPage() {
 
                   {/* Roadmap */}
                   <div className="rounded-xl border bg-white p-5">
-                    <h3 className="font-semibold text-navy-900 mb-4">Roadmap de integração</h3>
+                    <h3 className="font-semibold text-hm-black mb-4">Roadmap de integração</h3>
                     <div className="space-y-3">
                       {[
                         { phase: '1', label: 'Recolha de dados próprios', status: 'active', note: 'A decorrer — cada reserva gera dados' },
@@ -278,7 +278,7 @@ export default function AIPage() {
                                                        'bg-gray-100 text-gray-400'
                           }`}>{item.phase}</div>
                           <div>
-                            <div className="text-sm font-medium text-navy-900">{item.label}</div>
+                            <div className="text-sm font-medium text-hm-black">{item.label}</div>
                             <div className="text-xs text-gray-500">{item.note}</div>
                           </div>
                         </div>
@@ -350,7 +350,7 @@ export default function AIPage() {
                     {/* Header */}
                     <div className="px-5 py-4 flex items-center justify-between gap-4 border-b">
                       <div className="min-w-0 flex-1">
-                        <div className="font-semibold text-navy-900">{ps.propertyName}</div>
+                        <div className="font-semibold text-hm-black">{ps.propertyName}</div>
                         <div className="text-xs text-gray-400 mt-0.5">
                           {ps.bedrooms > 0 && `${ps.bedrooms} quartos · `}
                           {ps.zoneId?.replace('zone-', '').replace(/-/g, ' ') ?? 'zona desconhecida'}
@@ -358,7 +358,7 @@ export default function AIPage() {
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <div className="text-2xl font-bold text-navy-900">€{s.suggestedPrice}</div>
+                        <div className="text-2xl font-bold text-hm-black">€{s.suggestedPrice}</div>
                         <div className="flex items-center justify-end gap-1 mt-0.5">
                           {delta > 0 ? <ArrowUpRight className="h-3 w-3 text-green-600" /> : delta < 0 ? <ArrowDownRight className="h-3 w-3 text-red-500" /> : <Minus className="h-3 w-3 text-gray-400" />}
                           <span className={`text-xs font-semibold ${delta > 0 ? 'text-green-600' : delta < 0 ? 'text-red-500' : 'text-gray-400'}`}>

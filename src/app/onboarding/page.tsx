@@ -36,8 +36,8 @@ export default function OnboardingPage() {
       {/* Header */}
       <div className="bg-white border-b">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-2">
-          <Building2 className="h-6 w-6 text-navy-900" />
-          <span className="font-bold text-navy-900">Hostmaster</span>
+          <Building2 className="h-6 w-6 text-hm-black" />
+          <span className="font-bold text-hm-black">Hostmaster</span>
           <span className="text-gray-400 ml-2">/ Onboarding</span>
         </div>
       </div>
@@ -52,7 +52,7 @@ export default function OnboardingPage() {
                   currentStep > step.id
                     ? "bg-green-500 text-white"
                     : currentStep === step.id
-                    ? "bg-navy-900 text-white"
+                    ? "bg-hm-black text-white"
                     : "bg-gray-200 text-gray-500"
                 }`}>
                   {currentStep > step.id ? <Check className="h-5 w-5" /> : step.id}
@@ -72,7 +72,7 @@ export default function OnboardingPage() {
         {currentStep === 1 && (
           <Card className="border-0 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-navy-900">
+              <CardTitle className="flex items-center gap-2 text-hm-black">
                 <MapPin className="h-5 w-5 text-gold-400" /> Property Details
               </CardTitle>
               <CardDescription>Enter the basic information about your property</CardDescription>
@@ -99,12 +99,12 @@ export default function OnboardingPage() {
               <div className="space-y-2">
                 <Label>Description</Label>
                 <textarea
-                  className="w-full rounded-md border px-3 py-2 text-sm min-h-[100px] focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-md border px-3 py-2 text-sm min-h-[100px] focus:outline-none focus:ring-2 focus:ring-hm-gold"
                   placeholder="Beautiful beachfront villa with 3 bedrooms..."
                 />
               </div>
               <div className="border-t pt-4">
-                <h3 className="font-medium text-navy-900 flex items-center gap-2 mb-3">
+                <h3 className="font-medium text-hm-black flex items-center gap-2 mb-3">
                   <User className="h-4 w-4" /> Owner Details
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
@@ -130,7 +130,7 @@ export default function OnboardingPage() {
         {currentStep === 2 && (
           <Card className="border-0 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-navy-900">
+              <CardTitle className="flex items-center gap-2 text-hm-black">
                 <Camera className="h-5 w-5 text-gold-400" /> Photos & Contract
               </CardTitle>
               <CardDescription>Upload property photos and the management contract</CardDescription>
@@ -160,7 +160,7 @@ export default function OnboardingPage() {
         {currentStep === 3 && (
           <Card className="border-0 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-navy-900">
+              <CardTitle className="flex items-center gap-2 text-hm-black">
                 <Lock className="h-5 w-5 text-gold-400" /> Smart Lock Setup
               </CardTitle>
               <CardDescription>Connect your Nuki smart lock for automated access</CardDescription>
@@ -188,7 +188,7 @@ export default function OnboardingPage() {
         {currentStep === 4 && (
           <Card className="border-0 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-navy-900">
+              <CardTitle className="flex items-center gap-2 text-hm-black">
                 <Link2 className="h-5 w-5 text-gold-400" /> Channel Connections
               </CardTitle>
               <CardDescription>Connect your Airbnb and Booking.com listings</CardDescription>
@@ -200,7 +200,7 @@ export default function OnboardingPage() {
                     Air
                   </div>
                   <div>
-                    <p className="font-medium text-navy-900">Airbnb</p>
+                    <p className="font-medium text-hm-black">Airbnb</p>
                     <p className="text-xs text-gray-500">Sync reservations automatically</p>
                   </div>
                 </div>
@@ -212,7 +212,7 @@ export default function OnboardingPage() {
                     B.c
                   </div>
                   <div>
-                    <p className="font-medium text-navy-900">Booking.com</p>
+                    <p className="font-medium text-hm-black">Booking.com</p>
                     <p className="text-xs text-gray-500">Sync reservations automatically</p>
                   </div>
                 </div>
@@ -236,7 +236,7 @@ export default function OnboardingPage() {
             <ChevronLeft className="h-4 w-4" /> Back
           </Button>
           {currentStep < 4 ? (
-            <Button onClick={nextStep} className="gap-2 bg-navy-900 hover:bg-navy-800">
+            <Button onClick={nextStep} className="gap-2 bg-hm-black hover:bg-hm-black/90">
               Next <ChevronRight className="h-4 w-4" />
             </Button>
           ) : (

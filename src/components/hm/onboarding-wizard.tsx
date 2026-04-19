@@ -158,7 +158,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Step 0: Language */}
           {step === 0 && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-1">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-1">
                 <Globe className="h-5 w-5 text-[#B08A3E]" />
                 {t('onboarding.languageStep')}
               </div>
@@ -188,7 +188,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Step 1: Profile */}
           {step === profileIdx && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <User className="h-5 w-5 text-gray-400" />
                 {t('onboarding.profileStep')}
               </div>
@@ -210,7 +210,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Role step 1: Crew Contract — READ ONLY (set by Admin) */}
           {step === roleStep1Idx && role === 'CREW' && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
                 {t('onboarding.crewContractStep')}
               </div>
@@ -220,20 +220,20 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
               <div className="rounded-xl border bg-gray-50 p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Contract type</span>
-                  <span className="text-sm font-semibold text-navy-900">
+                  <span className="text-sm font-semibold text-hm-black">
                     {contractType === 'MONTHLY' ? t('onboarding.crewMonthly') : t('onboarding.crewFreelancer')}
                   </span>
                 </div>
                 {contractType === 'MONTHLY' && monthlyRate && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">{t('onboarding.crewMonthlyLabel')}</span>
-                    <span className="text-sm font-semibold text-navy-900">€{monthlyRate}</span>
+                    <span className="text-sm font-semibold text-hm-black">€{monthlyRate}</span>
                   </div>
                 )}
                 {contractType === 'FREELANCER' && taskRate && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">{t('onboarding.crewTaskLabel')}</span>
-                    <span className="text-sm font-semibold text-navy-900">€{taskRate}</span>
+                    <span className="text-sm font-semibold text-hm-black">€{taskRate}</span>
                   </div>
                 )}
                 {!monthlyRate && !taskRate && (
@@ -248,7 +248,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Role step 1: Manager Compensation — READ ONLY (set by Admin) */}
           {step === roleStep1Idx && role === 'MANAGER' && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
                 {t('onboarding.managerCompStep')}
               </div>
@@ -258,7 +258,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
               <div className="rounded-xl border bg-gray-50 p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">{t('onboarding.managerSubShare')}</span>
-                  <span className="text-sm font-semibold text-navy-900">
+                  <span className="text-sm font-semibold text-hm-black">
                     {subscriptionShare ? `${subscriptionShare}%` : '—'}
                   </span>
                 </div>
@@ -267,7 +267,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                 )}
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">{t('onboarding.managerCommShare')}</span>
-                  <span className="text-sm font-semibold text-navy-900">
+                  <span className="text-sm font-semibold text-hm-black">
                     {commissionShare ? `${commissionShare}%` : '—'}
                   </span>
                 </div>
@@ -286,7 +286,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Role step 1: Client Property */}
           {step === roleStep1Idx && role === 'CLIENT' && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
                 {t('onboarding.clientPropertyStep')}
               </div>
@@ -297,7 +297,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Crew Skills */}
           {step === roleStep2Idx && role === 'CREW' && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <Shield className="h-5 w-5 text-gray-400" />
                 {t('onboarding.crewSkillsStep')}
               </div>
@@ -318,7 +318,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Contract signing */}
           {step === contractIdx && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <FileText className="h-5 w-5 text-gray-400" />
                 {t('onboarding.contractStep')}
               </div>
@@ -347,7 +347,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           {/* Confirm */}
           {step === confirmIdx && (
             <>
-              <div className="flex items-center gap-2 text-navy-900 font-semibold mb-2">
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
                 {t('onboarding.confirmStep')}
               </div>

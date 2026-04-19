@@ -57,7 +57,7 @@ export function CrewScoreCard() {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-lg font-bold text-navy-900">{data.currentScore}</p>
+          <p className="text-lg font-bold text-hm-black">{data.currentScore}</p>
           <p className="text-[10px] text-gray-400">{t('crew.score.pts')}</p>
         </div>
       </div>

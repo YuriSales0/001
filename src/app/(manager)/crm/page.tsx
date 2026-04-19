@@ -304,7 +304,7 @@ export default function CRMPage() {
       {/* Page header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between gap-4 flex-wrap shrink-0">
         <div>
-          <h1 className="text-xl font-bold text-navy-900">{t('common.crmPipeline')}</h1>
+          <h1 className="text-xl font-bold text-hm-black">{t('common.crmPipeline')}</h1>
           <p className="text-xs text-gray-500 mt-0.5">{leads.length} total leads</p>
         </div>
 
@@ -329,7 +329,7 @@ export default function CRMPage() {
                 onClick={() => setLangFilter(lang)}
                 className={`px-3 py-2 font-medium transition-colors ${
                   langFilter === lang
-                    ? "bg-navy-900 text-white"
+                    ? "bg-hm-black text-white"
                     : "bg-white text-gray-600 hover:bg-gray-50"
                 }`}
               >
@@ -347,7 +347,7 @@ export default function CRMPage() {
           </button>
           <button
             onClick={() => setAddOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 transition-colors"
           >
             <Plus className="h-4 w-4" />
             {t('manager.crm.addLead')}
@@ -363,7 +363,7 @@ export default function CRMPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-6 m-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-navy-900">{t('manager.crm.newLead')}</h2>
+              <h2 className="font-bold text-hm-black">{t('manager.crm.newLead')}</h2>
               <button onClick={() => setAddOpen(false)} className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
@@ -445,7 +445,7 @@ export default function CRMPage() {
               <button
                 onClick={saveLead}
                 disabled={saving || !form.name.trim()}
-                className="px-4 py-2 rounded-lg bg-navy-900 text-white text-sm font-semibold hover:bg-navy-800 disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-hm-black text-white text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50"
               >
                 {saving ? t('manager.crm.saving') : t('manager.crm.saveLead')}
               </button>
@@ -463,7 +463,7 @@ export default function CRMPage() {
                 {selectedLead.nationality && (
                   <span className="text-xl">{FLAGS[selectedLead.nationality] ?? "🌍"}</span>
                 )}
-                <h2 className="font-bold text-navy-900">{selectedLead.name}</h2>
+                <h2 className="font-bold text-hm-black">{selectedLead.name}</h2>
                 {selectedLead.language && (
                   <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${
                     selectedLead.language === "EN" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
@@ -510,7 +510,7 @@ export default function CRMPage() {
                       }}
                       className={`rounded-lg border px-3 py-2 text-xs font-medium text-left transition-colors ${
                         selectedLead.status === s.id
-                          ? "bg-navy-900 text-white border-navy-900"
+                          ? "bg-hm-black text-white border-navy-900"
                           : "border-gray-200 text-gray-600 hover:border-gray-400"
                       }`}
                     >
@@ -543,7 +543,7 @@ export default function CRMPage() {
                   )}
                   {selectedLead.leadAttributions.map(a => (
                     <div key={a.campaign.id} className="flex items-center justify-between rounded-lg bg-gray-50 border px-3 py-2">
-                      <span className="text-xs font-medium text-navy-900">{a.campaign.name}</span>
+                      <span className="text-xs font-medium text-hm-black">{a.campaign.name}</span>
                       <button
                         onClick={() => removeAttribution(selectedLead.id, a.campaign.id)}
                         className="text-gray-300 hover:text-red-500 transition-colors ml-2"
@@ -568,7 +568,7 @@ export default function CRMPage() {
                       <button
                         onClick={() => attrCampaignId && addAttribution(selectedLead.id, attrCampaignId)}
                         disabled={!attrCampaignId}
-                        className="rounded-lg bg-navy-900 text-white px-3 py-1.5 text-xs font-medium disabled:opacity-40"
+                        className="rounded-lg bg-hm-black text-white px-3 py-1.5 text-xs font-medium disabled:opacity-40"
                       >
                         {t('common.add')}
                       </button>
@@ -611,7 +611,7 @@ export default function CRMPage() {
             return (
               <div
                 key={stage.id}
-                className={`flex flex-col w-60 rounded-xl border-2 bg-white flex-shrink-0 transition-all ${stage.color} ${
+                className={`flex flex-col w-60 rounded-hm border-2 bg-white flex-shrink-0 transition-all ${stage.color} ${
                   isDragTarget ? "ring-2 ring-gold-400 ring-offset-1 scale-[1.01]" : ""
                 }`}
                 onDragOver={e => { e.preventDefault(); setDraggingOver(stage.id) }}
@@ -1029,7 +1029,7 @@ x-integration-token: ${token}
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b">
           <div>
-            <h2 className="font-bold text-navy-900">Lead Integrations</h2>
+            <h2 className="font-bold text-hm-black">Lead Integrations</h2>
             <p className="text-xs text-gray-500 mt-0.5">Capture leads from digital marketing channels</p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -1052,7 +1052,7 @@ x-integration-token: ${token}
                     <Icon className="h-4 w-4 text-amber-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-navy-900">{sec.title}</p>
+                    <p className="text-sm font-semibold text-hm-black">{sec.title}</p>
                     <p className="text-xs text-gray-500">{sec.desc}</p>
                   </div>
                   <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />

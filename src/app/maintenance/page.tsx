@@ -236,11 +236,11 @@ function CorrectivePanel({ task, onSubmitted }: { task: Task; onSubmitted: () =>
   if (submitted && existing) {
     return (
       <div className="space-y-4">
-        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 flex items-center gap-2">
+        <div className="rounded-hm border border-green-200 bg-green-50 px-4 py-3 flex items-center gap-2">
           <FileText className="h-4 w-4 text-green-600 shrink-0"/>
           <span className="text-sm text-green-700 font-semibold">Relatório corretivo submetido</span>
         </div>
-        <div className="rounded-xl border bg-white p-4 space-y-3">
+        <div className="rounded-hm border bg-white p-4 space-y-3">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-0.5">Problema</p>
             <p className="text-sm text-gray-800">{existing.problem}</p>
@@ -583,7 +583,7 @@ export default function MaintenancePage() {
             </div>
 
             {selected.assignee && (
-              <div className="rounded-xl border bg-white px-4 py-3 mb-4 text-sm">
+              <div className="rounded-hm border bg-white px-4 py-3 mb-4 text-sm">
                 <span className="text-gray-500">Técnico:</span>
                 <span className="font-semibold text-gray-900 ml-2">{selected.assignee.name}</span>
               </div>
@@ -591,7 +591,7 @@ export default function MaintenancePage() {
 
             {/* ── CORRECTIVE: custom report form ── */}
             {selected.type === 'MAINTENANCE_CORRECTIVE' && (
-              <div className="rounded-xl border bg-white p-5">
+              <div className="rounded-hm border bg-white p-5">
                 <CorrectivePanel key={selected.id} task={selected} onSubmitted={() => load()} />
               </div>
             )}
@@ -605,7 +605,7 @@ export default function MaintenancePage() {
                 </div>
 
                 {(submitted === selected.id || (isComplete && !preventiveReport)) && (
-                  <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 mb-4 flex items-center gap-2">
+                  <div className="rounded-hm border border-green-200 bg-green-50 px-4 py-3 mb-4 flex items-center gap-2">
                     <FileText className="h-4 w-4 text-green-600 shrink-0"/>
                     <span className="text-sm text-green-700 font-semibold">Relatório preventivo submetido.</span>
                   </div>
@@ -613,7 +613,7 @@ export default function MaintenancePage() {
 
                 {/* Show submitted preventive report */}
                 {isComplete && preventiveReport && (
-                  <div className="rounded-xl border bg-white p-4 mb-4 space-y-3">
+                  <div className="rounded-hm border bg-white p-4 mb-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Relatório preventivo</h3>
                       <span className="text-xs text-gray-400">{preventiveReport.checkedCount}/{preventiveReport.totalCount} verificados</span>
@@ -652,7 +652,7 @@ export default function MaintenancePage() {
                 {!isComplete && sections.map(sec => (
                   <div key={sec.section} className="mb-4">
                     <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-2 px-1">{sec.section}</h3>
-                    <div className="rounded-xl border bg-white overflow-hidden divide-y">
+                    <div className="rounded-hm border bg-white overflow-hidden divide-y">
                       {sec.items.map(item => {
                         const state = checklist[item.id] ?? { checked: false, anomaly: false, note: '' }
                         const hasNote = expandedNote === item.id

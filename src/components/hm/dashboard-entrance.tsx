@@ -73,7 +73,7 @@ function TypewriterGreeting({
  */
 export function DashboardGreeting({
   nameOverride,
-  headingClass = "text-2xl sm:text-3xl font-bold text-navy-900",
+  headingClass = "text-2xl sm:text-3xl font-bold text-hm-black",
   dateClass = "text-sm text-gray-500 mt-1",
 }: {
   nameOverride?: string

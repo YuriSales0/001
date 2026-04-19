@@ -86,7 +86,7 @@ function PipelineDetail({ r, onClose }: { r: Reservation; onClose: ()=>void }) {
         </div>
         <div className="p-5 space-y-5">
           {/* Dates */}
-          <div className="rounded-xl border bg-blue-50 border-blue-200 p-4">
+          <div className="rounded-hm border bg-blue-50 border-blue-200 p-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <div className="text-xs text-gray-500 mb-1">{t('taskTypes.CHECK_IN')}</div>
@@ -315,7 +315,7 @@ export default function ReservationsPage() {
           {label:t('manager.reservations.completed'),value:completed,           icon:User,         color:"text-gray-600 bg-gray-100"},
           {label:t('common.revenue'),  value:fmtMoney(totalRev),  icon:DollarSign,   color:"text-amber-600 bg-amber-50"},
         ].map(({label,value,icon:Icon,color})=>(
-          <div key={label} className="rounded-xl border bg-white p-4 flex items-center gap-3">
+          <div key={label} className="rounded-hm border bg-white p-4 flex items-center gap-3">
             <div className={`rounded-lg p-2 ${color.split(" ")[1]}`}><Icon className={`h-5 w-5 ${color.split(" ")[0]}`}/></div>
             <div>
               <p className="text-xs text-gray-500">{label}</p>
@@ -347,10 +347,10 @@ export default function ReservationsPage() {
           <div className="space-y-3">
             {loading&&<div className="py-8 text-center text-sm text-gray-400">{t('common.loading')}</div>}
             {!loading&&filtered.length===0&&(
-              <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">{t('manager.reservations.noMatch')}</div>
+              <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">{t('manager.reservations.noMatch')}</div>
             )}
             {filtered.map(r=>(
-              <div key={r.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
+              <div key={r.id} className="rounded-hm border bg-white p-4 hover:shadow-sm transition-shadow">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-start gap-3 flex-1 min-w-0">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
@@ -433,8 +433,8 @@ export default function ReservationsPage() {
             {STATUS_COLS.map(col=>{
               const items = byStatus(col.id)
               return (
-                <div key={col.id} className={`flex flex-col w-72 rounded-xl border-2 bg-white flex-shrink-0 ${col.border}`}>
-                  <div className={`px-3 py-2.5 rounded-t-xl border-b ${col.header} flex items-center justify-between`}>
+                <div key={col.id} className={`flex flex-col w-72 rounded-hm border-2 bg-white flex-shrink-0 ${col.border}`}>
+                  <div className={`px-3 py-2.5 rounded-t-hm border-b ${col.header} flex items-center justify-between`}>
                     <span className="text-xs font-bold uppercase tracking-wider text-gray-600">{t(col.labelKey)}</span>
                     <span className="text-xs font-bold bg-white text-gray-500 rounded-full px-2 py-0.5 border">{items.length}</span>
                   </div>

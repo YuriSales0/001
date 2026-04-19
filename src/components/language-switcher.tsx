@@ -43,7 +43,7 @@ export function LanguageSwitcher({ currentLocale = "en", onChange }: LanguageSwi
               key={lang.code}
               onClick={() => handleChange(lang.code)}
               className={`flex w-full items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 ${
-                locale === lang.code ? "text-navy-900 font-medium" : "text-gray-600"
+                locale === lang.code ? "text-hm-black font-medium" : "text-gray-600"
               }`}
             >
               <span className="text-xs font-mono w-5">{lang.flag}</span>

@@ -57,7 +57,7 @@ export default function AdminDashboard() {
       <div className="space-y-6 animate-pulse p-6">
         <div className="h-10 rounded bg-gray-100 w-64" />
         <div className="grid grid-cols-4 gap-4">
-          {[...Array(8)].map((_, i) => <div key={i} className="h-24 rounded-xl bg-gray-100" />)}
+          {[...Array(8)].map((_, i) => <div key={i} className="h-24 rounded-hm bg-gray-100" />)}
         </div>
       </div>
     )
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
             <Link
               key={card.label}
               href={card.href}
-              className={`rounded-xl border bg-white p-4 hover:shadow-md transition-shadow ${
+              className={`rounded-hm border bg-white p-4 hover:shadow-md transition-shadow ${
                 card.danger ? "border-red-200 bg-red-50/30" : ""
               }`}
             >
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                 </span>
                 <Icon className={`h-4 w-4 ${card.color}`} />
               </div>
-              <div className={`text-2xl font-bold ${card.danger ? "text-red-600" : "text-navy-900"}`}>
+              <div className={`text-2xl font-bold ${card.danger ? "text-red-600" : "text-hm-black"}`}>
                 {card.value}
               </div>
               {card.sub && <div className="text-xs text-gray-400 mt-1">{card.sub}</div>}
@@ -181,11 +181,11 @@ export default function AdminDashboard() {
       {/* Today's operations */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 hm-animate-in hm-stagger-4">
         {/* Check-ins */}
-        <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="rounded-hm border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-navy-500" />
-              <span className="font-semibold text-navy-900 text-sm">{t("admin.dashboard.upcomingCheckIns7Days")}</span>
+              <span className="font-semibold text-hm-black text-sm">{t("admin.dashboard.upcomingCheckIns7Days")}</span>
             </div>
             <span className="text-xs text-gray-400">{stats.upcomingCheckIns.length}</span>
           </div>
@@ -208,11 +208,11 @@ export default function AdminDashboard() {
         </div>
 
         {/* Check-outs */}
-        <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="rounded-hm border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-green-500" />
-              <span className="font-semibold text-navy-900 text-sm">{t("admin.dashboard.upcomingCheckOuts7Days")}</span>
+              <span className="font-semibold text-hm-black text-sm">{t("admin.dashboard.upcomingCheckOuts7Days")}</span>
             </div>
             <span className="text-xs text-gray-400">{stats.upcomingCheckOuts.length}</span>
           </div>
@@ -236,14 +236,14 @@ export default function AdminDashboard() {
       </div>
 
       {/* Revenue breakdown */}
-      <div className="rounded-xl border bg-white p-4 hm-animate-in hm-stagger-5">
+      <div className="rounded-hm border bg-white p-4 hm-animate-in hm-stagger-5">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp className="h-4 w-4 text-navy-500" />
-          <span className="font-semibold text-navy-900 text-sm">{t("admin.dashboard.thisMonthAtAGlance")}</span>
+          <span className="font-semibold text-hm-black text-sm">{t("admin.dashboard.thisMonthAtAGlance")}</span>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div className="rounded-lg bg-gray-50 p-3">
-            <div className="text-xl font-bold text-navy-900">{fmtEUR(stats.rentalVolume)}</div>
+            <div className="text-xl font-bold text-hm-black">{fmtEUR(stats.rentalVolume)}</div>
             <div className="text-xs text-gray-400 mt-0.5">{t("admin.dashboard.rentalVolume")}</div>
           </div>
           <div className="rounded-lg bg-orange-50 p-3">
@@ -261,7 +261,7 @@ export default function AdminDashboard() {
         </div>
         <div className="mt-3 pt-3 border-t flex justify-between text-sm text-gray-500">
           <span>{t("admin.dashboard.pendingOwnerPayouts")}</span>
-          <span className="font-semibold text-navy-900">{fmtEUR(stats.openPayouts.net)}</span>
+          <span className="font-semibold text-hm-black">{fmtEUR(stats.openPayouts.net)}</span>
         </div>
       </div>
 

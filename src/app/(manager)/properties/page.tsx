@@ -59,12 +59,12 @@ export default function PropertiesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Properties</h1>
+          <h1 className="text-2xl font-bold text-hm-black">Properties</h1>
           <p className="text-sm text-gray-500">Manage and monitor all rental properties.</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+          className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
         >
           <Plus className="h-4 w-4" /> Add property
         </button>
@@ -76,12 +76,12 @@ export default function PropertiesPage() {
           <button
             key={s}
             onClick={() => setFilterStatus(filterStatus === s ? "all" : s)}
-            className={`rounded-xl border p-4 text-left transition-all hover:shadow-sm ${
+            className={`rounded-hm border p-4 text-left transition-all hover:shadow-sm ${
               filterStatus === s ? "ring-2 ring-navy-900" : "bg-white"
             }`}
           >
             <p className={`text-[10px] font-bold rounded px-1.5 py-0.5 inline-block mb-2 ${STATUS_COLOR[s]}`}>{s}</p>
-            <p className="text-2xl font-bold text-navy-900">{counts[s]}</p>
+            <p className="text-2xl font-bold text-hm-black">{counts[s]}</p>
           </button>
         ))}
       </div>
@@ -93,7 +93,7 @@ export default function PropertiesPage() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by name or city…"
-          className="rounded-lg border bg-white px-3 py-2 text-sm flex-1 min-w-[180px] max-w-xs focus:outline-none focus:ring-2 focus:ring-navy-900"
+          className="rounded-lg border bg-white px-3 py-2 text-sm flex-1 min-w-[180px] max-w-xs focus:outline-none focus:ring-2 focus:ring-hm-gold"
         />
         <select
           value={filterStatus}
@@ -112,12 +112,12 @@ export default function PropertiesPage() {
       <div className="space-y-3">
         {loading && <div className="py-8 text-center text-sm text-gray-400">Loading…</div>}
         {!loading && filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+          <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
             No properties match your filters.
           </div>
         )}
         {filtered.map(p => (
-          <div key={p.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
+          <div key={p.id} className="rounded-hm border bg-white p-4 hover:shadow-sm transition-shadow">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3 flex-1 min-w-0">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
@@ -125,7 +125,7 @@ export default function PropertiesPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-navy-900">{p.name}</span>
+                    <span className="font-semibold text-hm-black">{p.name}</span>
                     <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${STATUS_COLOR[p.status]}`}>
                       {p.status}
                     </span>
@@ -168,7 +168,7 @@ export default function PropertiesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowCreate(false)}>
           <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl p-6 text-center" onClick={e => e.stopPropagation()}>
             <Building2 className="mx-auto h-10 w-10 text-gray-400 mb-3" />
-            <h2 className="text-base font-bold text-navy-900 mb-1">Add a property</h2>
+            <h2 className="text-base font-bold text-hm-black mb-1">Add a property</h2>
             <p className="text-sm text-gray-500 mb-5">
               Use the full onboarding flow to register a new property with all details and OTA configuration.
             </p>
@@ -176,7 +176,7 @@ export default function PropertiesPage() {
               <button onClick={() => setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">
                 Cancel
               </button>
-              <a href="/onboarding" className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800">
+              <a href="/onboarding" className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90">
                 Go to onboarding
               </a>
             </div>

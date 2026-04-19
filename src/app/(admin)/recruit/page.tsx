@@ -95,7 +95,7 @@ export default function AdminRecruitPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-navy-900">Recruiting</h1>
+        <h1 className="text-2xl font-bold text-hm-black">Recruiting</h1>
         <p className="text-sm text-gray-500 mt-0.5">Applications from Managers and Crew.</p>
       </div>
 
@@ -109,7 +109,7 @@ export default function AdminRecruitPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3 bg-white rounded-xl border p-3">
+      <div className="flex flex-wrap items-center gap-3 bg-white rounded-hm border p-3">
         <Filter className="h-4 w-4 text-gray-400" />
         <select value={roleFilter} onChange={e => setRoleFilter(e.target.value as typeof roleFilter)} className="rounded-lg border px-3 py-1.5 text-sm">
           <option value="ALL">All roles</option>
@@ -127,7 +127,7 @@ export default function AdminRecruitPage() {
       {loading ? (
         <div className="text-center py-10 text-sm text-gray-400"><Loader2 className="h-4 w-4 inline animate-spin mr-2" />Loading…</div>
       ) : apps.length === 0 ? (
-        <div className="bg-white rounded-xl border p-10 text-center text-sm text-gray-400">
+        <div className="bg-white rounded-hm border p-10 text-center text-sm text-gray-400">
           No applications match the current filters.
         </div>
       ) : (
@@ -143,7 +143,7 @@ export default function AdminRecruitPage() {
                 <button
                   key={app.id}
                   onClick={() => setSelected(app)}
-                  className={`w-full text-left rounded-xl border bg-white p-4 hover:shadow-md transition-all ${isSelected ? "ring-2 ring-navy-700" : ""}`}
+                  className={`w-full text-left rounded-hm border bg-white p-4 hover:shadow-md transition-all ${isSelected ? "ring-2 ring-navy-700" : ""}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export default function AdminRecruitPage() {
                         <Icon className="h-4 w-4" style={{ color: "#B08A3E" }} />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-navy-900">{app.name}</p>
+                        <p className="text-sm font-semibold text-hm-black">{app.name}</p>
                         <p className="text-xs text-gray-500">{app.role} · {app.zone ?? "—"}</p>
                       </div>
                     </div>
@@ -171,7 +171,7 @@ export default function AdminRecruitPage() {
             {selected ? (
               <ApplicationDetail app={selected} onStatusChange={updateStatus} onConverted={load} />
             ) : (
-              <div className="bg-white rounded-xl border p-10 text-center text-sm text-gray-400">
+              <div className="bg-white rounded-hm border p-10 text-center text-sm text-gray-400">
                 Select an application to view details.
               </div>
             )}
@@ -184,7 +184,7 @@ export default function AdminRecruitPage() {
 
 function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="rounded-xl border bg-white p-4">
+    <div className="rounded-hm border bg-white p-4">
       <p className="text-xs uppercase tracking-wider text-gray-400 font-medium mb-1">{label}</p>
       <p className={`text-2xl font-bold ${color}`}>{value}</p>
     </div>
@@ -211,7 +211,7 @@ function ApplicationDetail({
   }
 
   return (
-    <div className="bg-white rounded-xl border overflow-hidden">
+    <div className="bg-white rounded-hm border overflow-hidden">
       {/* Header */}
       <div className="px-6 py-4 border-b flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
@@ -219,7 +219,7 @@ function ApplicationDetail({
             <Icon className="h-5 w-5" style={{ color: "#B08A3E" }} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-navy-900">{app.name}</h3>
+            <h3 className="text-lg font-bold text-hm-black">{app.name}</h3>
             <p className="text-xs text-gray-500">{app.role} · Applied {fmtDateTime(app.createdAt)}</p>
           </div>
         </div>
@@ -355,7 +355,7 @@ function ApplicationDetail({
           <button
             onClick={saveNotes}
             disabled={saving || notes === (app.adminNotes ?? "")}
-            className="rounded-lg bg-navy-900 text-white px-4 py-1.5 text-xs font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-lg bg-hm-black text-white px-4 py-1.5 text-xs font-semibold hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? "Saving…" : "Save notes"}
           </button>
@@ -437,7 +437,7 @@ function ConvertModal({
       >
         <div className="px-6 py-4 border-b flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold text-navy-900">Convert to {isManager ? "Manager" : "Crew"}</h3>
+            <h3 className="text-lg font-bold text-hm-black">Convert to {isManager ? "Manager" : "Crew"}</h3>
             <p className="text-xs text-gray-500">Creates a user account, generates a contract, and sends an invite email.</p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
@@ -448,7 +448,7 @@ function ConvertModal({
         <form onSubmit={submit} className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
           {/* Summary */}
           <div className="rounded-lg border bg-gray-50 p-4">
-            <p className="text-sm font-semibold text-navy-900">{app.name}</p>
+            <p className="text-sm font-semibold text-hm-black">{app.name}</p>
             <p className="text-xs text-gray-500 mt-0.5">
               {app.email}{app.zone ? ` · ${app.zone}` : ""}{app.phone ? ` · ${app.phone}` : ""}
             </p>
@@ -502,14 +502,14 @@ function ConvertModal({
                 <button
                   type="button"
                   onClick={() => setCrewContractType("MONTHLY")}
-                  className={`rounded-lg border px-3 py-2.5 text-sm font-semibold transition-colors ${crewContractType === "MONTHLY" ? "border-navy-700 bg-navy-50 text-navy-900" : "border-gray-200 hover:bg-gray-50 text-gray-600"}`}
+                  className={`rounded-lg border px-3 py-2.5 text-sm font-semibold transition-colors ${crewContractType === "MONTHLY" ? "border-navy-700 bg-navy-50 text-hm-black" : "border-gray-200 hover:bg-gray-50 text-gray-600"}`}
                 >
                   Monthly salary
                 </button>
                 <button
                   type="button"
                   onClick={() => setCrewContractType("FREELANCER")}
-                  className={`rounded-lg border px-3 py-2.5 text-sm font-semibold transition-colors ${crewContractType === "FREELANCER" ? "border-navy-700 bg-navy-50 text-navy-900" : "border-gray-200 hover:bg-gray-50 text-gray-600"}`}
+                  className={`rounded-lg border px-3 py-2.5 text-sm font-semibold transition-colors ${crewContractType === "FREELANCER" ? "border-navy-700 bg-navy-50 text-hm-black" : "border-gray-200 hover:bg-gray-50 text-gray-600"}`}
                 >
                   Per task
                 </button>

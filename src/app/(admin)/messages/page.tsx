@@ -72,7 +72,7 @@ export default function AdminMessagesPage() {
         </p>
       </div>
 
-      <div className="flex h-[calc(100vh-200px)] max-h-[650px] rounded-xl border bg-white overflow-hidden">
+      <div className="flex h-[calc(100vh-200px)] max-h-[650px] rounded-hm border bg-white overflow-hidden">
         {/* Sidebar */}
         <aside className="w-72 border-r flex flex-col shrink-0">
           <div className="p-3 border-b">

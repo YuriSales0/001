@@ -158,12 +158,12 @@ export default function ClientProperties() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">{t('client.properties.title')}</h1>
+          <h1 className="text-2xl font-bold text-hm-black">{t('client.properties.title')}</h1>
           <p className="text-sm text-gray-500">{t('client.properties.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+          className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
         >
           <Plus className="h-4 w-4" /> {t('client.properties.addProperty')}
         </button>
@@ -218,7 +218,7 @@ export default function ClientProperties() {
         <div className="rounded-xl border bg-white p-10 text-center">
           <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-3" />
           <p className="text-gray-500 mb-3">{t('client.properties.noProperties')}</p>
-          <button onClick={() => setShowAdd(true)} className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800">
+          <button onClick={() => setShowAdd(true)} className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90">
             {t('client.properties.requestFirst')}
           </button>
         </div>
@@ -242,7 +242,7 @@ export default function ClientProperties() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="text-base font-bold text-navy-900">{p.name}</h3>
+                    <h3 className="text-base font-bold text-hm-black">{p.name}</h3>
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${badge.cls}`}>{badge.label}</span>
                   </div>
                   <p className="text-sm text-gray-500 flex items-center gap-1">
@@ -315,7 +315,7 @@ export default function ClientProperties() {
           <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-navy-900">{t('client.properties.requestPropertyTitle')}</h2>
+                <h2 className="text-base font-bold text-hm-black">{t('client.properties.requestPropertyTitle')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('client.properties.requestPropertyDesc')}</p>
               </div>
               <button onClick={() => setShowAdd(false)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
@@ -333,26 +333,26 @@ export default function ClientProperties() {
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.propertyName')} *</label>
                 <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   placeholder={t('client.properties.propertyNamePlaceholder')}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.addressField')} *</label>
                 <input type="text" value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
                   placeholder={t('client.properties.addressPlaceholder')}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.city')} *</label>
                   <input type="text" value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
                     placeholder="Lisboa"
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{t('client.properties.postalCode')}</label>
                   <input type="text" value={form.postalCode} onChange={e => setForm(f => ({ ...f, postalCode: e.target.value }))}
                     placeholder="1000-001"
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
               </div>
 
@@ -371,7 +371,7 @@ export default function ClientProperties() {
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={() => setShowAdd(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
                 <button type="submit" disabled={addLoading}
-                  className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
+                  className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50">
                   {addLoading ? t('client.properties.submitting') : t('client.properties.submitRequest')}
                 </button>
               </div>

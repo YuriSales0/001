@@ -71,7 +71,7 @@ function KPI({ label, value, delta, sub }: { label: string; value: string; delta
   return (
     <div className="rounded-xl border bg-white p-5">
       <div className="text-xs uppercase text-gray-500">{label}</div>
-      <div className="text-2xl font-bold text-navy-900 mt-1">{value}</div>
+      <div className="text-2xl font-bold text-hm-black mt-1">{value}</div>
       <div className="flex items-center gap-2 mt-1">
         {delta !== undefined && <DeltaBadge value={delta} />}
         {sub && <span className="text-xs text-gray-400">{sub}</span>}
@@ -122,7 +122,7 @@ export default function ReportsPage() {
               key={opt.key}
               onClick={() => { setPreset(opt.key); if (opt.key !== 'custom') loadReport(opt.key) }}
               className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-                preset === opt.key ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                preset === opt.key ? 'bg-white text-hm-black shadow-sm' : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               {opt.label}
@@ -154,7 +154,7 @@ export default function ReportsPage() {
               <button
                 onClick={() => loadReport('custom', fromDate, toDate, compareFrom, compareTo)}
                 disabled={!fromDate || !toDate}
-                className="rounded-lg bg-navy-900 text-white px-4 py-2 text-xs font-semibold hover:bg-navy-800 disabled:opacity-40 self-end"
+                className="rounded-lg bg-hm-black text-white px-4 py-2 text-xs font-semibold hover:bg-hm-black/90 disabled:opacity-40 self-end"
               >
                 Aplicar
               </button>
@@ -167,7 +167,7 @@ export default function ReportsPage() {
 
   if (loading) return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+      <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
         <BarChart3 className="h-7 w-7 text-gray-400" /> Reports
       </h1>
       {periodSelector}
@@ -239,7 +239,7 @@ export default function ReportsPage() {
       <div className="p-6 space-y-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
               <BarChart3 className="h-7 w-7 text-gray-400" />
               Reports
             </h1>
@@ -273,11 +273,11 @@ export default function ReportsPage() {
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-xl border bg-white p-5">
             <div className="text-xs uppercase text-gray-500 mb-3">Propriedades activas</div>
-            <div className="text-3xl font-bold text-navy-900">{c.activeProperties}</div>
+            <div className="text-3xl font-bold text-hm-black">{c.activeProperties}</div>
           </div>
           <div className="rounded-xl border bg-white p-5">
             <div className="text-xs uppercase text-gray-500 mb-3">Clientes (owners)</div>
-            <div className="text-3xl font-bold text-navy-900">{c.totalClients}</div>
+            <div className="text-3xl font-bold text-hm-black">{c.totalClients}</div>
           </div>
         </div>
       </div>
@@ -293,7 +293,7 @@ export default function ReportsPage() {
       <div className="p-6 space-y-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-navy-900 flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-hm-black flex items-center gap-2">
               <BarChart3 className="h-7 w-7 text-gray-400" />
               O meu Report
             </h1>
@@ -316,11 +316,11 @@ export default function ReportsPage() {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <div className="text-xs text-gray-500">Assinaturas ({(rates.subscriptionShare * 100).toFixed(0)}%)</div>
-              <div className="text-xl font-bold text-navy-900 mt-0.5">{fmtEUR(c.managerEarnings.fromSubscriptions)}</div>
+              <div className="text-xl font-bold text-hm-black mt-0.5">{fmtEUR(c.managerEarnings.fromSubscriptions)}</div>
             </div>
             <div>
               <div className="text-xs text-gray-500">Comissões ({(rates.commissionShare * 100).toFixed(0)}%)</div>
-              <div className="text-xl font-bold text-navy-900 mt-0.5">{fmtEUR(c.managerEarnings.fromCommissions)}</div>
+              <div className="text-xl font-bold text-hm-black mt-0.5">{fmtEUR(c.managerEarnings.fromCommissions)}</div>
             </div>
             <div>
               <div className="text-xs text-[#92681a] font-semibold">Total</div>

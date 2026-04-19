@@ -177,12 +177,12 @@ export default function PropertiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-navy-900">Propriedades</h1>
+          <h1 className="text-3xl font-bold text-hm-black">Propriedades</h1>
           <p className="text-sm text-gray-600">Gere propriedades, aprova pedidos e conecta calendários OTA.</p>
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+          className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
         >
           <Plus className="h-4 w-4" /> Nova Propriedade
         </button>
@@ -190,7 +190,7 @@ export default function PropertiesPage() {
 
       {/* Pending banners */}
       {pendingClient.length > 0 && (
-        <div className="rounded-xl border border-violet-200 bg-violet-50 p-4 flex items-center gap-3">
+        <div className="rounded-hm border border-violet-200 bg-violet-50 p-4 flex items-center gap-3">
           <Clock className="h-5 w-5 text-violet-600 shrink-0" />
           <div className="text-sm text-violet-800">
             <span className="font-semibold">{pendingClient.length} propriedade{pendingClient.length > 1 ? 's' : ''}</span> aguardam confirmação do cliente — o cliente deve confirmar os dados antes de prosseguir.
@@ -198,7 +198,7 @@ export default function PropertiesPage() {
         </div>
       )}
       {pendingApproval.length > 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-center gap-3">
+        <div className="rounded-hm border border-amber-200 bg-amber-50 p-4 flex items-center gap-3">
           <Clock className="h-5 w-5 text-amber-600 shrink-0" />
           <div className="text-sm text-amber-800">
             <span className="font-semibold">{pendingApproval.length} propriedade{pendingApproval.length > 1 ? 's' : ''}</span> prontas para configurar — conecta os calendários OTA e ativa.
@@ -223,10 +223,10 @@ export default function PropertiesPage() {
             const isPending = isPendingClient || isPendingApproval
 
             return (
-              <div key={p.id} className={`rounded-xl border bg-white overflow-hidden ${isPending ? 'border-amber-300' : ''}`}>
+              <div key={p.id} className={`rounded-hm border bg-white overflow-hidden ${isPending ? 'border-amber-300' : ''}`}>
                 <div className="p-6 border-b flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="text-xl font-bold text-navy-900">{p.name}</h3>
+                    <h3 className="text-xl font-bold text-hm-black">{p.name}</h3>
                     <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
                       <MapPin className="h-4 w-4" /> {p.address}, {p.city}
                     </p>
@@ -253,7 +253,7 @@ export default function PropertiesPage() {
                 {/* House Rules — read-only display */}
                 {(p.houseRules ?? []).length > 0 && (
                   <div className="px-6 pt-4 pb-2">
-                    <div className="text-sm font-semibold text-navy-900 mb-2">House Rules</div>
+                    <div className="text-sm font-semibold text-hm-black mb-2">House Rules</div>
                     <div className="flex flex-wrap gap-1.5">
                       {getSelectedRuleLabels(p.houseRules).map(r => (
                         <span key={r.key} className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700">
@@ -267,7 +267,7 @@ export default function PropertiesPage() {
                 {/* iCal integration — only for ACTIVE properties inline */}
                 {!isPending && (
                   <div className="p-6 space-y-4">
-                    <div className="text-sm font-semibold text-navy-900 flex items-center gap-2">
+                    <div className="text-sm font-semibold text-hm-black flex items-center gap-2">
                       <Link2 className="h-4 w-4" /> Calendários iCal
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -298,7 +298,7 @@ export default function PropertiesPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <button onClick={() => saveUrls(p.id)} disabled={saving === p.id}
-                        className="rounded-md bg-navy-900 text-white px-4 py-2 text-sm hover:bg-navy-800 disabled:opacity-50">
+                        className="rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90 disabled:opacity-50">
                         {saving === p.id ? 'A guardar…' : 'Guardar URLs'}
                       </button>
                       <button onClick={() => sync(p.id)} disabled={syncing === p.id || (!p.airbnbIcalUrl && !p.bookingIcalUrl)}
@@ -328,7 +328,7 @@ export default function PropertiesPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-navy-900">Nova Propriedade</h2>
+                <h2 className="text-base font-bold text-hm-black">Nova Propriedade</h2>
                 <p className="text-xs text-gray-500 mt-0.5">Como Admin, a propriedade fica ativa imediatamente.</p>
               </div>
               <button onClick={() => setShowAdd(false)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>
@@ -338,34 +338,34 @@ export default function PropertiesPage() {
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Nome *</label>
                 <input type="text" value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" placeholder="Apartamento T2 Lisboa" />
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="Apartamento T2 Lisboa" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Morada *</label>
                   <input type="text" value={addForm.address} onChange={e => setAddForm(f => ({ ...f, address: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" placeholder="Rua, número" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="Rua, número" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Cidade *</label>
                   <input type="text" value={addForm.city} onChange={e => setAddForm(f => ({ ...f, city: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" placeholder="Lisboa" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="Lisboa" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Código Postal</label>
                   <input type="text" value={addForm.postalCode} onChange={e => setAddForm(f => ({ ...f, postalCode: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" placeholder="1000-001" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="1000-001" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Comissão (%)</label>
                   <input type="number" min="0" max="100" step="0.5" value={addForm.commissionRate} onChange={e => setAddForm(f => ({ ...f, commissionRate: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Proprietário *</label>
                 <select value={addForm.ownerId} onChange={e => setAddForm(f => ({ ...f, ownerId: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900">
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                   <option value="">Seleciona o proprietário…</option>
                   {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email} ({c.email})</option>)}
                 </select>
@@ -373,7 +373,7 @@ export default function PropertiesPage() {
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={() => setShowAdd(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancelar</button>
                 <button type="submit" disabled={addLoading}
-                  className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
+                  className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50">
                   {addLoading ? 'A criar…' : 'Criar e Ativar'}
                 </button>
               </div>
@@ -388,7 +388,7 @@ export default function PropertiesPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-start justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-navy-900">Aprovar Propriedade</h2>
+                <h2 className="text-base font-bold text-hm-black">Aprovar Propriedade</h2>
                 <p className="text-sm text-gray-500">{approveState.property.name} · {approveState.property.owner.name ?? approveState.property.owner.email}</p>
               </div>
               <button onClick={() => setApproveState(null)} className="rounded-md p-1 hover:bg-gray-100"><X className="h-5 w-5" /></button>

@@ -27,8 +27,8 @@ export default function ManagerPayouts() {
   }, [])
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-3xl font-bold text-navy-900">Payouts (my clients)</h1>
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <h1 className="text-3xl font-bold text-hm-black">Payouts (my clients)</h1>
+      <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">

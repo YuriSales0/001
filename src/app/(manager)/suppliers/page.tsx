@@ -101,12 +101,12 @@ export default function SuppliersPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">{t('common.suppliers')}</h1>
+          <h1 className="text-2xl font-bold text-hm-black">{t('common.suppliers')}</h1>
           <p className="text-sm text-gray-500">{t('manager.suppliers.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+          className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
         >
           <Plus className="h-4 w-4" /> {t('manager.suppliers.addSupplier')}
         </button>
@@ -121,7 +121,7 @@ export default function SuppliersPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder={t('manager.suppliers.searchSuppliers')}
-            className="w-full rounded-lg border bg-white pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+            className="w-full rounded-lg border bg-white pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
           />
         </div>
         <select
@@ -138,7 +138,7 @@ export default function SuppliersPage() {
       {loading && (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-20 rounded-xl bg-gray-100 animate-pulse" />
+            <div key={i} className="h-20 rounded-hm bg-gray-100 animate-pulse" />
           ))}
         </div>
       )}
@@ -147,12 +147,12 @@ export default function SuppliersPage() {
       {!loading && (
         <div className="space-y-3">
           {filtered.length === 0 && (
-            <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+            <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
               {suppliers.length === 0 ? t('manager.suppliers.noSuppliers') : t('manager.suppliers.noMatch')}
             </div>
           )}
           {filtered.map(s => (
-            <div key={s.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
+            <div key={s.id} className="rounded-hm border bg-white p-4 hover:shadow-sm transition-shadow">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-3 flex-1 min-w-0">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100">
@@ -160,7 +160,7 @@ export default function SuppliersPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-navy-900">{s.name}</span>
+                      <span className="font-semibold text-hm-black">{s.name}</span>
                       <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${TYPE_COLOR[s.type]}`}>
                         {t(TYPE_LABEL_KEYS[s.type])}
                       </span>
@@ -207,7 +207,7 @@ export default function SuppliersPage() {
           <div className="w-full max-w-md rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-navy-900">{t('manager.suppliers.newSupplier')}</h2>
+                <h2 className="text-base font-bold text-hm-black">{t('manager.suppliers.newSupplier')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('manager.suppliers.addVendor')}</p>
               </div>
               <button onClick={() => setShowCreate(false)} className="rounded-md p-1 hover:bg-gray-100">
@@ -221,13 +221,13 @@ export default function SuppliersPage() {
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.name')} *</label>
                 <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                   placeholder="Company or individual name" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.suppliers.type')}</label>
                 <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value as SupplierType }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900">
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
                   {TYPES.map(tp => <option key={tp} value={tp}>{t(TYPE_LABEL_KEYS[tp])}</option>)}
                 </select>
               </div>
@@ -235,25 +235,25 @@ export default function SuppliersPage() {
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')} *</label>
                   <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                     placeholder="+34 6xx xxx xxx" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.suppliers.email')}</label>
                   <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                     placeholder="email@example.com" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.notes')}</label>
                 <input type="text" value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                   placeholder="Any relevant notes" />
               </div>
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={() => setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
-                <button type="submit" disabled={saving} className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="submit" disabled={saving} className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
                   {saving ? t('manager.suppliers.saving') : t('manager.suppliers.addSupplier')}
                 </button>
               </div>

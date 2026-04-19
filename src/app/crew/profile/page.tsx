@@ -84,7 +84,7 @@ export default function CrewProfilePage() {
   return (
     <div className="space-y-6 p-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-navy-900">{t('common.myProfile')}</h1>
+        <h1 className="text-2xl font-bold text-hm-black">{t('common.myProfile')}</h1>
         <p className="text-sm text-gray-500">{t('crew.profile.roleDesc')}</p>
       </div>
 
@@ -107,7 +107,7 @@ export default function CrewProfilePage() {
           </div>
           <div>
             <p className="text-xs text-gray-500">{t('crew.profile.yourTaskRate')}</p>
-            <p className="text-2xl font-bold text-navy-900">{profile.commissionRate}%</p>
+            <p className="text-2xl font-bold text-hm-black">{profile.commissionRate}%</p>
           </div>
           <div className="ml-auto text-xs text-gray-400">{t('crew.profile.setByAdmin')}</div>
         </div>
@@ -137,7 +137,7 @@ export default function CrewProfilePage() {
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
           </div>
           <div>
-            <p className="font-semibold text-navy-900">{profile?.name ?? profile?.email}</p>
+            <p className="font-semibold text-hm-black">{profile?.name ?? profile?.email}</p>
             <p className="text-xs text-gray-500">{profile?.email}</p>
             <span className="mt-1 inline-block rounded px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800">CREW</span>
           </div>
@@ -147,18 +147,18 @@ export default function CrewProfilePage() {
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-semibold text-gray-700 mb-1">{t('profile.fullName')}</label>
             <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')}</label>
             <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="+34 600 000 000" />
           </div>
           <div className="col-span-2">
             <label className="block text-xs font-semibold text-gray-700 mb-1">{t('crew.profile.bio')}</label>
             <textarea rows={3} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 resize-none"
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none"
               placeholder={t('crew.profile.bioPlaceholder')} />
           </div>
         </div>
@@ -167,7 +167,7 @@ export default function CrewProfilePage() {
         <div className="flex items-center justify-between pt-1">
           {saved && <span className="text-sm text-green-600 font-medium">{t('profile.savedSuccessfully')}</span>}
           <button type="submit" disabled={saving}
-            className="ml-auto inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
+            className="ml-auto inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50">
             <Save className="h-4 w-4" /> {saving ? t('profile.saving') : t('profile.saveChanges')}
           </button>
         </div>
@@ -177,7 +177,7 @@ export default function CrewProfilePage() {
       <form onSubmit={savePassword} className="rounded-xl border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-semibold text-navy-900">{t('profile.changePassword')}</span>
+          <span className="text-sm font-semibold text-hm-black">{t('profile.changePassword')}</span>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[[t('profile.currentPassword'), "current"], [t('profile.newPassword'), "next"], [t('profile.confirmNew'), "confirm"]].map(([label, key]) => (
@@ -185,7 +185,7 @@ export default function CrewProfilePage() {
               <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
               <input type="password" value={pw[key as keyof typeof pw]}
                 onChange={e => setPw(p => ({ ...p, [key]: e.target.value }))}
-                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
           ))}
         </div>
@@ -270,7 +270,7 @@ function ScoreSection({ score }: { score: ScoreData }) {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold text-navy-900">{score.currentScore}</p>
+            <p className="text-3xl font-bold text-hm-black">{score.currentScore}</p>
             <p className="text-xs text-gray-400">{t('crew.profile.points')}</p>
           </div>
         </div>
@@ -292,7 +292,7 @@ function ScoreSection({ score }: { score: ScoreData }) {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-4">
           <div className="rounded-lg bg-gray-50 p-3 text-center">
-            <p className="text-lg font-bold text-navy-900">{score.totalTasks}</p>
+            <p className="text-lg font-bold text-hm-black">{score.totalTasks}</p>
             <p className="text-[10px] text-gray-500">{t('crew.profile.totalTasks')}</p>
           </div>
           <div className="rounded-lg bg-green-50 p-3 text-center">

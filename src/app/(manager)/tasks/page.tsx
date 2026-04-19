@@ -164,7 +164,7 @@ export default function TasksPage() {
     <div className="space-y-6 p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">{t('common.tasks')}</h1>
+          <h1 className="text-2xl font-bold text-hm-black">{t('common.tasks')}</h1>
           <p className="text-sm text-gray-500">
             {t('manager.tasks.subtitle')}
           </p>
@@ -179,7 +179,7 @@ export default function TasksPage() {
           </button>
           <button
             onClick={() => setShowCreate(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
+            className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
           >
             <Plus className="h-4 w-4" /> {t('manager.tasks.newTask')}
           </button>
@@ -222,7 +222,7 @@ export default function TasksPage() {
       <div className="space-y-3">
         {loading && <div className="py-8 text-center text-sm text-gray-400">{t('common.loading')}</div>}
         {!loading && filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
+          <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
             {t('manager.tasks.noMatch')}
           </div>
         )}
@@ -231,13 +231,13 @@ export default function TasksPage() {
           const StatusIcon = cfg.icon
           const overdue = task.status !== "COMPLETED" && new Date(task.dueDate) < new Date()
           return (
-            <div key={task.id} className="rounded-xl border bg-white p-4 hover:shadow-sm transition-shadow">
+            <div key={task.id} className="rounded-hm border bg-white p-4 hover:shadow-sm transition-shadow">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-3 flex-1 min-w-0">
                   <StatusIcon className={`mt-0.5 h-5 w-5 shrink-0 ${cfg.color}`} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-navy-900">{task.title}</span>
+                      <span className="font-semibold text-hm-black">{task.title}</span>
                       <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${TYPE_COLOR[task.type]}`}>
                         {t(TYPE_LABEL_KEY[task.type])}
                       </span>
@@ -282,7 +282,7 @@ export default function TasksPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-navy-900">{t('manager.tasks.newTask')}</h2>
+                <h2 className="text-base font-bold text-hm-black">{t('manager.tasks.newTask')}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">{t('manager.tasks.dispatchSubtitle')}</p>
               </div>
               <button onClick={() => setShowCreate(false)} className="rounded-md p-1 hover:bg-gray-100">
@@ -298,7 +298,7 @@ export default function TasksPage() {
                 <select
                   value={form.propertyId}
                   onChange={e => setForm(f => ({ ...f, propertyId: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                 >
                   <option value="">{t('manager.tasks.selectProperty')}</option>
                   {properties.map(p => (
@@ -311,7 +311,7 @@ export default function TasksPage() {
                 <select
                   value={form.type}
                   onChange={e => setForm(f => ({ ...f, type: e.target.value as TaskType }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                 >
                   {Object.entries(TYPE_LABEL_KEY).map(([k, l]) => (
                     <option key={k} value={k}>{t(l)}</option>
@@ -324,7 +324,7 @@ export default function TasksPage() {
                   type="text"
                   value={form.title}
                   onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                   placeholder="e.g. Pre-arrival inspection"
                 />
               </div>
@@ -334,7 +334,7 @@ export default function TasksPage() {
                   rows={2}
                   value={form.description}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                   placeholder="Optional context for the crew"
                 />
               </div>
@@ -345,7 +345,7 @@ export default function TasksPage() {
                     type="datetime-local"
                     value={form.dueDate}
                     onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                   />
                 </div>
                 <div>
@@ -353,7 +353,7 @@ export default function TasksPage() {
                   <select
                     value={form.assigneeId}
                     onChange={e => setForm(f => ({ ...f, assigneeId: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                   >
                     <option value="">{t('manager.tasks.autoAssign')}</option>
                     {crew.map(c => (
@@ -369,7 +369,7 @@ export default function TasksPage() {
                 <button
                   type="submit"
                   disabled={creating}
-                  className="rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {creating ? t('manager.tasks.creating') : t('manager.tasks.dispatchTask')}
                 </button>

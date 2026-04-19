@@ -20,7 +20,7 @@ export default function ManagerClients() {
   }, [])
   if (loading) return (
     <div className="p-6 space-y-4">
-      <h1 className="text-3xl font-bold text-navy-900">{t('manager.clientsPage.title')}</h1>
+      <h1 className="text-3xl font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
       <div className="space-y-4 animate-pulse">
         <div className="h-8 rounded bg-gray-100 w-48" />
         <div className="h-40 rounded-xl bg-gray-100" />
@@ -32,11 +32,11 @@ export default function ManagerClients() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h1 className="text-3xl font-bold text-navy-900">{t('manager.clientsPage.title')}</h1>
+        <h1 className="text-3xl font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
         {clients.length > 0 && (
           <Link
             href="/manager/clients/invite"
-            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90"
           >
             <UserPlus className="h-4 w-4" /> {t('manager.clientsPage.inviteBtn')}
           </Link>
@@ -63,7 +63,7 @@ export default function ManagerClients() {
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-1">{t('manager.clientsPage.emptyTitle')}</h3>
                   <p className="text-sm text-gray-500 mb-4">{t('manager.clientsPage.emptyBody')}</p>
-                  <Link href="/manager/clients/invite" className="inline-flex items-center gap-2 rounded-lg bg-navy-900 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800">
+                  <Link href="/manager/clients/invite" className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90">
                     {t('manager.clientsPage.inviteFirst')}
                   </Link>
                 </div>

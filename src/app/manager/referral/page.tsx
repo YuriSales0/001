@@ -86,10 +86,10 @@ export default function ManagerReferralPage() {
     return (
       <div className="p-6 space-y-6 animate-pulse">
         <div className="h-10 rounded bg-gray-100 w-64" />
-        <div className="h-32 rounded-xl bg-gray-100" />
+        <div className="h-32 rounded-hm bg-gray-100" />
         <div className="grid grid-cols-2 gap-3">
-          <div className="h-24 rounded-xl bg-gray-100" />
-          <div className="h-24 rounded-xl bg-gray-100" />
+          <div className="h-24 rounded-hm bg-gray-100" />
+          <div className="h-24 rounded-hm bg-gray-100" />
         </div>
       </div>
     )
@@ -108,7 +108,7 @@ export default function ManagerReferralPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-navy-900">{t('manager.referralPage.title')}</h1>
+        <h1 className="text-2xl font-bold text-hm-black">{t('manager.referralPage.title')}</h1>
         <p className="text-sm text-gray-500 mt-0.5">
           {t('manager.referralPage.subtitle')}
         </p>
@@ -215,8 +215,8 @@ export default function ManagerReferralPage() {
       </div>
 
       {/* How it works */}
-      <div className="rounded-xl border bg-white p-6">
-        <h3 className="font-semibold text-navy-900 mb-3">{t('manager.referralPage.howTitle')}</h3>
+      <div className="rounded-hm border bg-white p-6">
+        <h3 className="font-semibold text-hm-black mb-3">{t('manager.referralPage.howTitle')}</h3>
         <ol className="space-y-3 text-sm">
           <Step n={1}>
             {t('manager.referralPage.howStep1')}
@@ -234,8 +234,8 @@ export default function ManagerReferralPage() {
       </div>
 
       {/* Pre-written message */}
-      <div className="rounded-xl border bg-gray-50 p-6">
-        <h3 className="font-semibold text-navy-900 mb-3">{t('manager.referralPage.pitchTitle')}</h3>
+      <div className="rounded-hm border bg-gray-50 p-6">
+        <h3 className="font-semibold text-hm-black mb-3">{t('manager.referralPage.pitchTitle')}</h3>
         <p className="text-xs text-gray-500 mb-2">{t('manager.referralPage.pitchIntro')}</p>
         <div className="rounded-lg bg-white border p-4 text-sm text-gray-700 whitespace-pre-wrap mb-3">
           {t('manager.referralPage.pitchBody').replace('{url}', data.referralUrl)}
@@ -263,14 +263,14 @@ function StatCard({ icon: Icon, label, value, hint, color }: {
   color: string
 }) {
   return (
-    <div className="rounded-xl border bg-white p-5">
+    <div className="rounded-hm border bg-white p-5">
       <div className="flex items-center gap-2 mb-2">
         <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: color + "20" }}>
           <Icon className="h-4 w-4" style={{ color }} />
         </div>
         <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">{label}</p>
       </div>
-      <p className="text-3xl font-bold text-navy-900">{value}</p>
+      <p className="text-3xl font-bold text-hm-black">{value}</p>
       <p className="text-xs text-gray-500 mt-1">{hint}</p>
     </div>
   )
@@ -279,7 +279,7 @@ function StatCard({ icon: Icon, label, value, hint, color }: {
 function Step({ n, children }: { n: number; children: React.ReactNode }) {
   return (
     <li className="flex gap-3">
-      <span className="shrink-0 h-6 w-6 rounded-full bg-navy-900 text-white flex items-center justify-center text-xs font-bold">
+      <span className="shrink-0 h-6 w-6 rounded-full bg-hm-black text-white flex items-center justify-center text-xs font-bold">
         {n}
       </span>
       <span className="text-gray-700 pt-0.5">{children}</span>

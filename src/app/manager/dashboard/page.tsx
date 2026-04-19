@@ -116,7 +116,7 @@ export default function ManagerDashboard() {
               <Link
                 key={card.label}
                 href={card.href}
-                className={`rounded-xl border bg-white p-4 hover:shadow-md transition-shadow ${
+                className={`rounded-hm border bg-white p-4 hover:shadow-md transition-shadow ${
                   card.danger ? "border-red-200 bg-red-50/30" : ""
                 }`}
               >
@@ -126,7 +126,7 @@ export default function ManagerDashboard() {
                   </span>
                   <Icon className={`h-4 w-4 shrink-0 ${card.color}`} />
                 </div>
-                <div className={`text-2xl font-bold ${card.danger ? "text-red-600" : "text-navy-900"}`}>
+                <div className={`text-2xl font-bold ${card.danger ? "text-red-600" : "text-hm-black"}`}>
                   {card.value}
                 </div>
               </Link>
@@ -136,7 +136,7 @@ export default function ManagerDashboard() {
       ) : (
         <div className="grid grid-cols-5 gap-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl bg-gray-100 animate-pulse" />
+            <div key={i} className="h-24 rounded-hm bg-gray-100 animate-pulse" />
           ))}
         </div>
       )}
@@ -180,7 +180,7 @@ export default function ManagerDashboard() {
         ].map(item => {
           const Icon = item.icon
           return (
-            <div key={item.label} className={`rounded-xl border p-4 ${item.color}`}>
+            <div key={item.label} className={`rounded-hm border p-4 ${item.color}`}>
               <div className="flex items-center gap-2 mb-2">
                 <Icon className="h-4 w-4" />
                 <span className="text-xs font-semibold uppercase tracking-wider">{item.label}</span>
@@ -193,10 +193,10 @@ export default function ManagerDashboard() {
 
       {/* Check-ins & Check-outs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 hm-animate-in hm-stagger-4">
-        <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="rounded-hm border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center gap-2">
             <Clock className="h-4 w-4 text-navy-500" />
-            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.upcomingCheckIns')}</span>
+            <span className="font-semibold text-hm-black text-sm">{t('manager.dashboardPage.upcomingCheckIns')}</span>
           </div>
           <div className="divide-y max-h-64 overflow-auto">
             {!stats?.upcomingCheckIns.length && (
@@ -216,10 +216,10 @@ export default function ManagerDashboard() {
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white overflow-hidden">
+        <div className="rounded-hm border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-green-500" />
-            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.upcomingCheckOuts')}</span>
+            <span className="font-semibold text-hm-black text-sm">{t('manager.dashboardPage.upcomingCheckOuts')}</span>
           </div>
           <div className="divide-y max-h-64 overflow-auto">
             {!stats?.upcomingCheckOuts.length && (
@@ -243,10 +243,10 @@ export default function ManagerDashboard() {
       {/* Alerts legend + Quick actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 hm-animate-in hm-stagger-5">
         {/* Alert types */}
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-3">
             <Bell className="h-4 w-4 text-navy-500" />
-            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.alertStatus')}</span>
+            <span className="font-semibold text-hm-black text-sm">{t('manager.dashboardPage.alertStatus')}</span>
           </div>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 text-red-600">
@@ -265,10 +265,10 @@ export default function ManagerDashboard() {
         </div>
 
         {/* Quick actions */}
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="h-4 w-4 text-navy-500" />
-            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.quickActions')}</span>
+            <span className="font-semibold text-hm-black text-sm">{t('manager.dashboardPage.quickActions')}</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {[

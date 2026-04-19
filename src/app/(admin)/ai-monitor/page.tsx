@@ -143,7 +143,7 @@ export default async function AiMonitorPage() {
       <div>
         <div className="flex items-center gap-2 mb-1">
           <ShieldCheck className="h-5 w-5 text-navy-700" />
-          <h1 className="text-2xl font-bold text-navy-900">AI Monitor</h1>
+          <h1 className="text-2xl font-bold text-hm-black">AI Monitor</h1>
         </div>
         <p className="text-sm text-gray-500">
           Verificação automática de consistência da base de dados · Sem ligação Claude API por agora — só lógica de detecção
@@ -163,7 +163,7 @@ export default async function AiMonitorPage() {
           {CHECKS_BY_SECTION.map(group => {
             const SectionIcon = group.icon
             return (
-              <div key={group.section} className="rounded-xl border bg-white overflow-hidden">
+              <div key={group.section} className="rounded-hm border bg-white overflow-hidden">
                 <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b">
                   <SectionIcon className="h-4 w-4 text-gray-500" />
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-500">{group.section}</span>
@@ -202,12 +202,12 @@ export default async function AiMonitorPage() {
           Histórico de alertas persistidos
         </p>
         {history.length === 0 ? (
-          <div className="rounded-xl border bg-white py-10 text-center text-sm text-gray-400">
+          <div className="rounded-hm border bg-white py-10 text-center text-sm text-gray-400">
             <ShieldCheck className="h-6 w-6 mx-auto mb-2 text-gray-200" />
             Sem alertas guardados. Os alertas serão persistidos quando o cron AI Monitor for activado.
           </div>
         ) : (
-          <div className="rounded-xl border bg-white overflow-hidden divide-y">
+          <div className="rounded-hm border bg-white overflow-hidden divide-y">
             {history.map(a => (
               <div key={a.id} className="flex items-start gap-3 px-4 py-3">
                 <div className="mt-0.5 shrink-0">

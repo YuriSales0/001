@@ -43,7 +43,7 @@ export function ProfileContractSection() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold text-navy-900 flex items-center gap-2">
+      <h2 className="text-lg font-bold text-hm-black flex items-center gap-2">
         <FileText className="h-5 w-5 text-gray-400" />
         {t('contracts.myContract')}
       </h2>
