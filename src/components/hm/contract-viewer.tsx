@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { FileText, CheckCircle2, Loader2, Printer, Clock, AlertTriangle } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
+import { intlLocale, type Locale } from "@/i18n"
 
 type Contract = {
   id: string
@@ -36,7 +37,7 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
   const [error, setError] = useState("")
 
   const fmtDate = (s: string) =>
-    new Date(s).toLocaleDateString(locale === 'en' ? 'en-GB' : `${locale}-${locale.toUpperCase()}`, {
+    new Date(s).toLocaleDateString(intlLocale(locale as Locale), {
       day: '2-digit', month: 'long', year: 'numeric',
     })
 
@@ -64,7 +65,7 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
     w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
       <title>${contract.title}</title>
       <style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a1a1a;line-height:1.7}
-      h1{font-size:22px;border-bottom:2px solid #B08A3E;padding-bottom:8px}
+      h1{font-size:22px;border-bottom:2px solid #B08A3E;padding-bottom:8px;color:#0B1E3A}
       .meta{font-size:13px;color:#666;margin-bottom:24px}
       .signed{margin-top:32px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px}
       </style></head><body>
@@ -81,11 +82,11 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
     text.split("\n").map((line, i) => {
       if (!line.trim()) return <br key={i} />
       if (/^#{1,3}\s/.test(line))
-        return <p key={i} className="font-bold text-[#0a1628] mt-5 mb-1 text-sm">{line.replace(/^#{1,3}\s/, '')}</p>
+        return <p key={i} className="font-bold mt-5 mb-1 text-sm" style={{ color: 'var(--hm-black)' }}>{line.replace(/^#{1,3}\s/, '')}</p>
       if (/^\d+\.\s/.test(line))
-        return <p key={i} className="font-semibold text-[#0a1628] mt-4 mb-1">{line}</p>
+        return <p key={i} className="font-semibold mt-4 mb-1" style={{ color: 'var(--hm-black)' }}>{line}</p>
       if (line === line.toUpperCase() && line.trim().length > 3)
-        return <p key={i} className="font-bold text-[#0a1628] mt-5 mb-1 text-sm uppercase tracking-wide">{line}</p>
+        return <p key={i} className="font-bold mt-5 mb-1 text-sm uppercase tracking-wide" style={{ color: 'var(--hm-black)' }}>{line}</p>
       return <p key={i} className="text-sm leading-relaxed text-gray-700">{line}</p>
     })
 
@@ -94,10 +95,10 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
   const StatusIcon = statusMeta.icon
 
   return (
-    <div className="rounded-xl border border-[#0a1628]/10 overflow-hidden shadow-sm">
+    <div className="rounded-xl border overflow-hidden shadow-sm" style={{ borderColor: 'rgba(11,30,58,0.1)' }}>
       {/* Header */}
-      <div className="px-6 py-4 flex items-center gap-3" style={{ background: "#0a1628" }}>
-        <FileText className="h-5 w-5 text-[#c9a84c] shrink-0" />
+      <div className="px-6 py-4 flex items-center gap-3" style={{ background: 'var(--hm-black)' }}>
+        <FileText className="h-5 w-5 shrink-0" style={{ color: 'var(--hm-gold)' }} />
         <div className="flex-1 min-w-0">
           <h3 className="font-serif font-bold text-white text-lg truncate">{contract.title}</h3>
           <p className="text-xs text-white/60 font-sans">{t('contracts.serviceAgreement')}</p>
@@ -159,8 +160,8 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
             <button
               onClick={sign}
               disabled={signing}
-              className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold text-[#0a1628] transition-all hover:brightness-110 disabled:opacity-50"
-              style={{ background: "#c9a84c" }}
+              className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition-all hover:brightness-110 disabled:opacity-50"
+              style={{ background: 'var(--hm-gold)', color: 'var(--hm-black)' }}
             >
               {signing ? <><Loader2 className="h-4 w-4 animate-spin" /> {t('contracts.signing')}</> : <><FileText className="h-4 w-4" /> {t('contracts.signAgreement')}</>}
             </button>

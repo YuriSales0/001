@@ -121,7 +121,7 @@ export default function CrewProfilePage() {
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center"
-                 style={{ border: '3px solid #B08A3E' }}>
+                 style={{ border: '3px solid var(--hm-gold)' }}>
               {form.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={form.image} alt="" className="h-full w-full object-cover" />
@@ -131,7 +131,7 @@ export default function CrewProfilePage() {
             </div>
             <button type="button" onClick={() => fileRef.current?.click()}
               className="absolute -bottom-1 -right-1 rounded-full p-1.5 text-white shadow"
-              style={{ background: '#B08A3E' }}>
+              style={{ background: 'var(--hm-gold)' }}>
               <Camera className="h-3.5 w-3.5" />
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
@@ -283,7 +283,7 @@ function ScoreSection({ score }: { score: ScoreData }) {
               <span>{levelLabels[nextLevel]?.label} ({config.next})</span>
             </div>
             <div className="h-2 rounded-full bg-gray-100">
-              <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: '#B08A3E' }} />
+              <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: 'var(--hm-gold)' }} />
             </div>
             <p className="text-[10px] text-gray-500 mt-1">{config.next - score.currentScore} {t('crew.profile.pointsToNextLevel')}</p>
           </div>

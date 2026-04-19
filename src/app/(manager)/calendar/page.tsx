@@ -106,24 +106,24 @@ function CreateTaskModal({
       <div className="w-full max-w-2xl rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <div>
-            <h2 className="text-base font-bold">Nova tarefa</h2>
+            <h2 className="text-base font-bold">{t('manager.calendar.newTask')}</h2>
             <p className="text-xs text-gray-500 mt-0.5">{date}</p>
           </div>
           <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100"><X className="h-4 w-4"/></button>
         </div>
         <div className="p-6 space-y-5">
           <div>
-            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Propriedade</label>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{t('manager.calendar.property')}</label>
             <input
               value={propSearch}
               onChange={e=>setPropSearch(e.target.value)}
-              placeholder="Pesquisa por nome de propriedade…"
+              placeholder={t('manager.calendar.searchProperty')}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700 mb-2"
             />
             <select value={propertyId} onChange={e=>setPropertyId(e.target.value)}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
               {filteredProps.length===0
-                ? <option value="">— sem resultados —</option>
+                ? <option value="">{t('manager.calendar.noResults')}</option>
                 : filteredProps.map(p=>(
                     <option key={p.id} value={p.id}>
                       {p.name}{p.owner?.name ? ` · ${p.owner.name}` : p.owner?.email ? ` · ${p.owner.email}` : ''}
@@ -134,16 +134,16 @@ function CreateTaskModal({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Tipo de tarefa</label>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{t('manager.calendar.taskType')}</label>
               <div className="space-y-1.5">
-                {MANUAL_TASK_TYPES.map(t=>{
-                  const isActive = type===t
-                  const color = TASK_COLORS[t]??'border-gray-200 bg-gray-50 text-gray-700'
+                {MANUAL_TASK_TYPES.map(tt=>{
+                  const isActive = type===tt
+                  const color = TASK_COLORS[tt]??'border-gray-200 bg-gray-50 text-gray-700'
                   return (
-                    <button key={t} onClick={()=>setType(t)}
+                    <button key={tt} onClick={()=>setType(tt)}
                       className={`w-full text-left rounded-lg border px-3 py-2 text-sm font-medium transition-all ${
                         isActive?color+' ring-1':'border-gray-100 bg-white text-gray-500 hover:bg-gray-50'}`}>
-                      {TYPE_LABELS[t]}
+                      {t(TYPE_LABEL_KEYS[tt])}
                     </button>
                   )
                 })}
@@ -151,13 +151,13 @@ function CreateTaskModal({
             </div>
             <div className="flex flex-col gap-3">
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Título da tarefa</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{t('manager.calendar.taskTitle')}</label>
                 <input value={title} onChange={e=>setTitle(e.target.value)}
                   placeholder="Ex: Limpeza pré-chegada"
                   className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700"/>
               </div>
               <div className="flex-1 flex flex-col">
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Notas para a crew</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{t('manager.calendar.crewNotes')}</label>
                 <textarea value={notes} onChange={e=>setNotes(e.target.value)}
                   placeholder="Instruções, códigos de acesso…"
                   className="flex-1 min-h-[120px] w-full rounded-lg border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-navy-700"/>
@@ -166,10 +166,10 @@ function CreateTaskModal({
           </div>
         </div>
         <div className="flex gap-3 px-6 py-4 border-t">
-          <button onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm hover:bg-gray-50">Cancelar</button>
+          <button onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
           <button onClick={submit} disabled={submitting||!title||!propertyId}
             className="flex-1 rounded-lg bg-gray-900 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
-            {submitting?'A criar…':'Criar tarefa'}
+            {submitting?t('manager.calendar.creating'):t('manager.calendar.createTask')}
           </button>
         </div>
       </div>
@@ -186,20 +186,21 @@ function DayPanel({
   onCompleteTask: (e:CalEvent)=>void
   draggedId: React.MutableRefObject<string|null>
 }) {
+  const { t } = useLocale()
   const key = dayKey(day)
-  const label = day.toLocaleDateString('pt-PT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
+  const label = day.toLocaleDateString(undefined,{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
 
   return (
     <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
-          <p className="text-sm font-bold text-gray-900">{events.length} evento{events.length!==1?'s':''}</p>
+          <p className="text-sm font-bold text-gray-900">{events.length} {t('manager.calendar.events')}</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={()=>onCreateTask(key)}
             className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-800">
-            <Plus className="h-3.5 w-3.5"/> Criar tarefa
+            <Plus className="h-3.5 w-3.5"/> {t('manager.calendar.createTask')}
           </button>
           <button onClick={onClose} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
             <X className="h-4 w-4"/>
@@ -207,7 +208,7 @@ function DayPanel({
         </div>
       </div>
       {events.length===0 ? (
-        <div className="px-5 py-8 text-center text-sm text-gray-400">Nenhum evento neste dia</div>
+        <div className="px-5 py-8 text-center text-sm text-gray-400">{t('manager.calendar.noEvents')}</div>
       ) : (
         <div className="divide-y max-h-96 overflow-y-auto">
           {events.map(e=>{
@@ -228,8 +229,8 @@ function DayPanel({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className={`font-medium truncate ${isCompleted?'line-through text-gray-400':''}`}>{e.title}</span>
-                    {isOverdue&&<span className="inline-flex items-center gap-0.5 rounded-full bg-red-100 text-red-600 px-2 py-0.5 text-xs font-semibold shrink-0"><AlertCircle className="h-3 w-3"/>Atrasada</span>}
-                    {isCompleted&&<span className="inline-flex items-center gap-0.5 rounded-full bg-green-100 text-green-700 px-2 py-0.5 text-xs shrink-0"><CheckCircle2 className="h-3 w-3"/>Concluída</span>}
+                    {isOverdue&&<span className="inline-flex items-center gap-0.5 rounded-full bg-red-100 text-red-600 px-2 py-0.5 text-xs font-semibold shrink-0"><AlertCircle className="h-3 w-3"/>{t('manager.calendar.overdue')}</span>}
+                    {isCompleted&&<span className="inline-flex items-center gap-0.5 rounded-full bg-green-100 text-green-700 px-2 py-0.5 text-xs shrink-0"><CheckCircle2 className="h-3 w-3"/>{t('manager.calendar.done')}</span>}
                   </div>
                   {e.property&&<div className="text-xs text-gray-500">{e.property.name}</div>}
                   {meta?.assignee&&<div className="text-xs text-gray-400">{meta.assignee.name}</div>}
@@ -249,6 +250,7 @@ function DayPanel({
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function ManagerCalendar() {
+  const { t } = useLocale()
   const [events, setEvents] = useState<CalEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [weekStart, setWeekStart] = useState(()=>getWeekStart(new Date()))
@@ -324,8 +326,8 @@ export default function ManagerCalendar() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Calendário</h1>
-          <p className="text-sm text-gray-500">Check-ins, check-outs, tarefas e pagamentos dos teus clientes.</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('common.calendar')}</h1>
+          <p className="text-sm text-gray-500">{t('manager.calendar.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={()=>setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()-7);return d})}
@@ -334,7 +336,7 @@ export default function ManagerCalendar() {
           <button onClick={()=>setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()+7);return d})}
             className="rounded-lg border p-2 hover:bg-gray-50"><ChevronRight className="h-4 w-4"/></button>
           <button onClick={()=>setWeekStart(getWeekStart(new Date()))}
-            className="rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">Hoje</button>
+            className="rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">{t('manager.calendar.today')}</button>
         </div>
       </div>
 
@@ -352,7 +354,7 @@ export default function ManagerCalendar() {
         })}
       </div>
 
-      {loading && <p className="text-sm text-gray-400">A carregar…</p>}
+      {loading && <p className="text-sm text-gray-400">{t('common.loading')}</p>}
 
       {/* Week grid */}
       <div className="overflow-x-auto -mx-6 px-6">
@@ -374,7 +376,7 @@ export default function ManagerCalendar() {
                     isExpanded?'bg-gray-900 text-white border-gray-900'
                     :isToday?'bg-blue-50 border-blue-200 text-blue-700'
                     :'bg-white border-gray-100 hover:border-gray-300 text-gray-700'}`}>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider">{WEEKDAY_SHORT[i]}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider">{t(WEEKDAY_KEYS[i])}</span>
                   <span className={`text-xl font-bold mt-0.5 ${isExpanded?'text-white':isToday?'text-blue-700':'text-gray-900'}`}>
                     {day.getDate()}
                   </span>
@@ -413,12 +415,12 @@ export default function ManagerCalendar() {
                   {items.length>MAX&&(
                     <button onClick={()=>toggleDay(key)}
                       className="w-full rounded-lg px-2 py-1 text-[11px] text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-left">
-                      +{items.length-MAX} mais…
+                      +{items.length-MAX} {t('manager.calendar.more')}
                     </button>
                   )}
                   <button onClick={()=>setCreateTaskDate(key)}
                     className="w-full flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-gray-300 hover:text-gray-500 hover:bg-gray-50">
-                    <Plus className="h-3 w-3"/><span>Tarefa</span>
+                    <Plus className="h-3 w-3"/><span>{t('manager.calendar.task')}</span>
                   </button>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { useLocale } from '@/i18n/provider'
 import { ChevronLeft, ChevronRight, Plus, X, Clock, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 type Task = {
@@ -22,12 +23,12 @@ const TYPE_COLORS: Record<string, string> = {
   SHOPPING:               'bg-emerald-100 text-emerald-700 border-emerald-200',
   LAUNDRY:                'bg-pink-100 text-pink-700 border-pink-200',
 }
-const TYPE_LABELS: Record<string, string> = {
-  CHECK_IN: 'Check-in', CHECK_OUT: 'Check-out', CLEANING: 'Limpeza',
-  MAINTENANCE_PREVENTIVE: 'Manutenção Prev.', MAINTENANCE_CORRECTIVE: 'Manutenção Cor.',
-  INSPECTION: 'Inspecção', TRANSFER: 'Transfer', SHOPPING: 'Compras', LAUNDRY: 'Lavandaria',
+const TYPE_LABEL_KEYS: Record<string, string> = {
+  CHECK_IN: 'taskTypes.CHECK_IN', CHECK_OUT: 'taskTypes.CHECK_OUT', CLEANING: 'taskTypes.CLEANING',
+  MAINTENANCE_PREVENTIVE: 'taskTypes.MAINTENANCE_PREVENTIVE', MAINTENANCE_CORRECTIVE: 'taskTypes.MAINTENANCE_CORRECTIVE',
+  INSPECTION: 'taskTypes.INSPECTION', TRANSFER: 'taskTypes.TRANSFER', SHOPPING: 'taskTypes.SHOPPING', LAUNDRY: 'taskTypes.LAUNDRY',
 }
-const WEEKDAY_SHORT = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']
+const WEEKDAY_KEYS = ['manager.calendar.mon','manager.calendar.tue','manager.calendar.wed','manager.calendar.thu','manager.calendar.fri','manager.calendar.sat','manager.calendar.sun']
 
 const dayKey = (d: Date) => d.toISOString().slice(0,10)
 
@@ -53,21 +54,22 @@ function DayPanel({
 }: {
   day: Date; tasks: Task[]; onClose: ()=>void; onSelect: (t:Task)=>void
 }) {
+  const { t: tr } = useLocale()
   const today = new Date()
-  const label = day.toLocaleDateString('pt-PT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
+  const label = day.toLocaleDateString(undefined,{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
   return (
     <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
       <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
-          <p className="text-sm font-bold text-gray-900">{tasks.length} tarefa{tasks.length!==1?'s':''}</p>
+          <p className="text-sm font-bold text-gray-900">{tasks.length} {tr('common.tasks').toLowerCase()}</p>
         </div>
         <button onClick={onClose} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
           <X className="h-4 w-4"/>
         </button>
       </div>
       {tasks.length===0 ? (
-        <div className="px-5 py-8 text-center text-sm text-gray-400">Nenhuma tarefa neste dia</div>
+        <div className="px-5 py-8 text-center text-sm text-gray-400">{tr('client.calendar.noTasks')}</div>
       ) : (
         <div className="divide-y max-h-80 overflow-y-auto">
           {tasks.map(t=>{
@@ -77,7 +79,7 @@ function DayPanel({
               <button key={t.id} onClick={()=>onSelect(t)}
                 className="w-full flex items-center gap-3 px-5 py-3 text-sm text-left hover:bg-gray-50">
                 <span className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${colorClass}`}>
-                  {(TYPE_LABELS[t.type]??t.type).slice(0,2).toUpperCase()}
+                  {(tr(TYPE_LABEL_KEYS[t.type]??t.type)).slice(0,2).toUpperCase()}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className={`font-medium truncate ${t.status==='COMPLETED'?'line-through text-gray-400':''}`}>{t.title}</p>
@@ -96,6 +98,7 @@ function DayPanel({
 
 // ── Task Detail Modal ─────────────────────────────────────────────────────────
 function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
+  const { t: tr } = useLocale()
   const today = new Date()
   const isOverdue = task.status!=='COMPLETED'&&new Date(task.dueDate)<today
   const colorClass = TYPE_COLORS[task.type]??'bg-gray-100 text-gray-600 border-gray-200'
@@ -105,7 +108,7 @@ function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
         <div className="flex items-start justify-between p-5 border-b">
           <div>
             <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-semibold mb-1 ${colorClass}`}>
-              {TYPE_LABELS[task.type]??task.type}
+              {tr(TYPE_LABEL_KEYS[task.type]??task.type)}
             </span>
             <h2 className={`text-base font-bold text-gray-900 ${task.status==='COMPLETED'?'line-through text-gray-400':''}`}>
               {task.title}
@@ -118,26 +121,26 @@ function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
             <Clock className="h-4 w-4 shrink-0"/>
             <span>{fmtDate(task.dueDate)}</span>
           </div>
-          <div className="text-gray-600"><span className="font-medium text-gray-700">Propriedade:</span> {task.property.name}</div>
-          {task.assignee&&<div className="text-gray-600"><span className="font-medium text-gray-700">Crew:</span> {task.assignee.name??'Não atribuído'}</div>}
+          <div className="text-gray-600"><span className="font-medium text-gray-700">{tr('client.calendar.property')}:</span> {task.property.name}</div>
+          {task.assignee&&<div className="text-gray-600"><span className="font-medium text-gray-700">Crew:</span> {task.assignee.name??tr('client.calendar.unassigned')}</div>}
           {task.description&&(
             <div className="text-gray-600">
-              <span className="font-medium text-gray-700 block mb-0.5">Descrição:</span>
+              <span className="font-medium text-gray-700 block mb-0.5">{tr('common.description')}:</span>
               {task.description}
             </div>
           )}
           <div className="pt-1">
             {task.status==='COMPLETED'?(
               <span className="inline-flex items-center gap-1 rounded-full bg-green-100 text-green-700 px-3 py-1 text-xs font-semibold">
-                <CheckCircle2 className="h-3.5 w-3.5"/>Concluída
+                <CheckCircle2 className="h-3.5 w-3.5"/>{tr('client.calendar.completed')}
               </span>
             ):isOverdue?(
               <span className="inline-flex items-center gap-1 rounded-full bg-red-100 text-red-600 px-3 py-1 text-xs font-semibold">
-                <AlertCircle className="h-3.5 w-3.5"/>Em atraso
+                <AlertCircle className="h-3.5 w-3.5"/>{tr('client.calendar.overdue')}
               </span>
             ):(
               <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-600 px-3 py-1 text-xs font-semibold">
-                <Clock className="h-3.5 w-3.5"/>Pendente
+                <Clock className="h-3.5 w-3.5"/>{tr('client.calendar.pending')}
               </span>
             )}
           </div>
@@ -149,6 +152,7 @@ function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function ClientCalendarPage() {
+  const { t: tr } = useLocale()
   const [tasks, setTasks] = useState<Task[]>([])
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -198,12 +202,12 @@ export default function ClientCalendarPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Calendário</h1>
-          <p className="text-sm text-gray-500">Todas as tarefas agendadas para as tuas propriedades</p>
+          <h1 className="text-2xl font-bold text-gray-900">{tr('common.calendar')}</h1>
+          <p className="text-sm text-gray-500">{tr('client.calendar.subtitle')}</p>
         </div>
         <select value={propertyFilter} onChange={e=>setPropertyFilter(e.target.value)}
           className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700">
-          <option value="ALL">Todas as propriedades</option>
+          <option value="ALL">{tr('client.calendar.allProperties')}</option>
           {properties.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
       </div>
@@ -214,11 +218,11 @@ export default function ClientCalendarPage() {
         <span className="text-sm font-medium min-w-[200px] text-center">{weekLabel}</span>
         <button onClick={nextWeek} className="rounded-lg border p-2 hover:bg-gray-50"><ChevronRight className="h-4 w-4"/></button>
         <button onClick={()=>setWeekStart(getWeekStart(new Date()))}
-          className="ml-2 rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">Hoje</button>
+          className="ml-2 rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">{tr('manager.calendar.today')}</button>
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-400">A carregar…</p>
+        <p className="text-sm text-gray-400">{tr('common.loading')}</p>
       ) : (
         <>
           {/* Week grid */}
@@ -239,7 +243,7 @@ export default function ClientCalendarPage() {
                         :isToday?'bg-blue-50 border-blue-200'
                         :'bg-white border-gray-100 hover:border-gray-300'}`}>
                       <span className={`text-[10px] font-semibold uppercase tracking-wider ${isExpanded?'text-white/60':isToday?'text-blue-500':'text-gray-500'}`}>
-                        {WEEKDAY_SHORT[i]}
+                        {tr(WEEKDAY_KEYS[i])}
                       </span>
                       <span className={`text-xl font-bold mt-0.5 ${isExpanded?'text-white':isToday?'text-blue-700':'text-gray-900'}`}>
                         {day.getDate()}
@@ -264,14 +268,14 @@ export default function ClientCalendarPage() {
                           <button key={t.id} onClick={()=>{setSelected(t)}}
                             className={`w-full flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[11px] font-medium text-left hover:opacity-80 ${colorClass} ${
                               t.status==='COMPLETED'?'opacity-40':''} ${isOverdue?'ring-1 ring-red-400':''}`}>
-                            <span className="truncate">{TYPE_LABELS[t.type]??t.type}</span>
+                            <span className="truncate">{tr(TYPE_LABEL_KEYS[t.type]??t.type)}</span>
                           </button>
                         )
                       })}
                       {items.length>MAX&&(
                         <button onClick={()=>toggleDay(key)}
                           className="w-full rounded-lg px-2 py-1 text-[11px] text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-left">
-                          +{items.length-MAX} mais…
+                          +{items.length-MAX} {tr('manager.calendar.more')}
                         </button>
                       )}
                     </div>
@@ -295,9 +299,9 @@ export default function ClientCalendarPage() {
 
       {/* Legend */}
       <div className="flex flex-wrap gap-2">
-        {Object.entries(TYPE_LABELS).map(([type,label])=>(
+        {Object.entries(TYPE_LABEL_KEYS).map(([type,key])=>(
           <span key={type} className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium ${TYPE_COLORS[type]??'bg-gray-100 text-gray-600 border-gray-200'}`}>
-            {label}
+            {tr(key)}
           </span>
         ))}
       </div>

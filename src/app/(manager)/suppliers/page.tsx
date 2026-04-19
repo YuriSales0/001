@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useLocale } from "@/i18n/provider"
 import { Plus, Phone, Mail, Building2, Search, X, Trash2 } from "lucide-react"
 
 type SupplierType = "CLEANER" | "PLUMBER" | "ELECTRICIAN" | "GENERAL"
@@ -15,11 +16,11 @@ interface Supplier {
   properties: { property: { id: string; name: string; city: string } }[]
 }
 
-const TYPE_LABELS: Record<SupplierType, string> = {
-  CLEANER:     "Cleaner",
-  PLUMBER:     "Plumber",
-  ELECTRICIAN: "Electrician",
-  GENERAL:     "General",
+const TYPE_LABEL_KEYS: Record<SupplierType, string> = {
+  CLEANER:     "manager.suppliers.typeCleaner",
+  PLUMBER:     "manager.suppliers.typePlumber",
+  ELECTRICIAN: "manager.suppliers.typeElectrician",
+  GENERAL:     "manager.suppliers.typeGeneral",
 }
 
 const TYPE_COLOR: Record<SupplierType, string> = {
@@ -32,6 +33,7 @@ const TYPE_COLOR: Record<SupplierType, string> = {
 const TYPES: SupplierType[] = ["CLEANER", "PLUMBER", "ELECTRICIAN", "GENERAL"]
 
 export default function SuppliersPage() {
+  const { t } = useLocale()
   const [suppliers, setSuppliers]   = useState<Supplier[]>([])
   const [loading, setLoading]       = useState(true)
   const [filterType, setFilterType] = useState("all")
@@ -99,14 +101,14 @@ export default function SuppliersPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Suppliers</h1>
-          <p className="text-sm text-gray-500">Manage your vendor and supplier directory.</p>
+          <h1 className="text-2xl font-bold text-navy-900">{t('common.suppliers')}</h1>
+          <p className="text-sm text-gray-500">{t('manager.suppliers.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
           className="inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800"
         >
-          <Plus className="h-4 w-4" /> Add supplier
+          <Plus className="h-4 w-4" /> {t('manager.suppliers.addSupplier')}
         </button>
       </div>
 
@@ -118,7 +120,7 @@ export default function SuppliersPage() {
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search suppliers…"
+            placeholder={t('manager.suppliers.searchSuppliers')}
             className="w-full rounded-lg border bg-white pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
           />
         </div>
@@ -127,8 +129,8 @@ export default function SuppliersPage() {
           onChange={e => setFilterType(e.target.value)}
           className="rounded-lg border bg-white px-3 py-2 text-sm"
         >
-          <option value="all">All types</option>
-          {TYPES.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
+          <option value="all">{t('manager.suppliers.allTypes')}</option>
+          {TYPES.map(tp => <option key={tp} value={tp}>{t(TYPE_LABEL_KEYS[tp])}</option>)}
         </select>
       </div>
 
@@ -146,7 +148,7 @@ export default function SuppliersPage() {
         <div className="space-y-3">
           {filtered.length === 0 && (
             <div className="py-12 text-center text-sm text-gray-400 rounded-xl border bg-white">
-              {suppliers.length === 0 ? "No suppliers yet. Add the first one." : "No suppliers match your search."}
+              {suppliers.length === 0 ? t('manager.suppliers.noSuppliers') : t('manager.suppliers.noMatch')}
             </div>
           )}
           {filtered.map(s => (
@@ -160,7 +162,7 @@ export default function SuppliersPage() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold text-navy-900">{s.name}</span>
                       <span className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${TYPE_COLOR[s.type]}`}>
-                        {TYPE_LABELS[s.type]}
+                        {t(TYPE_LABEL_KEYS[s.type])}
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 mt-1">
@@ -177,12 +179,12 @@ export default function SuppliersPage() {
                 <div className="flex items-center gap-2">
                   <a href={`tel:${s.phone}`}
                     className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50">
-                    <Phone className="h-3 w-3" /> Call
+                    <Phone className="h-3 w-3" /> {t('manager.suppliers.call')}
                   </a>
                   {s.email && (
                     <a href={`mailto:${s.email}`}
                       className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50">
-                      <Mail className="h-3 w-3" /> Email
+                      <Mail className="h-3 w-3" /> {t('manager.suppliers.email')}
                     </a>
                   )}
                   <button
@@ -205,8 +207,8 @@ export default function SuppliersPage() {
           <div className="w-full max-w-md rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-navy-900">New supplier</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Add a vendor to your directory.</p>
+                <h2 className="text-base font-bold text-navy-900">{t('manager.suppliers.newSupplier')}</h2>
+                <p className="text-xs text-gray-500 mt-0.5">{t('manager.suppliers.addVendor')}</p>
               </div>
               <button onClick={() => setShowCreate(false)} className="rounded-md p-1 hover:bg-gray-100">
                 <X className="h-5 w-5" />
@@ -217,27 +219,27 @@ export default function SuppliersPage() {
                 <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{formError}</div>
               )}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Name *</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.name')} *</label>
                 <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
                   placeholder="Company or individual name" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Type</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.suppliers.type')}</label>
                 <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value as SupplierType }))}
                   className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900">
-                  {TYPES.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
+                  {TYPES.map(tp => <option key={tp} value={tp}>{t(TYPE_LABEL_KEYS[tp])}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Phone *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')} *</label>
                   <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
                     placeholder="+34 6xx xxx xxx" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Email</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.suppliers.email')}</label>
                   <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
                     placeholder="email@example.com" />
