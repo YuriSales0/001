@@ -40,8 +40,11 @@ export default function LandingPage() {
       {/* ───────── Header ───────── */}
       <header className="sticky top-0 z-50 border-b bg-hm-paper/90 backdrop-blur-md" style={{ borderColor: 'var(--hm-cream-dark)' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/">
-            <HmLogo size={32} variant="compact" />
+          <Link href="/" className="flex items-center gap-2.5">
+            <HmLogo size={36} />
+            <span className="text-lg font-semibold tracking-tight" style={{ color: '#0B1E3A' }}>
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
+            </span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: 'var(--hm-stone)' }}>
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
@@ -390,9 +393,12 @@ export default function LandingPage() {
       {/* ───────── Footer ───────── */}
       <footer className="border-t border-gray-100 bg-white py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <HmLogo size={22} variant="compact" />
-            <span className="text-xs text-gray-400 ml-2">Costa Tropical · España</span>
+          <div className="flex items-center gap-2.5">
+            <HmLogo size={24} />
+            <span className="text-sm font-semibold tracking-tight" style={{ color: '#0B1E3A' }}>
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
+            </span>
+            <span className="text-xs text-gray-400 ml-1">Costa Tropical · España</span>
           </div>
           <p className="text-xs text-gray-400">
             {t('landing.footer.copyright')} {t('landing.footer.tagline')}
