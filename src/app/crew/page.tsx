@@ -328,7 +328,7 @@ export default function CrewHome() {
           <div className="h-full flex items-center justify-center text-gray-400 text-sm">
             <div className="text-center">
               <ClipboardCheck className="h-12 w-12 mx-auto text-gray-300 mb-2" />
-              Select a task to view its checklist and submit a report.
+              {t('crew.detail.selectTask')}
             </div>
           </div>
         ) : (

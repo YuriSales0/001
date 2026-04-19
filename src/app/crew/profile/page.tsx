@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Wrench, Percent, TrendingUp, Star, Shield, Zap, AlertTriangle } from "lucide-react"
 import { ProfileContractSection } from "@/components/hm/profile-contract-section"
+import { useLocale } from "@/i18n/provider"
 
 type ScoreData = {
   currentScore: number
@@ -19,6 +20,7 @@ interface Profile {
 }
 
 export default function CrewProfilePage() {
+  const { t } = useLocale()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -41,7 +43,7 @@ export default function CrewProfilePage() {
       setForm({ name: d.name ?? "", phone: d.phone ?? "", bio: d.bio ?? "", image: d.image ?? "" })
       setScore(s)
       setLoading(false)
-    }).catch(() => { setError("Failed to load profile"); setLoading(false) })
+    }).catch(() => { setError(t('profile.loadFailed')); setLoading(false) })
   }, [])
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,30 +62,30 @@ export default function CrewProfilePage() {
       body: JSON.stringify(form),
     })
     if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000) }
-    else { const d = await res.json(); setError(d.error ?? "Failed to save") }
+    else { const d = await res.json(); setError(d.error ?? t('profile.failedToSave')) }
     setSaving(false)
   }
 
   const savePassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setPwError(""); setPwSaved(false)
-    if (pw.next !== pw.confirm) { setPwError("Passwords do not match"); return }
-    if (pw.next.length < 8) { setPwError("Password must be at least 8 characters"); return }
+    if (pw.next !== pw.confirm) { setPwError(t('profile.passwordsDoNotMatch')); return }
+    if (pw.next.length < 8) { setPwError(t('profile.passwordMinLength')); return }
     const res = await fetch("/api/profile", {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ currentPassword: pw.current, newPassword: pw.next }),
     })
     if (res.ok) { setPwSaved(true); setPw({ current: "", next: "", confirm: "" }); setTimeout(() => setPwSaved(false), 3000) }
-    else { const d = await res.json(); setPwError(d.error ?? "Failed to update password") }
+    else { const d = await res.json(); setPwError(d.error ?? t('profile.failedToUpdatePassword')) }
   }
 
-  if (loading) return <div className="p-8 text-sm text-gray-400">Loading…</div>
+  if (loading) return <div className="p-8 text-sm text-gray-400">{t('common.loading')}</div>
 
   return (
     <div className="space-y-6 p-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-navy-900">My Profile</h1>
-        <p className="text-sm text-gray-500">Crew · Field Operations</p>
+        <h1 className="text-2xl font-bold text-navy-900">{t('common.myProfile')}</h1>
+        <p className="text-sm text-gray-500">{t('crew.profile.roleDesc')}</p>
       </div>
 
       {/* Performance Score */}
@@ -93,8 +95,8 @@ export default function CrewProfilePage() {
       <div className="rounded-xl border bg-emerald-50 border-emerald-100 p-4 flex gap-4">
         <Wrench className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
         <div className="text-sm text-emerald-800 space-y-1">
-          <p className="font-semibold">Crew responsibilities</p>
-          <p>You are the operational backbone of HostMasters — handling <strong>check-ins, check-outs, cleaning, maintenance and inspections</strong>. Your work report after each visit is sent directly to the property owner.</p>
+          <p className="font-semibold">{t('crew.profile.responsibilities')}</p>
+          <p>{t('crew.profile.responsibilitiesDesc')}</p>
         </div>
       </div>
 
@@ -104,10 +106,10 @@ export default function CrewProfilePage() {
             <Percent className="h-5 w-5 text-amber-600" />
           </div>
           <div>
-            <p className="text-xs text-gray-500">Your per-task rate</p>
+            <p className="text-xs text-gray-500">{t('crew.profile.yourTaskRate')}</p>
             <p className="text-2xl font-bold text-navy-900">{profile.commissionRate}%</p>
           </div>
-          <div className="ml-auto text-xs text-gray-400">Set by Admin</div>
+          <div className="ml-auto text-xs text-gray-400">{t('crew.profile.setByAdmin')}</div>
         </div>
       )}
 
@@ -143,30 +145,30 @@ export default function CrewProfilePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Full name</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('profile.fullName')}</label>
             <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900" />
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Phone</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')}</label>
             <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
               placeholder="+34 600 000 000" />
           </div>
           <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Professional bio <span className="text-gray-400 font-normal">(visible to property owners)</span></label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t('crew.profile.bio')}</label>
             <textarea rows={3} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 resize-none"
-              placeholder="Introduce yourself. What's your speciality? Years of experience?" />
+              placeholder={t('crew.profile.bioPlaceholder')} />
           </div>
         </div>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
         <div className="flex items-center justify-between pt-1">
-          {saved && <span className="text-sm text-green-600 font-medium">Saved successfully</span>}
+          {saved && <span className="text-sm text-green-600 font-medium">{t('profile.savedSuccessfully')}</span>}
           <button type="submit" disabled={saving}
             className="ml-auto inline-flex items-center gap-2 rounded-xl bg-navy-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 disabled:opacity-50">
-            <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save changes"}
+            <Save className="h-4 w-4" /> {saving ? t('profile.saving') : t('profile.saveChanges')}
           </button>
         </div>
       </form>
@@ -175,10 +177,10 @@ export default function CrewProfilePage() {
       <form onSubmit={savePassword} className="rounded-xl border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-semibold text-navy-900">Change password</span>
+          <span className="text-sm font-semibold text-navy-900">{t('profile.changePassword')}</span>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[["Current password", "current"], ["New password", "next"], ["Confirm new", "confirm"]].map(([label, key]) => (
+          {[[t('profile.currentPassword'), "current"], [t('profile.newPassword'), "next"], [t('profile.confirmNew'), "confirm"]].map(([label, key]) => (
             <div key={key}>
               <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
               <input type="password" value={pw[key as keyof typeof pw]}
@@ -189,10 +191,10 @@ export default function CrewProfilePage() {
         </div>
         {pwError && <p className="text-sm text-red-600">{pwError}</p>}
         <div className="flex items-center justify-between">
-          {pwSaved && <span className="text-sm text-green-600 font-medium">Password updated</span>}
+          {pwSaved && <span className="text-sm text-green-600 font-medium">{t('profile.passwordUpdated')}</span>}
           <button type="submit"
             className="ml-auto inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white text-gray-700 px-4 py-2.5 text-sm font-medium hover:bg-gray-50">
-            Update password
+            {t('profile.updatePassword')}
           </button>
         </div>
       </form>
@@ -200,27 +202,50 @@ export default function CrewProfilePage() {
   )
 }
 
-const LEVEL_META: Record<string, { label: string; icon: typeof Star; color: string; bg: string; min: number; next: number | null; bonus: string }> = {
-  SUSPENDED: { label: 'Suspended', icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', min: 0, next: 50, bonus: 'No tasks assigned' },
-  BASIC:     { label: 'Basic',     icon: Shield,        color: 'text-blue-600', bg: 'bg-blue-50', min: 50, next: 150, bonus: 'Standard tasks' },
-  VERIFIED:  { label: 'Verified',  icon: Zap,           color: 'text-amber-600', bg: 'bg-amber-50', min: 150, next: 300, bonus: '+5% rate bonus' },
-  EXPERT:    { label: 'Expert',    icon: TrendingUp,    color: 'text-green-600', bg: 'bg-green-50', min: 300, next: 500, bonus: '+10% rate bonus + premium properties' },
-  ELITE:     { label: 'Elite',     icon: Star,          color: 'text-yellow-600', bg: 'bg-yellow-50', min: 500, next: null, bonus: '+15% rate bonus + independent inspections' },
+const LEVEL_STYLE: Record<string, { icon: typeof Star; color: string; bg: string; min: number; next: number | null }> = {
+  SUSPENDED: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', min: 0, next: 50 },
+  BASIC:     { icon: Shield,        color: 'text-blue-600', bg: 'bg-blue-50', min: 50, next: 150 },
+  VERIFIED:  { icon: Zap,           color: 'text-amber-600', bg: 'bg-amber-50', min: 150, next: 300 },
+  EXPERT:    { icon: TrendingUp,    color: 'text-green-600', bg: 'bg-green-50', min: 300, next: 500 },
+  ELITE:     { icon: Star,          color: 'text-yellow-600', bg: 'bg-yellow-50', min: 500, next: null },
 }
 
-const REASON_LABELS: Record<string, { label: string; emoji: string }> = {
-  TASK_ON_TIME: { label: 'Task on time', emoji: '✅' },
-  VALIDATED_NO_REPAIR: { label: 'Validated without issues', emoji: '🏆' },
-  OWNER_POSITIVE: { label: 'Owner positive review', emoji: '⭐' },
-  PEAK_AVAILABILITY: { label: 'Peak availability', emoji: '📅' },
-  NOT_ACCEPTED: { label: 'Task not accepted', emoji: '⚠️' },
-  ACCEPTED_NOT_DONE: { label: 'Accepted but not done', emoji: '❌' },
-  COMPLAINT: { label: 'Complaint received', emoji: '🔴' },
-  UNREPORTED_DAMAGE: { label: 'Unreported damage', emoji: '🚨' },
+const REASON_EMOJIS: Record<string, string> = {
+  TASK_ON_TIME: '✅',
+  VALIDATED_NO_REPAIR: '🏆',
+  OWNER_POSITIVE: '⭐',
+  PEAK_AVAILABILITY: '📅',
+  NOT_ACCEPTED: '⚠️',
+  ACCEPTED_NOT_DONE: '❌',
+  COMPLAINT: '🔴',
+  UNREPORTED_DAMAGE: '🚨',
 }
 
 function ScoreSection({ score }: { score: ScoreData }) {
-  const config = LEVEL_META[score.level] ?? LEVEL_META.BASIC
+  const { t } = useLocale()
+
+  const levelLabels: Record<string, { label: string; bonus: string }> = {
+    SUSPENDED: { label: t('crew.score.suspended'), bonus: t('crew.score.suspendedDesc') },
+    BASIC:     { label: t('crew.score.basic'),     bonus: t('crew.score.basicDesc') },
+    VERIFIED:  { label: t('crew.score.verified'),  bonus: t('crew.score.verifiedDesc') },
+    EXPERT:    { label: t('crew.score.expert'),    bonus: t('crew.score.expertDesc') },
+    ELITE:     { label: t('crew.score.elite'),     bonus: t('crew.score.eliteDesc') },
+  }
+
+  const reasonLabels: Record<string, string> = {
+    TASK_ON_TIME: t('crew.profile.scoreReasons.taskOnTime'),
+    VALIDATED_NO_REPAIR: t('crew.profile.scoreReasons.validatedNoRepair'),
+    OWNER_POSITIVE: t('crew.profile.scoreReasons.ownerPositive'),
+    PEAK_AVAILABILITY: t('crew.profile.scoreReasons.peakAvailability'),
+    NOT_ACCEPTED: t('crew.profile.scoreReasons.notAccepted'),
+    ACCEPTED_NOT_DONE: t('crew.profile.scoreReasons.acceptedNotDone'),
+    COMPLAINT: t('crew.profile.scoreReasons.complaint'),
+    UNREPORTED_DAMAGE: t('crew.profile.scoreReasons.unreportedDamage'),
+  }
+
+  const style = LEVEL_STYLE[score.level] ?? LEVEL_STYLE.BASIC
+  const labels = levelLabels[score.level] ?? levelLabels.BASIC
+  const config = { ...style, label: labels.label, bonus: labels.bonus }
   const Icon = config.icon
   const progress = config.next
     ? Math.min(100, ((score.currentScore - config.min) / (config.next - config.min)) * 100)
@@ -246,7 +271,7 @@ function ScoreSection({ score }: { score: ScoreData }) {
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-navy-900">{score.currentScore}</p>
-            <p className="text-xs text-gray-400">points</p>
+            <p className="text-xs text-gray-400">{t('crew.profile.points')}</p>
           </div>
         </div>
 
@@ -255,12 +280,12 @@ function ScoreSection({ score }: { score: ScoreData }) {
           <div className="mb-4">
             <div className="flex justify-between text-[10px] text-gray-400 mb-1">
               <span>{config.label} ({config.min})</span>
-              <span>{LEVEL_META[nextLevel]?.label} ({config.next})</span>
+              <span>{levelLabels[nextLevel]?.label} ({config.next})</span>
             </div>
             <div className="h-2 rounded-full bg-gray-100">
               <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, background: '#B08A3E' }} />
             </div>
-            <p className="text-[10px] text-gray-500 mt-1">{config.next - score.currentScore} points to next level</p>
+            <p className="text-[10px] text-gray-500 mt-1">{config.next - score.currentScore} {t('crew.profile.pointsToNextLevel')}</p>
           </div>
         )}
 
@@ -268,26 +293,26 @@ function ScoreSection({ score }: { score: ScoreData }) {
         <div className="grid grid-cols-3 gap-3 mb-4">
           <div className="rounded-lg bg-gray-50 p-3 text-center">
             <p className="text-lg font-bold text-navy-900">{score.totalTasks}</p>
-            <p className="text-[10px] text-gray-500">Total tasks</p>
+            <p className="text-[10px] text-gray-500">{t('crew.profile.totalTasks')}</p>
           </div>
           <div className="rounded-lg bg-green-50 p-3 text-center">
             <p className="text-lg font-bold text-green-700">{approvalRate}%</p>
-            <p className="text-[10px] text-gray-500">Approval rate</p>
+            <p className="text-[10px] text-gray-500">{t('crew.profile.approvalRate')}</p>
           </div>
           <div className="rounded-lg bg-red-50 p-3 text-center">
             <p className="text-lg font-bold text-red-600">{score.totalRejected}</p>
-            <p className="text-[10px] text-gray-500">Rejected</p>
+            <p className="text-[10px] text-gray-500">{t('crew.profile.rejected')}</p>
           </div>
         </div>
 
         {/* Incentive box */}
         <div className="rounded-lg p-3 mb-4" style={{ background: 'rgba(176,138,62,0.08)', border: '1px solid rgba(176,138,62,0.15)' }}>
-          <p className="text-xs font-bold text-gray-800 mb-1">How your score works for you</p>
+          <p className="text-xs font-bold text-gray-800 mb-1">{t('crew.profile.howScoreWorks')}</p>
           <ul className="text-[11px] text-gray-600 space-y-1">
-            <li>• <strong>Good work on a property = trust score goes up</strong> — you get priority for future tasks there</li>
-            <li>• <strong>Higher global score = access to premium properties</strong> with better rates</li>
-            <li>• <strong>Level up = rate bonus</strong> — Verified +5%, Expert +10%, Elite +15%</li>
-            <li>• <strong>Owners can mark you as favourite</strong> — you always get called first</li>
+            <li>{t('crew.profile.scoreTip1')}</li>
+            <li>{t('crew.profile.scoreTip2')}</li>
+            <li>{t('crew.profile.scoreTip3')}</li>
+            <li>{t('crew.profile.scoreTip4')}</li>
           </ul>
         </div>
       </div>
@@ -296,17 +321,18 @@ function ScoreSection({ score }: { score: ScoreData }) {
       {score.history.length > 0 && (
         <div className="border-t">
           <div className="px-5 py-3 bg-gray-50">
-            <p className="text-xs font-semibold text-gray-700">Recent score changes</p>
+            <p className="text-xs font-semibold text-gray-700">{t('crew.profile.recentScoreChanges')}</p>
           </div>
           <div className="divide-y max-h-60 overflow-y-auto">
             {score.history.slice(0, 10).map((e, i) => {
-              const meta = REASON_LABELS[e.reason] ?? { label: e.reason, emoji: '📋' }
+              const emoji = REASON_EMOJIS[e.reason] ?? '📋'
+              const label = reasonLabels[e.reason] ?? e.reason
               return (
                 <div key={i} className="px-5 py-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">{meta.emoji}</span>
+                    <span className="text-sm">{emoji}</span>
                     <div>
-                      <p className="text-xs text-gray-700">{meta.label}</p>
+                      <p className="text-xs text-gray-700">{label}</p>
                       <p className="text-[10px] text-gray-400">{new Date(e.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</p>
                     </div>
                   </div>

@@ -88,8 +88,8 @@ export default function ManagerDashboard() {
         <div className="hm-animate-in hm-stagger-2">
           <AlertBanner
             level="error"
-            title={`${stats.overdueTasks} overdue task${stats.overdueTasks > 1 ? "s" : ""} require attention`}
-            message="Assign or resolve overdue tasks to maintain SLA compliance."
+            title={`${stats.overdueTasks} ${t('manager.dashboardPage.overdueRequireAttention')}`}
+            message={t('manager.dashboardPage.overdueResolveSLA')}
           />
         </div>
       )}
@@ -98,12 +98,12 @@ export default function ManagerDashboard() {
       {stats && stats.clientsCount > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 hm-animate-in hm-stagger-2">
           {[
-            { label: "Active owners",   value: stats.clientsCount,           icon: Users,        href: "/manager/clients",  color: "text-navy-600" },
-            { label: "Live bookings",   value: stats.activeReservations,      icon: CalendarDays, href: "/reservations",     color: "text-navy-600" },
-            { label: "Rental volume",   value: fmtEUR(stats.rentalVolume),    icon: Euro,         href: "/revenue",          color: "text-green-600" },
-            { label: "Payouts pending", value: fmtEUR(stats.openPayouts.net), icon: Wrench,       href: "/manager/payouts",  color: "text-amber-600" },
+            { label: t('manager.dashboardPage.activeOwners'),   value: stats.clientsCount,           icon: Users,        href: "/manager/clients",  color: "text-navy-600" },
+            { label: t('manager.dashboardPage.liveBookings'),   value: stats.activeReservations,      icon: CalendarDays, href: "/reservations",     color: "text-navy-600" },
+            { label: t('manager.dashboardPage.rentalVolume'),   value: fmtEUR(stats.rentalVolume),    icon: Euro,         href: "/revenue",          color: "text-green-600" },
+            { label: t('manager.dashboardPage.payoutsPending'), value: fmtEUR(stats.openPayouts.net), icon: Wrench,       href: "/manager/payouts",  color: "text-amber-600" },
             {
-              label: "Overdue tasks",
+              label: t('manager.dashboardPage.overdueTasks'),
               value: stats.overdueTasks,
               icon: AlertTriangle,
               href: "/tasks",
@@ -148,7 +148,7 @@ export default function ManagerDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 hm-animate-in hm-stagger-3">
         {[
           {
-            label: "Check-ins today",
+            label: t('manager.dashboardPage.checkInsToday'),
             value: stats?.upcomingCheckIns.filter(r => {
               const d = new Date(r.checkIn)
               return d.toDateString() === today.toDateString()
@@ -157,7 +157,7 @@ export default function ManagerDashboard() {
             color: "bg-blue-50 border-blue-200 text-blue-700",
           },
           {
-            label: "Check-outs today",
+            label: t('manager.dashboardPage.checkOutsToday'),
             value: stats?.upcomingCheckOuts.filter(r => {
               const d = new Date(r.checkOut)
               return d.toDateString() === today.toDateString()
@@ -166,13 +166,13 @@ export default function ManagerDashboard() {
             color: "bg-green-50 border-green-200 text-green-700",
           },
           {
-            label: "Pending tasks",
+            label: t('manager.dashboardPage.pendingTasks'),
             value: stats?.overdueTasks ?? 0,
             icon: ClipboardCheck,
             color: stats?.overdueTasks ? "bg-red-50 border-red-200 text-red-700" : "bg-gray-50 border-gray-200 text-gray-500",
           },
           {
-            label: "Active properties",
+            label: t('manager.dashboardPage.activeProperties'),
             value: stats?.propertiesCount ?? 0,
             icon: Building2,
             color: "bg-amber-50 border-amber-200 text-amber-700",
@@ -196,7 +196,7 @@ export default function ManagerDashboard() {
         <div className="rounded-xl border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center gap-2">
             <Clock className="h-4 w-4 text-navy-500" />
-            <span className="font-semibold text-navy-900 text-sm">Upcoming check-ins</span>
+            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.upcomingCheckIns')}</span>
           </div>
           <div className="divide-y max-h-64 overflow-auto">
             {!stats?.upcomingCheckIns.length && (
@@ -219,7 +219,7 @@ export default function ManagerDashboard() {
         <div className="rounded-xl border bg-white overflow-hidden">
           <div className="px-4 py-3 border-b bg-gray-50 flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-green-500" />
-            <span className="font-semibold text-navy-900 text-sm">Upcoming check-outs</span>
+            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.upcomingCheckOuts')}</span>
           </div>
           <div className="divide-y max-h-64 overflow-auto">
             {!stats?.upcomingCheckOuts.length && (
@@ -246,20 +246,20 @@ export default function ManagerDashboard() {
         <div className="rounded-xl border bg-white p-4">
           <div className="flex items-center gap-2 mb-3">
             <Bell className="h-4 w-4 text-navy-500" />
-            <span className="font-semibold text-navy-900 text-sm">Alert status</span>
+            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.alertStatus')}</span>
           </div>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 text-red-600">
               <div className="h-2.5 w-2.5 rounded-full bg-red-500" />
-              {stats?.overdueTasks ?? 0} overdue tasks
+              {stats?.overdueTasks ?? 0} {t('manager.dashboardPage.overdueTasksLabel')}
             </div>
             <div className="flex items-center gap-2 text-amber-600">
               <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-              {stats?.openPayouts.count ?? 0} payouts pending
+              {stats?.openPayouts.count ?? 0} {t('manager.dashboardPage.payoutsPendingLabel')}
             </div>
             <div className="flex items-center gap-2 text-green-600">
               <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
-              {stats?.propertiesCount ?? 0} properties active
+              {stats?.propertiesCount ?? 0} {t('manager.dashboardPage.propertiesActiveLabel')}
             </div>
           </div>
         </div>
@@ -268,16 +268,16 @@ export default function ManagerDashboard() {
         <div className="rounded-xl border bg-white p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="h-4 w-4 text-navy-500" />
-            <span className="font-semibold text-navy-900 text-sm">Quick actions</span>
+            <span className="font-semibold text-navy-900 text-sm">{t('manager.dashboardPage.quickActions')}</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {[
-              { href: "/manager/clients",  label: "My owners",    icon: Users },
-              { href: "/reservations",     label: "Reservations", icon: CalendarDays },
-              { href: "/tasks",            label: "Tasks",        icon: ClipboardCheck },
-              { href: "/manager/messages", label: "Messages",     icon: MessageCircle },
-              { href: "/revenue",          label: "Revenue",      icon: Euro },
-              { href: "/properties",       label: "Properties",   icon: Building2 },
+              { href: "/manager/clients",  label: t('manager.dashboardPage.myOwners'),     icon: Users },
+              { href: "/reservations",     label: t('manager.dashboardPage.reservations'), icon: CalendarDays },
+              { href: "/tasks",            label: t('manager.dashboardPage.tasks'),        icon: ClipboardCheck },
+              { href: "/manager/messages", label: t('manager.dashboardPage.messages'),     icon: MessageCircle },
+              { href: "/revenue",          label: t('manager.dashboardPage.revenue'),      icon: Euro },
+              { href: "/properties",       label: t('manager.dashboardPage.properties'),   icon: Building2 },
             ].map(action => {
               const Icon = action.icon
               return (

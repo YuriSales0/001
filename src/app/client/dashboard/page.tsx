@@ -340,7 +340,7 @@ export default function OwnerDashboard() {
                 )}
                 {prop.lastInspectionAt && (
                   <p className="font-sans text-sm text-hm-slate/60 mt-1">
-                    Last inspected {fmtDate(prop.lastInspectionAt)}
+                    {t('client.dashboard.lastInspected').replace('{date}', fmtDate(prop.lastInspectionAt))}
                   </p>
                 )}
               </div>
@@ -457,14 +457,14 @@ export default function OwnerDashboard() {
                    style={{ background: 'var(--hm-sand)' }}>
                 <div className="flex items-center gap-3 mb-2">
                   <Lock className="h-5 w-5 text-hm-green" />
-                  <span className="font-serif font-semibold text-hm-black">Smart Lock</span>
+                  <span className="font-serif font-semibold text-hm-black">{t('client.dashboard.smartLock')}</span>
                 </div>
                 <p className="font-sans text-sm text-hm-slate/70">
-                  Nuki lock active · ID {prop.smartLockId}
+                  {t('client.dashboard.smartLockActive').replace('{id}', prop.smartLockId)}
                 </p>
                 <div className="flex items-center gap-1.5 mt-2">
                   <span className="h-2 w-2 rounded-full bg-hm-green inline-block" />
-                  <span className="font-sans text-sm text-hm-green">Connected</span>
+                  <span className="font-sans text-sm text-hm-green">{t('client.dashboard.smartLockConnected')}</span>
                 </div>
               </div>
             )}
@@ -473,7 +473,7 @@ export default function OwnerDashboard() {
                  style={{ background: 'var(--hm-sand)' }}>
               <div className="flex items-center gap-3 mb-2">
                 <TrendingUp className="h-5 w-5 text-hm-blue" />
-                <span className="font-serif font-semibold text-hm-black">Active listings</span>
+                <span className="font-serif font-semibold text-hm-black">{t('client.dashboard.activeListings')}</span>
               </div>
               <div className="font-sans text-sm text-hm-slate/70 space-y-1">
                 <p>✓ Airbnb</p>
