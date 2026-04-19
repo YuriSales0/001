@@ -8,6 +8,7 @@ import {
 import { useEscapeKey } from "@/lib/use-escape-key"
 import { showToast } from "@/components/hm/toast"
 import { useLocale } from "@/i18n/provider"
+import { intlLocale, type Locale } from "@/i18n"
 
 type Property = { id: string; name: string }
 
@@ -63,17 +64,28 @@ type CorrectiveReport = {
   submittedAt?: string
 }
 
-const fmtDate = (s: string) =>
-  new Date(s).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
+function useFmtDate() {
+  const { locale } = useLocale()
+  const loc = intlLocale(locale as Locale)
+  return (s: string) => new Date(s).toLocaleDateString(loc, { day: "2-digit", month: "long", year: "numeric" })
+}
 
-const fmtRelative = (s: string) => {
-  const diff = Date.now() - new Date(s).getTime()
-  const days = Math.floor(diff / 86_400_000)
-  if (days <= 0) return "today"
-  if (days === 1) return "yesterday"
-  if (days < 30) return `${days} days ago`
-  if (days < 60) return "1 month ago"
-  return `${Math.floor(days / 30)} months ago`
+function useFmtRelative() {
+  const { locale } = useLocale()
+  const loc = intlLocale(locale as Locale)
+  return (s: string) => {
+    const diff = Date.now() - new Date(s).getTime()
+    const days = Math.floor(diff / 86_400_000)
+    try {
+      const rtf = new Intl.RelativeTimeFormat(loc, { numeric: 'auto' })
+      if (days <= 0) return rtf.format(0, 'day')
+      if (days < 30) return rtf.format(-days, 'day')
+      if (days < 365) return rtf.format(-Math.floor(days / 30), 'month')
+      return rtf.format(-Math.floor(days / 365), 'year')
+    } catch {
+      return `${days}d`
+    }
+  }
 }
 
 const TYPE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -99,6 +111,8 @@ function parseReport(notes: string | null): CheckoutReport | PreventiveReport | 
 
 export default function ClientCarePage() {
   const { t } = useLocale()
+  const fmtDate = useFmtDate()
+  const fmtRelative = useFmtRelative()
   const [tasks, setTasks] = useState<Task[]>([])
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [properties, setProperties] = useState<Property[]>([])

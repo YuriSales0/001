@@ -78,3 +78,12 @@ export function loadMessagesSync(locale: Locale): Messages {
 function isLocale(value: string): value is Locale {
   return ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da'].includes(value)
 }
+
+const INTL_LOCALE: Record<Locale, string> = {
+  en: 'en-GB', pt: 'pt-PT', es: 'es-ES', de: 'de-DE',
+  nl: 'nl-NL', fr: 'fr-FR', sv: 'sv-SE', da: 'da-DK',
+}
+
+export function intlLocale(locale: Locale): string {
+  return INTL_LOCALE[locale] ?? 'en-GB'
+}

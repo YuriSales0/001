@@ -1,5 +1,8 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { CalendarDays, Home, User } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type BookingStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED"
 

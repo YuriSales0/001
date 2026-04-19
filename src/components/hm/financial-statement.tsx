@@ -1,5 +1,8 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { Download, CheckCircle2 } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 interface Booking {
   dates: string
@@ -31,9 +34,11 @@ interface FinancialStatementProps {
 const fmtEUR = (n: number) =>
   new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n)
 
-const MONTHS = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December"
+const MONTH_KEYS = [
+  "finance.report.months.january","finance.report.months.february","finance.report.months.march",
+  "finance.report.months.april","finance.report.months.may","finance.report.months.june",
+  "finance.report.months.july","finance.report.months.august","finance.report.months.september",
+  "finance.report.months.october","finance.report.months.november","finance.report.months.december"
 ]
 
 export function FinancialStatement({
@@ -41,7 +46,8 @@ export function FinancialStatement({
   grossIncome, commission, commissionRate, cleaningFees, expenses,
   netPayout, sepaDate, sepaStatus, lastInspection, condition, pdfUrl, className,
 }: FinancialStatementProps) {
-  const monthName = isNaN(Number(month)) ? month : (MONTHS[Number(month) - 1] ?? month)
+  const { t } = useLocale()
+  const monthName = isNaN(Number(month)) ? month : (t(MONTH_KEYS[Number(month) - 1]) ?? month)
 
   return (
     <div className={cn("hm-card overflow-hidden", className)}>
@@ -50,7 +56,7 @@ export function FinancialStatement({
         <div className="flex items-start justify-between">
           <div>
             <div className="text-xs font-sans uppercase tracking-widest text-hm-gold mb-1">
-              Monthly Statement
+              {t('finance.statement.monthlyStatement')}
             </div>
             <h3 className="text-xl font-serif font-bold">{propertyName}</h3>
             <p className="text-hm-ivory/70 font-sans text-sm mt-0.5">
@@ -65,7 +71,7 @@ export function FinancialStatement({
                 className="inline-flex items-center gap-1.5 text-xs font-sans text-hm-gold hover:text-hm-gold/80 border border-hm-gold/40 rounded-lg px-3 py-1.5 transition-colors"
               >
                 <Download className="h-3.5 w-3.5" />
-                Download PDF
+                {t('finance.statement.downloadPdf')}
               </a>
             )}
           </div>
@@ -76,7 +82,7 @@ export function FinancialStatement({
       {bookings.length > 0 && (
         <div className="px-6 py-4 border-b border-hm-border">
           <h4 className="text-xs font-sans uppercase tracking-widest text-hm-slate/60 mb-3">
-            Bookings this month
+            {t('finance.statement.bookingsThisMonth')}
           </h4>
           <div className="space-y-2">
             {bookings.map((b, i) => (
@@ -95,20 +101,20 @@ export function FinancialStatement({
       {/* Financial breakdown */}
       <div className="px-6 py-4 space-y-3 font-sans text-[15px]">
         <div className="flex justify-between text-hm-slate">
-          <span>Gross rental income</span>
+          <span>{t('finance.statement.grossRentalIncome')}</span>
           <span className="font-medium">{fmtEUR(grossIncome)}</span>
         </div>
         <div className="flex justify-between text-hm-slate/70">
-          <span>HostMasters commission ({commissionRate}%)</span>
+          <span>{t('finance.statement.hmCommission')} ({commissionRate}%)</span>
           <span className="text-hm-red/80">− {fmtEUR(commission)}</span>
         </div>
         <div className="flex justify-between text-hm-slate/70">
-          <span>Cleaning fees</span>
+          <span>{t('finance.statement.cleaningFees')}</span>
           <span className="text-hm-red/80">− {fmtEUR(cleaningFees)}</span>
         </div>
         {expenses > 0 && (
           <div className="flex justify-between text-hm-slate/70">
-            <span>Other expenses</span>
+            <span>{t('finance.statement.otherExpenses')}</span>
             <span className="text-hm-red/80">− {fmtEUR(expenses)}</span>
           </div>
         )}
@@ -119,23 +125,23 @@ export function FinancialStatement({
         <div className="flex items-center justify-between">
           <div>
             <div className="text-xs font-sans uppercase tracking-widest text-hm-green/70 mb-1">
-              Your net payment
+              {t('finance.statement.yourNetPayment')}
             </div>
             <div className="text-4xl font-serif font-bold text-hm-green">
               {fmtEUR(netPayout)}
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs font-sans text-hm-slate/60 mb-1">SEPA Transfer</div>
+            <div className="text-xs font-sans text-hm-slate/60 mb-1">{t('finance.statement.sepaTransfer')}</div>
             <div className="flex items-center gap-1.5 font-sans text-sm">
               {sepaStatus === "sent" ? (
                 <>
                   <CheckCircle2 className="h-4 w-4 text-hm-green" />
-                  <span className="text-hm-green font-medium">Sent</span>
+                  <span className="text-hm-green font-medium">{t('finance.statement.sent')}</span>
                 </>
               ) : (
                 <span className="text-hm-slate">
-                  Scheduled {new Date(sepaDate).toLocaleDateString("en-GB")}
+                  {t('finance.statement.scheduled')} {new Date(sepaDate).toLocaleDateString("en-GB")}
                 </span>
               )}
             </div>
@@ -146,9 +152,9 @@ export function FinancialStatement({
       {/* Property condition footer */}
       {(lastInspection || condition) && (
         <div className="px-6 pb-4 font-sans text-sm text-hm-slate/70 border-t border-hm-border pt-4">
-          {condition && <p>Property condition: <strong className="text-hm-green">{condition}</strong></p>}
+          {condition && <p>{t('finance.statement.propertyCondition')}: <strong className="text-hm-green">{condition}</strong></p>}
           {lastInspection && (
-            <p>Last inspection: {new Date(lastInspection).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })}</p>
+            <p>{t('finance.statement.lastInspection')}: {new Date(lastInspection).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })}</p>
           )}
         </div>
       )}
