@@ -75,6 +75,7 @@ function JoinCard({
   cta: string
   onClick: () => void
 }) {
+  const { t } = useLocale()
   return (
     <button
       onClick={onClick}
@@ -150,14 +151,14 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
     { code: "sv", label: "Svenska" }, { code: "no", label: "Norsk" }, { code: "da", label: "Dansk" },
   ]
   const SKILLS = [
-    { code: "CLEANING", label: t("crew.cleaning") || "Cleaning" },
-    { code: "MAINTENANCE", label: t("crew.maintenance") || "Maintenance" },
-    { code: "CHECK_IN", label: "Check-in" },
-    { code: "CHECK_OUT", label: "Check-out" },
-    { code: "INSPECTION", label: "Inspection" },
-    { code: "HANDYMAN", label: "Handyman" },
-    { code: "LAUNDRY", label: "Laundry" },
-    { code: "GARDENING", label: "Gardening" },
+    { code: "CLEANING", label: t("landing.join.form.skillCleaning") },
+    { code: "MAINTENANCE", label: t("landing.join.form.skillMaintenance") },
+    { code: "CHECK_IN", label: t("landing.join.form.skillCheckIn") },
+    { code: "CHECK_OUT", label: t("landing.join.form.skillCheckOut") },
+    { code: "INSPECTION", label: t("landing.join.form.skillInspection") },
+    { code: "HANDYMAN", label: t("landing.join.form.skillHandyman") },
+    { code: "LAUNDRY", label: t("landing.join.form.skillLaundry") },
+    { code: "GARDENING", label: t("landing.join.form.skillGardening") },
   ]
 
   const toggleArray = (field: "languages" | "skills", value: string) => {
@@ -306,10 +307,10 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
                   style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
                 >
                   <option value="" style={{ background: "#0B1E3A" }}>{t("landing.join.form.availability")}</option>
-                  <option value="full-time" style={{ background: "#0B1E3A" }}>Full-time</option>
-                  <option value="part-time" style={{ background: "#0B1E3A" }}>Part-time</option>
-                  <option value="weekends" style={{ background: "#0B1E3A" }}>Weekends only</option>
-                  <option value="flexible" style={{ background: "#0B1E3A" }}>Flexible</option>
+                  <option value="full-time" style={{ background: "#0B1E3A" }}>{t("landing.join.form.fullTime")}</option>
+                  <option value="part-time" style={{ background: "#0B1E3A" }}>{t("landing.join.form.partTime")}</option>
+                  <option value="weekends" style={{ background: "#0B1E3A" }}>{t("landing.join.form.weekends")}</option>
+                  <option value="flexible" style={{ background: "#0B1E3A" }}>{t("landing.join.form.flexible")}</option>
                 </select>
               </>
             )}
