@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import {
   ArrowRight,
@@ -18,6 +19,10 @@ import {
   FileSignature,
   Settings,
   Rocket,
+  Mail,
+  Phone,
+  MapPin,
+  Send,
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
@@ -441,6 +446,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ───────── Contact Us ───────── */}
+      <ContactSection />
 
       {/* ───────── Work with us (subtle teaser → /careers) ───────── */}
       <section className="py-16 sm:py-20" style={{ background: "#071328" }}>
