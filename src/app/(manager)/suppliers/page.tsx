@@ -62,7 +62,7 @@ export default function SuppliersPage() {
     e.preventDefault()
     setFormError("")
     if (!form.name || !form.phone) {
-      setFormError("Name and phone are required.")
+      setFormError(t('manager.suppliers.namePhoneRequired'))
       return
     }
     setSaving(true)
@@ -80,7 +80,7 @@ export default function SuppliersPage() {
     setSaving(false)
     if (!res.ok) {
       const err = await res.json()
-      setFormError(err.error ?? "Failed to create supplier.")
+      setFormError(err.error ?? t('manager.suppliers.failedToCreate'))
       return
     }
     setShowCreate(false)
