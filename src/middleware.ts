@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
 
   // Allow public paths, API routes, and static assets
   if (
-    publicPaths.some(p => pathname === p) ||
+    publicPaths.some(p => pathname === p || pathname === p + '/') ||
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next') ||
     pathname.includes('.')
