@@ -55,7 +55,7 @@ export default function PropertiesPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -110,7 +110,7 @@ export default function PropertiesPage() {
 
       {/* List */}
       <div className="space-y-3">
-        {loading && <div className="py-8 text-center text-sm text-gray-400">Loading…</div>}
+        {loading && <div className="space-y-4 animate-pulse py-4"><div className="h-8 rounded-hm bg-hm-sand w-48" /><div className="h-40 rounded-hm bg-hm-sand" /></div>}
         {!loading && filtered.length === 0 && (
           <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
             No properties match your filters.

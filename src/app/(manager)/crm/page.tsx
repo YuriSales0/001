@@ -304,7 +304,7 @@ export default function CRMPage() {
       {/* Page header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between gap-4 flex-wrap shrink-0">
         <div>
-          <h1 className="text-xl font-bold text-hm-black">{t('common.crmPipeline')}</h1>
+          <h1 className="text-xl font-serif font-bold text-hm-black">{t('common.crmPipeline')}</h1>
           <p className="text-xs text-gray-500 mt-0.5">{leads.length} total leads</p>
         </div>
 

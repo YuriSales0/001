@@ -173,7 +173,7 @@ export default function PropertiesPage() {
   const pending = [...pendingClient, ...pendingApproval]
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -207,7 +207,10 @@ export default function PropertiesPage() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400">A carregar…</p>
+        <div className="space-y-4 animate-pulse">
+          <div className="h-8 rounded-hm bg-hm-sand w-48" />
+          <div className="h-40 rounded-hm bg-hm-sand" />
+        </div>
       ) : properties.length === 0 ? (
         <div className="flex flex-col items-center py-20 text-center">
           <Building2 className="h-16 w-16 text-gray-300 mb-4" />

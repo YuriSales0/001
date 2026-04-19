@@ -161,7 +161,7 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-serif font-bold text-hm-black">{t('common.tasks')}</h1>

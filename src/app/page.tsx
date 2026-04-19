@@ -13,6 +13,11 @@ import {
   Star,
   Zap,
   Globe,
+  UserPlus,
+  MessageCircle,
+  FileSignature,
+  Settings,
+  Rocket,
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
@@ -125,7 +130,7 @@ export default function LandingPage() {
             <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
               {t('landing.problem.badge')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
               {t('landing.problem.title')}
             </h2>
           </div>
@@ -159,7 +164,7 @@ export default function LandingPage() {
             <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
               {t('landing.solution.badge')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
               {t('landing.solution.title')}
             </h2>
             <p className="mt-4 text-gray-500 text-lg">{t('landing.solution.subtitle')}</p>
@@ -205,7 +210,7 @@ export default function LandingPage() {
             <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
               {t('landing.plans.badge')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
               {t('landing.plans.title')}
             </h2>
             <p className="mt-4 text-gray-500 text-lg">{t('landing.plans.subtitle')}</p>
@@ -297,7 +302,7 @@ export default function LandingPage() {
             <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
               {t('landing.social.badge')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
               {t('landing.social.title')}
             </h2>
           </div>
@@ -325,6 +330,96 @@ export default function LandingPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Client Journey ───────── */}
+      <section className="py-20 sm:py-28" style={{ background: 'var(--hm-ivory)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B08A3E' }}>
+              {t('landing.journey.badge')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: '#0B1E3A' }}>
+              {t('landing.journey.title')}
+            </h2>
+            <p className="mt-3 text-gray-500 max-w-lg mx-auto">
+              {t('landing.journey.subtitle')}
+            </p>
+          </div>
+
+          {/* Steps 1-4 */}
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute left-6 sm:left-8 top-0 bottom-0 w-px hidden sm:block" style={{ background: 'rgba(176,138,62,0.2)' }} />
+
+            <div className="space-y-8">
+              {[
+                { step: 1, icon: UserPlus, titleKey: 'step1Title', descKey: 'step1Desc' },
+                { step: 2, icon: MessageCircle, titleKey: 'step2Title', descKey: 'step2Desc' },
+                { step: 3, icon: FileSignature, titleKey: 'step3Title', descKey: 'step3Desc' },
+                { step: 4, icon: Settings, titleKey: 'step4Title', descKey: 'step4Desc' },
+              ].map(({ step, icon: Icon, titleKey, descKey }) => (
+                <div key={step} className="flex gap-5 sm:gap-7 items-start">
+                  <div className="relative z-10 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full shrink-0 shadow-md"
+                       style={{ background: '#0B1E3A' }}>
+                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: '#B08A3E' }} />
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                          style={{ background: '#B08A3E' }}>
+                      {step}
+                    </span>
+                  </div>
+                  <div className="pt-2 sm:pt-4">
+                    <h3 className="text-lg font-bold" style={{ color: '#0B1E3A' }}>
+                      {t(`landing.journey.${titleKey}`)}
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500 max-w-md">
+                      {t(`landing.journey.${descKey}`)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Step 5 — the big one */}
+          <div className="mt-12 rounded-2xl overflow-hidden" style={{ background: '#0B1E3A' }}>
+            <div className="px-6 sm:px-10 py-8 sm:py-10">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full shrink-0"
+                     style={{ background: 'rgba(176,138,62,0.15)' }}>
+                  <Rocket className="h-7 w-7" style={{ color: '#B08A3E' }} />
+                </div>
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#B08A3E' }}>
+                    Step 5
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white">
+                    {t('landing.journey.step5Title')}
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-400 mb-6 max-w-lg">
+                {t('landing.journey.step5Desc')}
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {Array.from({ length: 10 }, (_, i) => (
+                  <div key={i} className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: '#B08A3E' }} />
+                    <span className="text-sm text-gray-300">{t(`landing.journey.feat${i + 1}`)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(176,138,62,0.15)' }}>
+                <p className="text-lg sm:text-xl font-bold text-center" style={{ color: '#B08A3E' }}>
+                  {t('landing.journey.cta')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -359,7 +454,7 @@ export default function LandingPage() {
       {/* ───────── Final CTA ───────── */}
       <section className="py-20 sm:py-28" style={{ background: "#0B1E3A" }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white tracking-tight">
             {t('landing.finalCta.title1')}{" "}
             <span style={{ color: "#B08A3E" }}>{t('landing.finalCta.titleGold')}</span>{" "}
             {t('landing.finalCta.title2')}

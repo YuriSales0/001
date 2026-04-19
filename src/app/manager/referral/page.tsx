@@ -106,7 +106,7 @@ export default function ManagerReferralPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div>
         <h1 className="text-2xl font-serif font-bold text-hm-black">{t('manager.referralPage.title')}</h1>
         <p className="text-sm text-gray-500 mt-0.5">

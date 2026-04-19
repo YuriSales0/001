@@ -103,7 +103,7 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-3xl font-serif font-bold text-hm-black">Team & Users</h1>
@@ -147,7 +147,10 @@ export default function TeamPage() {
       </form>
 
       {loading ? (
-        <p className="text-gray-500">Loading…</p>
+        <div className="space-y-4 animate-pulse">
+          <div className="h-8 rounded-hm bg-hm-sand w-48" />
+          <div className="h-40 rounded-hm bg-hm-sand" />
+        </div>
       ) : (
         (['ADMIN', 'MANAGER', 'CREW', 'CLIENT'] as const).map(role => (
           <div key={role} className="rounded-hm border bg-white overflow-hidden">

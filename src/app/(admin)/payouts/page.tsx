@@ -413,7 +413,7 @@ export default function PayoutsPage() {
   )
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-3xl font-serif font-bold text-hm-black">Payouts</h1>
@@ -500,7 +500,7 @@ export default function PayoutsPage() {
             </tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan={11} className="text-center py-8 text-gray-500">A carregar...</td></tr>}
+            {loading && <tr><td colSpan={11} className="py-8"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>}
             {!loading && displayed.length === 0 && <tr><td colSpan={11} className="text-center py-8 text-gray-500">Sem payouts</td></tr>}
             {displayed.map(p => {
               const overdue = isOverdue(p)

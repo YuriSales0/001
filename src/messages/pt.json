@@ -1194,6 +1194,32 @@
         ]
       }
     },
+    "journey": {
+      "badge": "A tua Jornada",
+      "title": "Do registo ao rendimento total — em 5 passos",
+      "subtitle": "Um processo claro e guiado. Nunca estás sozinho.",
+      "step1Title": "Regista-te e aguarda o teu Manager",
+      "step1Desc": "Cria a tua conta. Um Manager local, fluente na tua língua, vai contactar-te pessoalmente.",
+      "step2Title": "Escolhe o plano ideal para ti",
+      "step2Desc": "O teu Manager explica cada plano em detalhe e recomenda o que melhor se adequa à tua propriedade e objectivos.",
+      "step3Title": "Assina o contrato de serviço",
+      "step3Desc": "Revê e assina o contrato digitalmente. Termos transparentes, sem custos ocultos, cancela quando quiseres.",
+      "step4Title": "Propriedade configurada",
+      "step4Desc": "Conectamos os teus calendários Airbnb e Booking.com, instalamos Smart Lock e configuramos tudo.",
+      "step5Title": "A tua propriedade trabalha por ti",
+      "step5Desc": "Tudo a funcionar — sem dores de cabeça.",
+      "feat1": "Gestão completa de aluguer de curta duração",
+      "feat2": "Manutenção preventiva",
+      "feat3": "Olhar do dono em cada inspecção",
+      "feat4": "Relatórios mensais automatizados",
+      "feat5": "Presença local no terreno",
+      "feat6": "Inspecções inopinadas pelo Crew Captain",
+      "feat7": "Payouts agendados automaticamente",
+      "feat8": "Gestão de manutenções corretivas",
+      "feat9": "Reformas e melhorias",
+      "feat10": "Administração fiscal (Modelo 179, IRNR, NRU)",
+      "cta": "A tua propriedade rentabiliza. Tu descansas."
+    },
     "finalCta": {
       "title1": "Pronto para ter",
       "titleGold": "controlo real",

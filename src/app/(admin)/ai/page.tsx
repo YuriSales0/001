@@ -96,7 +96,7 @@ export default function AIPage() {
   const maxDayAvg   = Math.max(...byDayOfWeek.map(d => d._avg.priceCharged ?? 0), 1)
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header + Tabs */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
@@ -145,7 +145,7 @@ export default function AIPage() {
       {tab === 'pricing' && (
         <>
           {loading ? (
-            <div className="text-center py-12 text-gray-500 text-sm">A carregar...</div>
+            <div className="space-y-4 animate-pulse py-4"><div className="h-8 rounded-hm bg-hm-sand w-48" /><div className="h-40 rounded-hm bg-hm-sand" /></div>
           ) : (
             <>
               {/* KPI cards */}

@@ -208,7 +208,7 @@ export default function ClientTaxPage() {
   const actionRequired = obligations.filter(o => o.status === "ACTION_REQUIRED" || o.status === "EXPIRED")
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>

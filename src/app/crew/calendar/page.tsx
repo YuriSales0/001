@@ -164,7 +164,7 @@ export default function CrewCalendarPage() {
   const MAX = 3
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-serif font-bold text-gray-900">As Minhas Tarefas</h1>
@@ -181,7 +181,7 @@ export default function CrewCalendarPage() {
         </div>
       </div>
 
-      {loading && <p className="text-sm text-gray-400">A carregar…</p>}
+      {loading && <div className="space-y-3 animate-pulse"><div className="h-6 rounded bg-hm-sand w-40" /><div className="h-32 rounded-hm bg-hm-sand" /></div>}
 
       <div className="overflow-x-auto -mx-6 px-6">
         <div className="grid grid-cols-7 gap-3 min-w-[700px]">

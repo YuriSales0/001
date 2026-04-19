@@ -337,7 +337,7 @@ export default function MarketingPage() {
   const cpl = totals.leads > 0 ? totals.spent / totals.leads : null
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
@@ -400,7 +400,7 @@ export default function MarketingPage() {
             </tr>
           </thead>
           <tbody>
-            {loading && <tr><td colSpan={8} className="text-center py-8 text-gray-400">Loading…</td></tr>}
+            {loading && <tr><td colSpan={8} className="py-8"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>}
             {!loading && campaigns.length === 0 && (
               <tr>
                 <td colSpan={8} className="py-12 text-center">

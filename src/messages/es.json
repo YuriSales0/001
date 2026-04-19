@@ -1194,6 +1194,32 @@
         ]
       }
     },
+    "journey": {
+      "badge": "Tu Recorrido",
+      "title": "Del registro a los ingresos — en 5 pasos",
+      "subtitle": "Un proceso claro y guiado. Nunca caminas solo.",
+      "step1Title": "Regístrate y espera a tu Manager",
+      "step1Desc": "Crea tu cuenta. Un Manager local, que habla tu idioma, te contactará personalmente.",
+      "step2Title": "Elige el plan ideal para ti",
+      "step2Desc": "Tu Manager te explica cada plan en detalle y recomienda el que mejor se adapta a tu propiedad y objetivos.",
+      "step3Title": "Firma el contrato de servicio",
+      "step3Desc": "Revisa y firma tu contrato digitalmente. Términos transparentes, sin costes ocultos, cancela cuando quieras.",
+      "step4Title": "Propiedad configurada",
+      "step4Desc": "Conectamos tus calendarios de Airbnb y Booking.com, instalamos Smart Lock y configuramos todo.",
+      "step5Title": "Tu propiedad trabaja para ti",
+      "step5Desc": "Todo funcionando — sin dolores de cabeza.",
+      "feat1": "Gestión completa de alquiler vacacional",
+      "feat2": "Mantenimiento preventivo",
+      "feat3": "Ojo del dueño en cada inspección",
+      "feat4": "Informes mensuales automatizados",
+      "feat5": "Presencia local sobre el terreno",
+      "feat6": "Inspecciones sorpresa por el Crew Captain",
+      "feat7": "Pagos programados automáticamente",
+      "feat8": "Gestión de mantenimiento correctivo",
+      "feat9": "Reformas y mejoras",
+      "feat10": "Administración fiscal (Modelo 179, IRNR, NRU)",
+      "cta": "Tu propiedad rentabiliza. Tú descansas."
+    },
     "finalCta": {
       "title1": "¿Listo para tener",
       "titleGold": "control real",

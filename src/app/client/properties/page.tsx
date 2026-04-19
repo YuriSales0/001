@@ -152,10 +152,15 @@ export default function ClientProperties() {
     setAddLoading(false)
   }
 
-  if (loading) return <div className="p-6 text-sm text-gray-400">{t('client.properties.loading')}</div>
+  if (loading) return (
+    <div className="p-6 space-y-6 animate-pulse">
+      <div className="h-10 rounded-hm bg-hm-sand w-64" />
+      <div className="h-48 rounded-hm bg-hm-sand" />
+    </div>
+  )
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-serif font-bold text-hm-black">{t('client.properties.title')}</h1>
@@ -242,7 +247,7 @@ export default function ClientProperties() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="text-base font-bold text-hm-black">{p.name}</h3>
+                    <h3 className="text-base font-bold text-hm-black truncate max-w-[250px]" title={p.name}>{p.name}</h3>
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${badge.cls}`}>{badge.label}</span>
                   </div>
                   <p className="text-sm text-gray-500 flex items-center gap-1">

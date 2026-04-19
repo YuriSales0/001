@@ -243,7 +243,7 @@ export default function ClientProfilePage() {
   const ownerName = profile?.name ?? profile?.email ?? "Owner"
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-8 max-w-2xl">
       <div>
         <h1 className="text-2xl font-serif font-bold" style={{ color: 'var(--hm-black)' }}>{t('common.myProfile')}</h1>
         <p className="text-sm text-gray-500">{t('profile.subtitle')}</p>

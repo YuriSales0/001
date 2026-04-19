@@ -166,7 +166,12 @@ export default function ClientReportsPage() {
   // Top months for bar chart (net)
   const maxNet = Math.max(...monthlyData.map(([, d]) => d.net), 1)
 
-  if (loading) return <div className="p-6 text-sm text-gray-400">A carregar…</div>
+  if (loading) return (
+    <div className="p-6 space-y-6 animate-pulse">
+      <div className="h-10 rounded-hm bg-hm-sand w-64" />
+      <div className="h-48 rounded-hm bg-hm-sand" />
+    </div>
+  )
   if (loadError) return <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
 
   return (

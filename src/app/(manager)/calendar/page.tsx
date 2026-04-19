@@ -322,11 +322,11 @@ export default function ManagerCalendar() {
   const toggleDay = (key:string) => setExpandedDay(d=>d===key?null:key)
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('common.calendar')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('common.calendar')}</h1>
           <p className="text-sm text-gray-500">{t('manager.calendar.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">

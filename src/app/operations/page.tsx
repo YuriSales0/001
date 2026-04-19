@@ -73,7 +73,7 @@ export default function OperationsPage() {
       {/* Header */}
       <div className="px-6 py-4 border-b bg-white flex items-center justify-between shrink-0">
         <div>
-          <h1 className="text-xl font-bold text-hm-black">Operations</h1>
+          <h1 className="text-xl font-serif font-bold text-hm-black">Operations</h1>
           <p className="text-xs text-gray-500 mt-0.5">
             {activeCount} active · {upcomingCount} upcoming
           </p>

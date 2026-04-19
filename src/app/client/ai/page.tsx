@@ -30,7 +30,12 @@ export default function ClientAIPage() {
     }
   }, [plan])
 
-  if (loading) return <div className="p-8 text-center text-gray-400">A carregar…</div>
+  if (loading) return (
+    <div className="p-8 space-y-6 animate-pulse">
+      <div className="h-10 rounded-hm bg-hm-sand w-64" />
+      <div className="h-48 rounded-hm bg-hm-sand" />
+    </div>
+  )
 
   const hasAccess = plan?.subscriptionPlan && ['MID', 'PREMIUM'].includes(plan.subscriptionPlan)
 
@@ -76,7 +81,7 @@ export default function ClientAIPage() {
   const maxAvg = Math.max(...stats.map(m => m._avg.priceCharged ?? 0), 1)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-serif font-bold text-gray-900 flex items-center gap-2">
           <Sparkles className="h-6 w-6 text-amber-500" />

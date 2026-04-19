@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState, useCallback } from "react"
 import { InvoiceForm } from "@/components/invoice-form"
-import { Pencil, Trash2, X, CheckCircle } from "lucide-react"
+import { Pencil, Trash2, X, CheckCircle, FileText } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
 import { useEscapeKey } from "@/lib/use-escape-key"
@@ -165,7 +165,7 @@ export default function ManagerInvoices() {
   )
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-serif font-bold text-gray-900">Invoices</h1>
@@ -207,10 +207,14 @@ export default function ManagerInvoices() {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan={7} className="text-center py-10 text-gray-400">Loading…</td></tr>
+              <tr><td colSpan={7} className="py-10"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>
             )}
             {!loading && invoices.length === 0 && (
-              <tr><td colSpan={7} className="text-center py-10 text-gray-400">No invoices yet</td></tr>
+              <tr><td colSpan={7} className="py-12 text-center">
+                <FileText className="h-10 w-10 mx-auto text-gray-300 mb-2" />
+                <p className="font-serif font-bold text-hm-black">No invoices yet</p>
+                <p className="text-sm text-gray-500 mt-0.5">Create your first invoice using the form above.</p>
+              </td></tr>
             )}
             {invoices.map(i => (
               <tr key={i.id} className="border-t hover:bg-gray-50 transition-colors">

@@ -68,7 +68,7 @@ export default function ManagerProfilePage() {
   if (loading) return <div className="p-8 text-sm text-gray-400">{t('common.loading')}</div>
 
   return (
-    <div className="space-y-6 p-6 max-w-2xl">
+    <div className="space-y-8 p-6 max-w-2xl">
       <div>
         <h1 className="text-2xl font-serif font-bold text-hm-black">{t('common.myProfile')}</h1>
         <p className="text-sm text-gray-500">{t('manager.profile.roleDesc')}</p>

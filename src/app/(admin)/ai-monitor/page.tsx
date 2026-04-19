@@ -138,7 +138,7 @@ export default async function AiMonitorPage() {
   })
 
   return (
-    <div className="p-6 space-y-6 max-w-4xl">
+    <div className="p-6 space-y-8 max-w-4xl">
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">

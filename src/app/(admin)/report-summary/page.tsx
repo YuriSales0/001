@@ -171,7 +171,7 @@ export default function ReportsPage() {
         <BarChart3 className="h-7 w-7 text-gray-400" /> Reports
       </h1>
       {periodSelector}
-      <div className="text-gray-500 text-sm py-8 text-center">A carregar...</div>
+      <div className="space-y-4 animate-pulse py-4"><div className="h-8 rounded-hm bg-hm-sand w-48" /><div className="h-40 rounded-hm bg-hm-sand" /></div>
     </div>
   )
   if (!report) return <div className="p-6 text-gray-500 text-sm">Erro ao carregar report.</div>

@@ -311,7 +311,7 @@ export default function OwnerBookings() {
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{FLAGS[r.guestNationality ?? ""] ?? "🌍"}</span>
                       <div>
-                        <p className="font-serif font-bold text-hm-black text-lg">{r.guestName}</p>
+                        <p className="font-serif font-bold text-hm-black text-lg truncate max-w-[250px]" title={r.guestName}>{r.guestName}</p>
                         <p className="font-sans text-sm text-hm-slate/70">
                           {fmtDate(r.checkIn)} → {fmtDate(r.checkOut)} · {r.nights} {t('client.bookings.nights')}
                         </p>

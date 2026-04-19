@@ -126,7 +126,7 @@ export default function ClientTasksPage() {
   const overdueCount = tasks.filter(task => task.status !== 'COMPLETED' && new Date(task.dueDate) < now).length
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>

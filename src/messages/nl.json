@@ -961,6 +961,32 @@
         "thanks": "Sollicitatie ontvangen",
         "thanksDesc": "Bedankt! We bekijken je sollicitatie en nemen snel contact op."
       }
+    },
+    "journey": {
+      "badge": "Your Journey",
+      "title": "From sign-up to full income — in 5 steps",
+      "subtitle": "A clear, guided process. You never walk alone.",
+      "step1Title": "Sign up and wait for your Manager",
+      "step1Desc": "Create your account. A local Manager fluent in your language will reach out to welcome you personally.",
+      "step2Title": "Choose the right plan for you",
+      "step2Desc": "Your Manager explains each plan in detail and recommends the one that fits your property and goals.",
+      "step3Title": "Sign the service agreement",
+      "step3Desc": "Review and sign your contract digitally. Transparent terms, no hidden fees, cancel anytime.",
+      "step4Title": "Property onboarded",
+      "step4Desc": "We connect your Airbnb and Booking.com calendars, install Smart Lock, and configure everything.",
+      "step5Title": "Your property works for you",
+      "step5Desc": "Everything running — without the headaches.",
+      "feat1": "Full short-term rental management",
+      "feat2": "Preventive maintenance",
+      "feat3": "Owner's eye on every inspection",
+      "feat4": "Automated monthly reports",
+      "feat5": "Local presence on the ground",
+      "feat6": "Unannounced inspections by Crew Captain",
+      "feat7": "Automatic scheduled payouts",
+      "feat8": "Corrective maintenance management",
+      "feat9": "Renovations & improvements",
+      "feat10": "Tax administration (Modelo 179, IRNR, NRU)",
+      "cta": "Your property earns. You rest."
     }
   },
   "onboarding": {

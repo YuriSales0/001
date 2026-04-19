@@ -92,7 +92,7 @@ export default function AdminRecruitPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-serif font-bold text-hm-black">Recruiting</h1>
