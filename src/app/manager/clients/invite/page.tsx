@@ -56,7 +56,7 @@ export default function ManagerInviteClientPage() {
           <div className="mx-auto h-14 w-14 rounded-full bg-green-50 flex items-center justify-center mb-4">
             <CheckCircle2 className="h-7 w-7 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-hm-black mb-1">{t('manager.inviteClient.sentTitle')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black mb-1">{t('manager.inviteClient.sentTitle')}</h1>
           <p className="text-sm text-gray-500 mb-6">
             {t('manager.inviteClient.sentBodyPrefix')} <strong>{sent.email}</strong> {t('manager.inviteClient.sentBodySuffix')}
           </p>
@@ -90,7 +90,7 @@ export default function ManagerInviteClientPage() {
       </Link>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-hm-black flex items-center gap-2">
+        <h1 className="text-2xl font-serif font-bold text-hm-black flex items-center gap-2">
           <UserPlus className="h-6 w-6" /> {t('manager.inviteClient.title')}
         </h1>
         <p className="text-sm text-gray-500 mt-1">

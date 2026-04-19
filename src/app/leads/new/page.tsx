@@ -66,7 +66,7 @@ export default function LeadCapturePage() {
           ) : (
             <>
               <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Fala connosco</h1>
+                <h1 className="text-2xl font-serif font-bold text-gray-900">Fala connosco</h1>
                 <p className="text-sm text-gray-500 mt-1">
                   Gestão profissional de propriedades · Costa Tropical, Espanha
                 </p>
