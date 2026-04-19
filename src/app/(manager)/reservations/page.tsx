@@ -207,7 +207,7 @@ export default function ReservationsPage() {
     e.preventDefault()
     setCreateError("")
     if (!form.propertyId||!form.guestName||!form.checkIn||!form.checkOut||!form.amount) {
-      setCreateError("Fill in all required fields.")
+      setCreateError(t('manager.reservations.fillRequired'))
       return
     }
     setCreating(true)
@@ -228,7 +228,7 @@ export default function ReservationsPage() {
     })
     if (!res.ok) {
       const err = await res.json().catch(()=>({}))
-      setCreateError(err.error??"Failed to create reservation")
+      setCreateError(err.error??t('manager.reservations.failedToCreate'))
     } else {
       setShowCreate(false)
       setForm({propertyId:"",guestName:"",guestEmail:"",guestPhone:"",checkIn:"",checkOut:"",amount:"",platform:"DIRECT",guestNationality:"",guestAgeGroup:"",guestGroupSize:"",hasChildren:false,hasPets:false,guestLanguage:""})
@@ -623,10 +623,10 @@ export default function ReservationsPage() {
               </div>
 
               <div className="flex justify-end gap-2 pt-1">
-                <button type="button" onClick={()=>setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
+                <button type="button" onClick={()=>setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
                 <button type="submit" disabled={creating}
                   className="rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                  {creating?"Saving…":"Create reservation"}
+                  {creating?t('manager.reservations.saving'):t('manager.reservations.createReservation')}
                 </button>
               </div>
             </form>
