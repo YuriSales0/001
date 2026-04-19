@@ -51,7 +51,7 @@ export default function LandingPage() {
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
           </Link>
-          <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: 'var(--hm-stone)' }}>
+          <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: '#4A5568' }}>
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
             <a href="#solucao" className="hover:text-hm-ink transition-colors">{t('landing.nav.solution')}</a>
             <a href="#planos" className="hover:text-hm-ink transition-colors">{t('landing.nav.plans')}</a>
@@ -61,7 +61,7 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSelector />
-            <Link href="/login" className="text-sm hover:text-hm-ink transition-colors hidden sm:block" style={{ color: 'var(--hm-stone)' }}>
+            <Link href="/login" className="text-sm hover:text-hm-ink transition-colors hidden sm:block" style={{ color: '#4A5568' }}>
               {t('landing.nav.enter')}
             </Link>
             <Link
