@@ -848,6 +848,13 @@
         "complaint": "Reclamação recebida",
         "unreportedDamage": "Dano não reportado"
       }
+    },
+    "calendar": {
+      "title": "As Minhas Tarefas",
+      "subtitle": "Tarefas atribuídas a mim esta semana",
+      "noTasksThisDay": "Nenhuma tarefa neste dia",
+      "complete": "Concluir",
+      "today": "Hoje"
     }
   },
   "finance": {
@@ -1919,6 +1926,24 @@
       "phase2Desc": "Recomendações de pricing com IA baseadas em sazonalidade, eventos e dados da tua propriedade.",
       "phase3": "Fase 3 — Futuro",
       "phase3Desc": "Pricing dinâmico automático. O sistema ajusta o preço por noite em tempo real."
+    },
+    "financials": {
+      "title": "Os Meus Ganhos",
+      "subtitle": "Os teus extratos mensais e pagamentos líquidos.",
+      "yearToDate": "Acumulado do ano",
+      "totalEarnings": "Total de ganhos",
+      "grossIncome": "Receita bruta",
+      "bookings": "Reservas",
+      "noStatements": "Sem extratos ainda",
+      "firstStatement": "O teu primeiro extrato aparecerá aqui após a primeira reserva concluída.",
+      "monthlyStatements": "Extratos mensais"
+    },
+    "messages": {
+      "placeholder": "Escreve uma mensagem…",
+      "noManager": "Sem gestor atribuído",
+      "noManagerDesc": "Contacta o administrador para te atribuir um gestor.",
+      "noMessages": "Sem mensagens ainda. Envia a primeira!",
+      "manager": "Gestor"
     }
   },
   "aiChat": {

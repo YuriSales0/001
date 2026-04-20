@@ -79,7 +79,12 @@ export default function CrewEarningsPage() {
   const currentMonthTasks = byMonth[currentMonth]?.length ?? 0
   const currentEarnings = contractType === 'MONTHLY' ? monthlyRate : currentMonthTasks * taskRate
 
-  const prevMonth = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 7)
+  const prevMonth = (() => {
+    const d = new Date()
+    d.setDate(1) // avoid month rollover issues (e.g. Mar 31 -> Feb 31 = Mar 3)
+    d.setMonth(d.getMonth() - 1)
+    return d.toISOString().slice(0, 7)
+  })()
   const prevMonthTasks = byMonth[prevMonth]?.length ?? 0
   const prevEarnings = contractType === 'MONTHLY' ? monthlyRate : prevMonthTasks * taskRate
 

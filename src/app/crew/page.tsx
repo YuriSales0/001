@@ -289,7 +289,29 @@ export default function CrewHome() {
             return (
               <button
                 key={t.id}
-                onClick={() => { setSelected(t); setCheckout({ condition: "good", issues: "", damages: "", notes: "" }) }}
+                onClick={() => {
+                  setSelected(t)
+                  // Pre-populate checkout form if the task has existing checkout data in notes
+                  if (t.notes) {
+                    try {
+                      const parsed = JSON.parse(t.notes)
+                      if (parsed && typeof parsed === 'object') {
+                        setCheckout({
+                          condition: parsed.condition ?? "good",
+                          issues: parsed.issues ?? "",
+                          damages: parsed.damages ?? "",
+                          notes: parsed.notes ?? "",
+                        })
+                      } else {
+                        setCheckout({ condition: "good", issues: "", damages: "", notes: "" })
+                      }
+                    } catch {
+                      setCheckout({ condition: "good", issues: "", damages: "", notes: "" })
+                    }
+                  } else {
+                    setCheckout({ condition: "good", issues: "", damages: "", notes: "" })
+                  }
+                }}
                 className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
                   active ? "bg-navy-50 border-l-2 border-l-navy-700" : ""
                 }`}

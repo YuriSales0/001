@@ -944,6 +944,13 @@
         "complaint": "Complaint received",
         "unreportedDamage": "Unreported damage"
       }
+    },
+    "calendar": {
+      "title": "My Tasks",
+      "subtitle": "Tasks assigned to me this week",
+      "noTasksThisDay": "No tasks this day",
+      "complete": "Complete",
+      "today": "Today"
     }
   },
   "finance": {
@@ -2019,6 +2026,24 @@
       "phase2Desc": "AI-powered pricing recommendations based on seasonality, events, and your property data.",
       "phase3": "Phase 3 — Future",
       "phase3Desc": "Automated dynamic pricing. The system adjusts your nightly rate in real-time."
+    },
+    "financials": {
+      "title": "My Earnings",
+      "subtitle": "Your monthly statements and net payments.",
+      "yearToDate": "Year to date",
+      "totalEarnings": "Total earnings",
+      "grossIncome": "Gross income",
+      "bookings": "Bookings",
+      "noStatements": "No statements yet",
+      "firstStatement": "Your first statement will appear here after your first booking is completed.",
+      "monthlyStatements": "Monthly statements"
+    },
+    "messages": {
+      "placeholder": "Write a message…",
+      "noManager": "No manager assigned",
+      "noManagerDesc": "Contact the administrator to assign a manager to you.",
+      "noMessages": "No messages yet. Send the first one!",
+      "manager": "Manager"
     }
   },
   "aiChat": {

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { MessageCircle, Send, Loader2 } from 'lucide-react'
+import { useLocale } from '@/i18n/provider'
 
 type Sender = { id: string; name: string | null; role: string }
 type Message = { id: string; body: string; createdAt: string; sender: Sender }
@@ -12,6 +13,7 @@ type Conversation = {
 }
 
 export default function ClientMessagesPage() {
+  const { t } = useLocale()
   const [conv, setConv] = useState<Conversation | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [text, setText] = useState('')
@@ -172,7 +174,7 @@ export default function ClientMessagesPage() {
           value={text}
           onChange={e => setText(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-          placeholder="Escreve uma mensagem…"
+          placeholder={t('client.messages.placeholder')}
           className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
         />
         <button

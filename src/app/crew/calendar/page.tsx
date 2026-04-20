@@ -77,7 +77,7 @@ function DayPanel({
         </button>
       </div>
       {events.length===0 ? (
-        <div className="px-5 py-8 text-center text-sm text-gray-400">Nenhuma tarefa neste dia</div>
+        <div className="px-5 py-8 text-center text-sm text-gray-400">{t('crew.calendar.noTasksThisDay')}</div>
       ) : (
         <div className="divide-y max-h-80 overflow-y-auto">
           {events.map(e=>{
@@ -102,7 +102,7 @@ function DayPanel({
                   ):meta?.taskId&&(
                     <button onClick={()=>onComplete(e)}
                       className="rounded-md border px-2 py-1 text-xs text-gray-600 hover:bg-gray-50">
-                      ✓ Concluir
+                      ✓ {t('crew.calendar.complete')}
                     </button>
                   )}
                 </div>
@@ -167,8 +167,8 @@ export default function CrewCalendarPage() {
     <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-gray-900">As Minhas Tarefas</h1>
-          <p className="text-sm text-gray-500">Tarefas atribuídas a mim esta semana</p>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('crew.calendar.title')}</h1>
+          <p className="text-sm text-gray-500">{t('crew.calendar.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={()=>setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()-7);return d})}
@@ -177,7 +177,7 @@ export default function CrewCalendarPage() {
           <button onClick={()=>setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()+7);return d})}
             className="rounded-lg border p-2 hover:bg-gray-50"><ChevronRight className="h-4 w-4"/></button>
           <button onClick={()=>setWeekStart(getWeekStart(new Date()))}
-            className="rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">Hoje</button>
+            className="rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">{t('crew.calendar.today')}</button>
         </div>
       </div>
 
