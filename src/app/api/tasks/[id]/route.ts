@@ -275,20 +275,26 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       const taskDate = existing.dueDate
       const dayBefore = new Date(taskDate); dayBefore.setDate(dayBefore.getDate() - 1)
       const dayAfter = new Date(taskDate); dayAfter.setDate(dayAfter.getDate() + 1)
-      await prisma.reservation.updateMany({
+      const matchingRes = await prisma.reservation.findFirst({
         where: { propertyId: existing.propertyId, status: 'UPCOMING', checkIn: { gte: dayBefore, lte: dayAfter } },
-        data: { status: 'ACTIVE' },
+        orderBy: { checkIn: 'asc' },
       })
+      if (matchingRes) {
+        await prisma.reservation.update({ where: { id: matchingRes.id }, data: { status: 'ACTIVE' } })
+      }
     }
 
     if (becameCompleted && (existing.type === 'CHECK_OUT' || (isCheckoutSubmit && existing.type === 'CLEANING'))) {
       const taskDate = existing.dueDate
       const dayBefore = new Date(taskDate); dayBefore.setDate(dayBefore.getDate() - 1)
       const dayAfter = new Date(taskDate); dayAfter.setDate(dayAfter.getDate() + 1)
-      await prisma.reservation.updateMany({
+      const matchingRes = await prisma.reservation.findFirst({
         where: { propertyId: existing.propertyId, status: 'ACTIVE', checkOut: { gte: dayBefore, lte: dayAfter } },
-        data: { status: 'COMPLETED' },
+        orderBy: { checkOut: 'asc' },
       })
+      if (matchingRes) {
+        await prisma.reservation.update({ where: { id: matchingRes.id }, data: { status: 'COMPLETED' } })
+      }
     }
 
     return NextResponse.json(task)

@@ -41,7 +41,8 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { dueDate: 'asc' },
-      take: 500,
+      skip: Number(searchParams.get('skip')) || 0,
+      take: Math.min(Number(searchParams.get('take')) || 200, 500),
     })
 
     return NextResponse.json(tasks)
