@@ -25,6 +25,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
   const [data, setData] = useState<OnboardingData | null>(null)
   const [saving, setSaving] = useState(false)
 
+  const [error, setError] = useState('')
   const [selectedLang, setSelectedLang] = useState<Locale>(locale)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -86,12 +87,26 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
 
   const saveStep = async (stepName: string, stepData: Record<string, unknown>, complete = false) => {
     setSaving(true)
-    await fetch('/api/onboarding', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ step: stepName, data: stepData, complete }),
-    })
+    setError('')
+    try {
+      const res = await fetch('/api/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ step: stepName, data: stepData, complete }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setError(data.error || t('onboarding.saveError'))
+        setSaving(false)
+        return false
+      }
+    } catch {
+      setError(t('onboarding.networkError'))
+      setSaving(false)
+      return false
+    }
     setSaving(false)
+    return true
   }
 
   const next = async () => {
@@ -99,22 +114,27 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
       // Language already saved on pick — just advance
     }
     if (step === 1) {
-      await saveStep('profile', { name, phone, language: selectedLang })
+      const ok = await saveStep('profile', { name, phone, language: selectedLang })
+      if (!ok) return
     }
     if (step === 2 && role === 'CREW') {
-      await saveStep('contract', { contractType, monthlyRate, taskRate })
+      const ok = await saveStep('contract', { contractType, monthlyRate, taskRate })
+      if (!ok) return
     }
     if (step === 2 && role === 'MANAGER') {
-      await saveStep('compensation', {
+      const ok = await saveStep('compensation', {
         subscriptionShare: parseFloat(subscriptionShare) / 100,
         commissionShare: parseFloat(commissionShare) / 100,
       })
+      if (!ok) return
     }
     if (step === 3 && role === 'CREW') {
-      await saveStep('skills', { skills })
+      const ok = await saveStep('skills', { skills })
+      if (!ok) return
     }
     if (step === stepLabels.length - 1) {
-      await saveStep('complete', { signContractIds: acceptedContracts }, true)
+      const ok = await saveStep('complete', { signContractIds: acceptedContracts }, true)
+      if (!ok) return
       onComplete()
       return
     }
@@ -215,11 +235,11 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                 {t('onboarding.crewContractStep')}
               </div>
               <p className="text-xs text-gray-500 mb-3">
-                Your contract terms have been set by the Admin. Please review and confirm.
+                {t('onboarding.crewContractDesc')}
               </p>
               <div className="rounded-xl border bg-gray-50 p-4 space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Contract type</span>
+                  <span className="text-sm text-gray-600">{t('onboarding.crewContractTypeLabel')}</span>
                   <span className="text-sm font-semibold text-hm-black">
                     {contractType === 'MONTHLY' ? t('onboarding.crewMonthly') : t('onboarding.crewFreelancer')}
                   </span>
@@ -238,7 +258,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                 )}
                 {!monthlyRate && !taskRate && (
                   <p className="text-xs text-amber-600">
-                    Rates not yet configured. Contact your Admin.
+                    {t('onboarding.ratesNotConfigured')}
                   </p>
                 )}
               </div>
@@ -276,7 +296,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                 )}
                 {!subscriptionShare && !commissionShare && (
                   <p className="text-xs text-amber-600">
-                    Compensation not yet configured. Contact your Admin.
+                    {t('onboarding.compensationNotConfigured')}
                   </p>
                 )}
               </div>
@@ -360,6 +380,13 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
             </>
           )}
         </div>
+
+        {/* Error */}
+        {error && (
+          <div className="px-6 pb-2">
+            <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="border-t px-6 py-4 flex justify-between">

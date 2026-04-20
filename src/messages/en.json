@@ -1715,7 +1715,13 @@
       "smartLock": "Smart Lock",
       "smartLockActive": "Nuki lock active · ID {id}",
       "smartLockConnected": "Connected",
-      "activeListings": "Active listings"
+      "activeListings": "Active listings",
+      "partialLoadError": "Some data could not be loaded",
+      "errorProperties": "Properties failed to load",
+      "errorPayouts": "Payouts failed to load",
+      "errorReservations": "Reservations failed to load",
+      "errorTasks": "Tasks failed to load",
+      "errorInvoices": "Invoices failed to load"
     },
     "profileDocs": {
       "managementAgreement": "Property Management Agreement",
@@ -2158,7 +2164,8 @@
     "subscriptionPlan": "Subscription plan",
     "viewPlanDetails": "View plan details",
     "yourDocuments": "Your documents",
-    "planSuffix": "plan"
+    "planSuffix": "plan",
+    "imageTooLarge": "Image must be under 5 MB"
   },
   "booking": {
     "status": {

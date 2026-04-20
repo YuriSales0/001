@@ -52,7 +52,7 @@ export default function OwnerPlan() {
     },
   ]
 
-  const [currentPlan, setCurrentPlan] = useState<PlanId>("BASIC")
+  const [currentPlan, setCurrentPlan] = useState<PlanId>("STARTER")
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly")
   const [loading, setLoading] = useState(true)
 

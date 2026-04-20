@@ -1615,7 +1615,13 @@
       "viewEarningsDesc": "Extractos e projecções",
       "propertySetup": "A tua propriedade está a ser configurada",
       "propertySetupDesc": "O teu Manager está a preparar a tua propriedade. Verás o teu dashboard aqui quando tudo estiver pronto.",
-      "contactManager": "Contactar o teu Manager"
+      "contactManager": "Contactar o teu Manager",
+      "partialLoadError": "Alguns dados não puderam ser carregados",
+      "errorProperties": "Propriedades não carregaram",
+      "errorPayouts": "Pagamentos não carregaram",
+      "errorReservations": "Reservas não carregaram",
+      "errorTasks": "Tarefas não carregaram",
+      "errorInvoices": "Facturas não carregaram"
     },
     "profileDocs": {
       "managementAgreement": "Contrato de Gestão",
@@ -2058,7 +2064,8 @@
     "subscriptionPlan": "Plano de subscrição",
     "viewPlanDetails": "Ver detalhes do plano",
     "yourDocuments": "Os teus documentos",
-    "planSuffix": "plano"
+    "planSuffix": "plano",
+    "imageTooLarge": "A imagem deve ter menos de 5 MB"
   },
   "booking": {
     "status": {

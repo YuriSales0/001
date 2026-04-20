@@ -68,6 +68,7 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
       h1{font-size:22px;border-bottom:2px solid #B08A3E;padding-bottom:8px;color:#0B1E3A}
       .meta{font-size:13px;color:#666;margin-bottom:24px}
       .signed{margin-top:32px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px}
+      @media print{body{max-height:none !important;overflow:visible !important}}
       </style></head><body>
       <h1>${contract.title}</h1>
       <div class="meta">${t('contracts.serviceAgreement')}</div>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, FileText, Download, Star, User } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
+import { showToast } from "@/components/hm/toast"
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -207,6 +208,10 @@ export default function ClientProfilePage() {
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    if (file.size > 5 * 1024 * 1024) {
+      showToast(t('profile.imageTooLarge'), 'error')
+      return
+    }
     const reader = new FileReader()
     reader.onload = ev => setForm(f => ({ ...f, image: ev.target?.result as string }))
     reader.readAsDataURL(file)

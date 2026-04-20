@@ -172,7 +172,9 @@ export default function ClientCarePage() {
       setReservations(await rRes.json())
       const props = await pRes.json()
       setProperties(props)
-      if (props.length > 0) setReqForm(f => ({ ...f, propertyId: f.propertyId || props[0].id }))
+      if (props.length > 0) {
+        setReqForm(f => ({ ...f, propertyId: f.propertyId || props[0].id }))
+      }
     } catch {
       setLoadError(true)
     } finally {
@@ -271,14 +273,16 @@ export default function ClientCarePage() {
             {t('client.care.subtitle')}
           </p>
         </div>
-        <button
-          onClick={() => setShowRequest(true)}
-          className="inline-flex items-center gap-2 rounded-lg px-5 py-3 font-sans font-semibold text-white transition-opacity hover:opacity-90"
-          style={{ background: "var(--hm-gold-dk)", minHeight: "44px" }}
-        >
-          <Plus className="h-4 w-4" />
-          {t('client.care.requestVisit')}
-        </button>
+        {properties.length > 0 && (
+          <button
+            onClick={() => setShowRequest(true)}
+            className="inline-flex items-center gap-2 rounded-lg px-5 py-3 font-sans font-semibold text-white transition-opacity hover:opacity-90"
+            style={{ background: "var(--hm-gold-dk)", minHeight: "44px" }}
+          >
+            <Plus className="h-4 w-4" />
+            {t('client.care.requestVisit')}
+          </button>
+        )}
       </div>
 
       {/* Issues needing attention */}

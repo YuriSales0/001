@@ -147,7 +147,7 @@ export async function POST(
       notify({ userId: me.id, type: 'PROPERTY_ACTIVE', title, body, link: '/client/dashboard' })
     ).catch(() => {})
 
-    convertLeadOnContractSign(me.id).catch(console.error)
+    convertLeadOnContractSign(me.id).catch(err => console.error('[Contract Sign] Lead conversion failed:', err))
 
     return NextResponse.json({
       ok: true,

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { TrendingUp, TrendingDown, Minus, Home, CalendarDays, Euro, BarChart3, Download } from 'lucide-react'
 import { generateReportSummaryPDF } from '@/lib/pdf'
+import { useLocale } from '@/i18n/provider'
+import { intlLocale, type Locale } from '@/i18n'
 
 type Reservation = {
   id: string
@@ -30,9 +32,6 @@ type Payout = {
 
 type Property = { id: string; name: string }
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(n)
-
 const fmtPct = (n: number) => `${Math.round(n)}%`
 
 function nightsBetween(a: string, b: string) {
@@ -55,6 +54,9 @@ function daysInMonth(key: string) {
 }
 
 export default function ClientReportsPage() {
+  const { t, locale } = useLocale()
+  const fmt = (n: number) =>
+    new Intl.NumberFormat(intlLocale(locale as Locale), { style: 'currency', currency: 'EUR' }).format(n)
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [properties, setProperties] = useState<Property[]>([])
@@ -172,7 +174,7 @@ export default function ClientReportsPage() {
       <div className="h-48 rounded-hm bg-hm-sand" />
     </div>
   )
-  if (loadError) return <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
+  if (loadError) return <div className="p-4 text-sm text-red-500">{t('client.reportsPage.loadError')}</div>
 
   return (
     <div className="p-6 space-y-8">
@@ -237,10 +239,10 @@ export default function ClientReportsPage() {
               <div className="text-xs uppercase text-gray-500">{kpi.label}</div>
               <div className="text-xl font-bold text-hm-black mt-1">{kpi.value}</div>
               <div className="flex items-center gap-1.5 mt-1">
-                {kpi.delta !== null && kpi.delta !== undefined && (
+                {kpi.delta != null && (
                   <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${kpi.delta > 0 ? 'text-green-600' : kpi.delta < 0 ? 'text-red-500' : 'text-gray-400'}`}>
                     {kpi.delta > 0 ? <TrendingUp className="h-3 w-3" /> : kpi.delta < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
-                    {kpi.delta > 0 ? '+' : ''}{kpi.delta.toFixed(1)}%
+                    {kpi.delta > 0 ? '+' : ''}{(kpi.delta ?? 0).toFixed(1)}%
                   </span>
                 )}
                 <span className="text-xs text-gray-400">ant. {kpi.prev}</span>

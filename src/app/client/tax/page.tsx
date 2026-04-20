@@ -77,7 +77,8 @@ export default function ClientTaxPage() {
     })
   }, [])
 
-  const hasAccess = plan === "MID" || plan === "PREMIUM"
+  const TAX_ACCESS_PLANS = ['MID', 'PREMIUM']
+  const hasAccess = TAX_ACCESS_PLANS.includes(plan)
   const isPremium = plan === "PREMIUM"
 
   if (loading) {
