@@ -1152,7 +1152,10 @@
     "welcomeBack": "Bem-vindo de volta",
     "loginSubtitle": "Entre no seu portal de proprietário",
     "invalidCredentials": "Credenciais inválidas. Verifique email e senha.",
-    "signingIn": "A entrar..."
+    "signingIn": "A entrar...",
+    "betaBadge": "Programa Beta · Acesso Limitado",
+    "betaMessage": "A HostMasters encontra-se actualmente em fase Beta de operação. Ao criar a tua conta, o teu interesse entrará na nossa base de dados e um Manager dedicado irá contactar-te rapidamente para esclarecer todas as tuas dúvidas. O início das operações da plataforma está previsto para 1 de Agosto de 2026.",
+    "betaCta": "Cria a tua conta agora — um Manager vai atender-te em breve!"
   },
   "tour": {
     "next": "Seguinte",

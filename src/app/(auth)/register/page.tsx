@@ -4,7 +4,7 @@ import { HmLogo } from "@/components/hm/hm-logo"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowRight, Globe } from "lucide-react"
+import { ArrowRight, Globe, Info } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LOCALES, type Locale } from "@/i18n"
 
@@ -71,7 +71,27 @@ export default function RegisterPage() {
         <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
           <div className="p-8">
             <h1 className="text-2xl font-bold text-white text-center mb-1">{t("auth.createAccount")}</h1>
-            <p className="text-sm text-gray-400 text-center mb-8">{t("auth.registerSubtitle")}</p>
+            <p className="text-sm text-gray-400 text-center mb-6">{t("auth.registerSubtitle")}</p>
+
+            {/* Beta announcement banner */}
+            <div className="rounded-xl p-4 mb-6" style={{ background: 'rgba(176,138,62,0.08)', border: '1px solid rgba(176,138,62,0.2)' }}>
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(176,138,62,0.15)' }}>
+                  <Info className="h-4 w-4" style={{ color: '#B08A3E' }} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: '#B08A3E' }}>
+                    {t("auth.betaBadge")}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                    {t("auth.betaMessage")}
+                  </p>
+                  <p className="text-xs font-medium mt-2" style={{ color: '#B08A3E' }}>
+                    {t("auth.betaCta")}
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <form onSubmit={submit} className="space-y-4">
               {/* Name */}

@@ -1246,7 +1246,10 @@
     "welcomeBack": "Welcome back",
     "loginSubtitle": "Sign in to your owner portal",
     "invalidCredentials": "Invalid credentials. Check your email and password.",
-    "signingIn": "Signing in..."
+    "signingIn": "Signing in...",
+    "betaBadge": "Beta Program · Limited Access",
+    "betaMessage": "HostMasters is currently in Beta phase. By creating your account, you will be added to our database and a dedicated Manager will contact you shortly to answer all your questions. Operations are scheduled to begin on August 1st, 2026.",
+    "betaCta": "Create your account now — a Manager will reach out to you soon!"
   },
   "tour": {
     "next": "Next",
