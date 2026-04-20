@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check, BarChart3, Users, TrendingUp, CreditCard, Filter, ChevronDown, ChevronUp, Target, CalendarCheck, DollarSign, ListChecks, CheckCircle2, Circle, AlertTriangle, XCircle } from 'lucide-react'
+import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check, BarChart3, Users, TrendingUp, CreditCard, Filter, ChevronDown, ChevronUp, ListChecks, CheckCircle2, Circle, AlertTriangle } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useLocale } from '@/i18n/provider'
+import { intlLocale, type Locale } from '@/i18n'
 
 // ─── Analytics Types ─────────────────────────────────────────────────────────
 type AnalyticsData = {
@@ -75,6 +76,7 @@ function AnalyticsDashboard() {
   const { t } = useLocale()
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [period, setPeriod] = useState<PeriodKey>('30d')
   const [customFrom, setCustomFrom] = useState('')
   const [customTo, setCustomTo] = useState('')
@@ -111,13 +113,20 @@ function AnalyticsDashboard() {
 
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const params = new URLSearchParams()
-    if (dateRange.from) params.set('from', dateRange.from)
-    if (dateRange.to) params.set('to', dateRange.to)
-    const res = await fetch(`/api/admin/marketing-analytics?${params}`)
-    if (res.ok) setData(await res.json())
-    setLoading(false)
-  }, [dateRange])
+    setError(null)
+    try {
+      const params = new URLSearchParams()
+      if (dateRange.from) params.set('from', dateRange.from)
+      if (dateRange.to) params.set('to', dateRange.to)
+      const res = await fetch(`/api/admin/marketing-analytics?${params}`)
+      if (res.ok) setData(await res.json())
+      else setError(t('common.error'))
+    } catch {
+      setError(t('common.error'))
+    } finally {
+      setLoading(false)
+    }
+  }, [dateRange, t])
 
   useEffect(() => { fetchData() }, [fetchData])
 
@@ -224,6 +233,13 @@ function AnalyticsDashboard() {
           )}
         </div>
       </div>
+
+      {error && (
+        <div className="rounded-hm border border-red-200 bg-red-50 p-4 flex items-center gap-2 text-sm text-red-700">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -399,7 +415,7 @@ function AnalyticsDashboard() {
             </div>
 
             {/* Recent Leads Table */}
-            <div className="lg:col-span-2 rounded-hm border border-hm-border bg-white overflow-hidden">
+            <div className="lg:col-span-2 rounded-hm border border-hm-border bg-white overflow-hidden overflow-x-auto">
               <div className="px-5 pt-5 pb-3">
                 <h3 className="text-sm font-semibold text-hm-black uppercase tracking-wider">{t('admin.marketing.recentLeads')}</h3>
               </div>
@@ -478,22 +494,42 @@ type Campaign = {
 const CHANNELS = ['GOOGLE_ADS','META','LINKEDIN','EMAIL','SEO','CONTENT','EVENT','PRINT','PARTNERSHIP','SIGNAGE','REFERRAL','OTHER']
 const TYPES    = ['DIGITAL','PHYSICAL','EMAIL','EVENT','PRINT']
 const STATUSES = ['PLANNING','ACTIVE','PAUSED','COMPLETED'] as const
-const STATUS_LABELS: Record<string, string> = { PLANNING: 'Planning', ACTIVE: 'Active', PAUSED: 'Paused', COMPLETED: 'Completed' }
+const CAMPAIGN_STATUS_LABEL_KEYS: Record<string, string> = {
+  PLANNING:  'admin.marketing.statusPlanning',
+  ACTIVE:    'admin.marketing.statusActive',
+  PAUSED:    'admin.marketing.statusPaused',
+  COMPLETED: 'admin.marketing.statusCompleted',
+}
 const STATUS_COLORS: Record<string, string> = {
   PLANNING:  'bg-gray-100 text-gray-600',
   ACTIVE:    'bg-green-100 text-green-700',
   PAUSED:    'bg-amber-100 text-amber-700',
   COMPLETED: 'bg-blue-100 text-blue-700',
 }
-const CHANNEL_LABELS: Record<string, string> = {
-  GOOGLE_ADS: 'Google Ads', META: 'Meta/Instagram', LINKEDIN: 'LinkedIn',
-  EMAIL: 'Email', SEO: 'SEO', CONTENT: 'Content',
-  EVENT: 'Event', PRINT: 'Print', PARTNERSHIP: 'Partnership',
-  SIGNAGE: 'Signage', REFERRAL: 'Referral', OTHER: 'Other',
+const CHANNEL_LABEL_KEYS: Record<string, string> = {
+  GOOGLE_ADS: 'admin.marketing.channelGoogleAds',
+  META: 'admin.marketing.channelMeta',
+  LINKEDIN: 'admin.marketing.channelLinkedIn',
+  EMAIL: 'admin.marketing.channelEmail',
+  SEO: 'admin.marketing.channelSeo',
+  CONTENT: 'admin.marketing.channelContent',
+  EVENT: 'admin.marketing.channelEvent',
+  PRINT: 'admin.marketing.channelPrint',
+  PARTNERSHIP: 'admin.marketing.channelPartnership',
+  SIGNAGE: 'admin.marketing.channelSignage',
+  REFERRAL: 'admin.marketing.channelReferral',
+  OTHER: 'admin.marketing.channelOther',
+}
+const CAMPAIGN_TYPE_LABEL_KEYS: Record<string, string> = {
+  DIGITAL: 'admin.marketing.typeDigital',
+  PHYSICAL: 'admin.marketing.typePhysical',
+  EMAIL: 'admin.marketing.typeEmail',
+  EVENT: 'admin.marketing.typeEvent',
+  PRINT: 'admin.marketing.typePrint',
 }
 
-const fmtEUR = (n: number) =>
-  new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
+const fmtEUR = (n: number, locale?: Locale) =>
+  new Intl.NumberFormat(intlLocale(locale ?? 'en'), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
 
 // ─── Create / Edit Modal ─────────────────────────────────────────────────────
 function CampaignModal({
@@ -505,6 +541,7 @@ function CampaignModal({
   onClose: () => void
   onSaved: () => void
 }) {
+  const { t } = useLocale()
   const isEdit = !!campaign
   const [name, setName]                   = useState(campaign?.name ?? '')
   const [channel, setChannel]             = useState(campaign?.channel ?? 'META')
@@ -516,106 +553,122 @@ function CampaignModal({
   const [targetAudience, setTargetAudience] = useState(campaign?.targetAudience ?? '')
   const [description, setDescription]     = useState(campaign?.description ?? '')
   const [saving, setSaving]               = useState(false)
+  const [error, setError]                 = useState<string | null>(null)
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    const body = {
-      name, channel, type, status,
-      budgetAllocated: parseFloat(budget) || 0,
-      startDate: startDate || null,
-      endDate:   endDate   || null,
-      targetAudience: targetAudience || null,
-      description:    description    || null,
+    setError(null)
+    try {
+      const body = {
+        name, channel, type, status,
+        budgetAllocated: parseFloat(budget) || 0,
+        startDate: startDate || null,
+        endDate:   endDate   || null,
+        targetAudience: targetAudience || null,
+        description:    description    || null,
+      }
+      let res: Response
+      if (isEdit) {
+        res = await fetch(`/api/campaigns/${campaign!.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      } else {
+        res = await fetch('/api/campaigns', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      }
+      if (!res.ok) {
+        setError(t('common.error'))
+        setSaving(false)
+        return
+      }
+      setSaving(false)
+      onSaved()
+      onClose()
+    } catch {
+      setError(t('common.error'))
+      setSaving(false)
     }
-    if (isEdit) {
-      await fetch(`/api/campaigns/${campaign!.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-    } else {
-      await fetch('/api/campaigns', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-    }
-    setSaving(false)
-    onSaved()
-    onClose()
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-hm-black">{isEdit ? 'Edit campaign' : 'New campaign'}</h2>
+          <h2 className="text-lg font-bold text-hm-black">{isEdit ? t('admin.marketing.editCampaign') : t('admin.marketing.newCampaign')}</h2>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
+          {error && (
+            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+          )}
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Name *</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('common.name')} *</label>
             <input value={name} onChange={e => setName(e.target.value)} required
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="e.g. Google Ads Spring 2026" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Channel</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.marketing.channelLabel')}</label>
               <select value={channel} onChange={e => setChannel(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
-                {CHANNELS.map(c => <option key={c} value={c}>{CHANNEL_LABELS[c]}</option>)}
+                {CHANNELS.map(c => <option key={c} value={c}>{CHANNEL_LABEL_KEYS[c] ? t(CHANNEL_LABEL_KEYS[c]) : c}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Type</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.marketing.typeLabel')}</label>
               <select value={type} onChange={e => setType(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
-                {TYPES.map(t => <option key={t} value={t}>{t.charAt(0) + t.slice(1).toLowerCase()}</option>)}
+                {TYPES.map(tp => <option key={tp} value={tp}>{CAMPAIGN_TYPE_LABEL_KEYS[tp] ? t(CAMPAIGN_TYPE_LABEL_KEYS[tp]) : tp}</option>)}
               </select>
             </div>
           </div>
           {isEdit && (
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">{t('common.status')}</label>
               <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
-                {STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
+                {STATUSES.map(s => <option key={s} value={s}>{CAMPAIGN_STATUS_LABEL_KEYS[s] ? t(CAMPAIGN_STATUS_LABEL_KEYS[s]) : s}</option>)}
               </select>
             </div>
           )}
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Budget (€)</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.marketing.budgetLabel')}</label>
             <input type="number" min="0" step="0.01" value={budget} onChange={e => setBudget(e.target.value)}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="0" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Start date</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">{t('contracts.startDate')}</label>
               <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">End date</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">{t('contracts.endDate')}</label>
               <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Target audience</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.marketing.targetAudience')}</label>
             <input value={targetAudience} onChange={e => setTargetAudience(e.target.value)}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
-              placeholder="e.g. Nordic property owners 35–60, Costa Tropical" />
+              placeholder="e.g. Nordic property owners 35-60, Costa Tropical" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('common.description')}</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)}
               rows={2} className="w-full rounded-md border px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
               className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button type="submit" disabled={saving}
               className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
-              {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Create campaign'}
+              {saving ? t('admin.marketing.saving') : isEdit ? t('admin.marketing.saveChanges') : t('admin.marketing.createCampaign')}
             </button>
           </div>
         </form>
@@ -626,22 +679,35 @@ function CampaignModal({
 
 // ─── Log Spend Modal ─────────────────────────────────────────────────────────
 function SpendModal({ campaign, onClose, onSaved }: { campaign: Campaign; onClose: () => void; onSaved: () => void }) {
+  const { t } = useLocale()
   const [amount, setAmount]           = useState('')
   const [date, setDate]               = useState(new Date().toISOString().slice(0, 10))
   const [description, setDescription] = useState('')
   const [saving, setSaving]           = useState(false)
+  const [error, setError]             = useState<string | null>(null)
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await fetch(`/api/campaigns/${campaign.id}/spend`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: parseFloat(amount), date, description: description || null }),
-    })
-    setSaving(false)
-    onSaved()
-    onClose()
+    setError(null)
+    try {
+      const res = await fetch(`/api/campaigns/${campaign.id}/spend`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: parseFloat(amount), date, description: description || null }),
+      })
+      if (!res.ok) {
+        setError(t('common.error'))
+        setSaving(false)
+        return
+      }
+      setSaving(false)
+      onSaved()
+      onClose()
+    } catch {
+      setError(t('common.error'))
+      setSaving(false)
+    }
   }
 
   return (
@@ -649,36 +715,39 @@ function SpendModal({ campaign, onClose, onSaved }: { campaign: Campaign; onClos
       <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <div>
-            <h2 className="text-lg font-bold text-hm-black">Log spend</h2>
+            <h2 className="text-lg font-bold text-hm-black">{t('admin.marketing.logSpend')}</h2>
             <p className="text-xs text-gray-500 mt-0.5">{campaign.name}</p>
           </div>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
+          {error && (
+            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+          )}
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Amount spent (€) *</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.marketing.amountSpent')} *</label>
             <input type="number" min="0.01" step="0.01" value={amount} onChange={e => setAmount(e.target.value)}
               required className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="0.00" autoFocus />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Date</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('common.date')}</label>
             <input type="date" value={date} onChange={e => setDate(e.target.value)}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.marketing.descriptionOptional')}</label>
             <input value={description} onChange={e => setDescription(e.target.value)}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
-              placeholder="e.g. Google Ads — Apr 1–15" />
+              placeholder="e.g. Google Ads — Apr 1-15" />
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
               className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">
-              Cancel
+              {t('common.cancel')}
             </button>
             <button type="submit" disabled={saving || !amount}
               className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50">
-              {saving ? 'Saving…' : 'Log spend'}
+              {saving ? t('admin.marketing.saving') : t('admin.marketing.logSpend')}
             </button>
           </div>
         </form>
@@ -689,6 +758,7 @@ function SpendModal({ campaign, onClose, onSaved }: { campaign: Campaign; onClos
 
 // ─── QR Code Modal ───────────────────────────────────────────────────────────
 function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => void }) {
+  const { t } = useLocale()
   const [copied, setCopied] = useState(false)
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
   const url = `${baseUrl}/leads/new?ref=${campaign.trackingCode}`
@@ -705,7 +775,7 @@ function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => voi
       <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
           <div>
-            <h2 className="text-lg font-bold text-hm-black">QR Code</h2>
+            <h2 className="text-lg font-bold text-hm-black">{t('admin.marketing.qrCode')}</h2>
             <p className="text-xs text-gray-500 mt-0.5">{campaign.name}</p>
           </div>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
@@ -715,20 +785,20 @@ function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => voi
             <QRCodeSVG value={url} size={200} level="M" includeMargin />
           </div>
           <div className="w-full">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Lead capture URL</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1.5">{t('admin.marketing.leadCaptureUrl')}</p>
             <div className="flex items-center gap-2 rounded-lg border bg-gray-50 px-3 py-2">
               <span className="flex-1 text-xs text-gray-600 truncate font-mono">{url}</span>
               <button
                 onClick={copyUrl}
                 className="shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
-                title="Copy URL"
+                title={t('admin.marketing.copyUrl')}
               >
                 {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
               </button>
             </div>
           </div>
           <p className="text-[10px] text-gray-400 text-center">
-            Scan to open lead form · Leads são atribuídos a esta campanha automaticamente
+            {t('admin.marketing.qrDescription')}
           </p>
           <button
             onClick={() => {
@@ -742,7 +812,7 @@ function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => voi
             }}
             className="w-full rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50"
           >
-            Download SVG
+            {t('admin.marketing.downloadSvg')}
           </button>
         </div>
         {/* Hidden element for download targeting */}
@@ -819,6 +889,13 @@ function useLocalStorage<T>(key: string, initial: T): [T, (v: T | ((prev: T) => 
   return [val, set]
 }
 
+function getISOWeekNumber(d: Date): number {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
+  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7))
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1))
+  return Math.ceil(((date.getTime() - yearStart.getTime()) / 86400000 + 1) / 7)
+}
+
 function MarketingPlanTracker() {
   const { t } = useLocale()
   const currentPhase = getCurrentPhase()
@@ -830,6 +907,17 @@ function MarketingPlanTracker() {
   const [customTasks, setCustomTasks] = useLocalStorage<string[]>('hm_plan_custom', [])
   const [newTask, setNewTask] = useState('')
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+
+  // Reset weekly checks on week boundary
+  useEffect(() => {
+    const now = new Date()
+    const currentWeek = `${now.getFullYear()}-W${getISOWeekNumber(now)}`
+    const storedWeek = typeof window !== 'undefined' ? localStorage.getItem('hm_plan_weekly_week') : null
+    if (storedWeek !== currentWeek) {
+      setWeeklyChecks({})
+      if (typeof window !== 'undefined') localStorage.setItem('hm_plan_weekly_week', currentWeek)
+    }
+  }, [setWeeklyChecks])
 
   useEffect(() => {
     fetch('/api/admin/marketing-analytics')
@@ -943,7 +1031,11 @@ function MarketingPlanTracker() {
                         <td className="py-2.5 text-center text-gray-500">{target}</td>
                         <td className="py-2.5 text-center font-semibold text-hm-black">{row.actual}</td>
                         <td className="py-2.5 text-center">
-                          {row.actual === '—' ? <Circle className="h-4 w-4 text-gray-300 mx-auto" /> : <CheckCircle2 className="h-4 w-4 text-hm-green mx-auto" />}
+                          {row.actual === '—'
+                            ? <Circle className="h-4 w-4 text-gray-300 mx-auto" />
+                            : row.actual === '0' || row.actual === '0.0%'
+                              ? <AlertTriangle className="h-4 w-4 text-amber-400 mx-auto" />
+                              : <CheckCircle2 className="h-4 w-4 text-hm-green mx-auto" />}
                         </td>
                       </tr>
                     )
@@ -955,7 +1047,7 @@ function MarketingPlanTracker() {
 
           {/* Budget Tracker */}
           <div className="rounded-lg border border-hm-border bg-white p-5">
-            <h3 className="font-serif font-bold text-hm-black mb-4">{mp('budgetTracker')}</h3>
+            <h3 className="font-serif font-bold text-hm-black mb-4">{mp('phaseBudgetTracker')}</h3>
             <div className="space-y-3">
               {budgetItems.map(b => {
                 const spentKey = `${selectedPhase}_${b.key}`
@@ -977,7 +1069,7 @@ function MarketingPlanTracker() {
                 )
               })}
               <div className="flex items-center gap-4 pt-2 border-t border-gray-100 font-semibold">
-                <span className="text-sm text-hm-black w-36">{mp('totalBudget')}</span>
+                <span className="text-sm text-hm-black w-36">{mp('phaseBudgetTotal')}</span>
                 <div className="flex-1" />
                 <span className="text-xs text-gray-500 w-16 text-right">€{totalTarget}</span>
                 <span className={`w-20 text-sm text-right ${totalSpent > totalTarget ? 'text-red-600' : 'text-hm-black'}`}>€{totalSpent}</span>
@@ -1027,8 +1119,10 @@ function MarketingPlanTracker() {
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function MarketingPage() {
+  const { t, locale } = useLocale()
   const [campaigns, setCampaigns]   = useState<Campaign[]>([])
   const [loading, setLoading]       = useState(true)
+  const [error, setError]           = useState<string | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [editing, setEditing]       = useState<Campaign | null>(null)
   const [spending, setSpending]     = useState<Campaign | null>(null)
@@ -1037,18 +1131,30 @@ export default function MarketingPage() {
 
   const load = async () => {
     setLoading(true)
-    const res = await fetch('/api/campaigns')
-    if (res.ok) setCampaigns(await res.json())
-    setLoading(false)
+    setError(null)
+    try {
+      const res = await fetch('/api/campaigns')
+      if (res.ok) setCampaigns(await res.json())
+      else setError(t('common.error'))
+    } catch {
+      setError(t('common.error'))
+    } finally {
+      setLoading(false)
+    }
   }
   useEffect(() => { load() }, [])
 
   const deleteCampaign = async (id: string) => {
-    if (!confirm('Delete this campaign? This cannot be undone.')) return
+    if (!confirm(t('admin.marketing.deleteConfirm'))) return
     setDeleting(id)
-    await fetch(`/api/campaigns/${id}`, { method: 'DELETE' })
-    setDeleting(null)
-    load()
+    try {
+      const res = await fetch(`/api/campaigns/${id}`, { method: 'DELETE' })
+      if (res.ok) load()
+    } catch {
+      // silently fail
+    } finally {
+      setDeleting(null)
+    }
   }
 
   const totals = campaigns.reduce(
@@ -1075,28 +1181,35 @@ export default function MarketingPage() {
         <div>
           <h1 className="text-3xl font-serif font-bold text-hm-black flex items-center gap-2">
             <Megaphone className="h-7 w-7 text-hm-black" />
-            Marketing
+            {t('common.marketing')}
           </h1>
-          <p className="text-sm text-gray-600 mt-1">Digital & physical campaigns · CPL per channel</p>
+          <p className="text-sm text-gray-600 mt-1">{t('admin.marketing.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
           className="inline-flex items-center gap-1.5 rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90"
         >
           <Plus className="h-4 w-4" />
-          New campaign
+          {t('admin.marketing.newCampaign')}
         </button>
       </div>
+
+      {error && (
+        <div className="rounded-hm border border-red-200 bg-red-50 p-4 flex items-center gap-2 text-sm text-red-700">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="rounded-hm border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500 mb-1">Total budget</div>
-          <div className="text-2xl font-bold text-hm-black">{fmtEUR(totals.budget)}</div>
+          <div className="text-xs uppercase text-gray-500 mb-1">{t('admin.marketing.totalBudget')}</div>
+          <div className="text-2xl font-bold text-hm-black">{fmtEUR(totals.budget, locale)}</div>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500 mb-1">Spent</div>
-          <div className="text-2xl font-bold text-hm-black">{fmtEUR(totals.spent)}</div>
+          <div className="text-xs uppercase text-gray-500 mb-1">{t('admin.marketing.spent')}</div>
+          <div className="text-2xl font-bold text-hm-black">{fmtEUR(totals.spent, locale)}</div>
           {totals.budget > 0 && (
             <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div
@@ -1107,27 +1220,27 @@ export default function MarketingPage() {
           )}
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500 mb-1">Attributed leads</div>
+          <div className="text-xs uppercase text-gray-500 mb-1">{t('admin.marketing.attributedLeads')}</div>
           <div className="text-2xl font-bold text-hm-black">{totals.leads}</div>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500 mb-1">Cost per lead</div>
-          <div className="text-2xl font-bold text-hm-black">{cpl !== null ? fmtEUR(cpl) : '—'}</div>
+          <div className="text-xs uppercase text-gray-500 mb-1">{t('admin.marketing.costPerLead')}</div>
+          <div className="text-2xl font-bold text-hm-black">{cpl !== null ? fmtEUR(cpl, locale) : '—'}</div>
         </div>
       </div>
 
       {/* Campaigns table */}
-      <div className="rounded-hm border bg-white overflow-hidden">
+      <div className="rounded-hm border bg-white overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
             <tr>
-              <th className="px-4 py-3">Campaign</th>
-              <th className="px-4 py-3">Channel</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3 text-right">Budget</th>
-              <th className="px-4 py-3 text-right">Spent</th>
-              <th className="px-4 py-3 text-right">Leads</th>
-              <th className="px-4 py-3 text-right">CPL</th>
+              <th className="px-4 py-3">{t('admin.marketing.thCampaign')}</th>
+              <th className="px-4 py-3">{t('admin.marketing.channelLabel')}</th>
+              <th className="px-4 py-3">{t('common.status')}</th>
+              <th className="px-4 py-3 text-right">{t('admin.marketing.thBudget')}</th>
+              <th className="px-4 py-3 text-right">{t('admin.marketing.spent')}</th>
+              <th className="px-4 py-3 text-right">{t('admin.marketing.thLeads')}</th>
+              <th className="px-4 py-3 text-right">{t('admin.marketing.thCpl')}</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -1137,7 +1250,7 @@ export default function MarketingPage() {
               <tr>
                 <td colSpan={8} className="py-12 text-center">
                   <Megaphone className="h-8 w-8 text-gray-200 mx-auto mb-2" />
-                  <p className="text-sm text-gray-400">No campaigns yet. Create the first one.</p>
+                  <p className="text-sm text-gray-400">{t('admin.marketing.noCampaignsYet')}</p>
                 </td>
               </tr>
             )}
@@ -1153,17 +1266,17 @@ export default function MarketingPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs whitespace-nowrap">
-                      {CHANNEL_LABELS[c.channel] ?? c.channel}
+                      {CHANNEL_LABEL_KEYS[c.channel] ? t(CHANNEL_LABEL_KEYS[c.channel]) : c.channel}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[c.status]}`}>
-                      {STATUS_LABELS[c.status]}
+                      {CAMPAIGN_STATUS_LABEL_KEYS[c.status] ? t(CAMPAIGN_STATUS_LABEL_KEYS[c.status]) : c.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right tabular-nums">{fmtEUR(c.budgetAllocated)}</td>
+                  <td className="px-4 py-3 text-right tabular-nums">{fmtEUR(c.budgetAllocated, locale)}</td>
                   <td className="px-4 py-3 text-right">
-                    <div className="tabular-nums">{fmtEUR(c.budgetSpent)}</div>
+                    <div className="tabular-nums">{fmtEUR(c.budgetSpent, locale)}</div>
                     {c.budgetAllocated > 0 && (
                       <div className="mt-1 h-1 w-16 ml-auto bg-gray-100 rounded-full overflow-hidden">
                         <div className="h-full bg-navy-400 rounded-full" style={{ width: `${pctSpent}%` }} />
@@ -1172,14 +1285,14 @@ export default function MarketingPage() {
                   </td>
                   <td className="px-4 py-3 text-right">{leads}</td>
                   <td className="px-4 py-3 text-right text-gray-500 tabular-nums">
-                    {cplC !== null ? fmtEUR(cplC) : '—'}
+                    {cplC !== null ? fmtEUR(cplC, locale) : '—'}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1 justify-end">
                       {c.trackingCode && (
                         <button
                           onClick={() => setQrCampaign(c)}
-                          title="QR Code"
+                          title={t('admin.marketing.qrCode')}
                           className="rounded p-1.5 text-amber-500 hover:text-amber-700 hover:bg-amber-50 transition-colors"
                         >
                           <QrCode className="h-3.5 w-3.5" />
@@ -1187,14 +1300,14 @@ export default function MarketingPage() {
                       )}
                       <button
                         onClick={() => setSpending(c)}
-                        title="Log spend"
+                        title={t('admin.marketing.logSpend')}
                         className="rounded p-1.5 text-gray-400 hover:text-navy-700 hover:bg-gray-100 transition-colors"
                       >
                         <PlusCircle className="h-3.5 w-3.5" />
                       </button>
                       <button
                         onClick={() => setEditing(c)}
-                        title="Edit"
+                        title={t('common.edit')}
                         className="rounded p-1.5 text-gray-400 hover:text-navy-700 hover:bg-gray-100 transition-colors"
                       >
                         <Pencil className="h-3.5 w-3.5" />
@@ -1202,7 +1315,7 @@ export default function MarketingPage() {
                       <button
                         onClick={() => deleteCampaign(c.id)}
                         disabled={deleting === c.id}
-                        title="Delete"
+                        title={t('common.delete')}
                         className="rounded p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

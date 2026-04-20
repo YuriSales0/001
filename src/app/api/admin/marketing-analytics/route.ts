@@ -64,7 +64,10 @@ export async function GET(request: NextRequest) {
     prisma.user.groupBy({
       by: ['subscriptionPlan'],
       _count: true,
-      where: { role: 'CLIENT' },
+      where: {
+        role: 'CLIENT',
+        ...(dateFilter.createdAt ? { createdAt: dateFilter.createdAt } : {}),
+      },
     }),
     // Recent 10 leads
     prisma.lead.findMany({
@@ -89,7 +92,10 @@ export async function GET(request: NextRequest) {
     }),
     // Properties with ACTIVE status (contract signed)
     prisma.property.count({
-      where: { status: 'ACTIVE' },
+      where: {
+        status: 'ACTIVE',
+        ...(dateFilter.createdAt ? { createdAt: dateFilter.createdAt } : {}),
+      },
     }),
   ])
 
