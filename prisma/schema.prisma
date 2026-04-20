@@ -137,6 +137,74 @@ enum PayoutStatus {
   CANCELLED
 }
 
+enum ExpenseCategory {
+  CONSUMABLES
+  LAUNDRY
+  RENT
+  UTILITIES
+  SUBSCRIPTIONS
+  VEHICLES
+  MARKETING
+  PROFESSIONAL_SERVICES
+  SALARIES
+  TAXES
+  OTHER
+}
+
+enum ExpenseStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  PAID
+  REJECTED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  DIRECT_DEBIT
+  CREDIT_CARD
+  CASH
+  OTHER
+}
+
+enum RecurringFrequency {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  SEMI_ANNUAL
+  ANNUAL
+}
+
+enum ConsumableType {
+  LAUNDERABLE
+  DISPOSABLE
+  DURABLE
+  WELCOME_KIT
+}
+
+enum ItemStatus {
+  AVAILABLE
+  DEPLOYED
+  IN_TRANSIT
+  WASHING
+  RETURNING
+  QUARANTINE
+  RETIRED
+}
+
+enum MovementType {
+  CHECKOUT_FROM_STORAGE
+  CHECKIN_TO_PROPERTY
+  PICKUP_FROM_PROPERTY
+  SEND_TO_LAUNDRY
+  RETURN_FROM_LAUNDRY
+  RETURN_TO_STORAGE
+  RETIRED
+  QUARANTINED
+  PURCHASE_ENTRY
+}
+
 enum InvoiceStatus {
   DRAFT
   SENT
@@ -343,6 +411,9 @@ model Property {
   contracts          Contract[]
   crewRelationships  CrewPropertyRelationship[]
   stayReviews        StayReview[]
+  consumableItems     ConsumableItem[]
+  consumableMovements ConsumableMovement[]
+  consumableSetups    PropertyConsumableSetup[]
 }
 
 model Invoice {
@@ -401,7 +472,6 @@ model Reservation {
   updatedAt     DateTime          @updatedAt
 
   property      Property           @relation(fields: [propertyId], references: [id])
-  expenses      Expense[]
   payouts       Payout[]
   pricingPoints PricingDataPoint[]
   stayReview    StayReview?
