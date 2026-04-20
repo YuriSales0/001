@@ -66,7 +66,7 @@ export const CLEANING_INCLUDED_MIN_NIGHTS: Record<string, number | null> = {
 }
 
 /** Default when plan is unknown */
-export const DEFAULT_COMMISSION_RATE = 0.17
+export const DEFAULT_COMMISSION_RATE = 0.22 // STARTER rate when plan is null/unknown
 
 export function commissionRateForPlan(plan?: string | null): number {
   return PLAN_COMMISSION[plan ?? ''] ?? DEFAULT_COMMISSION_RATE
