@@ -42,9 +42,9 @@ function monthKey(d: string) {
   return d.slice(0, 7) // "YYYY-MM"
 }
 
-function monthLabel(key: string) {
+function monthLabel(key: string, loc = 'en-GB') {
   const [y, m] = key.split('-')
-  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' })
+  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString(loc, { month: 'short', year: 'numeric' })
 }
 
 // Days in a month for occupancy
@@ -199,7 +199,7 @@ export default function ClientReportsPage() {
           <button
             onClick={() => {
               if (!summary) return
-              const fmtD = (d: number | null) => d === null ? '—' : `${d > 0 ? '+' : ''}${d.toFixed(1)}%`
+              const fmtD = (d: number | null | undefined) => d == null ? '—' : `${d > 0 ? '+' : ''}${d.toFixed(1)}%`
               const doc = generateReportSummaryPDF({
                 title: 'Owner Report',
                 period: summary.period,
