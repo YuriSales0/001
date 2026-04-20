@@ -1882,7 +1882,8 @@
       "failedToLoad": "Failed to load bookings. Try refreshing.",
       "failedToBlock": "Failed to block dates. Please try again.",
       "failedToRemove": "Failed to remove blocked dates.",
-      "networkError": "Network error. Please try again."
+      "networkError": "Network error. Please try again.",
+      "endBeforeStart": "End date must be after start date."
     },
     "properties": {
       "title": "My Properties",
@@ -2043,7 +2044,9 @@
       "noManager": "No manager assigned",
       "noManagerDesc": "Contact the administrator to assign a manager to you.",
       "noMessages": "No messages yet. Send the first one!",
-      "manager": "Manager"
+      "manager": "Manager",
+      "failedToSend": "Failed to send message",
+      "loadError": "Failed to load messages. Try refreshing."
     }
   },
   "aiChat": {

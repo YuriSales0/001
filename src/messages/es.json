@@ -1782,7 +1782,8 @@
       "failedToLoad": "Error al cargar reservas. Intenta actualizar.",
       "failedToBlock": "Error al bloquear fechas. Inténtalo de nuevo.",
       "failedToRemove": "Error al eliminar fechas bloqueadas.",
-      "networkError": "Error de red. Inténtalo de nuevo."
+      "networkError": "Error de red. Inténtalo de nuevo.",
+      "endBeforeStart": "La fecha de fin debe ser posterior a la fecha de inicio."
     },
     "properties": {
       "title": "Mis propiedades",
@@ -1943,7 +1944,9 @@
       "noManager": "Sin gestor asignado",
       "noManagerDesc": "Contacta al administrador para que te asigne un gestor.",
       "noMessages": "Sin mensajes aún. ¡Envía el primero!",
-      "manager": "Gestor"
+      "manager": "Gestor",
+      "failedToSend": "Error al enviar mensaje",
+      "loadError": "Error al cargar mensajes. Intenta refrescar."
     }
   },
   "aiChat": {

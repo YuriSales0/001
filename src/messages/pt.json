@@ -1782,7 +1782,8 @@
       "failedToLoad": "Erro ao carregar reservas. Tenta actualizar.",
       "failedToBlock": "Erro ao bloquear datas. Tenta novamente.",
       "failedToRemove": "Erro ao remover datas bloqueadas.",
-      "networkError": "Erro de rede. Tenta novamente."
+      "networkError": "Erro de rede. Tenta novamente.",
+      "endBeforeStart": "A data de fim deve ser posterior à data de início."
     },
     "properties": {
       "title": "As minhas propriedades",
@@ -1943,7 +1944,9 @@
       "noManager": "Sem gestor atribuído",
       "noManagerDesc": "Contacta o administrador para te atribuir um gestor.",
       "noMessages": "Sem mensagens ainda. Envia a primeira!",
-      "manager": "Gestor"
+      "manager": "Gestor",
+      "failedToSend": "Falha ao enviar mensagem",
+      "loadError": "Falha ao carregar mensagens. Tenta refrescar."
     }
   },
   "aiChat": {
