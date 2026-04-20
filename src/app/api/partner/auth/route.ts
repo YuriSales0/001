@@ -33,13 +33,9 @@ export async function POST(request: NextRequest) {
       data: { loginToken },
     })
 
-    // In production, this would send an email via Resend with the magic link:
-    // const magicLink = `${process.env.NEXTAUTH_URL}/partner?token=${loginToken}`
-    // await resend.emails.send({ to: partner.email, subject: 'Your HostMasters Partner Portal Login', ... })
-    //
-    // For development, log the token
-    console.log(`[Partner Auth] Magic link token for ${partner.email}: ${loginToken}`)
-    console.log(`[Partner Auth] Login URL: /partner?token=${loginToken}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[Partner Auth] Login URL: /partner?token=${loginToken}`)
+    }
 
     return NextResponse.json({ ok: true })
   } catch (error) {

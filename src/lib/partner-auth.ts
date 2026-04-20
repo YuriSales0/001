@@ -31,12 +31,26 @@ export async function getPartnerFromCookie(): Promise<AuthenticatedPartner | nul
         tier: true,
         referralCode: true,
         status: true,
+        lastLoginAt: true,
       },
     })
 
     if (!partner) return null
 
-    // Update last login
+    // Token expires after 30 days of inactivity
+    const lastLogin = (partner as any).lastLoginAt as Date | null
+    if (lastLogin) {
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      if (lastLogin < thirtyDaysAgo) {
+        // @ts-expect-error Partner model pending prisma generate
+        await prisma.partner.update({
+          where: { id: partner.id },
+          data: { loginToken: null },
+        }).catch(() => {})
+        return null
+      }
+    }
+
     // @ts-expect-error Partner model pending prisma generate
     await prisma.partner.update({
       where: { id: partner.id },

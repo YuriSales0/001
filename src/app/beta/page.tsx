@@ -96,6 +96,7 @@ export default function BetaPage() {
           phone: form.phone.trim(),
           source: "BETA",
           notes: notes || null,
+          partnerCode: form.partnerCode?.trim() || undefined,
         }),
       })
 
