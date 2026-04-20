@@ -47,8 +47,17 @@ export async function POST(
     }
 
     const qty = parseInt(quantityPerStay)
-    if (isNaN(qty) || qty < 0) {
-      return NextResponse.json({ error: 'quantityPerStay must be a non-negative integer' }, { status: 400 })
+    if (isNaN(qty) || qty <= 0) {
+      return NextResponse.json({ error: 'quantityPerStay must be a positive integer (> 0)' }, { status: 400 })
+    }
+
+    // Verify category exists
+    const category = await prisma.consumableCategory.findUnique({
+      where: { id: categoryId },
+      select: { id: true },
+    })
+    if (!category) {
+      return NextResponse.json({ error: 'Category not found' }, { status: 404 })
     }
 
     // Verify property exists

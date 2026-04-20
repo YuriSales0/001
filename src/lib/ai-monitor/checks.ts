@@ -481,6 +481,45 @@ const crew_interventionsOpen: CheckFn = async (now) => {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// CATEGORY: STOCK / CONSUMABLES
+// ─────────────────────────────────────────────────────────────────
+
+const stock_criticalLow: CheckFn = async () => {
+  const lowStockCategories = await prisma.stockLevel.findMany({
+    where: { available: { lt: 5 } },
+    include: { category: { select: { id: true, name: true } } },
+  })
+  // Exclude categories with 0 totalItems (unused categories)
+  const critical = lowStockCategories.filter(s => s.totalItems > 0)
+  if (critical.length === 0) return null
+  return {
+    checkType: 'STOCK_CRITICAL_LOW',
+    severity: 'HIGH',
+    message: `${critical.length} consumable category(ies) with <5 available items — restock needed`,
+    count: critical.length,
+    details: { categories: critical.map(s => ({ id: s.category.id, name: s.category.name, available: s.available })).slice(0, 20) },
+  }
+}
+
+const stock_laundryStuck: CheckFn = async (now) => {
+  // Items stuck in WASHING status for more than 72 hours
+  const threeDaysAgo = new Date(now.getTime() - 72 * 3600 * 1000)
+  const stuckItems = await prisma.consumableItem.count({
+    where: {
+      status: 'WASHING',
+      updatedAt: { lt: threeDaysAgo },
+    },
+  })
+  if (stuckItems === 0) return null
+  return {
+    checkType: 'STOCK_LAUNDRY_STUCK',
+    severity: 'MEDIUM',
+    message: `${stuckItems} consumable item(s) stuck in WASHING status for 72h+ — laundry may be delayed`,
+    count: stuckItems,
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // ALL CHECKS REGISTRY
 // ─────────────────────────────────────────────────────────────────
 
@@ -792,6 +831,9 @@ export const ALL_CHECKS: CheckFn[] = [
   // Stay Reviews — Mandatory (2)
   review_pendingOverdue,
   review_lowScoreTrend,
+  // Stock / Consumables (2)
+  stock_criticalLow,
+  stock_laundryStuck,
 ]
 
-// Total: 41 checks
+// Total: 43 checks

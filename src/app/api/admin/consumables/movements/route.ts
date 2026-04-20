@@ -84,38 +84,57 @@ export async function POST(req: NextRequest) {
       }
 
       const statusUpdate = getStatusForMovement(movementType)
-      const stockDelta = getStockDelta(movementType)
+      const stockDelta = getStockDelta(movementType, item.status)
 
-      // Update item status
-      await prisma.consumableItem.update({
-        where: { id: itemId },
-        data: {
-          status: statusUpdate,
-          currentPropertyId: propertyId || null,
-          ...(movementType === 'RETURN_FROM_LAUNDRY' ? { washCount: { increment: 1 } } : {}),
-          ...(movementType === 'RETIRED' ? { retiredAt: new Date(), retireReason: notes || 'Retired' } : {}),
-        },
-      })
-
-      // Create movement record
-      await prisma.consumableMovement.create({
-        data: {
-          itemId,
-          movementType,
-          propertyId: propertyId || null,
-          crewMemberId: crewMemberId || null,
-          quantity: 1,
-          notes: notes || null,
-        },
-      })
-
-      // Update stock level
+      // Validate no negative stock before applying
       if (stockDelta) {
-        await prisma.stockLevel.update({
+        const currentStock = await prisma.stockLevel.findUnique({
           where: { categoryId: item.categoryId },
-          data: stockDelta,
         })
+        if (currentStock) {
+          const validationError = validateStockDelta(currentStock, stockDelta)
+          if (validationError) {
+            return NextResponse.json({ error: validationError }, { status: 400 })
+          }
+        }
       }
+
+      // Wrap item update + movement + stock level in a transaction
+      await prisma.$transaction(async (tx) => {
+        // Update item status
+        await tx.consumableItem.update({
+          where: { id: itemId },
+          data: {
+            status: statusUpdate,
+            currentPropertyId: propertyId || null,
+            ...(movementType === 'RETURN_FROM_LAUNDRY' ? { washCount: { increment: 1 } } : {}),
+            ...(movementType === 'RETIRED' ? { retiredAt: new Date(), retireReason: notes || 'Retired' } : {}),
+          },
+        })
+
+        // Create movement record
+        await tx.consumableMovement.create({
+          data: {
+            itemId,
+            movementType,
+            propertyId: propertyId || null,
+            crewMemberId: crewMemberId || null,
+            quantity: 1,
+            notes: notes || null,
+          },
+        })
+
+        // Update stock level
+        if (stockDelta) {
+          await tx.stockLevel.update({
+            where: { categoryId: item.categoryId },
+            data: stockDelta,
+          })
+
+          // Recalculate totalItems as sum of all counters (Issue 6.1)
+          await recalcTotalItems(tx, item.categoryId)
+        }
+      })
 
       return NextResponse.json({ ok: true, itemId })
     }
@@ -125,6 +144,15 @@ export async function POST(req: NextRequest) {
       const qty = parseInt(quantity)
       if (isNaN(qty) || qty < 1) {
         return NextResponse.json({ error: 'quantity must be a positive integer' }, { status: 400 })
+      }
+
+      // Issue 3.5: Reject unsupported bulk movement types
+      const supportedBulkTypes = ['CHECKOUT_FROM_STORAGE', 'RETURN_TO_STORAGE', 'RETIRED']
+      if (!supportedBulkTypes.includes(movementType)) {
+        return NextResponse.json(
+          { error: `Bulk movement type '${movementType}' is not supported. Supported: ${supportedBulkTypes.join(', ')}` },
+          { status: 400 },
+        )
       }
 
       // Find available items in the category
@@ -141,40 +169,60 @@ export async function POST(req: NextRequest) {
         )
       }
 
+      const stockDelta = getStockDeltaBulk(movementType, qty)
+
+      // Validate no negative stock before applying
+      if (stockDelta) {
+        const currentStock = await prisma.stockLevel.findUnique({
+          where: { categoryId },
+        })
+        if (currentStock) {
+          const validationError = validateStockDelta(currentStock, stockDelta)
+          if (validationError) {
+            return NextResponse.json({ error: validationError }, { status: 400 })
+          }
+        }
+      }
+
       const statusUpdate = getStatusForMovement(movementType)
       const itemIds = items.map(i => i.id)
 
-      // Update all items
-      await prisma.consumableItem.updateMany({
-        where: { id: { in: itemIds } },
-        data: {
-          status: statusUpdate,
-          currentPropertyId: propertyId || null,
-        },
-      })
-
-      // Create movement records
-      for (const item of items) {
-        await prisma.consumableMovement.create({
+      // Wrap all updates in a transaction
+      await prisma.$transaction(async (tx) => {
+        // Update all items
+        await tx.consumableItem.updateMany({
+          where: { id: { in: itemIds } },
           data: {
-            itemId: item.id,
-            movementType,
-            propertyId: propertyId || null,
-            crewMemberId: crewMemberId || null,
-            quantity: 1,
-            notes: notes || null,
+            status: statusUpdate,
+            currentPropertyId: propertyId || null,
           },
         })
-      }
 
-      // Update stock level
-      const stockDelta = getStockDeltaBulk(movementType, qty)
-      if (stockDelta) {
-        await prisma.stockLevel.update({
-          where: { categoryId },
-          data: stockDelta,
-        })
-      }
+        // Create movement records
+        for (const item of items) {
+          await tx.consumableMovement.create({
+            data: {
+              itemId: item.id,
+              movementType,
+              propertyId: propertyId || null,
+              crewMemberId: crewMemberId || null,
+              quantity: 1,
+              notes: notes || null,
+            },
+          })
+        }
+
+        // Update stock level
+        if (stockDelta) {
+          await tx.stockLevel.update({
+            where: { categoryId },
+            data: stockDelta,
+          })
+
+          // Recalculate totalItems as sum of all counters (Issue 6.1)
+          await recalcTotalItems(tx, categoryId)
+        }
+      })
 
       return NextResponse.json({ ok: true, itemsProcessed: qty })
     }
@@ -205,8 +253,21 @@ function getStatusForMovement(movementType: string): ItemStatusType {
   }
 }
 
+// Maps item status to the StockLevel counter field name
+function statusToCounter(status: string): string {
+  switch (status) {
+    case 'AVAILABLE': return 'available'
+    case 'DEPLOYED': return 'deployed'
+    case 'IN_TRANSIT': return 'inTransit'
+    case 'WASHING': return 'inLaundry'
+    case 'QUARANTINE': return 'quarantine'
+    case 'RETIRED': return 'retired'
+    default: return 'available'
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getStockDelta(movementType: string): Record<string, any> | null {
+function getStockDelta(movementType: string, currentItemStatus?: string): Record<string, any> | null {
   switch (movementType) {
     case 'CHECKOUT_FROM_STORAGE':
       return { available: { decrement: 1 }, inTransit: { increment: 1 } }
@@ -220,22 +281,55 @@ function getStockDelta(movementType: string): Record<string, any> | null {
       return { inLaundry: { decrement: 1 }, available: { increment: 1 } }
     case 'RETURN_TO_STORAGE':
       return { inTransit: { decrement: 1 }, available: { increment: 1 } }
-    case 'RETIRED':
-      return { available: { decrement: 1 }, retired: { increment: 1 } }
-    case 'QUARANTINED':
-      return { available: { decrement: 1 }, quarantine: { increment: 1 } }
+    case 'RETIRED': {
+      // Decrement whatever counter the item is currently in
+      const counter = statusToCounter(currentItemStatus || 'AVAILABLE')
+      return { [counter]: { decrement: 1 }, retired: { increment: 1 } }
+    }
+    case 'QUARANTINED': {
+      const counter = statusToCounter(currentItemStatus || 'AVAILABLE')
+      return { [counter]: { decrement: 1 }, quarantine: { increment: 1 } }
+    }
     default:
       return null
   }
+}
+
+/** Validate that applying a stock delta won't make any counter go below 0 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function validateStockDelta(currentStock: Record<string, any>, delta: Record<string, any>): string | null {
+  const counterFields = ['available', 'deployed', 'inTransit', 'inLaundry', 'quarantine', 'retired']
+  for (const field of counterFields) {
+    if (delta[field]?.decrement) {
+      const current = Number(currentStock[field] ?? 0)
+      const dec = Number(delta[field].decrement)
+      if (current - dec < 0) {
+        return `Insufficient stock: ${field} has ${current} items but tried to decrement by ${dec}`
+      }
+    }
+  }
+  return null
+}
+
+/** Recalculate totalItems as sum of all counter fields */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function recalcTotalItems(tx: any, categoryId: string) {
+  const stock = await tx.stockLevel.findUnique({ where: { categoryId } })
+  if (!stock) return
+  const total = stock.available + stock.deployed + stock.inTransit + stock.inLaundry + stock.quarantine + stock.retired
+  await tx.stockLevel.update({
+    where: { categoryId },
+    data: { totalItems: total },
+  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getStockDeltaBulk(movementType: string, qty: number): Record<string, any> | null {
   switch (movementType) {
     case 'CHECKOUT_FROM_STORAGE':
-      return { available: { decrement: qty }, deployed: { increment: qty } }
+      return { available: { decrement: qty }, inTransit: { increment: qty } }
     case 'RETURN_TO_STORAGE':
-      return { deployed: { decrement: qty }, available: { increment: qty } }
+      return { inTransit: { decrement: qty }, available: { increment: qty } }
     case 'RETIRED':
       return { available: { decrement: qty }, retired: { increment: qty } }
     default:
