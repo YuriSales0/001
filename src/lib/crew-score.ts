@@ -33,7 +33,7 @@ async function getOrCreateScore(userId: string) {
   let score = await prisma.crewScore.findUnique({ where: { userId } })
   if (!score) {
     score = await prisma.crewScore.create({
-      data: { userId, currentScore: 100, level: 'BASIC' },
+      data: { userId, currentScore: 50, level: 'BASIC' },
     })
   }
   return score

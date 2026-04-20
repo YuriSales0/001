@@ -24,7 +24,7 @@ type Task = {
 }
 
 // Compress a File to a small JPEG data URL before upload
-async function compressPhoto(file: File, maxDim = 1280, quality = 0.72): Promise<string> {
+async function compressPhoto(file: File, maxDim = 1280, quality = 0.85): Promise<string> {
   const bitmap = await createImageBitmap(file)
   const ratio = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height))
   const w = Math.round(bitmap.width * ratio)
@@ -360,7 +360,7 @@ export default function CrewHome() {
               onClick={() => setSelected(null)}
               className="lg:hidden inline-flex items-center gap-1 text-sm text-gray-600 hover:text-hm-black mb-2"
             >
-              <span aria-hidden="true">&larr;</span> Back to tasks
+              <span aria-hidden="true">&larr;</span> {t('crew.detail.backToTasks')}
             </button>
             {/* Header */}
             <div>

@@ -37,6 +37,7 @@ function EditModal({ invoice, onClose, onSaved }: {
   onClose: () => void
   onSaved: () => void
 }) {
+  const { t } = useLocale()
   const [form, setForm] = useState({
     description: invoice.description,
     amount: String(invoice.amount),
@@ -58,23 +59,23 @@ function EditModal({ invoice, onClose, onSaved }: {
     })
     setBusy(false)
     if (res.ok) { onSaved(); onClose() }
-    else setErr((await res.json()).error || 'Failed to save')
+    else setErr((await res.json()).error || t('manager.invoices.failedToSave'))
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h2 className="font-semibold text-gray-900">Edit invoice</h2>
+          <h2 className="font-semibold text-gray-900">{t('manager.invoices.editInvoice')}</h2>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-4 w-4" /></button>
         </div>
         <form onSubmit={save} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Client</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.client')}</label>
             <p className="text-sm text-gray-700">{invoice.client.name || invoice.client.email}</p>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Description</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">{t('common.description')}</label>
             <input
               required value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
@@ -83,7 +84,7 @@ function EditModal({ invoice, onClose, onSaved }: {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Amount (EUR)</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.amountEur')}</label>
               <input
                 required type="number" step="0.01" min="0" value={form.amount}
                 onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
@@ -91,7 +92,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Due date</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.dueDate')}</label>
               <input
                 type="date" value={form.dueDate}
                 onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
@@ -100,7 +101,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Notes</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.notes')}</label>
             <textarea
               rows={2} value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
@@ -109,9 +110,9 @@ function EditModal({ invoice, onClose, onSaved }: {
           </div>
           {err && <p className="text-xs text-red-600">{err}</p>}
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
+            <button type="button" onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
             <button type="submit" disabled={busy} className="rounded-lg bg-gray-900 text-white px-4 py-2 text-sm hover:bg-gray-700 disabled:opacity-50">
-              {busy ? 'Saving…' : 'Save changes'}
+              {busy ? t('manager.invoices.saving') : t('manager.invoices.saveChanges')}
             </button>
           </div>
         </form>
@@ -121,6 +122,7 @@ function EditModal({ invoice, onClose, onSaved }: {
 }
 
 export default function ManagerInvoices() {
+  const { t } = useLocale()
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Invoice | null>(null)
@@ -144,7 +146,7 @@ export default function ManagerInvoices() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'PAID' }),
     })
-    if (!res.ok) { showToast('Failed to mark invoice as paid', 'error'); return }
+    if (!res.ok) { showToast(t('manager.invoices.failedToMarkPaid'), 'error'); return }
     load()
   }
 
@@ -152,7 +154,7 @@ export default function ManagerInvoices() {
     setDeleting(id)
     const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE' })
     setDeleting(null)
-    if (!res.ok) { showToast('Failed to delete invoice', 'error'); return }
+    if (!res.ok) { showToast(t('manager.invoices.failedToDelete'), 'error'); return }
     load()
   }
 
@@ -169,23 +171,23 @@ export default function ManagerInvoices() {
     <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-gray-900">Invoices</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Manage and send invoices to property owners</p>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('common.invoices')}</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{t('manager.invoices.subtitle')}</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-hm border bg-white p-4">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Total invoices</p>
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.invoices.totalInvoices')}</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">{invoices.length}</p>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Paid</p>
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.invoices.paid')}</p>
           <p className="text-2xl font-bold text-green-700 mt-1">{fmt(totals.paid)}</p>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Pending</p>
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.invoices.pending')}</p>
           <p className="text-2xl font-bold text-orange-600 mt-1">{fmt(totals.pending)}</p>
         </div>
       </div>
@@ -197,13 +199,13 @@ export default function ManagerInvoices() {
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-400 tracking-wide">
             <tr>
-              <th className="px-4 py-3">Date</th>
-              <th className="px-4 py-3">Client</th>
-              <th className="px-4 py-3">Description</th>
-              <th className="px-4 py-3">Due</th>
-              <th className="px-4 py-3 text-right">Amount</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3 text-right">Actions</th>
+              <th className="px-4 py-3">{t('manager.invoices.date')}</th>
+              <th className="px-4 py-3">{t('manager.invoices.client')}</th>
+              <th className="px-4 py-3">{t('common.description')}</th>
+              <th className="px-4 py-3">{t('manager.invoices.due')}</th>
+              <th className="px-4 py-3 text-right">{t('manager.invoices.amount')}</th>
+              <th className="px-4 py-3">{t('manager.invoices.status')}</th>
+              <th className="px-4 py-3 text-right">{t('manager.invoices.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -213,8 +215,8 @@ export default function ManagerInvoices() {
             {!loading && invoices.length === 0 && (
               <tr><td colSpan={7} className="py-12 text-center">
                 <FileText className="h-10 w-10 mx-auto text-gray-300 mb-2" />
-                <p className="font-serif font-bold text-hm-black">No invoices yet</p>
-                <p className="text-sm text-gray-500 mt-0.5">Create your first invoice using the form above.</p>
+                <p className="font-serif font-bold text-hm-black">{t('manager.invoices.noInvoices')}</p>
+                <p className="text-sm text-gray-500 mt-0.5">{t('manager.invoices.createFirst')}</p>
               </td></tr>
             )}
             {invoices.map(i => (
@@ -283,9 +285,9 @@ export default function ManagerInvoices() {
 
       <ConfirmDialog
         open={confirmAction?.type === 'markPaid'}
-        title="Mark invoice as paid"
-        message={confirmAction?.type === 'markPaid' ? `Mark invoice for ${confirmAction.label} as paid?` : ''}
-        confirmLabel="Mark paid"
+        title={t('manager.invoices.markAsPaid')}
+        message={confirmAction?.type === 'markPaid' ? `${t('manager.invoices.markAsPaidConfirm')} ${confirmAction.label}?` : ''}
+        confirmLabel={t('manager.invoices.markPaid')}
         onConfirm={() => {
           if (confirmAction?.type === 'markPaid') markPaid(confirmAction.id)
           setConfirmAction(null)
@@ -295,9 +297,9 @@ export default function ManagerInvoices() {
 
       <ConfirmDialog
         open={confirmAction?.type === 'delete'}
-        title="Delete invoice"
-        message={confirmAction?.type === 'delete' ? `Delete invoice for ${confirmAction.label}? This cannot be undone.` : ''}
-        confirmLabel="Delete"
+        title={t('manager.invoices.deleteInvoice')}
+        message={confirmAction?.type === 'delete' ? `${t('manager.invoices.deleteConfirm')} ${confirmAction.label}?` : ''}
+        confirmLabel={t('manager.invoices.delete')}
         variant="danger"
         onConfirm={() => {
           if (confirmAction?.type === 'delete') deleteInvoice(confirmAction.id)

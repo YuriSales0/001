@@ -257,7 +257,8 @@
       "bio": "Bio profesional",
       "bioPlaceholder": "Presentate a tus propietarios. Cual es tu experiencia? Como les ayudas?",
       "personalCommission": "Comision personal (%)",
-      "readOnly": "— solo lectura"
+      "readOnly": "— solo lectura",
+      "commissionNotConfigured": "No configurada por el Admin"
     },
     "reservations": {
       "subtitle": "Seguimiento y gestion de todas las reservas de huespedes.",
@@ -341,7 +342,8 @@
       "fillRequired": "Rellene propiedad, titulo y fecha limite.",
       "failedToCreate": "Error al crear tarea",
       "start": "Iniciar",
-      "completeAction": "Completar"
+      "completeAction": "Completar",
+      "autoAssignNote": "La Crew sera asignada automaticamente por el Captain."
     },
     "revenue": {
       "subtitle": "Resumen financiero y rendimiento por propiedad.",
@@ -467,6 +469,48 @@
       "typePlumber": "Fontanero",
       "typeElectrician": "Electricista",
       "typeGeneral": "General"
+    },
+    "messages": {
+      "loadError": "Error al cargar datos",
+      "myClients": "Mis clientes",
+      "otherManagers": "Otros gestores",
+      "noConversations": "Sin conversaciones",
+      "client": "Cliente",
+      "readOnly": "Solo lectura",
+      "noMessages": "Sin mensajes",
+      "placeholder": "Escribe un mensaje...",
+      "otherManagerReadOnly": "Conversación de otro gestor — solo lectura",
+      "selectConversation": "Selecciona una conversación",
+      "failedToSend": "Error al enviar mensaje"
+    },
+    "invoices": {
+      "subtitle": "Gestionar y enviar facturas a propietarios",
+      "totalInvoices": "Total de facturas",
+      "paid": "Pagado",
+      "pending": "Pendiente",
+      "editInvoice": "Editar factura",
+      "client": "Cliente",
+      "amountEur": "Importe (EUR)",
+      "dueDate": "Fecha de vencimiento",
+      "notes": "Notas",
+      "failedToSave": "Error al guardar",
+      "saving": "Guardando...",
+      "saveChanges": "Guardar cambios",
+      "date": "Fecha",
+      "due": "Vencimiento",
+      "amount": "Importe",
+      "status": "Estado",
+      "actions": "Acciones",
+      "noInvoices": "Sin facturas todavia",
+      "createFirst": "Crea tu primera factura usando el formulario de arriba.",
+      "markAsPaid": "Marcar factura como pagada",
+      "markAsPaidConfirm": "Marcar factura como pagada para",
+      "markPaid": "Marcar como pagada",
+      "deleteInvoice": "Eliminar factura",
+      "deleteConfirm": "Eliminar factura de",
+      "delete": "Eliminar",
+      "failedToMarkPaid": "Error al marcar factura como pagada",
+      "failedToDelete": "Error al eliminar factura"
     }
   },
   "admin": {

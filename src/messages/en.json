@@ -257,7 +257,8 @@
       "bio": "Professional bio",
       "bioPlaceholder": "Introduce yourself to your property owners. What's your background? How do you help them?",
       "personalCommission": "Personal commission (%)",
-      "readOnly": "— read-only"
+      "readOnly": "— read-only",
+      "commissionNotConfigured": "Not configured by Admin"
     },
     "reservations": {
       "subtitle": "Track and manage all guest reservations.",
@@ -341,7 +342,8 @@
       "fillRequired": "Fill in property, title and due date.",
       "failedToCreate": "Failed to create task",
       "start": "Start",
-      "completeAction": "Complete"
+      "completeAction": "Complete",
+      "autoAssignNote": "Crew will be auto-assigned by the Captain."
     },
     "revenue": {
       "subtitle": "Financial overview and property performance.",
@@ -467,6 +469,48 @@
       "typePlumber": "Plumber",
       "typeElectrician": "Electrician",
       "typeGeneral": "General"
+    },
+    "messages": {
+      "loadError": "Failed to load data",
+      "myClients": "My clients",
+      "otherManagers": "Other managers",
+      "noConversations": "No conversations",
+      "client": "Client",
+      "readOnly": "Read-only",
+      "noMessages": "No messages",
+      "placeholder": "Write a message...",
+      "otherManagerReadOnly": "Another manager's conversation — read-only",
+      "selectConversation": "Select a conversation",
+      "failedToSend": "Failed to send message"
+    },
+    "invoices": {
+      "subtitle": "Manage and send invoices to property owners",
+      "totalInvoices": "Total invoices",
+      "paid": "Paid",
+      "pending": "Pending",
+      "editInvoice": "Edit invoice",
+      "client": "Client",
+      "amountEur": "Amount (EUR)",
+      "dueDate": "Due date",
+      "notes": "Notes",
+      "failedToSave": "Failed to save",
+      "saving": "Saving...",
+      "saveChanges": "Save changes",
+      "date": "Date",
+      "due": "Due",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions",
+      "noInvoices": "No invoices yet",
+      "createFirst": "Create your first invoice using the form above.",
+      "markAsPaid": "Mark invoice as paid",
+      "markAsPaidConfirm": "Mark invoice as paid for",
+      "markPaid": "Mark paid",
+      "deleteInvoice": "Delete invoice",
+      "deleteConfirm": "Delete invoice for",
+      "delete": "Delete",
+      "failedToMarkPaid": "Failed to mark invoice as paid",
+      "failedToDelete": "Failed to delete invoice"
     }
   },
   "admin": {
