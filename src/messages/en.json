@@ -1179,7 +1179,43 @@
       "confirmMarkPaid": "Mark this expense as paid?",
       "view": "View",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "methodBizum": "Bizum",
+      "ocr": {
+        "uploadInvoice": "Upload Invoice",
+        "scanningInvoice": "Scanning invoice...",
+        "invoiceScanned": "Invoice scanned successfully",
+        "reviewData": "Review extracted data before saving",
+        "manualEntry": "Manual Entry",
+        "manualEntryDesc": "For payments without invoice (Bizum, transfer, cash)",
+        "stockExpense": "Stock Expense",
+        "operationalExpense": "Operational Expense",
+        "autoStockEntry": "Auto-create stock entries",
+        "itemsDetected": "Items detected",
+        "confirmStockEntry": "Confirm stock entries to create",
+        "paymentMethods": {
+          "bizum": "Bizum",
+          "bankTransfer": "Bank Transfer",
+          "cash": "Cash",
+          "creditCard": "Credit Card"
+        },
+        "ocrError": "Failed to scan invoice",
+        "noDataExtracted": "No data could be extracted from the image",
+        "dragDrop": "Drag & drop an invoice photo or click to upload",
+        "cameraOrFile": "Take a photo or select a file",
+        "maxSize": "Max 10MB - JPEG, PNG, WebP",
+        "chooseMode": "How do you want to add this expense?",
+        "itemDescription": "Item",
+        "quantity": "Qty",
+        "unitPrice": "Unit Price",
+        "addToStock": "Add to stock",
+        "matchedCategory": "Matched",
+        "newCategory": "New category",
+        "stockSummary": "Stock entries created",
+        "creatingStockEntries": "Creating stock entries...",
+        "stockEntriesCreated": "Stock entries created successfully",
+        "stockEntriesFailed": "Some stock entries failed to create"
+      }
     },
     "team": {
       "cannotDeleteSelf": "You cannot delete your own account."
@@ -1354,7 +1390,9 @@
       "taskCompleted": "Task completed",
       "startTask": "Start task",
       "acceptTask": "Accept task",
-      "declineTask": "Decline"
+      "declineTask": "Decline",
+      "consumablesTitle": "Consumables for this task",
+      "consumablesReminder": "Remember to register consumable pickups and returns with your Captain"
     },
     "score": {
       "suspended": "Suspended",

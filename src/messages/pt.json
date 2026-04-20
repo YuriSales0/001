@@ -1007,7 +1007,43 @@
       "confirmMarkPaid": "Marcar esta despesa como paga?",
       "view": "Ver",
       "edit": "Editar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "methodBizum": "Bizum",
+      "ocr": {
+        "uploadInvoice": "Carregar Factura",
+        "scanningInvoice": "A digitalizar factura...",
+        "invoiceScanned": "Factura digitalizada com sucesso",
+        "reviewData": "Revisa os dados extraidos antes de guardar",
+        "manualEntry": "Entrada Manual",
+        "manualEntryDesc": "Para pagamentos sem factura (Bizum, transferencia, dinheiro)",
+        "stockExpense": "Despesa de Stock",
+        "operationalExpense": "Despesa Operacional",
+        "autoStockEntry": "Criar entradas de stock automaticamente",
+        "itemsDetected": "Itens detectados",
+        "confirmStockEntry": "Confirmar entradas de stock a criar",
+        "paymentMethods": {
+          "bizum": "Bizum",
+          "bankTransfer": "Transferencia Bancaria",
+          "cash": "Dinheiro",
+          "creditCard": "Cartao de Credito"
+        },
+        "ocrError": "Erro ao digitalizar factura",
+        "noDataExtracted": "Nao foi possivel extrair dados da imagem",
+        "dragDrop": "Arrasta uma foto da factura ou clica para carregar",
+        "cameraOrFile": "Tira uma foto ou selecciona um ficheiro",
+        "maxSize": "Max 10MB - JPEG, PNG, WebP",
+        "chooseMode": "Como queres adicionar esta despesa?",
+        "itemDescription": "Item",
+        "quantity": "Qtd",
+        "unitPrice": "Preco Unitario",
+        "addToStock": "Adicionar ao stock",
+        "matchedCategory": "Correspondente",
+        "newCategory": "Nova categoria",
+        "stockSummary": "Entradas de stock criadas",
+        "creatingStockEntries": "A criar entradas de stock...",
+        "stockEntriesCreated": "Entradas de stock criadas com sucesso",
+        "stockEntriesFailed": "Algumas entradas de stock falharam"
+      }
     },
     "team": {
       "cannotDeleteSelf": "Não podes eliminar a tua própria conta."

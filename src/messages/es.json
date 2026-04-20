@@ -1007,7 +1007,43 @@
       "confirmMarkPaid": "¿Marcar este gasto como pagado?",
       "view": "Ver",
       "edit": "Editar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "methodBizum": "Bizum",
+      "ocr": {
+        "uploadInvoice": "Subir Factura",
+        "scanningInvoice": "Escaneando factura...",
+        "invoiceScanned": "Factura escaneada con exito",
+        "reviewData": "Revisa los datos extraidos antes de guardar",
+        "manualEntry": "Entrada Manual",
+        "manualEntryDesc": "Para pagos sin factura (Bizum, transferencia, efectivo)",
+        "stockExpense": "Gasto de Stock",
+        "operationalExpense": "Gasto Operativo",
+        "autoStockEntry": "Crear entradas de stock automaticamente",
+        "itemsDetected": "Articulos detectados",
+        "confirmStockEntry": "Confirmar entradas de stock a crear",
+        "paymentMethods": {
+          "bizum": "Bizum",
+          "bankTransfer": "Transferencia Bancaria",
+          "cash": "Efectivo",
+          "creditCard": "Tarjeta de Credito"
+        },
+        "ocrError": "Error al escanear factura",
+        "noDataExtracted": "No se pudieron extraer datos de la imagen",
+        "dragDrop": "Arrastra una foto de la factura o haz clic para subir",
+        "cameraOrFile": "Haz una foto o selecciona un archivo",
+        "maxSize": "Max 10MB - JPEG, PNG, WebP",
+        "chooseMode": "Como quieres anadir este gasto?",
+        "itemDescription": "Articulo",
+        "quantity": "Cant",
+        "unitPrice": "Precio Unitario",
+        "addToStock": "Anadir al stock",
+        "matchedCategory": "Coincidente",
+        "newCategory": "Nueva categoria",
+        "stockSummary": "Entradas de stock creadas",
+        "creatingStockEntries": "Creando entradas de stock...",
+        "stockEntriesCreated": "Entradas de stock creadas con exito",
+        "stockEntriesFailed": "Algunas entradas de stock fallaron"
+      }
     },
     "team": {
       "cannotDeleteSelf": "No puedes eliminar tu propia cuenta."

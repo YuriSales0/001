@@ -165,6 +165,7 @@ enum PaymentMethod {
   DIRECT_DEBIT
   CREDIT_CARD
   CASH
+  BIZUM
   OTHER
 }
 
