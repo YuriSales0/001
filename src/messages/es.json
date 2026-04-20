@@ -1108,6 +1108,149 @@
       "COMPLETED": "Completed",
       "EXPIRED": "Expired",
       "NOT_APPLICABLE": "N/A"
+    },
+    "aiMonitor": {
+      "title": "AI Monitor",
+      "subtitle": "Verificacion automatica de consistencia de la base de datos — sin conexion Claude API por ahora, solo logica de deteccion",
+      "currentState": "Estado actual",
+      "whatIsChecked": "Que se verifica",
+      "checks": "verificaciones",
+      "resolution": "Resolucion",
+      "alertHistory": "Historial de alertas persistidas",
+      "noAlerts": "Sin alertas guardadas. Las alertas se persistiran cuando el cron AI Monitor se active.",
+      "resolved": "Resuelto",
+      "sections": {
+        "reservations": "Reservas",
+        "payouts": "Pagos",
+        "reports": "Informes"
+      },
+      "checks_RESERVATION_PAST_CHECKIN": {
+        "label": "Check-in pasado con estado UPCOMING",
+        "desc": "Reservas con estado UPCOMING cuyo check-in ya paso — el estado esta desactualizado y afecta el dashboard de operaciones.",
+        "fix": "Marcar manualmente como ACTIVE o COMPLETED segun el estado real de la reserva."
+      },
+      "checks_CHECKIN_NO_TASK": {
+        "label": "Check-in en <7 dias sin tarea",
+        "desc": "Reservas con check-in en los proximos 7 dias sin tarea CHECK_IN creada para el equipo.",
+        "fix": "Crear tarea CHECK_IN en el calendario y asignar al Crew."
+      },
+      "checks_CHECKOUT_NO_TASK": {
+        "label": "Check-out en <7 dias sin tarea",
+        "desc": "Reservas con check-out en los proximos 7 dias sin tarea CHECK_OUT o CLEANING creada.",
+        "fix": "Crear tarea CHECK_OUT o CLEANING en el calendario y asignar al Crew."
+      },
+      "checks_CHECKOUT_NO_CREW_REPORT": {
+        "label": "Check-out sin informe de Crew",
+        "desc": "Reservas completadas en los ultimos 3 dias sin informe de checkout enviado por el Crew.",
+        "fix": "Solicitar al Crew que envie el informe de la reserva."
+      },
+      "checks_RESERVATION_ZERO_AMOUNT": {
+        "label": "Reserva con valor 0",
+        "desc": "Reservas activas con valor 0 — posible error de entrada de datos.",
+        "fix": "Verificar y corregir el valor de la reserva."
+      },
+      "checks_PAYOUT_NO_INVOICE": {
+        "label": "Payout pagado sin factura",
+        "desc": "Cada payout marcado como PAID debe generar automaticamente una factura para el propietario. Un desajuste indica un fallo en la creacion.",
+        "fix": "Verificar el log de errores del servidor. Crear la factura manualmente si es necesario."
+      },
+      "checks_PAYOUT_OVERDUE": {
+        "label": "Payout programado vencido",
+        "desc": "Payouts con fecha scheduledFor ya pasada sin ser marcados como pagados.",
+        "fix": "Procesar el pago y marcar el payout como PAID, o reprogramar si aun no se ha procesado."
+      },
+      "checks_COMMISSION_MISMATCH": {
+        "label": "Tasa de comision desactualizada",
+        "desc": "Payouts programados con tasa diferente al plan actual del propietario (puede haber cambiado de plan despues de crear el payout).",
+        "fix": "Editar el payout y recrear con la tasa correcta antes de marcar como pagado."
+      },
+      "checks_INVOICE_PAID_NO_PAIDAT": {
+        "label": "Factura PAID sin fecha de pago",
+        "desc": "Facturas con status=PAID pero sin paidAt son invisibles en el dashboard de ingresos.",
+        "fix": "Editar la factura y establecer la fecha de pago manualmente."
+      },
+      "checks_REPORT_MISSING": {
+        "label": "Propiedad con actividad sin informe mensual",
+        "desc": "Propiedades con reservas el mes anterior sin informe mensual generado para el propietario.",
+        "fix": "Generar el informe mensual en My Reports."
+      },
+      "checks_REPORT_NOT_SENT": {
+        "label": "Informe generado pero no enviado",
+        "desc": "Informes mensuales del mes anterior generados pero no enviados al propietario.",
+        "fix": "Acceder a My Reports y enviar los informes pendientes."
+      },
+      "checks_PROPERTY_STALE": {
+        "label": "Propiedad sin actividad (90 dias)",
+        "desc": "Propiedades activas sin ninguna reserva en los ultimos 90 dias — pueden estar inactivas o con listado desactualizado.",
+        "fix": "Verificar con el propietario si la propiedad esta disponible para alquiler."
+      }
+    },
+    "reportSummary": {
+      "title": "Informes",
+      "myReport": "Mi Informe",
+      "exportPdf": "Exportar PDF",
+      "thisMonth": "Este mes",
+      "previousMonth": "Mes anterior",
+      "year": "Ano",
+      "custom": "Personalizado",
+      "period": "Periodo",
+      "compareWith": "Comparar con",
+      "apply": "Aplicar",
+      "loadError": "Error al cargar informe.",
+      "grossRevenue": "Ingresos brutos",
+      "hmCommission": "Comision HM",
+      "reservations": "Reservas",
+      "avgPricePerNight": "Precio medio/noche",
+      "hmTotalRevenue": "Ingresos totales HM",
+      "commissionPlusInvoices": "comision + facturas",
+      "invoicesPaid": "Facturas pagadas",
+      "subscriptionsAndAdjustments": "suscripciones + ajustes",
+      "paidToOwners": "Pagado a propietarios",
+      "nightsOccupied": "Noches ocupadas",
+      "activeProperties": "Propiedades activas",
+      "clients": "Clientes (propietarios)",
+      "prev": "ant.",
+      "myCommission": "Mi comision",
+      "subscriptions": "Suscripciones",
+      "commissions": "Comisiones",
+      "total": "Total",
+      "previousPeriod": "Periodo anterior",
+      "clientsInPortfolio": "Clientes en cartera",
+      "noClients": "Sin clientes asignados.",
+      "noName": "Sin nombre",
+      "clientCount": "Clientes",
+      "grossRevenuePortfolio": "Ingresos brutos (cartera)",
+      "subscriptionsPerMonth": "Suscripciones/mes",
+      "fromYourClients": "de tus clientes"
+    },
+    "consumables": {
+      "title": "Consumibles",
+      "subtitle": "Gestionar categorias de stock y seguimiento de niveles de inventario",
+      "tabStock": "Vista General del Stock",
+      "tabCategories": "Categorias",
+      "addCategory": "Anadir Categoria",
+      "editCategory": "Editar Categoria",
+      "name": "Nombre",
+      "type": "Tipo",
+      "unit": "Unidad",
+      "lifecycle": "Ciclo de vida (usos)",
+      "available": "Disponible",
+      "total": "Total",
+      "deployed": "Desplegado",
+      "inLaundry": "En Lavanderia",
+      "inTransit": "En Transito",
+      "quarantine": "Cuarentena",
+      "retired": "Retirado",
+      "noCategories": "Sin categorias de consumibles. Crea la primera.",
+      "noStock": "Sin datos de stock disponibles.",
+      "typeLaunderable": "Lavable",
+      "typeDisposable": "Desechable",
+      "typeDurable": "Duradero",
+      "typeWelcomeKit": "Kit de Bienvenida",
+      "creating": "Creando...",
+      "create": "Crear",
+      "failedToLoad": "Error al cargar consumibles",
+      "failedToCreate": "Error al crear categoria"
     }
   },
   "crew": {
@@ -2529,15 +2672,22 @@
     "LAUNDRY": "Lavandería"
   },
   "profile": {
+    "title": "Mi Perfil",
+    "adminSubtitle": "Admin · HostMasters Owner",
     "subtitle": "Tus datos de cuenta y preferencias",
     "fullName": "Nombre completo",
+    "phone": "Telefono",
+    "bio": "Bio",
+    "bioHint": "visible para clientes",
+    "bioPlaceholder": "Breve introduccion visible para propietarios...",
+    "commissionRate": "Tasa de comision de la empresa (%)",
     "changePassword": "Cambiar contrasena",
     "currentPassword": "Contrasena actual",
     "newPassword": "Nueva contrasena",
     "confirmNew": "Confirmar nueva",
     "updatePassword": "Actualizar contrasena",
     "savedSuccessfully": "Guardado correctamente",
-    "saving": "Guardando…",
+    "saving": "Guardando...",
     "saveChanges": "Guardar cambios",
     "passwordUpdated": "Contrasena actualizada",
     "passwordsDoNotMatch": "Las contrasenas no coinciden",

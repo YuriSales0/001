@@ -1108,6 +1108,149 @@
       "COMPLETED": "Completed",
       "EXPIRED": "Expired",
       "NOT_APPLICABLE": "N/A"
+    },
+    "aiMonitor": {
+      "title": "AI Monitor",
+      "subtitle": "Verificacao automatica de consistencia da base de dados — sem ligacao Claude API por agora, so logica de detecao",
+      "currentState": "Estado actual",
+      "whatIsChecked": "O que e verificado",
+      "checks": "verificacoes",
+      "resolution": "Resolucao",
+      "alertHistory": "Historico de alertas persistidos",
+      "noAlerts": "Sem alertas guardados. Os alertas serao persistidos quando o cron AI Monitor for activado.",
+      "resolved": "Resolvido",
+      "sections": {
+        "reservations": "Reservas",
+        "payouts": "Pagamentos",
+        "reports": "Relatorios"
+      },
+      "checks_RESERVATION_PAST_CHECKIN": {
+        "label": "Check-in passado com estado UPCOMING",
+        "desc": "Reservas com estado UPCOMING cujo check-in ja aconteceu — o estado esta desactualizado e afecta o dashboard de operacoes.",
+        "fix": "Marcar manualmente como ACTIVE ou COMPLETED conforme o estado real da reserva."
+      },
+      "checks_CHECKIN_NO_TASK": {
+        "label": "Check-in em <7 dias sem tarefa",
+        "desc": "Reservas com check-in nos proximos 7 dias sem tarefa CHECK_IN criada para a equipa.",
+        "fix": "Criar tarefa CHECK_IN no calendario e atribuir ao Crew."
+      },
+      "checks_CHECKOUT_NO_TASK": {
+        "label": "Check-out em <7 dias sem tarefa",
+        "desc": "Reservas com check-out nos proximos 7 dias sem tarefa CHECK_OUT ou CLEANING criada.",
+        "fix": "Criar tarefa CHECK_OUT ou CLEANING no calendario e atribuir ao Crew."
+      },
+      "checks_CHECKOUT_NO_CREW_REPORT": {
+        "label": "Check-out sem relatorio de Crew",
+        "desc": "Reservas concluidas nos ultimos 3 dias sem relatorio de checkout submetido pelo Crew.",
+        "fix": "Solicitar ao Crew que submeta o relatorio da reserva."
+      },
+      "checks_RESERVATION_ZERO_AMOUNT": {
+        "label": "Reserva com valor 0",
+        "desc": "Reservas activas com valor 0 — possivel erro de entrada de dados.",
+        "fix": "Verificar e corrigir o valor da reserva."
+      },
+      "checks_PAYOUT_NO_INVOICE": {
+        "label": "Payout pago sem invoice",
+        "desc": "Cada payout marcado como PAID deve gerar automaticamente um invoice ao proprietario. Mismatch indica falha na criacao.",
+        "fix": "Verificar o log de erros do servidor. Criar o invoice manualmente se necessario."
+      },
+      "checks_PAYOUT_OVERDUE": {
+        "label": "Payout agendado em atraso",
+        "desc": "Payouts com data scheduledFor ja passada sem serem marcados como pagos.",
+        "fix": "Processar o pagamento e marcar o payout como PAID, ou reagendar se ainda nao processado."
+      },
+      "checks_COMMISSION_MISMATCH": {
+        "label": "Taxa de comissao desactualizada",
+        "desc": "Payouts agendados com taxa diferente do plano actual do proprietario (pode ter mudado de plano apos o payout ser criado).",
+        "fix": "Editar o payout e recriar com a taxa correcta antes de marcar como pago."
+      },
+      "checks_INVOICE_PAID_NO_PAIDAT": {
+        "label": "Invoice PAID sem data de pagamento",
+        "desc": "Invoices com status=PAID mas sem paidAt ficam invisiveis no dashboard de receita.",
+        "fix": "Editar o invoice e definir a data de pagamento manualmente."
+      },
+      "checks_REPORT_MISSING": {
+        "label": "Propriedade com actividade sem relatorio mensal",
+        "desc": "Propriedades com reservas no mes anterior sem relatorio mensal gerado para o proprietario.",
+        "fix": "Gerar o relatorio mensal em My Reports."
+      },
+      "checks_REPORT_NOT_SENT": {
+        "label": "Relatorio gerado mas nao enviado",
+        "desc": "Relatorios mensais do mes anterior gerados mas nao enviados ao proprietario.",
+        "fix": "Aceder a My Reports e enviar os relatorios pendentes."
+      },
+      "checks_PROPERTY_STALE": {
+        "label": "Propriedade sem actividade (90 dias)",
+        "desc": "Propriedades activas sem nenhuma reserva nos ultimos 90 dias — podem estar inactivas ou com listagem desactualizada.",
+        "fix": "Verificar com o proprietario se a propriedade esta disponivel para arrendamento."
+      }
+    },
+    "reportSummary": {
+      "title": "Relatorios",
+      "myReport": "O meu Report",
+      "exportPdf": "Exportar PDF",
+      "thisMonth": "Este mes",
+      "previousMonth": "Mes anterior",
+      "year": "Ano",
+      "custom": "Personalizado",
+      "period": "Periodo",
+      "compareWith": "Comparar com",
+      "apply": "Aplicar",
+      "loadError": "Erro ao carregar report.",
+      "grossRevenue": "Receita bruta",
+      "hmCommission": "Comissao HM",
+      "reservations": "Reservas",
+      "avgPricePerNight": "Preco medio/noite",
+      "hmTotalRevenue": "Receita total HM",
+      "commissionPlusInvoices": "comissao + invoices",
+      "invoicesPaid": "Invoices pagos",
+      "subscriptionsAndAdjustments": "subscricoes + ajustes",
+      "paidToOwners": "Pago a owners",
+      "nightsOccupied": "Noites ocupadas",
+      "activeProperties": "Propriedades activas",
+      "clients": "Clientes (owners)",
+      "prev": "ant.",
+      "myCommission": "A minha comissao",
+      "subscriptions": "Assinaturas",
+      "commissions": "Comissoes",
+      "total": "Total",
+      "previousPeriod": "Periodo anterior",
+      "clientsInPortfolio": "Clientes na carteira",
+      "noClients": "Sem clientes atribuidos.",
+      "noName": "Sem nome",
+      "clientCount": "Clientes",
+      "grossRevenuePortfolio": "Receita bruta (carteira)",
+      "subscriptionsPerMonth": "Assinaturas/mes",
+      "fromYourClients": "dos teus clientes"
+    },
+    "consumables": {
+      "title": "Consumiveis",
+      "subtitle": "Gerir categorias de stock e acompanhar niveis de inventario",
+      "tabStock": "Visao Geral do Stock",
+      "tabCategories": "Categorias",
+      "addCategory": "Adicionar Categoria",
+      "editCategory": "Editar Categoria",
+      "name": "Nome",
+      "type": "Tipo",
+      "unit": "Unidade",
+      "lifecycle": "Ciclo de vida (usos)",
+      "available": "Disponivel",
+      "total": "Total",
+      "deployed": "Em uso",
+      "inLaundry": "Na Lavandaria",
+      "inTransit": "Em Transito",
+      "quarantine": "Quarentena",
+      "retired": "Retirado",
+      "noCategories": "Sem categorias de consumiveis. Cria a primeira.",
+      "noStock": "Sem dados de stock disponiveis.",
+      "typeLaunderable": "Lavavel",
+      "typeDisposable": "Descartavel",
+      "typeDurable": "Duravel",
+      "typeWelcomeKit": "Kit de Boas-vindas",
+      "creating": "A criar...",
+      "create": "Criar",
+      "failedToLoad": "Erro ao carregar consumiveis",
+      "failedToCreate": "Erro ao criar categoria"
     }
   },
   "crew": {
@@ -2529,23 +2672,30 @@
     "LAUNDRY": "Lavandaria"
   },
   "profile": {
-    "subtitle": "Os teus dados de conta e preferências",
+    "title": "O Meu Perfil",
+    "adminSubtitle": "Admin · HostMasters Owner",
+    "subtitle": "Os teus dados de conta e preferencias",
     "fullName": "Nome completo",
+    "phone": "Telefone",
+    "bio": "Bio",
+    "bioHint": "visivel para clientes",
+    "bioPlaceholder": "Breve introducao visivel para proprietarios...",
+    "commissionRate": "Taxa de comissao da empresa (%)",
     "changePassword": "Alterar palavra-passe",
     "currentPassword": "Palavra-passe atual",
     "newPassword": "Nova palavra-passe",
     "confirmNew": "Confirmar nova",
     "updatePassword": "Atualizar palavra-passe",
     "savedSuccessfully": "Guardado com sucesso",
-    "saving": "A guardar…",
-    "saveChanges": "Guardar alterações",
+    "saving": "A guardar...",
+    "saveChanges": "Guardar alteracoes",
     "passwordUpdated": "Palavra-passe atualizada",
-    "passwordsDoNotMatch": "As palavras-passe não coincidem",
+    "passwordsDoNotMatch": "As palavras-passe nao coincidem",
     "passwordMinLength": "A palavra-passe deve ter pelo menos 8 caracteres",
     "failedToSave": "Erro ao guardar",
     "failedToUpdatePassword": "Erro ao atualizar a palavra-passe",
     "loadFailed": "Erro ao carregar perfil",
-    "subscriptionPlan": "Plano de subscrição",
+    "subscriptionPlan": "Plano de subscricao",
     "viewPlanDetails": "Ver detalhes do plano",
     "yourDocuments": "Os teus documentos",
     "planSuffix": "plano",
