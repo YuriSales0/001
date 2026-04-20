@@ -10,7 +10,6 @@ export async function POST(
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
   try {
-    // @ts-expect-error PartnerPayout model pending prisma generate
     const payout = await prisma.partnerPayout.findUnique({
       where: { id: params.id },
       select: { id: true, status: true },
@@ -27,7 +26,6 @@ export async function POST(
       )
     }
 
-    // @ts-expect-error PartnerPayout model pending prisma generate
     const updated = await prisma.partnerPayout.update({
       where: { id: params.id },
       data: {

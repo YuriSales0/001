@@ -258,6 +258,27 @@
       "bioPlaceholder": "Introduce yourself to your property owners. What's your background? How do you help them?",
       "personalCommission": "Personal commission (%)",
       "readOnly": "— read-only"
+    },
+    "reviews": {
+      "title": "Bewertungen",
+      "subtitle": "Bewerten Sie Gasteaufenthalte nach dem Checkout, um die Qualitat zu verfolgen und Crew-Scores zu beeinflussen.",
+      "pending": "Ausstehend",
+      "completed": "Abgeschlossen",
+      "reviewStay": "Aufenthalt bewerten",
+      "cleaningRating": "Reinigungsqualitat",
+      "setupRating": "Setup & Ausstattung",
+      "conditionRating": "Zustand der Unterkunft",
+      "guestComments": "Gaste-Feedback / Kommentare",
+      "guestCommentsPlaceholder": "Was hat der Gast uber seinen Aufenthalt gesagt?",
+      "issuesReported": "Gemeldete Probleme",
+      "issuesPlaceholder": "Probleme wahrend oder nach dem Aufenthalt? (optional)",
+      "submit": "Bewertung absenden",
+      "submitting": "Wird gesendet...",
+      "overallScore": "Gesamtbewertung",
+      "weight": "Gewicht",
+      "reviewSubmitted": "Bewertung erfolgreich eingereicht",
+      "noReviewsPending": "Keine Aufenthalte zur Bewertung ausstehend",
+      "noReviewsCompleted": "Noch keine abgeschlossenen Bewertungen"
     }
   },
   "admin": {

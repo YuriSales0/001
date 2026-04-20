@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight, ChevronDown,
   BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
-  Target, Settings, Brain, Briefcase, Link2, Handshake,
+  Target, Settings, Brain, Briefcase, Link2, Handshake, Star,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
@@ -82,6 +82,7 @@ function useManagerNav(): NavEntry[] {
       label: t('common.operations'), icon: CalendarDays, items: [
         { href: "/calendar", label: t('common.calendar'), icon: Calendar },
         { href: "/reservations", label: t('common.reservations'), icon: CalendarDays },
+        { href: "/reviews", label: t('manager.reviews.title'), icon: Star },
         { href: "/properties", label: t('common.properties'), icon: Building2 },
         { href: "/setup", label: t('common.setup'), icon: FileText },
         { href: "/maintenance", label: t('common.maintenance'), icon: Wrench },

@@ -258,6 +258,27 @@
       "bioPlaceholder": "Introduce yourself to your property owners. What's your background? How do you help them?",
       "personalCommission": "Personal commission (%)",
       "readOnly": "— read-only"
+    },
+    "reviews": {
+      "title": "Anmeldelser",
+      "subtitle": "Bedoem gaesternes ophold efter checkout for at folge kvalitet og pavirke Crew-score.",
+      "pending": "Afventende",
+      "completed": "Faerdige",
+      "reviewStay": "Bedoem ophold",
+      "cleaningRating": "Rengoringskvalitet",
+      "setupRating": "Setup & Faciliteter",
+      "conditionRating": "Ejendomstilstand",
+      "guestComments": "Gaestens feedback / kommentarer",
+      "guestCommentsPlaceholder": "Hvad sagde gaesten om sit ophold?",
+      "issuesReported": "Rapporterede problemer",
+      "issuesPlaceholder": "Problemer under eller efter opholdet? (valgfrit)",
+      "submit": "Indsend anmeldelse",
+      "submitting": "Indsender...",
+      "overallScore": "Samlet score",
+      "weight": "vaegt",
+      "reviewSubmitted": "Anmeldelse indsendt",
+      "noReviewsPending": "Ingen ophold afventer anmeldelse",
+      "noReviewsCompleted": "Ingen faerdige anmeldelser endnu"
     }
   },
   "admin": {

@@ -21,7 +21,6 @@ export async function getPartnerFromCookie(): Promise<AuthenticatedPartner | nul
   if (!token) return null
 
   try {
-    // @ts-expect-error Partner model pending prisma generate
     const partner = await prisma.partner.findFirst({
       where: { loginToken: token, status: 'ACTIVE' },
       select: {
@@ -42,7 +41,6 @@ export async function getPartnerFromCookie(): Promise<AuthenticatedPartner | nul
     if (lastLogin) {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
       if (lastLogin < thirtyDaysAgo) {
-        // @ts-expect-error Partner model pending prisma generate
         await prisma.partner.update({
           where: { id: partner.id },
           data: { loginToken: null },
@@ -51,7 +49,6 @@ export async function getPartnerFromCookie(): Promise<AuthenticatedPartner | nul
       }
     }
 
-    // @ts-expect-error Partner model pending prisma generate
     await prisma.partner.update({
       where: { id: partner.id },
       data: { lastLoginAt: new Date() },

@@ -258,6 +258,27 @@
       "bioPlaceholder": "Introduce yourself to your property owners. What's your background? How do you help them?",
       "personalCommission": "Personal commission (%)",
       "readOnly": "— read-only"
+    },
+    "reviews": {
+      "title": "Recensioner",
+      "subtitle": "Betygsatt gasternas vistelser efter utcheckning for att folja kvalitet och paverka Crew-poang.",
+      "pending": "Vantande",
+      "completed": "Slutforda",
+      "reviewStay": "Betygsatt vistelse",
+      "cleaningRating": "Stadningskvalitet",
+      "setupRating": "Setup & Bekvamligheter",
+      "conditionRating": "Fastighetsskick",
+      "guestComments": "Gasternas feedback / kommentarer",
+      "guestCommentsPlaceholder": "Vad sa gasten om sin vistelse?",
+      "issuesReported": "Rapporterade problem",
+      "issuesPlaceholder": "Problem under eller efter vistelsen? (valfritt)",
+      "submit": "Skicka recension",
+      "submitting": "Skickar...",
+      "overallScore": "Totalbetyg",
+      "weight": "vikt",
+      "reviewSubmitted": "Recension inskickad",
+      "noReviewsPending": "Inga vistelser vantar pa recension",
+      "noReviewsCompleted": "Inga slutforda recensioner annu"
     }
   },
   "admin": {

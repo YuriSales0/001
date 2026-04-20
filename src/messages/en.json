@@ -260,6 +260,27 @@
       "readOnly": "— read-only",
       "commissionNotConfigured": "Not configured by Admin"
     },
+    "reviews": {
+      "title": "Reviews",
+      "subtitle": "Rate guest stays after checkout to track quality and impact Crew scores.",
+      "pending": "Pending",
+      "completed": "Completed",
+      "reviewStay": "Review stay",
+      "cleaningRating": "Cleaning Quality",
+      "setupRating": "Setup & Amenities",
+      "conditionRating": "Property Condition",
+      "guestComments": "Guest feedback / comments",
+      "guestCommentsPlaceholder": "What did the guest say about their stay?",
+      "issuesReported": "Issues to report",
+      "issuesPlaceholder": "Any issues found during or after the stay? (optional)",
+      "submit": "Submit review",
+      "submitting": "Submitting...",
+      "overallScore": "Overall score",
+      "weight": "weight",
+      "reviewSubmitted": "Review submitted successfully",
+      "noReviewsPending": "No stays awaiting review",
+      "noReviewsCompleted": "No completed reviews yet"
+    },
     "reservations": {
       "subtitle": "Track and manage all guest reservations.",
       "upcoming": "Upcoming",

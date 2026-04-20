@@ -46,7 +46,6 @@ async function convertLead(leadId: string, partnerId: string | null, userId: str
   if (!partnerId) return
 
   try {
-    // @ts-expect-error Partner model pending prisma generate
     const partner = await prisma.partner.findUnique({
       where: { id: partnerId },
       select: { id: true, tier: true, commissionFixed: true, name: true, email: true },
@@ -60,7 +59,6 @@ async function convertLead(leadId: string, partnerId: string | null, userId: str
     }
 
     const now = new Date()
-    // @ts-expect-error PartnerPayout model pending prisma generate
     await prisma.partnerPayout.create({
       data: {
         partnerId: partner.id,
@@ -73,7 +71,6 @@ async function convertLead(leadId: string, partnerId: string | null, userId: str
       },
     })
 
-    // @ts-expect-error Partner model pending prisma generate
     await prisma.partner.update({
       where: { id: partner.id },
       data: {

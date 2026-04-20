@@ -297,6 +297,20 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       }
     }
 
+    // Notify Manager to review the stay when CHECK_OUT task is approved/completed
+    if (becameCompleted && (existing.type === 'CHECK_OUT' || existing.type === 'CLEANING')) {
+      const managerId = existing.property.owner.managerId
+      if (managerId) {
+        notify({
+          userId: managerId,
+          type: 'GENERAL',
+          title: `Guest checkout — review the stay`,
+          body: `${existing.property.name} — please submit a stay review for the recent guest`,
+          link: '/reviews',
+        }).catch(() => {})
+      }
+    }
+
     return NextResponse.json(task)
   } catch (e) {
     console.error(e)

@@ -260,6 +260,27 @@
       "readOnly": "— solo lectura",
       "commissionNotConfigured": "No configurada por el Admin"
     },
+    "reviews": {
+      "title": "Valoraciones",
+      "subtitle": "Valora las estancias de los huespedes tras el checkout para seguir la calidad e impactar los scores de la Crew.",
+      "pending": "Pendientes",
+      "completed": "Completadas",
+      "reviewStay": "Valorar estancia",
+      "cleaningRating": "Calidad de Limpieza",
+      "setupRating": "Setup & Comodidades",
+      "conditionRating": "Estado de la Propiedad",
+      "guestComments": "Comentarios / feedback del huesped",
+      "guestCommentsPlaceholder": "Que dijo el huesped sobre su estancia?",
+      "issuesReported": "Incidencias a reportar",
+      "issuesPlaceholder": "Alguna incidencia durante o despues de la estancia? (opcional)",
+      "submit": "Enviar valoracion",
+      "submitting": "Enviando...",
+      "overallScore": "Puntuacion general",
+      "weight": "peso",
+      "reviewSubmitted": "Valoracion enviada con exito",
+      "noReviewsPending": "Sin estancias pendientes de valoracion",
+      "noReviewsCompleted": "Sin valoraciones completadas aun"
+    },
     "reservations": {
       "subtitle": "Seguimiento y gestion de todas las reservas de huespedes.",
       "upcoming": "Proximas",

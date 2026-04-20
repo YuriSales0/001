@@ -260,6 +260,27 @@
       "readOnly": "— apenas leitura",
       "commissionNotConfigured": "Não configurada pelo Admin"
     },
+    "reviews": {
+      "title": "Avaliações",
+      "subtitle": "Avalie as estadias dos hóspedes após o checkout para acompanhar a qualidade e impactar os scores da Crew.",
+      "pending": "Pendentes",
+      "completed": "Concluídas",
+      "reviewStay": "Avaliar estadia",
+      "cleaningRating": "Qualidade da Limpeza",
+      "setupRating": "Setup & Amenidades",
+      "conditionRating": "Condição da Propriedade",
+      "guestComments": "Feedback / comentários do hóspede",
+      "guestCommentsPlaceholder": "O que disse o hóspede sobre a estadia?",
+      "issuesReported": "Problemas a reportar",
+      "issuesPlaceholder": "Algum problema encontrado durante ou após a estadia? (opcional)",
+      "submit": "Submeter avaliação",
+      "submitting": "A submeter...",
+      "overallScore": "Pontuação geral",
+      "weight": "peso",
+      "reviewSubmitted": "Avaliação submetida com sucesso",
+      "noReviewsPending": "Nenhuma estadia a aguardar avaliação",
+      "noReviewsCompleted": "Ainda sem avaliações concluídas"
+    },
     "reservations": {
       "subtitle": "Acompanhe e gira todas as reservas de hóspedes.",
       "upcoming": "Próximas",

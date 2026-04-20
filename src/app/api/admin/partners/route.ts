@@ -17,8 +17,7 @@ export async function GET() {
   const guard = await requireRole(['ADMIN'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-  const partners = // @ts-expect-error Partner model pending prisma generate
-    await prisma.partner.findMany({
+  const partners = await prisma.partner.findMany({
     include: {
       _count: { select: { leads: true } },
       leads: {
@@ -54,15 +53,13 @@ export async function POST(request: NextRequest) {
     let referralCode = generateReferralCode()
     let attempts = 0
     while (attempts < 10) {
-      const existing = // @ts-expect-error Partner model pending prisma generate
-    await prisma.partner.findUnique({ where: { referralCode } })
+      const existing = await prisma.partner.findUnique({ where: { referralCode } })
       if (!existing) break
       referralCode = generateReferralCode()
       attempts++
     }
 
-    const partner = // @ts-expect-error Partner model pending prisma generate
-    await prisma.partner.create({
+    const partner = await prisma.partner.create({
       data: {
         name: name.trim(),
         businessName: businessName?.trim() || null,

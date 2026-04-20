@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Find partner by email
-    // @ts-expect-error Partner model pending prisma generate
     const partner = await prisma.partner.findFirst({
       where: { email: email.toLowerCase(), status: 'ACTIVE' },
       select: { id: true, name: true, email: true },
@@ -27,7 +26,6 @@ export async function POST(request: NextRequest) {
     const loginToken = randomBytes(32).toString('hex')
 
     // Save token to partner
-    // @ts-expect-error Partner model pending prisma generate
     await prisma.partner.update({
       where: { id: partner.id },
       data: { loginToken },

@@ -216,6 +216,7 @@ model User {
   notifications        Notification[]
   groupMemberships     GroupChatMember[]
   groupMessages        GroupMessage[]              @relation("GroupMessageSender")
+  stayReviews          StayReview[]                @relation("StayReviewer")
 }
 
 model Account {
@@ -341,6 +342,7 @@ model Property {
   taxObligations     TaxObligation[]
   contracts          Contract[]
   crewRelationships  CrewPropertyRelationship[]
+  stayReviews        StayReview[]
 }
 
 model Invoice {
@@ -402,6 +404,7 @@ model Reservation {
   expenses      Expense[]
   payouts       Payout[]
   pricingPoints PricingDataPoint[]
+  stayReview    StayReview?
 }
 
 model Payout {
@@ -1157,4 +1160,32 @@ model Notification {
 
   @@index([userId, read, createdAt])
   @@index([createdAt])
+}
+
+// ─── Stay Reviews (Guest Review scoring) ────────────────────────────────────
+
+model StayReview {
+  id                String    @id @default(cuid())
+  reservationId     String    @unique
+  reservation       Reservation @relation(fields: [reservationId], references: [id])
+  propertyId        String
+  property          Property  @relation(fields: [propertyId], references: [id])
+  reviewerId        String
+  reviewer          User      @relation("StayReviewer", fields: [reviewerId], references: [id])
+
+  cleaningRating    Int       // 1-5, WEIGHT 3
+  setupRating       Int       // 1-5, WEIGHT 2
+  conditionRating   Int       // 1-5, WEIGHT 1
+  overallRating     Decimal   @db.Decimal(3,2) // calculated weighted average
+
+  guestComments     String?   @db.Text
+  issuesReported    String?   @db.Text
+
+  crewMemberId      String?   // Crew who did the cleaning/checkout
+  scoreApplied      Boolean   @default(false)
+
+  createdAt         DateTime  @default(now())
+
+  @@index([propertyId])
+  @@index([crewMemberId])
 }

@@ -554,7 +554,6 @@ const lead_noFollowUp: CheckFn = async (now) => {
 // ─────────────────────────────────────────────────────────────────
 
 const partner_payoutOverdue: CheckFn = async (now) => {
-  // @ts-expect-error PartnerPayout model pending prisma generate
   const count = await prisma.partnerPayout.count({
     where: {
       status: 'PENDING',
@@ -572,7 +571,6 @@ const partner_payoutOverdue: CheckFn = async (now) => {
 
 const partner_reversalDeadline: CheckFn = async (now) => {
   const in7Days = new Date(now.getTime() + 7 * 24 * 3600 * 1000)
-  // @ts-expect-error PartnerPayout model pending prisma generate
   const count = await prisma.partnerPayout.count({
     where: {
       status: { in: ['PENDING', 'APPROVED'] },
@@ -589,7 +587,6 @@ const partner_reversalDeadline: CheckFn = async (now) => {
 }
 
 const partner_inactiveWithLeads: CheckFn = async () => {
-  // @ts-expect-error Partner model pending prisma generate
   const partners = await prisma.partner.findMany({
     where: { status: 'ACTIVE', totalReferrals: 0 },
     select: { id: true },

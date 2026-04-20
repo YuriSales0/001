@@ -258,6 +258,27 @@
       "bioPlaceholder": "Introduce yourself to your property owners. What's your background? How do you help them?",
       "personalCommission": "Personal commission (%)",
       "readOnly": "— read-only"
+    },
+    "reviews": {
+      "title": "Beoordelingen",
+      "subtitle": "Beoordeel gastverblijven na checkout om kwaliteit te volgen en Crew-scores te beinvloeden.",
+      "pending": "In afwachting",
+      "completed": "Voltooid",
+      "reviewStay": "Verblijf beoordelen",
+      "cleaningRating": "Schoonmaakkwaliteit",
+      "setupRating": "Opzet & Voorzieningen",
+      "conditionRating": "Staat van het pand",
+      "guestComments": "Feedback / opmerkingen van de gast",
+      "guestCommentsPlaceholder": "Wat zei de gast over het verblijf?",
+      "issuesReported": "Gemelde problemen",
+      "issuesPlaceholder": "Problemen tijdens of na het verblijf? (optioneel)",
+      "submit": "Beoordeling indienen",
+      "submitting": "Bezig met verzenden...",
+      "overallScore": "Totaalscore",
+      "weight": "gewicht",
+      "reviewSubmitted": "Beoordeling succesvol ingediend",
+      "noReviewsPending": "Geen verblijven in afwachting van beoordeling",
+      "noReviewsCompleted": "Nog geen voltooide beoordelingen"
     }
   },
   "admin": {

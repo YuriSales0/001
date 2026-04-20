@@ -74,7 +74,6 @@ export async function PATCH(
     lead.partnerId
   ) {
     try {
-      // @ts-expect-error PartnerPayout model pending prisma generate
       const existingPayout = await prisma.partnerPayout.findFirst({
         where: { leadId: lead.id },
       })
@@ -83,7 +82,6 @@ export async function PATCH(
         return NextResponse.json(updated)
       }
 
-      // @ts-expect-error Partner model pending prisma generate
       const partner = await prisma.partner.findUnique({
         where: { id: lead.partnerId },
         select: { id: true, tier: true, commissionFixed: true },
@@ -101,7 +99,6 @@ export async function PATCH(
         const holdUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) // +30 days
         const reversalDeadline = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000) // +60 days
 
-        // @ts-expect-error PartnerPayout model pending prisma generate
         await prisma.partnerPayout.create({
           data: {
             partnerId: partner.id,
@@ -115,7 +112,6 @@ export async function PATCH(
         })
 
         // Increment partner conversion count and total commission
-        // @ts-expect-error Partner model pending prisma generate
         await prisma.partner.update({
           where: { id: partner.id },
           data: {
@@ -151,7 +147,6 @@ export async function DELETE(
   if (lead.partnerId) {
     try {
       const wasConverted = lead.status === 'CONVERTED'
-      // @ts-expect-error Partner model pending prisma generate
       await prisma.partner.update({
         where: { id: lead.partnerId },
         data: {

@@ -7,7 +7,6 @@ export async function GET() {
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
   try {
-    // @ts-expect-error PartnerPayout model pending prisma generate
     const payouts = await prisma.partnerPayout.findMany({
       include: {
         partner: { select: { id: true, name: true, tier: true } },

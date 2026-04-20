@@ -64,8 +64,7 @@ export async function POST(request: NextRequest) {
   // Resolve partner from referral code
   let partnerId: string | null = null
   if (partnerCode && typeof partnerCode === 'string') {
-    const partner = // @ts-expect-error Partner model pending prisma generate
-    await prisma.partner.findUnique({
+    const partner = await prisma.partner.findUnique({
       where: { referralCode: partnerCode.toUpperCase() },
       select: { id: true },
     })
@@ -84,7 +83,6 @@ export async function POST(request: NextRequest) {
       propertyType: propertyType || null,
       followUpDate: followUpDate ? new Date(followUpDate) : null,
       assignedManagerId: resolvedManagerId,
-      // @ts-expect-error Partner field pending prisma generate
       partnerId,
     },
     include: LEAD_INCLUDE,
@@ -92,7 +90,6 @@ export async function POST(request: NextRequest) {
 
   // Increment partner referral count
   if (partnerId) {
-    // @ts-expect-error Partner model pending prisma generate
     await prisma.partner.update({
       where: { id: partnerId },
       data: { totalReferrals: { increment: 1 } },

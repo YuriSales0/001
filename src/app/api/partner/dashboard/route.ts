@@ -19,7 +19,6 @@ export async function GET() {
     const conversions = leads.filter((l: { status: string }) => l.status === 'CONVERTED').length
 
     // Get payouts
-    // @ts-expect-error PartnerPayout model pending prisma generate
     const payouts = await prisma.partnerPayout.findMany({
       where: { partnerId: partner.id },
       orderBy: { createdAt: 'desc' },

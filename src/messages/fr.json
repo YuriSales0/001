@@ -258,6 +258,27 @@
       "bioPlaceholder": "Introduce yourself to your property owners. What's your background? How do you help them?",
       "personalCommission": "Personal commission (%)",
       "readOnly": "— read-only"
+    },
+    "reviews": {
+      "title": "Evaluations",
+      "subtitle": "Evaluez les sejours apres le checkout pour suivre la qualite et impacter les scores de la Crew.",
+      "pending": "En attente",
+      "completed": "Terminees",
+      "reviewStay": "Evaluer le sejour",
+      "cleaningRating": "Qualite du menage",
+      "setupRating": "Installation & Equipements",
+      "conditionRating": "Etat de la propriete",
+      "guestComments": "Retour / commentaires du voyageur",
+      "guestCommentsPlaceholder": "Qu'a dit le voyageur sur son sejour?",
+      "issuesReported": "Problemes signales",
+      "issuesPlaceholder": "Des problemes pendant ou apres le sejour? (optionnel)",
+      "submit": "Soumettre l'evaluation",
+      "submitting": "Envoi en cours...",
+      "overallScore": "Score global",
+      "weight": "poids",
+      "reviewSubmitted": "Evaluation soumise avec succes",
+      "noReviewsPending": "Aucun sejour en attente d'evaluation",
+      "noReviewsCompleted": "Aucune evaluation terminee pour le moment"
     }
   },
   "admin": {
