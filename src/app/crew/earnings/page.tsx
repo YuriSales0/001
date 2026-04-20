@@ -170,6 +170,7 @@ export default function CrewEarningsPage() {
         <div className="px-5 py-3 border-b bg-gray-50">
           <h2 className="text-sm font-semibold text-gray-700">{t('crew.earnings.byMonthTitle')}</h2>
         </div>
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="text-left text-xs uppercase text-gray-500 border-b">
             <tr>
@@ -191,6 +192,7 @@ export default function CrewEarningsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Recent completed tasks */}

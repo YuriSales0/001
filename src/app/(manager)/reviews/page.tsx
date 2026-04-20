@@ -121,7 +121,7 @@ export default function ReviewsPage() {
     <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t("manager.reviews.title")}</h1>
+        <h1 className="text-2xl font-serif font-bold text-gray-900">{t("manager.reviews.title")}</h1>
         <p className="text-sm text-gray-500 mt-1">{t("manager.reviews.subtitle")}</p>
       </div>
 
