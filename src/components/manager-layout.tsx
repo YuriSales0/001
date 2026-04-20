@@ -160,10 +160,8 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
             <span className="text-sm font-semibold tracking-tight text-white">
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
-                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
-              {badgeLabel}
-            </span>
+            <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>Beta</span>
           </Link>
           <button aria-label="Close" className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4" />

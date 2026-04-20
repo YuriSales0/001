@@ -55,6 +55,8 @@ export default function LandingPage() {
             <span className="text-lg font-semibold tracking-tight" style={{ color: '#0B1E3A' }}>
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
+            <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
+                  style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>Beta</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: '#4A5568' }}>
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>

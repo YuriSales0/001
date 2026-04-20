@@ -70,6 +70,8 @@ export default async function ClientLayout({ children }: { children: React.React
             <span className="font-semibold text-white text-sm tracking-tight">
               Host<span style={{ color: 'var(--hm-gold)' }}>Masters</span>
             </span>
+            <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>Beta</span>
           </Link>
           <label htmlFor="sidebar-toggle" className="lg:hidden cursor-pointer text-white/50 hover:text-white">
             <X className="h-4 w-4" />
