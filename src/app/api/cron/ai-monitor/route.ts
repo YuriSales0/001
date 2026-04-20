@@ -244,5 +244,24 @@ export async function GET(request: NextRequest) {
   }
 
   console.log('[AI Monitor] Cron complete:', JSON.stringify(summary))
+
+  // Piggyback other daily jobs (Hobby plan only allows 2 crons)
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  const headers: Record<string, string> = {}
+  if (cronSecret) headers['authorization'] = `Bearer ${cronSecret}`
+
+  const jobs = [
+    '/api/cron/crew-confirmation-timeout',
+    '/api/cron/notification-cleanup',
+  ]
+  // Crew payout only on Wednesdays
+  if (new Date().getUTCDay() === 3) jobs.push('/api/cron/crew-payout')
+  // Market scrape only on Sundays
+  if (new Date().getUTCDay() === 0) jobs.push('/api/cron/scrape-market')
+
+  await Promise.allSettled(
+    jobs.map(path => fetch(`${baseUrl}${path}`, { method: 'POST', headers }).catch(() => {}))
+  )
+
   return NextResponse.json(summary)
 }
