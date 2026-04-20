@@ -828,11 +828,11 @@
       "properties_plural": "propriedades"
     },
     "payouts": {
-      "title": "Payouts",
+      "title": "Pagamentos",
       "subtitle": "Pagamentos automáticos por plataforma — comissão calculada por plano",
       "howItWorks": "Como funciona",
-      "howItWorksTitle": "Como funciona — Payouts",
-      "invoices": "Invoices",
+      "howItWorksTitle": "Como funciona — Pagamentos",
+      "invoices": "Facturas",
       "createPayout": "Criar payout",
       "scheduledNet": "Agendado (líquido)",
       "pendingCommission": "Comissão pendente",
@@ -849,7 +849,7 @@
       "thOwner": "Proprietário",
       "thGuestDesc": "Hóspede / Descrição",
       "thPlatform": "Plataforma",
-      "thCheckout": "Checkout",
+      "thCheckout": "Check-out",
       "thScheduled": "Agendado",
       "thGross": "Bruto",
       "thCommission": "Comissão",
