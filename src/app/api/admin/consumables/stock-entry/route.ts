@@ -34,50 +34,54 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 })
     }
 
-    // Create N ConsumableItem records with PURCHASE_ENTRY movements
-    const createdItems: string[] = []
+    // Create N ConsumableItem records with PURCHASE_ENTRY movements — all in a transaction
+    const createdItems = await prisma.$transaction(async (tx) => {
+      const itemIds: string[] = []
 
-    for (let i = 0; i < qty; i++) {
-      const item = await prisma.consumableItem.create({
-        data: {
+      for (let i = 0; i < qty; i++) {
+        const item = await tx.consumableItem.create({
+          data: {
+            categoryId,
+            batchNumber: batchNumber || null,
+            status: 'AVAILABLE',
+            purchasePrice: price,
+            purchaseDate: new Date(),
+          },
+        })
+
+        await tx.consumableMovement.create({
+          data: {
+            itemId: item.id,
+            movementType: 'PURCHASE_ENTRY',
+            toLocation: 'STORAGE',
+            quantity: 1,
+            notes: expenseId ? `From expense ${expenseId}` : 'Manual stock entry',
+          },
+        })
+
+        itemIds.push(item.id)
+      }
+
+      // Update StockLevel
+      await tx.stockLevel.upsert({
+        where: { categoryId },
+        update: {
+          available: { increment: qty },
+          totalItems: { increment: qty },
+        },
+        create: {
           categoryId,
-          batchNumber: batchNumber || null,
-          status: 'AVAILABLE',
-          purchasePrice: price,
-          purchaseDate: new Date(),
+          available: qty,
+          totalItems: qty,
+          deployed: 0,
+          inLaundry: 0,
+          inTransit: 0,
+          quarantine: 0,
+          retired: 0,
         },
       })
 
-      await prisma.consumableMovement.create({
-        data: {
-          itemId: item.id,
-          movementType: 'PURCHASE_ENTRY',
-          toLocation: 'STORAGE',
-          quantity: 1,
-          notes: expenseId ? `From expense ${expenseId}` : 'Manual stock entry',
-        },
-      })
-
-      createdItems.push(item.id)
-    }
-
-    // Update StockLevel
-    await prisma.stockLevel.upsert({
-      where: { categoryId },
-      update: {
-        available: { increment: qty },
-        totalItems: { increment: qty },
-      },
-      create: {
-        categoryId,
-        available: qty,
-        totalItems: qty,
-        deployed: 0,
-        inLaundry: 0,
-        inTransit: 0,
-        quarantine: 0,
-        retired: 0,
-      },
+      return itemIds
     })
 
     return NextResponse.json({

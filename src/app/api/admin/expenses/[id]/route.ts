@@ -74,11 +74,11 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
       // Validate allowed transitions
       const VALID_TRANSITIONS: Record<string, string[]> = {
         DRAFT: ['PENDING_APPROVAL', 'CANCELLED'],
-        PENDING_APPROVAL: ['APPROVED', 'REJECTED', 'DRAFT'],
+        PENDING_APPROVAL: ['APPROVED', 'REJECTED'],
         APPROVED: ['PAID', 'REJECTED'],
         REJECTED: ['DRAFT'],
-        PAID: ['CANCELLED'],
-        CANCELLED: ['DRAFT'],
+        PAID: [],
+        CANCELLED: [],
       }
 
       const allowed = VALID_TRANSITIONS[currentStatus] || []
@@ -96,6 +96,11 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
         data.approvedAt = new Date()
       }
 
+      // Flag to inform UI about autoStockEntry prompt
+      if (newStatus === 'APPROVED' && (existing.autoStockEntry || body.autoStockEntry)) {
+        data._autoStockEntryPrompt = true
+      }
+
       if (newStatus === 'PAID') {
         data.paidAt = new Date()
         if (body.paymentMethod) data.paymentMethod = body.paymentMethod
@@ -110,13 +115,22 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
       data.paymentReference = body.paymentReference?.trim() || null
     }
 
+    // Extract the UI flag before saving — it's not a DB column
+    const autoStockEntryPrompt = !!data._autoStockEntryPrompt
+    delete data._autoStockEntryPrompt
+
     const expense = await prisma.expense.update({
       where: { id: params.id },
       data,
       include: { property: { select: { id: true, name: true } } },
     })
 
-    return NextResponse.json(serialize(expense as unknown as Record<string, unknown>))
+    const result = serialize(expense as unknown as Record<string, unknown>)
+    if (autoStockEntryPrompt) {
+      (result as Record<string, unknown>).autoStockEntryPrompt = true
+    }
+
+    return NextResponse.json(result)
   } catch (e) {
     console.error('Failed to update expense:', e)
     return NextResponse.json({ error: 'Failed to update expense' }, { status: 500 })

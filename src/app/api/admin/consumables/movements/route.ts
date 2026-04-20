@@ -5,8 +5,13 @@ import { requireRole } from '@/lib/session'
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
-  const guard = await requireRole(['ADMIN'])
+  const guard = await requireRole(['ADMIN', 'CREW'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+
+  // CREW must be Captain to access movements
+  if (guard.user!.role === 'CREW' && !guard.user!.isCaptain) {
+    return NextResponse.json({ error: 'Only Crew Captains can access movements' }, { status: 403 })
+  }
 
   try {
     const { searchParams } = new URL(req.url)
@@ -44,8 +49,13 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const guard = await requireRole(['ADMIN'])
+  const guard = await requireRole(['ADMIN', 'CREW'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
+
+  // CREW must be Captain to record movements
+  if (guard.user!.role === 'CREW' && !guard.user!.isCaptain) {
+    return NextResponse.json({ error: 'Only Crew Captains can record movements' }, { status: 403 })
+  }
 
   try {
     const { itemId, categoryId, quantity, movementType, propertyId, crewMemberId, notes } = await req.json()
@@ -179,13 +189,13 @@ export async function POST(req: NextRequest) {
   }
 }
 
-type ItemStatusType = 'AVAILABLE' | 'DEPLOYED' | 'IN_TRANSIT' | 'WASHING' | 'RETURNING' | 'QUARANTINE' | 'RETIRED'
+type ItemStatusType = 'AVAILABLE' | 'DEPLOYED' | 'IN_TRANSIT' | 'WASHING' | 'QUARANTINE' | 'RETIRED'
 
 function getStatusForMovement(movementType: string): ItemStatusType {
   switch (movementType) {
     case 'CHECKOUT_FROM_STORAGE': return 'IN_TRANSIT'
     case 'CHECKIN_TO_PROPERTY': return 'DEPLOYED'
-    case 'PICKUP_FROM_PROPERTY': return 'RETURNING'
+    case 'PICKUP_FROM_PROPERTY': return 'IN_TRANSIT'
     case 'SEND_TO_LAUNDRY': return 'WASHING'
     case 'RETURN_FROM_LAUNDRY': return 'AVAILABLE'
     case 'RETURN_TO_STORAGE': return 'AVAILABLE'
