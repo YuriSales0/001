@@ -42,6 +42,7 @@ export default function BetaPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState("")
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; phone?: string }>({})
 
   /* Fetch taken spots count */
   useEffect(() => {
@@ -71,11 +72,12 @@ export default function BetaPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
-
-    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
-      setError(t("landing.beta.required"))
-      return
-    }
+    const errors: { name?: string; email?: string; phone?: string } = {}
+    if (!form.name.trim()) errors.name = t("landing.beta.requiredName")
+    if (!form.email.trim()) errors.email = t("landing.beta.requiredEmail")
+    if (!form.phone.trim()) errors.phone = t("landing.beta.requiredPhone")
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) return
 
     setSubmitting(true)
     try {
@@ -367,15 +369,16 @@ export default function BetaPage() {
                         type="text"
                         required
                         value={form.name}
-                        onChange={handleChange}
+                        onChange={e => { handleChange(e); if (fieldErrors.name) setFieldErrors(prev => ({ ...prev, name: undefined })) }}
                         placeholder={t("landing.beta.namePlaceholder")}
                         className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
                         style={{
-                          borderColor: "rgba(176,138,62,0.25)",
+                          borderColor: fieldErrors.name ? "#E5544B" : "rgba(176,138,62,0.25)",
                           background: "rgba(7,19,40,0.6)",
                           color: "#F6F2EA",
                         }}
                       />
+                      {fieldErrors.name && <p className="mt-1 text-xs" style={{ color: "#E5544B" }}>{fieldErrors.name}</p>}
                     </div>
                     <div>
                       <label
@@ -391,15 +394,16 @@ export default function BetaPage() {
                         type="email"
                         required
                         value={form.email}
-                        onChange={handleChange}
+                        onChange={e => { handleChange(e); if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: undefined })) }}
                         placeholder={t("landing.beta.emailPlaceholder")}
                         className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
                         style={{
-                          borderColor: "rgba(176,138,62,0.25)",
+                          borderColor: fieldErrors.email ? "#E5544B" : "rgba(176,138,62,0.25)",
                           background: "rgba(7,19,40,0.6)",
                           color: "#F6F2EA",
                         }}
                       />
+                      {fieldErrors.email && <p className="mt-1 text-xs" style={{ color: "#E5544B" }}>{fieldErrors.email}</p>}
                     </div>
                   </div>
 
@@ -419,15 +423,16 @@ export default function BetaPage() {
                         type="tel"
                         required
                         value={form.phone}
-                        onChange={handleChange}
+                        onChange={e => { handleChange(e); if (fieldErrors.phone) setFieldErrors(prev => ({ ...prev, phone: undefined })) }}
                         placeholder={t("landing.beta.phonePlaceholder")}
                         className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
                         style={{
-                          borderColor: "rgba(176,138,62,0.25)",
+                          borderColor: fieldErrors.phone ? "#E5544B" : "rgba(176,138,62,0.25)",
                           background: "rgba(7,19,40,0.6)",
                           color: "#F6F2EA",
                         }}
                       />
+                      {fieldErrors.phone && <p className="mt-1 text-xs" style={{ color: "#E5544B" }}>{fieldErrors.phone}</p>}
                     </div>
                     <div>
                       <label

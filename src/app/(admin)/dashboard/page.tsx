@@ -35,12 +35,17 @@ const fmtDate = (s: string) =>
 export default function AdminDashboard() {
   const { t } = useLocale()
   const [stats, setStats] = useState<Stats | null>(null)
+  const [fetchError, setFetchError] = useState(false)
 
   useEffect(() => {
     const load = () =>
       fetch("/api/admin/stats")
-        .then(r => r.ok ? r.json() : null)
-        .then(setStats)
+        .then(r => {
+          if (!r.ok) throw new Error("fetch failed")
+          return r.json()
+        })
+        .then(data => { setStats(data); setFetchError(false) })
+        .catch(() => { setFetchError(true) })
 
     load()
     const interval = setInterval(load, 60_000)
@@ -51,6 +56,17 @@ export default function AdminDashboard() {
       window.removeEventListener('focus', onFocus)
     }
   }, [])
+
+  if (fetchError && !stats) {
+    return (
+      <div className="p-6 space-y-4">
+        <div className="rounded-hm border border-red-200 bg-red-50 p-4 flex items-center gap-3">
+          <AlertTriangle className="h-5 w-5 text-red-600 shrink-0" />
+          <span className="text-sm text-red-800">{t('admin.dashboard.fetchError')}</span>
+        </div>
+      </div>
+    )
+  }
 
   if (!stats) {
     return (

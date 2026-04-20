@@ -6,6 +6,7 @@ import {
   CheckCircle2, AlertCircle, ExternalLink,
 } from 'lucide-react'
 import { getSelectedRuleLabels } from '@/lib/house-rules'
+import { useLocale } from '@/i18n/provider'
 
 type Property = {
   id: string
@@ -46,15 +47,16 @@ const STATUS_BADGE: Record<string, string> = {
   INACTIVE:         'bg-gray-100 text-gray-500',
   MAINTENANCE:      'bg-orange-100 text-orange-600',
 }
-const STATUS_LABEL: Record<string, string> = {
-  PENDING_CLIENT:   'Aguarda confirmação do cliente',
-  PENDING_APPROVAL: 'Aguarda configuração OTA',
-  ACTIVE:           'Ativa',
-  INACTIVE:         'Inativa',
-  MAINTENANCE:      'Em manutenção',
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  PENDING_CLIENT:   'admin.properties.statusPendingClient',
+  PENDING_APPROVAL: 'admin.properties.statusPendingApproval',
+  ACTIVE:           'admin.properties.statusActive',
+  INACTIVE:         'admin.properties.statusInactive',
+  MAINTENANCE:      'admin.properties.statusMaintenance',
 }
 
 export default function PropertiesPage() {
+  const { t } = useLocale()
   const [properties, setProperties] = useState<Property[]>([])
   const [clients, setClients]       = useState<Client[]>([])
   const [loading, setLoading]       = useState(true)
@@ -111,7 +113,7 @@ export default function PropertiesPage() {
     e.preventDefault()
     setAddError('')
     if (!addForm.name || !addForm.address || !addForm.city || !addForm.ownerId) {
-      setAddError('Preenche todos os campos obrigatórios.')
+      setAddError(t('admin.properties.fillRequiredFields'))
       return
     }
     setAddLoading(true)
@@ -126,7 +128,7 @@ export default function PropertiesPage() {
     })
     if (!res.ok) {
       const err = await res.json()
-      setAddError(err.error || 'Erro ao criar.')
+      setAddError(err.error || t('admin.properties.errorCreating'))
     } else {
       setShowAdd(false)
       setAddForm({ name: '', address: '', city: '', postalCode: '', ownerId: '', commissionRate: '18' })
@@ -161,7 +163,7 @@ export default function PropertiesPage() {
     const res = await fetch(`/api/properties/${approveState.property.id}/approve`, { method: 'POST' })
     if (!res.ok) {
       const err = await res.json()
-      setApproveState(s => s ? { ...s, approving: false, error: err.error ?? 'Erro ao aprovar.' } : s)
+      setApproveState(s => s ? { ...s, approving: false, error: err.error ?? t('admin.properties.errorApproving') } : s)
       return
     }
     setApproveState(null)
@@ -177,14 +179,14 @@ export default function PropertiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-serif font-bold text-hm-black">Propriedades</h1>
-          <p className="text-sm text-gray-600">Gere propriedades, aprova pedidos e conecta calendários OTA.</p>
+          <h1 className="text-3xl font-serif font-bold text-hm-black">{t('admin.properties.title')}</h1>
+          <p className="text-sm text-gray-600">{t('admin.properties.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowAdd(true)}
           className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
         >
-          <Plus className="h-4 w-4" /> Nova Propriedade
+          <Plus className="h-4 w-4" /> {t('admin.properties.newProperty')}
         </button>
       </div>
 
@@ -193,7 +195,7 @@ export default function PropertiesPage() {
         <div className="rounded-hm border border-violet-200 bg-violet-50 p-4 flex items-center gap-3">
           <Clock className="h-5 w-5 text-violet-600 shrink-0" />
           <div className="text-sm text-violet-800">
-            <span className="font-semibold">{pendingClient.length} propriedade{pendingClient.length > 1 ? 's' : ''}</span> aguardam confirmação do cliente — o cliente deve confirmar os dados antes de prosseguir.
+            <span className="font-semibold">{pendingClient.length} {pendingClient.length > 1 ? t('admin.properties.properties_plural') : t('admin.properties.property')}</span> {t('admin.properties.pendingClientBanner')}
           </div>
         </div>
       )}
@@ -201,7 +203,7 @@ export default function PropertiesPage() {
         <div className="rounded-hm border border-amber-200 bg-amber-50 p-4 flex items-center gap-3">
           <Clock className="h-5 w-5 text-amber-600 shrink-0" />
           <div className="text-sm text-amber-800">
-            <span className="font-semibold">{pendingApproval.length} propriedade{pendingApproval.length > 1 ? 's' : ''}</span> prontas para configurar — conecta os calendários OTA e ativa.
+            <span className="font-semibold">{pendingApproval.length} {pendingApproval.length > 1 ? t('admin.properties.properties_plural') : t('admin.properties.property')}</span> {t('admin.properties.pendingApprovalBanner')}
           </div>
         </div>
       )}
@@ -214,7 +216,7 @@ export default function PropertiesPage() {
       ) : properties.length === 0 ? (
         <div className="flex flex-col items-center py-20 text-center">
           <Building2 className="h-16 w-16 text-gray-300 mb-4" />
-          <p className="text-gray-500">Nenhuma propriedade. Cria a primeira com o botão acima.</p>
+          <p className="text-gray-500">{t('admin.properties.noProperties')}</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -233,21 +235,21 @@ export default function PropertiesPage() {
                     <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
                       <MapPin className="h-4 w-4" /> {p.address}, {p.city}
                     </p>
-                    <p className="text-xs text-gray-400 mt-0.5">Proprietário: {p.owner.name ?? p.owner.email}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{t('admin.properties.owner')}: {p.owner.name ?? p.owner.email}</p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_BADGE[p.status] ?? 'bg-gray-100 text-gray-600'}`}>
-                      {STATUS_LABEL[p.status] ?? p.status}
+                      {STATUS_LABEL_KEYS[p.status] ? t(STATUS_LABEL_KEYS[p.status]) : p.status}
                     </span>
                     {isPendingClient && (
-                      <span className="text-xs text-violet-600 font-medium">Aguarda cliente</span>
+                      <span className="text-xs text-violet-600 font-medium">{t('admin.properties.pendingClientLabel')}</span>
                     )}
                     {isPendingApproval && (
                       <button
                         onClick={() => openApprove(p)}
                         className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 text-white px-3 py-1.5 text-sm font-semibold hover:bg-amber-600"
                       >
-                        <CheckCircle2 className="h-4 w-4" /> Configurar e Aprovar
+                        <CheckCircle2 className="h-4 w-4" /> {t('admin.properties.configureAndApprove')}
                       </button>
                     )}
                   </div>
@@ -271,12 +273,12 @@ export default function PropertiesPage() {
                 {!isPending && (
                   <div className="p-6 space-y-4">
                     <div className="text-sm font-semibold text-hm-black flex items-center gap-2">
-                      <Link2 className="h-4 w-4" /> Calendários iCal
+                      <Link2 className="h-4 w-4" /> {t('admin.properties.icalCalendars')}
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs uppercase text-gray-500 mb-1">
-                          Airbnb iCal URL {p.airbnbConnected && <Check className="inline h-3 w-3 text-green-600 ml-1" />}
+                          {t('admin.properties.airbnbIcalUrl')} {p.airbnbConnected && <Check className="inline h-3 w-3 text-green-600 ml-1" />}
                         </label>
                         <input type="url"
                           placeholder="https://www.airbnb.com/calendar/ical/..."
@@ -284,11 +286,11 @@ export default function PropertiesPage() {
                           onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...draft, airbnb: e.target.value } }))}
                           className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                         />
-                        <p className="text-xs text-gray-400 mt-1">Airbnb → Anúncio → Disponibilidade → Exportar calendário</p>
+                        <p className="text-xs text-gray-400 mt-1">{t('admin.properties.airbnbHelp')}</p>
                       </div>
                       <div>
                         <label className="block text-xs uppercase text-gray-500 mb-1">
-                          Booking.com iCal URL {p.bookingConnected && <Check className="inline h-3 w-3 text-green-600 ml-1" />}
+                          {t('admin.properties.bookingIcalUrl')} {p.bookingConnected && <Check className="inline h-3 w-3 text-green-600 ml-1" />}
                         </label>
                         <input type="url"
                           placeholder="https://admin.booking.com/hotel/.../ical?..."
@@ -296,24 +298,24 @@ export default function PropertiesPage() {
                           onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...draft, booking: e.target.value } }))}
                           className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
                         />
-                        <p className="text-xs text-gray-400 mt-1">Booking.com Extranet → Tarifas → Sincronizar calendários</p>
+                        <p className="text-xs text-gray-400 mt-1">{t('admin.properties.bookingHelp')}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <button onClick={() => saveUrls(p.id)} disabled={saving === p.id}
                         className="rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90 disabled:opacity-50">
-                        {saving === p.id ? 'A guardar…' : 'Guardar URLs'}
+                        {saving === p.id ? t('admin.properties.saving') : t('admin.properties.saveUrls')}
                       </button>
                       <button onClick={() => sync(p.id)} disabled={syncing === p.id || (!p.airbnbIcalUrl && !p.bookingIcalUrl)}
                         className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50 disabled:opacity-50 inline-flex items-center gap-1">
-                        <RefreshCw className={`h-4 w-4 ${syncing === p.id ? 'animate-spin' : ''}`} /> Sincronizar
+                        <RefreshCw className={`h-4 w-4 ${syncing === p.id ? 'animate-spin' : ''}`} /> {t('admin.properties.sync')}
                       </button>
                     </div>
                     {result && (
                       <div className="text-xs rounded-md bg-gray-50 p-3">
-                        <div className="font-semibold mb-1">Última sync — {new Date(result.syncedAt).toLocaleString('pt-PT')}</div>
+                        <div className="font-semibold mb-1">{t('admin.properties.lastSync')} — {new Date(result.syncedAt).toLocaleString()}</div>
                         {Object.entries(result.summary).map(([src, info]) => (
-                          <div key={src}>{src}: {info.error ? <span className="text-red-600">erro — {info.error}</span> : <span>{info.events} eventos, {info.created} novos</span>}</div>
+                          <div key={src}>{src}: {info.error ? <span className="text-red-600">{t('admin.properties.error')} — {info.error}</span> : <span>{info.events} {t('admin.properties.events')}, {info.created} {t('admin.properties.newCreated')}</span>}</div>
                         ))}
                       </div>
                     )}
@@ -331,53 +333,53 @@ export default function PropertiesPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-hm-black">Nova Propriedade</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Como Admin, a propriedade fica ativa imediatamente.</p>
+                <h2 className="text-base font-bold text-hm-black">{t('admin.properties.newPropertyTitle')}</h2>
+                <p className="text-xs text-gray-500 mt-0.5">{t('admin.properties.newPropertySubtitle')}</p>
               </div>
               <button onClick={() => setShowAdd(false)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
             </div>
             <form onSubmit={submitAdd} className="p-5 space-y-4">
               {addError && <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{addError}</div>}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Nome *</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">{t('admin.properties.nameLabel')} *</label>
                 <input type="text" value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))}
                   className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="Apartamento T2 Lisboa" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Morada *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('admin.properties.addressLabel')} *</label>
                   <input type="text" value={addForm.address} onChange={e => setAddForm(f => ({ ...f, address: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="Rua, número" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Cidade *</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('admin.properties.cityLabel')} *</label>
                   <input type="text" value={addForm.city} onChange={e => setAddForm(f => ({ ...f, city: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="Lisboa" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Código Postal</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('admin.properties.postalCodeLabel')}</label>
                   <input type="text" value={addForm.postalCode} onChange={e => setAddForm(f => ({ ...f, postalCode: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" placeholder="1000-001" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Comissão (%)</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('admin.properties.commissionLabel')}</label>
                   <input type="number" min="0" max="100" step="0.5" value={addForm.commissionRate} onChange={e => setAddForm(f => ({ ...f, commissionRate: e.target.value }))}
                     className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Proprietário *</label>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">{t('admin.properties.ownerLabel')} *</label>
                 <select value={addForm.ownerId} onChange={e => setAddForm(f => ({ ...f, ownerId: e.target.value }))}
                   className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
-                  <option value="">Seleciona o proprietário…</option>
+                  <option value="">{t('admin.properties.selectOwner')}</option>
                   {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email} ({c.email})</option>)}
                 </select>
               </div>
               <div className="flex justify-end gap-2 pt-1">
-                <button type="button" onClick={() => setShowAdd(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancelar</button>
+                <button type="button" onClick={() => setShowAdd(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('admin.properties.cancel')}</button>
                 <button type="submit" disabled={addLoading}
                   className="rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50">
-                  {addLoading ? 'A criar…' : 'Criar e Ativar'}
+                  {addLoading ? t('admin.properties.creating') : t('admin.properties.createAndActivate')}
                 </button>
               </div>
             </form>
@@ -391,7 +393,7 @@ export default function PropertiesPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-start justify-between p-5 border-b">
               <div>
-                <h2 className="text-base font-bold text-hm-black">Aprovar Propriedade</h2>
+                <h2 className="text-base font-bold text-hm-black">{t('admin.properties.approvePropertyTitle')}</h2>
                 <p className="text-sm text-gray-500">{approveState.property.name} · {approveState.property.owner.name ?? approveState.property.owner.email}</p>
               </div>
               <button onClick={() => setApproveState(null)} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
@@ -402,7 +404,7 @@ export default function PropertiesPage() {
                 <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">{approveState.error}</div>
               )}
 
-              <p className="text-sm text-gray-600">Conecta os calendários OTA antes de ativar a propriedade (opcional mas recomendado).</p>
+              <p className="text-sm text-gray-600">{t('admin.properties.connectOtaDesc')}</p>
 
               {/* Airbnb */}
               <div className="rounded-lg bg-rose-50 border border-rose-100 p-4 space-y-2">
@@ -410,17 +412,17 @@ export default function PropertiesPage() {
                   <span className="text-sm font-semibold text-rose-800">Airbnb</span>
                   <a href="https://www.airbnb.com/hosting/listings" target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-xs text-rose-700 hover:underline">
-                    Abrir Airbnb <ExternalLink className="h-3 w-3" />
+                    {t('admin.properties.openAirbnb')} <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
-                <p className="text-xs text-rose-700">Anúncio → Disponibilidade → Sincronizar calendários → Exportar</p>
+                <p className="text-xs text-rose-700">{t('admin.properties.airbnbHelp')}</p>
                 <input type="url"
                   value={approveState.airbnbIcalUrl}
                   onChange={e => setApproveState(s => s ? { ...s, airbnbIcalUrl: e.target.value } : s)}
                   placeholder="https://www.airbnb.com/calendar/ical/XXXXX.ics?s=..."
                   className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
-                {approveState.airbnbIcalUrl && <span className="inline-flex items-center gap-1 text-xs text-green-600 font-semibold"><Check className="h-3 w-3" /> Preenchido</span>}
+                {approveState.airbnbIcalUrl && <span className="inline-flex items-center gap-1 text-xs text-green-600 font-semibold"><Check className="h-3 w-3" /> {t('admin.properties.filled')}</span>}
               </div>
 
               {/* Booking.com */}
@@ -429,41 +431,41 @@ export default function PropertiesPage() {
                   <span className="text-sm font-semibold text-blue-800">Booking.com</span>
                   <a href="https://admin.booking.com" target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-xs text-blue-700 hover:underline">
-                    Abrir Extranet <ExternalLink className="h-3 w-3" />
+                    {t('admin.properties.openExtranet')} <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
-                <p className="text-xs text-blue-700">Extranet → Tarifas e Disponibilidade → Sincronização → Exportar</p>
+                <p className="text-xs text-blue-700">{t('admin.properties.bookingHelp')}</p>
                 <input type="url"
                   value={approveState.bookingIcalUrl}
                   onChange={e => setApproveState(s => s ? { ...s, bookingIcalUrl: e.target.value } : s)}
                   placeholder="https://admin.booking.com/hotel/hoteladmin/ical.html?..."
                   className="w-full rounded-lg border px-3 py-2 text-sm"
                 />
-                {approveState.bookingIcalUrl && <span className="inline-flex items-center gap-1 text-xs text-green-600 font-semibold"><Check className="h-3 w-3" /> Preenchido</span>}
+                {approveState.bookingIcalUrl && <span className="inline-flex items-center gap-1 text-xs text-green-600 font-semibold"><Check className="h-3 w-3" /> {t('admin.properties.filled')}</span>}
               </div>
 
               {/* Status summary */}
               <div className="flex items-center gap-3 text-xs">
                 <span className={`inline-flex items-center gap-1 ${approveState.airbnbIcalUrl ? 'text-green-600' : 'text-gray-400'}`}>
                   {approveState.airbnbIcalUrl ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
-                  Airbnb {approveState.airbnbIcalUrl ? 'conectado' : 'não conectado'}
+                  Airbnb {approveState.airbnbIcalUrl ? t('admin.properties.connected') : t('admin.properties.notConnected')}
                 </span>
                 <span className={`inline-flex items-center gap-1 ${approveState.bookingIcalUrl ? 'text-green-600' : 'text-gray-400'}`}>
                   {approveState.bookingIcalUrl ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
-                  Booking.com {approveState.bookingIcalUrl ? 'conectado' : 'não conectado'}
+                  Booking.com {approveState.bookingIcalUrl ? t('admin.properties.connected') : t('admin.properties.notConnected')}
                 </span>
               </div>
             </div>
 
             <div className="flex justify-between items-center p-5 border-t">
-              <button onClick={() => setApproveState(null)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">Cancelar</button>
+              <button onClick={() => setApproveState(null)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('admin.properties.cancel')}</button>
               <button
                 onClick={submitApprove}
                 disabled={approveState.approving}
                 className="inline-flex items-center gap-2 rounded-lg bg-green-600 text-white px-5 py-2 text-sm font-semibold hover:bg-green-700 disabled:opacity-50"
               >
                 <CheckCircle2 className="h-4 w-4" />
-                {approveState.approving ? 'A aprovar…' : 'Aprovar e Ativar'}
+                {approveState.approving ? t('admin.properties.approving') : t('admin.properties.approveAndActivate')}
               </button>
             </div>
           </div>
