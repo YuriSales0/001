@@ -906,11 +906,15 @@ function MarketingPlanTracker() {
   const [weeklyChecks, setWeeklyChecks] = useLocalStorage<Record<string, boolean>>('hm_plan_weekly', {})
   const [customTasks, setCustomTasks] = useLocalStorage<string[]>('hm_plan_custom', [])
   const [newTask, setNewTask] = useState('')
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+  type PhaseMetrics = {
+    leadsPerMonth: number; totalLeadsInPhase: number; conversionRate: number
+    partnerPct: number; churnRate: number; mrr: number; cac: number | null
+    activeClients: number; managers: number; crewValidated: number
+  }
+  const [metrics, setMetrics] = useState<PhaseMetrics | null>(null)
 
   useEffect(() => { setSelectedPhase(activePhase) }, [activePhase])
 
-  // Reset weekly checks on week boundary
   useEffect(() => {
     const now = new Date()
     const currentWeek = `${now.getFullYear()}-W${getISOWeekNumber(now)}`
@@ -921,15 +925,13 @@ function MarketingPlanTracker() {
     }
   }, [setWeeklyChecks])
 
-  // Fetch analytics filtered from phase start date
   useEffect(() => {
     const phase = PHASES.find(p => p.id === activePhase)
-    const from = phase ? `${phase.start}-01` : undefined
-    const params = new URLSearchParams()
-    if (from) params.set('from', from)
-    fetch(`/api/admin/marketing-analytics?${params}`)
+    if (!phase) return
+    const params = new URLSearchParams({ from: `${phase.start}-01`, to: `${phase.end}-28` })
+    fetch(`/api/admin/phase-metrics?${params}`)
       .then(r => r.ok ? r.json() : null)
-      .then(setAnalytics)
+      .then(setMetrics)
       .catch(() => {})
   }, [activePhase])
 
@@ -942,17 +944,18 @@ function MarketingPlanTracker() {
   const totalTarget = budgetItems.reduce((s, b) => s + b.target, 0)
   const totalSpent = budgetItems.reduce((s, b) => s + (budgetSpent[`${selectedPhase}_${b.key}`] ?? 0), 0)
 
+  const m = metrics
   const KPI_ROWS = [
-    { key: 'newLeadsMonth', targets: ['15-20', '30-50', '60-100'], actual: analytics ? String(analytics.totalLeads) : '—' },
-    { key: 'cac', targets: ['€50-100', '€200-400', '€300-600'], actual: '—' },
-    { key: 'leadClientConversion', targets: ['10-15%', '8-12%', '6-10%'], actual: analytics ? `${analytics.conversionRate.toFixed(1)}%` : '—' },
-    { key: 'leadsViaPartners', targets: ['15%', '25-35%', '30-40%'], actual: '—' },
-    { key: 'monthlyChurn', targets: ['<5%', '<3%', '<2%'], actual: '—' },
+    { key: 'newLeadsMonth', targets: ['15-20', '30-50', '60-100'], actual: m ? String(m.leadsPerMonth) : '—' },
+    { key: 'cac', targets: ['€50-100', '€200-400', '€300-600'], actual: m?.cac != null ? `€${m.cac}` : '—' },
+    { key: 'leadClientConversion', targets: ['10-15%', '8-12%', '6-10%'], actual: m ? `${m.conversionRate}%` : '—' },
+    { key: 'leadsViaPartners', targets: ['15%', '25-35%', '30-40%'], actual: m ? `${m.partnerPct}%` : '—' },
+    { key: 'monthlyChurn', targets: ['<5%', '<3%', '<2%'], actual: m ? `${m.churnRate}%` : '—' },
     { key: 'nps', targets: ['>7', '>8', '>8.5'], actual: '—' },
-    { key: 'mrr', targets: ['€2,500+', '€13,000+', '€50,000+'], actual: '—' },
-    { key: 'activeClients', targets: ['3-5', '25+', '100+'], actual: analytics ? String(analytics.totalClients) : '—' },
-    { key: 'operationalManagers', targets: ['2', '4-5', '12+'], actual: '—' },
-    { key: 'validatedCrew', targets: ['3-5', '8-12', '15+'], actual: '—' },
+    { key: 'mrr', targets: ['€2,500+', '€13,000+', '€50,000+'], actual: m ? `€${m.mrr.toLocaleString()}` : '—' },
+    { key: 'activeClients', targets: ['3-5', '25+', '100+'], actual: m ? String(m.activeClients) : '—' },
+    { key: 'operationalManagers', targets: ['2', '4-5', '12+'], actual: m ? String(m.managers) : '—' },
+    { key: 'validatedCrew', targets: ['3-5', '8-12', '15+'], actual: m ? String(m.crewValidated) : '—' },
   ]
 
   return (
