@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const publicPaths = ['/', '/login', '/register', '/onboarding', '/pricing', '/careers', '/beta'];
+const publicPaths = ['/', '/login', '/register', '/onboarding', '/pricing', '/careers', '/beta', '/partner', '/partner/login'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow public paths, API routes, and static assets
+  // Allow public paths, API routes, static assets, and partner portal (separate auth)
   if (
     publicPaths.some(p => pathname === p || pathname === p + '/') ||
+    pathname.startsWith('/partner') ||
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next') ||
     pathname.includes('.')

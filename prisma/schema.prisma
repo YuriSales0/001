@@ -660,6 +660,7 @@ model Lead {
   assignedManager User?    @relation("AssignedLeads", fields: [assignedManagerId], references: [id])
   partner         Partner? @relation("PartnerLeads", fields: [partnerId], references: [id])
   attributions    LeadAttribution[]
+  partnerPayouts  PartnerPayout[]
 
   @@index([partnerId])
 }
@@ -1022,10 +1023,43 @@ model Partner {
   totalCommission Decimal       @default(0) @db.Decimal(10,2)
   zone            String?
   notes           String?
+  // Auth fields for partner portal
+  passwordHash    String?
+  loginToken      String?       @unique
+  lastLoginAt     DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
   leads           Lead[]        @relation("PartnerLeads")
+  payouts         PartnerPayout[]
+}
+
+enum PartnerPayoutStatus {
+  PENDING       // 30-day holding period
+  APPROVED      // Ready to pay
+  PAID          // Paid out
+  REVERSED      // Client cancelled within 60 days
+}
+
+model PartnerPayout {
+  id               String              @id @default(cuid())
+  partnerId        String
+  partner          Partner             @relation(fields: [partnerId], references: [id])
+  leadId           String
+  lead             Lead                @relation(fields: [leadId], references: [id])
+  clientName       String?
+  amount           Decimal             @db.Decimal(10,2)
+  status           PartnerPayoutStatus @default(PENDING)
+  holdUntil        DateTime            // 30 days after conversion
+  reversalDeadline DateTime            // 60 days after conversion
+  paidAt           DateTime?
+  reversedAt       DateTime?
+  notes            String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([partnerId])
+  @@index([status])
 }
 
 enum RecruitRole {
