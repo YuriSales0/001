@@ -355,7 +355,8 @@ export default function ClientReportsPage() {
 
             {/* Table */}
             <div className="rounded-hm border bg-white overflow-hidden">
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto">
+              <table className="min-w-[600px] w-full text-sm">
                 <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500 border-b">
                   <tr>
                     <th className="px-4 py-3">{t('client.reportsPage.month')}</th>
@@ -399,6 +400,7 @@ export default function ClientReportsPage() {
                   </tr>
                 </tfoot>
               </table>
+              </div>
             </div>
           </>
         )}
