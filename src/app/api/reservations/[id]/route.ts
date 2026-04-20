@@ -121,15 +121,18 @@ export async function PUT(
         ? `${paidCount} paid payout${paidCount === 1 ? '' : 's'} require manual refund`
         : null
 
-      // Cancel associated pending tasks
-      await prisma.task.updateMany({
-        where: {
-          propertyId: (await prisma.reservation.findUnique({ where: { id }, select: { propertyId: true } }))!.propertyId,
-          status: { in: ['PENDING', 'IN_PROGRESS'] },
-          dueDate: { gte: new Date() },
-        },
-        data: { status: 'COMPLETED' },
-      })
+      // Cancel ALL associated pending/notified/confirmed tasks
+      const res = await prisma.reservation.findUnique({ where: { id }, select: { propertyId: true, checkIn: true, checkOut: true } })
+      if (res) {
+        await prisma.task.updateMany({
+          where: {
+            propertyId: res.propertyId,
+            status: { in: ['PENDING', 'NOTIFIED', 'CONFIRMED', 'IN_PROGRESS'] },
+            dueDate: { gte: res.checkIn, lte: res.checkOut },
+          },
+          data: { status: 'COMPLETED' },
+        })
+      }
     }
 
     // ── Admin activating reservation manually ──

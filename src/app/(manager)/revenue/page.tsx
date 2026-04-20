@@ -8,6 +8,7 @@ import { PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from "@/lib/finance"
 interface Reservation {
   id: string
   amount: number
+  status: string
   checkIn: string
   checkOut: string
   property: { id: string; name: string; city: string }
@@ -79,8 +80,8 @@ export default function RevenuePage() {
   }, [])
 
   // Filter by selected month
-  const monthRes = reservations.filter(r => r.checkOut.startsWith(selectedMonth))
-  const monthPayouts = payouts.filter(p => p.scheduledFor?.startsWith(selectedMonth))
+  const monthRes = reservations.filter(r => r.checkOut.startsWith(selectedMonth) && r.status !== 'CANCELLED')
+  const monthPayouts = payouts.filter(p => p.scheduledFor?.startsWith(selectedMonth) && p.status !== 'CANCELLED')
 
   // Aggregate by property
   const byProperty = new Map<string, PropertyRevRow>()
