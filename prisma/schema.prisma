@@ -652,12 +652,16 @@ model Lead {
   ownerId           String?
   assignedManagerId String?
   convertedUserId   String?
+  partnerId         String?
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
 
-  owner           User? @relation("LeadOwner", fields: [ownerId], references: [id])
-  assignedManager User? @relation("AssignedLeads", fields: [assignedManagerId], references: [id])
+  owner           User?    @relation("LeadOwner", fields: [ownerId], references: [id])
+  assignedManager User?    @relation("AssignedLeads", fields: [assignedManagerId], references: [id])
+  partner         Partner? @relation("PartnerLeads", fields: [partnerId], references: [id])
   attributions    LeadAttribution[]
+
+  @@index([partnerId])
 }
 
 model Conversation {
@@ -986,6 +990,43 @@ model LeadAttribution {
   @@unique([leadId, campaignId])
 }
 
+
+// ─── Partner Program ────────────────────────────────────────────────────────
+
+enum PartnerTier {
+  STANDARD
+  STANDARD_PLUS
+  PREMIUM
+  STRATEGIC
+}
+
+enum PartnerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+model Partner {
+  id              String        @id @default(cuid())
+  name            String
+  businessName    String?
+  email           String?
+  phone           String?
+  tier            PartnerTier   @default(STANDARD)
+  referralCode    String        @unique
+  status          PartnerStatus @default(ACTIVE)
+  commissionFixed Decimal?      @db.Decimal(10,2)
+  commissionPct   Decimal?      @db.Decimal(5,2)
+  totalReferrals  Int           @default(0)
+  totalConversions Int          @default(0)
+  totalCommission Decimal       @default(0) @db.Decimal(10,2)
+  zone            String?
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  leads           Lead[]        @relation("PartnerLeads")
+}
 
 enum RecruitRole {
   MANAGER
