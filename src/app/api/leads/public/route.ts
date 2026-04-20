@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { name, email, phone, source, notes, ref } = body
+    const { name, email, phone, source, notes, ref, partnerCode } = body
 
     if (!name || typeof name !== 'string' || !name.trim()) {
       return NextResponse.json({ error: 'name is required' }, { status: 400 })
@@ -49,17 +49,38 @@ export async function POST(request: NextRequest) {
       campaignId = campaign?.id ?? null
     }
 
+    // Resolve partner from referral code
+    let partnerId: string | null = null
+    if (partnerCode && typeof partnerCode === 'string') {
+      const partner = await prisma.partner.findUnique({
+        where: { referralCode: partnerCode.toUpperCase() },
+        select: { id: true },
+      })
+      if (partner) {
+        partnerId = partner.id
+      }
+    }
+
     const lead = await prisma.lead.create({
       data: {
         name: stripTags(name.trim()).slice(0, 200),
         email: trimmedEmail || null,
         phone: typeof phone === 'string' ? stripTags(phone.trim()).slice(0, 50) : null,
-        source: campaignId ? 'PRINT' : (source ?? 'WEBSITE'),
+        source: partnerId ? 'REFERRAL' : campaignId ? 'PRINT' : (source ?? 'WEBSITE'),
         notes: typeof notes === 'string' ? stripTags(notes.trim()).slice(0, 1000) : null,
         status: 'NEW',
+        partnerId,
       },
       select: { id: true, name: true, email: true, createdAt: true },
     })
+
+    // Increment partner referral count
+    if (partnerId) {
+      await prisma.partner.update({
+        where: { id: partnerId },
+        data: { totalReferrals: { increment: 1 } },
+      }).catch(() => {}) // best-effort
+    }
 
     // Attribute lead to campaign
     if (campaignId) {

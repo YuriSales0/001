@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const {
     name, email, phone, source, message, notes,
-    budget, propertyType, followUpDate, assignedManagerId,
+    budget, propertyType, followUpDate, assignedManagerId, partnerCode,
   } = body
 
   if (!name || !source) {
@@ -61,6 +61,16 @@ export async function POST(request: NextRequest) {
   // MANAGER creating a lead always owns it — ignore client-supplied value
   const resolvedManagerId = me.role === 'MANAGER' ? me.id : (assignedManagerId || null)
 
+  // Resolve partner from referral code
+  let partnerId: string | null = null
+  if (partnerCode && typeof partnerCode === 'string') {
+    const partner = await prisma.partner.findUnique({
+      where: { referralCode: partnerCode.toUpperCase() },
+      select: { id: true },
+    })
+    if (partner) partnerId = partner.id
+  }
+
   const lead = await prisma.lead.create({
     data: {
       name: cleanName,
@@ -73,9 +83,18 @@ export async function POST(request: NextRequest) {
       propertyType: propertyType || null,
       followUpDate: followUpDate ? new Date(followUpDate) : null,
       assignedManagerId: resolvedManagerId,
+      partnerId,
     },
     include: LEAD_INCLUDE,
   })
+
+  // Increment partner referral count
+  if (partnerId) {
+    await prisma.partner.update({
+      where: { id: partnerId },
+      data: { totalReferrals: { increment: 1 } },
+    }).catch(() => {})
+  }
 
   if (resolvedManagerId) {
     notify({
