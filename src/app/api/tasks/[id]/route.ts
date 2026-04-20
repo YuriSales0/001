@@ -91,8 +91,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
             }).catch(() => {})
           }
           break
-        case 'IN_PROGRESS':
+        case 'IN_PROGRESS': {
+          const code = Math.random().toString().slice(2, 8)
+          data.smartLockCode = code
+          data.smartLockExpiresAt = new Date(Date.now() + 4 * 60 * 60 * 1000)
           break
+        }
         case 'SUBMITTED': {
           if (me.role !== 'CREW') return NextResponse.json({ error: 'Only Crew can submit' }, { status: 403 })
           // Photos mandatory for CHECK_OUT and CLEANING
