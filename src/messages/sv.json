@@ -338,7 +338,8 @@
       "activate": "Activate",
       "cancelReservation": "Cancel reservation",
       "markCompleted": "Mark as completed",
-      "complete": "Complete"
+      "complete": "Complete",
+      "deleteReservation": "Delete this reservation permanently?"
     },
     "tasks": {
       "subtitle": "Dispatch and track cleaning, maintenance and inspection visits.",
