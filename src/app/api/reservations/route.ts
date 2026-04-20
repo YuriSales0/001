@@ -81,6 +81,40 @@ export async function POST(request: NextRequest) {
     if (!property) {
       return NextResponse.json({ error: 'Property not found' }, { status: 404 })
     }
+
+    // Check for blocked dates overlap
+    const blockedOverlap = await prisma.blockedDate.findFirst({
+      where: {
+        propertyId,
+        startDate: { lt: checkOutDate },
+        endDate: { gt: checkInDate },
+      },
+    })
+    if (blockedOverlap) {
+      const from = blockedOverlap.startDate.toISOString().slice(0, 10)
+      const to = blockedOverlap.endDate.toISOString().slice(0, 10)
+      return NextResponse.json(
+        { error: `Property is blocked from ${from} to ${to}${blockedOverlap.reason ? ` (${blockedOverlap.reason})` : ''}` },
+        { status: 409 },
+      )
+    }
+
+    // Check for overlapping reservations
+    const reservationOverlap = await prisma.reservation.findFirst({
+      where: {
+        propertyId,
+        status: { notIn: ['CANCELLED'] },
+        checkIn: { lt: checkOutDate },
+        checkOut: { gt: checkInDate },
+      },
+    })
+    if (reservationOverlap) {
+      return NextResponse.json(
+        { error: `Overlaps with existing reservation (${reservationOverlap.guestName}, ${reservationOverlap.checkIn.toISOString().slice(0, 10)} – ${reservationOverlap.checkOut.toISOString().slice(0, 10)})` },
+        { status: 409 },
+      )
+    }
+
     // MANAGER can only create reservations for properties owned by their managed clients
     if (me.role === 'MANAGER' && property.owner?.managerId !== me.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
