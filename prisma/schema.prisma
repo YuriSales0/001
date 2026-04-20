@@ -1046,7 +1046,7 @@ model PartnerPayout {
   partnerId        String
   partner          Partner             @relation(fields: [partnerId], references: [id])
   leadId           String
-  lead             Lead                @relation(fields: [leadId], references: [id])
+  lead             Lead                @relation(fields: [leadId], references: [id], onDelete: Cascade)
   clientName       String?
   amount           Decimal             @db.Decimal(10,2)
   status           PartnerPayoutStatus @default(PENDING)

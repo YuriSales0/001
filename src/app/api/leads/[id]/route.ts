@@ -140,6 +140,28 @@ export async function DELETE(
   const guard = await requireRole(['ADMIN'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
+  const lead = await prisma.lead.findUnique({
+    where: { id: params.id },
+    select: { id: true, status: true, partnerId: true } as Record<string, boolean>,
+  }) as { id: string; status: string; partnerId: string | null } | null
+
+  if (!lead) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  // Decrement partner counters if lead had partner attribution
+  if (lead.partnerId) {
+    try {
+      const wasConverted = lead.status === 'CONVERTED'
+      // @ts-expect-error Partner model pending prisma generate
+      await prisma.partner.update({
+        where: { id: lead.partnerId },
+        data: {
+          totalReferrals: { decrement: 1 },
+          ...(wasConverted ? { totalConversions: { decrement: 1 } } : {}),
+        },
+      })
+    } catch { /* partner may not exist */ }
+  }
+
   await prisma.lead.delete({ where: { id: params.id } })
   return NextResponse.json({ ok: true })
 }
