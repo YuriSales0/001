@@ -700,6 +700,46 @@ const mkt_mrrTracking: CheckFn = async () => {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────
+// CATEGORY: STAY REVIEWS (MANDATORY)
+// ─────────────────────────────────────────────────────────────────
+
+const review_pendingOverdue: CheckFn = async (now) => {
+  const fortyEightHoursAgo = new Date(now.getTime() - 48 * 3600 * 1000)
+  const overdue = await prisma.reservation.count({
+    where: {
+      status: 'COMPLETED',
+      checkOut: { lt: fortyEightHoursAgo },
+      stayReview: null,
+    },
+  })
+  if (overdue === 0) return null
+  return {
+    checkType: 'REVIEW_PENDING_48H',
+    severity: 'HIGH',
+    message: `${overdue} checkout(s) without cleaning review for 48h+ — Manager must review`,
+    count: overdue,
+  }
+}
+
+const review_lowScoreTrend: CheckFn = async () => {
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 3600 * 1000)
+  const recentReviews = await prisma.stayReview.findMany({
+    where: { createdAt: { gte: thirtyDaysAgo } },
+    select: { overallRating: true, crewMemberId: true },
+  })
+  if (recentReviews.length < 5) return null
+  const avgRating = recentReviews.reduce((s, r) => s + Number(r.overallRating), 0) / recentReviews.length
+  if (avgRating >= 3.5) return null
+  return {
+    checkType: 'REVIEW_LOW_AVG_30D',
+    severity: 'CRITICAL',
+    message: `Average cleaning review score is ${avgRating.toFixed(1)} in last 30 days — below 3.5 threshold`,
+    count: recentReviews.length,
+    details: { avgRating: avgRating.toFixed(2), reviewCount: recentReviews.length },
+  }
+}
+
 export const ALL_CHECKS: CheckFn[] = [
   // Reservations (4)
   r1_overdueCheckins,
@@ -749,6 +789,9 @@ export const ALL_CHECKS: CheckFn[] = [
   mkt_noPartnerReferrals,
   mkt_churnAlert,
   mkt_mrrTracking,
+  // Stay Reviews — Mandatory (2)
+  review_pendingOverdue,
+  review_lowScoreTrend,
 ]
 
-// Total: 39 checks
+// Total: 41 checks

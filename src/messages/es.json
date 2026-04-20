@@ -279,7 +279,10 @@
       "weight": "peso",
       "reviewSubmitted": "Valoracion enviada con exito",
       "noReviewsPending": "Sin estancias pendientes de valoracion",
-      "noReviewsCompleted": "Sin valoraciones completadas aun"
+      "noReviewsCompleted": "Sin valoraciones completadas aun",
+      "pendingReviewsAlert": "checkout(s) esperando revisión de limpieza",
+      "pendingReviewsDesc": "Las revisiones de limpieza son obligatorias. Evalúa cada checkout para mantener los estándares de calidad del equipo.",
+      "reviewNow": "Evaluar ahora"
     },
     "reservations": {
       "subtitle": "Seguimiento y gestion de todas las reservas de huespedes.",

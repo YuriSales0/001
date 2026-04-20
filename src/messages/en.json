@@ -279,7 +279,10 @@
       "weight": "weight",
       "reviewSubmitted": "Review submitted successfully",
       "noReviewsPending": "No stays awaiting review",
-      "noReviewsCompleted": "No completed reviews yet"
+      "noReviewsCompleted": "No completed reviews yet",
+      "pendingReviewsAlert": "checkout(s) awaiting cleaning review",
+      "pendingReviewsDesc": "Cleaning reviews are mandatory. Review each checkout to maintain crew quality standards.",
+      "reviewNow": "Review now"
     },
     "reservations": {
       "subtitle": "Track and manage all guest reservations.",
