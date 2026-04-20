@@ -5,6 +5,7 @@ import { Pencil, Trash2, X, CheckCircle, FileText } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
 import { useEscapeKey } from "@/lib/use-escape-key"
+import { useLocale } from "@/i18n/provider"
 
 type Invoice = {
   id: string

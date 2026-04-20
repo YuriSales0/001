@@ -247,7 +247,7 @@ export default function ManagerMessagesPage() {
         <div className="flex-1 flex items-center justify-center text-gray-400">
           <div className="text-center">
             <MessageCircle className="h-12 w-12 mx-auto mb-2 text-gray-300"/>
-            <p className="text-sm">Selecciona uma conversa</p>
+            <p className="text-sm">{t('manager.messages.selectConversation')}</p>
           </div>
         </div>
       )}
