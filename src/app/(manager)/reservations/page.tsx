@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle, Play, CheckCheck, Ban } from "lucide-react"
+import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle, Play, CheckCheck, Ban, Trash2 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 
 type ReservationStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED"
@@ -265,6 +265,14 @@ export default function ReservationsPage() {
     await load()
   }
 
+  const deleteReservation = async (id: string, guestName: string) => {
+    if (!confirm(`${t('manager.reservations.deleteReservation')} — ${guestName}?`)) return
+    setActivating(id)
+    const res = await fetch(`/api/reservations/${id}`, { method: 'DELETE' })
+    setActivating(null)
+    if (res.ok) await load()
+  }
+
   const changeReservationStatus = async (id: string, status: 'ACTIVE'|'COMPLETED', force = false) => {
     const reservation = reservations.find(r => r.id === id)
     if (!reservation || !isValidTransition(reservation.status, status)) return
@@ -432,6 +440,16 @@ export default function ReservationsPage() {
                             <Ban className="h-3 w-3" />
                           </button>
                         </>
+                      )}
+                      {r.status === 'CANCELLED' && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); deleteReservation(r.id, r.guestName) }}
+                          disabled={activating === r.id}
+                          className="inline-flex items-center gap-1 rounded-lg border border-red-200 text-red-500 px-2.5 py-1 text-[11px] font-semibold hover:bg-red-50 disabled:opacity-50 transition-colors"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                          {activating === r.id ? '...' : t('common.delete')}
+                        </button>
                       )}
                     </div>
                   </div>

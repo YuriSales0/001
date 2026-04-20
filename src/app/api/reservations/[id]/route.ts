@@ -210,11 +210,35 @@ export async function DELETE(
   try {
     const { id } = params
 
-    await prisma.reservation.delete({
+    const reservation = await prisma.reservation.findUnique({
       where: { id },
+      select: { id: true, status: true, propertyId: true, checkIn: true, checkOut: true },
+    })
+    if (!reservation) {
+      return NextResponse.json({ error: 'Reservation not found' }, { status: 404 })
+    }
+
+    // Clean up related records before deleting
+    await prisma.$transaction(async (tx) => {
+      // Delete associated payouts
+      await tx.payout.deleteMany({ where: { reservationId: id } })
+
+      // Delete associated tasks (scoped by property + date range)
+      await tx.task.deleteMany({
+        where: {
+          propertyId: reservation.propertyId,
+          dueDate: { gte: reservation.checkIn, lte: reservation.checkOut },
+        },
+      })
+
+      // Delete stay review if exists
+      await tx.stayReview.deleteMany({ where: { reservationId: id } })
+
+      // Delete the reservation
+      await tx.reservation.delete({ where: { id } })
     })
 
-    return NextResponse.json({ message: 'Reservation deleted successfully' })
+    return NextResponse.json({ ok: true })
   } catch (error) {
     console.error('Error deleting reservation:', error)
     return NextResponse.json(

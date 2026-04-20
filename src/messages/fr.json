@@ -257,7 +257,8 @@
       "bio": "Professional bio",
       "bioPlaceholder": "Introduce yourself to your property owners. What's your background? How do you help them?",
       "personalCommission": "Personal commission (%)",
-      "readOnly": "— read-only"
+      "readOnly": "— read-only",
+      "commissionNotConfigured": "Not configured by Admin"
     },
     "reviews": {
       "title": "Reviews",
@@ -282,6 +283,258 @@
       "pendingReviewsAlert": "checkout(s) awaiting cleaning review",
       "pendingReviewsDesc": "Cleaning reviews are mandatory. Review each checkout to maintain crew quality standards.",
       "reviewNow": "Review now"
+    },
+    "reservations": {
+      "subtitle": "Track and manage all guest reservations.",
+      "upcoming": "Upcoming",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "nights": "nights",
+      "financials": "Financials",
+      "grossBooking": "Gross booking",
+      "hmCommission": "HostMasters commission (20%)",
+      "sla": "SLA",
+      "guestResponse": "Guest response",
+      "ownerResponse": "Owner response",
+      "emergency": "Emergency",
+      "fullLifecycle": "Full lifecycle",
+      "lifecycle": {
+        "bookingConfirmed": "Booking confirmed → owner notified",
+        "welcomeEmail": "Guest welcome email sent",
+        "nukiCode": "Nuki access code generated",
+        "cleaningConfirmed": "48h before: cleaning confirmed",
+        "preStayInspection": "Pre-stay inspection done",
+        "guestReminder": "Guest reminder sent",
+        "checkInCode": "Check-in: code activated",
+        "checkOutInspection": "Check-out: inspection + cleaning",
+        "reviewRequest": "Review request sent",
+        "financialsLogged": "Financials logged"
+      },
+      "allProperties": "All properties",
+      "allStatuses": "All statuses",
+      "noMatch": "No reservations match your filters.",
+      "noReservations": "No reservations",
+      "list": "List",
+      "pipeline": "Pipeline",
+      "newReservation": "New reservation",
+      "autoTasksOnSave": "Auto-tasks will be generated on save.",
+      "property": "Property",
+      "selectProperty": "Select a property...",
+      "guestName": "Guest name",
+      "platform": "Platform",
+      "guestEmail": "Guest email",
+      "amount": "Amount (EUR)",
+      "guestProfile": "Guest profile (AI data)",
+      "nationality": "Nationality",
+      "guestType": "Guest type",
+      "groupSize": "Group size",
+      "children": "Children",
+      "pets": "Pets",
+      "saving": "Saving...",
+      "createReservation": "Create reservation",
+      "failedToCreate": "Failed to create reservation",
+      "fillRequired": "Fill in all required fields.",
+      "activate": "Activate",
+      "cancelReservation": "Cancel reservation",
+      "markCompleted": "Mark as completed",
+      "complete": "Complete"
+    },
+    "tasks": {
+      "subtitle": "Dispatch and track cleaning, maintenance and inspection visits.",
+      "pending": "Pending",
+      "inProgress": "In progress",
+      "completed": "Completed",
+      "allProperties": "All properties",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "noMatch": "No tasks match your filters.",
+      "autoTaskDocs": "Auto-task docs",
+      "newTask": "New task",
+      "dispatchSubtitle": "Dispatch a visit to the field crew.",
+      "property": "Property",
+      "selectProperty": "Select a property...",
+      "taskType": "Task type",
+      "title": "Title",
+      "dueDate": "Due date",
+      "due": "Due",
+      "assignTo": "Assign to",
+      "autoAssign": "Auto-assign (least busy)",
+      "unassigned": "Unassigned",
+      "creating": "Creating...",
+      "dispatchTask": "Dispatch task",
+      "fillRequired": "Fill in property, title and due date.",
+      "failedToCreate": "Failed to create task",
+      "start": "Start",
+      "completeAction": "Complete",
+      "autoAssignNote": "Crew will be auto-assigned by the Captain."
+    },
+    "revenue": {
+      "subtitle": "Financial overview and property performance.",
+      "grossRevenue": "Gross Revenue",
+      "netToOwners": "Net to Owners",
+      "commission": "Commission",
+      "noData": "No revenue data for this period."
+    },
+    "crm": {
+      "searchLeads": "Search leads...",
+      "addLead": "Add lead",
+      "newLead": "New Lead",
+      "fullName": "Full name",
+      "email": "Email",
+      "source": "Source",
+      "saving": "Saving...",
+      "saveLead": "Save lead",
+      "contact": "Contact",
+      "moveToStage": "Move to stage",
+      "noNotes": "No notes yet",
+      "campaignAttribution": "Campaign attribution",
+      "noCampaign": "No campaign attributed yet.",
+      "selectCampaign": "Select campaign...",
+      "attributeToCampaign": "Attribute to campaign",
+      "added": "Added",
+      "followUp": "Follow-up",
+      "dropHere": "Drop here",
+      "leadQualification": "Lead Qualification",
+      "saveQualification": "Save qualification",
+      "scoreSaved": "Score saved",
+      "failedToSaveScore": "Failed to save score",
+      "clearAnswers": "Clear answers",
+      "stages": {
+        "newLead": "New Lead",
+        "firstContact": "First Contact",
+        "callScheduled": "Call Scheduled",
+        "qualified": "Qualified",
+        "proposalSent": "Proposal Sent",
+        "contractSigned": "Contract Signed",
+        "activeOwner": "Active Owner"
+      },
+      "sources": {
+        "registration": "Registration",
+        "newsletter": "Newsletter",
+        "online": "Online",
+        "phone": "Phone",
+        "whatsapp": "WhatsApp",
+        "website": "Website",
+        "email": "Email",
+        "referral": "Referral",
+        "other": "Other"
+      },
+      "bant": {
+        "location": "Property location",
+        "locationInZone": "Costa Tropical — Motril to Nerja",
+        "locationNearby": "Malaga province, nearby area",
+        "locationUnknown": "Location not confirmed yet",
+        "locationOutside": "Outside our operating zone",
+        "availability": "Annual availability",
+        "avail8plus": "8+ months/year available",
+        "avail5to7": "5-7 months/year",
+        "avail3to4": "3-4 months/year",
+        "availUnder3": "Less than 3 months/year",
+        "authority": "Decision authority",
+        "authSoleOwner": "Direct sole owner",
+        "authCoOwner": "Co-owner (joint decision)",
+        "authPoa": "Power of attorney",
+        "authOther": "Tenant / third party",
+        "propertySize": "Property size",
+        "prop3plus": "3+ bedrooms (villa / large apt)",
+        "prop2bed": "2 bedrooms",
+        "prop1bed": "1 bedroom",
+        "propStudio": "Studio / 0 bedrooms",
+        "timeline": "Start timeline",
+        "timeNow": "Ready now — within 1 month",
+        "timeSoon": "1-3 months",
+        "timeMedium": "3-6 months",
+        "timeLong": "6+ months or unsure"
+      }
+    },
+    "calendar": {
+      "subtitle": "Check-ins, check-outs, tasks and payouts for your clients.",
+      "today": "Today",
+      "newTask": "New task",
+      "property": "Property",
+      "searchProperty": "Search by property name...",
+      "noResults": "— no results —",
+      "taskType": "Task type",
+      "taskTitle": "Task title",
+      "crewNotes": "Notes for crew",
+      "creating": "Creating...",
+      "createTask": "Create task",
+      "events": "events",
+      "noEvents": "No events on this day",
+      "overdue": "Overdue",
+      "done": "Done",
+      "more": "more...",
+      "task": "Task",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "suppliers": {
+      "subtitle": "Manage your vendor and supplier directory.",
+      "addSupplier": "Add supplier",
+      "searchSuppliers": "Search suppliers...",
+      "allTypes": "All types",
+      "noSuppliers": "No suppliers yet. Add the first one.",
+      "noMatch": "No suppliers match your search.",
+      "call": "Call",
+      "email": "Email",
+      "newSupplier": "New supplier",
+      "addVendor": "Add a vendor to your directory.",
+      "type": "Type",
+      "saving": "Saving...",
+      "namePhoneRequired": "Name and phone are required.",
+      "failedToCreate": "Failed to create supplier.",
+      "typeCleaner": "Cleaner",
+      "typePlumber": "Plumber",
+      "typeElectrician": "Electrician",
+      "typeGeneral": "General"
+    },
+    "messages": {
+      "loadError": "Failed to load data",
+      "myClients": "My clients",
+      "otherManagers": "Other managers",
+      "noConversations": "No conversations",
+      "client": "Client",
+      "readOnly": "Read-only",
+      "noMessages": "No messages",
+      "placeholder": "Write a message...",
+      "otherManagerReadOnly": "Another manager's conversation — read-only",
+      "selectConversation": "Select a conversation",
+      "failedToSend": "Failed to send message"
+    },
+    "invoices": {
+      "subtitle": "Manage and send invoices to property owners",
+      "totalInvoices": "Total invoices",
+      "paid": "Paid",
+      "pending": "Pending",
+      "editInvoice": "Edit invoice",
+      "client": "Client",
+      "amountEur": "Amount (EUR)",
+      "dueDate": "Due date",
+      "notes": "Notes",
+      "failedToSave": "Failed to save",
+      "saving": "Saving...",
+      "saveChanges": "Save changes",
+      "date": "Date",
+      "due": "Due",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions",
+      "noInvoices": "No invoices yet",
+      "createFirst": "Create your first invoice using the form above.",
+      "markAsPaid": "Mark invoice as paid",
+      "markAsPaidConfirm": "Mark invoice as paid for",
+      "markPaid": "Mark paid",
+      "deleteInvoice": "Delete invoice",
+      "deleteConfirm": "Delete invoice for",
+      "delete": "Delete",
+      "failedToMarkPaid": "Failed to mark invoice as paid",
+      "failedToDelete": "Failed to delete invoice"
     }
   },
   "admin": {
@@ -341,7 +594,82 @@
     "subscriptionPlans": "Subscription Plans",
     "recruiting": "Recruiting",
     "hmAi": "HostMasters AI",
-    "aiMonitor": "AI Monitor",
+    "aiMonitor": {
+      "title": "AI Monitor",
+      "subtitle": "Automatic database consistency checks — no Claude API connection yet, detection logic only",
+      "currentState": "Current state",
+      "whatIsChecked": "What is checked",
+      "checks": "checks",
+      "resolution": "Resolution",
+      "alertHistory": "Persisted alert history",
+      "noAlerts": "No saved alerts. Alerts will be persisted when the AI Monitor cron is activated.",
+      "resolved": "Resolved",
+      "sections": {
+        "reservations": "Reservations",
+        "payouts": "Payouts",
+        "reports": "Reports"
+      },
+      "checks_RESERVATION_PAST_CHECKIN": {
+        "label": "Past check-in with UPCOMING status",
+        "desc": "Reservations with UPCOMING status whose check-in has already happened — status is outdated and affects the operations dashboard.",
+        "fix": "Manually mark as ACTIVE or COMPLETED based on the actual reservation state."
+      },
+      "checks_CHECKIN_NO_TASK": {
+        "label": "Check-in in <7 days without task",
+        "desc": "Reservations with check-in in the next 7 days without a CHECK_IN task created for the team.",
+        "fix": "Create a CHECK_IN task in the calendar and assign to Crew."
+      },
+      "checks_CHECKOUT_NO_TASK": {
+        "label": "Check-out in <7 days without task",
+        "desc": "Reservations with check-out in the next 7 days without a CHECK_OUT or CLEANING task created.",
+        "fix": "Create a CHECK_OUT or CLEANING task in the calendar and assign to Crew."
+      },
+      "checks_CHECKOUT_NO_CREW_REPORT": {
+        "label": "Check-out without Crew report",
+        "desc": "Reservations completed in the last 3 days without a checkout report submitted by Crew.",
+        "fix": "Ask the Crew member to submit the reservation report."
+      },
+      "checks_RESERVATION_ZERO_AMOUNT": {
+        "label": "Reservation with value 0",
+        "desc": "Active reservations with value 0 — possible data entry error.",
+        "fix": "Check and correct the reservation value."
+      },
+      "checks_PAYOUT_NO_INVOICE": {
+        "label": "Paid payout without invoice",
+        "desc": "Each payout marked as PAID should automatically generate an invoice for the owner. A mismatch indicates a creation failure.",
+        "fix": "Check server error logs. Create the invoice manually if needed."
+      },
+      "checks_PAYOUT_OVERDUE": {
+        "label": "Overdue scheduled payout",
+        "desc": "Payouts with scheduledFor date already past without being marked as paid.",
+        "fix": "Process the payment and mark the payout as PAID, or reschedule if not yet processed."
+      },
+      "checks_COMMISSION_MISMATCH": {
+        "label": "Outdated commission rate",
+        "desc": "Scheduled payouts with a rate different from the owner's current plan (plan may have changed after the payout was created).",
+        "fix": "Edit the payout and recreate with the correct rate before marking as paid."
+      },
+      "checks_INVOICE_PAID_NO_PAIDAT": {
+        "label": "PAID invoice without payment date",
+        "desc": "Invoices with status=PAID but without paidAt are invisible in the revenue dashboard.",
+        "fix": "Edit the invoice and set the payment date manually."
+      },
+      "checks_REPORT_MISSING": {
+        "label": "Property with activity but no monthly report",
+        "desc": "Properties with reservations last month without a monthly report generated for the owner.",
+        "fix": "Generate the monthly report in My Reports."
+      },
+      "checks_REPORT_NOT_SENT": {
+        "label": "Report generated but not sent",
+        "desc": "Monthly reports from the previous month generated but not sent to the owner.",
+        "fix": "Go to My Reports and send the pending reports."
+      },
+      "checks_PROPERTY_STALE": {
+        "label": "Property without activity (90 days)",
+        "desc": "Active properties without any reservation in the last 90 days — may be inactive or with an outdated listing.",
+        "fix": "Check with the owner if the property is available for rental."
+      }
+    },
     "tax": "Tax & Compliance",
     "taxSubtitle": "Manage fiscal obligations for all clients",
     "newObligation": "New obligation",
@@ -854,6 +1182,73 @@
     },
     "team": {
       "cannotDeleteSelf": "You cannot delete your own account."
+    },
+    "reportSummary": {
+      "title": "Reports",
+      "myReport": "My Report",
+      "exportPdf": "Export PDF",
+      "thisMonth": "This month",
+      "previousMonth": "Previous month",
+      "year": "Year",
+      "custom": "Custom",
+      "period": "Period",
+      "compareWith": "Compare with",
+      "apply": "Apply",
+      "loadError": "Error loading report.",
+      "grossRevenue": "Gross revenue",
+      "hmCommission": "HM Commission",
+      "reservations": "Reservations",
+      "avgPricePerNight": "Avg price/night",
+      "hmTotalRevenue": "HM total revenue",
+      "commissionPlusInvoices": "commission + invoices",
+      "invoicesPaid": "Invoices paid",
+      "subscriptionsAndAdjustments": "subscriptions + adjustments",
+      "paidToOwners": "Paid to owners",
+      "nightsOccupied": "Nights occupied",
+      "activeProperties": "Active properties",
+      "clients": "Clients (owners)",
+      "prev": "prev.",
+      "myCommission": "My commission",
+      "subscriptions": "Subscriptions",
+      "commissions": "Commissions",
+      "total": "Total",
+      "previousPeriod": "Previous period",
+      "clientsInPortfolio": "Clients in portfolio",
+      "noClients": "No assigned clients.",
+      "noName": "No name",
+      "clientCount": "Clients",
+      "grossRevenuePortfolio": "Gross revenue (portfolio)",
+      "subscriptionsPerMonth": "Subscriptions/month",
+      "fromYourClients": "from your clients"
+    },
+    "consumables": {
+      "title": "Consumables",
+      "subtitle": "Manage stock categories and track inventory levels",
+      "tabStock": "Stock Overview",
+      "tabCategories": "Categories",
+      "addCategory": "Add Category",
+      "editCategory": "Edit Category",
+      "name": "Name",
+      "type": "Type",
+      "unit": "Unit",
+      "lifecycle": "Lifecycle (uses)",
+      "available": "Available",
+      "total": "Total",
+      "deployed": "Deployed",
+      "inLaundry": "In Laundry",
+      "inTransit": "In Transit",
+      "quarantine": "Quarantine",
+      "retired": "Retired",
+      "noCategories": "No consumable categories yet. Create the first one.",
+      "noStock": "No stock data available.",
+      "typeLaunderable": "Launderable",
+      "typeDisposable": "Disposable",
+      "typeDurable": "Durable",
+      "typeWelcomeKit": "Welcome Kit",
+      "creating": "Creating...",
+      "create": "Create",
+      "failedToLoad": "Failed to load consumables",
+      "failedToCreate": "Failed to create category"
     }
   },
   "crew": {
@@ -956,7 +1351,9 @@
       "submitCheckout": "Submit check-out report",
       "markComplete": "Mark task complete",
       "taskCompleted": "Task completed",
-      "startTask": "Start task"
+      "startTask": "Start task",
+      "acceptTask": "Accept task",
+      "declineTask": "Decline"
     },
     "score": {
       "suspended": "Suspended",
@@ -968,7 +1365,14 @@
       "expert": "Expert",
       "expertDesc": "+10% rate bonus + premium properties",
       "elite": "Elite",
-      "eliteDesc": "+15% rate bonus + independent inspections"
+      "eliteDesc": "+15% rate bonus + independent inspections",
+      "pts": "pts",
+      "ptsTo": "pts to",
+      "nextLevel": "next level",
+      "tasks": "tasks",
+      "approved": "approved",
+      "incentiveTitle": "Higher score = more tasks for you",
+      "incentiveDesc": "Good work on a property builds trust. The platform prioritises you for future tasks at properties where you performed well."
     },
     "profile": {
       "roleDesc": "Crew · Field Operations",
@@ -999,6 +1403,14 @@
         "complaint": "Complaint received",
         "unreportedDamage": "Unreported damage"
       }
+    },
+    "calendar": {
+      "title": "My Tasks",
+      "subtitle": "Tasks assigned to me this week",
+      "noTasksThisDay": "No tasks this day",
+      "complete": "Complete",
+      "today": "Today",
+      "more": "more..."
     }
   },
   "finance": {
@@ -1008,7 +1420,21 @@
     "ownerPayout": "Owner Payout",
     "income": "Income",
     "expenses": "Expenses",
-    "statement": "Statement",
+    "statement": {
+      "monthlyStatement": "Monthly Statement",
+      "downloadPdf": "Download PDF",
+      "bookingsThisMonth": "Bookings this month",
+      "grossRentalIncome": "Gross rental income",
+      "hmCommission": "HostMasters commission",
+      "cleaningFees": "Cleaning fees",
+      "otherExpenses": "Other expenses",
+      "yourNetPayment": "Your net payment",
+      "sepaTransfer": "SEPA Transfer",
+      "sent": "Sent",
+      "scheduled": "Scheduled",
+      "propertyCondition": "Property condition",
+      "lastInspection": "Last inspection"
+    },
     "netRevenue": "Net Revenue",
     "platformFees": "Platform Fees",
     "cleaningFees": "Cleaning Fees",
@@ -1022,7 +1448,31 @@
     "overdue": "Overdue",
     "invoiceNumber": "Invoice Number",
     "billingPeriod": "Billing Period",
-    "taxReport": "Tax Report"
+    "taxReport": "Tax Report",
+    "report": {
+      "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+      },
+      "transfer": "Transfer",
+      "sent": "Sent",
+      "scheduled": "Scheduled",
+      "grossRentalIncome": "Gross rental income",
+      "hmCommission": "HostMasters commission",
+      "cleaningFees": "Cleaning fees",
+      "otherExpenses": "Other expenses",
+      "yourPayment": "Your payment"
+    }
   },
   "auth": {
     "signIn": "Sign In",
@@ -1169,6 +1619,14 @@
         "actions": {
           "title": "Actions Rapides",
           "desc": "Bloquez des dates, demandez une visite de maintenance ou consultez votre rapport financier complet — tout en un clic."
+        },
+        "profile": {
+          "title": "Let's set up your profile",
+          "desc": "Just a few details so we can personalize your experience.",
+          "nameLabel": "Full name",
+          "namePlaceholder": "Your name",
+          "phoneLabel": "Phone number",
+          "langLabel": "Preferred language"
         }
       }
     }
@@ -1238,6 +1696,32 @@
         "Document sharing",
         "Multi-language support"
       ]
+    },
+    "mock": {
+      "smartLock": "Smart Lock",
+      "connected": "Connected",
+      "allGood": "All good",
+      "inspected3d": "Inspected 3d ago",
+      "julyStatement": "July 2026 Statement",
+      "grossRentalIncome": "Gross rental income",
+      "hmCommission": "HM commission (17%)",
+      "cleaningFees": "Cleaning fees (3×)",
+      "maintenance": "Maintenance",
+      "monthlyPlanFee": "Monthly plan fee (Mid)",
+      "netPayout": "Net payout",
+      "taskCleaning": "Cleaning",
+      "taskInspection": "Inspection",
+      "taskMaintenance": "Maintenance",
+      "statusCompleted": "completed",
+      "statusScheduled": "scheduled",
+      "upcomingVisits": "Upcoming visits",
+      "openIssues": "Open issues",
+      "aiAssistant": "AI Assistant available 24/7 for instant answers",
+      "guest": "Guest",
+      "dates": "Dates",
+      "platform": "Platform",
+      "revenue": "Revenue",
+      "personalUse": "Personal use"
     }
   },
   "aiTools": {
@@ -1664,7 +2148,13 @@
     "finish": "Terminer",
     "saving": "Enregistrement…",
     "setupTitle": "Setup",
-    "setupSubtitle": "Configuration initiale de ton compte"
+    "setupSubtitle": "Configuration initiale de ton compte",
+    "saveError": "Failed to save. Please try again.",
+    "networkError": "Network error. Check your connection.",
+    "crewContractDesc": "Your contract terms have been set by the Admin. Please review and confirm.",
+    "crewContractTypeLabel": "Contract type",
+    "ratesNotConfigured": "Rates not yet configured. Contact your Admin.",
+    "compensationNotConfigured": "Compensation not yet configured. Contact your Admin."
   },
   "client": {
     "dashboard": {
@@ -2152,7 +2642,17 @@
     "noEndDate": "Indéfini",
     "myContract": "Mon Contrat",
     "noContract": "Aucun contrat disponible. Contacte ton Admin.",
-    "type": "Type"
+    "type": "Type",
+    "calendar": {
+      "subtitle": "All scheduled tasks for your properties",
+      "allProperties": "All properties",
+      "noTasks": "No tasks on this day",
+      "property": "Property",
+      "unassigned": "Unassigned",
+      "completed": "Completed",
+      "overdue": "Overdue",
+      "pending": "Pending"
+    }
   },
   "notifBell": {
     "title": "Notifications",
@@ -2191,6 +2691,99 @@
     "subscriptionPlan": "Subscription plan",
     "viewPlanDetails": "View plan details",
     "yourDocuments": "Your documents",
-    "planSuffix": "plan"
+    "planSuffix": "plan",
+    "title": "My Profile",
+    "adminSubtitle": "Admin · HostMasters Owner",
+    "phone": "Phone",
+    "bio": "Bio",
+    "bioHint": "visible to clients",
+    "bioPlaceholder": "Brief introduction visible to property owners...",
+    "commissionRate": "Company commission rate (%)",
+    "imageTooLarge": "Image must be under 5 MB"
+  },
+  "booking": {
+    "status": {
+      "upcoming": "Upcoming",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "nights": "nights",
+    "cleaning": "Cleaning",
+    "cleaningStatus": {
+      "pending": "pending",
+      "confirmed": "confirmed",
+      "done": "done"
+    }
+  },
+  "monitor": {
+    "sections": {
+      "reservations": "Reservations",
+      "payouts": "Payouts",
+      "reports": "Reports"
+    },
+    "anomalyDetected": "anomaly detected",
+    "anomaliesDetected": "anomalies detected",
+    "critical": "critical",
+    "criticalPlural": "critical",
+    "allClear": "System operational — no anomalies",
+    "checkNow": "Check now"
+  },
+  "partner": {
+    "portal": "Partner Portal",
+    "login": {
+      "title": "Partner Portal",
+      "subtitle": "Sign in to view your referrals and payouts",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "sendMagicLink": "Send magic link",
+      "sending": "Sending...",
+      "checkEmail": "Check your email",
+      "checkEmailDesc": "We sent a login link to your email. Click the link to access your portal.",
+      "useDifferent": "Use a different email",
+      "notPartner": "Not a partner yet?",
+      "learnMore": "Learn more"
+    },
+    "dashboard": {
+      "welcome": "Welcome",
+      "subtitle": "Your referral dashboard",
+      "totalReferrals": "Total Referrals",
+      "conversions": "Conversions",
+      "pendingPayouts": "Pending Payouts",
+      "totalEarned": "Total Earned",
+      "referralLink": "Your Referral Link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "shareInfo": "Share this link with property owners.",
+      "code": "Code"
+    },
+    "leads": {
+      "title": "Recent Referrals",
+      "empty": "No referrals yet. Share your link to get started.",
+      "name": "Name",
+      "email": "Email",
+      "status": "Status",
+      "date": "Date"
+    },
+    "payouts": {
+      "title": "Payouts",
+      "empty": "No payouts yet. Payouts are created when your referrals convert.",
+      "client": "Client",
+      "amount": "Amount",
+      "status": "Status",
+      "holdUntil": "Hold Until",
+      "paidDate": "Paid Date",
+      "pending": "Pending",
+      "approved": "Approved",
+      "paid": "Paid",
+      "reversed": "Reversed",
+      "totalPending": "Pending",
+      "totalPaid": "Paid",
+      "statusPending": "Commission in 30-day holding period",
+      "statusApproved": "Ready for payment — will be paid by day 5 of next month",
+      "statusPaid": "Paid on",
+      "statusReversed": "Client cancelled within 60 days — commission reversed"
+    },
+    "logout": "Logout"
   }
 }

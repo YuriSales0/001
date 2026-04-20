@@ -338,7 +338,8 @@
       "activate": "Activar",
       "cancelReservation": "Cancelar reserva",
       "markCompleted": "Marcar como completada",
-      "complete": "Completar"
+      "complete": "Completar",
+      "deleteReservation": "¿Eliminar esta reserva permanentemente?"
     },
     "tasks": {
       "subtitle": "Despacha y controla visitas de limpieza, mantenimiento e inspeccion.",
