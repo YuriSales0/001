@@ -594,7 +594,82 @@
     "subscriptionPlans": "Subscription Plans",
     "recruiting": "Recruiting",
     "hmAi": "HostMasters AI",
-    "aiMonitor": "AI Monitor",
+    "aiMonitor": {
+      "title": "AI Monitor",
+      "subtitle": "Automatic database consistency checks — no Claude API connection yet, detection logic only",
+      "currentState": "Current state",
+      "whatIsChecked": "What is checked",
+      "checks": "checks",
+      "resolution": "Resolution",
+      "alertHistory": "Persisted alert history",
+      "noAlerts": "No saved alerts. Alerts will be persisted when the AI Monitor cron is activated.",
+      "resolved": "Resolved",
+      "sections": {
+        "reservations": "Reservations",
+        "payouts": "Payouts",
+        "reports": "Reports"
+      },
+      "checks_RESERVATION_PAST_CHECKIN": {
+        "label": "Past check-in with UPCOMING status",
+        "desc": "Reservations with UPCOMING status whose check-in has already happened — status is outdated and affects the operations dashboard.",
+        "fix": "Manually mark as ACTIVE or COMPLETED based on the actual reservation state."
+      },
+      "checks_CHECKIN_NO_TASK": {
+        "label": "Check-in in <7 days without task",
+        "desc": "Reservations with check-in in the next 7 days without a CHECK_IN task created for the team.",
+        "fix": "Create a CHECK_IN task in the calendar and assign to Crew."
+      },
+      "checks_CHECKOUT_NO_TASK": {
+        "label": "Check-out in <7 days without task",
+        "desc": "Reservations with check-out in the next 7 days without a CHECK_OUT or CLEANING task created.",
+        "fix": "Create a CHECK_OUT or CLEANING task in the calendar and assign to Crew."
+      },
+      "checks_CHECKOUT_NO_CREW_REPORT": {
+        "label": "Check-out without Crew report",
+        "desc": "Reservations completed in the last 3 days without a checkout report submitted by Crew.",
+        "fix": "Ask the Crew member to submit the reservation report."
+      },
+      "checks_RESERVATION_ZERO_AMOUNT": {
+        "label": "Reservation with value 0",
+        "desc": "Active reservations with value 0 — possible data entry error.",
+        "fix": "Check and correct the reservation value."
+      },
+      "checks_PAYOUT_NO_INVOICE": {
+        "label": "Paid payout without invoice",
+        "desc": "Each payout marked as PAID should automatically generate an invoice for the owner. A mismatch indicates a creation failure.",
+        "fix": "Check server error logs. Create the invoice manually if needed."
+      },
+      "checks_PAYOUT_OVERDUE": {
+        "label": "Overdue scheduled payout",
+        "desc": "Payouts with scheduledFor date already past without being marked as paid.",
+        "fix": "Process the payment and mark the payout as PAID, or reschedule if not yet processed."
+      },
+      "checks_COMMISSION_MISMATCH": {
+        "label": "Outdated commission rate",
+        "desc": "Scheduled payouts with a rate different from the owner's current plan (plan may have changed after the payout was created).",
+        "fix": "Edit the payout and recreate with the correct rate before marking as paid."
+      },
+      "checks_INVOICE_PAID_NO_PAIDAT": {
+        "label": "PAID invoice without payment date",
+        "desc": "Invoices with status=PAID but without paidAt are invisible in the revenue dashboard.",
+        "fix": "Edit the invoice and set the payment date manually."
+      },
+      "checks_REPORT_MISSING": {
+        "label": "Property with activity but no monthly report",
+        "desc": "Properties with reservations last month without a monthly report generated for the owner.",
+        "fix": "Generate the monthly report in My Reports."
+      },
+      "checks_REPORT_NOT_SENT": {
+        "label": "Report generated but not sent",
+        "desc": "Monthly reports from the previous month generated but not sent to the owner.",
+        "fix": "Go to My Reports and send the pending reports."
+      },
+      "checks_PROPERTY_STALE": {
+        "label": "Property without activity (90 days)",
+        "desc": "Active properties without any reservation in the last 90 days — may be inactive or with an outdated listing.",
+        "fix": "Check with the owner if the property is available for rental."
+      }
+    },
     "tax": "Tax & Compliance",
     "taxSubtitle": "Manage fiscal obligations for all clients",
     "newObligation": "New obligation",
@@ -1108,82 +1183,6 @@
     "team": {
       "cannotDeleteSelf": "You cannot delete your own account."
     },
-    "aiMonitor": {
-      "title": "AI Monitor",
-      "subtitle": "Automatic database consistency checks — no Claude API connection yet, detection logic only",
-      "currentState": "Current state",
-      "whatIsChecked": "What is checked",
-      "checks": "checks",
-      "resolution": "Resolution",
-      "alertHistory": "Persisted alert history",
-      "noAlerts": "No saved alerts. Alerts will be persisted when the AI Monitor cron is activated.",
-      "resolved": "Resolved",
-      "sections": {
-        "reservations": "Reservations",
-        "payouts": "Payouts",
-        "reports": "Reports"
-      },
-      "checks_RESERVATION_PAST_CHECKIN": {
-        "label": "Past check-in with UPCOMING status",
-        "desc": "Reservations with UPCOMING status whose check-in has already happened — status is outdated and affects the operations dashboard.",
-        "fix": "Manually mark as ACTIVE or COMPLETED based on the actual reservation state."
-      },
-      "checks_CHECKIN_NO_TASK": {
-        "label": "Check-in in <7 days without task",
-        "desc": "Reservations with check-in in the next 7 days without a CHECK_IN task created for the team.",
-        "fix": "Create a CHECK_IN task in the calendar and assign to Crew."
-      },
-      "checks_CHECKOUT_NO_TASK": {
-        "label": "Check-out in <7 days without task",
-        "desc": "Reservations with check-out in the next 7 days without a CHECK_OUT or CLEANING task created.",
-        "fix": "Create a CHECK_OUT or CLEANING task in the calendar and assign to Crew."
-      },
-      "checks_CHECKOUT_NO_CREW_REPORT": {
-        "label": "Check-out without Crew report",
-        "desc": "Reservations completed in the last 3 days without a checkout report submitted by Crew.",
-        "fix": "Ask the Crew member to submit the reservation report."
-      },
-      "checks_RESERVATION_ZERO_AMOUNT": {
-        "label": "Reservation with value 0",
-        "desc": "Active reservations with value 0 — possible data entry error.",
-        "fix": "Check and correct the reservation value."
-      },
-      "checks_PAYOUT_NO_INVOICE": {
-        "label": "Paid payout without invoice",
-        "desc": "Each payout marked as PAID should automatically generate an invoice for the owner. A mismatch indicates a creation failure.",
-        "fix": "Check server error logs. Create the invoice manually if needed."
-      },
-      "checks_PAYOUT_OVERDUE": {
-        "label": "Overdue scheduled payout",
-        "desc": "Payouts with scheduledFor date already past without being marked as paid.",
-        "fix": "Process the payment and mark the payout as PAID, or reschedule if not yet processed."
-      },
-      "checks_COMMISSION_MISMATCH": {
-        "label": "Outdated commission rate",
-        "desc": "Scheduled payouts with a rate different from the owner's current plan (plan may have changed after the payout was created).",
-        "fix": "Edit the payout and recreate with the correct rate before marking as paid."
-      },
-      "checks_INVOICE_PAID_NO_PAIDAT": {
-        "label": "PAID invoice without payment date",
-        "desc": "Invoices with status=PAID but without paidAt are invisible in the revenue dashboard.",
-        "fix": "Edit the invoice and set the payment date manually."
-      },
-      "checks_REPORT_MISSING": {
-        "label": "Property with activity but no monthly report",
-        "desc": "Properties with reservations last month without a monthly report generated for the owner.",
-        "fix": "Generate the monthly report in My Reports."
-      },
-      "checks_REPORT_NOT_SENT": {
-        "label": "Report generated but not sent",
-        "desc": "Monthly reports from the previous month generated but not sent to the owner.",
-        "fix": "Go to My Reports and send the pending reports."
-      },
-      "checks_PROPERTY_STALE": {
-        "label": "Property without activity (90 days)",
-        "desc": "Active properties without any reservation in the last 90 days — may be inactive or with an outdated listing.",
-        "fix": "Check with the owner if the property is available for rental."
-      }
-    },
     "reportSummary": {
       "title": "Reports",
       "myReport": "My Report",
@@ -1352,7 +1351,9 @@
       "submitCheckout": "Submit check-out report",
       "markComplete": "Mark task complete",
       "taskCompleted": "Task completed",
-      "startTask": "Start task"
+      "startTask": "Start task",
+      "acceptTask": "Accept task",
+      "declineTask": "Decline"
     },
     "score": {
       "suspended": "Suspended",

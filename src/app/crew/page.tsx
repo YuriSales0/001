@@ -14,7 +14,7 @@ type Task = {
   id: string
   title: string
   type: string
-  status: "PENDING" | "IN_PROGRESS" | "COMPLETED"
+  status: "PENDING" | "NOTIFIED" | "CONFIRMED" | "IN_PROGRESS" | "SUBMITTED" | "APPROVED" | "REJECTED" | "REDISTRIBUTED" | "COMPLETED"
   dueDate: string
   description: string | null
   notes: string | null
@@ -182,6 +182,8 @@ export default function CrewHome() {
   }
 
   const startTask = () => patchTask({ status: "IN_PROGRESS" })
+  const confirmTask = () => patchTask({ status: "CONFIRMED" })
+  const declineTask = () => patchTask({ status: "REDISTRIBUTED" })
 
   const toggleChecklistItem = (idx: number) => {
     if (!selected) return
@@ -395,8 +397,29 @@ export default function CrewHome() {
               </div>
             )}
 
-            {/* Start button */}
-            {selected.status === "PENDING" && (
+            {/* Accept / Decline — NOTIFIED tasks need crew confirmation */}
+            {selected.status === "NOTIFIED" && (
+              <div className="flex gap-3">
+                <button
+                  onClick={confirmTask}
+                  disabled={saving}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl text-white py-3 font-semibold hover:opacity-90 disabled:opacity-50"
+                  style={{ background: 'var(--hm-gold)' }}
+                >
+                  <CheckCircle2 className="h-5 w-5" /> {t('crew.detail.acceptTask')}
+                </button>
+                <button
+                  onClick={declineTask}
+                  disabled={saving}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-2 border-red-300 text-red-600 py-3 font-semibold hover:bg-red-50 disabled:opacity-50"
+                >
+                  <X className="h-5 w-5" /> {t('crew.detail.declineTask')}
+                </button>
+              </div>
+            )}
+
+            {/* Start button — only after crew CONFIRMED */}
+            {(selected.status === "PENDING" || selected.status === "CONFIRMED") && (
               <button
                 onClick={startTask}
                 disabled={saving}
