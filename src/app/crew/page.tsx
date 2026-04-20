@@ -207,7 +207,10 @@ export default function CrewHome() {
   const hasMinPhotos = !requiresPhotos || photoCount >= 2
   const checklistDone = selected?.checklist?.filter(c => c.done).length ?? 0
   const checklistTotal = selected?.checklist?.length ?? 0
-  const allChecklistDone = checklistTotal > 0 && checklistDone === checklistTotal
+  const requiresChecklist = ['CHECK_OUT', 'CLEANING'].includes(selected?.type ?? '')
+  const allChecklistDone = checklistTotal > 0
+    ? checklistDone === checklistTotal
+    : !requiresChecklist
 
   return (
     <div className="flex h-[calc(100vh-3.25rem)]">

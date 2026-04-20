@@ -89,7 +89,11 @@ function DayPanel({
             return (
               <div key={e.id} className="flex items-center gap-3 px-5 py-3 text-sm">
                 <span className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${colorClass}`}>
-                  {(t(`crew.taskTypes.${taskType}`) || taskType).slice(0,2).toUpperCase()}
+                  {(() => {
+                    const translated = t(`crew.taskTypes.${taskType}`)
+                    const label = translated.startsWith('crew.taskTypes.') ? taskType : translated
+                    return label.slice(0, 2).toUpperCase()
+                  })()}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className={`font-medium truncate ${isCompleted?'line-through text-gray-400':''}`}>{e.title}</p>

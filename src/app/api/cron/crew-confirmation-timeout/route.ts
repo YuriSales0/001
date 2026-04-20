@@ -25,13 +25,21 @@ export async function POST(request: NextRequest) {
       notifiedAt: { lte: thirtyMinAgo },
       assigneeId: { not: null },
     },
-    select: { id: true, assigneeId: true, propertyId: true, title: true },
+    select: { id: true, assigneeId: true, propertyId: true, title: true, notes: true },
   })
 
   let redistributed = 0
 
   for (const task of stale) {
     const prevAssignee = task.assigneeId!
+
+    // Track redistribution count to prevent infinite loops
+    let redistributionCount = 0
+    try {
+      const parsed = task.notes ? JSON.parse(task.notes) : {}
+      redistributionCount = parsed.redistributionCount ?? 0
+    } catch { /* notes not JSON, count stays 0 */ }
+    redistributionCount++
 
     await crewScoreEngine.applyDelta(prevAssignee, 'NOT_ACCEPTED', task.id)
 
@@ -43,6 +51,20 @@ export async function POST(request: NextRequest) {
       link: '/crew',
     }).catch(() => {})
 
+    // If redistributed 3+ times, stop trying and set to PENDING
+    if (redistributionCount >= 3) {
+      await prisma.task.update({
+        where: { id: task.id },
+        data: {
+          status: 'PENDING',
+          assigneeId: null,
+          notes: JSON.stringify({ redistributionCount }),
+        },
+      })
+      redistributed++
+      continue
+    }
+
     const nextCrew = await findBestCrew(task.propertyId)
 
     if (nextCrew && nextCrew.userId !== prevAssignee) {
@@ -52,6 +74,7 @@ export async function POST(request: NextRequest) {
           status: 'NOTIFIED',
           assigneeId: nextCrew.userId,
           notifiedAt: new Date(),
+          notes: JSON.stringify({ redistributionCount }),
         },
       })
 
@@ -65,7 +88,11 @@ export async function POST(request: NextRequest) {
     } else {
       await prisma.task.update({
         where: { id: task.id },
-        data: { status: 'PENDING', assigneeId: null },
+        data: {
+          status: 'PENDING',
+          assigneeId: null,
+          notes: JSON.stringify({ redistributionCount }),
+        },
       })
     }
 

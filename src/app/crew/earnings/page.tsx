@@ -27,8 +27,14 @@ type MonthData = {
 
 const fmtEUR = (n: number) => new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
 
+const LOCALE_MAP: Record<string, string> = {
+  en: 'en-GB', pt: 'pt-PT', es: 'es-ES', de: 'de-DE',
+  nl: 'nl-NL', fr: 'fr-FR', sv: 'sv-SE', da: 'da-DK',
+}
+
 export default function CrewEarningsPage() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const dateLoc = LOCALE_MAP[locale] ?? 'en-GB'
   const [tasks, setTasks] = useState<Task[]>([])
   const [profile, setProfile] = useState<CrewProfile | null>(null)
   const [loading, setLoading] = useState(true)
@@ -92,7 +98,7 @@ export default function CrewEarningsPage() {
 
   const fmtMonth = (key: string) => {
     const [y, m] = key.split('-')
-    return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' })
+    return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString(dateLoc, { month: 'long', year: 'numeric' })
   }
 
   return (
