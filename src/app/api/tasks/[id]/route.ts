@@ -196,7 +196,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           type: 'TASK_SUBMITTED',
           title: `Task submitted for review`,
           body: `${task.title} at ${task.property.name}`,
-          link: '/tasks',
+          link: '/maintenance',
         }).catch(() => {})
       }
     }
@@ -306,7 +306,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           type: 'GENERAL',
           title: `Guest checkout — review the stay`,
           body: `${existing.property.name} — please submit a stay review for the recent guest`,
-          link: '/reviews',
+          link: '/manager/reviews',
         }).catch(() => {})
       }
     }

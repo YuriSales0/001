@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
         .then(title =>
           tForUser(crewId, 'notifications.crewPayoutReadyBody', { tasks: String(crewTasks.length) })
             .then(body =>
-              notify({ userId: crewId, type: 'CREW_PAYOUT_READY', title, body, link: '/crew/payouts' })
+              notify({ userId: crewId, type: 'CREW_PAYOUT_READY', title, body, link: '/crew/earnings' })
             )
         )
         .catch(() => {})
