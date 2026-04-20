@@ -726,7 +726,9 @@
         "weeklyAgencyVisits": "Real estate agency visits this week",
         "weeklyPartnerRecruitment": "Partner recruitment progress",
         "weeklyContentCalendar": "Review and update content calendar",
-        "weeklyLeadFollowUp": "Follow up on all warm leads"
+        "weeklyLeadFollowUp": "Follow up on all warm leads",
+        "setAsCurrent": "Set as current phase",
+        "metricsFilteredFrom": "Metrics counting from the start of"
       }
     },
     "partners": {
@@ -1590,7 +1592,7 @@
       }
     },
     "beta": {
-      "badge": "Beta Program \u00b7 Limited to 10 Properties",
+      "badge": "Beta Program · Limited to 10 Properties",
       "heroTitle1": "Be among the first to experience",
       "heroTitleGold": "intelligent property management",
       "heroSubtitle": "We're selecting 10 founding clients on the Costa Tropical. Lock in exclusive conditions for 24 months.",
@@ -1607,9 +1609,9 @@
       "phonePlaceholder": "+44 7700 000000",
       "locationLabel": "Property location",
       "locationPlaceholder": "Select a location",
-      "locationAlmunecar": "Almu\u00f1\u00e9car",
+      "locationAlmunecar": "Almuñécar",
       "locationHerradura": "La Herradura",
-      "locationSalobrena": "Salobre\u00f1a",
+      "locationSalobrena": "Salobreña",
       "locationMotril": "Motril",
       "locationOther": "Other",
       "propertiesLabel": "Number of properties",
@@ -2157,5 +2159,62 @@
     "criticalPlural": "critical",
     "allClear": "System operational — no anomalies",
     "checkNow": "Check now"
+  },
+  "partner": {
+    "portal": "Partner Portal",
+    "login": {
+      "title": "Partner Portal",
+      "subtitle": "Sign in to view your referrals and payouts",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "sendMagicLink": "Send magic link",
+      "sending": "Sending...",
+      "checkEmail": "Check your email",
+      "checkEmailDesc": "We sent a login link to your email. Click the link to access your portal.",
+      "useDifferent": "Use a different email",
+      "notPartner": "Not a partner yet?",
+      "learnMore": "Learn more"
+    },
+    "dashboard": {
+      "welcome": "Welcome",
+      "subtitle": "Your referral dashboard",
+      "totalReferrals": "Total Referrals",
+      "conversions": "Conversions",
+      "pendingPayouts": "Pending Payouts",
+      "totalEarned": "Total Earned",
+      "referralLink": "Your Referral Link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "shareInfo": "Share this link with property owners.",
+      "code": "Code"
+    },
+    "leads": {
+      "title": "Recent Referrals",
+      "empty": "No referrals yet. Share your link to get started.",
+      "name": "Name",
+      "email": "Email",
+      "status": "Status",
+      "date": "Date"
+    },
+    "payouts": {
+      "title": "Payouts",
+      "empty": "No payouts yet. Payouts are created when your referrals convert.",
+      "client": "Client",
+      "amount": "Amount",
+      "status": "Status",
+      "holdUntil": "Hold Until",
+      "paidDate": "Paid Date",
+      "pending": "Pending",
+      "approved": "Approved",
+      "paid": "Paid",
+      "reversed": "Reversed",
+      "totalPending": "Pending",
+      "totalPaid": "Paid",
+      "statusPending": "Commission in 30-day holding period",
+      "statusApproved": "Ready for payment — will be paid by day 5 of next month",
+      "statusPaid": "Paid on",
+      "statusReversed": "Client cancelled within 60 days — commission reversed"
+    },
+    "logout": "Logout"
   }
 }

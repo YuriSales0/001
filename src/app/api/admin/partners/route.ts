@@ -29,7 +29,7 @@ export async function GET() {
     orderBy: { createdAt: 'desc' },
   })
 
-  const result = partners.map(({ leads, _count, // @ts-expect-error Partner model pending ...p }) => ({
+  const result = partners.map(({ leads, _count, ...p }: any) => ({
     ...p,
     leadCount: _count.leads,
     conversionCount: leads.length,

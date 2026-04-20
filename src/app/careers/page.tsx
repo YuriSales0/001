@@ -49,9 +49,14 @@ export default function CareersPage() {
           <div className="flex items-center gap-2"><HmLogo size={20} variant="compact" onDark />
             <span className="text-xs text-gray-500 ml-2">Costa Tropical · España</span>
           </div>
-          <p className="text-xs text-gray-600">
-            {t('landing.footer.copyright')}
-          </p>
+          <div className="flex items-center gap-4">
+            <a href="/partner/login" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">
+              Partner Portal
+            </a>
+            <p className="text-xs text-gray-600">
+              {t('landing.footer.copyright')}
+            </p>
+          </div>
         </div>
       </footer>
     </div>

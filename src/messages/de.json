@@ -524,7 +524,9 @@
         "weeklyAgencyVisits": "Real estate agency visits this week",
         "weeklyPartnerRecruitment": "Partner recruitment progress",
         "weeklyContentCalendar": "Review and update content calendar",
-        "weeklyLeadFollowUp": "Follow up on all warm leads"
+        "weeklyLeadFollowUp": "Follow up on all warm leads",
+        "setAsCurrent": "Set as current phase",
+        "metricsFilteredFrom": "Metrics counting from the start of"
       }
     },
     "setup": {

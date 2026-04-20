@@ -898,15 +898,17 @@ function getISOWeekNumber(d: Date): number {
 
 function MarketingPlanTracker() {
   const { t } = useLocale()
-  const currentPhase = getCurrentPhase()
   const [open, setOpen] = useState(true)
-  const [selectedPhase, setSelectedPhase] = useState(currentPhase)
+  const [activePhase, setActivePhase] = useLocalStorage<number>('hm_plan_active_phase', 1)
+  const [selectedPhase, setSelectedPhase] = useState(0)
   const [checks, setChecks] = useLocalStorage<Record<string, boolean>>('hm_plan_checks', {})
   const [budgetSpent, setBudgetSpent] = useLocalStorage<Record<string, number>>('hm_plan_budget', {})
   const [weeklyChecks, setWeeklyChecks] = useLocalStorage<Record<string, boolean>>('hm_plan_weekly', {})
   const [customTasks, setCustomTasks] = useLocalStorage<string[]>('hm_plan_custom', [])
   const [newTask, setNewTask] = useState('')
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+
+  useEffect(() => { setSelectedPhase(activePhase) }, [activePhase])
 
   // Reset weekly checks on week boundary
   useEffect(() => {
@@ -919,12 +921,17 @@ function MarketingPlanTracker() {
     }
   }, [setWeeklyChecks])
 
+  // Fetch analytics filtered from phase start date
   useEffect(() => {
-    fetch('/api/admin/marketing-analytics')
+    const phase = PHASES.find(p => p.id === activePhase)
+    const from = phase ? `${phase.start}-01` : undefined
+    const params = new URLSearchParams()
+    if (from) params.set('from', from)
+    fetch(`/api/admin/marketing-analytics?${params}`)
       .then(r => r.ok ? r.json() : null)
       .then(setAnalytics)
       .catch(() => {})
-  }, [])
+  }, [activePhase])
 
   const phaseLabel = (key: string) => t(`admin.marketing.marketingPlan.${key}`)
   const mp = (k: string) => t(`admin.marketing.marketingPlan.${k}`)
@@ -964,11 +971,11 @@ function MarketingPlanTracker() {
       {open && (
         <div className="border-t border-hm-border px-6 py-6 space-y-6">
 
-          {/* Phase Timeline */}
+          {/* Phase Timeline — Admin declares active phase */}
           <div className="flex gap-2">
             {PHASES.map(p => {
-              const isCurrent = p.id === currentPhase
-              const isCompleted = p.id < currentPhase
+              const isActive = p.id === activePhase
+              const isCompleted = p.id < activePhase
               const isSelected = p.id === selectedPhase
               return (
                 <button key={p.id} onClick={() => setSelectedPhase(p.id)}
@@ -977,17 +984,28 @@ function MarketingPlanTracker() {
                   }`}
                   style={{ background: isSelected ? 'white' : 'transparent' }}>
                   <div className="flex items-center gap-2 mb-1">
-                    <div className={`h-3 w-3 rounded-full ${isCompleted ? 'bg-hm-green' : isCurrent ? 'bg-hm-gold' : 'bg-gray-300'}`} />
+                    <div className={`h-3 w-3 rounded-full ${isCompleted ? 'bg-hm-green' : isActive ? 'bg-hm-gold' : 'bg-gray-300'}`} />
                     <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{mp('phase')} {p.id}</span>
                   </div>
                   <p className="font-serif font-bold text-hm-black text-sm">{phaseLabel(p.key)}</p>
                   <p className="text-[10px] text-gray-400 mt-0.5">{mp(`phase${p.id}Dates`)}</p>
-                  {isCurrent && <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>{mp('current')}</span>}
+                  {isActive && <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>{mp('current')}</span>}
                   {isCompleted && <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">{mp('completed')}</span>}
+                  {isSelected && !isActive && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setActivePhase(p.id) }}
+                      className="mt-1.5 w-full rounded text-[10px] font-bold py-1 transition-colors hover:opacity-90"
+                      style={{ background: '#0B1E3A', color: '#B08A3E' }}>
+                      {mp('setAsCurrent')}
+                    </button>
+                  )}
                 </button>
               )
             })}
           </div>
+          <p className="text-[11px] text-gray-400 -mt-4">
+            {mp('metricsFilteredFrom')} <strong className="text-hm-black">{phaseLabel(PHASES.find(p => p.id === activePhase)?.key ?? 'beta')}</strong> ({PHASES.find(p => p.id === activePhase)?.start}-01)
+          </p>
 
           {/* Exit Criteria */}
           {exitKeys.length > 0 && (

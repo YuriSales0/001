@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Handshake, Plus, Filter, Loader2, X, Copy, CheckCircle2 } from "lucide-react"
+import { Handshake, Plus, Filter, Loader2, X, Copy, CheckCircle2, DollarSign, CheckCheck } from "lucide-react"
 import { showToast } from "@/components/hm/toast"
 import { useLocale } from "@/i18n/provider"
 
@@ -49,6 +49,26 @@ const COMMISSION_DEFAULTS: Record<PartnerTier, string> = {
   STRATEGIC:      "Negotiated",
 }
 
+type PartnerPayoutRow = {
+  id: string
+  partnerId: string
+  partnerName: string
+  clientName: string | null
+  amount: string
+  status: "PENDING" | "APPROVED" | "PAID" | "REVERSED"
+  holdUntil: string
+  paidAt: string | null
+  reversedAt: string | null
+  createdAt: string
+}
+
+const PAYOUT_STATUS_META: Record<string, { label: string; color: string }> = {
+  PENDING:  { label: "Pending",  color: "bg-yellow-100 text-yellow-700" },
+  APPROVED: { label: "Approved", color: "bg-blue-100 text-blue-700" },
+  PAID:     { label: "Paid",     color: "bg-green-100 text-green-700" },
+  REVERSED: { label: "Reversed", color: "bg-red-100 text-red-700" },
+}
+
 const fmtDate = (s: string) =>
   new Date(s).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
 
@@ -78,6 +98,7 @@ const emptyForm: PartnerForm = {
 
 export default function AdminPartnersPage() {
   const { t } = useLocale()
+  const [activeTab, setActiveTab] = useState<"partners" | "payouts">("partners")
   const [partners, setPartners] = useState<Partner[]>([])
   const [loading, setLoading] = useState(true)
   const [tierFilter, setTierFilter] = useState<string>("ALL")
@@ -87,6 +108,10 @@ export default function AdminPartnersPage() {
   const [form, setForm] = useState<PartnerForm>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
+  // Payouts
+  const [payouts, setPayouts] = useState<PartnerPayoutRow[]>([])
+  const [payoutsLoading, setPayoutsLoading] = useState(false)
+  const [payingId, setPayingId] = useState<string | null>(null)
 
   const load = async () => {
     setLoading(true)
@@ -101,7 +126,35 @@ export default function AdminPartnersPage() {
     }
   }
 
+  const loadPayouts = async () => {
+    setPayoutsLoading(true)
+    try {
+      const res = await fetch("/api/admin/partner-payouts")
+      if (!res.ok) throw new Error()
+      setPayouts(await res.json())
+    } catch {
+      showToast("Failed to load payouts", "error")
+    } finally {
+      setPayoutsLoading(false)
+    }
+  }
+
+  const markPaid = async (id: string) => {
+    setPayingId(id)
+    try {
+      const res = await fetch(`/api/admin/partner-payouts/${id}/pay`, { method: "POST" })
+      if (!res.ok) throw new Error()
+      showToast("Payout marked as paid", "success")
+      loadPayouts()
+    } catch {
+      showToast("Failed to mark payout as paid", "error")
+    } finally {
+      setPayingId(null)
+    }
+  }
+
   useEffect(() => { load() }, [])
+  useEffect(() => { if (activeTab === "payouts") loadPayouts() }, [activeTab])
 
   const filtered = partners.filter(p => {
     if (tierFilter !== "ALL" && p.tier !== tierFilter) return false
@@ -215,6 +268,97 @@ export default function AdminPartnersPage() {
         </button>
       </div>
 
+      {/* Tabs */}
+      <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+        <button
+          onClick={() => setActiveTab("partners")}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            activeTab === "partners" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          <Handshake className="h-4 w-4" />
+          Partners
+        </button>
+        <button
+          onClick={() => setActiveTab("payouts")}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            activeTab === "payouts" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          <DollarSign className="h-4 w-4" />
+          Payouts
+        </button>
+      </div>
+
+      {/* ─── Payouts Tab ─── */}
+      {activeTab === "payouts" && (
+        <div className="space-y-4">
+          {payoutsLoading ? (
+            <div className="text-center py-10 text-sm text-gray-400">
+              <Loader2 className="h-4 w-4 inline animate-spin mr-2" />Loading payouts...
+            </div>
+          ) : payouts.length === 0 ? (
+            <div className="bg-white rounded-xl border p-10 text-center text-sm text-gray-400">
+              No partner payouts yet.
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-gray-50/50">
+                    <th className="px-4 py-3 text-left font-medium text-gray-500">Partner</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-500">Client</th>
+                    <th className="px-4 py-3 text-right font-medium text-gray-500">Amount</th>
+                    <th className="px-4 py-3 text-center font-medium text-gray-500">Status</th>
+                    <th className="px-4 py-3 text-right font-medium text-gray-500">Hold Until</th>
+                    <th className="px-4 py-3 text-right font-medium text-gray-500">Paid</th>
+                    <th className="px-4 py-3 text-right font-medium text-gray-500">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payouts.map(p => {
+                    const statusMeta = PAYOUT_STATUS_META[p.status] || { label: p.status, color: "bg-gray-100 text-gray-600" }
+                    return (
+                      <tr key={p.id} className="border-b last:border-0 hover:bg-gray-50/50 transition-colors">
+                        <td className="px-4 py-3 font-medium text-gray-900">{p.partnerName}</td>
+                        <td className="px-4 py-3 text-gray-600">{p.clientName || "-"}</td>
+                        <td className="px-4 py-3 text-right font-medium">{fmtEUR(p.amount)}</td>
+                        <td className="px-4 py-3 text-center">
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusMeta.color}`}>
+                            {statusMeta.label}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right text-gray-500 text-xs">{fmtDate(p.holdUntil)}</td>
+                        <td className="px-4 py-3 text-right text-gray-500 text-xs">{p.paidAt ? fmtDate(p.paidAt) : "-"}</td>
+                        <td className="px-4 py-3 text-right">
+                          {p.status === "APPROVED" && (
+                            <button
+                              onClick={() => markPaid(p.id)}
+                              disabled={payingId === p.id}
+                              className="inline-flex items-center gap-1 text-xs font-medium text-white rounded-lg px-3 py-1.5 disabled:opacity-50"
+                              style={{ background: "#B08A3E" }}
+                            >
+                              {payingId === p.id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <CheckCheck className="h-3 w-3" />
+                              )}
+                              Mark Paid
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ─── Partners Tab ─── */}
+      {activeTab === "partners" && <>
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCard label={t("admin.partners.title")} value={stats.total} color="text-navy-700" />
@@ -357,6 +501,8 @@ export default function AdminPartnersPage() {
           </table>
         </div>
       )}
+
+      </>}
 
       {/* Modal */}
       {showModal && (

@@ -7,6 +7,14 @@ const LEAD_INCLUDE = {
   assignedManager: { select: { id: true, name: true, email: true } },
 } as const
 
+// Partner commission amounts by tier
+const PARTNER_COMMISSION: Record<string, number> = {
+  STANDARD: 50,
+  STANDARD_PLUS: 75,
+  PREMIUM: 200,
+  STRATEGIC: 0, // uses commissionFixed from partner record
+}
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -17,8 +25,8 @@ export async function PATCH(
 
   const lead = await prisma.lead.findUnique({
     where: { id: params.id },
-    select: { id: true, assignedManagerId: true },
-  })
+    select: { id: true, assignedManagerId: true, status: true, partnerId: true, name: true } as Record<string, boolean>,
+  }) as { id: string; assignedManagerId: string | null; status: string; partnerId: string | null; name: string } | null
   if (!lead) return NextResponse.json({ error: 'Lead not found' }, { status: 404 })
 
   // MANAGER can only update leads assigned to them
@@ -57,6 +65,60 @@ export async function PATCH(
     },
     include: LEAD_INCLUDE,
   })
+
+  // Auto-create PartnerPayout when lead transitions to CONVERTED with a partnerId
+  if (
+    status === 'CONVERTED' &&
+    lead.status !== 'CONVERTED' &&
+    lead.partnerId
+  ) {
+    try {
+      // @ts-expect-error Partner model pending prisma generate
+      const partner = await prisma.partner.findUnique({
+        where: { id: lead.partnerId },
+        select: { id: true, tier: true, commissionFixed: true },
+      })
+
+      if (partner) {
+        const tier = partner.tier as string
+        let amount = PARTNER_COMMISSION[tier] || 50
+        // STRATEGIC uses custom commission
+        if (tier === 'STRATEGIC' && partner.commissionFixed) {
+          amount = parseFloat(partner.commissionFixed.toString())
+        }
+
+        const now = new Date()
+        const holdUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) // +30 days
+        const reversalDeadline = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000) // +60 days
+
+        // @ts-expect-error PartnerPayout model pending prisma generate
+        await prisma.partnerPayout.create({
+          data: {
+            partnerId: partner.id,
+            leadId: lead.id,
+            clientName: lead.name || null,
+            amount,
+            status: 'PENDING',
+            holdUntil,
+            reversalDeadline,
+          },
+        })
+
+        // Increment partner conversion count and total commission
+        // @ts-expect-error Partner model pending prisma generate
+        await prisma.partner.update({
+          where: { id: partner.id },
+          data: {
+            totalConversions: { increment: 1 },
+            totalCommission: { increment: amount },
+          },
+        })
+      }
+    } catch (err) {
+      console.error('[Lead PATCH] Failed to create PartnerPayout:', err)
+      // Don't fail the lead update if payout creation fails
+    }
+  }
 
   return NextResponse.json(updated)
 }

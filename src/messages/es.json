@@ -655,7 +655,9 @@
         "weeklyAgencyVisits": "Visitas a agencias inmobiliarias esta semana",
         "weeklyPartnerRecruitment": "Progreso en captación de socios",
         "weeklyContentCalendar": "Revisar y actualizar calendario de contenido",
-        "weeklyLeadFollowUp": "Seguimiento de todos los leads calientes"
+        "weeklyLeadFollowUp": "Seguimiento de todos los leads calientes",
+        "setAsCurrent": "Definir como fase actual",
+        "metricsFilteredFrom": "Métricas contando desde el inicio de"
       }
     },
     "partners": {
@@ -1494,37 +1496,37 @@
       }
     },
     "beta": {
-      "badge": "Programa Beta \u00b7 Limitado a 10 Propiedades",
-      "heroTitle1": "S\u00e9 de los primeros en experimentar",
-      "heroTitleGold": "gesti\u00f3n inteligente de propiedades",
+      "badge": "Programa Beta · Limitado a 10 Propiedades",
+      "heroTitle1": "Sé de los primeros en experimentar",
+      "heroTitleGold": "gestión inteligente de propiedades",
       "heroSubtitle": "Estamos seleccionando 10 clientes fundadores en la Costa Tropical. Asegura condiciones exclusivas durante 24 meses.",
       "benefit1": "Primer mes gratis en cualquier plan",
-      "benefit2": "Tasa de comisi\u00f3n fija durante 24 meses",
-      "benefit3": "Acceso directo al fundador v\u00eda WhatsApp",
+      "benefit2": "Tasa de comisión fija durante 24 meses",
+      "benefit3": "Acceso directo al fundador vía WhatsApp",
       "benefit4": "Badge \"Cliente Fundador\" en tu portal",
       "formTitle": "Reserva tu plaza beta",
       "nameLabel": "Nombre",
       "namePlaceholder": "Tu nombre completo",
       "emailLabel": "Email",
       "emailPlaceholder": "tu@ejemplo.com",
-      "phoneLabel": "Tel\u00e9fono / WhatsApp",
+      "phoneLabel": "Teléfono / WhatsApp",
       "phonePlaceholder": "+34 600 000 000",
-      "locationLabel": "Ubicaci\u00f3n de la propiedad",
-      "locationPlaceholder": "Selecciona una ubicaci\u00f3n",
-      "locationAlmunecar": "Almu\u00f1\u00e9car",
+      "locationLabel": "Ubicación de la propiedad",
+      "locationPlaceholder": "Selecciona una ubicación",
+      "locationAlmunecar": "Almuñécar",
       "locationHerradura": "La Herradura",
-      "locationSalobrena": "Salobre\u00f1a",
+      "locationSalobrena": "Salobreña",
       "locationMotril": "Motril",
       "locationOther": "Otra",
-      "propertiesLabel": "N\u00famero de propiedades",
+      "propertiesLabel": "Número de propiedades",
       "propertiesPlaceholder": "ej: 1, 2, 3",
-      "partnerCodeLabel": "C\u00f3digo de socio (opcional)",
-      "partnerCodePlaceholder": "Si tienes un c\u00f3digo de referencia",
+      "partnerCodeLabel": "Código de socio (opcional)",
+      "partnerCodePlaceholder": "Si tienes un código de referencia",
       "submitBtn": "Reservar Mi Plaza Beta",
       "submitting": "Reservando...",
-      "thankYouTitle": "\u00a1Est\u00e1s en la lista!",
-      "thankYouDesc": "Te contactaremos en las pr\u00f3ximas 24 horas para hablar de los siguientes pasos.",
-      "required": "Por favor rellena nombre, email y tel\u00e9fono.",
+      "thankYouTitle": "¡Estás en la lista!",
+      "thankYouDesc": "Te contactaremos en las próximas 24 horas para hablar de los siguientes pasos.",
+      "required": "Por favor rellena nombre, email y teléfono.",
       "spotsTitle": "plazas disponibles",
       "spotsOf": "de 10 plazas disponibles",
       "spotTaken": "Ocupada",
@@ -1535,8 +1537,8 @@
       "card2Title": "Precios con IA",
       "card2Desc": "Nuestro algoritmo analiza estacionalidad, eventos locales y tarifas de la competencia para maximizar tus ingresos cada noche. Hasta +25% vs. precios fijos.",
       "card3Title": "Equipo Local Experto",
-      "card3Desc": "Un equipo certificado sobre el terreno se encarga de limpiezas, mantenimiento, check-ins e inspecciones. Calidad garantizada por checklists y verificaci\u00f3n fotogr\u00e1fica.",
-      "footerContact": "\u00bfPreguntas? Contacta hello@hostmasters.es o WhatsApp +34 XXX XXX XXX"
+      "card3Desc": "Un equipo certificado sobre el terreno se encarga de limpiezas, mantenimiento, check-ins e inspecciones. Calidad garantizada por checklists y verificación fotográfica.",
+      "footerContact": "¿Preguntas? Contacta hello@hostmasters.es o WhatsApp +34 XXX XXX XXX"
     }
   },
   "onboarding": {
@@ -2057,5 +2059,62 @@
     "criticalPlural": "críticas",
     "allClear": "Sistema operativo — sin anomalías",
     "checkNow": "Verificar ahora"
+  },
+  "partner": {
+    "portal": "Portal de Socios",
+    "login": {
+      "title": "Portal de Socios",
+      "subtitle": "Inicie sesión para ver sus referencias y pagos",
+      "emailLabel": "Dirección de email",
+      "emailPlaceholder": "usted@empresa.com",
+      "sendMagicLink": "Enviar enlace mágico",
+      "sending": "Enviando...",
+      "checkEmail": "Revise su email",
+      "checkEmailDesc": "Enviamos un enlace de inicio de sesión a su email. Haga clic en el enlace para acceder al portal.",
+      "useDifferent": "Usar otro email",
+      "notPartner": "¿Aún no es socio?",
+      "learnMore": "Más información"
+    },
+    "dashboard": {
+      "welcome": "Bienvenido",
+      "subtitle": "Panel de referencias",
+      "totalReferrals": "Total de Referencias",
+      "conversions": "Conversiones",
+      "pendingPayouts": "Pagos Pendientes",
+      "totalEarned": "Total Ganado",
+      "referralLink": "Su Enlace de Referencia",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "shareInfo": "Comparta este enlace con propietarios.",
+      "code": "Código"
+    },
+    "leads": {
+      "title": "Referencias Recientes",
+      "empty": "Sin referencias todavía. Comparta su enlace para empezar.",
+      "name": "Nombre",
+      "email": "Email",
+      "status": "Estado",
+      "date": "Fecha"
+    },
+    "payouts": {
+      "title": "Pagos",
+      "empty": "Sin pagos todavía. Los pagos se crean cuando sus referencias se convierten.",
+      "client": "Cliente",
+      "amount": "Importe",
+      "status": "Estado",
+      "holdUntil": "Retenido Hasta",
+      "paidDate": "Fecha de Pago",
+      "pending": "Pendiente",
+      "approved": "Aprobado",
+      "paid": "Pagado",
+      "reversed": "Revertido",
+      "totalPending": "Pendiente",
+      "totalPaid": "Pagado",
+      "statusPending": "Comisión en período de retención de 30 días",
+      "statusApproved": "Listo para pago — se pagará antes del día 5 del próximo mes",
+      "statusPaid": "Pagado el",
+      "statusReversed": "Cliente canceló dentro de 60 días — comisión revertida"
+    },
+    "logout": "Cerrar sesión"
   }
 }
