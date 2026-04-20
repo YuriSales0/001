@@ -3,12 +3,100 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { notify, tForUser } from '@/lib/notifications'
 
+const PARTNER_COMMISSION: Record<string, number> = {
+  STANDARD: 50,
+  STANDARD_PLUS: 75,
+  PREMIUM: 200,
+  STRATEGIC: 0,
+}
+
+async function convertLeadOnContractSign(userId: string) {
+  const lead = await prisma.lead.findFirst({
+    where: {
+      OR: [
+        { convertedUserId: userId },
+        { email: { not: null } },
+      ],
+      status: { not: 'CONVERTED' },
+    },
+    orderBy: { createdAt: 'desc' },
+  }) as any
+
+  if (!lead) {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } }) as any
+    if (!user?.email) return
+    const leadByEmail = await prisma.lead.findFirst({
+      where: { email: user.email, status: { not: 'CONVERTED' } },
+      orderBy: { createdAt: 'desc' },
+    }) as any
+    if (!leadByEmail) return
+    await convertLead(leadByEmail.id, leadByEmail.partnerId, userId, leadByEmail.name)
+    return
+  }
+
+  await convertLead(lead.id, lead.partnerId, userId, lead.name)
+}
+
+async function convertLead(leadId: string, partnerId: string | null, userId: string, leadName: string) {
+  await prisma.lead.update({
+    where: { id: leadId },
+    data: { status: 'CONVERTED', convertedUserId: userId },
+  })
+
+  if (!partnerId) return
+
+  try {
+    // @ts-expect-error Partner model pending prisma generate
+    const partner = await prisma.partner.findUnique({
+      where: { id: partnerId },
+      select: { id: true, tier: true, commissionFixed: true, name: true, email: true },
+    })
+    if (!partner) return
+
+    const tier = partner.tier as string
+    let amount = PARTNER_COMMISSION[tier] || 50
+    if (tier === 'STRATEGIC' && partner.commissionFixed) {
+      amount = parseFloat(partner.commissionFixed.toString())
+    }
+
+    const now = new Date()
+    // @ts-expect-error PartnerPayout model pending prisma generate
+    await prisma.partnerPayout.create({
+      data: {
+        partnerId: partner.id,
+        leadId,
+        clientName: leadName || null,
+        amount,
+        status: 'PENDING',
+        holdUntil: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
+        reversalDeadline: new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000),
+      },
+    })
+
+    // @ts-expect-error Partner model pending prisma generate
+    await prisma.partner.update({
+      where: { id: partner.id },
+      data: {
+        totalConversions: { increment: 1 },
+        totalCommission: { increment: amount },
+      },
+    })
+
+    if (partner.email) {
+      // Notify partner about conversion (in-app not possible since partner
+      // uses separate auth — we log it for the partner portal to display)
+      console.log(`[Partner Conversion] ${partner.name} earns €${amount} from lead "${leadName}"`)
+    }
+  } catch (err) {
+    console.error('[Contract Sign] Failed to process partner payout:', err)
+  }
+}
+
 /**
  * POST /api/contracts/[id]/sign
  *
  * Client signs a service contract.
- * If the contract is linked to a property in CONTRACT_PENDING status,
- * the property is activated (→ ACTIVE).
+ * Triggers: property activation + lead → CONVERTED + partner payout creation.
  */
 export async function POST(
   _request: NextRequest,
@@ -26,17 +114,14 @@ export async function POST(
 
   if (!contract) return NextResponse.json({ error: 'Contract not found' }, { status: 404 })
 
-  // Only the contract owner can sign
   if (contract.userId !== me.id) {
     return NextResponse.json({ error: 'You can only sign your own contracts' }, { status: 403 })
   }
 
-  // Already signed
   if (contract.signedByUser) {
     return NextResponse.json({ ok: true, alreadySigned: true })
   }
 
-  // Sign the contract + activate property if CONTRACT_PENDING
   const now = new Date()
   const shouldActivate =
     contract.propertyId &&
@@ -44,7 +129,6 @@ export async function POST(
     (contract.property.status as string) === 'CONTRACT_PENDING'
 
   if (shouldActivate) {
-    // Atomic: sign contract + activate property
     const [updatedContract] = await prisma.$transaction([
       prisma.contract.update({
         where: { id: params.id },
@@ -55,12 +139,15 @@ export async function POST(
         data: { status: 'ACTIVE' },
       }),
     ])
+
     Promise.all([
       tForUser(me.id, 'notifications.propertyActiveTitle'),
       tForUser(me.id, 'notifications.propertyActiveBody'),
     ]).then(([title, body]) =>
       notify({ userId: me.id, type: 'PROPERTY_ACTIVE', title, body, link: '/client/dashboard' })
     ).catch(() => {})
+
+    convertLeadOnContractSign(me.id).catch(console.error)
 
     return NextResponse.json({
       ok: true,
@@ -70,7 +157,6 @@ export async function POST(
     })
   }
 
-  // Just sign without property activation
   const updated = await prisma.contract.update({
     where: { id: params.id },
     data: { signedByUser: true, signedAt: now, status: 'ACTIVE' },
@@ -82,6 +168,8 @@ export async function POST(
   ]).then(([title, body]) =>
     notify({ userId: me.id, type: 'CONTRACT_READY', title, body, link: '/client/properties' })
   ).catch(() => {})
+
+  convertLeadOnContractSign(me.id).catch(console.error)
 
   return NextResponse.json({ ok: true, contractSigned: true, contractId: updated.id })
 }

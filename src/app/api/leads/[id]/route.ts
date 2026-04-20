@@ -67,12 +67,22 @@ export async function PATCH(
   })
 
   // Auto-create PartnerPayout when lead transitions to CONVERTED with a partnerId
+  // (also triggered by contract signing — check for existing payout to avoid duplicates)
   if (
     status === 'CONVERTED' &&
     lead.status !== 'CONVERTED' &&
     lead.partnerId
   ) {
     try {
+      // @ts-expect-error PartnerPayout model pending prisma generate
+      const existingPayout = await prisma.partnerPayout.findFirst({
+        where: { leadId: lead.id },
+      })
+      if (existingPayout) {
+        // Payout already created by contract signing automation
+        return NextResponse.json(updated)
+      }
+
       // @ts-expect-error Partner model pending prisma generate
       const partner = await prisma.partner.findUnique({
         where: { id: lead.partnerId },
