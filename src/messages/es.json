@@ -2380,7 +2380,17 @@
     "interventionResolvedTitle": "Intervención resuelta",
     "clientRegisteredTitle": "Nuevo cliente registrado",
     "newLeadTitle": "Nuevo lead en tu pipeline",
-    "crewPayoutPaidTitle": "Pago recibido: {amount}"
+    "crewPayoutPaidTitle": "Pago recibido: {amount}",
+    "crewPayoutReadyTitle": "Pago semanal listo: {amount}",
+    "crewPayoutReadyBody": "Tu pago de {tasks} tarea(s) ha sido creado y está pendiente de transferencia.",
+    "crewLevelUpTitle": "¡Subiste de nivel! Ahora eres {level}",
+    "crewLevelUpBody": "Tu puntuación es ahora {score}. ¡Sigue así!",
+    "crewLevelDownTitle": "Nivel cambiado a {level}",
+    "crewLevelDownBody": "Tu puntuación bajó a {score}. Completa tareas a tiempo para recuperarte.",
+    "crewScoreChangeTitle": "Actualización de puntuación: {delta} puntos",
+    "crewScoreChangeBody": "Tu puntuación es ahora {score} (motivo: {reason}).",
+    "taxDeadlineTitle": "Plazo fiscal próximo",
+    "taxDeadlineBody": "Tienes obligaciones fiscales con plazo en los próximos 7 días. Consulta tu panel fiscal."
   },
   "contracts": {
     "serviceAgreement": "Contrato de Servicio — HostMasters Costa Tropical",

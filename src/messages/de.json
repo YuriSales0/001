@@ -2041,7 +2041,17 @@
     "interventionResolvedTitle": "Intervention gelöst",
     "clientRegisteredTitle": "Neuer Kunde registriert",
     "newLeadTitle": "Neuer Lead in deiner Pipeline",
-    "crewPayoutPaidTitle": "Auszahlung erhalten: {amount}"
+    "crewPayoutPaidTitle": "Auszahlung erhalten: {amount}",
+    "crewPayoutReadyTitle": "Wöchentliche Auszahlung bereit: {amount}",
+    "crewPayoutReadyBody": "Deine Auszahlung für {tasks} Aufgabe(n) wurde erstellt und wartet auf Überweisung.",
+    "crewLevelUpTitle": "Aufgestiegen! Du bist jetzt {level}",
+    "crewLevelUpBody": "Dein Score ist jetzt {score}. Weiter so!",
+    "crewLevelDownTitle": "Level geändert auf {level}",
+    "crewLevelDownBody": "Dein Score ist auf {score} gesunken. Erledige Aufgaben pünktlich, um dich zu erholen.",
+    "crewScoreChangeTitle": "Score-Update: {delta} Punkte",
+    "crewScoreChangeBody": "Dein Score ist jetzt {score} (Grund: {reason}).",
+    "taxDeadlineTitle": "Steuerfrist nähert sich",
+    "taxDeadlineBody": "Du hast Steuerpflichten mit Frist in den nächsten 7 Tagen. Prüfe dein Steuer-Dashboard."
   },
   "contracts": {
     "serviceAgreement": "Servicevertrag — HostMasters Costa Tropical",

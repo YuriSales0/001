@@ -5,7 +5,7 @@ import { ALL_CHECKS, type CheckResult } from '@/lib/ai-monitor/checks'
 import { analyzeAlert } from '@/lib/ai-monitor/ai-analysis'
 import { autoFix } from '@/lib/ai-monitor/auto-fix'
 import { sendAlertEmail, sendWebhook, shouldNotify } from '@/lib/ai-monitor/notifier'
-import { notifyMany } from '@/lib/notifications'
+import { notify, notifyMany, tForUser } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300
@@ -185,6 +185,36 @@ export async function GET(request: NextRequest) {
       },
       data: { notifiedAt: now },
     })
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // Gap #8: TAX DEADLINE — notify affected clients (not just admins)
+  // ═══════════════════════════════════════════════════════════════
+  const taxAlerts = enrichedAlerts.filter(a =>
+    a.checkType === 'TAX_DUE_SOON' || a.checkType === 'TAX_OVERDUE',
+  )
+
+  if (taxAlerts.length > 0) {
+    const in7Days = new Date(now.getTime() + 7 * 24 * 3600 * 1000)
+    const taxObligations = await prisma.taxObligation.findMany({
+      where: {
+        status: { in: ['NOT_STARTED', 'IN_PROGRESS', 'ACTION_REQUIRED'] },
+        dueDate: { lte: in7Days },
+      },
+      select: { userId: true, type: true, dueDate: true },
+    })
+
+    const clientIds = Array.from(new Set(taxObligations.map(t => t.userId)))
+    for (const clientId of clientIds) {
+      tForUser(clientId, 'notifications.taxDeadlineTitle')
+        .then(title =>
+          tForUser(clientId, 'notifications.taxDeadlineBody')
+            .then(body =>
+              notify({ userId: clientId, type: 'TAX_DEADLINE', title, body, link: '/client/tax' })
+            )
+        )
+        .catch(() => {})
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import type { CrewScoreLevel } from '@prisma/client'
+import { notify, tForUser } from '@/lib/notifications'
 
 const SCORE_TABLE: Record<string, number> = {
   TASK_ON_TIME:        +10,
@@ -50,6 +51,7 @@ async function applyDelta(userId: string, reason: string, taskId?: string) {
   const isApproval = delta > 0 && ['TASK_ON_TIME', 'VALIDATED_NO_REPAIR', 'OWNER_POSITIVE'].includes(reason)
   const isRejection = delta < 0
 
+  const oldLevel = score.level as CrewScoreLevel
   const [updated] = await prisma.$transaction([
     prisma.crewScore.update({
       where: { id: score.id },
@@ -72,6 +74,38 @@ async function applyDelta(userId: string, reason: string, taskId?: string) {
       },
     }),
   ])
+
+  // Gap #5 + #6: Notify crew of score/level changes
+  const levelOrder: CrewScoreLevel[] = ['SUSPENDED', 'BASIC', 'VERIFIED', 'EXPERT', 'ELITE']
+  const oldIdx = levelOrder.indexOf(oldLevel)
+  const newIdx = levelOrder.indexOf(newLevel)
+
+  if (newIdx > oldIdx) {
+    // Level UP
+    tForUser(userId, 'notifications.crewLevelUpTitle', { level: newLevel })
+      .then(title =>
+        tForUser(userId, 'notifications.crewLevelUpBody', { score: String(newScore) })
+          .then(body => notify({ userId, type: 'CREW_LEVEL_UP', title, body, link: '/crew/score' }))
+      )
+      .catch(() => {})
+  } else if (newIdx < oldIdx) {
+    // Level DOWN
+    tForUser(userId, 'notifications.crewLevelDownTitle', { level: newLevel })
+      .then(title =>
+        tForUser(userId, 'notifications.crewLevelDownBody', { score: String(newScore) })
+          .then(body => notify({ userId, type: 'CREW_LEVEL_DOWN', title, body, link: '/crew/score' }))
+      )
+      .catch(() => {})
+  } else if (Math.abs(delta) >= 15) {
+    // Significant score change without level change
+    const sign = delta > 0 ? '+' : ''
+    tForUser(userId, 'notifications.crewScoreChangeTitle', { delta: `${sign}${delta}` })
+      .then(title =>
+        tForUser(userId, 'notifications.crewScoreChangeBody', { score: String(newScore), reason })
+          .then(body => notify({ userId, type: 'CREW_SCORE_CHANGE', title, body, link: '/crew/score' }))
+      )
+      .catch(() => {})
+  }
 
   return updated
 }

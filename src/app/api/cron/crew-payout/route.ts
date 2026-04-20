@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { crewScoreEngine } from '@/lib/crew-score'
+import { notify, notifyMany, tForUser } from '@/lib/notifications'
 
 /**
  * POST /api/cron/crew-payout — Weekly Crew payout reconciliation
@@ -91,8 +92,35 @@ export async function POST(request: NextRequest) {
       })
 
       if (!payout) continue
+
+      // Gap #3: Notify crew member that weekly payout is ready
+      tForUser(crewId, 'notifications.crewPayoutReadyTitle', { amount: `€${finalAmount.toFixed(2)}` })
+        .then(title =>
+          tForUser(crewId, 'notifications.crewPayoutReadyBody', { tasks: String(crewTasks.length) })
+            .then(body =>
+              notify({ userId: crewId, type: 'CREW_PAYOUT_READY', title, body, link: '/crew/payouts' })
+            )
+        )
+        .catch(() => {})
     } catch (err) {
       console.error(`[CrewPayout] Failed for crew ${crewId}:`, err)
+
+      // Gap #9: Notify all admins of payout creation failure
+      prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+        .then(admins => {
+          if (admins.length === 0) return
+          notifyMany(
+            admins.map(a => a.id),
+            {
+              type: 'AI_ALERT',
+              title: `Crew payout failed for ${crewId}`,
+              body: `Weekly payout creation failed: ${err instanceof Error ? err.message : String(err)}`,
+              link: '/ai-monitor',
+            },
+          )
+        })
+        .catch(() => {})
+
       continue
     }
 

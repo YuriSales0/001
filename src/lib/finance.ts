@@ -23,6 +23,13 @@
  *   Airbnb  → checkOut + 1 day + 2 business days
  *   Booking → last day of checkOut month
  *   Others  → checkOut + 7 days
+ *
+ * TODO (Gap #4 — future sprint): Manager commission payout mechanism.
+ *   Currently no automated system exists to calculate and pay manager
+ *   commissions (15% of monthly fee + 3% of gross rental + bonus tiers).
+ *   When implemented, must notify managers via COMMISSION_PAID notification
+ *   type with localized messages (notifications.commissionPaidTitle/Body).
+ *   Cycle: HM pays Manager by day 10 of the following month.
  */
 
 export const PLAN_COMMISSION: Record<string, number> = {

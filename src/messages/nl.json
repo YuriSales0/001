@@ -2033,7 +2033,17 @@
     "interventionResolvedTitle": "Interventie opgelost",
     "clientRegisteredTitle": "Nieuwe klant geregistreerd",
     "newLeadTitle": "Nieuwe lead in je pipeline",
-    "crewPayoutPaidTitle": "Uitbetaling ontvangen: {amount}"
+    "crewPayoutPaidTitle": "Uitbetaling ontvangen: {amount}",
+    "crewPayoutReadyTitle": "Wekelijkse uitbetaling klaar: {amount}",
+    "crewPayoutReadyBody": "Je uitbetaling voor {tasks} ta(a)k(en) is aangemaakt en wacht op overschrijving.",
+    "crewLevelUpTitle": "Niveau omhoog! Je bent nu {level}",
+    "crewLevelUpBody": "Je score is nu {score}. Ga zo door!",
+    "crewLevelDownTitle": "Niveau gewijzigd naar {level}",
+    "crewLevelDownBody": "Je score is gedaald naar {score}. Voltooi taken op tijd om te herstellen.",
+    "crewScoreChangeTitle": "Score-update: {delta} punten",
+    "crewScoreChangeBody": "Je score is nu {score} (reden: {reason}).",
+    "taxDeadlineTitle": "Belastingdeadline nadert",
+    "taxDeadlineBody": "Je hebt belastingverplichtingen met deadline binnen 7 dagen. Controleer je belastingdashboard."
   },
   "contracts": {
     "serviceAgreement": "Servicecontract — HostMasters Costa Tropical",
