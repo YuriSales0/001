@@ -25,9 +25,6 @@ export async function GET(
             owner: { select: { managerId: true } },
           },
         },
-        expenses: {
-          orderBy: { date: 'desc' },
-        },
       },
     })
 
@@ -53,7 +50,7 @@ export async function GET(
       })
       if (!hasTask) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       // Return limited data for CREW — no financial details
-      const { expenses: _expenses, ...safeReservation } = reservation
+      const safeReservation = reservation
       return NextResponse.json({
         ...safeReservation,
         amount: undefined,

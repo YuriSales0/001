@@ -99,12 +99,12 @@ export async function POST(request: NextRequest) {
     const expenses = await prisma.expense.findMany({
       where: {
         propertyId,
-        date: { gte: startDate, lte: endDate },
+        expenseDate: { gte: startDate, lte: endDate },
       },
     })
 
     const totalExpenses = expenses.reduce(
-      (sum, expense) => sum + expense.amount,
+      (sum, expense) => sum + Number(expense.amount),
       0
     )
 

@@ -45,6 +45,7 @@ function useAdminNav(): NavEntry[] {
     {
       label: t('finance.income'), icon: Wallet, items: [
         { href: "/payouts", label: t('common.payouts'), icon: Wallet },
+        { href: "/expenses", label: t('admin.expenses.title'), icon: Receipt },
         { href: "/manager/invoices", label: t('common.invoices'), icon: Receipt },
         { href: "/report-summary", label: t('common.reports'), icon: FileBarChart },
         { href: "/my-reports", label: t('common.ownerReports'), icon: FileText },

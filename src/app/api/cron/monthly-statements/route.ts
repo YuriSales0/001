@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
     prisma.expense.findMany({
       where: {
         propertyId: { in: propertyIds },
-        date: { gte: monthStart, lt: monthEnd },
+        expenseDate: { gte: monthStart, lt: monthEnd },
       },
       select: { propertyId: true, amount: true },
     }),
@@ -86,8 +86,8 @@ export async function GET(request: NextRequest) {
     reservationsByProperty.get(r.propertyId)!.push(r)
   }
   for (const e of allExpenses) {
-    if (!expensesByProperty.has(e.propertyId)) expensesByProperty.set(e.propertyId, [])
-    expensesByProperty.get(e.propertyId)!.push(e)
+    if (e.propertyId && !expensesByProperty.has(e.propertyId)) expensesByProperty.set(e.propertyId, [])
+    if (e.propertyId) expensesByProperty.get(e.propertyId)!.push(e)
   }
 
   const results: { propertyId: string; status: string; reason?: string }[] = []
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       const expenses = expensesByProperty.get(property.id) ?? []
 
       const grossRevenue  = reservations.reduce((s, r) => s + r.amount, 0)
-      const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0)
+      const totalExpenses = expenses.reduce((s, e) => s + Number(e.amount), 0)
       const commissionRate = commissionRateForPlan(property.owner.subscriptionPlan) * 100
       const commission    = +(grossRevenue * commissionRate / 100).toFixed(2)
       const ownerPayout   = +(grossRevenue - totalExpenses - commission).toFixed(2)

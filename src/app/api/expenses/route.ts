@@ -9,42 +9,25 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const propertyId = searchParams.get('propertyId')
-    const reservationId = searchParams.get('reservationId')
 
     const where: Record<string, unknown> = {}
     if (propertyId) where.propertyId = propertyId
-    if (reservationId) where.reservationId = reservationId
     if (me.role === 'CLIENT') where.property = { ownerId: me.id }
     else if (me.role === 'MANAGER') where.property = { owner: { managerId: me.id } }
 
     const expenses = await prisma.expense.findMany({
       where,
       include: {
-        property: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        reservation: {
-          select: {
-            id: true,
-            guestName: true,
-            checkIn: true,
-            checkOut: true,
-          },
-        },
+        property: { select: { id: true, name: true } },
       },
-      orderBy: { date: 'desc' },
+      orderBy: { expenseDate: 'desc' },
+      take: 200,
     })
 
     return NextResponse.json(expenses)
   } catch (error) {
     console.error('Error fetching expenses:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch expenses' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch expenses' }, { status: 500 })
   }
 }
 
@@ -54,62 +37,42 @@ export async function POST(request: NextRequest) {
   const me = guard.user!
   try {
     const body = await request.json()
-    const { propertyId, reservationId, description, amount, category, date } = body
+    const { description, amount, category, expenseDate, supplierName } = body
 
-    if (!propertyId || !description || amount == null || !category || !date) {
-      return NextResponse.json(
-        { error: 'Missing required fields: propertyId, description, amount, category, date' },
-        { status: 400 }
-      )
-    }
-
-    // MANAGER can only log expenses for properties of their assigned owners
-    if (me.role === 'MANAGER') {
-      const prop = await prisma.property.findUnique({
-        where: { id: propertyId },
-        select: { owner: { select: { managerId: true } } },
-      })
-      if (!prop || prop.owner.managerId !== me.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-      }
-    }
-
-    // CREW can only log expenses for properties where they have assigned tasks
-    if (me.role === 'CREW') {
-      const hasTask = await prisma.task.findFirst({
-        where: { propertyId, assigneeId: me.id },
-        select: { id: true },
-      })
-      if (!hasTask) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-      }
+    if (!description || amount == null || !category || !expenseDate || !supplierName) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     const expense = await prisma.expense.create({
       data: {
-        propertyId,
-        reservationId: reservationId || null,
         description,
-        amount,
+        amount: Number(amount),
         category,
-        date: new Date(date),
+        expenseDate: new Date(expenseDate),
+        supplierName,
+        subcategory: body.subcategory || null,
+        vatAmount: body.vatAmount ? Number(body.vatAmount) : null,
+        vatRate: body.vatRate ? Number(body.vatRate) : null,
+        dueDate: body.dueDate ? new Date(body.dueDate) : null,
+        supplierTaxId: body.supplierTaxId || null,
+        supplierInvoice: body.supplierInvoice || null,
+        invoiceUrl: body.invoiceUrl || null,
+        invoicePhotoUrl: body.invoicePhotoUrl || null,
+        propertyId: body.propertyId || null,
+        notes: body.notes || null,
+        paymentMethod: body.paymentMethod || null,
+        isRecurring: body.isRecurring ?? false,
+        recurringFreq: body.recurringFreq || null,
+        autoStockEntry: body.autoStockEntry ?? false,
+        status: 'DRAFT',
+        createdBy: me.id,
       },
-      include: {
-        property: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
+      include: { property: { select: { id: true, name: true } } },
     })
 
     return NextResponse.json(expense, { status: 201 })
   } catch (error) {
     console.error('Error creating expense:', error)
-    return NextResponse.json(
-      { error: 'Failed to create expense' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create expense' }, { status: 500 })
   }
 }

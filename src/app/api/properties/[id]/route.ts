@@ -29,7 +29,7 @@ export async function GET(
           orderBy: { checkIn: 'desc' },
         },
         expenses: {
-          orderBy: { date: 'desc' },
+          orderBy: { expenseDate: 'desc' },
         },
         tasks: {
           orderBy: { dueDate: 'asc' },

@@ -43,9 +43,9 @@ export async function GET(request: NextRequest) {
     prisma.expense.findMany({
       where: {
         propertyId,
-        date: { gte: monthStart, lt: monthEnd },
+        expenseDate: { gte: monthStart, lt: monthEnd },
       },
-      orderBy: { date: 'asc' },
+      orderBy: { expenseDate: 'asc' },
     }),
   ])
 
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
   }
 
   const grossRevenue  = reservations.reduce((s, r) => s + r.amount, 0)
-  const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0)
+  const totalExpenses = expenses.reduce((s, e) => s + Number(e.amount), 0)
   const commissionRate = property.commissionRate
   const commission    = +(grossRevenue * commissionRate / 100).toFixed(2)
   const ownerPayout   = +(grossRevenue - totalExpenses - commission).toFixed(2)
