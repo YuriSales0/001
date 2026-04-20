@@ -223,6 +223,9 @@ export async function DELETE(
       // Delete associated payouts
       await tx.payout.deleteMany({ where: { reservationId: id } })
 
+      // Delete pricing data points linked to this reservation
+      await tx.pricingDataPoint.deleteMany({ where: { reservationId: id } })
+
       // Delete associated tasks (scoped by property + date range)
       await tx.task.deleteMany({
         where: {
