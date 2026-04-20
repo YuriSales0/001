@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check, BarChart3, Users, TrendingUp, CreditCard, Filter, ChevronDown, ChevronUp } from 'lucide-react'
+import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check, BarChart3, Users, TrendingUp, CreditCard, Filter, ChevronDown, ChevronUp, Target, CalendarCheck, DollarSign, ListChecks, CheckCircle2, Circle, AlertTriangle, XCircle } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useLocale } from '@/i18n/provider'
 
@@ -754,6 +754,269 @@ function QrModal({ campaign, onClose }: { campaign: Campaign; onClose: () => voi
   )
 }
 
+// ─── Marketing Plan Tracker ──────────────────────────────────────────────────
+
+const PHASES = [
+  { id: 1, key: 'beta', start: '2026-04', end: '2026-07' },
+  { id: 2, key: 'expansion', start: '2026-08', end: '2027-03' },
+  { id: 3, key: 'grow', start: '2027-04', end: '2028-03' },
+  { id: 4, key: 'scale', start: '2028-04', end: '2030-12' },
+]
+
+const EXIT_CRITERIA: Record<number, string[]> = {
+  1: ['phase1Exit1','phase1Exit2','phase1Exit3','phase1Exit4','phase1Exit5','phase1Exit6','phase1Exit7'],
+  2: ['phase2Exit1','phase2Exit2','phase2Exit3','phase2Exit4','phase2Exit5','phase2Exit6','phase2Exit7','phase2Exit8'],
+  3: ['phase3Exit1','phase3Exit2','phase3Exit3','phase3Exit4','phase3Exit5','phase3Exit6','phase3Exit7'],
+}
+
+const PHASE_BUDGETS: Record<number, { key: string; target: number }[]> = {
+  1: [
+    { key: 'eventsActivations', target: 300 },
+    { key: 'physicalMaterials', target: 330 },
+  ],
+  2: [
+    { key: 'googleAds', target: 3200 },
+    { key: 'metaAds', target: 2000 },
+    { key: 'linkedInAds', target: 600 },
+    { key: 'eventsActivations', target: 1500 },
+    { key: 'physicalMaterials', target: 600 },
+    { key: 'contentCreation', target: 500 },
+  ],
+  3: [
+    { key: 'googleAds', target: 5500 },
+    { key: 'metaAds', target: 4000 },
+    { key: 'linkedInAds', target: 1500 },
+    { key: 'eventsActivations', target: 2500 },
+    { key: 'physicalMaterials', target: 800 },
+    { key: 'contentCreation', target: 1200 },
+  ],
+}
+
+const WEEKLY_TASKS = ['weeklyLinkedInPost','weeklyLinkedInConnections','weeklyFacebookGroups','weeklyAgencyVisits','weeklyPartnerRecruitment','weeklyContentCalendar','weeklyLeadFollowUp']
+
+function getCurrentPhase(): number {
+  const now = new Date().toISOString().slice(0, 7)
+  for (const p of PHASES) {
+    if (now >= p.start && now <= p.end) return p.id
+  }
+  return now < '2026-04' ? 1 : 4
+}
+
+function useLocalStorage<T>(key: string, initial: T): [T, (v: T | ((prev: T) => T)) => void] {
+  const [val, setVal] = useState<T>(() => {
+    if (typeof window === 'undefined') return initial
+    try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : initial } catch { return initial }
+  })
+  const set = useCallback((v: T | ((prev: T) => T)) => {
+    setVal(prev => {
+      const next = typeof v === 'function' ? (v as (p: T) => T)(prev) : v
+      localStorage.setItem(key, JSON.stringify(next))
+      return next
+    })
+  }, [key])
+  return [val, set]
+}
+
+function MarketingPlanTracker() {
+  const { t } = useLocale()
+  const currentPhase = getCurrentPhase()
+  const [open, setOpen] = useState(true)
+  const [selectedPhase, setSelectedPhase] = useState(currentPhase)
+  const [checks, setChecks] = useLocalStorage<Record<string, boolean>>('hm_plan_checks', {})
+  const [budgetSpent, setBudgetSpent] = useLocalStorage<Record<string, number>>('hm_plan_budget', {})
+  const [weeklyChecks, setWeeklyChecks] = useLocalStorage<Record<string, boolean>>('hm_plan_weekly', {})
+  const [customTasks, setCustomTasks] = useLocalStorage<string[]>('hm_plan_custom', [])
+  const [newTask, setNewTask] = useState('')
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+
+  useEffect(() => {
+    fetch('/api/admin/marketing-analytics')
+      .then(r => r.ok ? r.json() : null)
+      .then(setAnalytics)
+      .catch(() => {})
+  }, [])
+
+  const phaseLabel = (key: string) => t(`admin.marketing.marketingPlan.${key}`)
+  const mp = (k: string) => t(`admin.marketing.marketingPlan.${k}`)
+
+  const exitKeys = EXIT_CRITERIA[selectedPhase] ?? []
+  const completedExits = exitKeys.filter(k => checks[k]).length
+  const budgetItems = PHASE_BUDGETS[selectedPhase] ?? PHASE_BUDGETS[1]
+  const totalTarget = budgetItems.reduce((s, b) => s + b.target, 0)
+  const totalSpent = budgetItems.reduce((s, b) => s + (budgetSpent[`${selectedPhase}_${b.key}`] ?? 0), 0)
+
+  const KPI_ROWS = [
+    { key: 'newLeadsMonth', targets: ['15-20', '30-50', '60-100'], actual: analytics ? String(analytics.totalLeads) : '—' },
+    { key: 'leadClientConversion', targets: ['10-15%', '8-12%', '6-10%'], actual: analytics ? `${analytics.conversionRate.toFixed(1)}%` : '—' },
+    { key: 'mrr', targets: ['€2,500+', '€13,000+', '€50,000+'], actual: '—' },
+    { key: 'activeClients', targets: ['3-5', '25+', '100+'], actual: analytics ? String(analytics.totalClients) : '—' },
+  ]
+
+  return (
+    <div className="rounded-hm border border-hm-border overflow-hidden" style={{ background: 'var(--hm-sand)' }}>
+      <button onClick={() => setOpen(!open)} className="w-full px-6 py-4 flex items-center justify-between hover:bg-hm-ivory/50 transition-colors">
+        <div className="flex items-center gap-3">
+          <ListChecks className="h-5 w-5" style={{ color: '#B08A3E' }} />
+          <div className="text-left">
+            <h2 className="font-serif font-bold text-hm-black text-lg">{mp('title')}</h2>
+            <p className="text-xs text-gray-500">{mp('subtitle')}</p>
+          </div>
+        </div>
+        {open ? <ChevronUp className="h-5 w-5 text-gray-400" /> : <ChevronDown className="h-5 w-5 text-gray-400" />}
+      </button>
+
+      {open && (
+        <div className="border-t border-hm-border px-6 py-6 space-y-6">
+
+          {/* Phase Timeline */}
+          <div className="flex gap-2">
+            {PHASES.map(p => {
+              const isCurrent = p.id === currentPhase
+              const isCompleted = p.id < currentPhase
+              const isSelected = p.id === selectedPhase
+              return (
+                <button key={p.id} onClick={() => setSelectedPhase(p.id)}
+                  className={`flex-1 rounded-lg border-2 p-3 text-left transition-all ${
+                    isSelected ? 'border-hm-gold shadow-sm' : 'border-transparent hover:border-hm-border'
+                  }`}
+                  style={{ background: isSelected ? 'white' : 'transparent' }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className={`h-3 w-3 rounded-full ${isCompleted ? 'bg-hm-green' : isCurrent ? 'bg-hm-gold' : 'bg-gray-300'}`} />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{mp('phase')} {p.id}</span>
+                  </div>
+                  <p className="font-serif font-bold text-hm-black text-sm">{phaseLabel(p.key)}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">{mp(`phase${p.id}Dates`)}</p>
+                  {isCurrent && <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>{mp('current')}</span>}
+                  {isCompleted && <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">{mp('completed')}</span>}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Exit Criteria */}
+          {exitKeys.length > 0 && (
+            <div className="rounded-lg border border-hm-border bg-white p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-serif font-bold text-hm-black">{mp('exitCriteria')}</h3>
+                <span className="text-xs font-bold px-2 py-1 rounded" style={{ background: completedExits === exitKeys.length ? 'rgba(42,122,79,0.1)' : 'rgba(176,138,62,0.1)', color: completedExits === exitKeys.length ? '#2A7A4F' : '#B08A3E' }}>
+                  {completedExits}/{exitKeys.length}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mb-4">{mp('exitCriteriaDesc')}</p>
+              <div className="space-y-2">
+                {exitKeys.map(k => (
+                  <label key={k} className="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" checked={!!checks[k]} onChange={() => setChecks(prev => ({ ...prev, [k]: !prev[k] }))}
+                      className="mt-0.5 accent-[#B08A3E]" />
+                    <span className={`text-sm ${checks[k] ? 'text-gray-400 line-through' : 'text-hm-black'}`}>{mp(k)}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* KPI Targets vs Actuals */}
+          <div className="rounded-lg border border-hm-border bg-white p-5">
+            <h3 className="font-serif font-bold text-hm-black mb-4">{mp('kpiTargets')}</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="text-xs uppercase text-gray-400 border-b">
+                  <th className="text-left pb-2">{mp('metric')}</th>
+                  <th className="text-center pb-2">{mp('target')}</th>
+                  <th className="text-center pb-2">{mp('actual')}</th>
+                  <th className="text-center pb-2">{mp('statusCol')}</th>
+                </tr></thead>
+                <tbody>
+                  {KPI_ROWS.map(row => {
+                    const target = row.targets[Math.min(selectedPhase - 1, 2)]
+                    return (
+                      <tr key={row.key} className="border-b border-gray-50">
+                        <td className="py-2.5 text-hm-black font-medium">{mp(row.key)}</td>
+                        <td className="py-2.5 text-center text-gray-500">{target}</td>
+                        <td className="py-2.5 text-center font-semibold text-hm-black">{row.actual}</td>
+                        <td className="py-2.5 text-center">
+                          {row.actual === '—' ? <Circle className="h-4 w-4 text-gray-300 mx-auto" /> : <CheckCircle2 className="h-4 w-4 text-hm-green mx-auto" />}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Budget Tracker */}
+          <div className="rounded-lg border border-hm-border bg-white p-5">
+            <h3 className="font-serif font-bold text-hm-black mb-4">{mp('budgetTracker')}</h3>
+            <div className="space-y-3">
+              {budgetItems.map(b => {
+                const spentKey = `${selectedPhase}_${b.key}`
+                const spent = budgetSpent[spentKey] ?? 0
+                const pct = b.target > 0 ? Math.min((spent / b.target) * 100, 100) : 0
+                return (
+                  <div key={b.key} className="flex items-center gap-4">
+                    <span className="text-sm text-hm-black w-36 shrink-0">{mp(b.key)}</span>
+                    <div className="flex-1">
+                      <div className="h-2 rounded-full bg-gray-100">
+                        <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: pct > 90 ? '#A32D2D' : '#B08A3E' }} />
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-400 w-16 text-right">€{b.target}</span>
+                    <input type="number" value={spent || ''} placeholder="0"
+                      onChange={e => setBudgetSpent(prev => ({ ...prev, [spentKey]: Number(e.target.value) || 0 }))}
+                      className="w-20 rounded-lg border border-hm-border px-2 py-1 text-sm text-right focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+                  </div>
+                )
+              })}
+              <div className="flex items-center gap-4 pt-2 border-t border-gray-100 font-semibold">
+                <span className="text-sm text-hm-black w-36">{mp('totalBudget')}</span>
+                <div className="flex-1" />
+                <span className="text-xs text-gray-500 w-16 text-right">€{totalTarget}</span>
+                <span className={`w-20 text-sm text-right ${totalSpent > totalTarget ? 'text-red-600' : 'text-hm-black'}`}>€{totalSpent}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Weekly Actions */}
+          <div className="rounded-lg border border-hm-border bg-white p-5">
+            <h3 className="font-serif font-bold text-hm-black mb-4">{mp('weeklyActions')}</h3>
+            <div className="space-y-2">
+              {WEEKLY_TASKS.map(k => (
+                <label key={k} className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={!!weeklyChecks[k]} onChange={() => setWeeklyChecks(prev => ({ ...prev, [k]: !prev[k] }))}
+                    className="accent-[#B08A3E]" />
+                  <span className={`text-sm ${weeklyChecks[k] ? 'text-gray-400 line-through' : 'text-hm-black'}`}>{mp(k)}</span>
+                </label>
+              ))}
+              {customTasks.map((task, i) => (
+                <label key={`c${i}`} className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={!!weeklyChecks[`custom_${i}`]}
+                    onChange={() => setWeeklyChecks(prev => ({ ...prev, [`custom_${i}`]: !prev[`custom_${i}`] }))}
+                    className="accent-[#B08A3E]" />
+                  <span className={`text-sm flex-1 ${weeklyChecks[`custom_${i}`] ? 'text-gray-400 line-through' : 'text-hm-black'}`}>{task}</span>
+                  <button onClick={() => setCustomTasks(prev => prev.filter((_, j) => j !== i))} className="text-gray-300 hover:text-red-400 p-1">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </label>
+              ))}
+            </div>
+            <div className="mt-3 flex gap-2">
+              <input value={newTask} onChange={e => setNewTask(e.target.value)} placeholder={mp('taskPlaceholder')}
+                onKeyDown={e => { if (e.key === 'Enter' && newTask.trim()) { setCustomTasks(prev => [...prev, newTask.trim()]); setNewTask('') } }}
+                className="flex-1 rounded-lg border border-hm-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+              <button onClick={() => { if (newTask.trim()) { setCustomTasks(prev => [...prev, newTask.trim()]); setNewTask('') } }}
+                className="rounded-lg px-3 py-2 text-sm font-semibold text-white hover:opacity-90" style={{ background: '#B08A3E' }}>
+                {mp('addTask')}
+              </button>
+            </div>
+          </div>
+
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function MarketingPage() {
   const [campaigns, setCampaigns]   = useState<Campaign[]>([])
@@ -795,6 +1058,9 @@ export default function MarketingPage() {
     <div className="p-6 space-y-8">
       {/* Analytics Dashboard */}
       <AnalyticsDashboard />
+
+      {/* Marketing Plan Tracker */}
+      <MarketingPlanTracker />
 
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
