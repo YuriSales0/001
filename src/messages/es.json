@@ -1391,7 +1391,9 @@
       "taskCompleted": "Tarea completada",
       "startTask": "Iniciar tarea",
       "acceptTask": "Aceptar tarea",
-      "declineTask": "Rechazar"
+      "declineTask": "Rechazar",
+      "consumablesTitle": "Consumibles para esta tarea",
+      "consumablesReminder": "Recuerda registrar recogidas y devoluciones de consumibles con tu Captain"
     },
     "score": {
       "suspended": "Suspendido",
@@ -1449,6 +1451,40 @@
       "complete": "Completar",
       "today": "Hoy",
       "more": "más..."
+    },
+    "levelGuide": {
+      "title": "Cómo Funcionan los Niveles",
+      "levelTable": "Tabla de Niveles",
+      "level": "Nivel",
+      "scoreRange": "Rango de Puntuación",
+      "taskBonus": "Bonus por Tarea",
+      "benefits": "Beneficios",
+      "suspendedRange": "0 - 49",
+      "suspendedBonus": "Sin tareas asignadas",
+      "suspendedBenefits": "Contacta al Captain para resolver",
+      "basicRange": "50 - 149",
+      "basicBonus": "Tarifa estándar",
+      "basicBenefits": "Asignación estándar de tareas",
+      "verifiedRange": "150 - 299",
+      "verifiedBonus": "+5% por tarea",
+      "verifiedBenefits": "Asignación prioritaria, badge verificado",
+      "expertRange": "300 - 499",
+      "expertBonus": "+10% por tarea",
+      "expertBenefits": "Propiedades premium, mayor prioridad",
+      "eliteRange": "500+",
+      "eliteBonus": "+15% por tarea",
+      "eliteBenefits": "Inspecciones independientes, máxima prioridad, propiedades premium",
+      "howToEarn": "Cómo Ganar Puntos",
+      "earnTaskOnTime": "Tarea completada a tiempo: +10",
+      "earnValidated": "Validada sin reparaciones: +15",
+      "earnOwnerReview": "Valoración positiva del propietario: +20",
+      "earnPeakAvailability": "Disponibilidad en pico (Vie/Sáb): +5",
+      "howToLose": "Cómo Perder Puntos",
+      "loseNotAccepted": "No aceptada sin justificación: -20",
+      "loseNotCompleted": "Aceptada pero no completada: -30",
+      "loseComplaint": "Reclamación documentada: -40",
+      "loseUnreportedDamage": "Daño no reportado: -50",
+      "keyMessage": "Niveles más altos = más pago por tarea. Un miembro Elite gana 15% más que un Básico en cada tarea."
     }
   },
   "finance": {

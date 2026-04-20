@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import {
   Wrench, Calendar, MapPin, ClipboardCheck, CheckCircle2, PlayCircle,
   AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save, X, ImagePlus,
+  Package, Info,
 } from "lucide-react"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 import { showToast } from "@/components/hm/toast"
@@ -22,6 +23,15 @@ type Task = {
   photos: string[]
   property: { id: string; name: string; address: string; city: string }
 }
+
+type Consumable = {
+  id: string
+  category: string
+  quantity: number
+  type: string
+}
+
+const PROPERTY_VISIT_TYPES = ["CHECK_IN", "CHECK_OUT", "CLEANING", "INSPECTION"]
 
 // Compress a File to a small JPEG data URL before upload
 async function compressPhoto(file: File, maxDim = 1280, quality = 0.85): Promise<string> {
@@ -84,6 +94,24 @@ export default function CrewHome() {
   })
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [consumables, setConsumables] = useState<Consumable[]>([])
+  const [loadingConsumables, setLoadingConsumables] = useState(false)
+
+  // Fetch consumables when a property-visit task is selected
+  useEffect(() => {
+    if (!selected || !PROPERTY_VISIT_TYPES.includes(selected.type)) {
+      setConsumables([])
+      return
+    }
+    let cancelled = false
+    setLoadingConsumables(true)
+    fetch(`/api/properties/${selected.property.id}/consumables`)
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (!cancelled) setConsumables(Array.isArray(data) ? data : []) })
+      .catch(() => { if (!cancelled) setConsumables([]) })
+      .finally(() => { if (!cancelled) setLoadingConsumables(false) })
+    return () => { cancelled = true }
+  }, [selected?.id, selected?.type, selected?.property.id])
 
   const uploadPhoto = async (file: File) => {
     if (!selected) return
@@ -394,6 +422,44 @@ export default function CrewHome() {
             {selected.description && (
               <div className="rounded-hm border bg-white p-4 text-sm text-gray-700">
                 {selected.description}
+              </div>
+            )}
+
+            {/* Consumables needed for property visit tasks */}
+            {PROPERTY_VISIT_TYPES.includes(selected.type) && (
+              <div className="rounded-hm border bg-white overflow-hidden">
+                <div className="px-4 py-3 border-b bg-gray-50 flex items-center gap-2">
+                  <Package className="h-4 w-4 text-navy-700" />
+                  <span className="font-semibold text-hm-black text-sm">{t('crew.detail.consumablesTitle')}</span>
+                </div>
+                <div className="p-4">
+                  {loadingConsumables && (
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <Loader2 className="h-4 w-4 animate-spin" /> {t('crew.home.loading')}
+                    </div>
+                  )}
+                  {!loadingConsumables && consumables.length === 0 && (
+                    <p className="text-sm text-gray-400">-</p>
+                  )}
+                  {!loadingConsumables && consumables.length > 0 && (
+                    <ul className="space-y-2">
+                      {consumables.map(c => (
+                        <li key={c.id} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-800">{c.category} <span className="text-gray-500">x{c.quantity}</span></span>
+                          <span className="text-[10px] font-semibold rounded-full px-2 py-0.5 bg-gray-100 text-gray-600">{c.type}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Consumables reminder for IN_PROGRESS / SUBMITTED */}
+            {(selected.status === "IN_PROGRESS" || selected.status === "SUBMITTED") && (
+              <div className="rounded-hm border border-blue-200 bg-blue-50 px-4 py-3 flex items-start gap-2">
+                <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
+                <p className="text-xs text-blue-800">{t('crew.detail.consumablesReminder')}</p>
               </div>
             )}
 
