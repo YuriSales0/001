@@ -18,6 +18,7 @@ const MAX_RETRIES = 3
 export function OnboardingGate({ role, children }: Props) {
   const [needsOnboarding, setNeedsOnboarding] = useState<boolean | null>(null)
   const [error, setError] = useState(false)
+  const [retryTrigger, setRetryTrigger] = useState(0)
   const retryCount = useRef(0)
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export function OnboardingGate({ role, children }: Props) {
     }
 
     fetchOnboarding()
-  }, [role])
+  }, [role, retryTrigger])
 
   // Error state — do not render children to avoid broken state
   if (error) {
@@ -54,7 +55,7 @@ export function OnboardingGate({ role, children }: Props) {
         <div className="text-center space-y-2">
           <p className="text-sm text-red-600">Failed to load onboarding status.</p>
           <button
-            onClick={() => { retryCount.current = 0; setError(false); setNeedsOnboarding(null) }}
+            onClick={() => { retryCount.current = 0; setError(false); setNeedsOnboarding(null); setRetryTrigger(n => n + 1) }}
             className="text-sm text-blue-600 underline hover:text-blue-800"
           >
             Retry

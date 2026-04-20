@@ -213,6 +213,17 @@ export async function POST(request: NextRequest) {
           `Reservation ID: ${reservation.id}\nProperty ID: ${propertyId}\nCheck-in: ${checkInDate.toISOString()}\n\n` +
           `Create a crew member or assign the tasks manually.`,
       })
+
+      // Also notify the manager so they can escalate to the Captain
+      if (property.owner?.managerId) {
+        notify({
+          userId: property.owner.managerId,
+          type: 'GENERAL',
+          title: `Tasks unassigned: ${guestName}`,
+          body: `${autoTasks.length} task(s) for ${reservation.property.name} could not be auto-assigned. No crew available — please contact the Captain.`,
+          link: '/manager/tasks',
+        }).catch(() => {})
+      }
     }
 
     // ── PricingDataPoint — collect one row per night ─────────────────────────

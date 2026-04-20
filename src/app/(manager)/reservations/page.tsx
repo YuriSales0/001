@@ -239,8 +239,22 @@ export default function ReservationsPage() {
 
   const [activating, setActivating] = useState<string|null>(null)
 
+  // Valid status transitions
+  const VALID_TRANSITIONS: Record<ReservationStatus, ReservationStatus[]> = {
+    UPCOMING:  ['ACTIVE', 'CANCELLED'],
+    ACTIVE:    ['COMPLETED', 'CANCELLED'],
+    COMPLETED: [],
+    CANCELLED: [],
+  }
+
+  const isValidTransition = (from: ReservationStatus, to: ReservationStatus): boolean => {
+    return VALID_TRANSITIONS[from]?.includes(to) ?? false
+  }
+
   const cancelReservation = async (id: string, guestName: string) => {
-    if (!confirm(`Cancelar a reserva de ${guestName}?\n\nIsto irá:\n- Mudar a reserva para CANCELLED\n- Cancelar payouts agendados associados\n- Cancelar tarefas pendentes`)) return
+    const reservation = reservations.find(r => r.id === id)
+    if (!reservation || !isValidTransition(reservation.status, 'CANCELLED')) return
+    if (!confirm(`${t('manager.reservations.cancelReservation')} — ${guestName}?`)) return
     setActivating(id)
     await fetch(`/api/reservations/${id}`, {
       method: 'PUT',
@@ -252,6 +266,8 @@ export default function ReservationsPage() {
   }
 
   const changeReservationStatus = async (id: string, status: 'ACTIVE'|'COMPLETED', force = false) => {
+    const reservation = reservations.find(r => r.id === id)
+    if (!reservation || !isValidTransition(reservation.status, status)) return
     setActivating(id)
     const res = await fetch(`/api/reservations/${id}`, {
       method: 'PUT',

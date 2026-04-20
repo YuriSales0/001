@@ -1,7 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useLocale } from "@/i18n/provider"
 import { DollarSign, TrendingUp, Percent, BarChart3, Building2 } from "lucide-react"
+import { PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from "@/lib/finance"
 
 interface Reservation {
   id: string
@@ -20,6 +22,12 @@ interface Payout {
   scheduledFor: string | null
   status: string
   property: { id: string; name: string }
+}
+
+interface PropertyWithPlan {
+  id: string
+  name: string
+  owner?: { subscriptionPlan: string | null } | null
 }
 
 interface PropertyRevRow {
@@ -44,8 +52,10 @@ const MONTHS = [
 ]
 
 export default function RevenuePage() {
+  const { t } = useLocale()
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [payouts, setPayouts] = useState<Payout[]>([])
+  const [properties, setProperties] = useState<PropertyWithPlan[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
@@ -55,12 +65,14 @@ export default function RevenuePage() {
   useEffect(() => {
     const load = async () => {
       setLoading(true)
-      const [rRes, pRes] = await Promise.all([
+      const [rRes, pRes, prRes] = await Promise.all([
         fetch("/api/reservations"),
         fetch("/api/payouts").catch(() => null),
+        fetch("/api/properties").catch(() => null),
       ])
       if (rRes.ok) setReservations(await rRes.json())
       if (pRes?.ok) setPayouts(await pRes.json())
+      if (prRes?.ok) setProperties(await prRes.json())
       setLoading(false)
     }
     load()
@@ -91,11 +103,15 @@ export default function RevenuePage() {
     }
   })
 
-  // Fallback: if no payouts, use reservations
+  // Fallback: if no payouts, use reservations with actual plan commission rates
   if (byProperty.size === 0) {
+    const propertyPlanMap = new Map<string, string | null>()
+    properties.forEach(p => propertyPlanMap.set(p.id, p.owner?.subscriptionPlan ?? null))
+
     monthRes.forEach(r => {
       const existing = byProperty.get(r.property.id)
-      const commissionRate = 0.17
+      const plan = propertyPlanMap.get(r.property.id) ?? null
+      const commissionRate = PLAN_COMMISSION[plan ?? ''] ?? DEFAULT_COMMISSION_RATE
       const commission = r.amount * commissionRate
       const net = r.amount - commission
       if (existing) {
@@ -124,10 +140,10 @@ export default function RevenuePage() {
   const avgCommRate     = totalRevenue > 0 ? Math.round((totalCommission / totalRevenue) * 100) : 0
 
   const statCards = [
-    { label: "Gross Revenue",  value: fmtMoney(totalRevenue),    icon: DollarSign, color: "text-emerald-600", bg: "bg-emerald-50" },
-    { label: "Net to Owners",  value: fmtMoney(totalNet),        icon: TrendingUp, color: "text-blue-600",    bg: "bg-blue-50" },
-    { label: "Commission",     value: fmtMoney(totalCommission), icon: Percent,    color: "text-violet-600",  bg: "bg-violet-50" },
-    { label: "Reservations",   value: String(totalRes),          icon: BarChart3,  color: "text-amber-600",   bg: "bg-amber-50" },
+    { label: t('manager.revenue.grossRevenue'),  value: fmtMoney(totalRevenue),    icon: DollarSign, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: t('manager.revenue.netToOwners'),    value: fmtMoney(totalNet),        icon: TrendingUp, color: "text-blue-600",    bg: "bg-blue-50" },
+    { label: t('manager.revenue.commission'),      value: fmtMoney(totalCommission), icon: Percent,    color: "text-violet-600",  bg: "bg-violet-50" },
+    { label: t('common.reservations'),             value: String(totalRes),          icon: BarChart3,  color: "text-amber-600",   bg: "bg-amber-50" },
   ]
 
   return (
@@ -135,8 +151,8 @@ export default function RevenuePage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-hm-black">Revenue</h1>
-          <p className="text-sm text-gray-500">Financial overview and property performance.</p>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('common.revenue')}</h1>
+          <p className="text-sm text-gray-500">{t('manager.revenue.subtitle')}</p>
         </div>
         <select
           value={selectedMonth}
@@ -169,7 +185,7 @@ export default function RevenuePage() {
         <div className="space-y-4 animate-pulse py-4"><div className="h-8 rounded-hm bg-hm-sand w-48" /><div className="h-40 rounded-hm bg-hm-sand" /></div>
       ) : rows.length === 0 ? (
         <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
-          No revenue data for this period.
+          {t('manager.revenue.noData')}
         </div>
       ) : (
         <div className="rounded-hm border bg-white overflow-hidden">

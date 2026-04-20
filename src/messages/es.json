@@ -343,6 +343,13 @@
       "start": "Iniciar",
       "completeAction": "Completar"
     },
+    "revenue": {
+      "subtitle": "Resumen financiero y rendimiento por propiedad.",
+      "grossRevenue": "Ingresos brutos",
+      "netToOwners": "Neto a propietarios",
+      "commission": "Comisión",
+      "noData": "Sin datos de ingresos para este período."
+    },
     "crm": {
       "searchLeads": "Buscar leads...",
       "addLead": "Anadir lead",
@@ -854,7 +861,8 @@
       "subtitle": "Tareas asignadas a mí esta semana",
       "noTasksThisDay": "Ninguna tarea este día",
       "complete": "Completar",
-      "today": "Hoy"
+      "today": "Hoy",
+      "more": "más..."
     }
   },
   "finance": {
@@ -1586,7 +1594,13 @@
     "finish": "Finalizar",
     "saving": "Guardando…",
     "setupTitle": "Setup",
-    "setupSubtitle": "Configuración inicial de tu cuenta"
+    "setupSubtitle": "Configuración inicial de tu cuenta",
+    "saveError": "Error al guardar. Inténtalo de nuevo.",
+    "networkError": "Error de red. Comprueba tu conexión.",
+    "crewContractDesc": "Los términos de tu contrato han sido definidos por el Admin. Revísalos y confirma.",
+    "crewContractTypeLabel": "Tipo de contrato",
+    "ratesNotConfigured": "Tarifas aún no configuradas. Contacta con tu Admin.",
+    "compensationNotConfigured": "Compensación aún no configurada. Contacta con tu Admin."
   },
   "client": {
     "dashboard": {
@@ -1944,6 +1958,51 @@
       "noStatements": "Sin extractos aún",
       "firstStatement": "Tu primer extracto aparecerá aquí después de completar tu primera reserva.",
       "monthlyStatements": "Extractos mensuales"
+    },
+    "aiPage": {
+      "title": "AI Pricing Intelligence",
+      "lockedDesc": "Disponible en los planes Mid y Premium. El sistema analiza la competencia en las plataformas y sugiere los precios más competitivos para maximizar tus ingresos en la Costa Tropical.",
+      "feat1": "Análisis de precios de la competencia (Airbnb, Booking)",
+      "feat2": "Sugerencias por día de la semana y estacionalidad",
+      "feat3": "Ajuste automático por ocupación regional",
+      "feat4": "Informe mensual de optimización de ingresos",
+      "seePlans": "Ver planes",
+      "subtitle": "Análisis de precios de tus propiedades",
+      "collecting": "Recopilando datos",
+      "collectingDesc": "Los datos se recopilan con cada reserva. Los análisis estarán disponibles pronto.",
+      "seasonality": "Estacionalidad — precio medio/noche",
+      "competitorTitle": "Integración con competencia",
+      "competitorDesc": "El equipo de HostMasters está activando la integración con datos de mercado (PriceLabs) para tu plan. Recibirás una notificación cuando esté disponible.",
+      "competitorEta": "Previsión: Q2 2026 · Tus datos históricos ya se están recopilando"
+    },
+    "reportsPage": {
+      "title": "Informes",
+      "subtitle": "Resumen financiero y de ocupación de tus propiedades",
+      "allProperties": "Todas las propiedades",
+      "grossRevenue": "Ingresos Brutos",
+      "hmCommission": "Comisión HM",
+      "netRevenue": "Ingresos Netos",
+      "reservations": "Reservas",
+      "nightsOccupied": "Noches ocupadas",
+      "occupancy": "Ocupación",
+      "avgPriceNight": "Precio medio/noche",
+      "avgPrice": "Precio medio",
+      "totalAccumulated": "total acumulado",
+      "afterCommission": "tras comisión",
+      "nightsBooked": "Noches Reservadas",
+      "total": "Total",
+      "grossPerNight": "bruto / noche",
+      "occupancyThisYear": "Ocupación este año (por propiedad)",
+      "nightsBookedLabel": "noches reservadas",
+      "monthlyPerformance": "Rendimiento mensual (últimos 12 meses)",
+      "noData": "Sin datos de reservas aún.",
+      "netShort": "neto",
+      "month": "Mes",
+      "nights": "Noches",
+      "gross": "Bruto",
+      "commission": "Comisión",
+      "net": "Neto",
+      "loadError": "Error al cargar datos. Intenta refrescar la página."
     },
     "messages": {
       "placeholder": "Escribe un mensaje…",

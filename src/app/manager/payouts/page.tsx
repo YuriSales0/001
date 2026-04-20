@@ -1,5 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
+import { useLocale } from "@/i18n/provider"
+import { intlLocale } from "@/i18n"
 import { Banknote } from "lucide-react"
 
 type Payout = {
@@ -13,9 +15,11 @@ type Payout = {
   reservation: { id: string; guestName: string; checkOut: string }
 }
 const fmtEUR = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(n)
-const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB')
 
 export default function ManagerPayouts() {
+  const { locale } = useLocale()
+  const dateLoc = intlLocale(locale)
+  const fmtDate = (s: string) => new Date(s).toLocaleDateString(dateLoc)
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)

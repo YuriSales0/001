@@ -343,6 +343,13 @@
       "start": "Start",
       "completeAction": "Complete"
     },
+    "revenue": {
+      "subtitle": "Financial overview and property performance.",
+      "grossRevenue": "Gross Revenue",
+      "netToOwners": "Net to Owners",
+      "commission": "Commission",
+      "noData": "No revenue data for this period."
+    },
     "crm": {
       "searchLeads": "Search leads...",
       "addLead": "Add lead",

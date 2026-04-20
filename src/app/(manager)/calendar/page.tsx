@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useRef } from "react"
 import { useLocale } from "@/i18n/provider"
+import { intlLocale } from "@/i18n"
 import {
   LogIn, LogOut, Wrench, Lock, Wallet,
   Plus, AlertCircle, CheckCircle2, X,
@@ -250,7 +251,8 @@ function DayPanel({
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function ManagerCalendar() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const dateLoc = intlLocale(locale)
   const [events, setEvents] = useState<CalEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [weekStart, setWeekStart] = useState(()=>getWeekStart(new Date()))
@@ -264,19 +266,27 @@ export default function ManagerCalendar() {
   const [properties, setProperties] = useState<Property[]>([])
   const draggedId = useRef<string|null>(null)
 
+  const [error, setError] = useState(false)
+
   const load = () => {
     const from = weekStart.toISOString()
     const to = new Date(weekStart.getTime()+7*24*60*60*1000).toISOString()
     setLoading(true)
+    setError(false)
     fetch(`/api/admin/calendar?from=${from}&to=${to}`)
-      .then(r=>r.ok?r.json():[])
-      .then(d=>{setEvents(d);setLoading(false)})
+      .then(r => { if (!r.ok) throw new Error(); return r.json() })
+      .then(d => setEvents(d))
+      .catch(() => { setEvents([]); setError(true) })
+      .finally(() => setLoading(false))
   }
 
   useEffect(()=>{load()},[weekStart])
 
   useEffect(()=>{
-    fetch('/api/properties').then(r=>r.ok?r.json():[]).then(setProperties)
+    fetch('/api/properties')
+      .then(r => { if (!r.ok) throw new Error(); return r.json() })
+      .then(setProperties)
+      .catch(() => setProperties([]))
   },[])
 
   const completeTask = async (e:CalEvent) => {
@@ -314,8 +324,8 @@ export default function ManagerCalendar() {
 
   const weekLabel = (() => {
     const end = new Date(weekStart); end.setDate(weekStart.getDate()+6)
-    const s = weekStart.toLocaleDateString('pt-PT',{day:'2-digit',month:'short'})
-    const f = end.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'})
+    const s = weekStart.toLocaleDateString(dateLoc,{day:'2-digit',month:'short'})
+    const f = end.toLocaleDateString(dateLoc,{day:'2-digit',month:'short',year:'numeric'})
     return `${s} – ${f}`
   })()
 
@@ -355,6 +365,7 @@ export default function ManagerCalendar() {
       </div>
 
       {loading && <p className="text-sm text-gray-400">{t('common.loading')}</p>}
+      {error && <p className="text-sm text-red-500">{t('manager.dashboardPage.loadFailed')}</p>}
 
       {/* Week grid */}
       <div className="overflow-x-auto -mx-6 px-6">
@@ -381,7 +392,7 @@ export default function ManagerCalendar() {
                     {day.getDate()}
                   </span>
                   <span className={`text-[10px] mt-0.5 ${isExpanded?'text-white/60':isToday?'text-blue-500':'text-gray-400'}`}>
-                    {day.toLocaleDateString('pt-PT',{month:'short'})}
+                    {day.toLocaleDateString(dateLoc,{month:'short'})}
                   </span>
                   {items.length>0&&(
                     <span className={`mt-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
