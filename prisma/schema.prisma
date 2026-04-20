@@ -1281,3 +1281,94 @@ model StayReview {
   @@index([propertyId])
   @@index([crewMemberId])
 }
+
+// ─── Consumables & Stock Management ─────────────────────────────────────────
+
+model ConsumableCategory {
+  id                String          @id @default(cuid())
+  name              String
+  type              ConsumableType
+  unit              String          @default("unit")
+  standardLifecycle Int?
+  imageUrl          String?
+  active            Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+
+  items             ConsumableItem[]
+  propertySetups    PropertyConsumableSetup[]
+  stockLevel        StockLevel?
+}
+
+model ConsumableItem {
+  id                String          @id @default(cuid())
+  categoryId        String
+  category          ConsumableCategory @relation(fields: [categoryId], references: [id])
+  serialNumber      String?         @unique
+  batchNumber       String?
+  status            ItemStatus      @default(AVAILABLE)
+  currentPropertyId String?
+  currentProperty   Property?       @relation(fields: [currentPropertyId], references: [id])
+  washCount         Int             @default(0)
+  purchaseDate      DateTime        @default(now())
+  purchasePrice     Decimal         @db.Decimal(10, 2)
+  expectedLifespan  Int?
+  retiredAt         DateTime?
+  retireReason      String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  movements         ConsumableMovement[]
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model ConsumableMovement {
+  id                String          @id @default(cuid())
+  itemId            String
+  item              ConsumableItem  @relation(fields: [itemId], references: [id])
+  movementType      MovementType
+  fromLocation      String?
+  toLocation        String?
+  propertyId        String?
+  property          Property?       @relation(fields: [propertyId], references: [id])
+  crewMemberId      String?
+  reservationId     String?
+  quantity          Int             @default(1)
+  executedAt        DateTime        @default(now())
+  notes             String?
+
+  @@index([itemId])
+  @@index([executedAt])
+}
+
+model PropertyConsumableSetup {
+  id                String          @id @default(cuid())
+  propertyId        String
+  property          Property        @relation(fields: [propertyId], references: [id])
+  categoryId        String
+  category          ConsumableCategory @relation(fields: [categoryId], references: [id])
+  quantityPerStay   Int
+  notes             String?
+  active            Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([propertyId, categoryId])
+}
+
+model StockLevel {
+  id                String          @id @default(cuid())
+  categoryId        String          @unique
+  category          ConsumableCategory @relation(fields: [categoryId], references: [id])
+  totalItems        Int             @default(0)
+  available         Int             @default(0)
+  deployed          Int             @default(0)
+  inLaundry         Int             @default(0)
+  inTransit         Int             @default(0)
+  quarantine        Int             @default(0)
+  retired           Int             @default(0)
+  minimumLevel      Int             @default(0)
+  criticalLevel     Int             @default(0)
+  lastUpdated       DateTime        @updatedAt
+}
