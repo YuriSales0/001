@@ -70,7 +70,7 @@ function DayPanel({
       <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
-          <p className="text-sm font-bold text-gray-900">{events.length} tarefa{events.length!==1?'s':''}</p>
+          <p className="text-sm font-bold text-gray-900">{events.length} {t('common.tasks').toLowerCase()}</p>
         </div>
         <button onClick={onClose} aria-label="Close" className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
           <X className="h-4 w-4"/>
@@ -235,7 +235,7 @@ export default function CrewCalendarPage() {
                   {items.length>MAX&&(
                     <button onClick={()=>toggleDay(key)}
                       className="w-full rounded-lg px-2 py-1 text-[11px] text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-left">
-                      +{items.length-MAX} mais…
+                      +{items.length-MAX} {t('crew.calendar.more')}
                     </button>
                   )}
                 </div>

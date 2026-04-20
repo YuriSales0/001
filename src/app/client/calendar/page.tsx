@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useLocale } from '@/i18n/provider'
+import { intlLocale, type Locale } from '@/i18n'
 import { ChevronLeft, ChevronRight, Plus, X, Clock, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 type Task = {
@@ -45,8 +46,8 @@ function getWeekDays(start: Date): Date[] {
   })
 }
 
-const fmtDate = (s: string) =>
-  new Date(s).toLocaleDateString('pt-PT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
+const fmtDate = (s: string, loc = 'en-GB') =>
+  new Date(s).toLocaleDateString(loc,{weekday:'long',day:'2-digit',month:'long',year:'numeric'})
 
 // ── Day Panel ─────────────────────────────────────────────────────────────────
 function DayPanel({
@@ -98,7 +99,8 @@ function DayPanel({
 
 // ── Task Detail Modal ─────────────────────────────────────────────────────────
 function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
-  const { t: tr } = useLocale()
+  const { t: tr, locale } = useLocale()
+  const dateLoc = intlLocale(locale as Locale)
   const today = new Date()
   const isOverdue = task.status!=='COMPLETED'&&new Date(task.dueDate)<today
   const colorClass = TYPE_COLORS[task.type]??'bg-gray-100 text-gray-600 border-gray-200'
@@ -119,7 +121,7 @@ function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
         <div className="p-5 space-y-3 text-sm">
           <div className="flex items-center gap-2 text-gray-600">
             <Clock className="h-4 w-4 shrink-0"/>
-            <span>{fmtDate(task.dueDate)}</span>
+            <span>{fmtDate(task.dueDate, dateLoc)}</span>
           </div>
           <div className="text-gray-600"><span className="font-medium text-gray-700">{tr('client.calendar.property')}:</span> {task.property.name}</div>
           {task.assignee&&<div className="text-gray-600"><span className="font-medium text-gray-700">Crew:</span> {task.assignee.name??tr('client.calendar.unassigned')}</div>}
@@ -152,7 +154,8 @@ function TaskModal({ task, onClose }: { task: Task; onClose: ()=>void }) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function ClientCalendarPage() {
-  const { t: tr } = useLocale()
+  const { t: tr, locale } = useLocale()
+  const dateLoc = intlLocale(locale as Locale)
   const [tasks, setTasks] = useState<Task[]>([])
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -189,8 +192,8 @@ export default function ClientCalendarPage() {
   const todayKey = dayKey(today)
   const weekLabel = (() => {
     const end = new Date(weekStart); end.setDate(weekStart.getDate()+6)
-    const s = weekStart.toLocaleDateString('pt-PT',{day:'2-digit',month:'short'})
-    const f = end.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'})
+    const s = weekStart.toLocaleDateString(dateLoc,{day:'2-digit',month:'short'})
+    const f = end.toLocaleDateString(dateLoc,{day:'2-digit',month:'short',year:'numeric'})
     return `${s} – ${f}`
   })()
 
@@ -227,7 +230,7 @@ export default function ClientCalendarPage() {
         <>
           {/* Week grid */}
           <div className="overflow-x-auto -mx-6 px-6">
-            <div className="grid grid-cols-7 gap-3 min-w-[700px]">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
               {weekDays.map((day,i) => {
                 const key = dayKey(day)
                 const items = byDay[key]??[]
@@ -249,7 +252,7 @@ export default function ClientCalendarPage() {
                         {day.getDate()}
                       </span>
                       <span className={`text-[10px] mt-0.5 ${isExpanded?'text-white/60':isToday?'text-blue-500':'text-gray-400'}`}>
-                        {day.toLocaleDateString('pt-PT',{month:'short'})}
+                        {day.toLocaleDateString(dateLoc,{month:'short'})}
                       </span>
                       {items.length>0&&(
                         <span className={`mt-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${

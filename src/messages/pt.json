@@ -854,7 +854,8 @@
       "subtitle": "Tarefas atribuídas a mim esta semana",
       "noTasksThisDay": "Nenhuma tarefa neste dia",
       "complete": "Concluir",
-      "today": "Hoje"
+      "today": "Hoje",
+      "more": "mais..."
     }
   },
   "finance": {
@@ -1586,7 +1587,13 @@
     "finish": "Concluir",
     "saving": "A guardar…",
     "setupTitle": "Setup",
-    "setupSubtitle": "Configuração inicial da tua conta"
+    "setupSubtitle": "Configuração inicial da tua conta",
+    "saveError": "Erro ao guardar. Tenta novamente.",
+    "networkError": "Erro de rede. Verifica a tua ligação.",
+    "crewContractDesc": "Os termos do teu contrato foram definidos pelo Admin. Revê e confirma.",
+    "crewContractTypeLabel": "Tipo de contrato",
+    "ratesNotConfigured": "Valores ainda não configurados. Contacta o Admin.",
+    "compensationNotConfigured": "Compensação ainda não configurada. Contacta o Admin."
   },
   "client": {
     "dashboard": {

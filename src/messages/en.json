@@ -950,7 +950,8 @@
       "subtitle": "Tasks assigned to me this week",
       "noTasksThisDay": "No tasks this day",
       "complete": "Complete",
-      "today": "Today"
+      "today": "Today",
+      "more": "more..."
     }
   },
   "finance": {
@@ -1682,7 +1683,13 @@
     "finish": "Finish",
     "saving": "Saving…",
     "setupTitle": "Setup",
-    "setupSubtitle": "Initial account setup"
+    "setupSubtitle": "Initial account setup",
+    "saveError": "Failed to save. Please try again.",
+    "networkError": "Network error. Check your connection.",
+    "crewContractDesc": "Your contract terms have been set by the Admin. Please review and confirm.",
+    "crewContractTypeLabel": "Contract type",
+    "ratesNotConfigured": "Rates not yet configured. Contact your Admin.",
+    "compensationNotConfigured": "Compensation not yet configured. Contact your Admin."
   },
   "client": {
     "dashboard": {
@@ -2044,6 +2051,51 @@
       "noStatements": "No statements yet",
       "firstStatement": "Your first statement will appear here after your first booking is completed.",
       "monthlyStatements": "Monthly statements"
+    },
+    "aiPage": {
+      "title": "AI Pricing Intelligence",
+      "lockedDesc": "Available on Mid and Premium plans. The system analyses competitor pricing on platforms and suggests the most competitive rates to maximise your revenue on the Costa Tropical.",
+      "feat1": "Competitor price analysis (Airbnb, Booking)",
+      "feat2": "Suggestions by day of week and seasonality",
+      "feat3": "Automatic adjustment by regional occupancy",
+      "feat4": "Monthly revenue optimisation report",
+      "seePlans": "See plans",
+      "subtitle": "Price analysis for your properties",
+      "collecting": "Collecting data",
+      "collectingDesc": "Data is collected with each booking. Analyses will be available soon.",
+      "seasonality": "Seasonality — average price/night",
+      "competitorTitle": "Competitor integration",
+      "competitorDesc": "The HostMasters team is activating market data integration (PriceLabs) for your plan. You will receive a notification once it is available.",
+      "competitorEta": "Forecast: Q2 2026 · Your historical data is already being collected"
+    },
+    "reportsPage": {
+      "title": "Reports",
+      "subtitle": "Financial and occupancy summary for your properties",
+      "allProperties": "All properties",
+      "grossRevenue": "Gross Revenue",
+      "hmCommission": "HM Commission",
+      "netRevenue": "Net Revenue",
+      "reservations": "Reservations",
+      "nightsOccupied": "Nights occupied",
+      "occupancy": "Occupancy",
+      "avgPriceNight": "Avg. price/night",
+      "avgPrice": "Avg. price",
+      "totalAccumulated": "total accumulated",
+      "afterCommission": "after commission",
+      "nightsBooked": "Nights Booked",
+      "total": "Total",
+      "grossPerNight": "gross / night",
+      "occupancyThisYear": "Occupancy this year (by property)",
+      "nightsBookedLabel": "nights booked",
+      "monthlyPerformance": "Monthly performance (last 12 months)",
+      "noData": "No reservation data yet.",
+      "netShort": "net",
+      "month": "Month",
+      "nights": "Nights",
+      "gross": "Gross",
+      "commission": "Commission",
+      "net": "Net",
+      "loadError": "Failed to load data. Try refreshing."
     },
     "messages": {
       "placeholder": "Write a message…",
