@@ -32,34 +32,34 @@ type AnalyticsData = {
 
 type PeriodKey = 'today' | '7d' | '30d' | '90d' | 'custom'
 
-const SOURCE_LABELS: Record<string, string> = {
-  CADASTRO: 'Registration',
-  NEWSLETTER: 'Newsletter',
-  ONLINE: 'Online',
-  PHONE: 'Phone',
-  WHATSAPP: 'WhatsApp',
-  WEBSITE: 'Website',
-  EMAIL: 'Email',
-  REFERRAL: 'Referral',
-  OTHER: 'Other',
+const SOURCE_LABEL_KEYS: Record<string, string> = {
+  CADASTRO: 'manager.crm.sourceRegistration',
+  NEWSLETTER: 'manager.crm.sourceNewsletter',
+  ONLINE: 'manager.crm.sourceOnline',
+  PHONE: 'manager.crm.sourcePhone',
+  WHATSAPP: 'manager.crm.sourceWhatsApp',
+  WEBSITE: 'manager.crm.sourceWebsite',
+  EMAIL: 'manager.crm.sourceEmail',
+  REFERRAL: 'manager.crm.sourceReferral',
+  OTHER: 'manager.crm.sourceOther',
 }
 
-const STATUS_LABEL_MAP: Record<string, string> = {
-  NEW: 'New',
-  CONTACTED: 'Contacted',
-  QUALIFIED: 'Qualified',
-  CONVERTED: 'Converted',
-  RETAINED: 'Retained',
-  LOST: 'Lost',
-  REMARKETING: 'Remarketing',
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  NEW: 'manager.crm.stageNew',
+  CONTACTED: 'manager.crm.stageContacted',
+  QUALIFIED: 'manager.crm.stageQualified',
+  CONVERTED: 'manager.crm.stageConverted',
+  RETAINED: 'manager.crm.stageRetained',
+  LOST: 'manager.crm.stageLost',
+  REMARKETING: 'manager.crm.stageRemarketing',
 }
 
-const PLAN_LABELS: Record<string, string> = {
-  STARTER: 'Starter',
-  BASIC: 'Basic',
-  MID: 'Mid',
-  PREMIUM: 'Premium',
-  NONE: 'No Plan',
+const PLAN_LABEL_KEYS: Record<string, string> = {
+  STARTER: 'client.plan.starterName',
+  BASIC: 'client.plan.basicName',
+  MID: 'client.plan.midName',
+  PREMIUM: 'client.plan.premiumName',
+  NONE: 'admin.marketing.noPlan',
 }
 
 const PLAN_COLORS: Record<string, string> = {
@@ -318,7 +318,7 @@ function AnalyticsDashboard() {
                             className="h-full rounded-md transition-all duration-500"
                             style={{
                               width: `${barWidth}%`,
-                              background: `linear-gradient(90deg, #1a1a1a ${Math.max(0, barWidth - 15)}%, #d4a853)`,
+                              background: `linear-gradient(90deg, #0B1E3A ${Math.max(0, barWidth - 15)}%, #B08A3E)`,
                             }}
                           />
                         )}
@@ -344,7 +344,7 @@ function AnalyticsDashboard() {
                       <div key={p.plan}>
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium text-gray-700">
-                            {PLAN_LABELS[p.plan] ?? p.plan}
+                            {PLAN_LABEL_KEYS[p.plan] ? t(PLAN_LABEL_KEYS[p.plan]) : p.plan}
                           </span>
                           <div className="flex items-center gap-2">
                             <span className="text-[10px] text-gray-400">{pct.toFixed(0)}%</span>
@@ -381,7 +381,7 @@ function AnalyticsDashboard() {
                       const pct = (s.count / maxSource) * 100
                       return (
                         <div key={s.source} className="flex items-center gap-3">
-                          <span className="text-xs text-gray-600 w-24 shrink-0 truncate">{SOURCE_LABELS[s.source] ?? s.source}</span>
+                          <span className="text-xs text-gray-600 w-24 shrink-0 truncate">{SOURCE_LABEL_KEYS[s.source] ? t(SOURCE_LABEL_KEYS[s.source]) : s.source}</span>
                           <div className="flex-1 h-4 rounded bg-gray-50 overflow-hidden">
                             <div
                               className="h-full rounded bg-hm-black/80 transition-all duration-500"
@@ -427,7 +427,7 @@ function AnalyticsDashboard() {
                       <td className="px-5 py-2.5 text-gray-500 truncate max-w-[180px]">{lead.email ?? '---'}</td>
                       <td className="px-5 py-2.5">
                         <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs">
-                          {SOURCE_LABELS[lead.source] ?? lead.source}
+                          {SOURCE_LABEL_KEYS[lead.source] ? t(SOURCE_LABEL_KEYS[lead.source]) : lead.source}
                         </span>
                       </td>
                       <td className="px-5 py-2.5">
@@ -438,7 +438,7 @@ function AnalyticsDashboard() {
                           lead.status === 'QUALIFIED' ? 'bg-amber-100 text-amber-700' :
                           'bg-gray-100 text-gray-600'
                         }`}>
-                          {STATUS_LABEL_MAP[lead.status] ?? lead.status}
+                          {STATUS_LABEL_KEYS[lead.status] ? t(STATUS_LABEL_KEYS[lead.status]) : lead.status}
                         </span>
                       </td>
                       <td className="px-5 py-2.5 text-gray-400 text-xs tabular-nums">
@@ -778,17 +778,19 @@ const PHASE_BUDGETS: Record<number, { key: string; target: number }[]> = {
     { key: 'googleAds', target: 3200 },
     { key: 'metaAds', target: 2000 },
     { key: 'linkedInAds', target: 600 },
+    { key: 'contentCreation', target: 500 },
     { key: 'eventsActivations', target: 1500 },
     { key: 'physicalMaterials', target: 600 },
-    { key: 'contentCreation', target: 500 },
+    { key: 'officeShare', target: 2400 },
   ],
   3: [
     { key: 'googleAds', target: 5500 },
     { key: 'metaAds', target: 4000 },
     { key: 'linkedInAds', target: 1500 },
+    { key: 'contentCreation', target: 1200 },
     { key: 'eventsActivations', target: 2500 },
     { key: 'physicalMaterials', target: 800 },
-    { key: 'contentCreation', target: 1200 },
+    { key: 'officeShare', target: 4800 },
   ],
 }
 
@@ -847,9 +849,15 @@ function MarketingPlanTracker() {
 
   const KPI_ROWS = [
     { key: 'newLeadsMonth', targets: ['15-20', '30-50', '60-100'], actual: analytics ? String(analytics.totalLeads) : '—' },
+    { key: 'cac', targets: ['€50-100', '€200-400', '€300-600'], actual: '—' },
     { key: 'leadClientConversion', targets: ['10-15%', '8-12%', '6-10%'], actual: analytics ? `${analytics.conversionRate.toFixed(1)}%` : '—' },
+    { key: 'leadsViaPartners', targets: ['15%', '25-35%', '30-40%'], actual: '—' },
+    { key: 'monthlyChurn', targets: ['<5%', '<3%', '<2%'], actual: '—' },
+    { key: 'nps', targets: ['>7', '>8', '>8.5'], actual: '—' },
     { key: 'mrr', targets: ['€2,500+', '€13,000+', '€50,000+'], actual: '—' },
     { key: 'activeClients', targets: ['3-5', '25+', '100+'], actual: analytics ? String(analytics.totalClients) : '—' },
+    { key: 'operationalManagers', targets: ['2', '4-5', '12+'], actual: '—' },
+    { key: 'validatedCrew', targets: ['3-5', '8-12', '15+'], actual: '—' },
   ]
 
   return (

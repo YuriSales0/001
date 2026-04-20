@@ -597,6 +597,7 @@
       "status": "Status",
       "created": "Created",
       "noLeadsYet": "No leads recorded yet.",
+      "noPlan": "No plan",
       "loading": "Loading analytics...",
       "marketingPlan": {
         "title": "Marketing Plan Tracker",
@@ -637,6 +638,7 @@
         "eventsActivations": "Events & activations",
         "physicalMaterials": "Physical materials",
         "contentCreation": "Content creation",
+        "officeShare": "Office (marketing share)",
         "totalBudget": "Total",
         "weeklyActions": "Weekly Action Items",
         "addTask": "Add task",
