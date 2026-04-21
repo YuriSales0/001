@@ -429,6 +429,17 @@ function LevelGuideCard() {
             </ul>
           </div>
 
+          {/* Monthly Decay */}
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+            <h4 className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">{t('crew.levelGuide.monthlyDecayTitle')}</h4>
+            <p className="text-xs text-amber-700 leading-relaxed">{t('crew.levelGuide.monthlyDecayDesc')}</p>
+            <div className="mt-2 text-xs text-amber-600">
+              <p className="font-semibold">{t('crew.levelGuide.monthlyDecayExample')}</p>
+              <p>Elite 800 pts → 500 + (300 × 30%) = <strong>590 pts</strong></p>
+              <p>Expert 400 pts → 300 + (100 × 30%) = <strong>330 pts</strong></p>
+            </div>
+          </div>
+
           {/* Key Message */}
           <div className="rounded-lg p-3" style={{ background: 'rgba(176,138,62,0.08)', border: '1px solid rgba(176,138,62,0.15)' }}>
             <p className="text-xs font-bold text-gray-800">{t('crew.levelGuide.keyMessage')}</p>

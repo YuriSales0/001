@@ -1489,7 +1489,10 @@
       "loseUnreportedDamage": "Dano não reportado: -50",
       "keyMessage": "Níveis mais altos = mais pagamento por tarefa. Um membro Elite ganha 15% mais que um Básico em cada tarefa.",
       "quarterlyDecay": "Reset trimestral de score",
-      "quarterlyDecayDesc": "A cada trimestre, os scores decaem para o mínimo do nível actual + 20%% do excedente. Desempenho consistente é recompensado — estagnação não."
+      "quarterlyDecayDesc": "A cada trimestre, os scores decaem para o mínimo do nível actual + 20%% do excedente. Desempenho consistente é recompensado — estagnação não.",
+      "monthlyDecayTitle": "Reset Mensal de Score",
+      "monthlyDecayDesc": "No 1º dia de cada mês, o teu score é recalculado para o mínimo do teu nível actual mais 30% do excedente. Isto garante que é necessário desempenho consistente para manter o teu nível — o buffer acumulado é reduzido mensalmente.",
+      "monthlyDecayExample": "Exemplo:"
     }
   },
   "finance": {

@@ -106,7 +106,17 @@ export function NotificationBell() {
     <div ref={ref} className="relative">
       {/* Bell button — prominent with border */}
       <button
-        onClick={() => { setOpen(o => !o); if (!open) load() }}
+        onClick={() => {
+          const wasOpen = open
+          setOpen(o => !o)
+          if (!wasOpen) {
+            load()
+            setTimeout(() => {
+              const unreadItems = items.filter(n => !n.read)
+              if (unreadItems.length > 0) markAllRead()
+            }, 2000)
+          }
+        }}
         className={cn(
           "relative flex items-center justify-center h-10 w-10 rounded-xl border transition-all",
           open

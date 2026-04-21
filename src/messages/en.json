@@ -1488,7 +1488,10 @@
       "loseUnreportedDamage": "Unreported damage: -50",
       "keyMessage": "Higher levels = higher pay per task. An Elite crew member earns 15% more than Basic on every task.",
       "quarterlyDecay": "Quarterly score reset",
-      "quarterlyDecayDesc": "Every quarter, scores decay to the minimum of your current level + 20%% of the excess. Consistently high performance is rewarded — coasting is not."
+      "quarterlyDecayDesc": "Every quarter, scores decay to the minimum of your current level + 20%% of the excess. Consistently high performance is rewarded — coasting is not.",
+      "monthlyDecayTitle": "Monthly Score Reset",
+      "monthlyDecayDesc": "On the 1st of every month, your score resets to the minimum of your current level plus 30% of any excess. This ensures consistent performance is required to maintain your level — accumulated buffer is reduced monthly.",
+      "monthlyDecayExample": "Example:"
     }
   },
   "finance": {

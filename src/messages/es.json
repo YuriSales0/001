@@ -1489,7 +1489,10 @@
       "loseUnreportedDamage": "Daño no reportado: -50",
       "keyMessage": "Niveles más altos = más pago por tarea. Un miembro Elite gana 15% más que un Básico en cada tarea.",
       "quarterlyDecay": "Reset trimestral de score",
-      "quarterlyDecayDesc": "Cada trimestre, los scores decaen al mínimo del nivel actual + 20%% del excedente. El rendimiento consistente se recompensa — la inercia no."
+      "quarterlyDecayDesc": "Cada trimestre, los scores decaen al mínimo del nivel actual + 20%% del excedente. El rendimiento consistente se recompensa — la inercia no.",
+      "monthlyDecayTitle": "Reset Mensual de Score",
+      "monthlyDecayDesc": "El 1º de cada mes, tu score se recalcula al mínimo de tu nivel actual más el 30% del excedente. Esto garantiza que se requiere un rendimiento consistente para mantener tu nivel — el buffer acumulado se reduce mensualmente.",
+      "monthlyDecayExample": "Ejemplo:"
     }
   },
   "finance": {
