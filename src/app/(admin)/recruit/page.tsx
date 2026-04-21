@@ -55,7 +55,7 @@ export default function AdminRecruitPage() {
       const data = await res.json()
       setApps(data)
     } catch {
-      showToast("Failed to load applications", "error")
+      showToast("Something went wrong", "error")
     } finally {
       setLoading(false)
     }
@@ -87,7 +87,7 @@ export default function AdminRecruitPage() {
         if (updated) setSelected(updated)
       }
     } else {
-      showToast("Failed to update", "error")
+      showToast("Something went wrong", "error")
     }
   }
 
@@ -425,7 +425,7 @@ function ConvertModal({
       showToast(`User created and invite sent to ${app.email}`, "success")
       onSuccess()
     } else {
-      setError(data.error ?? "Failed to convert")
+      setError(data.error ?? "Something went wrong")
     }
   }
 

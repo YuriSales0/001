@@ -160,7 +160,7 @@ export default function CrewHome() {
     fetch('/api/me').then(r => r.ok ? r.json() : null).then(d => { if (d) setMe({ isCaptain: d.isCaptain }) }).catch(() => {})
     try {
       const res = await fetch("/api/tasks")
-      if (!res.ok) throw new Error("Failed to load tasks")
+      if (!res.ok) throw new Error(t("crew.home.loadFailed"))
       const data: Task[] = await res.json()
       setTasks(data)
       if (selected) {

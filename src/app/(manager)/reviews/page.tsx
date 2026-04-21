@@ -333,7 +333,7 @@ function ReviewModal({
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        setError(data.error || "Failed to submit review")
+        setError(data.error || t("common.error"))
         return
       }
 

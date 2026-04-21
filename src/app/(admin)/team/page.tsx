@@ -292,12 +292,14 @@ export default function TeamPage() {
 type ManagerOption = { id: string; name: string | null; email: string }
 
 function InviteModal({
+
   managers, onClose, onSuccess,
 }: {
   managers: ManagerOption[]
   onClose: () => void
   onSuccess: () => void
 }) {
+  const { t } = useLocale()
   const [role, setRole] = useState<"MANAGER" | "CREW" | "CLIENT">("MANAGER")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -370,7 +372,7 @@ function InviteModal({
       showToast(`Invite sent to ${email}`, "success")
       onSuccess()
     } else {
-      setError(data.error ?? "Failed to send invite")
+      setError(data.error ?? t("common.error"))
     }
   }
 

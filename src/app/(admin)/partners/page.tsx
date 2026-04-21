@@ -120,7 +120,7 @@ export default function AdminPartnersPage() {
       if (!res.ok) throw new Error()
       setPartners(await res.json())
     } catch {
-      showToast("Failed to load partners", "error")
+      showToast(t("common.error"), "error")
     } finally {
       setLoading(false)
     }
@@ -133,7 +133,7 @@ export default function AdminPartnersPage() {
       if (!res.ok) throw new Error()
       setPayouts(await res.json())
     } catch {
-      showToast("Failed to load payouts", "error")
+      showToast(t("common.error"), "error")
     } finally {
       setPayoutsLoading(false)
     }
@@ -147,7 +147,7 @@ export default function AdminPartnersPage() {
       showToast("Payout marked as paid", "success")
       loadPayouts()
     } catch {
-      showToast("Failed to mark payout as paid", "error")
+      showToast(t("common.error"), "error")
     } finally {
       setPayingId(null)
     }
@@ -226,7 +226,7 @@ export default function AdminPartnersPage() {
       setShowModal(false)
       load()
     } catch {
-      showToast("Failed to save partner", "error")
+      showToast(t("common.error"), "error")
     } finally {
       setSaving(false)
     }
@@ -239,7 +239,7 @@ export default function AdminPartnersPage() {
       showToast("Partner deactivated", "success")
       load()
     } else {
-      showToast("Failed to deactivate", "error")
+      showToast(t("common.error"), "error")
     }
   }
 
