@@ -504,13 +504,13 @@ function AnalyticsDashboard() {
           </div>
           <div className="rounded-lg border overflow-hidden" style={{ background: '#f8f9fa' }}>
             <iframe
-              src="https://lookerstudio.google.com/embed/reporting/3715d9ae-3e58-4e2c-8f7a-326eb81fcb8d"
+              src="https://datastudio.google.com/embed/reporting/3715d9ae-3e58-4e2c-8f7a-326eb81fcb8d/page/X8nvF"
               width="100%"
               height="500"
               frameBorder="0"
               style={{ border: 0, minHeight: '500px' }}
               allowFullScreen
-              sandbox="allow-scripts allow-same-origin allow-popups"
+              sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
             />
             <div className="px-4 py-3 bg-white border-t text-xs text-gray-400 text-center">
               {t('admin.marketing.gaNote')}
