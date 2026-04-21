@@ -739,7 +739,11 @@
       "openGA": "Abrir Google Analytics",
       "gaRegisterDesc": "Acompanha conversões de registo e funil de inscrição",
       "gaCareersDesc": "Acompanha candidaturas de Manager/Crew da página careers",
-      "gaNote": "Para dados em tempo real detalhados, abre o Google Analytics directamente. Conecta o Looker Studio para dashboards embebidos."
+      "gaNote": "Para dados em tempo real detalhados, abre o Google Analytics directamente. Conecta o Looker Studio para dashboards embebidos.",
+      "recentSignups": "Registos Recentes",
+      "recentApplications": "Candidaturas Careers",
+      "noSignups": "Sem registos ainda",
+      "noApplications": "Sem candidaturas ainda"
     },
     "partners": {
       "title": "Parceiros",

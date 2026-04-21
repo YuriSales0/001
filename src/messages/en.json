@@ -886,7 +886,11 @@
       "openGA": "Open Google Analytics",
       "gaRegisterDesc": "Tracks sign-up conversions and registration funnel",
       "gaCareersDesc": "Tracks Manager/Crew applications from careers page",
-      "gaNote": "For detailed real-time data, open Google Analytics directly. Connect Looker Studio for embedded dashboards."
+      "gaNote": "For detailed real-time data, open Google Analytics directly. Connect Looker Studio for embedded dashboards.",
+      "recentSignups": "Recent Sign-ups",
+      "recentApplications": "Career Applications",
+      "noSignups": "No sign-ups yet",
+      "noApplications": "No applications yet"
     },
     "partners": {
       "title": "Partners",

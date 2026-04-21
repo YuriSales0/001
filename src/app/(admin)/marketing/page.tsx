@@ -82,6 +82,8 @@ function AnalyticsDashboard() {
   const [customTo, setCustomTo] = useState('')
   const [showCustom, setShowCustom] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [recentUsers, setRecentUsers] = useState<{ id: string; name: string | null; email: string; language: string; createdAt: string }[]>([])
+  const [recentRecruits, setRecentRecruits] = useState<{ id: string; name: string; email: string; role: string; status: string; createdAt: string }[]>([])
 
   const dateRange = useMemo(() => {
     const now = new Date()
@@ -118,9 +120,15 @@ function AnalyticsDashboard() {
       const params = new URLSearchParams()
       if (dateRange.from) params.set('from', dateRange.from)
       if (dateRange.to) params.set('to', dateRange.to)
-      const res = await fetch(`/api/admin/marketing-analytics?${params}`)
+      const [res, usersRes, recruitsRes] = await Promise.all([
+        fetch(`/api/admin/marketing-analytics?${params}`),
+        fetch('/api/users?role=CLIENT&take=10&orderBy=createdAt'),
+        fetch('/api/recruit?take=10'),
+      ])
       if (res.ok) setData(await res.json())
       else setError(t('common.error'))
+      if (usersRes.ok) setRecentUsers(await usersRes.json())
+      if (recruitsRes.ok) { const r = await recruitsRes.json(); setRecentRecruits(Array.isArray(r) ? r : r.data ?? []) }
     } catch {
       setError(t('common.error'))
     } finally {
@@ -507,6 +515,81 @@ function AnalyticsDashboard() {
             <div className="px-4 py-3 bg-white border-t text-xs text-gray-400 text-center">
               {t('admin.marketing.gaNote')}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Registrations & Career Applications */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Sign-ups */}
+        <div className="rounded-hm border border-hm-border bg-white overflow-hidden">
+          <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-hm-black uppercase tracking-wider">{t('admin.marketing.recentSignups')}</h3>
+            <span className="text-xs font-bold rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700">{data?.totalClients ?? 0}</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
+                <tr>
+                  <th className="px-5 py-2.5">{t('admin.marketing.name')}</th>
+                  <th className="px-5 py-2.5">{t('admin.marketing.email')}</th>
+                  <th className="px-5 py-2.5">{t('common.language')}</th>
+                  <th className="px-5 py-2.5">{t('admin.marketing.created')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(!recentUsers || recentUsers.length === 0) && (
+                  <tr><td colSpan={4} className="px-5 py-6 text-center text-xs text-gray-400">{t('admin.marketing.noSignups')}</td></tr>
+                )}
+                {recentUsers?.map(u => (
+                  <tr key={u.id} className="border-t hover:bg-gray-50">
+                    <td className="px-5 py-2.5 font-medium text-hm-black">{u.name ?? '—'}</td>
+                    <td className="px-5 py-2.5 text-gray-500 truncate max-w-[180px]">{u.email}</td>
+                    <td className="px-5 py-2.5"><span className="text-xs">{u.language?.toUpperCase()}</span></td>
+                    <td className="px-5 py-2.5 text-gray-400 text-xs">{new Date(u.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Recent Career Applications */}
+        <div className="rounded-hm border border-hm-border bg-white overflow-hidden">
+          <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-hm-black uppercase tracking-wider">{t('admin.marketing.recentApplications')}</h3>
+            <span className="text-xs font-bold rounded-full px-2 py-0.5 bg-blue-100 text-blue-700">{recentRecruits?.length ?? 0}</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
+                <tr>
+                  <th className="px-5 py-2.5">{t('admin.marketing.name')}</th>
+                  <th className="px-5 py-2.5">{t('admin.marketing.email')}</th>
+                  <th className="px-5 py-2.5">{t('common.status')}</th>
+                  <th className="px-5 py-2.5">{t('admin.marketing.created')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(!recentRecruits || recentRecruits.length === 0) && (
+                  <tr><td colSpan={4} className="px-5 py-6 text-center text-xs text-gray-400">{t('admin.marketing.noApplications')}</td></tr>
+                )}
+                {recentRecruits?.map(r => (
+                  <tr key={r.id} className="border-t hover:bg-gray-50">
+                    <td className="px-5 py-2.5 font-medium text-hm-black">{r.name}</td>
+                    <td className="px-5 py-2.5 text-gray-500 truncate max-w-[180px]">{r.email}</td>
+                    <td className="px-5 py-2.5">
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        r.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
+                        r.status === 'REJECTED' ? 'bg-red-100 text-red-600' :
+                        'bg-amber-100 text-amber-700'
+                      }`}>{r.role} · {r.status}</span>
+                    </td>
+                    <td className="px-5 py-2.5 text-gray-400 text-xs">{new Date(r.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
