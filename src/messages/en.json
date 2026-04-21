@@ -1215,7 +1215,13 @@
         "creatingStockEntries": "Creating stock entries...",
         "stockEntriesCreated": "Stock entries created successfully",
         "stockEntriesFailed": "Some stock entries failed to create"
-      }
+      },
+      "scanInvoice": "Scan invoice",
+      "scanning": "Scanning...",
+      "manualEntry": "Manual entry",
+      "ocrSuccess": "Invoice scanned — review the data",
+      "ocrFailed": "Failed to scan invoice",
+      "imageTooLarge": "Image too large (max 10MB)"
     },
     "team": {
       "cannotDeleteSelf": "You cannot delete your own account."

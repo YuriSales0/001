@@ -1043,7 +1043,13 @@
         "creatingStockEntries": "Creando entradas de stock...",
         "stockEntriesCreated": "Entradas de stock creadas con exito",
         "stockEntriesFailed": "Algunas entradas de stock fallaron"
-      }
+      },
+      "scanInvoice": "Escanear factura",
+      "scanning": "Escaneando...",
+      "manualEntry": "Entrada manual",
+      "ocrSuccess": "Factura escaneada — revisa los datos",
+      "ocrFailed": "Error al escanear factura",
+      "imageTooLarge": "Imagen demasiado grande (máx 10MB)"
     },
     "team": {
       "cannotDeleteSelf": "No puedes eliminar tu propia cuenta."

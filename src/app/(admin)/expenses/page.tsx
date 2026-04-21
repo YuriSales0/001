@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { DollarSign, Plus, Filter, CheckCircle2, Clock, X, Loader2 } from "lucide-react"
+import { DollarSign, Plus, Filter, CheckCircle2, Clock, X, Loader2, Camera, Upload } from "lucide-react"
+import { showToast } from "@/components/hm/toast"
 import { useLocale } from "@/i18n/provider"
 
 type Expense = {
@@ -54,6 +55,48 @@ export default function ExpensesPage() {
   const [filterCategory, setFilterCategory] = useState("")
   const [filterStatus, setFilterStatus] = useState("")
   const [showCreate, setShowCreate] = useState(false)
+  const [scanning, setScanning] = useState(false)
+  const [ocrResult, setOcrResult] = useState<{
+    supplierName: string | null; supplierTaxId: string | null; invoiceNumber: string | null
+    date: string | null; items: { description: string; quantity: number; unitPrice: number }[]
+    subtotal: number | null; vatRate: number | null; vatAmount: number | null; total: number | null
+    category: string; suggestedCategory: string | null
+  } | null>(null)
+  const fileInputRef = useState<HTMLInputElement | null>(null)
+
+  const handleOcrUpload = async (file: File) => {
+    if (file.size > 10 * 1024 * 1024) {
+      showToast(t('admin.expenses.imageTooLarge'), 'error')
+      return
+    }
+    setScanning(true)
+    try {
+      const reader = new FileReader()
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
+      const res = await fetch('/api/admin/expenses/ocr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: dataUrl }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        showToast(err.error ?? t('admin.expenses.ocrFailed'), 'error')
+        return
+      }
+      const data = await res.json()
+      setOcrResult(data)
+      setShowCreate(true)
+      showToast(t('admin.expenses.ocrSuccess'), 'success')
+    } catch {
+      showToast(t('admin.expenses.ocrFailed'), 'error')
+    } finally {
+      setScanning(false)
+    }
+  }
 
   const loadExpenses = useCallback(async () => {
     setLoading(true)
@@ -128,12 +171,32 @@ export default function ExpensesPage() {
           </h1>
           <p className="text-sm text-gray-500 mt-1">{t("admin.expenses.subtitle")}</p>
         </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
-        >
-          <Plus className="h-4 w-4" /> {t("admin.expenses.newExpense")}
-        </button>
+        <div className="flex items-center gap-2">
+          {/* OCR Upload Button */}
+          <label className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold cursor-pointer transition-all hover:brightness-110 ${scanning ? 'opacity-50 pointer-events-none' : ''}`}
+                 style={{ background: '#B08A3E', color: '#0B1E3A' }}>
+            {scanning ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> {t("admin.expenses.scanning")}</>
+            ) : (
+              <><Camera className="h-4 w-4" /> {t("admin.expenses.scanInvoice")}</>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={e => { const f = e.target.files?.[0]; if (f) handleOcrUpload(f); e.target.value = '' }}
+            />
+          </label>
+
+          {/* Manual Entry Button */}
+          <button
+            onClick={() => { setOcrResult(null); setShowCreate(true) }}
+            className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
+          >
+            <Plus className="h-4 w-4" /> {t("admin.expenses.manualEntry")}
+          </button>
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -261,24 +324,39 @@ export default function ExpensesPage() {
       {/* Create Modal */}
       {showCreate && (
         <CreateExpenseModal
-          onClose={() => setShowCreate(false)}
-          onCreated={() => { setShowCreate(false); loadExpenses() }}
+          onClose={() => { setShowCreate(false); setOcrResult(null) }}
+          onCreated={() => { setShowCreate(false); setOcrResult(null); loadExpenses() }}
+          ocrData={ocrResult}
         />
       )}
     </div>
   )
 }
 
-function CreateExpenseModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+type OcrData = {
+  supplierName: string | null; supplierTaxId: string | null; invoiceNumber: string | null
+  date: string | null; items: { description: string; quantity: number; unitPrice: number }[]
+  subtotal: number | null; vatRate: number | null; vatAmount: number | null; total: number | null
+  category: string; suggestedCategory: string | null
+} | null
+
+function CreateExpenseModal({ onClose, onCreated, ocrData }: { onClose: () => void; onCreated: () => void; ocrData?: OcrData }) {
   const { t } = useLocale()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [form, setForm] = useState({
-    description: "",
-    category: "OTHER",
-    amount: "",
-    supplierName: "",
-    expenseDate: new Date().toISOString().slice(0, 10),
+    description: ocrData?.items?.map(i => i.description).join(', ') || "",
+    category: ocrData?.category || "OTHER",
+    amount: ocrData?.total ? String(ocrData.total) : "",
+    vatRate: ocrData?.vatRate ? String(ocrData.vatRate) : "",
+    vatAmount: ocrData?.vatAmount ? String(ocrData.vatAmount) : "",
+    supplierName: ocrData?.supplierName || "",
+    supplierTaxId: ocrData?.supplierTaxId || "",
+    supplierInvoice: ocrData?.invoiceNumber || "",
+    expenseDate: ocrData?.date || new Date().toISOString().slice(0, 10),
+    notes: "",
+    paymentMethod: "",
+    autoStockEntry: ocrData?.category === 'CONSUMABLES' || ocrData?.category === 'LAUNDRY',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -290,8 +368,18 @@ function CreateExpenseModal({ onClose, onCreated }: { onClose: () => void; onCre
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
+          description: form.description,
+          category: form.category,
           amount: parseFloat(form.amount),
+          vatRate: form.vatRate ? parseFloat(form.vatRate) : undefined,
+          vatAmount: form.vatAmount ? parseFloat(form.vatAmount) : undefined,
+          supplierName: form.supplierName,
+          supplierTaxId: form.supplierTaxId || undefined,
+          supplierInvoice: form.supplierInvoice || undefined,
+          expenseDate: form.expenseDate,
+          notes: form.notes || undefined,
+          paymentMethod: form.paymentMethod || undefined,
+          autoStockEntry: form.autoStockEntry,
         }),
       })
       if (res.ok) {

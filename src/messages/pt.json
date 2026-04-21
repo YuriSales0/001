@@ -1043,7 +1043,13 @@
         "creatingStockEntries": "A criar entradas de stock...",
         "stockEntriesCreated": "Entradas de stock criadas com sucesso",
         "stockEntriesFailed": "Algumas entradas de stock falharam"
-      }
+      },
+      "scanInvoice": "Digitalizar factura",
+      "scanning": "A digitalizar...",
+      "manualEntry": "Entrada manual",
+      "ocrSuccess": "Factura digitalizada — revê os dados",
+      "ocrFailed": "Erro ao digitalizar factura",
+      "imageTooLarge": "Imagem demasiado grande (máx 10MB)"
     },
     "team": {
       "cannotDeleteSelf": "Não podes eliminar a tua própria conta."
