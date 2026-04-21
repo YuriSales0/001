@@ -138,6 +138,13 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
     setSubmitting(false)
     if (res.ok) {
       setSubmitted(true)
+      if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'generate_lead', {
+          send_to: 'G-GE38PW30QQ',
+          event_category: 'careers',
+          event_label: role,
+        })
+      }
     } else {
       const data = await res.json().catch(() => ({}))
       setError(data.error || t("common.error"))

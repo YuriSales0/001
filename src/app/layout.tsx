@@ -65,7 +65,21 @@ export default async function RootLayout({
             <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`} />
             <script dangerouslySetInnerHTML={{ __html: `
               window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
-              gtag('js',new Date());gtag('config','${process.env.NEXT_PUBLIC_GA_ID}');
+              gtag('js',new Date());
+              gtag('config','${process.env.NEXT_PUBLIC_GA_ID}');
+              gtag('config','G-61YMZ4P4MT');
+              gtag('config','G-GE38PW30QQ');
+            `}} />
+          </>
+        )}
+        {!process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-61YMZ4P4MT" />
+            <script dangerouslySetInnerHTML={{ __html: `
+              window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+              gtag('js',new Date());
+              gtag('config','G-61YMZ4P4MT');
+              gtag('config','G-GE38PW30QQ');
             `}} />
           </>
         )}

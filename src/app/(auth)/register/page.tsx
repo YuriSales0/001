@@ -47,7 +47,14 @@ export default function RegisterPage() {
         setError(data.error || t("common.error"))
         return
       }
-      // Set locale to selected language — cookie persists through redirect
+      // GA conversion event for register flow
+      if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'sign_up', {
+          send_to: 'G-61YMZ4P4MT',
+          method: 'email',
+          language: form.language,
+        })
+      }
       setLocale(form.language as Locale)
       router.push(`/login?registered=1&lang=${form.language}`)
     } finally {
