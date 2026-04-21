@@ -35,6 +35,11 @@ export async function POST(
 
   const body = await req.json().catch(() => ({}))
   const photo = body?.photo
+  // Block uploads after task is APPROVED/COMPLETED (audit trail integrity)
+  if (['APPROVED', 'COMPLETED'].includes(task.status)) {
+    return NextResponse.json({ error: 'Cannot modify photos after approval' }, { status: 403 })
+  }
+
   if (typeof photo !== 'string' || !photo.startsWith('data:image/')) {
     return NextResponse.json({ error: 'photo must be a data URL (image/jpeg, image/png, image/webp)' }, { status: 400 })
   }
@@ -83,9 +88,9 @@ export async function DELETE(
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  // Crew cannot remove photos after the task is completed (audit trail)
-  if (me.role === 'CREW' && task.status === 'COMPLETED') {
-    return NextResponse.json({ error: 'Cannot edit photos after completion' }, { status: 403 })
+  // Cannot modify photos after approval/completion (audit trail)
+  if (['APPROVED', 'COMPLETED', 'SUBMITTED'].includes(task.status) && me.role === 'CREW') {
+    return NextResponse.json({ error: 'Cannot modify photos after submission' }, { status: 403 })
   }
 
   const next = task.photos.filter((_, i) => i !== idx)
