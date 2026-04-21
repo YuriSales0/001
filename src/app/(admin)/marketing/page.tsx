@@ -504,11 +504,11 @@ function AnalyticsDashboard() {
           </div>
           <div className="rounded-lg border overflow-hidden" style={{ background: '#f8f9fa' }}>
             <iframe
-              src="https://lookerstudio.google.com/embed/reporting/create?c.reportId=7&c.mode=view&ds.connector=googleAnalytics&ds.datasourceName=HostMasters"
+              src="https://lookerstudio.google.com/embed/reporting/3715d9ae-3e58-4e2c-8f7a-326eb81fcb8d"
               width="100%"
-              height="400"
+              height="500"
               frameBorder="0"
-              style={{ border: 0, minHeight: '400px' }}
+              style={{ border: 0, minHeight: '500px' }}
               allowFullScreen
               sandbox="allow-scripts allow-same-origin allow-popups"
             />
