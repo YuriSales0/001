@@ -1440,7 +1440,8 @@
         "notAccepted": "Task not accepted",
         "acceptedNotDone": "Accepted but not done",
         "complaint": "Complaint received",
-        "unreportedDamage": "Unreported damage"
+        "unreportedDamage": "Unreported damage",
+        "quarterlyDecay": "Quarterly score reset"
       }
     },
     "calendar": {
@@ -1483,7 +1484,9 @@
       "loseNotCompleted": "Accepted but not completed: -30",
       "loseComplaint": "Documented complaint: -40",
       "loseUnreportedDamage": "Unreported damage: -50",
-      "keyMessage": "Higher levels = higher pay per task. An Elite crew member earns 15% more than Basic on every task."
+      "keyMessage": "Higher levels = higher pay per task. An Elite crew member earns 15% more than Basic on every task.",
+      "quarterlyDecay": "Quarterly score reset",
+      "quarterlyDecayDesc": "Every quarter, scores decay to the minimum of your current level + 20%% of the excess. Consistently high performance is rewarded — coasting is not."
     }
   },
   "finance": {

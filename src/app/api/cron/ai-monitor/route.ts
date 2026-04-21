@@ -258,6 +258,11 @@ export async function GET(request: NextRequest) {
   if (new Date().getUTCDay() === 3) jobs.push('/api/cron/crew-payout')
   // Market scrape only on Sundays
   if (new Date().getUTCDay() === 0) jobs.push('/api/cron/scrape-market')
+  // Quarterly score decay on 1st of Jan/Apr/Jul/Oct
+  const today = new Date()
+  if (today.getUTCDate() === 1 && [0, 3, 6, 9].includes(today.getUTCMonth())) {
+    jobs.push('/api/cron/crew-score-decay')
+  }
 
   await Promise.allSettled(
     jobs.map(path => fetch(`${baseUrl}${path}`, { method: 'POST', headers }).catch(() => {}))

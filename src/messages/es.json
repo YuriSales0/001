@@ -1441,7 +1441,8 @@
         "notAccepted": "Tarea no aceptada",
         "acceptedNotDone": "Aceptada pero no completada",
         "complaint": "Reclamacion recibida",
-        "unreportedDamage": "Dano no reportado"
+        "unreportedDamage": "Dano no reportado",
+        "quarterlyDecay": "Reset trimestral de score"
       }
     },
     "calendar": {
@@ -1484,7 +1485,9 @@
       "loseNotCompleted": "Aceptada pero no completada: -30",
       "loseComplaint": "Reclamación documentada: -40",
       "loseUnreportedDamage": "Daño no reportado: -50",
-      "keyMessage": "Niveles más altos = más pago por tarea. Un miembro Elite gana 15% más que un Básico en cada tarea."
+      "keyMessage": "Niveles más altos = más pago por tarea. Un miembro Elite gana 15% más que un Básico en cada tarea.",
+      "quarterlyDecay": "Reset trimestral de score",
+      "quarterlyDecayDesc": "Cada trimestre, los scores decaen al mínimo del nivel actual + 20%% del excedente. El rendimiento consistente se recompensa — la inercia no."
     }
   },
   "finance": {
