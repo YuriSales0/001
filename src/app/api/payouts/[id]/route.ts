@@ -67,9 +67,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (status === 'PAID') data.paidAt = new Date()
     if (status === 'CANCELLED') data.cancelledAt = new Date()
 
-    // Atomically update the payout + create the auto-invoice (when marking PAID)
-    // so we never end up with a PAID payout without its corresponding invoice.
+    // Atomically check status + update + create invoice
     const { payout, invoice } = await prisma.$transaction(async (tx) => {
+      // Re-check status inside transaction to prevent race conditions
+      const fresh = await tx.payout.findUnique({ where: { id: params.id }, select: { status: true } })
+      if (status === 'PAID' && fresh?.status === 'PAID') throw new Error('ALREADY_PAID')
+
       const payout = await tx.payout.update({
         where: { id: params.id },
         data,
@@ -192,6 +195,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     return NextResponse.json(payout)
   } catch (error) {
+    if (error instanceof Error && error.message === 'ALREADY_PAID') {
+      return NextResponse.json({ error: 'Payout already paid' }, { status: 409 })
+    }
     console.error('Error updating payout:', error)
     return NextResponse.json({ error: 'Failed to update payout' }, { status: 500 })
   }

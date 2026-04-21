@@ -124,14 +124,28 @@ export async function PUT(
       // Cancel ALL associated pending/notified/confirmed tasks
       const res = await prisma.reservation.findUnique({ where: { id }, select: { propertyId: true, checkIn: true, checkOut: true } })
       if (res) {
+        // Cancel tasks
         await prisma.task.updateMany({
           where: {
             propertyId: res.propertyId,
-            status: { in: ['PENDING', 'NOTIFIED', 'CONFIRMED', 'IN_PROGRESS'] },
+            status: { in: ['PENDING', 'NOTIFIED', 'CONFIRMED', 'IN_PROGRESS', 'SUBMITTED', 'REDISTRIBUTED'] },
             dueDate: { gte: res.checkIn, lte: res.checkOut },
           },
           data: { status: 'COMPLETED' },
         })
+
+        // Void any PENDING crew payouts containing tasks for this reservation
+        const affectedTasks = await prisma.task.findMany({
+          where: { propertyId: res.propertyId, dueDate: { gte: res.checkIn, lte: res.checkOut }, crewPayoutId: { not: null } },
+          select: { crewPayoutId: true },
+        })
+        const payoutIds = Array.from(new Set(affectedTasks.map(t => t.crewPayoutId).filter(Boolean))) as string[]
+        if (payoutIds.length > 0) {
+          await prisma.crewPayout.updateMany({
+            where: { id: { in: payoutIds }, status: 'PENDING' },
+            data: { status: 'FAILED', failedReason: 'Reservation cancelled' },
+          })
+        }
       }
     }
 

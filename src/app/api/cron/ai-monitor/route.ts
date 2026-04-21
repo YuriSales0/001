@@ -253,6 +253,7 @@ export async function GET(request: NextRequest) {
   const jobs = [
     '/api/cron/crew-confirmation-timeout',
     '/api/cron/notification-cleanup',
+    '/api/cron/partner-payout-approval',
   ]
   // Crew payout only on Wednesdays
   if (new Date().getUTCDay() === 3) jobs.push('/api/cron/crew-payout')
