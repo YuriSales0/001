@@ -881,7 +881,12 @@
         "weeklyLeadFollowUp": "Follow up on all warm leads",
         "setAsCurrent": "Set as current phase",
         "metricsFilteredFrom": "Metrics counting from the start of"
-      }
+      },
+      "gaRealtime": "Site Analytics · Real-time",
+      "openGA": "Open Google Analytics",
+      "gaRegisterDesc": "Tracks sign-up conversions and registration funnel",
+      "gaCareersDesc": "Tracks Manager/Crew applications from careers page",
+      "gaNote": "For detailed real-time data, open Google Analytics directly. Connect Looker Studio for embedded dashboards."
     },
     "partners": {
       "title": "Partners",

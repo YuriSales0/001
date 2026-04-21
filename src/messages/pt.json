@@ -734,7 +734,12 @@
         "weeklyLeadFollowUp": "Seguimento de todos os leads quentes",
         "setAsCurrent": "Definir como fase actual",
         "metricsFilteredFrom": "Métricas a contar desde o início de"
-      }
+      },
+      "gaRealtime": "Analytics do Site · Tempo real",
+      "openGA": "Abrir Google Analytics",
+      "gaRegisterDesc": "Acompanha conversões de registo e funil de inscrição",
+      "gaCareersDesc": "Acompanha candidaturas de Manager/Crew da página careers",
+      "gaNote": "Para dados em tempo real detalhados, abre o Google Analytics directamente. Conecta o Looker Studio para dashboards embebidos."
     },
     "partners": {
       "title": "Parceiros",

@@ -469,6 +469,48 @@ function AnalyticsDashboard() {
         </>
       ) : null}
 
+      {/* GA4 Real-time & Site Analytics */}
+      <div className="rounded-hm border border-hm-border bg-white overflow-hidden">
+        <div className="px-5 py-4 border-b border-hm-border flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <h3 className="font-serif font-bold text-hm-black">{t('admin.marketing.gaRealtime')}</h3>
+          </div>
+          <a href="https://analytics.google.com/analytics/web/#/p/G-61YMZ4P4MT/reports" target="_blank" rel="noopener noreferrer"
+            className="text-xs font-medium hover:underline" style={{ color: '#B08A3E' }}>
+            {t('admin.marketing.openGA')} →
+          </a>
+        </div>
+        <div className="p-4 space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="rounded-lg border border-hm-border p-4" style={{ background: 'var(--hm-sand)' }}>
+              <div className="text-xs uppercase text-gray-500 mb-1">Register Flow</div>
+              <div className="text-lg font-bold text-hm-black">G-61YMZ4P4MT</div>
+              <p className="text-xs text-gray-400 mt-1">{t('admin.marketing.gaRegisterDesc')}</p>
+            </div>
+            <div className="rounded-lg border border-hm-border p-4" style={{ background: 'var(--hm-sand)' }}>
+              <div className="text-xs uppercase text-gray-500 mb-1">Careers Flow</div>
+              <div className="text-lg font-bold text-hm-black">G-GE38PW30QQ</div>
+              <p className="text-xs text-gray-400 mt-1">{t('admin.marketing.gaCareersDesc')}</p>
+            </div>
+          </div>
+          <div className="rounded-lg border overflow-hidden" style={{ background: '#f8f9fa' }}>
+            <iframe
+              src="https://lookerstudio.google.com/embed/reporting/create?c.reportId=7&c.mode=view&ds.connector=googleAnalytics&ds.datasourceName=HostMasters"
+              width="100%"
+              height="400"
+              frameBorder="0"
+              style={{ border: 0, minHeight: '400px' }}
+              allowFullScreen
+              sandbox="allow-scripts allow-same-origin allow-popups"
+            />
+            <div className="px-4 py-3 bg-white border-t text-xs text-gray-400 text-center">
+              {t('admin.marketing.gaNote')}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Divider */}
       <div className="border-t border-hm-border" />
     </div>

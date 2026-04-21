@@ -734,7 +734,12 @@
         "weeklyLeadFollowUp": "Seguimiento de todos los leads calientes",
         "setAsCurrent": "Definir como fase actual",
         "metricsFilteredFrom": "Métricas contando desde el inicio de"
-      }
+      },
+      "gaRealtime": "Analytics del Sitio · Tiempo real",
+      "openGA": "Abrir Google Analytics",
+      "gaRegisterDesc": "Rastrea conversiones de registro y embudo de inscripción",
+      "gaCareersDesc": "Rastrea solicitudes de Manager/Crew desde la página de carreras",
+      "gaNote": "Para datos en tiempo real detallados, abre Google Analytics directamente. Conecta Looker Studio para dashboards integrados."
     },
     "partners": {
       "title": "Socios",
