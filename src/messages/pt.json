@@ -1393,7 +1393,9 @@
       "acceptTask": "Aceitar tarefa",
       "declineTask": "Recusar",
       "consumablesTitle": "Consumíveis para esta tarefa",
-      "consumablesReminder": "Lembra-te de registar levantamentos e devoluções de consumíveis com o teu Captain"
+      "consumablesReminder": "Lembra-te de registar levantamentos e devoluções de consumíveis com o teu Captain",
+      "confirmPickup": "Confirmar retirada de stock",
+      "stockWithdrawn": "Stock retirado com sucesso"
     },
     "score": {
       "suspended": "Suspenso",

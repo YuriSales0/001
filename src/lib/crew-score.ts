@@ -11,7 +11,7 @@ const SCORE_TABLE: Record<string, number> = {
   ACCEPTED_NOT_DONE:   -30,
   COMPLAINT:           -40,
   UNREPORTED_DAMAGE:   -50,
-  QUARTERLY_DECAY:     0, // calculated dynamically, not a fixed delta
+  MONTHLY_DECAY:       0, // calculated dynamically, not a fixed delta
 }
 
 function levelForScore(score: number): CrewScoreLevel {
@@ -115,9 +115,9 @@ const LEVEL_MIN: Record<string, number> = {
   ELITE: 500, EXPERT: 300, VERIFIED: 150, BASIC: 50, SUSPENDED: 0,
 }
 
-const DECAY_RETAIN_PCT = 0.20
+const DECAY_RETAIN_PCT = 0.30
 
-async function quarterlyDecay() {
+async function scoreDecay() {
   const allScores = await prisma.crewScore.findMany({
     select: { id: true, userId: true, currentScore: true, level: true },
   })
@@ -140,7 +140,7 @@ async function quarterlyDecay() {
         data: {
           crewScoreId: score.id,
           delta: newScore - score.currentScore,
-          reason: 'QUARTERLY_DECAY',
+          reason: 'MONTHLY_DECAY',
           scoreBefore: score.currentScore,
           scoreAfter: newScore,
         },
@@ -174,5 +174,5 @@ export const crewScoreEngine = {
   bonusRate,
   getOrCreateScore,
   applyDelta,
-  quarterlyDecay,
+  scoreDecay,
 }

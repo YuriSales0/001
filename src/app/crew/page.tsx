@@ -95,6 +95,7 @@ export default function CrewHome() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [consumables, setConsumables] = useState<Consumable[]>([])
+  const [me, setMe] = useState<{ isCaptain?: boolean } | null>(null)
   const [loadingConsumables, setLoadingConsumables] = useState(false)
 
   // Fetch consumables when a property-visit task is selected
@@ -156,6 +157,7 @@ export default function CrewHome() {
   const load = async () => {
     setLoading(true)
     setError(null)
+    fetch('/api/me').then(r => r.ok ? r.json() : null).then(d => { if (d) setMe({ isCaptain: d.isCaptain }) }).catch(() => {})
     try {
       const res = await fetch("/api/tasks")
       if (!res.ok) throw new Error("Failed to load tasks")
@@ -450,6 +452,25 @@ export default function CrewHome() {
                         </li>
                       ))}
                     </ul>
+                  )}
+                  {!loadingConsumables && consumables.length > 0 && me?.isCaptain && selected.status === 'CONFIRMED' && (
+                    <button
+                      onClick={async () => {
+                        setSaving(true)
+                        await fetch('/api/admin/consumables/checkout-for-task', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ taskId: selected.id, propertyId: selected.property.id }),
+                        })
+                        setSaving(false)
+                        showToast(t('crew.detail.stockWithdrawn'), 'success')
+                      }}
+                      disabled={saving}
+                      className="w-full mt-3 rounded-lg py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                      style={{ background: 'var(--hm-gold)' }}
+                    >
+                      <Package className="h-4 w-4 inline mr-1" /> {t('crew.detail.confirmPickup')}
+                    </button>
                   )}
                 </div>
               </div>

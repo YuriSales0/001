@@ -1392,7 +1392,9 @@
       "acceptTask": "Accept task",
       "declineTask": "Decline",
       "consumablesTitle": "Consumables for this task",
-      "consumablesReminder": "Remember to register consumable pickups and returns with your Captain"
+      "consumablesReminder": "Remember to register consumable pickups and returns with your Captain",
+      "confirmPickup": "Confirm stock pickup",
+      "stockWithdrawn": "Stock withdrawn successfully"
     },
     "score": {
       "suspended": "Suspended",

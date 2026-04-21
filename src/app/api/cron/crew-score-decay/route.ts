@@ -3,11 +3,8 @@ import { crewScoreEngine } from '@/lib/crew-score'
 
 /**
  * POST /api/cron/crew-score-decay
- * Quarterly crew score decay — resets scores to level minimum + 20% of excess.
- * Prevents high-scoring crew from coasting with a large buffer.
- *
- * Should run on Jan 1, Apr 1, Jul 1, Oct 1 — triggered by AI Monitor
- * on the 1st day of those months.
+ * Monthly crew score decay — resets scores to level minimum + 30% of excess.
+ * Runs on the 1st of every month via AI Monitor.
  */
 export async function POST(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
@@ -18,6 +15,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const result = await crewScoreEngine.quarterlyDecay()
+  const result = await crewScoreEngine.scoreDecay()
   return NextResponse.json(result)
 }
