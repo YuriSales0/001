@@ -493,7 +493,8 @@
       "typeCleaner": "Limpeza",
       "typePlumber": "Canalizador",
       "typeElectrician": "Eletricista",
-      "typeGeneral": "Geral"
+      "typeGeneral": "Geral",
+      "deleteConfirm": "Apagar este fornecedor? Esta acção não pode ser revertida."
     },
     "messages": {
       "loadError": "Erro ao carregar dados",
@@ -790,6 +791,7 @@
       "subtitle": "Gere propriedades, aprova pedidos e conecta calendários OTA.",
       "newProperty": "Nova Propriedade",
       "noProperties": "Nenhuma propriedade. Cria a primeira com o botão acima.",
+      "noMatch": "Nenhuma propriedade corresponde aos filtros.",
       "owner": "Proprietário",
       "statusPendingClient": "Aguarda confirmação do cliente",
       "statusPendingApproval": "Aguarda configuração OTA",

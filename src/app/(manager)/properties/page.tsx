@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useLocale } from "@/i18n/provider"
 import { Plus, X, Building2, MapPin, User, Bed, Bath, TrendingUp } from "lucide-react"
 
 type PropertyStatus = "ACTIVE" | "INACTIVE" | "MAINTENANCE" | "PENDING"
@@ -25,6 +26,7 @@ const STATUS_COLOR: Record<PropertyStatus, string> = {
 }
 
 export default function PropertiesPage() {
+  const { t } = useLocale()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [filterStatus, setFilterStatus] = useState("all")
@@ -113,7 +115,7 @@ export default function PropertiesPage() {
         {loading && <div className="space-y-4 animate-pulse py-4"><div className="h-8 rounded-hm bg-hm-sand w-48" /><div className="h-40 rounded-hm bg-hm-sand" /></div>}
         {!loading && filtered.length === 0 && (
           <div className="py-12 text-center text-sm text-gray-400 rounded-hm border bg-white">
-            No properties match your filters.
+            {t('admin.properties.noMatch')}
           </div>
         )}
         {filtered.map(p => (

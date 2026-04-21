@@ -88,8 +88,8 @@ export default function SuppliersPage() {
     load()
   }
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
+  const handleDelete = async (id: string, _name: string) => {
+    if (!confirm(t('manager.suppliers.deleteConfirm'))) return
     setDeleting(id)
     await fetch(`/api/suppliers/${id}`, { method: "DELETE" })
     setDeleting(null)

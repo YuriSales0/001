@@ -493,7 +493,8 @@
       "typeCleaner": "Cleaner",
       "typePlumber": "Plumber",
       "typeElectrician": "Electrician",
-      "typeGeneral": "General"
+      "typeGeneral": "General",
+      "deleteConfirm": "Delete this supplier? This cannot be undone."
     },
     "messages": {
       "loadError": "Failed to load data",
@@ -969,6 +970,7 @@
       "subtitle": "Manage properties, approve requests and connect OTA calendars.",
       "newProperty": "New Property",
       "noProperties": "No properties. Create the first one with the button above.",
+      "noMatch": "No properties match your filters.",
       "owner": "Owner",
       "statusPendingClient": "Awaiting client confirmation",
       "statusPendingApproval": "Awaiting OTA setup",

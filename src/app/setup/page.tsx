@@ -118,7 +118,7 @@ function ChecklistConfig({ propertyId }: { propertyId: string }) {
   }
 
   const seedDefaults = async () => {
-    if (!confirm('Repor itens padrão? Os itens actuais serão apagados.')) return
+    if (!confirm('Reset to default items? Current items will be deleted.')) return
     setSeeding(true)
     await fetch(`/api/properties/${propertyId}/checklist`, {
       method: 'POST',

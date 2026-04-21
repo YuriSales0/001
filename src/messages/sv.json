@@ -493,7 +493,8 @@
       "typeCleaner": "Cleaner",
       "typePlumber": "Plumber",
       "typeElectrician": "Electrician",
-      "typeGeneral": "General"
+      "typeGeneral": "General",
+      "deleteConfirm": "Ta bort denna leverantör? Detta kan inte ångras."
     },
     "messages": {
       "loadError": "Failed to load data",
@@ -950,6 +951,7 @@
       "subtitle": "Manage properties, approve requests and connect OTA calendars.",
       "newProperty": "New Property",
       "noProperties": "No properties. Create the first one with the button above.",
+      "noMatch": "Inga fastigheter matchar dina filter.",
       "owner": "Owner",
       "statusPendingClient": "Awaiting client confirmation",
       "statusPendingApproval": "Awaiting OTA setup",

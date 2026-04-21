@@ -493,7 +493,8 @@
       "typeCleaner": "Limpieza",
       "typePlumber": "Fontanero",
       "typeElectrician": "Electricista",
-      "typeGeneral": "General"
+      "typeGeneral": "General",
+      "deleteConfirm": "¿Eliminar este proveedor? Esta acción no se puede deshacer."
     },
     "messages": {
       "loadError": "Error al cargar datos",
@@ -790,6 +791,7 @@
       "subtitle": "Gestiona propiedades, aprueba solicitudes y conecta calendarios OTA.",
       "newProperty": "Nueva Propiedad",
       "noProperties": "Sin propiedades. Crea la primera con el botón de arriba.",
+      "noMatch": "Ninguna propiedad coincide con los filtros.",
       "owner": "Propietario",
       "statusPendingClient": "Esperando confirmación del cliente",
       "statusPendingApproval": "Esperando configuración OTA",
