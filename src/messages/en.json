@@ -892,7 +892,8 @@
       "noSignups": "No sign-ups yet",
       "noApplications": "No applications yet",
       "totalOnline": "Total Online",
-      "activeSessions": "Active sessions right now"
+      "activeSessions": "Active sessions right now",
+      "loginsInPeriod": "logins in period"
     },
     "partners": {
       "title": "Partners",

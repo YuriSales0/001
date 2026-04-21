@@ -308,7 +308,7 @@ function AnalyticsDashboard() {
               { role: 'CREW', color: 'bg-emerald-500', label: 'Crew' },
               { role: 'CLIENT', color: 'bg-amber-500', label: 'Client' },
             ].map(r => {
-              const registered = (data as any).usersByRole?.find((u: any) => u.role === r.role)?.count ?? 0
+              const logins = (data as any).usersByRole?.find((u: any) => u.role === r.role)?.count ?? 0
               const online = (data as any).onlineByRole?.[r.role] ?? 0
               return (
                 <div key={r.role} className="rounded-hm border border-hm-border bg-white p-4">
@@ -316,7 +316,8 @@ function AnalyticsDashboard() {
                     <div className={`h-2.5 w-2.5 rounded-full ${r.color}`} />
                     <span className="text-xs uppercase text-gray-500 font-medium">{r.label}</span>
                   </div>
-                  <div className="text-2xl font-bold text-hm-black tabular-nums">{registered}</div>
+                  <div className="text-2xl font-bold text-hm-black tabular-nums">{logins}</div>
+                  <div className="text-[10px] text-gray-400">{t('admin.marketing.loginsInPeriod')}</div>
                   <div className="flex items-center gap-1 mt-1">
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[10px] text-gray-400">{online} online</span>

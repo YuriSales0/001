@@ -100,17 +100,31 @@ export async function GET(request: NextRequest) {
         ...(dateFilter.createdAt ? { createdAt: dateFilter.createdAt } : {}),
       },
     }),
-    // Users by role (registered in period)
-    prisma.user.groupBy({
-      by: ['role'],
+    // Logins by role in period (count sessions created in date range)
+    prisma.session.groupBy({
+      by: ['userId'],
       _count: true,
-      ...(dateFilter.createdAt ? { where: { createdAt: dateFilter.createdAt } } : {}),
+      ...(dateFilter.createdAt ? { where: { expires: dateFilter.createdAt } } : {}),
+    }).then(async (sessions) => {
+      if (sessions.length === 0) return []
+      const userIds = sessions.map(s => s.userId)
+      const users = await prisma.user.findMany({
+        where: { id: { in: userIds } },
+        select: { id: true, role: true },
+      })
+      const roleMap = Object.fromEntries(users.map(u => [u.id, u.role]))
+      const counts: Record<string, number> = { ADMIN: 0, MANAGER: 0, CREW: 0, CLIENT: 0 }
+      sessions.forEach(s => {
+        const role = roleMap[s.userId]
+        if (role) counts[role] = (counts[role] || 0) + s._count
+      })
+      return Object.entries(counts).map(([role, count]) => ({ role, count }))
     }),
-    // Active sessions (users who logged in within last 24h)
+    // Active sessions right now
     prisma.session.count({
       where: { expires: { gt: new Date() } },
     }),
-    // Sessions by role (users online now)
+    // Online now by role
     prisma.session.findMany({
       where: { expires: { gt: new Date() } },
       select: { user: { select: { role: true } } },
@@ -144,7 +158,7 @@ export async function GET(request: NextRequest) {
     })),
     recentLeads,
     convertedLeads,
-    usersByRole: usersByRole.map(r => ({ role: r.role, count: r._count })),
+    usersByRole,
     activeSessions,
     onlineByRole: (() => {
       const counts: Record<string, number> = { ADMIN: 0, MANAGER: 0, CREW: 0, CLIENT: 0 }

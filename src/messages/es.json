@@ -745,7 +745,8 @@
       "noSignups": "Sin registros aún",
       "noApplications": "Sin solicitudes aún",
       "totalOnline": "Total Online",
-      "activeSessions": "Sesiones activas ahora"
+      "activeSessions": "Sesiones activas ahora",
+      "loginsInPeriod": "accesos en el período"
     },
     "partners": {
       "title": "Socios",
