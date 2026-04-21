@@ -1179,7 +1179,43 @@
       "confirmMarkPaid": "Diese Ausgabe als bezahlt markieren?",
       "view": "Ansehen",
       "edit": "Bearbeiten",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "methodBizum": "Bizum",
+      "ocr": {
+        "uploadInvoice": "Upload Invoice",
+        "scanningInvoice": "Scanning invoice...",
+        "invoiceScanned": "Invoice scanned successfully",
+        "reviewData": "Review extracted data before saving",
+        "manualEntry": "Manual Entry",
+        "manualEntryDesc": "For payments without invoice (Bizum, transfer, cash)",
+        "stockExpense": "Stock Expense",
+        "operationalExpense": "Operational Expense",
+        "autoStockEntry": "Auto-create stock entries",
+        "itemsDetected": "Items detected",
+        "confirmStockEntry": "Confirm stock entries to create",
+        "paymentMethods": {
+          "bizum": "Bizum",
+          "bankTransfer": "Bank Transfer",
+          "cash": "Cash",
+          "creditCard": "Credit Card"
+        },
+        "ocrError": "Failed to scan invoice",
+        "noDataExtracted": "No data could be extracted from the image",
+        "dragDrop": "Drag & drop an invoice photo or click to upload",
+        "cameraOrFile": "Take a photo or select a file",
+        "maxSize": "Max 10MB - JPEG, PNG, WebP",
+        "chooseMode": "How do you want to add this expense?",
+        "itemDescription": "Item",
+        "quantity": "Qty",
+        "unitPrice": "Unit Price",
+        "addToStock": "Add to stock",
+        "matchedCategory": "Matched",
+        "newCategory": "New category",
+        "stockSummary": "Stock entries created",
+        "creatingStockEntries": "Creating stock entries...",
+        "stockEntriesCreated": "Stock entries created successfully",
+        "stockEntriesFailed": "Some stock entries failed to create"
+      }
     },
     "team": {
       "cannotDeleteSelf": "You cannot delete your own account."
@@ -1354,7 +1390,11 @@
       "taskCompleted": "Task completed",
       "startTask": "Start task",
       "acceptTask": "Accept task",
-      "declineTask": "Decline"
+      "declineTask": "Decline",
+      "consumablesTitle": "Consumables for this task",
+      "consumablesReminder": "Remember to register consumable pickups and returns with your Captain",
+      "confirmPickup": "Confirm stock pickup",
+      "stockWithdrawn": "Stock withdrawn successfully"
     },
     "score": {
       "suspended": "Suspended",
@@ -1402,7 +1442,8 @@
         "notAccepted": "Task not accepted",
         "acceptedNotDone": "Accepted but not done",
         "complaint": "Complaint received",
-        "unreportedDamage": "Unreported damage"
+        "unreportedDamage": "Unreported damage",
+        "quarterlyDecay": "Quarterly score reset"
       }
     },
     "calendar": {
@@ -1412,6 +1453,45 @@
       "complete": "Complete",
       "today": "Today",
       "more": "more..."
+    },
+    "levelGuide": {
+      "title": "How Levels Work",
+      "levelTable": "Level Table",
+      "level": "Level",
+      "scoreRange": "Score Range",
+      "taskBonus": "Task Bonus",
+      "benefits": "Benefits",
+      "suspendedRange": "0 - 49",
+      "suspendedBonus": "No tasks assigned",
+      "suspendedBenefits": "Contact Captain to resolve",
+      "basicRange": "50 - 149",
+      "basicBonus": "Standard rate",
+      "basicBenefits": "Standard task assignment",
+      "verifiedRange": "150 - 299",
+      "verifiedBonus": "+5% per task",
+      "verifiedBenefits": "Priority assignment, verified badge",
+      "expertRange": "300 - 499",
+      "expertBonus": "+10% per task",
+      "expertBenefits": "Premium properties, higher task priority",
+      "eliteRange": "500+",
+      "eliteBonus": "+15% per task",
+      "eliteBenefits": "Independent inspections, top priority, premium properties",
+      "howToEarn": "How to Earn Points",
+      "earnTaskOnTime": "Task completed on time: +10",
+      "earnValidated": "Validated without repairs: +15",
+      "earnOwnerReview": "Positive owner review: +20",
+      "earnPeakAvailability": "Peak availability (Fri/Sat): +5",
+      "howToLose": "How to Lose Points",
+      "loseNotAccepted": "Not accepted without justification: -20",
+      "loseNotCompleted": "Accepted but not completed: -30",
+      "loseComplaint": "Documented complaint: -40",
+      "loseUnreportedDamage": "Unreported damage: -50",
+      "keyMessage": "Higher levels = higher pay per task. An Elite crew member earns 15% more than Basic on every task.",
+      "quarterlyDecay": "Quarterly score reset",
+      "quarterlyDecayDesc": "Every quarter, scores decay to the minimum of your current level + 20%% of the excess. Consistently high performance is rewarded — coasting is not.",
+      "monthlyDecayTitle": "Monthly Score Reset",
+      "monthlyDecayDesc": "On the 1st of every month, your score resets to the minimum of your current level plus 30% of any excess. This ensures consistent performance is required to maintain your level — accumulated buffer is reduced monthly.",
+      "monthlyDecayExample": "Example:"
     }
   },
   "finance": {

@@ -73,7 +73,33 @@ export default function RegisterPage() {
             <h1 className="text-2xl font-serif font-bold text-white text-center mb-1">{t("auth.createAccount")}</h1>
             <p className="text-sm text-gray-400 text-center mb-6">{t("auth.registerSubtitle")}</p>
 
-            {/* Beta announcement banner */}
+            {/* Language — FIRST so user reads everything in their language */}
+            <div className="mb-6">
+              <label className="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider text-center">
+                <Globe className="h-3 w-3 inline mr-1" />
+                {t("common.language")}
+              </label>
+              <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
+                {LOCALES.map(lang => (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => { setForm({ ...form, language: lang.code }); setLocale(lang.code) }}
+                    className="rounded-lg border px-2 py-2 text-center transition-all"
+                    style={{
+                      background: form.language === lang.code ? "rgba(176,138,62,0.15)" : "rgba(255,255,255,0.03)",
+                      borderColor: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.08)",
+                      color: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.5)",
+                    }}
+                  >
+                    <span className="text-lg block">{lang.flag}</span>
+                    <span className="text-[9px] font-medium">{lang.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Beta announcement banner — now in user's chosen language */}
             <div className="rounded-xl p-4 mb-6" style={{ background: 'rgba(176,138,62,0.08)', border: '1px solid rgba(176,138,62,0.2)' }}>
               <div className="flex items-start gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(176,138,62,0.15)' }}>
@@ -141,32 +167,6 @@ export default function RegisterPage() {
                   style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
                   placeholder={t("auth.passwordPlaceholder")}
                 />
-              </div>
-
-              {/* Language */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
-                  <Globe className="h-3 w-3 inline mr-1" />
-                  {t("common.language")}
-                </label>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  {LOCALES.map(lang => (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      onClick={() => { setForm({ ...form, language: lang.code }); setLocale(lang.code) }}
-                      className="rounded-lg border px-3 py-2.5 text-center text-sm transition-all"
-                      style={{
-                        background: form.language === lang.code ? "rgba(176,138,62,0.15)" : "rgba(255,255,255,0.03)",
-                        borderColor: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.08)",
-                        color: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.5)",
-                      }}
-                    >
-                      <span className="text-lg block mb-0.5">{lang.flag}</span>
-                      <span className="text-[10px] font-medium">{lang.label}</span>
-                    </button>
-                  ))}
-                </div>
               </div>
 
               {error && (
