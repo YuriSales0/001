@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef, useCallback } from "react"
+import { useEffect, useState, useRef, useCallback, useMemo } from "react"
 import { Bell, Check, CheckCheck, X, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useLocale } from "@/i18n/provider"
@@ -92,6 +92,11 @@ export function NotificationBell() {
     setUnread(prev => Math.max(0, prev - 1))
   }
 
+  const timeAgoMap = useMemo(
+    () => Object.fromEntries(items.map(n => [n.id, timeAgo(n.createdAt, t)])),
+    [items, t]
+  )
+
   const handleClick = (n: Notification) => {
     if (!n.read) markOneRead(n.id)
     if (n.link) window.location.href = n.link
@@ -101,7 +106,17 @@ export function NotificationBell() {
     <div ref={ref} className="relative">
       {/* Bell button — prominent with border */}
       <button
-        onClick={() => { setOpen(o => !o); if (!open) load() }}
+        onClick={() => {
+          const wasOpen = open
+          setOpen(o => !o)
+          if (!wasOpen) {
+            load()
+            setTimeout(() => {
+              const unreadItems = items.filter(n => !n.read)
+              if (unreadItems.length > 0) markAllRead()
+            }, 2000)
+          }
+        }}
         className={cn(
           "relative flex items-center justify-center h-10 w-10 rounded-xl border transition-all",
           open
@@ -170,7 +185,7 @@ export function NotificationBell() {
                   {n.body && (
                     <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>
                   )}
-                  <p className="text-[10px] text-gray-400 mt-1">{timeAgo(n.createdAt, t)}</p>
+                  <p className="text-[10px] text-gray-400 mt-1">{timeAgoMap[n.id]}</p>
                 </div>
                 {!n.read && (
                   <span className="mt-1.5 h-2 w-2 rounded-full shrink-0" style={{ background: "#B08A3E" }} />

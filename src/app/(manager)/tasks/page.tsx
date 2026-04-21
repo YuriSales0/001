@@ -29,11 +29,8 @@ interface Property {
   city: string
 }
 
-interface CrewMember {
-  id: string
-  name: string | null
-  email: string
-}
+// Crew assignment removed: per business rules, Managers never assign Crew directly.
+// Only ADMIN/Captain can assign crew.
 
 const TYPE_COLOR: Record<TaskType, string> = {
   CLEANING: "bg-sky-100 text-sky-800",
@@ -77,7 +74,6 @@ export default function TasksPage() {
   const { t } = useLocale()
   const [tasks, setTasks] = useState<Task[]>([])
   const [properties, setProperties] = useState<Property[]>([])
-  const [crew, setCrew] = useState<CrewMember[]>([])
   const [loading, setLoading] = useState(true)
   const [filterProperty, setFilterProperty] = useState("all")
   const [filterType, setFilterType] = useState("all")
@@ -92,19 +88,16 @@ export default function TasksPage() {
     title: "",
     description: "",
     dueDate: "",
-    assigneeId: "",
   })
 
   const load = async () => {
     setLoading(true)
-    const [tRes, pRes, cRes] = await Promise.all([
+    const [tRes, pRes] = await Promise.all([
       fetch("/api/tasks"),
       fetch("/api/properties"),
-      fetch("/api/users?role=CREW"),
     ])
     if (tRes.ok) setTasks(await tRes.json())
     if (pRes.ok) setProperties(await pRes.json())
-    if (cRes.ok) setCrew(await cRes.json())
     setLoading(false)
   }
   useEffect(() => { load() }, [])
@@ -146,7 +139,6 @@ export default function TasksPage() {
         title: form.title,
         description: form.description || undefined,
         dueDate: new Date(form.dueDate).toISOString(),
-        assigneeId: form.assigneeId || undefined,
       }),
     })
     if (!res.ok) {
@@ -154,7 +146,7 @@ export default function TasksPage() {
       setCreateError(err.error ?? t('manager.tasks.failedToCreate'))
     } else {
       setShowCreate(false)
-      setForm({ propertyId: "", type: "CLEANING", title: "", description: "", dueDate: "", assigneeId: "" })
+      setForm({ propertyId: "", type: "CLEANING", title: "", description: "", dueDate: "" })
       await load()
     }
     setCreating(false)
@@ -338,29 +330,15 @@ export default function TasksPage() {
                   placeholder="Optional context for the crew"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.tasks.dueDate')} *</label>
-                  <input
-                    type="datetime-local"
-                    value={form.dueDate}
-                    onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.tasks.assignTo')}</label>
-                  <select
-                    value={form.assigneeId}
-                    onChange={e => setForm(f => ({ ...f, assigneeId: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
-                  >
-                    <option value="">{t('manager.tasks.autoAssign')}</option>
-                    {crew.map(c => (
-                      <option key={c.id} value={c.id}>{c.name ?? c.email}</option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manager.tasks.dueDate')} *</label>
+                <input
+                  type="datetime-local"
+                  value={form.dueDate}
+                  onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                />
+                <p className="text-xs text-gray-400 mt-1">{t('manager.tasks.autoAssignNote')}</p>
               </div>
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={() => setShowCreate(false)} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">

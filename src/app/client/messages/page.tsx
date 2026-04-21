@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { MessageCircle, Send, Loader2 } from 'lucide-react'
+import { useLocale } from '@/i18n/provider'
+import { showToast } from '@/components/hm/toast'
 
 type Sender = { id: string; name: string | null; role: string }
 type Message = { id: string; body: string; createdAt: string; sender: Sender }
@@ -12,6 +14,7 @@ type Conversation = {
 }
 
 export default function ClientMessagesPage() {
+  const { t } = useLocale()
   const [conv, setConv] = useState<Conversation | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [text, setText] = useState('')
@@ -94,7 +97,7 @@ export default function ClientMessagesPage() {
       body: JSON.stringify({ body: text }),
     }).catch(() => null)
     setSending(false)
-    if (!res || !res.ok) { alert('Failed to send message'); return }
+    if (!res || !res.ok) { showToast(t('client.messages.failedToSend'), 'error'); return }
     setText('')
     fetchMessages(conv.id)
   }
@@ -103,15 +106,15 @@ export default function ClientMessagesPage() {
     return (
       <div className="p-8 text-center">
         <MessageCircle className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-        <h2 className="text-lg font-semibold text-gray-700 mb-1">Sem gestor atribuído</h2>
-        <p className="text-sm text-gray-500">Contacta o administrador para te atribuir um gestor.</p>
+        <h2 className="text-lg font-semibold text-gray-700 mb-1">{t('client.messages.noManager')}</h2>
+        <p className="text-sm text-gray-500">{t('client.messages.noManagerDesc')}</p>
       </div>
     )
   }
 
   if (!conv && loadError) {
     return (
-      <div className="p-4 text-sm text-red-500">Failed to load messages. Try refreshing.</div>
+      <div className="p-4 text-sm text-red-500">{t('client.messages.loadError')}</div>
     )
   }
 
@@ -134,7 +137,7 @@ export default function ClientMessagesPage() {
           <div className="font-semibold text-hm-black text-sm">
             {conv.manager.name ?? conv.manager.email}
           </div>
-          <div className="text-xs text-gray-500">Gestor</div>
+          <div className="text-xs text-gray-500">{t('client.messages.manager')}</div>
         </div>
       </div>
 
@@ -143,7 +146,7 @@ export default function ClientMessagesPage() {
         {messages.length === 0 && (
           <div className="text-center text-sm text-gray-400 py-8">
             <MessageCircle className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-            Sem mensagens ainda. Envia a primeira!
+            {t('client.messages.noMessages')}
           </div>
         )}
         {messages.map(m => {
@@ -157,7 +160,7 @@ export default function ClientMessagesPage() {
               }`}>
                 <p>{m.body}</p>
                 <p className={`text-xs mt-1 ${isMe ? 'text-white/60' : 'text-gray-400'}`}>
-                  {new Date(m.createdAt).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(m.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
             </div>
@@ -172,7 +175,7 @@ export default function ClientMessagesPage() {
           value={text}
           onChange={e => setText(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-          placeholder="Escreve uma mensagem…"
+          placeholder={t('client.messages.placeholder')}
           className="flex-1 rounded-full border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
         />
         <button

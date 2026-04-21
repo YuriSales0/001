@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
         phone: phone || null,
         language: language || 'en',
         role: 'CLIENT',
+        subscriptionPlan: 'STARTER',
         managerId,
         emailVerified: null,
       },

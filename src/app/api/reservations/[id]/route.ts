@@ -25,9 +25,6 @@ export async function GET(
             owner: { select: { managerId: true } },
           },
         },
-        expenses: {
-          orderBy: { date: 'desc' },
-        },
       },
     })
 
@@ -53,7 +50,7 @@ export async function GET(
       })
       if (!hasTask) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       // Return limited data for CREW — no financial details
-      const { expenses: _expenses, ...safeReservation } = reservation
+      const safeReservation = reservation
       return NextResponse.json({
         ...safeReservation,
         amount: undefined,
@@ -124,15 +121,32 @@ export async function PUT(
         ? `${paidCount} paid payout${paidCount === 1 ? '' : 's'} require manual refund`
         : null
 
-      // Cancel associated pending tasks
-      await prisma.task.updateMany({
-        where: {
-          propertyId: (await prisma.reservation.findUnique({ where: { id }, select: { propertyId: true } }))!.propertyId,
-          status: { in: ['PENDING', 'IN_PROGRESS'] },
-          dueDate: { gte: new Date() },
-        },
-        data: { status: 'COMPLETED' },
-      })
+      // Cancel ALL associated pending/notified/confirmed tasks
+      const res = await prisma.reservation.findUnique({ where: { id }, select: { propertyId: true, checkIn: true, checkOut: true } })
+      if (res) {
+        // Cancel tasks
+        await prisma.task.updateMany({
+          where: {
+            propertyId: res.propertyId,
+            status: { in: ['PENDING', 'NOTIFIED', 'CONFIRMED', 'IN_PROGRESS', 'SUBMITTED', 'REDISTRIBUTED'] },
+            dueDate: { gte: res.checkIn, lte: res.checkOut },
+          },
+          data: { status: 'COMPLETED' },
+        })
+
+        // Void any PENDING crew payouts containing tasks for this reservation
+        const affectedTasks = await prisma.task.findMany({
+          where: { propertyId: res.propertyId, dueDate: { gte: res.checkIn, lte: res.checkOut }, crewPayoutId: { not: null } },
+          select: { crewPayoutId: true },
+        })
+        const payoutIds = Array.from(new Set(affectedTasks.map(t => t.crewPayoutId).filter(Boolean))) as string[]
+        if (payoutIds.length > 0) {
+          await prisma.crewPayout.updateMany({
+            where: { id: { in: payoutIds }, status: 'PENDING' },
+            data: { status: 'FAILED', failedReason: 'Reservation cancelled' },
+          })
+        }
+      }
     }
 
     // ── Admin activating reservation manually ──
@@ -210,11 +224,38 @@ export async function DELETE(
   try {
     const { id } = params
 
-    await prisma.reservation.delete({
+    const reservation = await prisma.reservation.findUnique({
       where: { id },
+      select: { id: true, status: true, propertyId: true, checkIn: true, checkOut: true },
+    })
+    if (!reservation) {
+      return NextResponse.json({ error: 'Reservation not found' }, { status: 404 })
+    }
+
+    // Clean up related records before deleting
+    await prisma.$transaction(async (tx) => {
+      // Delete associated payouts
+      await tx.payout.deleteMany({ where: { reservationId: id } })
+
+      // Delete pricing data points linked to this reservation
+      await tx.pricingDataPoint.deleteMany({ where: { reservationId: id } })
+
+      // Delete associated tasks (scoped by property + date range)
+      await tx.task.deleteMany({
+        where: {
+          propertyId: reservation.propertyId,
+          dueDate: { gte: reservation.checkIn, lte: reservation.checkOut },
+        },
+      })
+
+      // Delete stay review if exists
+      await tx.stayReview.deleteMany({ where: { reservationId: id } })
+
+      // Delete the reservation
+      await tx.reservation.delete({ where: { id } })
     })
 
-    return NextResponse.json({ message: 'Reservation deleted successfully' })
+    return NextResponse.json({ ok: true })
   } catch (error) {
     console.error('Error deleting reservation:', error)
     return NextResponse.json(

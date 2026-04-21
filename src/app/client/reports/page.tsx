@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { TrendingUp, TrendingDown, Minus, Home, CalendarDays, Euro, BarChart3, Download } from 'lucide-react'
 import { generateReportSummaryPDF } from '@/lib/pdf'
+import { useLocale } from '@/i18n/provider'
+import { intlLocale, type Locale } from '@/i18n'
 
 type Reservation = {
   id: string
@@ -30,9 +32,6 @@ type Payout = {
 
 type Property = { id: string; name: string }
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(n)
-
 const fmtPct = (n: number) => `${Math.round(n)}%`
 
 function nightsBetween(a: string, b: string) {
@@ -43,9 +42,9 @@ function monthKey(d: string) {
   return d.slice(0, 7) // "YYYY-MM"
 }
 
-function monthLabel(key: string) {
+function monthLabel(key: string, loc = 'en-GB') {
   const [y, m] = key.split('-')
-  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' })
+  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString(loc, { month: 'short', year: 'numeric' })
 }
 
 // Days in a month for occupancy
@@ -55,6 +54,10 @@ function daysInMonth(key: string) {
 }
 
 export default function ClientReportsPage() {
+  const { t, locale } = useLocale()
+  const dateLoc = intlLocale(locale as Locale)
+  const fmt = (n: number) =>
+    new Intl.NumberFormat(dateLoc, { style: 'currency', currency: 'EUR' }).format(n)
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [properties, setProperties] = useState<Property[]>([])
@@ -172,16 +175,16 @@ export default function ClientReportsPage() {
       <div className="h-48 rounded-hm bg-hm-sand" />
     </div>
   )
-  if (loadError) return <div className="p-4 text-sm text-red-500">Failed to load data. Try refreshing.</div>
+  if (loadError) return <div className="p-4 text-sm text-red-500">{t('client.reportsPage.loadError')}</div>
 
   return (
     <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-hm-black">Relatórios</h1>
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('client.reportsPage.title')}</h1>
           <p className="text-sm text-gray-500">
-            Resumo financeiro e de ocupação das tuas propriedades
+            {t('client.reportsPage.subtitle')}
             {summary && <span className="text-gray-400"> · {summary.period} vs. {summary.previousPeriod}</span>}
           </p>
         </div>
@@ -191,26 +194,26 @@ export default function ClientReportsPage() {
             onChange={e => setPropFilter(e.target.value)}
             className="rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
           >
-            <option value="ALL">Todas as propriedades</option>
+            <option value="ALL">{t('client.reportsPage.allProperties')}</option>
             {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
           <button
             onClick={() => {
               if (!summary) return
-              const fmtD = (d: number | null) => d === null ? '—' : `${d > 0 ? '+' : ''}${d.toFixed(1)}%`
+              const fmtD = (d: number | null | undefined) => d == null ? '—' : `${d > 0 ? '+' : ''}${d.toFixed(1)}%`
               const doc = generateReportSummaryPDF({
                 title: 'Owner Report',
                 period: summary.period,
                 previousPeriod: summary.previousPeriod,
                 role: 'CLIENT',
                 kpis: [
-                  { label: 'Receita bruta', value: fmt(summary.current.grossRevenue), previous: fmt(summary.previous.grossRevenue), delta: fmtD(summary.delta.grossRevenue) },
-                  { label: 'Comissão HM', value: fmt(summary.current.commission), previous: fmt(summary.previous.commission), delta: null },
-                  { label: 'Receita líquida', value: fmt(summary.current.netReceived), previous: fmt(summary.previous.netReceived), delta: fmtD(summary.delta.netReceived) },
-                  { label: 'Reservas', value: String(summary.current.reservations), previous: String(summary.previous.reservations), delta: fmtD(summary.delta.reservations) },
-                  { label: 'Noites ocupadas', value: String(summary.current.totalNights), previous: String(summary.previous.totalNights), delta: null },
-                  { label: 'Ocupação', value: `${summary.current.occupancy}%`, previous: `${summary.previous.occupancy}%`, delta: fmtD(summary.delta.occupancy) },
-                  { label: 'Preço médio/noite', value: fmt(summary.current.avgPricePerNight), previous: fmt(summary.previous.avgPricePerNight), delta: null },
+                  { label: t('client.reportsPage.grossRevenue'), value: fmt(summary.current.grossRevenue), previous: fmt(summary.previous.grossRevenue), delta: fmtD(summary.delta.grossRevenue) },
+                  { label: t('client.reportsPage.hmCommission'), value: fmt(summary.current.commission), previous: fmt(summary.previous.commission), delta: null },
+                  { label: t('client.reportsPage.netRevenue'), value: fmt(summary.current.netReceived), previous: fmt(summary.previous.netReceived), delta: fmtD(summary.delta.netReceived) },
+                  { label: t('client.reportsPage.reservations'), value: String(summary.current.reservations), previous: String(summary.previous.reservations), delta: fmtD(summary.delta.reservations) },
+                  { label: t('client.reportsPage.nightsOccupied'), value: String(summary.current.totalNights), previous: String(summary.previous.totalNights), delta: null },
+                  { label: t('client.reportsPage.occupancy'), value: `${summary.current.occupancy}%`, previous: `${summary.previous.occupancy}%`, delta: fmtD(summary.delta.occupancy) },
+                  { label: t('client.reportsPage.avgPriceNight'), value: fmt(summary.current.avgPricePerNight), previous: fmt(summary.previous.avgPricePerNight), delta: null },
                 ],
               })
               doc.save(`hostmasters-report-owner-${summary.period.replace(/\s/g, '-')}.pdf`)
@@ -228,19 +231,19 @@ export default function ClientReportsPage() {
       {summary && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: 'Receita líquida', value: fmt(summary.current.netReceived), delta: summary.delta.netReceived, prev: fmt(summary.previous.netReceived) },
-            { label: 'Reservas', value: String(summary.current.reservations), delta: summary.delta.reservations, prev: String(summary.previous.reservations) },
-            { label: 'Ocupação', value: `${summary.current.occupancy}%`, delta: summary.delta.occupancy, prev: `${summary.previous.occupancy}%` },
-            { label: 'Preço médio', value: fmt(summary.current.avgPricePerNight), delta: null, prev: fmt(summary.previous.avgPricePerNight) },
+            { label: t('client.reportsPage.netRevenue'), value: fmt(summary.current.netReceived), delta: summary.delta.netReceived, prev: fmt(summary.previous.netReceived) },
+            { label: t('client.reportsPage.reservations'), value: String(summary.current.reservations), delta: summary.delta.reservations, prev: String(summary.previous.reservations) },
+            { label: t('client.reportsPage.occupancy'), value: `${summary.current.occupancy}%`, delta: summary.delta.occupancy, prev: `${summary.previous.occupancy}%` },
+            { label: t('client.reportsPage.avgPrice'), value: fmt(summary.current.avgPricePerNight), delta: null, prev: fmt(summary.previous.avgPricePerNight) },
           ].map(kpi => (
             <div key={kpi.label} className="rounded-hm border bg-white p-4">
               <div className="text-xs uppercase text-gray-500">{kpi.label}</div>
               <div className="text-xl font-bold text-hm-black mt-1">{kpi.value}</div>
               <div className="flex items-center gap-1.5 mt-1">
-                {kpi.delta !== null && kpi.delta !== undefined && (
+                {kpi.delta != null && (
                   <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${kpi.delta > 0 ? 'text-green-600' : kpi.delta < 0 ? 'text-red-500' : 'text-gray-400'}`}>
                     {kpi.delta > 0 ? <TrendingUp className="h-3 w-3" /> : kpi.delta < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
-                    {kpi.delta > 0 ? '+' : ''}{kpi.delta.toFixed(1)}%
+                    {kpi.delta > 0 ? '+' : ''}{(kpi.delta ?? 0).toFixed(1)}%
                   </span>
                 )}
                 <span className="text-xs text-gray-400">ant. {kpi.prev}</span>
@@ -255,37 +258,37 @@ export default function ClientReportsPage() {
         <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <Euro className="h-4 w-4" />
-            <span className="text-xs uppercase tracking-wide font-medium">Receita Bruta</span>
+            <span className="text-xs uppercase tracking-wide font-medium">{t('client.reportsPage.grossRevenue')}</span>
           </div>
           <div className="text-2xl font-bold text-hm-black">{fmt(totalGross)}</div>
-          <div className="text-xs text-gray-400 mt-0.5">total acumulado</div>
+          <div className="text-xs text-gray-400 mt-0.5">{t('client.reportsPage.totalAccumulated')}</div>
         </div>
 
         <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <TrendingUp className="h-4 w-4" />
-            <span className="text-xs uppercase tracking-wide font-medium">Receita Líquida</span>
+            <span className="text-xs uppercase tracking-wide font-medium">{t('client.reportsPage.netRevenue')}</span>
           </div>
           <div className="text-2xl font-bold text-green-700">{fmt(totalNet)}</div>
-          <div className="text-xs text-gray-400 mt-0.5">após comissão</div>
+          <div className="text-xs text-gray-400 mt-0.5">{t('client.reportsPage.afterCommission')}</div>
         </div>
 
         <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <CalendarDays className="h-4 w-4" />
-            <span className="text-xs uppercase tracking-wide font-medium">Noites Reservadas</span>
+            <span className="text-xs uppercase tracking-wide font-medium">{t('client.reportsPage.nightsBooked')}</span>
           </div>
           <div className="text-2xl font-bold text-hm-black">{totalNights}</div>
-          <div className="text-xs text-gray-400 mt-0.5">total</div>
+          <div className="text-xs text-gray-400 mt-0.5">{t('client.reportsPage.total')}</div>
         </div>
 
         <div className="rounded-hm border bg-white p-4">
           <div className="flex items-center gap-2 mb-2 text-gray-500">
             <BarChart3 className="h-4 w-4" />
-            <span className="text-xs uppercase tracking-wide font-medium">Preço Médio/Noite</span>
+            <span className="text-xs uppercase tracking-wide font-medium">{t('client.reportsPage.avgPriceNight')}</span>
           </div>
           <div className="text-2xl font-bold text-hm-black">{fmt(avgNightly)}</div>
-          <div className="text-xs text-gray-400 mt-0.5">gross / noite</div>
+          <div className="text-xs text-gray-400 mt-0.5">{t('client.reportsPage.grossPerNight')}</div>
         </div>
       </div>
 
@@ -294,7 +297,7 @@ export default function ClientReportsPage() {
         <section>
           <h2 className="text-base font-semibold text-hm-black mb-3 flex items-center gap-2">
             <Home className="h-4 w-4" />
-            Ocupação este ano (por propriedade)
+            {t('client.reportsPage.occupancyThisYear')}
           </h2>
           <div className="space-y-3">
             {occupancyByProperty.map(p => (
@@ -309,7 +312,7 @@ export default function ClientReportsPage() {
                     style={{ width: `${Math.min(p.occupancy, 100)}%` }}
                   />
                 </div>
-                <div className="text-xs text-gray-400 mt-1">{p.nights} noites reservadas</div>
+                <div className="text-xs text-gray-400 mt-1">{p.nights} {t('client.reportsPage.nightsBookedLabel')}</div>
               </div>
             ))}
           </div>
@@ -320,12 +323,12 @@ export default function ClientReportsPage() {
       <section>
         <h2 className="text-base font-semibold text-hm-black mb-3 flex items-center gap-2">
           <BarChart3 className="h-4 w-4" />
-          Desempenho mensal (últimos 12 meses)
+          {t('client.reportsPage.monthlyPerformance')}
         </h2>
 
         {monthlyData.length === 0 ? (
           <div className="rounded-hm border bg-white p-8 text-center text-gray-400 text-sm">
-            Sem dados de reservas ainda.
+            {t('client.reportsPage.noData')}
           </div>
         ) : (
           <>
@@ -339,11 +342,11 @@ export default function ClientReportsPage() {
                       style={{ height: `${(d.net / maxNet) * 88}px` }}
                     />
                     <span className="text-[9px] text-gray-400 rotate-45 origin-left whitespace-nowrap mt-1">
-                      {monthLabel(key)}
+                      {monthLabel(key, dateLoc)}
                     </span>
                     {/* Tooltip */}
                     <div className="absolute bottom-full mb-2 hidden group-hover:block bg-hm-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
-                      {monthLabel(key)}: {fmt(d.net)} líq.
+                      {monthLabel(key, dateLoc)}: {fmt(d.net)} {t('client.reportsPage.netShort')}
                     </div>
                   </div>
                 ))}
@@ -352,21 +355,22 @@ export default function ClientReportsPage() {
 
             {/* Table */}
             <div className="rounded-hm border bg-white overflow-hidden">
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto">
+              <table className="min-w-[600px] w-full text-sm">
                 <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500 border-b">
                   <tr>
-                    <th className="px-4 py-3">Mês</th>
-                    <th className="px-4 py-3 text-center">Reservas</th>
-                    <th className="px-4 py-3 text-center">Noites</th>
-                    <th className="px-4 py-3 text-right">Gross</th>
-                    <th className="px-4 py-3 text-right">Comissão</th>
-                    <th className="px-4 py-3 text-right font-semibold">Líquido</th>
+                    <th className="px-4 py-3">{t('client.reportsPage.month')}</th>
+                    <th className="px-4 py-3 text-center">{t('client.reportsPage.reservations')}</th>
+                    <th className="px-4 py-3 text-center">{t('client.reportsPage.nights')}</th>
+                    <th className="px-4 py-3 text-right">{t('client.reportsPage.gross')}</th>
+                    <th className="px-4 py-3 text-right">{t('client.reportsPage.commission')}</th>
+                    <th className="px-4 py-3 text-right font-semibold">{t('client.reportsPage.net')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {monthlyData.map(([key, d]) => (
                     <tr key={key} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 font-medium text-hm-black capitalize">{monthLabel(key)}</td>
+                      <td className="px-4 py-3 font-medium text-hm-black capitalize">{monthLabel(key, dateLoc)}</td>
                       <td className="px-4 py-3 text-center text-gray-600">{d.reservations}</td>
                       <td className="px-4 py-3 text-center text-gray-600">{d.nights}</td>
                       <td className="px-4 py-3 text-right text-gray-600">{fmt(d.gross)}</td>
@@ -377,7 +381,7 @@ export default function ClientReportsPage() {
                 </tbody>
                 <tfoot className="border-t bg-gray-50">
                   <tr>
-                    <td className="px-4 py-3 font-semibold text-hm-black">Total</td>
+                    <td className="px-4 py-3 font-semibold text-hm-black">{t('client.reportsPage.total')}</td>
                     <td className="px-4 py-3 text-center font-semibold">
                       {monthlyData.reduce((s, [, d]) => s + d.reservations, 0)}
                     </td>
@@ -396,6 +400,7 @@ export default function ClientReportsPage() {
                   </tr>
                 </tfoot>
               </table>
+              </div>
             </div>
           </>
         )}

@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import {
   ArrowRight,
@@ -18,6 +19,10 @@ import {
   FileSignature,
   Settings,
   Rocket,
+  Mail,
+  Phone,
+  MapPin,
+  Send,
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
@@ -50,22 +55,25 @@ export default function LandingPage() {
             <span className="text-lg font-semibold tracking-tight" style={{ color: '#0B1E3A' }}>
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
+            <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
+                  style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>Beta</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: 'var(--hm-stone)' }}>
+          <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: '#4A5568' }}>
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
             <a href="#solucao" className="hover:text-hm-ink transition-colors">{t('landing.nav.solution')}</a>
             <a href="#planos" className="hover:text-hm-ink transition-colors">{t('landing.nav.plans')}</a>
+            <a href="#contacto" className="hover:text-hm-ink transition-colors">{t('landing.nav.contact')}</a>
             <Link href="/careers" className="font-semibold hover:text-hm-ink transition-colors" style={{ color: "#B08A3E" }}>
               Careers
             </Link>
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSelector />
-            <Link href="/login" className="text-sm hover:text-hm-ink transition-colors hidden sm:block" style={{ color: 'var(--hm-stone)' }}>
+            <Link href="/login" className="text-sm hover:text-hm-ink transition-colors hidden sm:block" style={{ color: '#4A5568' }}>
               {t('landing.nav.enter')}
             </Link>
             <Link
-              href="/login"
+              href="/register"
               className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-all hover:brightness-110"
               style={{ background: "#0B1E3A", color: "#F6F2EA" }}
             >
@@ -98,7 +106,7 @@ export default function LandingPage() {
 
             <div className="hm-hero-animate hm-hero-delay-3 mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
-                href="/login"
+                href="/register"
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-lg text-base font-bold transition-all hover:brightness-110"
                 style={{ background: "#B08A3E", color: "#0B1E3A" }}
               >
@@ -278,7 +286,7 @@ export default function LandingPage() {
                     })}
                   </ul>
                   <Link
-                    href="/login"
+                    href="/register"
                     className="mt-7 block text-center py-3 rounded-lg font-semibold text-sm transition-all hover:opacity-90"
                     style={
                       plan.popular
@@ -442,6 +450,9 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ───────── Contact Us ───────── */}
+      <ContactSection />
+
       {/* ───────── Work with us (subtle teaser → /careers) ───────── */}
       <section className="py-16 sm:py-20" style={{ background: "#071328" }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
@@ -482,7 +493,7 @@ export default function LandingPage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/login"
+              href="/register"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-lg text-base font-semibold transition-all hover:scale-[1.02]"
               style={{ background: "#B08A3E", color: "#0B1E3A" }}
             >
@@ -513,11 +524,421 @@ export default function LandingPage() {
             </span>
             <span className="text-xs text-gray-400 ml-1">Costa Tropical · España</span>
           </div>
-          <p className="text-xs text-gray-400">
-            {t('landing.footer.copyright')} {t('landing.footer.tagline')}
-          </p>
+          <div className="flex items-center gap-4">
+            <a href="/partner/login" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+              Partner Portal
+            </a>
+            <p className="text-xs text-gray-400">
+              {t('landing.footer.copyright')} {t('landing.footer.tagline')}
+            </p>
+          </div>
         </div>
       </footer>
     </div>
+  )
+}
+
+/* ── Contact Us Section ── */
+function ContactSection() {
+  const { t } = useLocale()
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+    location: "",
+    partnerCode: "",
+    contactMethod: "email" as "email" | "whatsapp" | "phone",
+  })
+  const [sending, setSending] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      setError(t("landing.contact.required"))
+      return
+    }
+
+    setSending(true)
+    try {
+      const notes = [
+        form.location ? `Location: ${form.location}` : "",
+        `Preferred contact: ${form.contactMethod}`,
+        form.phone ? `Phone: ${form.phone}` : "",
+      ]
+        .filter(Boolean)
+        .join(" | ")
+
+      const res = await fetch("/api/leads/public", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim() || null,
+          source: "WEBSITE",
+          message: form.message.trim(),
+          notes,
+          partnerCode: form.partnerCode.trim() || undefined,
+        }),
+      })
+
+      if (!res.ok) throw new Error("Failed")
+      setSent(true)
+    } catch {
+      setError(t("common.error"))
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return (
+    <section id="contacto" className="py-20 sm:py-28" style={{ background: "var(--hm-ivory, #FAF8F4)" }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Section header */}
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <p
+            className="text-sm font-semibold uppercase tracking-widest mb-3"
+            style={{ color: "#B08A3E" }}
+          >
+            {t("landing.contact.badge")}
+          </p>
+          <h2
+            className="text-3xl sm:text-4xl font-serif font-bold tracking-tight"
+            style={{ color: "#0B1E3A" }}
+          >
+            {t("landing.contact.title")}
+          </h2>
+          <p className="mt-4 text-gray-500 text-lg">
+            {t("landing.contact.subtitle")}
+          </p>
+        </div>
+
+        {/* Card */}
+        <div
+          className="rounded-2xl border overflow-hidden"
+          style={{ background: "#fff", borderColor: "#E8E3D8" }}
+        >
+          <div className="grid md:grid-cols-5">
+            {/* Left — info panel */}
+            <div
+              className="md:col-span-2 p-8 sm:p-10 flex flex-col justify-between"
+              style={{ background: "#0B1E3A" }}
+            >
+              <div>
+                <h3 className="text-xl font-serif font-bold text-white mb-4">
+                  {t("landing.contact.whyTitle")}
+                </h3>
+                <p className="text-sm leading-relaxed mb-8" style={{ color: "rgba(246,242,234,0.7)" }}>
+                  {t("landing.contact.whyDesc")}
+                </p>
+
+                <div className="space-y-5">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(176,138,62,0.15)" }}
+                    >
+                      <Clock className="h-5 w-5" style={{ color: "#B08A3E" }} />
+                    </div>
+                    <span className="text-sm font-semibold text-white">
+                      {t("landing.contact.responsePromise")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(176,138,62,0.15)" }}
+                    >
+                      <Mail className="h-5 w-5" style={{ color: "#B08A3E" }} />
+                    </div>
+                    <span className="text-sm text-gray-300">
+                      {t("landing.contact.emailAddress")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(176,138,62,0.15)" }}
+                    >
+                      <Phone className="h-5 w-5" style={{ color: "#B08A3E" }} />
+                    </div>
+                    <span className="text-sm text-gray-300">
+                      {t("landing.contact.whatsappNumber")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(176,138,62,0.15)" }}
+                    >
+                      <MapPin className="h-5 w-5" style={{ color: "#B08A3E" }} />
+                    </div>
+                    <span className="text-sm text-gray-300">
+                      Costa Tropical, Granada
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-10 pt-6 border-t" style={{ borderColor: "rgba(176,138,62,0.15)" }}>
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4" style={{ color: "#B08A3E" }} />
+                  <span className="text-xs text-gray-400">
+                    No commitment. No spam. Just a conversation.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right — form */}
+            <div className="md:col-span-3 p-8 sm:p-10">
+              {sent ? (
+                <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                  <div
+                    className="h-16 w-16 rounded-full flex items-center justify-center mb-6"
+                    style={{ background: "rgba(42,122,79,0.1)" }}
+                  >
+                    <CheckCircle2 className="h-8 w-8" style={{ color: "#2A7A4F" }} />
+                  </div>
+                  <h3
+                    className="text-2xl font-serif font-bold mb-3"
+                    style={{ color: "#0B1E3A" }}
+                  >
+                    {t("landing.contact.thankYouTitle")}
+                  </h3>
+                  <p className="text-gray-500 max-w-sm">
+                    {t("landing.contact.thankYouDesc")}
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  {/* Name & Email row */}
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    <div>
+                      <label
+                        htmlFor="contact-name"
+                        className="block text-sm font-semibold mb-1.5"
+                        style={{ color: "#0B1E3A" }}
+                      >
+                        {t("landing.contact.nameLabel")} *
+                      </label>
+                      <input
+                        id="contact-name"
+                        name="name"
+                        type="text"
+                        required
+                        value={form.name}
+                        onChange={handleChange}
+                        placeholder={t("landing.contact.namePlaceholder")}
+                        className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
+                        style={{
+                          borderColor: "#E8E3D8",
+                          background: "#FAFAF8",
+                          color: "#0B1E3A",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="contact-email"
+                        className="block text-sm font-semibold mb-1.5"
+                        style={{ color: "#0B1E3A" }}
+                      >
+                        {t("landing.contact.emailLabel")} *
+                      </label>
+                      <input
+                        id="contact-email"
+                        name="email"
+                        type="email"
+                        required
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder={t("landing.contact.emailPlaceholder")}
+                        className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
+                        style={{
+                          borderColor: "#E8E3D8",
+                          background: "#FAFAF8",
+                          color: "#0B1E3A",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Phone & Location row */}
+                  <div className="grid sm:grid-cols-2 gap-5">
+                    <div>
+                      <label
+                        htmlFor="contact-phone"
+                        className="block text-sm font-semibold mb-1.5"
+                        style={{ color: "#0B1E3A" }}
+                      >
+                        {t("landing.contact.phoneLabel")}
+                      </label>
+                      <input
+                        id="contact-phone"
+                        name="phone"
+                        type="tel"
+                        value={form.phone}
+                        onChange={handleChange}
+                        placeholder={t("landing.contact.phonePlaceholder")}
+                        className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
+                        style={{
+                          borderColor: "#E8E3D8",
+                          background: "#FAFAF8",
+                          color: "#0B1E3A",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="contact-location"
+                        className="block text-sm font-semibold mb-1.5"
+                        style={{ color: "#0B1E3A" }}
+                      >
+                        {t("landing.contact.locationLabel")}
+                      </label>
+                      <input
+                        id="contact-location"
+                        name="location"
+                        type="text"
+                        value={form.location}
+                        onChange={handleChange}
+                        placeholder={t("landing.contact.locationPlaceholder")}
+                        className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
+                        style={{
+                          borderColor: "#E8E3D8",
+                          background: "#FAFAF8",
+                          color: "#0B1E3A",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Partner code */}
+                  <div>
+                    <label htmlFor="contact-partner" className="block text-sm font-semibold mb-2" style={{ color: "#0B1E3A" }}>
+                      {t("landing.contact.partnerCodeLabel")}
+                    </label>
+                    <input
+                      id="contact-partner"
+                      name="partnerCode"
+                      value={form.partnerCode}
+                      onChange={handleChange}
+                      placeholder={t("landing.contact.partnerCodePlaceholder")}
+                      className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
+                      style={{ borderColor: "#E8E3D8", background: "#FAFAF8", color: "#0B1E3A" }}
+                    />
+                  </div>
+
+                  {/* Preferred contact method */}
+                  <div>
+                    <label
+                      className="block text-sm font-semibold mb-2"
+                      style={{ color: "#0B1E3A" }}
+                    >
+                      {t("landing.contact.contactMethodLabel")}
+                    </label>
+                    <div className="flex flex-wrap gap-3">
+                      {(["email", "whatsapp", "phone"] as const).map((method) => (
+                        <label
+                          key={method}
+                          className="flex items-center gap-2 cursor-pointer rounded-lg border px-4 py-2.5 text-sm transition-all"
+                          style={{
+                            borderColor:
+                              form.contactMethod === method ? "#B08A3E" : "#E8E3D8",
+                            background:
+                              form.contactMethod === method
+                                ? "rgba(176,138,62,0.08)"
+                                : "#FAFAF8",
+                            color: "#0B1E3A",
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            name="contactMethod"
+                            value={method}
+                            checked={form.contactMethod === method}
+                            onChange={handleChange}
+                            className="sr-only"
+                          />
+                          {method === "email" && <Mail className="h-4 w-4" style={{ color: "#B08A3E" }} />}
+                          {method === "whatsapp" && <MessageCircle className="h-4 w-4" style={{ color: "#B08A3E" }} />}
+                          {method === "phone" && <Phone className="h-4 w-4" style={{ color: "#B08A3E" }} />}
+                          {t(`landing.contact.contactMethod${method.charAt(0).toUpperCase() + method.slice(1)}`)}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label
+                      htmlFor="contact-message"
+                      className="block text-sm font-semibold mb-1.5"
+                      style={{ color: "#0B1E3A" }}
+                    >
+                      {t("landing.contact.messageLabel")} *
+                    </label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      required
+                      rows={4}
+                      value={form.message}
+                      onChange={handleChange}
+                      placeholder={t("landing.contact.messagePlaceholder")}
+                      className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2 resize-none"
+                      style={{
+                        borderColor: "#E8E3D8",
+                        background: "#FAFAF8",
+                        color: "#0B1E3A",
+                      }}
+                    />
+                  </div>
+
+                  {/* Error message */}
+                  {error && (
+                    <p className="text-sm font-medium" style={{ color: "#A32D2D" }}>
+                      {error}
+                    </p>
+                  )}
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={sending}
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg text-sm font-bold transition-all hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                    style={{ background: "#B08A3E", color: "#0B1E3A" }}
+                  >
+                    {sending ? (
+                      t("landing.contact.sending")
+                    ) : (
+                      <>
+                        {t("landing.contact.submitBtn")}
+                        <Send className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }

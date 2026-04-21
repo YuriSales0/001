@@ -75,6 +75,7 @@ function JoinCard({
   cta: string
   onClick: () => void
 }) {
+  const { t } = useLocale()
   return (
     <button
       onClick={onClick}
@@ -85,7 +86,7 @@ function JoinCard({
         <Icon className="h-6 w-6" style={{ color: "#B08A3E" }} />
       </div>
       <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#B08A3E" }}>
-        {role === "MANAGER" ? "Manager" : "Crew"}
+        {role === "MANAGER" ? t("landing.join.manager.roleLabel") : t("landing.join.crew.roleLabel")}
       </p>
       <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
       <p className="text-sm text-gray-400 leading-relaxed mb-5">{tagline}</p>
@@ -137,6 +138,13 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
     setSubmitting(false)
     if (res.ok) {
       setSubmitted(true)
+      if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'generate_lead', {
+          send_to: 'G-GE38PW30QQ',
+          event_category: 'careers',
+          event_label: role,
+        })
+      }
     } else {
       const data = await res.json().catch(() => ({}))
       setError(data.error || t("common.error"))
@@ -150,14 +158,14 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
     { code: "sv", label: "Svenska" }, { code: "no", label: "Norsk" }, { code: "da", label: "Dansk" },
   ]
   const SKILLS = [
-    { code: "CLEANING", label: t("crew.cleaning") || "Cleaning" },
-    { code: "MAINTENANCE", label: t("crew.maintenance") || "Maintenance" },
-    { code: "CHECK_IN", label: "Check-in" },
-    { code: "CHECK_OUT", label: "Check-out" },
-    { code: "INSPECTION", label: "Inspection" },
-    { code: "HANDYMAN", label: "Handyman" },
-    { code: "LAUNDRY", label: "Laundry" },
-    { code: "GARDENING", label: "Gardening" },
+    { code: "CLEANING", label: t("landing.join.form.skillCleaning") },
+    { code: "MAINTENANCE", label: t("landing.join.form.skillMaintenance") },
+    { code: "CHECK_IN", label: t("landing.join.form.skillCheckIn") },
+    { code: "CHECK_OUT", label: t("landing.join.form.skillCheckOut") },
+    { code: "INSPECTION", label: t("landing.join.form.skillInspection") },
+    { code: "HANDYMAN", label: t("landing.join.form.skillHandyman") },
+    { code: "LAUNDRY", label: t("landing.join.form.skillLaundry") },
+    { code: "GARDENING", label: t("landing.join.form.skillGardening") },
   ]
 
   const toggleArray = (field: "languages" | "skills", value: string) => {
@@ -306,10 +314,10 @@ function RecruitModal({ role, locale, onClose }: { role: RecruitRole; locale: st
                   style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
                 >
                   <option value="" style={{ background: "#0B1E3A" }}>{t("landing.join.form.availability")}</option>
-                  <option value="full-time" style={{ background: "#0B1E3A" }}>Full-time</option>
-                  <option value="part-time" style={{ background: "#0B1E3A" }}>Part-time</option>
-                  <option value="weekends" style={{ background: "#0B1E3A" }}>Weekends only</option>
-                  <option value="flexible" style={{ background: "#0B1E3A" }}>Flexible</option>
+                  <option value="full-time" style={{ background: "#0B1E3A" }}>{t("landing.join.form.fullTime")}</option>
+                  <option value="part-time" style={{ background: "#0B1E3A" }}>{t("landing.join.form.partTime")}</option>
+                  <option value="weekends" style={{ background: "#0B1E3A" }}>{t("landing.join.form.weekends")}</option>
+                  <option value="flexible" style={{ background: "#0B1E3A" }}>{t("landing.join.form.flexible")}</option>
                 </select>
               </>
             )}

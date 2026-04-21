@@ -28,6 +28,10 @@ export async function PATCH(
     return NextResponse.json({ error: 'status must be PAID or FAILED' }, { status: 400 })
   }
 
+  if (payout.status === 'PAID') {
+    return NextResponse.json({ error: 'Payout already paid' }, { status: 409 })
+  }
+
   const updated = await prisma.crewPayout.update({
     where: { id: params.id },
     data: {

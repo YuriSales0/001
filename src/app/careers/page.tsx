@@ -6,8 +6,10 @@ import { HmLogo } from "@/components/hm/hm-logo"
 import { LanguageSelector } from "@/components/hm/language-selector"
 import { ManagerRecruitSection } from "@/components/hm/manager-recruit-section"
 import { JoinHostMasters } from "@/components/hm/join-hostmasters"
+import { useLocale } from "@/i18n/provider"
 
 export default function CareersPage() {
+  const { t } = useLocale()
   return (
     <div className="min-h-screen font-sans" style={{ background: "#071328" }}>
       {/* Header */}
@@ -17,19 +19,19 @@ export default function CareersPage() {
           <nav className="hidden md:flex items-center gap-8 text-sm text-gray-400">
             <a href="#manager" className="hover:text-white transition-colors">Manager</a>
             <a href="#join" className="hover:text-white transition-colors">Crew</a>
-            <a href="#join" className="hover:text-white transition-colors">Apply</a>
+            <a href="#join" className="hover:text-white transition-colors">{t('landing.join.form.submit').split(' ')[0]}</a>
           </nav>
           <div className="flex items-center gap-3">
             <LanguageSelector />
             <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors">
-              <ArrowLeft className="h-3.5 w-3.5" /> Back to site
+              <ArrowLeft className="h-3.5 w-3.5" /> {t('common.back')}
             </Link>
             <Link
               href="/login"
               className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-all hover:opacity-90"
               style={{ background: "#B08A3E", color: "#0B1E3A" }}
             >
-              Sign in
+              {t('auth.signIn')}
             </Link>
           </div>
         </div>
@@ -47,9 +49,14 @@ export default function CareersPage() {
           <div className="flex items-center gap-2"><HmLogo size={20} variant="compact" onDark />
             <span className="text-xs text-gray-500 ml-2">Costa Tropical · España</span>
           </div>
-          <p className="text-xs text-gray-600">
-            © {new Date().getFullYear()} HostMasters. Property management powered by AI.
-          </p>
+          <div className="flex items-center gap-4">
+            <a href="/partner/login" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">
+              Partner Portal
+            </a>
+            <p className="text-xs text-gray-600">
+              {t('landing.footer.copyright')}
+            </p>
+          </div>
         </div>
       </footer>
     </div>

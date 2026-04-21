@@ -52,17 +52,16 @@ export default function OwnerPlan() {
     },
   ]
 
-  const [currentPlan, setCurrentPlan] = useState<PlanId>("BASIC")
+  const [currentPlan, setCurrentPlan] = useState<PlanId>("STARTER")
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly")
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    type PropertyWithOwner = { owner?: { subscriptionPlan?: PlanId } }
-    fetch("/api/properties")
-      .then(r => r.ok ? r.json() : [])
-      .then((props: PropertyWithOwner[]) => {
-        const plan = props[0]?.owner?.subscriptionPlan as PlanId
-        if (plan) setCurrentPlan(plan)
+    fetch("/api/me")
+      .then(r => r.ok ? r.json() : null)
+      .then((me: { subscriptionPlan?: PlanId | null } | null) => {
+        const plan = me?.subscriptionPlan as PlanId | null
+        setCurrentPlan(plan ?? "STARTER")
       })
       .finally(() => setLoading(false))
   }, [])

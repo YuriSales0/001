@@ -7,6 +7,7 @@ import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES, PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from '@/lib/finance'
 import { ConfirmDialog } from '@/components/hm/confirm-dialog'
 import { useEscapeKey } from '@/lib/use-escape-key'
+import { useLocale } from '@/i18n/provider'
 
 type Payout = {
   id: string
@@ -30,31 +31,32 @@ const fmtDate = (s: string) => new Date(s).toLocaleDateString('pt-PT')
 const PLATFORMS = ['AIRBNB', 'BOOKING', 'VRBO', 'DIRECT', 'OTHER']
 
 function HowItWorksModal({ onClose }: { onClose: () => void }) {
+  const { t } = useLocale()
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-hm-black">Como funciona — Payouts</h2>
+          <h2 className="text-lg font-bold text-hm-black">{t('admin.payouts.howItWorksTitle')}</h2>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>
         <div className="p-5 space-y-4 text-sm text-gray-700">
 
-          {/* Fluxo automático */}
+          {/* Payment flow */}
           <div className="rounded-lg border p-4 space-y-2">
-            <h3 className="font-semibold text-hm-black mb-3">Fluxo de pagamento</h3>
+            <h3 className="font-semibold text-hm-black mb-3">{t('admin.payouts.paymentFlow')}</h3>
             {[
-              { label: 'Hóspede paga Airbnb / Booking', status: 'auto', note: 'Payout agendado automaticamente ao criar reserva' },
-              { label: 'Dinheiro chega ao banco', status: 'manual', note: 'Admin clica "Mark paid" — futuro: Open Banking detecta automaticamente' },
-              { label: 'Invoice ao proprietário', status: 'auto', note: 'Gerado automaticamente quando payout é marcado pago' },
-              { label: 'Invoice de subscrição', status: 'manual', note: 'Manual por agora — futuro: Stripe webhook cria automaticamente' },
+              { label: t('admin.payouts.guestPays'), status: 'auto', note: t('admin.payouts.guestPaysNote') },
+              { label: t('admin.payouts.moneyArrives'), status: 'manual', note: t('admin.payouts.moneyArrivesNote') },
+              { label: t('admin.payouts.ownerInvoice'), status: 'auto', note: t('admin.payouts.ownerInvoiceNote') },
+              { label: t('admin.payouts.subscriptionInvoice'), status: 'manual', note: t('admin.payouts.subscriptionInvoiceNote') },
             ].map(row => (
               <div key={row.label} className="flex items-start gap-3 py-2 border-b last:border-0">
                 <span className={`mt-0.5 shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                   row.status === 'auto' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
                 }`}>
-                  {row.status === 'auto' ? 'Auto' : 'Manual'}
+                  {row.status === 'auto' ? t('admin.payouts.auto') : t('admin.payouts.manualLabel')}
                 </span>
                 <div>
                   <div className="font-medium text-hm-black text-xs">{row.label}</div>
@@ -65,7 +67,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="rounded-lg border p-4 space-y-2">
-            <h3 className="font-semibold text-hm-black">Data de pagamento por plataforma</h3>
+            <h3 className="font-semibold text-hm-black">{t('admin.payouts.paymentDateByPlatform')}</h3>
             {Object.entries(PLATFORM_RULES).map(([platform, rule]) => (
               <div key={platform} className="flex items-center justify-between">
                 <span className="text-gray-600">{PLATFORM_LABELS[platform] ?? platform}</span>
@@ -74,13 +76,13 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
             ))}
           </div>
           <div className="rounded-lg border p-4 space-y-2">
-            <h3 className="font-semibold text-hm-black">Comissão por plano</h3>
+            <h3 className="font-semibold text-hm-black">{t('admin.payouts.commissionByPlan')}</h3>
             <div className="grid grid-cols-2 gap-1 text-xs">
               {[
-                { plan: 'STARTER', rate: '22%', price: 'Grátis' },
-                { plan: 'BASIC',   rate: '20%', price: '€89/mês' },
-                { plan: 'MID',     rate: '17%', price: '€159/mês' },
-                { plan: 'PREMIUM', rate: '13%', price: '€269/mês' },
+                { plan: 'STARTER', rate: '22%', price: t('admin.payouts.free') },
+                { plan: 'BASIC',   rate: '20%', price: '€89/m' },
+                { plan: 'MID',     rate: '17%', price: '€159/m' },
+                { plan: 'PREMIUM', rate: '13%', price: '€269/m' },
               ].map(r => (
                 <div key={r.plan} className="rounded-md bg-gray-50 px-3 py-2">
                   <div className="font-semibold text-hm-black">{r.plan}</div>
@@ -91,13 +93,12 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
           <p className="text-xs text-gray-500">
-            O payout é calculado automaticamente sobre o valor bruto de cada reserva.
-            Dias úteis excluem sábados e domingos.
+            {t('admin.payouts.payoutCalcNote')}
           </p>
         </div>
         <div className="p-5 border-t">
           <button onClick={onClose} className="w-full rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90">
-            Fechar
+            {t('admin.payouts.close')}
           </button>
         </div>
       </div>
@@ -124,6 +125,7 @@ function CreatePayoutModal({
   const [description, setDescription] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const { t } = useLocale()
 
   useEscapeKey(true, onClose)
 
@@ -137,7 +139,7 @@ function CreatePayoutModal({
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!propertyId || gross <= 0) { setError('Selecciona uma propriedade e um valor válido.'); return }
+    if (!propertyId || gross <= 0) { setError(t('admin.payouts.selectPropertyAndAmount')); return }
     setSaving(true)
     setError('')
     const res = await fetch('/api/payouts', {
@@ -148,7 +150,7 @@ function CreatePayoutModal({
     setSaving(false)
     if (!res.ok) {
       const data = await res.json().catch(() => ({}))
-      setError((data as { error?: string }).error || 'Erro ao criar payout.')
+      setError((data as { error?: string }).error || t('admin.payouts.errorCreating'))
       return
     }
     onCreated()
@@ -159,22 +161,22 @@ function CreatePayoutModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-hm-black">Criar payout manual</h2>
+          <h2 className="text-lg font-bold text-hm-black">{t('admin.payouts.createPayoutTitle')}</h2>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           {error && <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Propriedade *</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.propertyLabel')} *</label>
             <select value={propertyId} onChange={e => setPropertyId(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required>
-              <option value="">Seleccionar propriedade...</option>
+              <option value="">{t('admin.payouts.selectProperty')}</option>
               {properties.map(p => (
                 <option key={p.id} value={p.id}>{p.name} — {p.owner.name || p.owner.email}</option>
               ))}
             </select>
             {selectedProp && (
               <p className="mt-1 text-xs text-gray-500">
-                Proprietário: {selectedProp.owner.name || selectedProp.owner.email}
+                {t('admin.payouts.ownerLabel')}: {selectedProp.owner.name || selectedProp.owner.email}
                 {selectedProp.owner.subscriptionPlan && (
                   <span className="ml-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 font-medium text-gray-600">{selectedProp.owner.subscriptionPlan}</span>
                 )}
@@ -183,51 +185,51 @@ function CreatePayoutModal({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Valor recebido da plataforma (EUR) *</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.grossAmountLabel')} *</label>
               <input type="number" min="1" step="0.01" value={grossAmount} onChange={e => setGrossAmount(e.target.value)} placeholder="0.00" className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.platformLabel')}</label>
               <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
-                <option value="">Nenhuma</option>
+                <option value="">{t('admin.payouts.noPlatform')}</option>
                 {PLATFORMS.map(pl => <option key={pl} value={pl}>{PLATFORM_LABELS[pl] ?? pl}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada *</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.scheduledDateLabel')} *</label>
             <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
-            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="ex: Ajuste manual — Jan 2026" className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.descriptionLabel')}</label>
+            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder={t('admin.payouts.descriptionPlaceholder')} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           {gross > 0 && (
             <div className="rounded-lg bg-gray-50 border divide-y text-sm">
               <div className="flex justify-between px-3 py-2">
-                <span className="text-gray-500">Recebido da plataforma</span>
+                <span className="text-gray-500">{t('admin.payouts.receivedFromPlatform')}</span>
                 <span className="font-medium">{fmtEUR(gross)}</span>
               </div>
               <div className="flex justify-between px-3 py-2 text-orange-600">
                 <span>
-                  Comissão HostMasters
+                  {t('admin.payouts.hmCommission')}
                   {plan
                     ? <span className="ml-1 rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-bold">{plan} · {rateLabel}</span>
-                    : <span className="ml-1 text-xs text-gray-400">(plano padrão · {rateLabel})</span>
+                    : <span className="ml-1 text-xs text-gray-400">({t('admin.payouts.defaultPlan')} · {rateLabel})</span>
                   }
                 </span>
                 <span>− {fmtEUR(commission)}</span>
               </div>
               <div className="flex justify-between px-3 py-2.5 font-semibold border-t-2">
-                <span>Valor a receber pelo proprietário</span>
+                <span>{t('admin.payouts.ownerReceives')}</span>
                 <span className="text-green-600">{fmtEUR(net)}</span>
               </div>
             </div>
           )}
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">{t('admin.payouts.cancel')}</button>
             <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
-              {saving ? 'A criar...' : 'Criar payout'}
+              {saving ? t('admin.payouts.creating') : t('admin.payouts.createPayout')}
             </button>
           </div>
         </form>
@@ -247,6 +249,7 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
   const [description, setDescription] = useState(payout.description ?? '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const { t } = useLocale()
 
   useEscapeKey(true, onClose)
 
@@ -272,7 +275,7 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
     setSaving(false)
     if (!res.ok) {
       const data = await res.json().catch(() => ({}))
-      setError((data as { error?: string }).error || 'Erro ao guardar.')
+      setError((data as { error?: string }).error || t('admin.payouts.errorSaving'))
       return
     }
     onSaved()
@@ -283,49 +286,49 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-bold text-hm-black">Editar payout</h2>
+          <h2 className="text-lg font-bold text-hm-black">{t('admin.payouts.editPayoutTitle')}</h2>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="p-5 space-y-4">
           {error && <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>}
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Valor bruto (€)</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.grossLabel')}</label>
             <input type="number" step="0.01" min="0" value={grossAmount} onChange={e => setGrossAmount(e.target.value)}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
             {gross > 0 && (
               <div className="mt-2 rounded-lg bg-gray-50 border divide-y text-sm">
                 <div className="flex justify-between px-3 py-2 text-orange-600">
-                  <span>Comissão ({payout.commissionRate}%)</span>
+                  <span>{t('admin.payouts.commissionLabel')} ({payout.commissionRate}%)</span>
                   <span>− {fmtEUR(commission)}</span>
                 </div>
                 <div className="flex justify-between px-3 py-2 font-semibold">
-                  <span>Líquido</span>
+                  <span>{t('admin.payouts.netLabel')}</span>
                   <span className="text-green-600">{fmtEUR(net)}</span>
                 </div>
               </div>
             )}
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Data agendada</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.scheduledLabel')}</label>
             <input type="date" value={scheduledFor} onChange={e => setScheduledFor(e.target.value)}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" required />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Plataforma</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.platform')}</label>
             <select value={platform} onChange={e => setPlatform(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
-              <option value="">— Nenhuma —</option>
+              <option value="">{t('admin.payouts.nonePlatform')}</option>
               {PLATFORMS.map(p => <option key={p} value={p}>{PLATFORM_LABELS[p] ?? p}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Descrição</label>
-            <input value={description} onChange={e => setDescription(e.target.value)} placeholder="Opcional"
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('admin.payouts.description')}</label>
+            <input value={description} onChange={e => setDescription(e.target.value)} placeholder={t('admin.payouts.optionalPlaceholder')}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">Cancelar</button>
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border py-2.5 text-sm font-medium hover:bg-gray-50">{t('admin.payouts.cancel')}</button>
             <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-hm-black py-2.5 text-sm font-semibold text-white hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
-              {saving ? 'A guardar...' : 'Guardar'}
+              {saving ? t('admin.payouts.saving') : t('admin.payouts.save')}
             </button>
           </div>
         </form>
@@ -336,6 +339,7 @@ function EditPayoutModal({ payout, onClose, onSaved }: {
 
 export default function PayoutsPage() {
   const { fmt } = useCurrency()
+  const { t } = useLocale()
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
   const [clientFilter, setClientFilter] = useState('')
@@ -417,39 +421,39 @@ export default function PayoutsPage() {
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-3xl font-serif font-bold text-hm-black">Payouts</h1>
-          <p className="text-sm text-gray-600">Pagamentos automaticos por plataforma - comissao calculada por plano</p>
+          <p className="text-sm text-gray-600">{t('admin.payouts.subtitle')}</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           <button onClick={() => setShowHowItWorks(true)} className="inline-flex items-center gap-1.5 rounded-md border px-3 py-2 text-sm text-gray-600 hover:bg-gray-50">
             <Info className="h-4 w-4" />
-            Como funciona
+            {t('admin.payouts.howItWorks')}
           </button>
           <Link href="/manager/invoices" className="inline-flex items-center gap-1.5 rounded-md bg-gray-100 text-gray-700 px-4 py-2 text-sm hover:bg-gray-200">
             <Receipt className="h-4 w-4" />
-            Invoices
+            {t('admin.payouts.invoices')}
           </Link>
           <button onClick={() => setShowCreate(true)} className="inline-flex items-center gap-1.5 rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90">
             <Plus className="h-4 w-4" />
-            Criar payout
+            {t('admin.payouts.createPayout')}
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="rounded-hm border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500">Agendado (liquido)</div>
+          <div className="text-xs uppercase text-gray-500">{t('admin.payouts.scheduledNet')}</div>
           <div className="text-2xl font-semibold text-hm-black mt-1">{fmt(totals.scheduled)}</div>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500">Comissao pendente</div>
+          <div className="text-xs uppercase text-gray-500">{t('admin.payouts.pendingCommission')}</div>
           <div className="text-2xl font-semibold text-hm-black mt-1">{fmt(totals.commission)}</div>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <div className="text-xs uppercase text-gray-500">Payouts abertos</div>
+          <div className="text-xs uppercase text-gray-500">{t('admin.payouts.openPayouts')}</div>
           <div className="text-2xl font-semibold text-hm-black mt-1">{payouts.filter(p => p.status === 'SCHEDULED').length}</div>
         </div>
         <div className="rounded-hm border bg-white p-4 flex flex-col">
-          <div className="text-xs uppercase text-gray-500 mb-1">Em atraso</div>
+          <div className="text-xs uppercase text-gray-500 mb-1">{t('admin.payouts.overdue')}</div>
           <button
             onClick={() => setOverdueOnly(o => !o)}
             className={`mt-auto inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${overdueOnly ? 'bg-red-600 text-white' : 'bg-red-50 text-red-700 hover:bg-red-100'}`}
@@ -461,23 +465,23 @@ export default function PayoutsPage() {
               </span>
             )}
             <AlertCircle className="h-4 w-4" />
-            {totals.overdueCount} em atraso{overdueOnly && ' (limpar)'}
+            {totals.overdueCount} {t('admin.payouts.overdueCount')}{overdueOnly && ` ${t('admin.payouts.clearFilter')}`}
           </button>
         </div>
       </div>
 
       <form onSubmit={e => { e.preventDefault(); load(clientFilter) }} className="flex gap-2">
-        <input placeholder="Filtrar por cliente, email ou ID..." value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="flex-1 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
-        <button type="submit" className="rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90">Filtrar</button>
+        <input placeholder={t('admin.payouts.filterPlaceholder')} value={clientFilter} onChange={e => setClientFilter(e.target.value)} className="flex-1 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+        <button type="submit" className="rounded-md bg-hm-black text-white px-4 py-2 text-sm hover:bg-hm-black/90">{t('admin.payouts.filter')}</button>
         {clientFilter && (
-          <button type="button" onClick={() => { setClientFilter(''); load('') }} className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">Limpar</button>
+          <button type="button" onClick={() => { setClientFilter(''); load('') }} className="rounded-md border px-4 py-2 text-sm hover:bg-gray-50">{t('admin.payouts.clear')}</button>
         )}
       </form>
 
       {overdueOnly && (
         <div className="flex items-center gap-2 rounded-lg bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-700">
           <AlertCircle className="h-4 w-4 shrink-0" />
-          A mostrar apenas {totals.overdueCount} payout(s) em atraso.
+          {t('admin.payouts.showingOverdue')} {totals.overdueCount} {t('admin.payouts.showingOverdueSuffix')}
         </div>
       )}
 
@@ -486,22 +490,22 @@ export default function PayoutsPage() {
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
             <tr>
-              <th className="px-4 py-3">Propriedade</th>
-              <th className="px-4 py-3">Proprietario</th>
-              <th className="px-4 py-3">Hospede / Descricao</th>
-              <th className="px-4 py-3">Plataforma</th>
-              <th className="px-4 py-3">Checkout</th>
-              <th className="px-4 py-3">Agendado</th>
-              <th className="px-4 py-3 text-right">Bruto</th>
-              <th className="px-4 py-3 text-right">Comissao</th>
-              <th className="px-4 py-3 text-right">Liquido</th>
-              <th className="px-4 py-3">Estado</th>
+              <th className="px-4 py-3">{t('admin.payouts.thProperty')}</th>
+              <th className="px-4 py-3">{t('admin.payouts.thOwner')}</th>
+              <th className="px-4 py-3">{t('admin.payouts.thGuestDesc')}</th>
+              <th className="px-4 py-3">{t('admin.payouts.thPlatform')}</th>
+              <th className="px-4 py-3">{t('admin.payouts.thCheckout')}</th>
+              <th className="px-4 py-3">{t('admin.payouts.thScheduled')}</th>
+              <th className="px-4 py-3 text-right">{t('admin.payouts.thGross')}</th>
+              <th className="px-4 py-3 text-right">{t('admin.payouts.thCommission')}</th>
+              <th className="px-4 py-3 text-right">{t('admin.payouts.thNet')}</th>
+              <th className="px-4 py-3">{t('admin.payouts.thStatus')}</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
           <tbody>
             {loading && <tr><td colSpan={11} className="py-8"><div className="space-y-3 animate-pulse"><div className="h-4 rounded bg-hm-sand w-3/4 mx-auto" /><div className="h-4 rounded bg-hm-sand w-1/2 mx-auto" /></div></td></tr>}
-            {!loading && displayed.length === 0 && <tr><td colSpan={11} className="text-center py-8 text-gray-500">Sem payouts</td></tr>}
+            {!loading && displayed.length === 0 && <tr><td colSpan={11} className="text-center py-8 text-gray-500">{t('admin.payouts.noPayouts')}</td></tr>}
             {displayed.map(p => {
               const overdue = isOverdue(p)
               const guestOrDesc = p.reservation?.guestName ?? p.description ?? '—'
@@ -512,7 +516,7 @@ export default function PayoutsPage() {
                   <td className="px-4 py-3 text-gray-600">{p.property.owner.name || p.property.owner.email}</td>
                   <td className="px-4 py-3 text-gray-600">
                     {guestOrDesc}
-                    {!p.reservation && <span className="ml-1.5 rounded-full bg-purple-100 text-purple-700 px-1.5 py-0.5 text-[10px] font-medium">manual</span>}
+                    {!p.reservation && <span className="ml-1.5 rounded-full bg-purple-100 text-purple-700 px-1.5 py-0.5 text-[10px] font-medium">{t('admin.payouts.manual')}</span>}
                   </td>
                   <td className="px-4 py-3">
                     {p.platform
@@ -521,7 +525,7 @@ export default function PayoutsPage() {
                   </td>
                   <td className="px-4 py-3 text-gray-600">{checkoutStr}</td>
                   <td className={`px-4 py-3 ${overdue ? 'text-red-600 font-semibold' : 'text-gray-600'}`}>
-                    {fmtDate(p.scheduledFor)}{overdue && <span className="ml-1 text-xs">(atraso)</span>}
+                    {fmtDate(p.scheduledFor)}{overdue && <span className="ml-1 text-xs">{t('admin.payouts.late')}</span>}
                   </td>
                   <td className="px-4 py-3 text-right">{fmt(p.grossAmount)}</td>
                   <td className="px-4 py-3 text-right text-orange-600">
@@ -534,7 +538,7 @@ export default function PayoutsPage() {
                       p.status === 'SCHEDULED' ? 'inline-block rounded-full bg-blue-100 text-blue-700 px-2 py-0.5 text-xs' :
                                                   'inline-block rounded-full bg-gray-200 text-gray-700 px-2 py-0.5 text-xs'
                     }>
-                      {p.status === 'PAID' ? 'Pago' : p.status === 'SCHEDULED' ? 'Agendado' : 'Cancelado'}
+                      {p.status === 'PAID' ? t('admin.payouts.statusPaid') : p.status === 'SCHEDULED' ? t('admin.payouts.statusScheduled') : t('admin.payouts.statusCancelled')}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -551,14 +555,14 @@ export default function PayoutsPage() {
                           <button
                             onClick={() => setEditingPayout(p)}
                             className="rounded-lg border p-1.5 text-gray-500 hover:bg-gray-50 hover:text-hm-black transition-colors"
-                            title="Editar"
+                            title={t('admin.payouts.editTooltip')}
                           >
                             <Pencil className="h-3.5 w-3.5" />
                           </button>
                           <button
                             onClick={() => setConfirmAction({ type: 'cancel', id: p.id, label: p.property.owner.name || p.property.owner.email, wasPaid: false })}
                             className="rounded-lg border border-orange-200 p-1.5 text-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                            title="Cancelar"
+                            title={t('admin.payouts.cancelTooltip')}
                           >
                             <Ban className="h-3.5 w-3.5" />
                           </button>
@@ -570,7 +574,7 @@ export default function PayoutsPage() {
                           className="inline-flex items-center gap-1.5 text-xs rounded-lg border border-orange-200 text-orange-600 px-3 py-1.5 hover:bg-orange-50 font-medium transition-colors"
                         >
                           <Ban className="h-3.5 w-3.5" />
-                          Cancelar
+                          {t('admin.payouts.cancelBtn')}
                         </button>
                       )}
                       {p.status === 'CANCELLED' && (
@@ -579,7 +583,7 @@ export default function PayoutsPage() {
                           className="inline-flex items-center gap-1.5 text-xs rounded-lg border border-red-200 text-red-500 px-3 py-1.5 hover:bg-red-50 font-medium transition-colors"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                          Excluir
+                          {t('admin.payouts.deleteBtn')}
                         </button>
                       )}
                     </div>
@@ -610,13 +614,13 @@ export default function PayoutsPage() {
 
       <ConfirmDialog
         open={confirmAction?.type === 'markPaid'}
-        title="Confirmar pagamento"
+        title={t('admin.payouts.confirmPaymentTitle')}
         message={
           confirmAction?.type === 'markPaid'
-            ? `Confirm payout to ${confirmAction.ownerName} of ${fmt(confirmAction.amount)}?\n\nThis will:\n- Mark payout as paid\n- Generate invoice automatically\n- Send Owner Statement by email`
+            ? t('admin.payouts.confirmPaymentMsg').replace('{owner}', confirmAction.ownerName).replace('{amount}', fmt(confirmAction.amount))
             : ''
         }
-        confirmLabel="Mark paid"
+        confirmLabel={t('admin.payouts.markPaid')}
         variant="default"
         onConfirm={() => {
           if (confirmAction?.type === 'markPaid') doMarkPaid(confirmAction.id)
@@ -627,16 +631,16 @@ export default function PayoutsPage() {
 
       <ConfirmDialog
         open={confirmAction?.type === 'cancel'}
-        title="Cancelar payout"
+        title={t('admin.payouts.confirmCancelTitle')}
         message={
           confirmAction?.type === 'cancel'
             ? confirmAction.wasPaid
-              ? `Cancelar payout PAGO de ${confirmAction.label}?\n\nIsto irá:\n- Mudar o estado para CANCELADO\n- Cancelar o invoice auto-gerado associado`
-              : `Cancelar payout agendado de ${confirmAction.label}?\n\nO payout ficará no estado CANCELADO.`
+              ? t('admin.payouts.confirmCancelPaidMsg').replace('{label}', confirmAction.label)
+              : t('admin.payouts.confirmCancelScheduledMsg').replace('{label}', confirmAction.label)
             : ''
         }
-        confirmLabel="Cancelar payout"
-        cancelLabel="Voltar"
+        confirmLabel={t('admin.payouts.confirmCancelBtn')}
+        cancelLabel={t('admin.payouts.confirmCancelBack')}
         variant="warning"
         onConfirm={() => {
           if (confirmAction?.type === 'cancel') doCancelPayout(confirmAction.id)
@@ -647,14 +651,14 @@ export default function PayoutsPage() {
 
       <ConfirmDialog
         open={confirmAction?.type === 'delete'}
-        title="Eliminar payout"
+        title={t('admin.payouts.confirmDeleteTitle')}
         message={
           confirmAction?.type === 'delete'
-            ? `Eliminar permanentemente o payout cancelado de ${confirmAction.label}?\n\nEsta acção não pode ser desfeita.`
+            ? t('admin.payouts.confirmDeleteMsg').replace('{label}', confirmAction.label)
             : ''
         }
-        confirmLabel="Eliminar"
-        cancelLabel="Cancelar"
+        confirmLabel={t('admin.payouts.confirmDeleteBtn')}
+        cancelLabel={t('admin.payouts.confirmDeleteCancel')}
         variant="danger"
         onConfirm={() => {
           if (confirmAction?.type === 'delete') doDeletePayout(confirmAction.id)

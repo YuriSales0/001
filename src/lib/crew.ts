@@ -92,7 +92,7 @@ export function buildChecklist(type: string) {
 export const PLAN_AUTO_TASKS: Record<string, string[]> = {
   STARTER:  [],
   BASIC:    ['INSPECTION'],           // Inspecção pré e pós-estadia
-  MID:      ['INSPECTION'],
+  MID:      ['INSPECTION', 'SHOPPING'],  // Acumulativo: inclui tudo do BASIC + shopping
   PREMIUM:  ['INSPECTION', 'SHOPPING', 'TRANSFER', 'LAUNDRY'],
 }
 

@@ -83,19 +83,21 @@ export default function ManagerProfilePage() {
         </div>
       </div>
 
-      {/* Commission snapshot */}
-      {profile?.commissionRate != null && (
-        <div className="rounded-hm border bg-white p-4 flex items-center gap-4">
-          <div className="rounded-lg p-2 bg-emerald-50">
-            <TrendingUp className="h-5 w-5 text-emerald-600" />
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">{t('manager.profile.yourCommissionRate')}</p>
-            <p className="text-2xl font-bold text-hm-black">{profile.commissionRate}%</p>
-          </div>
-          <div className="ml-auto text-xs text-gray-400">{t('manager.profile.setByAdmin')}</div>
+      {/* Commission snapshot — always visible */}
+      <div className="rounded-hm border bg-white p-4 flex items-center gap-4">
+        <div className="rounded-lg p-2 bg-emerald-50">
+          <TrendingUp className="h-5 w-5 text-emerald-600" />
         </div>
-      )}
+        <div>
+          <p className="text-xs text-gray-500">{t('manager.profile.yourCommissionRate')}</p>
+          {profile?.commissionRate != null ? (
+            <p className="text-2xl font-bold text-hm-black">{profile.commissionRate}%</p>
+          ) : (
+            <p className="text-sm text-gray-400 italic">{t('manager.profile.commissionNotConfigured')}</p>
+          )}
+        </div>
+        <div className="ml-auto text-xs text-gray-400">{t('manager.profile.setByAdmin')}</div>
+      </div>
 
       {/* Photo + identity */}
       <form onSubmit={save} className="rounded-hm border bg-white p-5 space-y-5">

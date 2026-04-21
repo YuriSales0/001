@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { MonthlyReportCard } from "@/components/hm/monthly-report-card"
 import { TrendingUp, Calendar } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
+import { intlLocale, type Locale } from "@/i18n"
 
 type Payout = {
   id: string
@@ -37,8 +39,7 @@ const MONTHS = [
   "July","August","September","October","November","December"
 ]
 
-const fmtEUR = (n: number) =>
-  new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n)
+// fmtEUR is defined inside the component to use the user's locale
 
 function groupByMonth(payouts: Payout[]): MonthGroup[] {
   const map = new Map<string, MonthGroup>()
@@ -79,6 +80,9 @@ function groupByMonth(payouts: Payout[]): MonthGroup[] {
 }
 
 export default function OwnerFinancials() {
+  const { t, locale } = useLocale()
+  const fmtEUR = (n: number) =>
+    new Intl.NumberFormat(intlLocale(locale as Locale), { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n)
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -113,9 +117,9 @@ export default function OwnerFinancials() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">My Earnings</h1>
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-hm-black">{t('client.financials.title')}</h1>
         <p className="mt-1 font-sans text-lg text-hm-slate/70">
-          Your monthly statements and net payments.
+          {t('client.financials.subtitle')}
         </p>
       </div>
 
@@ -125,25 +129,25 @@ export default function OwnerFinancials() {
         <div className="px-6 py-4 border-b border-hm-border">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-hm-gold-dk" />
-            <h2 className="font-serif font-bold text-hm-black text-lg">Year to date</h2>
+            <h2 className="font-serif font-bold text-hm-black text-lg">{t('client.financials.yearToDate')}</h2>
           </div>
         </div>
         <div className="grid grid-cols-3 divide-x divide-hm-border">
           <div className="px-6 py-5 text-center">
             <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-1">
-              Total earnings
+              {t('client.financials.totalEarnings')}
             </p>
             <p className="font-serif text-2xl font-bold text-hm-black">{fmtEUR(yearToDate.net)}</p>
           </div>
           <div className="px-6 py-5 text-center">
             <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-1">
-              Gross income
+              {t('client.financials.grossIncome')}
             </p>
             <p className="font-serif text-2xl font-bold text-hm-black">{fmtEUR(yearToDate.gross)}</p>
           </div>
           <div className="px-6 py-5 text-center">
             <p className="font-sans text-xs uppercase tracking-widest text-hm-slate/60 mb-1">
-              Bookings
+              {t('client.financials.bookings')}
             </p>
             <p className="font-serif text-2xl font-bold text-hm-black">{yearToDate.bookings}</p>
           </div>
@@ -155,14 +159,14 @@ export default function OwnerFinancials() {
         <div className="rounded-hm border border-hm-border p-12 text-center"
              style={{ background: 'var(--hm-sand)' }}>
           <Calendar className="h-12 w-12 mx-auto mb-3 text-hm-slate/30" />
-          <p className="font-serif text-xl text-hm-black mb-1">No statements yet</p>
+          <p className="font-serif text-xl text-hm-black mb-1">{t('client.financials.noStatements')}</p>
           <p className="font-sans text-hm-slate/60">
-            Your first statement will appear here after your first booking is completed.
+            {t('client.financials.firstStatement')}
           </p>
         </div>
       ) : (
         <div className="space-y-5">
-          <h2 className="font-serif text-xl font-bold text-hm-black">Monthly statements</h2>
+          <h2 className="font-serif text-xl font-bold text-hm-black">{t('client.financials.monthlyStatements')}</h2>
           {monthGroups.map(group => (
             <MonthlyReportCard
               key={group.monthKey}

@@ -3,16 +3,12 @@
   "framework": "nextjs",
   "crons": [
     {
-      "path": "/api/cron/monthly-statements",
-      "schedule": "0 8 1 * *"
-    },
-    {
       "path": "/api/cron/ai-monitor",
       "schedule": "0 7 * * *"
     },
     {
-      "path": "/api/cron/scrape-market",
-      "schedule": "0 6 * * 0"
+      "path": "/api/cron/monthly-statements",
+      "schedule": "0 8 1 * *"
     }
   ]
 }

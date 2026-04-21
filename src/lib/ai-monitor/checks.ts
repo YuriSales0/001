@@ -481,8 +481,303 @@ const crew_interventionsOpen: CheckFn = async (now) => {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// CATEGORY: STOCK / CONSUMABLES
+// ─────────────────────────────────────────────────────────────────
+
+const stock_criticalLow: CheckFn = async () => {
+  const lowStockCategories = await prisma.stockLevel.findMany({
+    where: { available: { lt: 5 } },
+    include: { category: { select: { id: true, name: true } } },
+  })
+  // Exclude categories with 0 totalItems (unused categories)
+  const critical = lowStockCategories.filter(s => s.totalItems > 0)
+  if (critical.length === 0) return null
+  return {
+    checkType: 'STOCK_CRITICAL_LOW',
+    severity: 'HIGH',
+    message: `${critical.length} consumable category(ies) with <5 available items — restock needed`,
+    count: critical.length,
+    details: { categories: critical.map(s => ({ id: s.category.id, name: s.category.name, available: s.available })).slice(0, 20) },
+  }
+}
+
+const stock_laundryStuck: CheckFn = async (now) => {
+  // Items stuck in WASHING status for more than 72 hours
+  const threeDaysAgo = new Date(now.getTime() - 72 * 3600 * 1000)
+  const stuckItems = await prisma.consumableItem.count({
+    where: {
+      status: 'WASHING',
+      updatedAt: { lt: threeDaysAgo },
+    },
+  })
+  if (stuckItems === 0) return null
+  return {
+    checkType: 'STOCK_LAUNDRY_STUCK',
+    severity: 'MEDIUM',
+    message: `${stuckItems} consumable item(s) stuck in WASHING status for 72h+ — laundry may be delayed`,
+    count: stuckItems,
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // ALL CHECKS REGISTRY
 // ─────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────
+// CATEGORY: LEAD PIPELINE & AUTOMATION
+// ─────────────────────────────────────────────────────────────────
+
+const lead_convertedNoContract: CheckFn = async () => {
+  const leads = await prisma.lead.findMany({
+    where: { status: 'CONVERTED', convertedUserId: { not: null } },
+    select: { convertedUserId: true, name: true },
+  })
+  let orphaned = 0
+  for (const lead of leads) {
+    if (!lead.convertedUserId) continue
+    const contract = await prisma.contract.findFirst({
+      where: { userId: lead.convertedUserId, signedByUser: true },
+    })
+    if (!contract) orphaned++
+  }
+  if (orphaned === 0) return null
+  return {
+    checkType: 'LEAD_CONVERTED_NO_CONTRACT',
+    severity: 'HIGH',
+    message: `${orphaned} lead(s) marked CONVERTED but client has no signed contract`,
+    count: orphaned,
+  }
+}
+
+const lead_unattributedClients: CheckFn = async () => {
+  const clients = await prisma.user.findMany({
+    where: { role: 'CLIENT' },
+    select: { id: true, email: true },
+  })
+  let unlinked = 0
+  for (const client of clients) {
+    const lead = await prisma.lead.findFirst({
+      where: { OR: [{ convertedUserId: client.id }, { email: client.email }] },
+    })
+    if (!lead) unlinked++
+  }
+  if (unlinked === 0) return null
+  return {
+    checkType: 'CLIENT_NO_LEAD_RECORD',
+    severity: 'MEDIUM',
+    message: `${unlinked} client(s) registered without a lead record in CRM pipeline`,
+    count: unlinked,
+  }
+}
+
+const lead_noFollowUp: CheckFn = async (now) => {
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000)
+  const count = await prisma.lead.count({
+    where: {
+      status: { in: ['NEW', 'CONTACTED'] },
+      updatedAt: { lt: sevenDaysAgo },
+      followUpDate: null,
+    },
+  })
+  if (count === 0) return null
+  return {
+    checkType: 'LEAD_NO_FOLLOWUP_7D',
+    severity: 'MEDIUM',
+    message: `${count} lead(s) without follow-up date, inactive for 7+ days`,
+    count,
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CATEGORY: PARTNER PROGRAM
+// ─────────────────────────────────────────────────────────────────
+
+const partner_payoutOverdue: CheckFn = async (now) => {
+  const count = await prisma.partnerPayout.count({
+    where: {
+      status: 'PENDING',
+      holdUntil: { lt: now },
+    },
+  }).catch(() => 0)
+  if (count === 0) return null
+  return {
+    checkType: 'PARTNER_PAYOUT_OVERDUE',
+    severity: 'HIGH',
+    message: `${count} partner payout(s) past 30-day hold period — ready to approve`,
+    count,
+  }
+}
+
+const partner_reversalDeadline: CheckFn = async (now) => {
+  const in7Days = new Date(now.getTime() + 7 * 24 * 3600 * 1000)
+  const count = await prisma.partnerPayout.count({
+    where: {
+      status: { in: ['PENDING', 'APPROVED'] },
+      reversalDeadline: { gte: now, lte: in7Days },
+    },
+  }).catch(() => 0)
+  if (count === 0) return null
+  return {
+    checkType: 'PARTNER_REVERSAL_DEADLINE_7D',
+    severity: 'MEDIUM',
+    message: `${count} partner payout(s) approaching 60-day reversal deadline in next 7 days`,
+    count,
+  }
+}
+
+const partner_inactiveWithLeads: CheckFn = async () => {
+  const partners = await prisma.partner.findMany({
+    where: { status: 'ACTIVE', totalReferrals: 0 },
+    select: { id: true },
+  }).catch(() => [])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const count = (partners as any[]).length
+  if (count === 0) return null
+  return {
+    checkType: 'PARTNER_ACTIVE_NO_REFERRALS',
+    severity: 'LOW',
+    message: `${count} active partner(s) with zero referrals — consider follow-up visit`,
+    count,
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CATEGORY: MARKETING PLAN HEALTH
+// ─────────────────────────────────────────────────────────────────
+
+const mkt_lowLeadVolume: CheckFn = async (now) => {
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  const dayOfMonth = now.getDate()
+  if (dayOfMonth < 15) return null
+  const leadsThisMonth = await prisma.lead.count({
+    where: { createdAt: { gte: monthStart } },
+  })
+  if (leadsThisMonth >= 10) return null
+  return {
+    checkType: 'MKT_LOW_LEAD_VOLUME',
+    severity: 'HIGH',
+    message: `Only ${leadsThisMonth} leads this month (past day 15) — target is 15-20/month in Phase 1`,
+    count: leadsThisMonth,
+  }
+}
+
+const mkt_lowConversion: CheckFn = async () => {
+  const totalLeads = await prisma.lead.count()
+  const converted = await prisma.lead.count({ where: { status: 'CONVERTED' } })
+  if (totalLeads < 10) return null
+  const rate = (converted / totalLeads) * 100
+  if (rate >= 5) return null
+  return {
+    checkType: 'MKT_LOW_CONVERSION_RATE',
+    severity: 'MEDIUM',
+    message: `Lead conversion rate is ${rate.toFixed(1)}% — target is 10-15% (Phase 1)`,
+    count: 1,
+    details: { rate: rate.toFixed(1), totalLeads, converted },
+  }
+}
+
+const mkt_noPartnerReferrals: CheckFn = async (now) => {
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 3600 * 1000)
+  const partnerLeads = await prisma.lead.count({
+    where: {
+      createdAt: { gte: thirtyDaysAgo },
+      partnerId: { not: null },
+    } as any,
+  })
+  const totalLeads = await prisma.lead.count({
+    where: { createdAt: { gte: thirtyDaysAgo } },
+  })
+  if (totalLeads < 5) return null
+  const pct = (partnerLeads / totalLeads) * 100
+  if (pct >= 10) return null
+  return {
+    checkType: 'MKT_LOW_PARTNER_REFERRALS',
+    severity: 'MEDIUM',
+    message: `Only ${pct.toFixed(0)}% of leads from partners in last 30 days — target is 15%+`,
+    count: partnerLeads,
+    details: { percentage: pct.toFixed(1), partnerLeads, totalLeads },
+  }
+}
+
+const mkt_churnAlert: CheckFn = async (now) => {
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  const churned = await prisma.user.count({
+    where: { role: 'CLIENT', subscriptionPlan: null, updatedAt: { gte: monthStart } },
+  })
+  const active = await prisma.user.count({
+    where: { role: 'CLIENT', subscriptionPlan: { not: null } },
+  })
+  if (active === 0) return null
+  const rate = (churned / active) * 100
+  if (rate < 5) return null
+  return {
+    checkType: 'MKT_HIGH_CHURN',
+    severity: 'CRITICAL',
+    message: `Monthly churn is ${rate.toFixed(1)}% (${churned} lost / ${active} active) — target is <5%`,
+    count: churned,
+    details: { rate: rate.toFixed(1), churned, active },
+  }
+}
+
+const mkt_mrrTracking: CheckFn = async () => {
+  const planPricing: Record<string, number> = { BASIC: 89, MID: 159, PREMIUM: 269 }
+  const planCounts = await prisma.user.groupBy({
+    by: ['subscriptionPlan'],
+    _count: true,
+    where: { role: 'CLIENT', subscriptionPlan: { not: null } },
+  })
+  const mrr = planCounts.reduce((sum, p) => {
+    return sum + (planPricing[p.subscriptionPlan ?? ''] ?? 0) * p._count
+  }, 0)
+  if (mrr >= 2500) return null
+  return {
+    checkType: 'MKT_MRR_BELOW_TARGET',
+    severity: 'MEDIUM',
+    message: `MRR is €${mrr.toLocaleString()} — Phase 1 target is €2,500+`,
+    count: 1,
+    details: { mrr, target: 2500 },
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CATEGORY: STAY REVIEWS (MANDATORY)
+// ─────────────────────────────────────────────────────────────────
+
+const review_pendingOverdue: CheckFn = async (now) => {
+  const fortyEightHoursAgo = new Date(now.getTime() - 48 * 3600 * 1000)
+  const overdue = await prisma.reservation.count({
+    where: {
+      status: 'COMPLETED',
+      checkOut: { lt: fortyEightHoursAgo },
+      stayReview: null,
+    },
+  })
+  if (overdue === 0) return null
+  return {
+    checkType: 'REVIEW_PENDING_48H',
+    severity: 'HIGH',
+    message: `${overdue} checkout(s) without cleaning review for 48h+ — Manager must review`,
+    count: overdue,
+  }
+}
+
+const review_lowScoreTrend: CheckFn = async () => {
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 3600 * 1000)
+  const recentReviews = await prisma.stayReview.findMany({
+    where: { createdAt: { gte: thirtyDaysAgo } },
+    select: { overallRating: true, crewMemberId: true },
+  })
+  if (recentReviews.length < 5) return null
+  const avgRating = recentReviews.reduce((s, r) => s + Number(r.overallRating), 0) / recentReviews.length
+  if (avgRating >= 3.5) return null
+  return {
+    checkType: 'REVIEW_LOW_AVG_30D',
+    severity: 'CRITICAL',
+    message: `Average cleaning review score is ${avgRating.toFixed(1)} in last 30 days — below 3.5 threshold`,
+    count: recentReviews.length,
+    details: { avgRating: avgRating.toFixed(2), reviewCount: recentReviews.length },
+  }
+}
 
 export const ALL_CHECKS: CheckFn[] = [
   // Reservations (4)
@@ -511,8 +806,11 @@ export const ALL_CHECKS: CheckFn[] = [
   // Tax (2)
   tax_overdue,
   tax_dueIn7Days,
-  // CRM (1)
+  // CRM & Lead Pipeline (4)
   lead_staleContact,
+  lead_convertedNoContract,
+  lead_unattributedClients,
+  lead_noFollowUp,
   // Crew Health (6)
   crew_scoreDrop,
   crew_suspended,
@@ -520,6 +818,22 @@ export const ALL_CHECKS: CheckFn[] = [
   crew_propertyRisk,
   crew_payoutStuck,
   crew_interventionsOpen,
+  // Partner Program (3)
+  partner_payoutOverdue,
+  partner_reversalDeadline,
+  partner_inactiveWithLeads,
+  // Marketing Plan Health (5)
+  mkt_lowLeadVolume,
+  mkt_lowConversion,
+  mkt_noPartnerReferrals,
+  mkt_churnAlert,
+  mkt_mrrTracking,
+  // Stay Reviews — Mandatory (2)
+  review_pendingOverdue,
+  review_lowScoreTrend,
+  // Stock / Consumables (2)
+  stock_criticalLow,
+  stock_laundryStuck,
 ]
 
-// Total: 27 checks
+// Total: 43 checks

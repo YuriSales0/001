@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Sparkles, Lock, TrendingUp, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { useLocale } from '@/i18n/provider'
 
 type PlanData = {
   subscriptionPlan: string | null
@@ -16,6 +17,7 @@ type DataPoint = {
 }
 
 export default function ClientAIPage() {
+  const { t } = useLocale()
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [stats, setStats] = useState<DataPoint[]>([])
   const [loading, setLoading] = useState(true)
@@ -37,7 +39,8 @@ export default function ClientAIPage() {
     </div>
   )
 
-  const hasAccess = plan?.subscriptionPlan && ['MID', 'PREMIUM'].includes(plan.subscriptionPlan)
+  const AI_ACCESS_PLANS = ['MID', 'PREMIUM']
+  const hasAccess = plan?.subscriptionPlan && AI_ACCESS_PLANS.includes(plan.subscriptionPlan)
 
   if (!hasAccess) {
     return (
@@ -46,19 +49,17 @@ export default function ClientAIPage() {
           <Lock className="h-8 w-8 text-amber-400" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">AI Pricing Intelligence</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('client.aiPage.title')}</h2>
           <p className="text-gray-500">
-            Disponível nos planos <strong>Mid</strong> e <strong>Premium</strong>.
-            O sistema analisa a concorrência nas plataformas e sugere os preços mais competitivos
-            para maximizar a tua receita na Costa Tropical.
+            {t('client.aiPage.lockedDesc')}
           </p>
         </div>
         <div className="rounded-hm border bg-white p-5 text-left space-y-3">
           {[
-            'Análise de preços de concorrência (Airbnb, Booking)',
-            'Sugestões por dia da semana e sazonalidade',
-            'Ajuste automático por ocupação regional',
-            'Relatório mensal de optimização de receita',
+            t('client.aiPage.feat1'),
+            t('client.aiPage.feat2'),
+            t('client.aiPage.feat3'),
+            t('client.aiPage.feat4'),
           ].map(f => (
             <div key={f} className="flex items-center gap-2 text-sm text-gray-700">
               <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
@@ -70,7 +71,7 @@ export default function ClientAIPage() {
           href="/client/plan"
           className="inline-flex items-center gap-2 rounded-lg bg-amber-500 text-white px-6 py-3 font-semibold text-sm hover:bg-amber-600 transition-colors"
         >
-          Ver planos
+          {t('client.aiPage.seePlans')}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -85,19 +86,19 @@ export default function ClientAIPage() {
       <div>
         <h1 className="text-2xl font-serif font-bold text-gray-900 flex items-center gap-2">
           <Sparkles className="h-6 w-6 text-amber-500" />
-          AI Pricing Intelligence
+          {t('client.aiPage.title')}
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Análise de preços das tuas propriedades · plano {plan?.subscriptionPlan}
+          {t('client.aiPage.subtitle')} · {plan?.subscriptionPlan}
         </p>
       </div>
 
       {stats.length === 0 ? (
         <div className="rounded-hm border-2 border-dashed border-gray-200 p-12 text-center">
           <Sparkles className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-          <h3 className="font-semibold text-gray-700 mb-1">Dados em recolha</h3>
+          <h3 className="font-semibold text-gray-700 mb-1">{t('client.aiPage.collecting')}</h3>
           <p className="text-sm text-gray-500">
-            Os dados são recolhidos a cada reserva. As análises estarão disponíveis em breve.
+            {t('client.aiPage.collectingDesc')}
           </p>
         </div>
       ) : (
@@ -105,7 +106,7 @@ export default function ClientAIPage() {
           <div className="rounded-hm border bg-white p-5">
             <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gray-400" />
-              Sazonalidade — preço médio/noite
+              {t('client.aiPage.seasonality')}
             </h3>
             <div className="space-y-2">
               {stats.map(m => (
@@ -130,15 +131,14 @@ export default function ClientAIPage() {
             <div>
               <h3 className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
-                Integração com concorrência
+                {t('client.aiPage.competitorTitle')}
               </h3>
               <p className="text-sm text-amber-800">
-                A equipa HostMasters está a activar a integração com dados de mercado (PriceLabs)
-                para o teu plano {plan?.subscriptionPlan}. Receberás uma notificação assim que estiver disponível.
+                {t('client.aiPage.competitorDesc')}
               </p>
             </div>
             <div className="mt-4 text-xs text-amber-700 bg-amber-100 rounded-lg px-3 py-2">
-              Previsão: Q2 2026 · Os teus dados históricos já estão a ser recolhidos
+              {t('client.aiPage.competitorEta')}
             </div>
           </div>
         </div>

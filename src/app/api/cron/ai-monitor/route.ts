@@ -5,7 +5,7 @@ import { ALL_CHECKS, type CheckResult } from '@/lib/ai-monitor/checks'
 import { analyzeAlert } from '@/lib/ai-monitor/ai-analysis'
 import { autoFix } from '@/lib/ai-monitor/auto-fix'
 import { sendAlertEmail, sendWebhook, shouldNotify } from '@/lib/ai-monitor/notifier'
-import { notifyMany } from '@/lib/notifications'
+import { notify, notifyMany, tForUser } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300
@@ -188,6 +188,36 @@ export async function GET(request: NextRequest) {
   }
 
   // ═══════════════════════════════════════════════════════════════
+  // Gap #8: TAX DEADLINE — notify affected clients (not just admins)
+  // ═══════════════════════════════════════════════════════════════
+  const taxAlerts = enrichedAlerts.filter(a =>
+    a.checkType === 'TAX_DUE_SOON' || a.checkType === 'TAX_OVERDUE',
+  )
+
+  if (taxAlerts.length > 0) {
+    const in7Days = new Date(now.getTime() + 7 * 24 * 3600 * 1000)
+    const taxObligations = await prisma.taxObligation.findMany({
+      where: {
+        status: { in: ['NOT_STARTED', 'IN_PROGRESS', 'ACTION_REQUIRED'] },
+        dueDate: { lte: in7Days },
+      },
+      select: { userId: true, type: true, dueDate: true },
+    })
+
+    const clientIds = Array.from(new Set(taxObligations.map(t => t.userId)))
+    for (const clientId of clientIds) {
+      tForUser(clientId, 'notifications.taxDeadlineTitle')
+        .then(title =>
+          tForUser(clientId, 'notifications.taxDeadlineBody')
+            .then(body =>
+              notify({ userId: clientId, type: 'TAX_DEADLINE', title, body, link: '/client/tax' })
+            )
+        )
+        .catch(() => {})
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   // RESPONSE SUMMARY
   // ═══════════════════════════════════════════════════════════════
   const summary = {
@@ -214,5 +244,29 @@ export async function GET(request: NextRequest) {
   }
 
   console.log('[AI Monitor] Cron complete:', JSON.stringify(summary))
+
+  // Piggyback other daily jobs (Hobby plan only allows 2 crons)
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  const headers: Record<string, string> = {}
+  if (cronSecret) headers['authorization'] = `Bearer ${cronSecret}`
+
+  const jobs = [
+    '/api/cron/crew-confirmation-timeout',
+    '/api/cron/notification-cleanup',
+    '/api/cron/partner-payout-approval',
+  ]
+  // Crew payout only on Wednesdays
+  if (new Date().getUTCDay() === 3) jobs.push('/api/cron/crew-payout')
+  // Market scrape only on Sundays
+  if (new Date().getUTCDay() === 0) jobs.push('/api/cron/scrape-market')
+  // Monthly score decay on the 1st of every month
+  if (new Date().getUTCDate() === 1) {
+    jobs.push('/api/cron/crew-score-decay')
+  }
+
+  await Promise.allSettled(
+    jobs.map(path => fetch(`${baseUrl}${path}`, { method: 'POST', headers }).catch(() => {}))
+  )
+
   return NextResponse.json(summary)
 }

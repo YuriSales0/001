@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import {
   Wrench, Calendar, MapPin, ClipboardCheck, CheckCircle2, PlayCircle,
   AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save, X, ImagePlus,
+  Package, Info,
 } from "lucide-react"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 import { showToast } from "@/components/hm/toast"
@@ -14,7 +15,7 @@ type Task = {
   id: string
   title: string
   type: string
-  status: "PENDING" | "IN_PROGRESS" | "COMPLETED"
+  status: "PENDING" | "NOTIFIED" | "CONFIRMED" | "IN_PROGRESS" | "SUBMITTED" | "APPROVED" | "REJECTED" | "REDISTRIBUTED" | "COMPLETED"
   dueDate: string
   description: string | null
   notes: string | null
@@ -23,8 +24,17 @@ type Task = {
   property: { id: string; name: string; address: string; city: string }
 }
 
+type Consumable = {
+  id: string
+  category: string
+  quantity: number
+  type: string
+}
+
+const PROPERTY_VISIT_TYPES = ["CHECK_IN", "CHECK_OUT", "CLEANING", "INSPECTION"]
+
 // Compress a File to a small JPEG data URL before upload
-async function compressPhoto(file: File, maxDim = 1280, quality = 0.72): Promise<string> {
+async function compressPhoto(file: File, maxDim = 1280, quality = 0.85): Promise<string> {
   const bitmap = await createImageBitmap(file)
   const ratio = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height))
   const w = Math.round(bitmap.width * ratio)
@@ -84,6 +94,25 @@ export default function CrewHome() {
   })
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [consumables, setConsumables] = useState<Consumable[]>([])
+  const [me, setMe] = useState<{ isCaptain?: boolean } | null>(null)
+  const [loadingConsumables, setLoadingConsumables] = useState(false)
+
+  // Fetch consumables when a property-visit task is selected
+  useEffect(() => {
+    if (!selected || !PROPERTY_VISIT_TYPES.includes(selected.type)) {
+      setConsumables([])
+      return
+    }
+    let cancelled = false
+    setLoadingConsumables(true)
+    fetch(`/api/properties/${selected.property.id}/consumables`)
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (!cancelled) setConsumables(Array.isArray(data) ? data : []) })
+      .catch(() => { if (!cancelled) setConsumables([]) })
+      .finally(() => { if (!cancelled) setLoadingConsumables(false) })
+    return () => { cancelled = true }
+  }, [selected?.id, selected?.type, selected?.property.id])
 
   const uploadPhoto = async (file: File) => {
     if (!selected) return
@@ -128,9 +157,10 @@ export default function CrewHome() {
   const load = async () => {
     setLoading(true)
     setError(null)
+    fetch('/api/me').then(r => r.ok ? r.json() : null).then(d => { if (d) setMe({ isCaptain: d.isCaptain }) }).catch(() => {})
     try {
       const res = await fetch("/api/tasks")
-      if (!res.ok) throw new Error("Failed to load tasks")
+      if (!res.ok) throw new Error(t("crew.home.loadFailed"))
       const data: Task[] = await res.json()
       setTasks(data)
       if (selected) {
@@ -182,6 +212,8 @@ export default function CrewHome() {
   }
 
   const startTask = () => patchTask({ status: "IN_PROGRESS" })
+  const confirmTask = () => patchTask({ status: "CONFIRMED" })
+  const declineTask = () => patchTask({ status: "REDISTRIBUTED" })
 
   const toggleChecklistItem = (idx: number) => {
     if (!selected) return
@@ -207,7 +239,10 @@ export default function CrewHome() {
   const hasMinPhotos = !requiresPhotos || photoCount >= 2
   const checklistDone = selected?.checklist?.filter(c => c.done).length ?? 0
   const checklistTotal = selected?.checklist?.length ?? 0
-  const allChecklistDone = checklistTotal > 0 && checklistDone === checklistTotal
+  const requiresChecklist = ['CHECK_OUT', 'CLEANING'].includes(selected?.type ?? '')
+  const allChecklistDone = checklistTotal > 0
+    ? checklistDone === checklistTotal
+    : !requiresChecklist
 
   return (
     <div className="flex h-[calc(100vh-3.25rem)]">
@@ -289,7 +324,29 @@ export default function CrewHome() {
             return (
               <button
                 key={t.id}
-                onClick={() => { setSelected(t); setCheckout({ condition: "good", issues: "", damages: "", notes: "" }) }}
+                onClick={() => {
+                  setSelected(t)
+                  // Pre-populate checkout form if the task has existing checkout data in notes
+                  if (t.notes) {
+                    try {
+                      const parsed = JSON.parse(t.notes)
+                      if (parsed && typeof parsed === 'object') {
+                        setCheckout({
+                          condition: parsed.condition ?? "good",
+                          issues: parsed.issues ?? "",
+                          damages: parsed.damages ?? "",
+                          notes: parsed.notes ?? "",
+                        })
+                      } else {
+                        setCheckout({ condition: "good", issues: "", damages: "", notes: "" })
+                      }
+                    } catch {
+                      setCheckout({ condition: "good", issues: "", damages: "", notes: "" })
+                    }
+                  } else {
+                    setCheckout({ condition: "good", issues: "", damages: "", notes: "" })
+                  }
+                }}
                 className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
                   active ? "bg-navy-50 border-l-2 border-l-navy-700" : ""
                 }`}
@@ -338,7 +395,7 @@ export default function CrewHome() {
               onClick={() => setSelected(null)}
               className="lg:hidden inline-flex items-center gap-1 text-sm text-gray-600 hover:text-hm-black mb-2"
             >
-              <span aria-hidden="true">&larr;</span> Back to tasks
+              <span aria-hidden="true">&larr;</span> {t('crew.detail.backToTasks')}
             </button>
             {/* Header */}
             <div>
@@ -370,8 +427,86 @@ export default function CrewHome() {
               </div>
             )}
 
-            {/* Start button */}
-            {selected.status === "PENDING" && (
+            {/* Consumables needed for property visit tasks */}
+            {PROPERTY_VISIT_TYPES.includes(selected.type) && (
+              <div className="rounded-hm border bg-white overflow-hidden">
+                <div className="px-4 py-3 border-b bg-gray-50 flex items-center gap-2">
+                  <Package className="h-4 w-4 text-navy-700" />
+                  <span className="font-semibold text-hm-black text-sm">{t('crew.detail.consumablesTitle')}</span>
+                </div>
+                <div className="p-4">
+                  {loadingConsumables && (
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <Loader2 className="h-4 w-4 animate-spin" /> {t('crew.home.loading')}
+                    </div>
+                  )}
+                  {!loadingConsumables && consumables.length === 0 && (
+                    <p className="text-sm text-gray-400">-</p>
+                  )}
+                  {!loadingConsumables && consumables.length > 0 && (
+                    <ul className="space-y-2">
+                      {consumables.map(c => (
+                        <li key={c.id} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-800">{c.category} <span className="text-gray-500">x{c.quantity}</span></span>
+                          <span className="text-[10px] font-semibold rounded-full px-2 py-0.5 bg-gray-100 text-gray-600">{c.type}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {!loadingConsumables && consumables.length > 0 && me?.isCaptain && selected.status === 'CONFIRMED' && (
+                    <button
+                      onClick={async () => {
+                        setSaving(true)
+                        await fetch('/api/admin/consumables/checkout-for-task', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ taskId: selected.id, propertyId: selected.property.id }),
+                        })
+                        setSaving(false)
+                        showToast(t('crew.detail.stockWithdrawn'), 'success')
+                      }}
+                      disabled={saving}
+                      className="w-full mt-3 rounded-lg py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                      style={{ background: 'var(--hm-gold)' }}
+                    >
+                      <Package className="h-4 w-4 inline mr-1" /> {t('crew.detail.confirmPickup')}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Consumables reminder for IN_PROGRESS / SUBMITTED */}
+            {(selected.status === "IN_PROGRESS" || selected.status === "SUBMITTED") && (
+              <div className="rounded-hm border border-blue-200 bg-blue-50 px-4 py-3 flex items-start gap-2">
+                <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
+                <p className="text-xs text-blue-800">{t('crew.detail.consumablesReminder')}</p>
+              </div>
+            )}
+
+            {/* Accept / Decline — NOTIFIED tasks need crew confirmation */}
+            {selected.status === "NOTIFIED" && (
+              <div className="flex gap-3">
+                <button
+                  onClick={confirmTask}
+                  disabled={saving}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl text-white py-3 font-semibold hover:opacity-90 disabled:opacity-50"
+                  style={{ background: 'var(--hm-gold)' }}
+                >
+                  <CheckCircle2 className="h-5 w-5" /> {t('crew.detail.acceptTask')}
+                </button>
+                <button
+                  onClick={declineTask}
+                  disabled={saving}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-2 border-red-300 text-red-600 py-3 font-semibold hover:bg-red-50 disabled:opacity-50"
+                >
+                  <X className="h-5 w-5" /> {t('crew.detail.declineTask')}
+                </button>
+              </div>
+            )}
+
+            {/* Start button — only after crew CONFIRMED */}
+            {(selected.status === "PENDING" || selected.status === "CONFIRMED") && (
               <button
                 onClick={startTask}
                 disabled={saving}

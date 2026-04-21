@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Camera, Save, Lock, Wrench, Percent, TrendingUp, Star, Shield, Zap, AlertTriangle } from "lucide-react"
+import { Camera, Save, Lock, Wrench, Percent, TrendingUp, Star, Shield, Zap, AlertTriangle, ChevronDown } from "lucide-react"
 import { ProfileContractSection } from "@/components/hm/profile-contract-section"
 import { useLocale } from "@/i18n/provider"
 
@@ -90,6 +90,9 @@ export default function CrewProfilePage() {
 
       {/* Performance Score */}
       {score && <ScoreSection score={score} />}
+
+      {/* How Levels Work — collapsible */}
+      <LevelGuideCard />
 
       {/* Role info */}
       <div className="rounded-hm border bg-emerald-50 border-emerald-100 p-4 flex gap-4">
@@ -342,6 +345,104 @@ function ScoreSection({ score }: { score: ScoreData }) {
                 </div>
               )
             })}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function LevelGuideCard() {
+  const { t } = useLocale()
+  const [open, setOpen] = useState(false)
+
+  const levels = [
+    { key: "suspended", color: "text-red-600" },
+    { key: "basic", color: "text-blue-600" },
+    { key: "verified", color: "text-amber-600" },
+    { key: "expert", color: "text-green-600" },
+    { key: "elite", color: "text-yellow-600" },
+  ]
+
+  return (
+    <div className="rounded-hm border bg-white overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+      >
+        <div className="flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-navy-700" />
+          <span className="font-semibold text-hm-black text-sm">{t('crew.levelGuide.title')}</span>
+        </div>
+        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="border-t px-5 py-4 space-y-5">
+          {/* Level Table */}
+          <div>
+            <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">{t('crew.levelGuide.levelTable')}</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-2 pr-2 font-semibold text-gray-600">{t('crew.levelGuide.level')}</th>
+                    <th className="text-left py-2 pr-2 font-semibold text-gray-600">{t('crew.levelGuide.scoreRange')}</th>
+                    <th className="text-left py-2 pr-2 font-semibold text-gray-600">{t('crew.levelGuide.taskBonus')}</th>
+                    <th className="text-left py-2 font-semibold text-gray-600">{t('crew.levelGuide.benefits')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {levels.map(l => (
+                    <tr key={l.key}>
+                      <td className={`py-2 pr-2 font-semibold ${l.color}`}>{t(`crew.score.${l.key}`)}</td>
+                      <td className="py-2 pr-2 text-gray-700">{t(`crew.levelGuide.${l.key}Range`)}</td>
+                      <td className="py-2 pr-2 text-gray-700">{t(`crew.levelGuide.${l.key}Bonus`)}</td>
+                      <td className="py-2 text-gray-700">{t(`crew.levelGuide.${l.key}Benefits`)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* How to Earn */}
+          <div>
+            <h4 className="text-xs font-bold text-green-700 uppercase tracking-wider mb-2">{t('crew.levelGuide.howToEarn')}</h4>
+            <ul className="space-y-1 text-xs text-gray-700">
+              <li className="flex items-center gap-2"><span className="text-green-500 font-bold">+</span>{t('crew.levelGuide.earnTaskOnTime')}</li>
+              <li className="flex items-center gap-2"><span className="text-green-500 font-bold">+</span>{t('crew.levelGuide.earnValidated')}</li>
+              <li className="flex items-center gap-2"><span className="text-green-500 font-bold">+</span>{t('crew.levelGuide.earnOwnerReview')}</li>
+              <li className="flex items-center gap-2"><span className="text-green-500 font-bold">+</span>{t('crew.levelGuide.earnPeakAvailability')}</li>
+            </ul>
+          </div>
+
+          {/* How to Lose */}
+          <div>
+            <h4 className="text-xs font-bold text-red-700 uppercase tracking-wider mb-2">{t('crew.levelGuide.howToLose')}</h4>
+            <ul className="space-y-1 text-xs text-gray-700">
+              <li className="flex items-center gap-2"><span className="text-red-500 font-bold">-</span>{t('crew.levelGuide.loseNotAccepted')}</li>
+              <li className="flex items-center gap-2"><span className="text-red-500 font-bold">-</span>{t('crew.levelGuide.loseNotCompleted')}</li>
+              <li className="flex items-center gap-2"><span className="text-red-500 font-bold">-</span>{t('crew.levelGuide.loseComplaint')}</li>
+              <li className="flex items-center gap-2"><span className="text-red-500 font-bold">-</span>{t('crew.levelGuide.loseUnreportedDamage')}</li>
+            </ul>
+          </div>
+
+          {/* Monthly Decay */}
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+            <h4 className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">{t('crew.levelGuide.monthlyDecayTitle')}</h4>
+            <p className="text-xs text-amber-700 leading-relaxed">{t('crew.levelGuide.monthlyDecayDesc')}</p>
+            <div className="mt-2 text-xs text-amber-600">
+              <p className="font-semibold">{t('crew.levelGuide.monthlyDecayExample')}</p>
+              <p>Elite 800 pts → 500 + (300 × 30%) = <strong>590 pts</strong></p>
+              <p>Expert 400 pts → 300 + (100 × 30%) = <strong>330 pts</strong></p>
+            </div>
+          </div>
+
+          {/* Key Message */}
+          <div className="rounded-lg p-3" style={{ background: 'rgba(176,138,62,0.08)', border: '1px solid rgba(176,138,62,0.15)' }}>
+            <p className="text-xs font-bold text-gray-800">{t('crew.levelGuide.keyMessage')}</p>
           </div>
         </div>
       )}

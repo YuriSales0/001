@@ -11,21 +11,28 @@ const PARTNER_COMMISSION: Record<string, number> = {
 }
 
 async function convertLeadOnContractSign(userId: string) {
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } }) as any
-  if (!user?.email) return
-
   const lead = await prisma.lead.findFirst({
     where: {
       OR: [
         { convertedUserId: userId },
-        { email: user.email },
+        { email: { not: null } },
       ],
       status: { not: 'CONVERTED' },
     },
     orderBy: { createdAt: 'desc' },
   }) as any
 
-  if (!lead) return
+  if (!lead) {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } }) as any
+    if (!user?.email) return
+    const leadByEmail = await prisma.lead.findFirst({
+      where: { email: user.email, status: { not: 'CONVERTED' } },
+      orderBy: { createdAt: 'desc' },
+    }) as any
+    if (!leadByEmail) return
+    await convertLead(leadByEmail.id, leadByEmail.partnerId, userId, leadByEmail.name)
+    return
+  }
 
   await convertLead(lead.id, lead.partnerId, userId, lead.name)
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Building2, Percent } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -9,6 +10,7 @@ interface Profile {
 }
 
 export default function AdminProfilePage() {
+  const { t } = useLocale()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -45,21 +47,21 @@ export default function AdminProfilePage() {
       body: JSON.stringify({ ...form, commissionRate: form.commissionRate ? parseFloat(form.commissionRate) : undefined }),
     })
     if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000) }
-    else { const d = await res.json(); setError(d.error ?? "Failed to save") }
+    else { const d = await res.json(); setError(d.error ?? t("profile.failedToSave")) }
     setSaving(false)
   }
 
   const savePassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setPwError(""); setPwSaved(false)
-    if (pw.next !== pw.confirm) { setPwError("Passwords do not match"); return }
-    if (pw.next.length < 8) { setPwError("Password must be at least 8 characters"); return }
+    if (pw.next !== pw.confirm) { setPwError(t("profile.passwordsDoNotMatch")); return }
+    if (pw.next.length < 8) { setPwError(t("profile.passwordMinLength")); return }
     const res = await fetch("/api/profile", {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ currentPassword: pw.current, newPassword: pw.next }),
     })
     if (res.ok) { setPwSaved(true); setPw({ current: "", next: "", confirm: "" }); setTimeout(() => setPwSaved(false), 3000) }
-    else { const d = await res.json(); setPwError(d.error ?? "Failed to update password") }
+    else { const d = await res.json(); setPwError(d.error ?? t("profile.failedToUpdatePassword")) }
   }
 
   if (loading) return (
@@ -72,8 +74,8 @@ export default function AdminProfilePage() {
   return (
     <div className="space-y-8 p-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-serif font-bold text-hm-black">My Profile</h1>
-        <p className="text-sm text-gray-500">Admin · HostMasters Owner</p>
+        <h1 className="text-2xl font-serif font-bold text-hm-black">{t("profile.title")}</h1>
+        <p className="text-sm text-gray-500">{t("profile.adminSubtitle")}</p>
       </div>
 
       {/* Photo + identity */}
@@ -105,25 +107,25 @@ export default function AdminProfilePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Full name</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t("profile.fullName")}</label>
             <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Phone</label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t("profile.phone")}</label>
             <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
               placeholder="+34 600 000 000" />
           </div>
           <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Bio <span className="text-gray-400 font-normal">(visible to clients)</span></label>
+            <label className="block text-xs font-semibold text-gray-700 mb-1">{t("profile.bio")} <span className="text-gray-400 font-normal">({t("profile.bioHint")})</span></label>
             <textarea rows={3} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
               className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold resize-none"
-              placeholder="Brief introduction visible to property owners…" />
+              placeholder={t("profile.bioPlaceholder")} />
           </div>
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
-              <Percent className="h-3 w-3" /> Company commission rate (%)
+              <Percent className="h-3 w-3" /> {t("profile.commissionRate")}
             </label>
             <input type="number" min="0" max="100" step="0.1" value={form.commissionRate}
               onChange={e => setForm(f => ({ ...f, commissionRate: e.target.value }))}
@@ -134,10 +136,10 @@ export default function AdminProfilePage() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
         <div className="flex items-center justify-between pt-1">
-          {saved && <span className="text-sm text-green-600 font-medium">Saved successfully</span>}
+          {saved && <span className="text-sm text-green-600 font-medium">{t("profile.savedSuccessfully")}</span>}
           <button type="submit" disabled={saving}
             className="ml-auto inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90 disabled:opacity-50 disabled:cursor-not-allowed">
-            <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save changes"}
+            <Save className="h-4 w-4" /> {saving ? t("profile.saving") : t("profile.saveChanges")}
           </button>
         </div>
       </form>
@@ -146,10 +148,10 @@ export default function AdminProfilePage() {
       <form onSubmit={savePassword} className="rounded-hm border bg-white p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="h-4 w-4 text-gray-400" />
-          <span className="text-sm font-semibold text-hm-black">Change password</span>
+          <span className="text-sm font-semibold text-hm-black">{t("profile.changePassword")}</span>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[["Current password", "current"], ["New password", "next"], ["Confirm new", "confirm"]].map(([label, key]) => (
+          {([[t("profile.currentPassword"), "current"], [t("profile.newPassword"), "next"], [t("profile.confirmNew"), "confirm"]] as [string, string][]).map(([label, key]) => (
             <div key={key}>
               <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
               <input type="password" value={pw[key as keyof typeof pw]}
@@ -160,10 +162,10 @@ export default function AdminProfilePage() {
         </div>
         {pwError && <p className="text-sm text-red-600">{pwError}</p>}
         <div className="flex items-center justify-between">
-          {pwSaved && <span className="text-sm text-green-600 font-medium">Password updated</span>}
+          {pwSaved && <span className="text-sm text-green-600 font-medium">{t("profile.passwordUpdated")}</span>}
           <button type="submit"
             className="ml-auto inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white text-gray-700 px-4 py-2.5 text-sm font-medium hover:bg-gray-50">
-            Update password
+            {t("profile.updatePassword")}
           </button>
         </div>
       </form>

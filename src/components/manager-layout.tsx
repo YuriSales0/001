@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Building2, CalendarDays, Users,
   TrendingUp, FileBarChart, Menu, MessageCircle, User, LogOut, X, ChevronRight, ChevronDown,
   BarChart3, FileText, Calendar, Wrench, Home, Wallet, Receipt, Sparkles, Megaphone, Landmark, Activity,
-  Target, Settings, Brain, Briefcase, Link2,
+  Target, Settings, Brain, Briefcase, Link2, Handshake, Star, Package,
 } from "lucide-react"
 import { AiChat } from "@/components/hm/ai-chat"
 import { OnboardingGate } from "@/components/hm/onboarding-gate"
@@ -40,11 +40,13 @@ function useAdminNav(): NavEntry[] {
         { href: "/reservations", label: t('common.reservations'), icon: CalendarDays },
         { href: "/setup", label: t('common.setup'), icon: FileText },
         { href: "/maintenance", label: t('common.maintenance'), icon: Wrench },
+        { href: "/consumables", label: t('admin.consumables.title'), icon: Package },
       ],
     },
     {
       label: t('finance.income'), icon: Wallet, items: [
         { href: "/payouts", label: t('common.payouts'), icon: Wallet },
+        { href: "/expenses", label: t('admin.expenses.title'), icon: Receipt },
         { href: "/manager/invoices", label: t('common.invoices'), icon: Receipt },
         { href: "/report-summary", label: t('common.reports'), icon: FileBarChart },
         { href: "/my-reports", label: t('common.ownerReports'), icon: FileText },
@@ -54,6 +56,7 @@ function useAdminNav(): NavEntry[] {
       label: t('common.administration'), icon: Settings, items: [
         { href: "/team", label: t('common.team'), icon: Users },
         { href: "/recruit", label: t('admin.recruiting'), icon: Briefcase },
+        { href: "/partners", label: t('admin.partners.title'), icon: Handshake },
         { href: "/my-properties", label: t('common.properties'), icon: Building2 },
         { href: "/integrations", label: t('common.integrations'), icon: Landmark },
       ],
@@ -81,6 +84,7 @@ function useManagerNav(): NavEntry[] {
       label: t('common.operations'), icon: CalendarDays, items: [
         { href: "/calendar", label: t('common.calendar'), icon: Calendar },
         { href: "/reservations", label: t('common.reservations'), icon: CalendarDays },
+        { href: "/reviews", label: t('manager.reviews.title'), icon: Star },
         { href: "/properties", label: t('common.properties'), icon: Building2 },
         { href: "/setup", label: t('common.setup'), icon: FileText },
         { href: "/maintenance", label: t('common.maintenance'), icon: Wrench },
@@ -159,10 +163,8 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
             <span className="text-sm font-semibold tracking-tight text-white">
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
-                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
-              {badgeLabel}
-            </span>
+            <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>Beta</span>
           </Link>
           <button aria-label="Close" className="lg:hidden text-white/50 hover:text-white" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4" />

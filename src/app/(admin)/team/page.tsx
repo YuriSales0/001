@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { UserPlus, Trash2, Save, Loader2, Mail, X } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
+import { useLocale } from "@/i18n/provider"
 
 type Role = 'ADMIN' | 'MANAGER' | 'CREW' | 'CLIENT'
 type Plan = 'BASIC' | 'MID' | 'PREMIUM' | null
@@ -20,6 +21,7 @@ type User = {
 }
 
 export default function TeamPage() {
+  const { t } = useLocale()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState({ name: "", email: "", password: "", phone: "", role: "MANAGER", managerId: "" })
@@ -28,6 +30,13 @@ export default function TeamPage() {
   const [edits, setEdits] = useState<Record<string, Partial<User>>>({})
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; label: string } | null>(null)
   const [showInviteModal, setShowInviteModal] = useState(false)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/auth/session').then(r => r.ok ? r.json() : null).then(s => {
+      if (s?.user?.id) setCurrentUserId(s.user.id)
+    }).catch(() => {})
+  }, [])
 
   const load = async () => {
     setLoading(true)
@@ -226,7 +235,13 @@ export default function TeamPage() {
                           </button>
                         )}
                         <button
-                          onClick={() => setDeleteTarget({ id: u.id, label: u.name || u.email })}
+                          onClick={() => {
+                            if (currentUserId && u.id === currentUserId) {
+                              showToast(t('admin.team.cannotDeleteSelf'), 'error')
+                              return
+                            }
+                            setDeleteTarget({ id: u.id, label: u.name || u.email })
+                          }}
                           className="inline-flex items-center gap-1 rounded-md border border-red-200 text-red-600 px-2 py-1 text-xs hover:bg-red-50"
                         >
                           <Trash2 className="h-3 w-3" /> Delete
@@ -277,12 +292,14 @@ export default function TeamPage() {
 type ManagerOption = { id: string; name: string | null; email: string }
 
 function InviteModal({
+
   managers, onClose, onSuccess,
 }: {
   managers: ManagerOption[]
   onClose: () => void
   onSuccess: () => void
 }) {
+  const { t } = useLocale()
   const [role, setRole] = useState<"MANAGER" | "CREW" | "CLIENT">("MANAGER")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -355,7 +372,7 @@ function InviteModal({
       showToast(`Invite sent to ${email}`, "success")
       onSuccess()
     } else {
-      setError(data.error ?? "Failed to send invite")
+      setError(data.error ?? t("common.error"))
     }
   }
 

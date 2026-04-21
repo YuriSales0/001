@@ -11,7 +11,7 @@ const VALID_TRANSITIONS: Record<string, string[]> = {
   PENDING:        ['NOTIFIED', 'IN_PROGRESS', 'COMPLETED'],
   NOTIFIED:       ['CONFIRMED', 'REDISTRIBUTED'],
   CONFIRMED:      ['IN_PROGRESS'],
-  IN_PROGRESS:    ['SUBMITTED', 'COMPLETED'],
+  IN_PROGRESS:    ['SUBMITTED'],
   SUBMITTED:      ['APPROVED', 'REJECTED'],
   APPROVED:       [],
   REJECTED:       ['REDISTRIBUTED', 'IN_PROGRESS'],
@@ -91,13 +91,25 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
             }).catch(() => {})
           }
           break
-        case 'IN_PROGRESS':
+        case 'IN_PROGRESS': {
+          const code = Math.random().toString().slice(2, 8)
+          data.smartLockCode = code
+          data.smartLockExpiresAt = new Date(Date.now() + 4 * 60 * 60 * 1000)
           break
+        }
         case 'SUBMITTED': {
           if (me.role !== 'CREW') return NextResponse.json({ error: 'Only Crew can submit' }, { status: 403 })
-          // Photos mandatory for CHECK_OUT and CLEANING
-          if (['CHECK_OUT', 'CLEANING'].includes(existing.type) && (existing.photos?.length ?? 0) < 2) {
+          // Photos mandatory for CHECK_OUT, CLEANING, and INSPECTION
+          if (['CHECK_OUT', 'CLEANING', 'INSPECTION'].includes(existing.type) && (existing.photos?.length ?? 0) < 2) {
             return NextResponse.json({ error: 'Minimum 2 photos required before submitting' }, { status: 400 })
+          }
+          // Checklist must be complete for tasks that have one
+          if (existing.checklist && Array.isArray(existing.checklist)) {
+            const items = existing.checklist as { done: boolean }[]
+            const allDone = items.length === 0 || items.every(i => i.done)
+            if (!allDone && ['CHECK_OUT', 'CLEANING', 'INSPECTION'].includes(existing.type)) {
+              return NextResponse.json({ error: 'Complete all checklist items before submitting' }, { status: 400 })
+            }
           }
           data.submittedAt = now
           // Auto-set amount from crew rate if not already set
@@ -160,14 +172,22 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       isCheckoutSubmit = true
     }
 
-    // ── Persist ──
-    const task = await prisma.task.update({
-      where: { id: params.id },
-      data,
-      include: {
-        property: { select: { id: true, name: true } },
-        assignee: { select: { id: true, name: true, email: true } },
-      },
+    // ── Persist (with optimistic locking for status changes) ──
+    const task = await prisma.$transaction(async (tx) => {
+      if (newStatus) {
+        const fresh = await tx.task.findUnique({ where: { id: params.id }, select: { status: true } })
+        if (fresh && fresh.status !== existing.status) {
+          throw new Error('CONFLICT')
+        }
+      }
+      return tx.task.update({
+        where: { id: params.id },
+        data,
+        include: {
+          property: { select: { id: true, name: true } },
+          assignee: { select: { id: true, name: true, email: true } },
+        },
+      })
     })
 
     // ── Post-transition side effects + in-app notifications ──
@@ -192,7 +212,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           type: 'TASK_SUBMITTED',
           title: `Task submitted for review`,
           body: `${task.title} at ${task.property.name}`,
-          link: '/tasks',
+          link: '/maintenance',
         }).catch(() => {})
       }
     }
@@ -271,24 +291,47 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       const taskDate = existing.dueDate
       const dayBefore = new Date(taskDate); dayBefore.setDate(dayBefore.getDate() - 1)
       const dayAfter = new Date(taskDate); dayAfter.setDate(dayAfter.getDate() + 1)
-      await prisma.reservation.updateMany({
+      const matchingRes = await prisma.reservation.findFirst({
         where: { propertyId: existing.propertyId, status: 'UPCOMING', checkIn: { gte: dayBefore, lte: dayAfter } },
-        data: { status: 'ACTIVE' },
+        orderBy: { checkIn: 'asc' },
       })
+      if (matchingRes) {
+        await prisma.reservation.update({ where: { id: matchingRes.id }, data: { status: 'ACTIVE' } })
+      }
     }
 
     if (becameCompleted && (existing.type === 'CHECK_OUT' || (isCheckoutSubmit && existing.type === 'CLEANING'))) {
       const taskDate = existing.dueDate
       const dayBefore = new Date(taskDate); dayBefore.setDate(dayBefore.getDate() - 1)
       const dayAfter = new Date(taskDate); dayAfter.setDate(dayAfter.getDate() + 1)
-      await prisma.reservation.updateMany({
+      const matchingRes = await prisma.reservation.findFirst({
         where: { propertyId: existing.propertyId, status: 'ACTIVE', checkOut: { gte: dayBefore, lte: dayAfter } },
-        data: { status: 'COMPLETED' },
+        orderBy: { checkOut: 'asc' },
       })
+      if (matchingRes) {
+        await prisma.reservation.update({ where: { id: matchingRes.id }, data: { status: 'COMPLETED' } })
+      }
+    }
+
+    // Notify Manager to review the stay when CHECK_OUT task is approved/completed
+    if (becameCompleted && (existing.type === 'CHECK_OUT' || existing.type === 'CLEANING')) {
+      const managerId = existing.property.owner.managerId
+      if (managerId) {
+        notify({
+          userId: managerId,
+          type: 'GENERAL',
+          title: `Guest checkout — review the stay`,
+          body: `${existing.property.name} — please submit a stay review for the recent guest`,
+          link: '/reviews',
+        }).catch(() => {})
+      }
     }
 
     return NextResponse.json(task)
   } catch (e) {
+    if (e instanceof Error && e.message === 'CONFLICT') {
+      return NextResponse.json({ error: 'Task was modified by another user. Please refresh.' }, { status: 409 })
+    }
     console.error(e)
     return NextResponse.json({ error: 'Failed to update task' }, { status: 500 })
   }

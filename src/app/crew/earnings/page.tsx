@@ -27,8 +27,14 @@ type MonthData = {
 
 const fmtEUR = (n: number) => new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
 
+const LOCALE_MAP: Record<string, string> = {
+  en: 'en-GB', pt: 'pt-PT', es: 'es-ES', de: 'de-DE',
+  nl: 'nl-NL', fr: 'fr-FR', sv: 'sv-SE', da: 'da-DK',
+}
+
 export default function CrewEarningsPage() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const dateLoc = LOCALE_MAP[locale] ?? 'en-GB'
   const [tasks, setTasks] = useState<Task[]>([])
   const [profile, setProfile] = useState<CrewProfile | null>(null)
   const [loading, setLoading] = useState(true)
@@ -55,8 +61,8 @@ export default function CrewEarningsPage() {
   const monthlyRate = profile?.crewMonthlyRate ?? 0
   const taskRate = profile?.crewTaskRate ?? 0
 
-  const completedTasks = tasks.filter(t => t.status === 'COMPLETED' || t.status === 'APPROVED')
-  const pendingTasks = tasks.filter(t => t.status !== 'COMPLETED' && t.status !== 'APPROVED')
+  const completedTasks = tasks.filter(t => t.status === 'APPROVED')
+  const pendingTasks = tasks.filter(t => t.status !== 'APPROVED')
 
   // Group by month
   const byMonth: Record<string, Task[]> = {}
@@ -79,7 +85,12 @@ export default function CrewEarningsPage() {
   const currentMonthTasks = byMonth[currentMonth]?.length ?? 0
   const currentEarnings = contractType === 'MONTHLY' ? monthlyRate : currentMonthTasks * taskRate
 
-  const prevMonth = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 7)
+  const prevMonth = (() => {
+    const d = new Date()
+    d.setDate(1) // avoid month rollover issues (e.g. Mar 31 -> Feb 31 = Mar 3)
+    d.setMonth(d.getMonth() - 1)
+    return d.toISOString().slice(0, 7)
+  })()
   const prevMonthTasks = byMonth[prevMonth]?.length ?? 0
   const prevEarnings = contractType === 'MONTHLY' ? monthlyRate : prevMonthTasks * taskRate
 
@@ -87,7 +98,7 @@ export default function CrewEarningsPage() {
 
   const fmtMonth = (key: string) => {
     const [y, m] = key.split('-')
-    return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' })
+    return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString(dateLoc, { month: 'long', year: 'numeric' })
   }
 
   return (
@@ -159,6 +170,7 @@ export default function CrewEarningsPage() {
         <div className="px-5 py-3 border-b bg-gray-50">
           <h2 className="text-sm font-semibold text-gray-700">{t('crew.earnings.byMonthTitle')}</h2>
         </div>
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="text-left text-xs uppercase text-gray-500 border-b">
             <tr>
@@ -180,6 +192,7 @@ export default function CrewEarningsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Recent completed tasks */}

@@ -4,7 +4,7 @@ import { HmLogo } from "@/components/hm/hm-logo"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowRight, Globe } from "lucide-react"
+import { ArrowRight, Globe, Info } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LOCALES, type Locale } from "@/i18n"
 
@@ -47,7 +47,14 @@ export default function RegisterPage() {
         setError(data.error || t("common.error"))
         return
       }
-      // Set locale to selected language — cookie persists through redirect
+      // GA conversion event for register flow
+      if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'sign_up', {
+          send_to: 'G-61YMZ4P4MT',
+          method: 'email',
+          language: form.language,
+        })
+      }
       setLocale(form.language as Locale)
       router.push(`/login?registered=1&lang=${form.language}`)
     } finally {
@@ -70,8 +77,54 @@ export default function RegisterPage() {
         {/* Card */}
         <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
           <div className="p-8">
-            <h1 className="text-2xl font-bold text-white text-center mb-1">{t("auth.createAccount")}</h1>
-            <p className="text-sm text-gray-400 text-center mb-8">{t("auth.registerSubtitle")}</p>
+            <h1 className="text-2xl font-serif font-bold text-white text-center mb-1">{t("auth.createAccount")}</h1>
+            <p className="text-sm text-gray-400 text-center mb-6">{t("auth.registerSubtitle")}</p>
+
+            {/* Language — FIRST so user reads everything in their language */}
+            <div className="mb-6">
+              <label className="block text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider text-center">
+                <Globe className="h-3 w-3 inline mr-1" />
+                {t("common.language")}
+              </label>
+              <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
+                {LOCALES.map(lang => (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => { setForm({ ...form, language: lang.code }); setLocale(lang.code) }}
+                    className="rounded-lg border px-2 py-2 text-center transition-all"
+                    style={{
+                      background: form.language === lang.code ? "rgba(176,138,62,0.15)" : "rgba(255,255,255,0.03)",
+                      borderColor: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.08)",
+                      color: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.5)",
+                    }}
+                  >
+                    <span className="text-lg block">{lang.flag}</span>
+                    <span className="text-[9px] font-medium">{lang.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Beta announcement banner — now in user's chosen language */}
+            <div className="rounded-xl p-4 mb-6" style={{ background: 'rgba(176,138,62,0.08)', border: '1px solid rgba(176,138,62,0.2)' }}>
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(176,138,62,0.15)' }}>
+                  <Info className="h-4 w-4" style={{ color: '#B08A3E' }} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: '#B08A3E' }}>
+                    {t("auth.betaBadge")}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                    {t("auth.betaMessage")}
+                  </p>
+                  <p className="text-xs font-medium mt-2" style={{ color: '#B08A3E' }}>
+                    {t("auth.betaCta")}
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <form onSubmit={submit} className="space-y-4">
               {/* Name */}
@@ -121,32 +174,6 @@ export default function RegisterPage() {
                   style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
                   placeholder={t("auth.passwordPlaceholder")}
                 />
-              </div>
-
-              {/* Language */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
-                  <Globe className="h-3 w-3 inline mr-1" />
-                  {t("common.language")}
-                </label>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  {LOCALES.map(lang => (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      onClick={() => { setForm({ ...form, language: lang.code }); setLocale(lang.code) }}
-                      className="rounded-lg border px-3 py-2.5 text-center text-sm transition-all"
-                      style={{
-                        background: form.language === lang.code ? "rgba(176,138,62,0.15)" : "rgba(255,255,255,0.03)",
-                        borderColor: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.08)",
-                        color: form.language === lang.code ? "#B08A3E" : "rgba(255,255,255,0.5)",
-                      }}
-                    >
-                      <span className="text-lg block mb-0.5">{lang.flag}</span>
-                      <span className="text-[10px] font-medium">{lang.label}</span>
-                    </button>
-                  ))}
-                </div>
               </div>
 
               {error && (

@@ -36,9 +36,14 @@ export default function ManagerDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [error, setError] = useState(false)
   const [lastRefresh, setLastRefresh] = useState(new Date())
+  const [pendingReviews, setPendingReviews] = useState(0)
 
   const load = () => {
     setError(false)
+    fetch("/api/reviews/pending")
+      .then(r => r.ok ? r.json() : [])
+      .then(data => setPendingReviews(Array.isArray(data) ? data.length : 0))
+      .catch(() => {})
     fetch("/api/manager/stats")
       .then(r => { if (!r.ok) throw new Error(); return r.json() })
       .then(data => {
@@ -81,6 +86,17 @@ export default function ManagerDashboard() {
       {/* Empty state for new Managers with no clients yet */}
       {stats && stats.clientsCount === 0 && !error && (
         <ManagerEmptyState />
+      )}
+
+      {/* Pending reviews alert */}
+      {pendingReviews > 0 && (
+        <div className="hm-animate-in hm-stagger-2">
+          <AlertBanner
+            level="warning"
+            title={`${pendingReviews} ${t('manager.reviews.pendingReviewsAlert')}`}
+            message={t('manager.reviews.pendingReviewsDesc')}
+          />
+        </div>
       )}
 
       {/* Alerts panel */}

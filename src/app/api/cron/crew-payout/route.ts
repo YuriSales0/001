@@ -1,33 +1,28 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { crewScoreEngine } from '@/lib/crew-score'
+import { notify, notifyMany, tForUser } from '@/lib/notifications'
 
 /**
  * POST /api/cron/crew-payout — Weekly Crew payout reconciliation
  *
  * Runs every Wednesday 09:00 UTC (called by Vercel Cron or manual trigger).
- *
- * 1. Find all APPROVED tasks from the previous week (Mon-Sun)
- * 2. Group by assignee
- * 3. Calculate payout per crew (base amount + level bonus)
- * 4. Create CrewPayout records
- * 5. Link tasks to payout
- *
- * Stripe Connect execution + Resend statement are separate steps
- * (triggered after manual review or via a follow-up cron).
  */
-export async function POST() {
-  const authHeader =
-    process.env.CRON_SECRET
-      ? undefined // Vercel Cron handles auth via headers
-      : undefined
+export async function POST(request: NextRequest) {
+  const cronSecret = process.env.CRON_SECRET
+  if (cronSecret) {
+    const auth = request.headers.get('authorization')
+    if (auth !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+  }
 
   // Calculate previous week window (Mon 00:00 → Sun 23:59)
   const now = new Date()
   const dayOfWeek = now.getUTCDay() // 0=Sun, 1=Mon, ..., 3=Wed
-  const daysToLastMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1 + 7
+  const daysToLastMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
   const weekStart = new Date(now)
-  weekStart.setUTCDate(now.getUTCDate() - daysToLastMonday)
+  weekStart.setUTCDate(now.getUTCDate() - daysToLastMonday - 7)
   weekStart.setUTCHours(0, 0, 0, 0)
 
   const weekEnd = new Date(weekStart)
@@ -97,8 +92,35 @@ export async function POST() {
       })
 
       if (!payout) continue
+
+      // Gap #3: Notify crew member that weekly payout is ready
+      tForUser(crewId, 'notifications.crewPayoutReadyTitle', { amount: `€${finalAmount.toFixed(2)}` })
+        .then(title =>
+          tForUser(crewId, 'notifications.crewPayoutReadyBody', { tasks: String(crewTasks.length) })
+            .then(body =>
+              notify({ userId: crewId, type: 'CREW_PAYOUT_READY', title, body, link: '/crew/earnings' })
+            )
+        )
+        .catch(() => {})
     } catch (err) {
       console.error(`[CrewPayout] Failed for crew ${crewId}:`, err)
+
+      // Gap #9: Notify all admins of payout creation failure
+      prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+        .then(admins => {
+          if (admins.length === 0) return
+          notifyMany(
+            admins.map(a => a.id),
+            {
+              type: 'AI_ALERT',
+              title: `Crew payout failed for ${crewId}`,
+              body: `Weekly payout creation failed: ${err instanceof Error ? err.message : String(err)}`,
+              link: '/ai-monitor',
+            },
+          )
+        })
+        .catch(() => {})
+
       continue
     }
 

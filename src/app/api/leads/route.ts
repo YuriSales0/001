@@ -66,9 +66,9 @@ export async function POST(request: NextRequest) {
   if (partnerCode && typeof partnerCode === 'string') {
     const partner = await prisma.partner.findUnique({
       where: { referralCode: partnerCode.toUpperCase() },
-      select: { id: true, status: true },
+      select: { id: true },
     })
-    if (partner && (partner as any).status === 'ACTIVE') partnerId = partner.id
+    if (partner) partnerId = partner.id
   }
 
   const lead = await prisma.lead.create({

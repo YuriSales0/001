@@ -82,7 +82,7 @@ export default function LoginPage() {
         {/* Card */}
         <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
           <div className="p-8">
-            <h1 className="text-2xl font-bold text-white text-center mb-1">{t("auth.welcomeBack")}</h1>
+            <h1 className="text-2xl font-serif font-bold text-white text-center mb-1">{t("auth.welcomeBack")}</h1>
             <p className="text-sm text-gray-400 text-center mb-8">{t("auth.loginSubtitle")}</p>
 
             <form onSubmit={handleLogin} className="space-y-4">

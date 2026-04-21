@@ -48,10 +48,8 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
             <span className="font-semibold text-white text-sm tracking-tight">
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em]"
-                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>
-              {t(msgs, 'common.crewPortal')}
-            </span>
+            <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
+                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>Beta</span>
           </Link>
           <label htmlFor="crew-sidebar-toggle" className="lg:hidden cursor-pointer text-white/50 hover:text-white">
             <X className="h-4 w-4" />

@@ -68,6 +68,7 @@ export default function OwnerDashboard() {
   const { t } = useLocale()
   const [pendingInvoices, setPendingInvoices] = useState<{ count: number; total: number }>({ count: 0, total: 0 })
   const [hasContractPending, setHasContractPending] = useState(false)
+  const [fetchErrors, setFetchErrors] = useState<string[]>([])
 
   useEffect(() => {
     type Payout = { scheduledFor: string; status: string; netAmount: number }
@@ -99,6 +100,15 @@ export default function OwnerDashboard() {
           fetch("/api/tasks"),
           fetch("/api/invoices"),
         ])
+
+        const errors: string[] = []
+        if (!propRes.ok) errors.push(t('client.dashboard.errorProperties'))
+        if (!payRes.ok) errors.push(t('client.dashboard.errorPayouts'))
+        if (!resRes.ok) errors.push(t('client.dashboard.errorReservations'))
+        if (!taskRes.ok) errors.push(t('client.dashboard.errorTasks'))
+        if (!invRes.ok) errors.push(t('client.dashboard.errorInvoices'))
+        setFetchErrors(errors)
+
         const properties = propRes.ok ? await propRes.json() : []
         const payouts: Payout[] = payRes.ok ? await payRes.json() : []
         const reservations: Reservation[] = resRes.ok ? await resRes.json() : []
@@ -219,6 +229,19 @@ export default function OwnerDashboard() {
         headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
         dateClass="mt-1 font-sans text-hm-slate/70 text-base"
       />
+
+      {/* Partial fetch errors banner */}
+      {fetchErrors.length > 0 && (
+        <div className="rounded-hm border border-yellow-300 bg-yellow-50 px-5 py-4">
+          <div className="flex items-center gap-2 mb-1">
+            <AlertTriangle className="h-4 w-4 text-yellow-600 shrink-0" />
+            <p className="text-sm font-semibold text-yellow-800">{t('client.dashboard.partialLoadError')}</p>
+          </div>
+          <ul className="list-disc list-inside text-xs text-yellow-700 space-y-0.5">
+            {fetchErrors.map((err, i) => <li key={i}>{err}</li>)}
+          </ul>
+        </div>
+      )}
 
       {/* Contract pending alert */}
       {hasContractPending && (

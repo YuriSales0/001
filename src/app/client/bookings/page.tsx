@@ -59,7 +59,7 @@ export default function OwnerBookings() {
   // Block dates form
   const [blocking, setBlocking] = useState(false)
   const [blockForm, setBlockForm] = useState({ start: "", end: "", reason: "" })
-  const [blocking_saving, setBlockingSaving] = useState(false)
+  const [blockingSaving, setBlockingSaving] = useState(false)
   const [error, setError] = useState("")
 
   useEscapeKey(blocking, () => setBlocking(false))
@@ -80,6 +80,10 @@ export default function OwnerBookings() {
 
   const saveBlock = async () => {
     if (!blockForm.start || !blockForm.end) return
+    if (new Date(blockForm.end) <= new Date(blockForm.start)) {
+      setError(t('client.bookings.endBeforeStart'))
+      return
+    }
     setBlockingSaving(true)
     setError("")
     try {
@@ -196,7 +200,7 @@ export default function OwnerBookings() {
       {/* Block dates form */}
       {blocking && (
         <div className="rounded-hm border border-hm-gold/40 p-5"
-             style={{ background: 'var(--hm-gold)', opacity: undefined, backgroundColor: 'rgba(176,138,62,0.08)' }}>
+             style={{ backgroundColor: 'rgba(176,138,62,0.08)' }}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-serif font-bold text-hm-black">{t('client.bookings.blockTitle')}</h3>
             <button onClick={() => setBlocking(false)} aria-label="Close" className="text-hm-slate/60 hover:text-hm-slate">
@@ -236,11 +240,11 @@ export default function OwnerBookings() {
           <div className="mt-4 flex justify-end">
             <button
               onClick={saveBlock}
-              disabled={blocking_saving || !blockForm.start || !blockForm.end}
+              disabled={blockingSaving || !blockForm.start || !blockForm.end}
               className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2.5 font-sans font-semibold text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed transition-opacity hover:opacity-90"
               style={{ background: 'var(--hm-black)', minHeight: '44px' }}
             >
-              {blocking_saving ? (<><Loader2 className="h-4 w-4 animate-spin" /> {t('client.bookings.saving')}</>) : t('client.bookings.blockTheseDates')}
+              {blockingSaving ? (<><Loader2 className="h-4 w-4 animate-spin" /> {t('client.bookings.saving')}</>) : t('client.bookings.blockTheseDates')}
             </button>
           </div>
         </div>

@@ -70,14 +70,14 @@ function DayPanel({
       <div className="flex items-center justify-between px-5 py-3 border-b bg-gray-50">
         <div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide capitalize">{label}</p>
-          <p className="text-sm font-bold text-gray-900">{events.length} tarefa{events.length!==1?'s':''}</p>
+          <p className="text-sm font-bold text-gray-900">{events.length} {t('common.tasks').toLowerCase()}</p>
         </div>
         <button onClick={onClose} aria-label="Close" className="rounded-md p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-700">
           <X className="h-4 w-4"/>
         </button>
       </div>
       {events.length===0 ? (
-        <div className="px-5 py-8 text-center text-sm text-gray-400">Nenhuma tarefa neste dia</div>
+        <div className="px-5 py-8 text-center text-sm text-gray-400">{t('crew.calendar.noTasksThisDay')}</div>
       ) : (
         <div className="divide-y max-h-80 overflow-y-auto">
           {events.map(e=>{
@@ -89,7 +89,11 @@ function DayPanel({
             return (
               <div key={e.id} className="flex items-center gap-3 px-5 py-3 text-sm">
                 <span className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${colorClass}`}>
-                  {(t(`crew.taskTypes.${taskType}`) || taskType).slice(0,2).toUpperCase()}
+                  {(() => {
+                    const translated = t(`crew.taskTypes.${taskType}`)
+                    const label = translated.startsWith('crew.taskTypes.') ? taskType : translated
+                    return label.slice(0, 2).toUpperCase()
+                  })()}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className={`font-medium truncate ${isCompleted?'line-through text-gray-400':''}`}>{e.title}</p>
@@ -102,7 +106,7 @@ function DayPanel({
                   ):meta?.taskId&&(
                     <button onClick={()=>onComplete(e)}
                       className="rounded-md border px-2 py-1 text-xs text-gray-600 hover:bg-gray-50">
-                      ✓ Concluir
+                      ✓ {t('crew.calendar.complete')}
                     </button>
                   )}
                 </div>
@@ -167,8 +171,8 @@ export default function CrewCalendarPage() {
     <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-gray-900">As Minhas Tarefas</h1>
-          <p className="text-sm text-gray-500">Tarefas atribuídas a mim esta semana</p>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('crew.calendar.title')}</h1>
+          <p className="text-sm text-gray-500">{t('crew.calendar.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={()=>setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()-7);return d})}
@@ -177,7 +181,7 @@ export default function CrewCalendarPage() {
           <button onClick={()=>setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()+7);return d})}
             className="rounded-lg border p-2 hover:bg-gray-50"><ChevronRight className="h-4 w-4"/></button>
           <button onClick={()=>setWeekStart(getWeekStart(new Date()))}
-            className="rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">Hoje</button>
+            className="rounded-lg border px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50">{t('crew.calendar.today')}</button>
         </div>
       </div>
 
@@ -235,7 +239,7 @@ export default function CrewCalendarPage() {
                   {items.length>MAX&&(
                     <button onClick={()=>toggleDay(key)}
                       className="w-full rounded-lg px-2 py-1 text-[11px] text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-left">
-                      +{items.length-MAX} mais…
+                      +{items.length-MAX} {t('crew.calendar.more')}
                     </button>
                   )}
                 </div>
