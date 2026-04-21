@@ -72,7 +72,7 @@ export default function LandingPage() {
               {t('landing.nav.enter')}
             </Link>
             <Link
-              href="/login"
+              href="/register"
               className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-all hover:brightness-110"
               style={{ background: "#0B1E3A", color: "#F6F2EA" }}
             >
@@ -105,7 +105,7 @@ export default function LandingPage() {
 
             <div className="hm-hero-animate hm-hero-delay-3 mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
-                href="/login"
+                href="/register"
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-lg text-base font-bold transition-all hover:brightness-110"
                 style={{ background: "#B08A3E", color: "#0B1E3A" }}
               >
@@ -285,7 +285,7 @@ export default function LandingPage() {
                     })}
                   </ul>
                   <Link
-                    href="/login"
+                    href="/register"
                     className="mt-7 block text-center py-3 rounded-lg font-semibold text-sm transition-all hover:opacity-90"
                     style={
                       plan.popular
@@ -492,7 +492,7 @@ export default function LandingPage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/login"
+              href="/register"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-lg text-base font-semibold transition-all hover:scale-[1.02]"
               style={{ background: "#B08A3E", color: "#0B1E3A" }}
             >
