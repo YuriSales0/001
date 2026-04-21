@@ -595,6 +595,13 @@
     "subscriptionPlans": "Subscription Plans",
     "recruiting": "Recruiting",
     "hmAi": "HostMasters AI",
+    "ai": {
+      "loadingMap": "Preparing the map...",
+      "nightsCollected": "Nights collected",
+      "priceDataAccumulated": "accumulated price data",
+      "modelStatus": "Model status",
+      "noDataYet": "No data yet"
+    },
     "aiMonitor": {
       "title": "AI Monitor",
       "subtitle": "Automatic database consistency checks — no Claude API connection yet, detection logic only",
@@ -2887,5 +2894,58 @@
       "statusReversed": "Client cancelled within 60 days — commission reversed"
     },
     "logout": "Logout"
+  },
+  "clientTasks": {
+    "title": "My Tasks",
+    "subtitle": "Track maintenance requests and property visits",
+    "requestTask": "Request a visit",
+    "requestNew": "Request a visit",
+    "noTasks": "No tasks yet",
+    "filterAll": "All",
+    "filterOpen": "Open",
+    "filterOverdue": "Overdue",
+    "filterCompleted": "Completed",
+    "overdue": "Overdue",
+    "completedTag": "Completed",
+    "crew": "Crew",
+    "modalNote": "Our crew will handle this for you. You will be notified when it is done.",
+    "property": "Property",
+    "taskType": "Task type",
+    "titleLabel": "Title",
+    "desiredDate": "Desired date",
+    "notesForCrew": "Notes for crew",
+    "notesPlaceholder": "Any details that might help the crew...",
+    "submitting": "Submitting...",
+    "extraCleaning": "Extra Cleaning",
+    "preArrivalShopping": "Pre-arrival Shopping",
+    "airportTransfer": "Airport Transfer",
+    "warningCorrective": "Corrective maintenance may incur additional costs depending on the issue found.",
+    "warningPremium": "This is a premium service. Costs will be confirmed before proceeding.",
+    "labels": {
+      "CHECK_IN": "Check-in",
+      "CHECK_OUT": "Check-out",
+      "CLEANING": "Cleaning",
+      "MAINTENANCE_PREVENTIVE": "Preventive Maintenance",
+      "MAINTENANCE_CORRECTIVE": "Corrective Maintenance",
+      "INSPECTION": "Inspection",
+      "TRANSFER": "Transfer",
+      "SHOPPING": "Shopping",
+      "LAUNDRY": "Laundry"
+    },
+    "descs": {
+      "correctiveMaintenance": "Something broken? Report it and we will fix it.",
+      "extraCleaning": "Request an additional cleaning outside the regular schedule.",
+      "shopping": "Need supplies before your arrival? We will stock up for you.",
+      "transfer": "Airport or station pickup for you or your guests.",
+      "preventiveMaintenance": "Scheduled check to keep everything in top shape.",
+      "inspection": "Request a general property inspection."
+    },
+    "placeholders": {
+      "maintenance": "e.g. Leaking tap in the kitchen",
+      "cleaning": "e.g. Deep clean before our arrival",
+      "shopping": "e.g. Groceries for 4 guests, 7 nights",
+      "transfer": "e.g. Malaga airport, 2 adults + luggage",
+      "default": "Brief description of the request"
+    }
   }
 }

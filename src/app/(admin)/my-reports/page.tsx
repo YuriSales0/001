@@ -224,6 +224,7 @@ export default function ReportsPage() {
             {report.reservations.length === 0 ? (
               <p className="p-5 text-sm text-gray-400 text-center">No reservations this month</p>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 text-left">
@@ -258,6 +259,7 @@ export default function ReportsPage() {
                   </tr>
                 </tbody>
               </table>
+              </div>
             )}
           </div>
 
@@ -271,6 +273,7 @@ export default function ReportsPage() {
             {report.expenses.length === 0 ? (
               <p className="p-5 text-sm text-gray-400 text-center">No expenses this month</p>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 text-left">
@@ -301,6 +304,7 @@ export default function ReportsPage() {
                   </tr>
                 </tbody>
               </table>
+              </div>
             )}
           </div>
 

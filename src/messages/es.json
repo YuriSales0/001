@@ -1122,6 +1122,13 @@
     "subscriptionPlans": "Planes de Suscripción",
     "recruiting": "Reclutamiento",
     "hmAi": "HostMasters IA",
+    "ai": {
+      "loadingMap": "Preparando el mapa...",
+      "nightsCollected": "Noches recopiladas",
+      "priceDataAccumulated": "datos de precio acumulados",
+      "modelStatus": "Estado del modelo",
+      "noDataYet": "Sin datos todavia"
+    },
     "aiMonitor": {
       "title": "Monitor IA",
       "subtitle": "Verificacion automatica de consistencia de la base de datos — sin conexion Claude API por ahora, solo logica de deteccion",
@@ -2887,6 +2894,59 @@
       "statusPaid": "Pagado el",
       "statusReversed": "Cliente canceló dentro de 60 días — comisión revertida"
     },
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesion"
+  },
+  "clientTasks": {
+    "title": "Mis Tareas",
+    "subtitle": "Sigue las solicitudes de mantenimiento y visitas a la propiedad",
+    "requestTask": "Solicitar una visita",
+    "requestNew": "Solicitar una visita",
+    "noTasks": "Sin tareas todavia",
+    "filterAll": "Todas",
+    "filterOpen": "Abiertas",
+    "filterOverdue": "Atrasadas",
+    "filterCompleted": "Completadas",
+    "overdue": "Atrasada",
+    "completedTag": "Completada",
+    "crew": "Equipo",
+    "modalNote": "Nuestro equipo se encargara de esto. Le notificaremos cuando este listo.",
+    "property": "Propiedad",
+    "taskType": "Tipo de tarea",
+    "titleLabel": "Titulo",
+    "desiredDate": "Fecha deseada",
+    "notesForCrew": "Notas para el equipo",
+    "notesPlaceholder": "Detalles que puedan ayudar al equipo...",
+    "submitting": "Enviando...",
+    "extraCleaning": "Limpieza Extra",
+    "preArrivalShopping": "Compras Pre-llegada",
+    "airportTransfer": "Transfer Aeropuerto",
+    "warningCorrective": "El mantenimiento correctivo puede conllevar costes adicionales segun el problema encontrado.",
+    "warningPremium": "Este es un servicio premium. Los costes se confirmaran antes de proceder.",
+    "labels": {
+      "CHECK_IN": "Check-in",
+      "CHECK_OUT": "Check-out",
+      "CLEANING": "Limpieza",
+      "MAINTENANCE_PREVENTIVE": "Mantenimiento Preventivo",
+      "MAINTENANCE_CORRECTIVE": "Mantenimiento Correctivo",
+      "INSPECTION": "Inspeccion",
+      "TRANSFER": "Transfer",
+      "SHOPPING": "Compras",
+      "LAUNDRY": "Lavanderia"
+    },
+    "descs": {
+      "correctiveMaintenance": "Algo roto? Reportelo y nosotros lo reparamos.",
+      "extraCleaning": "Solicite una limpieza adicional fuera del horario regular.",
+      "shopping": "Necesita provisiones antes de llegar? Nosotros nos encargamos.",
+      "transfer": "Recogida en aeropuerto o estacion para usted o sus huespedes.",
+      "preventiveMaintenance": "Revision programada para mantener todo en perfecto estado.",
+      "inspection": "Solicite una inspeccion general de la propiedad."
+    },
+    "placeholders": {
+      "maintenance": "ej. Grifo goteando en la cocina",
+      "cleaning": "ej. Limpieza profunda antes de nuestra llegada",
+      "shopping": "ej. Comestibles para 4 huespedes, 7 noches",
+      "transfer": "ej. Aeropuerto de Malaga, 2 adultos + equipaje",
+      "default": "Breve descripcion de la solicitud"
+    }
   }
 }

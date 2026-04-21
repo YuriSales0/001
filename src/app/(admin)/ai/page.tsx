@@ -3,16 +3,22 @@
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Sparkles, TrendingUp, BarChart3, Calendar, AlertCircle, MapPin, Cpu, ArrowUpRight, ArrowDownRight, Minus, Target } from 'lucide-react'
+import { useLocale } from '@/i18n/provider'
 
 // Market Map — client-only (deck.gl needs window)
 const MarketMap = dynamic(
   () => import('@/components/market/market-map').then(m => m.MarketMap),
-  { ssr: false, loading: () => (
-    <div className="h-[calc(100vh-10rem)] w-full flex items-center justify-center bg-[#0a0e1a] rounded-hm text-white/50 text-sm">
-      A preparar o mapa…
-    </div>
-  )},
+  { ssr: false, loading: () => <MapLoadingFallback /> },
 )
+
+function MapLoadingFallback() {
+  const { t } = useLocale()
+  return (
+    <div className="h-[calc(100vh-10rem)] w-full flex items-center justify-center bg-[#0a0e1a] rounded-hm text-white/50 text-sm">
+      {t('admin.ai.loadingMap')}
+    </div>
+  )
+}
 
 type Tab = 'pricing' | 'engine' | 'market'
 
@@ -60,6 +66,7 @@ const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'
 const DAY_NAMES   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
 
 export default function AIPage() {
+  const { t } = useLocale()
   const [tab, setTab] = useState<Tab>('pricing')
   const [stats, setStats] = useState<StatsData | null>(null)
   const [engine, setEngine] = useState<EngineData | null>(null)
@@ -151,9 +158,9 @@ export default function AIPage() {
               {/* KPI cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="rounded-hm border bg-white p-5">
-                  <div className="text-xs uppercase text-gray-500">Noites recolhidas</div>
+                  <div className="text-xs uppercase text-gray-500">{t('admin.ai.nightsCollected')}</div>
                   <div className="text-3xl font-bold text-hm-black mt-1">{totalPoints.toLocaleString()}</div>
-                  <div className="text-xs text-gray-400 mt-1">dados de preço acumulados</div>
+                  <div className="text-xs text-gray-400 mt-1">{t('admin.ai.priceDataAccumulated')}</div>
                 </div>
                 <div className="rounded-hm border bg-white p-5">
                   <div className="text-xs uppercase text-gray-500">Preço médio/noite</div>
@@ -165,7 +172,7 @@ export default function AIPage() {
                   <div className="text-xs text-gray-400 mt-1">média geral todas as propriedades</div>
                 </div>
                 <div className="rounded-hm border bg-amber-50 border-amber-200 p-5">
-                  <div className="text-xs uppercase text-amber-600">Estado do modelo</div>
+                  <div className="text-xs uppercase text-amber-600">{t('admin.ai.modelStatus')}</div>
                   <div className="text-lg font-bold text-amber-700 mt-1">
                     {totalPoints < 100 ? 'Recolha inicial' : totalPoints < 500 ? 'Em aprendizagem' : 'Dados suficientes'}
                   </div>
@@ -182,7 +189,7 @@ export default function AIPage() {
               {totalPoints === 0 ? (
                 <div className="rounded-hm border-2 border-dashed border-gray-200 bg-white p-12 text-center">
                   <Sparkles className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-                  <h3 className="font-semibold text-gray-700 mb-1">Sem dados ainda</h3>
+                  <h3 className="font-semibold text-gray-700 mb-1">{t('admin.ai.noDataYet')}</h3>
                   <p className="text-sm text-gray-500 max-w-md mx-auto">
                     Os dados de pricing são recolhidos automaticamente a cada reserva criada.
                     Cria reservas para começar a acumular o dataset.
