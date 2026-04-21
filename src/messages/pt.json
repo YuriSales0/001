@@ -1855,7 +1855,8 @@
       "solution": "Solução",
       "plans": "Planos",
       "enter": "Entrar",
-      "startFree": "Começar grátis"
+      "startFree": "Começar grátis",
+      "contact": "Contacto"
     },
     "badge": "Costa Tropical · España",
     "hero": {
@@ -2054,7 +2055,9 @@
       "sending": "A enviar...",
       "thankYouTitle": "Obrigado!",
       "thankYouDesc": "Recebemos a sua mensagem e entraremos em contacto dentro de 24 horas. Entretanto, explore os nossos planos.",
-      "required": "Por favor preencha o nome, email e mensagem."
+      "required": "Por favor preencha o nome, email e mensagem.",
+      "partnerCodeLabel": "Código de parceiro (opcional)",
+      "partnerCodePlaceholder": "ex: HM-AB12CD"
     },
     "join": {
       "badge": "Junta-te à Equipa",

@@ -62,6 +62,7 @@ export default function LandingPage() {
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
             <a href="#solucao" className="hover:text-hm-ink transition-colors">{t('landing.nav.solution')}</a>
             <a href="#planos" className="hover:text-hm-ink transition-colors">{t('landing.nav.plans')}</a>
+            <a href="#contacto" className="hover:text-hm-ink transition-colors">{t('landing.nav.contact')}</a>
             <Link href="/careers" className="font-semibold hover:text-hm-ink transition-colors" style={{ color: "#B08A3E" }}>
               Careers
             </Link>
@@ -546,6 +547,7 @@ function ContactSection() {
     phone: "",
     message: "",
     location: "",
+    partnerCode: "",
     contactMethod: "email" as "email" | "whatsapp" | "phone",
   })
   const [sending, setSending] = useState(false)
@@ -587,6 +589,7 @@ function ContactSection() {
           source: "WEBSITE",
           message: form.message.trim(),
           notes,
+          partnerCode: form.partnerCode.trim() || undefined,
         }),
       })
 
@@ -823,6 +826,22 @@ function ContactSection() {
                         }}
                       />
                     </div>
+                  </div>
+
+                  {/* Partner code */}
+                  <div>
+                    <label htmlFor="contact-partner" className="block text-sm font-semibold mb-2" style={{ color: "#0B1E3A" }}>
+                      {t("landing.contact.partnerCodeLabel")}
+                    </label>
+                    <input
+                      id="contact-partner"
+                      name="partnerCode"
+                      value={form.partnerCode}
+                      onChange={handleChange}
+                      placeholder={t("landing.contact.partnerCodePlaceholder")}
+                      className="w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors focus:ring-2"
+                      style={{ borderColor: "#E8E3D8", background: "#FAFAF8", color: "#0B1E3A" }}
+                    />
                   </div>
 
                   {/* Preferred contact method */}
