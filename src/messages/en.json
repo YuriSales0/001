@@ -890,7 +890,9 @@
       "recentSignups": "Recent Sign-ups",
       "recentApplications": "Career Applications",
       "noSignups": "No sign-ups yet",
-      "noApplications": "No applications yet"
+      "noApplications": "No applications yet",
+      "totalOnline": "Total Online",
+      "activeSessions": "Active sessions right now"
     },
     "partners": {
       "title": "Partners",

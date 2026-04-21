@@ -30,6 +30,9 @@ export async function GET(request: NextRequest) {
     recentLeads,
     convertedLeads,
     propertiesActive,
+    usersByRole,
+    activeSessions,
+    sessionsByRole,
   ] = await Promise.all([
     // Total leads (with date filter)
     prisma.lead.count({ where: dateFilter }),
@@ -97,6 +100,21 @@ export async function GET(request: NextRequest) {
         ...(dateFilter.createdAt ? { createdAt: dateFilter.createdAt } : {}),
       },
     }),
+    // Users by role (registered in period)
+    prisma.user.groupBy({
+      by: ['role'],
+      _count: true,
+      ...(dateFilter.createdAt ? { where: { createdAt: dateFilter.createdAt } } : {}),
+    }),
+    // Active sessions (users who logged in within last 24h)
+    prisma.session.count({
+      where: { expires: { gt: new Date() } },
+    }),
+    // Sessions by role (users online now)
+    prisma.session.findMany({
+      where: { expires: { gt: new Date() } },
+      select: { user: { select: { role: true } } },
+    }),
   ])
 
   // Funnel: Contacted = leads with status past NEW
@@ -126,5 +144,12 @@ export async function GET(request: NextRequest) {
     })),
     recentLeads,
     convertedLeads,
+    usersByRole: usersByRole.map(r => ({ role: r.role, count: r._count })),
+    activeSessions,
+    onlineByRole: (() => {
+      const counts: Record<string, number> = { ADMIN: 0, MANAGER: 0, CREW: 0, CLIENT: 0 }
+      sessionsByRole.forEach(s => { if (s.user?.role) counts[s.user.role] = (counts[s.user.role] || 0) + 1 })
+      return counts
+    })(),
   })
 }

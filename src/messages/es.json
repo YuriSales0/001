@@ -743,7 +743,9 @@
       "recentSignups": "Registros Recientes",
       "recentApplications": "Solicitudes Careers",
       "noSignups": "Sin registros aún",
-      "noApplications": "Sin solicitudes aún"
+      "noApplications": "Sin solicitudes aún",
+      "totalOnline": "Total Online",
+      "activeSessions": "Sesiones activas ahora"
     },
     "partners": {
       "title": "Socios",
