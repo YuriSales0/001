@@ -306,7 +306,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           type: 'GENERAL',
           title: `Guest checkout — review the stay`,
           body: `${existing.property.name} — please submit a stay review for the recent guest`,
-          link: '/manager/reviews',
+          link: '/reviews',
         }).catch(() => {})
       }
     }

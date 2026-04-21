@@ -186,7 +186,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         type: 'PAYOUT_COMPLETED',
         title: `Payout received: €${payout.netAmount.toFixed(0)}`,
         body: payout.property.name ?? 'Your property',
-        link: '/client/earnings',
+        link: '/client/financials',
       }).catch(() => {})
     }
 

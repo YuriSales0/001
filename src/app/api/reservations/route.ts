@@ -255,7 +255,7 @@ export async function POST(request: NextRequest) {
           type: 'GENERAL',
           title: `Tasks unassigned: ${guestName}`,
           body: `${autoTasks.length} task(s) for ${reservation.property.name} could not be auto-assigned. No crew available — please contact the Captain.`,
-          link: '/manager/tasks',
+          link: '/tasks',
         }).catch(() => {})
       }
     }
