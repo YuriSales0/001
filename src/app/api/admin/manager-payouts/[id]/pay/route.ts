@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { notify, tForUser } from '@/lib/notifications'
+import { transferToConnectedAccount } from '@/lib/stripe-connect'
 
 /**
  * POST /api/admin/manager-payouts/[id]/pay
@@ -27,14 +28,45 @@ export async function POST(
     return NextResponse.json({ error: 'Cannot pay cancelled payout' }, { status: 400 })
   }
 
-  const body = await request.json().catch(() => ({})) as { stripeTransferId?: string; notes?: string }
+  const body = await request.json().catch(() => ({})) as {
+    stripeTransferId?: string
+    notes?: string
+    skipStripe?: boolean
+  }
+
+  // Attempt Stripe Connect transfer if not manually overridden
+  let stripeTransferId = body.stripeTransferId
+  let transferError: string | null = null
+
+  if (!body.skipStripe && !stripeTransferId) {
+    try {
+      const transfer = await transferToConnectedAccount({
+        userId: payout.managerId,
+        amountEur: Number(payout.finalAmount),
+        description: `Manager commission ${payout.periodMonth}/${payout.periodYear}`,
+        metadata: { managerPayoutId: payout.id },
+      })
+      if (transfer) {
+        stripeTransferId = transfer.transferId
+      } else {
+        transferError = 'Connect account not ready. Pass skipStripe:true to pay manually outside Stripe.'
+      }
+    } catch (err) {
+      transferError = err instanceof Error ? err.message : 'Stripe transfer failed'
+      console.error('[Manager Payout] Stripe transfer failed:', err)
+    }
+  }
+
+  if (transferError && !body.skipStripe) {
+    return NextResponse.json({ error: transferError, canOverride: true }, { status: 502 })
+  }
 
   const updated = await prisma.managerPayout.update({
     where: { id: params.id },
     data: {
       status: 'PAID',
       paidAt: new Date(),
-      ...(body.stripeTransferId ? { stripeTransferId: body.stripeTransferId } : {}),
+      ...(stripeTransferId ? { stripeTransferId } : {}),
       ...(body.notes ? { notes: body.notes } : {}),
     },
   })
