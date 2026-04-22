@@ -169,12 +169,15 @@ export const COSTA_TROPICAL_ZONES: ZoneInfo[] = [
 ]
 
 /** Build the regional context block for the AI system prompt. */
-export function regionalContextBlock(propertyCity: string): string {
-  const normalized = propertyCity.toUpperCase().replace(/[^A-Z]/g, '')
-  const primary = COSTA_TROPICAL_ZONES.find(z =>
-    normalized.includes(z.code.replace('_', '')) ||
-    normalized.includes(z.name.toUpperCase().replace(/[^A-Z]/g, '')),
-  )
+export function regionalContextBlock(propertyCity: string | null | undefined): string {
+  const safeCity = (propertyCity ?? '').toString()
+  const normalized = safeCity.toUpperCase().replace(/[^A-Z]/g, '')
+  const primary = normalized
+    ? COSTA_TROPICAL_ZONES.find(z =>
+        normalized.includes(z.code.replace('_', '')) ||
+        normalized.includes(z.name.toUpperCase().replace(/[^A-Z]/g, '')),
+      )
+    : undefined
 
   const listZone = (z: ZoneInfo, isPrimary: boolean) => `
 ━━ ${z.name.toUpperCase()}${isPrimary ? ' (the property is here)' : ''} ━━

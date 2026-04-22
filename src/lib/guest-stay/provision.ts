@@ -32,16 +32,29 @@ export async function provisionStayChat(reservationId: string) {
 
   const token = crypto.randomBytes(32).toString('hex')
 
-  const chat = await prisma.guestStayChat.create({
-    data: {
-      reservationId,
-      propertyId: reservation.propertyId,
-      clientId: reservation.property.ownerId,
-      token,
-      language: reservation.guestLanguage ?? 'en',
-    },
-    select: { id: true, token: true },
-  })
+  let chat: { id: string; token: string }
+  try {
+    chat = await prisma.guestStayChat.create({
+      data: {
+        reservationId,
+        propertyId: reservation.propertyId,
+        clientId: reservation.property.ownerId,
+        token,
+        language: reservation.guestLanguage ?? 'en',
+      },
+      select: { id: true, token: true },
+    })
+  } catch (err) {
+    // Concurrent call won the race — return the existing chat
+    if ((err as { code?: string }).code === 'P2002') {
+      const existingByReservation = await prisma.guestStayChat.findUnique({
+        where: { reservationId },
+        select: { id: true, token: true },
+      })
+      if (existingByReservation) return existingByReservation
+    }
+    throw err
+  }
 
   await prisma.guestStayMessage.create({
     data: {

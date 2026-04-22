@@ -44,6 +44,9 @@ export async function escalateStayChat(
     const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' } })
     targetUserId = admin?.id ?? null
     status = 'PENDING_ADMIN'
+    if (!targetUserId) {
+      console.error(`[StayChat] CRITICAL: No admin in system to escalate chat ${chatId} — escalation unhandled`)
+    }
   }
 
   await prisma.guestStayChat.update({
@@ -102,12 +105,14 @@ export async function escalateStayChat(
     }).catch(() => {})
   }
 
-  // ALWAYS notify ALL admins
+  // ALWAYS notify ALL admins (skipping the target if they're an admin,
+  // to avoid duplicate notifications)
   const admins = await prisma.user.findMany({
     where: { role: 'ADMIN' },
     select: { id: true },
   })
   for (const admin of admins) {
+    if (admin.id === targetUserId) continue
     notify({
       userId: admin.id,
       type: 'AI_ALERT',

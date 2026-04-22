@@ -49,20 +49,27 @@ export async function scheduleGuestFeedbackCall(reservationId: string) {
     reservation.guestTimezone,
   )
 
-  const feedback = await prisma.guestFeedback.create({
-    data: {
-      reservationId,
-      propertyId: reservation.propertyId,
-      clientId: reservation.property.ownerId,
-      crewMemberId: checkoutTask?.assigneeId ?? null,
-      callStatus: 'SCHEDULED',
-      callScheduledAt: callTime,
-      language: reservation.guestLanguage ?? 'en',
-      webToken: crypto.randomBytes(32).toString('hex'),
-    },
-  })
-
-  return feedback
+  try {
+    const feedback = await prisma.guestFeedback.create({
+      data: {
+        reservationId,
+        propertyId: reservation.propertyId,
+        clientId: reservation.property.ownerId,
+        crewMemberId: checkoutTask?.assigneeId ?? null,
+        callStatus: 'SCHEDULED',
+        callScheduledAt: callTime,
+        language: reservation.guestLanguage ?? 'en',
+        webToken: crypto.randomBytes(32).toString('hex'),
+      },
+    })
+    return feedback
+  } catch (err) {
+    // Concurrent call won the race — return the existing feedback
+    if ((err as { code?: string }).code === 'P2002') {
+      return prisma.guestFeedback.findUnique({ where: { reservationId } })
+    }
+    throw err
+  }
 }
 
 /**

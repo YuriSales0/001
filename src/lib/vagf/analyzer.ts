@@ -112,7 +112,7 @@ export async function analyzeTranscription(transcript: string): Promise<Feedback
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
+      model: process.env.VAGF_ANALYSIS_MODEL || 'claude-sonnet-4-6',
       max_tokens: 3000,
       messages: [{
         role: 'user',
@@ -130,9 +130,17 @@ export async function analyzeTranscription(transcript: string): Promise<Feedback
   const text = data.content?.[0]?.text ?? '{}'
 
   const jsonMatch = text.match(/\{[\s\S]*\}/)
-  if (!jsonMatch) throw new Error('No JSON found in Claude response')
+  if (!jsonMatch) {
+    throw new Error('No JSON found in Claude response')
+  }
 
-  return JSON.parse(jsonMatch[0]) as FeedbackAnalysis
+  try {
+    return JSON.parse(jsonMatch[0]) as FeedbackAnalysis
+  } catch (err) {
+    console.error('[VAGF] Failed to parse Claude response as JSON:', err)
+    console.error('[VAGF] Raw response:', text.slice(0, 500))
+    throw new Error(`Claude returned invalid JSON: ${err instanceof Error ? err.message : 'unknown'}`)
+  }
 }
 
 export function calculateNpsCategory(nps: number | null): 'PROMOTER' | 'PASSIVE' | 'DETRACTOR' | null {

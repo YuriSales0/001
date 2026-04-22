@@ -25,6 +25,22 @@ export async function POST(
   })
   if (!chat) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
+  // Rate limit: max 30 guest messages per chat per hour
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+  const recentGuestMsgs = await prisma.guestStayMessage.count({
+    where: {
+      chatId: chat.id,
+      author: 'GUEST',
+      createdAt: { gte: oneHourAgo },
+    },
+  })
+  if (recentGuestMsgs >= 30) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded. Please wait before sending more messages.' },
+      { status: 429 },
+    )
+  }
+
   // Expiry check
   const expiresAt = new Date(chat.reservation.checkOut.getTime() + 24 * 60 * 60 * 1000)
   if (new Date() > expiresAt) {
