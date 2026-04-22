@@ -205,6 +205,13 @@ export async function PUT(
       },
     })
 
+    // VAGF: schedule guest feedback call when reservation completes
+    if (body.status === 'COMPLETED' && reservation.feedbackEligible && reservation.guestPhone) {
+      import('@/lib/vagf/scheduler')
+        .then(({ scheduleGuestFeedbackCall }) => scheduleGuestFeedbackCall(reservation.id))
+        .catch(err => console.error('[VAGF] Failed to schedule feedback call:', err))
+    }
+
     return NextResponse.json({ ...reservation, warning: paidPayoutsWarning })
   } catch (error) {
     console.error('Error updating reservation:', error)

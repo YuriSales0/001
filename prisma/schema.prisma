@@ -208,6 +208,42 @@ enum MovementType {
   PURCHASE_ENTRY
 }
 
+// ── VAGF (Voice Agent Guest Feedback) ──
+
+enum CallStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED_SUCCESS
+  COMPLETED_PARTIAL
+  NOT_ANSWERED
+  DECLINED
+  FALLBACK_SMS_SENT
+  FALLBACK_WEB_COMPLETED
+  UNREACHABLE
+  CANCELLED
+}
+
+enum NpsCategory {
+  PROMOTER
+  PASSIVE
+  DETRACTOR
+}
+
+enum FeedbackSentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+  SEVERE_NEGATIVE
+}
+
+enum EscalationLevel {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 enum ReceiptStatus {
   DRAFT
   PENDING
@@ -306,6 +342,16 @@ model User {
   groupMemberships     GroupChatMember[]
   groupMessages        GroupMessage[]              @relation("GroupMessageSender")
   stayReviews          StayReview[]                @relation("StayReviewer")
+  feedbackAsClient     GuestFeedback[]             @relation("ClientFeedback")
+  feedbackAsCrew       GuestFeedback[]             @relation("CrewFeedback")
+
+  // VAGF Crew fields
+  guestScoreAverage    Float?            @default(0)
+  guestScoreCount      Int?              @default(0)
+  lastGuestScoreAt     DateTime?
+  suspendedDueToFeedback Boolean         @default(false)
+  suspensionReason     String?
+  suspendedAt          DateTime?
 }
 
 model Account {
@@ -431,6 +477,7 @@ model Property {
   taxObligations     TaxObligation[]
   contracts          Contract[]
   crewRelationships  CrewPropertyRelationship[]
+  guestFeedback      GuestFeedback[]            @relation("PropertyFeedback")
   stayReviews        StayReview[]
   consumableItems     ConsumableItem[]
   consumableMovements ConsumableMovement[]
@@ -512,6 +559,93 @@ model TaxfixExport {
   updatedAt                DateTime     @updatedAt
 }
 
+// ── VAGF Models ──
+
+model GuestFeedback {
+  id                    String            @id @default(cuid())
+
+  reservationId         String            @unique
+  reservation           Reservation       @relation(fields: [reservationId], references: [id])
+  propertyId            String
+  property              Property          @relation("PropertyFeedback", fields: [propertyId], references: [id])
+  clientId              String
+  client                User              @relation("ClientFeedback", fields: [clientId], references: [id])
+  crewMemberId          String?
+  crewMember            User?             @relation("CrewFeedback", fields: [crewMemberId], references: [id])
+
+  // Call metadata
+  callStatus            CallStatus        @default(SCHEDULED)
+  callAttempts          Int               @default(0)
+  callScheduledAt       DateTime
+  callStartedAt         DateTime?
+  callEndedAt           DateTime?
+  callDurationSeconds   Int?
+  language              String            @default("en")
+
+  // External refs
+  elevenlabsCallId      String?
+  twilioCallSid         String?
+  recordingUrl          String?
+  transcriptionFull     String?           @db.Text
+
+  // Structured scores (1-10, nullable if not captured)
+  scorePropertyState    Int?
+  scoreCleanliness      Int?
+  scoreCommunication    Int?
+  scorePlatformOverall  Int?
+  scoreNps              Int?
+
+  // Calculated
+  npsCategory           NpsCategory?
+  sentimentOverall      FeedbackSentiment @default(NEUTRAL)
+
+  // Qualitative
+  feedbackFirstImpression String?         @db.Text
+  feedbackPositive      String?           @db.Text
+  feedbackImprovement   String?           @db.Text
+  feedbackNegative      String?           @db.Text
+  feedbackRecommendation String?          @db.Text
+
+  // Auto-categorization
+  categoryTags          String[]
+
+  // Contact during stay
+  contactedDuringStay   Boolean           @default(false)
+  contactResponseScore  Int?
+
+  // Review workflow
+  reviewPromptSent      Boolean           @default(false)
+  reviewSmsSent         Boolean           @default(false)
+  reviewSmsSentAt       DateTime?
+
+  // Escalation
+  escalationTriggered   Boolean           @default(false)
+  escalationLevel       EscalationLevel?
+  escalationNotifiedTo  String[]
+
+  // Web fallback token
+  webToken              String?           @unique
+
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([reservationId])
+  @@index([crewMemberId])
+  @@index([clientId])
+  @@index([propertyId])
+  @@index([callStatus])
+  @@index([createdAt])
+}
+
+model GuestFeedbackCategory {
+  id          String            @id @default(cuid())
+  tag         String            @unique
+  displayName String
+  category    String
+  sentiment   FeedbackSentiment
+  createdAt   DateTime          @default(now())
+}
+
 model Reservation {
   id            String            @id @default(cuid())
   propertyId    String
@@ -545,11 +679,15 @@ model Reservation {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
+  feedbackEligible Boolean           @default(true)
+  guestTimezone    String?
+
   property      Property           @relation(fields: [propertyId], references: [id])
   payouts       Payout[]
   pricingPoints PricingDataPoint[]
   stayReview    StayReview?
   receipts      PaymentReceipt[]
+  guestFeedback GuestFeedback?
 }
 
 model Payout {

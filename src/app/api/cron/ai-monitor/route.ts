@@ -264,9 +264,13 @@ export async function GET(request: NextRequest) {
     jobs.push('/api/cron/crew-score-decay')
   }
   // Manager monthly commission payout on the 5th of every month
-  // (between day 1 to guarantee prior-month data is settled, and day 10 deadline)
   if (new Date().getUTCDate() === 5) {
     jobs.push('/api/cron/manager-payout')
+  }
+  // VAGF: process scheduled guest feedback calls (10:00-18:00 UTC window)
+  const hour = new Date().getUTCHours()
+  if (hour >= 9 && hour <= 18) {
+    jobs.push('/api/cron/vagf-calls')
   }
 
   await Promise.allSettled(
