@@ -9,7 +9,7 @@ type PeriodData = {
   grossRevenue: number
   hmCommission: number
   hmTotalRevenue: number
-  invoiceRevenue: number
+  receiptRevenue: number
   netToOwners: number
   payoutCount: number
   reservations: number
@@ -194,7 +194,7 @@ export default function ReportsPage() {
           { label: t('admin.reportSummary.grossRevenue'), value: fmtEUR(c.grossRevenue), previous: fmtEUR(p.grossRevenue), delta: fmtDelta(r.delta.grossRevenue) },
           { label: t('admin.reportSummary.hmCommission'), value: fmtEUR(c.hmCommission), previous: fmtEUR(p.hmCommission), delta: fmtDelta(r.delta.hmCommission) },
           { label: t('admin.reportSummary.hmTotalRevenue'), value: fmtEUR(c.hmTotalRevenue), previous: fmtEUR(p.hmTotalRevenue), delta: null },
-          { label: t('admin.reportSummary.invoicesPaid'), value: fmtEUR(c.invoiceRevenue), previous: fmtEUR(p.invoiceRevenue), delta: null },
+          { label: t('admin.reportSummary.invoicesPaid'), value: fmtEUR(c.receiptRevenue), previous: fmtEUR(p.receiptRevenue), delta: null },
           { label: t('admin.reportSummary.paidToOwners'), value: fmtEUR(c.netToOwners), previous: fmtEUR(p.netToOwners), delta: null },
           { label: t('admin.reportSummary.reservations'), value: String(c.reservations), previous: String(p.reservations), delta: fmtDelta(r.delta.reservations) },
           { label: t('admin.reportSummary.avgPricePerNight'), value: fmtEUR(c.avgPricePerNight), previous: fmtEUR(p.avgPricePerNight), delta: fmtDelta(r.delta.avgPrice) },
@@ -267,7 +267,7 @@ export default function ReportsPage() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <KPI label={t('admin.reportSummary.hmTotalRevenue')} value={fmtEUR(c.hmTotalRevenue)} sub={t('admin.reportSummary.commissionPlusInvoices')} />
-          <KPI label={t('admin.reportSummary.invoicesPaid')} value={fmtEUR(c.invoiceRevenue)} sub={t('admin.reportSummary.subscriptionsAndAdjustments')} />
+          <KPI label={t('admin.reportSummary.invoicesPaid')} value={fmtEUR(c.receiptRevenue)} sub={t('admin.reportSummary.subscriptionsAndAdjustments')} />
           <KPI label={t('admin.reportSummary.paidToOwners')} value={fmtEUR(c.netToOwners)} sub={`${c.payoutCount} ${t('common.payouts').toLowerCase()}`} />
           <KPI label={t('admin.reportSummary.nightsOccupied')} value={String(c.totalNights)} delta={r.delta.occupancyNights} sub={`${t('admin.reportSummary.prev')} ${p.totalNights}`} />
         </div>

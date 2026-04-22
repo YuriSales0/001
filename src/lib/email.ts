@@ -182,7 +182,7 @@ function baseWrapper(content: string) {
 </html>`
 }
 
-function invoiceTable(opts: {
+function receiptTable(opts: {
   invoiceId: string
   description: string
   amount: number
@@ -210,7 +210,7 @@ function invoiceTable(opts: {
   `
 }
 
-export function invoiceCreatedEmail(opts: {
+export function receiptCreatedEmail(opts: {
   clientName: string
   invoiceId: string
   description: string
@@ -222,10 +222,10 @@ export function invoiceCreatedEmail(opts: {
 }) {
   const name = opts.clientName.split(' ')[0] || opts.clientName
   const body = `
-    <h2 style="margin:0 0 8px;font-size:22px;color:#111827;">New invoice from HostMasters</h2>
+    <h2 style="margin:0 0 8px;font-size:22px;color:#111827;">New payment receipt from HostMasters</h2>
     <p style="margin:0 0 24px;font-size:15px;color:#555;">Dear ${escapeHtml(name)},</p>
     <p style="font-size:15px;color:#444;margin:0 0 8px;">Please find your invoice details below.</p>
-    ${invoiceTable(opts)}
+    ${receiptTable(opts)}
     <p style="font-size:14px;color:#555;">You can view your account and invoices at any time through your owner portal.</p>
     ${opts.dashboardUrl ? `<p style="margin:24px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">View in portal</a></p>` : ''}
     <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for your trust.<br>— The HostMasters Team</p>
@@ -233,7 +233,7 @@ export function invoiceCreatedEmail(opts: {
   return baseWrapper(body)
 }
 
-export function invoicePaidEmail(opts: {
+export function receiptPaidEmail(opts: {
   clientName: string
   invoiceId: string
   description: string
@@ -328,7 +328,7 @@ export function ownerStatementEmail(opts: {
   return baseWrapper(body)
 }
 
-export function subscriptionInvoiceEmail(opts: {
+export function subscriptionReceiptEmail(opts: {
   clientName: string
   plan: string
   amount: number

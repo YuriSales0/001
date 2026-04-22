@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
-import { sendEmail, invoiceCreatedEmail } from '@/lib/email'
+import { sendEmail, receiptCreatedEmail } from '@/lib/email'
 
 const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       await sendEmail({
         to: invoice.client.email,
         subject: `Invoice from HostMasters`,
-        html: invoiceCreatedEmail({
+        html: receiptCreatedEmail({
           clientName: invoice.client.name || invoice.client.email,
           invoiceId: invoice.id,
           description: invoice.description,

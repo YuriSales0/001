@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
-import { sendEmail, subscriptionInvoiceEmail } from '@/lib/email'
+import { sendEmail, subscriptionReceiptEmail } from '@/lib/email'
 import Stripe from 'stripe'
 
 export const dynamic = 'force-dynamic'
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
           await sendEmail({
             to: user.email,
             subject: `Thank you — HostMasters ${planName} subscription`,
-            html: subscriptionInvoiceEmail({
+            html: subscriptionReceiptEmail({
               clientName: user.name || user.email,
               plan: planName,
               amount: amountPaid,

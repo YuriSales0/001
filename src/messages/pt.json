@@ -55,7 +55,6 @@
     "clientPortal": "Portal do Cliente",
     "crewPortal": "Portal da Equipa",
     "messages": "Mensagens",
-    "invoices": "Faturas",
     "payouts": "Pagamentos",
     "setup": "Configuração",
     "team": "Equipa",
@@ -68,7 +67,8 @@
     "ownerReports": "Relatórios de Proprietários",
     "crmPipeline": "Pipeline CRM",
     "marketing": "Marketing",
-    "aiPricing": "Preços com IA"
+    "aiPricing": "Preços com IA",
+    "receipts": "Faturas"
   },
   "owner": {
     "welcome": "Bem-vindo de volta",
@@ -509,7 +509,7 @@
       "selectConversation": "Selecciona uma conversa",
       "failedToSend": "Falha ao enviar mensagem"
     },
-    "invoices": {
+    "receipts": {
       "subtitle": "Gerir e enviar faturas a proprietários",
       "totalInvoices": "Total de faturas",
       "paid": "Pago",
@@ -846,7 +846,7 @@
       "subtitle": "Pagamentos automáticos por plataforma — comissão calculada por plano",
       "howItWorks": "Como funciona",
       "howItWorksTitle": "Como funciona — Pagamentos",
-      "invoices": "Facturas",
+      "invoices": "Recibos de Pagamento",
       "createPayout": "Criar payout",
       "scheduledNet": "Agendado (líquido)",
       "pendingCommission": "Comissão pendente",
@@ -1075,11 +1075,11 @@
       "liveReservations": "Reservas em curso",
       "hmRevenueThisMonth": "Receita HM este mês",
       "rentals": "Alugueres",
-      "invoices": "Facturas",
+      "invoices": "Recibos de Pagamento",
       "openPayouts": "Payouts em aberto",
       "scheduled": "agendados",
       "sent": "enviados",
-      "pendingInvoices": "Facturas pendentes",
+      "pendingInvoices": "Recibos pendentes",
       "overdueTasks": "Tarefas em atraso",
       "openLeads": "Leads em aberto",
       "systemLive": "Sistema operacional",
@@ -1091,7 +1091,7 @@
       "thisMonthAtAGlance": "Este mês num relance",
       "rentalVolume": "Volume de alugueres",
       "rentalCommission": "Comissão de alugueres",
-      "invoicesPaid": "Facturas pagas",
+      "invoicesPaid": "Recibos pagos",
       "totalHMRevenue": "Receita total HM",
       "pendingOwnerPayouts": "Payouts pendentes a proprietários",
       "navCalendar": "Calendário",
@@ -1099,7 +1099,10 @@
       "navTeamUsers": "Equipa e Utilizadores",
       "navProperties": "Propriedades",
       "navCrmPipeline": "Pipeline CRM",
-      "navReports": "Relatórios"
+      "navReports": "Relatórios",
+      "receipts": "Recibos de Pagamento",
+      "receiptsPaid": "Recibos pagos",
+      "pendingReceipts": "Recibos pendentes"
     },
     "systemLive": "Sistema Operacional",
     "hmRevenue": "Receita HM",
@@ -1284,7 +1287,8 @@
       "clientCount": "Clientes",
       "grossRevenuePortfolio": "Receita bruta (carteira)",
       "subscriptionsPerMonth": "Assinaturas/mes",
-      "fromYourClients": "dos teus clientes"
+      "fromYourClients": "dos teus clientes",
+      "receiptsPaid": "Invoices pagos"
     },
     "consumables": {
       "title": "Consumiveis",
@@ -1314,7 +1318,9 @@
       "create": "Criar",
       "failedToLoad": "Erro ao carregar consumiveis",
       "failedToCreate": "Erro ao criar categoria"
-    }
+    },
+    "receiptsPaid": "Facturas Pagas",
+    "pendingReceipts": "Facturas Pendentes"
   },
   "crew": {
     "myTasks": "As Minhas Tarefas",
@@ -2426,11 +2432,11 @@
       "title": "Os meus recebimentos",
       "subtitle": "Rendimentos das tuas rendas e facturas de serviço.",
       "scheduledReceive": "Previsto receber",
-      "pendingInvoices": "Facturas pendentes",
+      "pendingInvoices": "Recibos pendentes",
       "rentalPayouts": "Payouts de rendas",
       "serviceInvoices": "Facturas de serviço",
       "noPayouts": "Sem payouts ainda",
-      "noInvoices": "Sem facturas",
+      "noInvoices": "Sem recibos de pagamento",
       "thProperty": "Propriedade",
       "thGuest": "Hóspede",
       "thCheckout": "Check-out",
@@ -2443,7 +2449,8 @@
       "thDescription": "Descrição",
       "thIssuedBy": "Emitida por",
       "thDue": "Vencimento",
-      "thAmount": "Valor"
+      "thAmount": "Valor",
+      "pendingReceipts": "Recibos pendentes"
     },
     "bookings": {
       "title": "As minhas Reservas",

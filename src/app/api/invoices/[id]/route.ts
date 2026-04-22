@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
-import { sendEmail, invoiceCreatedEmail, invoicePaidEmail } from '@/lib/email'
+import { sendEmail, receiptCreatedEmail, receiptPaidEmail } from '@/lib/email'
 
 const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -59,7 +59,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         await sendEmail({
           to: invoice.client.email,
           subject: `Payment confirmed — HostMasters`,
-          html: invoicePaidEmail({
+          html: receiptPaidEmail({
             clientName: invoice.client.name || invoice.client.email,
             invoiceId: invoice.id,
             description: invoice.description,

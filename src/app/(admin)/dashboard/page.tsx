@@ -17,7 +17,7 @@ type Stats = {
   activeReservations: number
   rentalVolume: number
   rentalCommission: number
-  invoiceRevenue: number
+  receiptRevenue: number
   totalHMRevenue: number
   openPayouts: { count: number; net: number; commission: number }
   overdueTasks: number
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
     {
       label: t("admin.dashboard.hmRevenueThisMonth"),
       value: fmtEUR(stats.totalHMRevenue),
-      sub: `${t("admin.dashboard.rentals")} ${fmtEUR(stats.rentalCommission)} · ${t("admin.dashboard.invoices")} ${fmtEUR(stats.invoiceRevenue)}`,
+      sub: `${t("admin.dashboard.rentals")} ${fmtEUR(stats.rentalCommission)} · ${t("admin.dashboard.receipts")} ${fmtEUR(stats.receiptRevenue)}`,
       icon: Euro,
       href: "/my-reports",
       color: "text-navy-700",
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
       color: "text-navy-700",
     },
     {
-      label: t("admin.dashboard.pendingInvoices"),
+      label: t("admin.dashboard.pendingReceipts"),
       value: fmtEUR(stats.pendingInvoices.total),
       sub: `${stats.pendingInvoices.count} ${t("admin.dashboard.sent")}`,
       icon: FileText,
@@ -267,8 +267,8 @@ export default function AdminDashboard() {
             <div className="text-xs text-gray-400 mt-0.5">{t("admin.dashboard.rentalCommission")}</div>
           </div>
           <div className="rounded-lg bg-blue-50 p-3">
-            <div className="text-xl font-bold text-blue-600">{fmtEUR(stats.invoiceRevenue)}</div>
-            <div className="text-xs text-gray-400 mt-0.5">{t("admin.dashboard.invoicesPaid")}</div>
+            <div className="text-xl font-bold text-blue-600">{fmtEUR(stats.receiptRevenue)}</div>
+            <div className="text-xs text-gray-400 mt-0.5">{t("admin.dashboard.receiptsPaid")}</div>
           </div>
           <div className="rounded-lg bg-green-50 p-3 border border-green-200">
             <div className="text-xl font-bold text-green-600">{fmtEUR(stats.totalHMRevenue)}</div>

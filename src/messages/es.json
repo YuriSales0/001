@@ -55,7 +55,6 @@
     "clientPortal": "Portal del Cliente",
     "crewPortal": "Portal del Equipo",
     "messages": "Mensajes",
-    "invoices": "Facturas",
     "payouts": "Pagos",
     "setup": "Configuración",
     "team": "Equipo",
@@ -68,7 +67,8 @@
     "ownerReports": "Informes de Propietarios",
     "crmPipeline": "Pipeline CRM",
     "marketing": "Marketing",
-    "aiPricing": "Precios con IA"
+    "aiPricing": "Precios con IA",
+    "receipts": "Recibos de Pago"
   },
   "owner": {
     "welcome": "Bienvenido de nuevo",
@@ -509,12 +509,12 @@
       "selectConversation": "Selecciona una conversación",
       "failedToSend": "Error al enviar mensaje"
     },
-    "invoices": {
+    "receipts": {
       "subtitle": "Gestionar y enviar facturas a propietarios",
-      "totalInvoices": "Total de facturas",
+      "totalInvoices": "Total de recibos",
       "paid": "Pagado",
       "pending": "Pendiente",
-      "editInvoice": "Editar factura",
+      "editInvoice": "Editar recibo",
       "client": "Cliente",
       "amountEur": "Importe (EUR)",
       "dueDate": "Fecha de vencimiento",
@@ -529,10 +529,10 @@
       "actions": "Acciones",
       "noInvoices": "Sin facturas todavia",
       "createFirst": "Crea tu primera factura usando el formulario de arriba.",
-      "markAsPaid": "Marcar factura como pagada",
+      "markAsPaid": "Marcar recibo como pagado",
       "markAsPaidConfirm": "Marcar factura como pagada para",
       "markPaid": "Marcar como pagada",
-      "deleteInvoice": "Eliminar factura",
+      "deleteInvoice": "Eliminar recibo",
       "deleteConfirm": "Eliminar factura de",
       "delete": "Eliminar",
       "failedToMarkPaid": "Error al marcar factura como pagada",
@@ -846,7 +846,7 @@
       "subtitle": "Pagos automáticos por plataforma — comisión calculada por plan",
       "howItWorks": "Cómo funciona",
       "howItWorksTitle": "Cómo funciona — Pagos",
-      "invoices": "Facturas",
+      "invoices": "Recibos de Pago",
       "createPayout": "Crear payout",
       "scheduledNet": "Programado (neto)",
       "pendingCommission": "Comisión pendiente",
@@ -1075,11 +1075,11 @@
       "liveReservations": "Reservas en curso",
       "hmRevenueThisMonth": "Ingresos HM este mes",
       "rentals": "Alquileres",
-      "invoices": "Facturas",
+      "invoices": "Recibos de Pago",
       "openPayouts": "Pagos pendientes",
       "scheduled": "programados",
       "sent": "enviados",
-      "pendingInvoices": "Facturas pendientes",
+      "pendingInvoices": "Recibos pendientes",
       "overdueTasks": "Tareas atrasadas",
       "openLeads": "Leads abiertos",
       "systemLive": "Sistema operativo",
@@ -1091,7 +1091,7 @@
       "thisMonthAtAGlance": "Este mes de un vistazo",
       "rentalVolume": "Volumen de alquileres",
       "rentalCommission": "Comisión de alquileres",
-      "invoicesPaid": "Facturas pagadas",
+      "invoicesPaid": "Recibos pagados",
       "totalHMRevenue": "Ingresos totales HM",
       "pendingOwnerPayouts": "Pagos pendientes a propietarios",
       "navCalendar": "Calendario",
@@ -1099,7 +1099,10 @@
       "navTeamUsers": "Equipo y Usuarios",
       "navProperties": "Propiedades",
       "navCrmPipeline": "Pipeline CRM",
-      "navReports": "Informes"
+      "navReports": "Informes",
+      "receipts": "Recibos de Pago",
+      "receiptsPaid": "Recibos pagados",
+      "pendingReceipts": "Recibos pendientes"
     },
     "systemLive": "Sistema Operativo",
     "hmRevenue": "Ingresos HM",
@@ -1266,7 +1269,7 @@
       "avgPricePerNight": "Precio medio/noche",
       "hmTotalRevenue": "Ingresos totales HM",
       "commissionPlusInvoices": "comision + facturas",
-      "invoicesPaid": "Facturas pagadas",
+      "invoicesPaid": "Recibos pagados",
       "subscriptionsAndAdjustments": "suscripciones + ajustes",
       "paidToOwners": "Pagado a propietarios",
       "nightsOccupied": "Noches ocupadas",
@@ -1284,7 +1287,8 @@
       "clientCount": "Clientes",
       "grossRevenuePortfolio": "Ingresos brutos (cartera)",
       "subscriptionsPerMonth": "Suscripciones/mes",
-      "fromYourClients": "de tus clientes"
+      "fromYourClients": "de tus clientes",
+      "receiptsPaid": "Recibos pagados"
     },
     "consumables": {
       "title": "Consumibles",
@@ -1314,7 +1318,9 @@
       "create": "Crear",
       "failedToLoad": "Error al cargar consumibles",
       "failedToCreate": "Error al crear categoria"
-    }
+    },
+    "receiptsPaid": "Facturas Pagadas",
+    "pendingReceipts": "Facturas Pendientes"
   },
   "crew": {
     "myTasks": "Mis Tareas",
@@ -2426,11 +2432,11 @@
       "title": "Mis cobros",
       "subtitle": "Ingresos de tus alquileres y facturas de servicio.",
       "scheduledReceive": "Previsto cobrar",
-      "pendingInvoices": "Facturas pendientes",
+      "pendingInvoices": "Recibos pendientes",
       "rentalPayouts": "Pagos de alquileres",
       "serviceInvoices": "Facturas de servicio",
       "noPayouts": "Sin pagos aún",
-      "noInvoices": "Sin facturas",
+      "noInvoices": "Sin recibos de pago",
       "thProperty": "Propiedad",
       "thGuest": "Huésped",
       "thCheckout": "Check-out",
@@ -2443,7 +2449,8 @@
       "thDescription": "Descripción",
       "thIssuedBy": "Emitida por",
       "thDue": "Vencimiento",
-      "thAmount": "Importe"
+      "thAmount": "Importe",
+      "pendingReceipts": "Recibos pendientes"
     },
     "bookings": {
       "title": "Mis Reservas",

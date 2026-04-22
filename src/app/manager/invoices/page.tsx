@@ -59,19 +59,19 @@ function EditModal({ invoice, onClose, onSaved }: {
     })
     setBusy(false)
     if (res.ok) { onSaved(); onClose() }
-    else setErr((await res.json()).error || t('manager.invoices.failedToSave'))
+    else setErr((await res.json()).error || t('manager.receipts.failedToSave'))
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h2 className="font-semibold text-gray-900">{t('manager.invoices.editInvoice')}</h2>
+          <h2 className="font-semibold text-gray-900">{t('manager.receipts.editInvoice')}</h2>
           <button onClick={onClose} aria-label="Close" className="rounded-md p-2 hover:bg-gray-100"><X className="h-4 w-4" /></button>
         </div>
         <form onSubmit={save} className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.client')}</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.receipts.client')}</label>
             <p className="text-sm text-gray-700">{invoice.client.name || invoice.client.email}</p>
           </div>
           <div>
@@ -84,7 +84,7 @@ function EditModal({ invoice, onClose, onSaved }: {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.amountEur')}</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.receipts.amountEur')}</label>
               <input
                 required type="number" step="0.01" min="0" value={form.amount}
                 onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
@@ -92,7 +92,7 @@ function EditModal({ invoice, onClose, onSaved }: {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.dueDate')}</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.receipts.dueDate')}</label>
               <input
                 type="date" value={form.dueDate}
                 onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
@@ -101,7 +101,7 @@ function EditModal({ invoice, onClose, onSaved }: {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.invoices.notes')}</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">{t('manager.receipts.notes')}</label>
             <textarea
               rows={2} value={form.notes}
               onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
@@ -112,7 +112,7 @@ function EditModal({ invoice, onClose, onSaved }: {
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-50">{t('common.cancel')}</button>
             <button type="submit" disabled={busy} className="rounded-lg bg-gray-900 text-white px-4 py-2 text-sm hover:bg-gray-700 disabled:opacity-50">
-              {busy ? t('manager.invoices.saving') : t('manager.invoices.saveChanges')}
+              {busy ? t('manager.receipts.saving') : t('manager.receipts.saveChanges')}
             </button>
           </div>
         </form>
@@ -146,7 +146,7 @@ export default function ManagerInvoices() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'PAID' }),
     })
-    if (!res.ok) { showToast(t('manager.invoices.failedToMarkPaid'), 'error'); return }
+    if (!res.ok) { showToast(t('manager.receipts.failedToMarkPaid'), 'error'); return }
     load()
   }
 
@@ -154,7 +154,7 @@ export default function ManagerInvoices() {
     setDeleting(id)
     const res = await fetch(`/api/invoices/${id}`, { method: 'DELETE' })
     setDeleting(null)
-    if (!res.ok) { showToast(t('manager.invoices.failedToDelete'), 'error'); return }
+    if (!res.ok) { showToast(t('manager.receipts.failedToDelete'), 'error'); return }
     load()
   }
 
@@ -171,23 +171,23 @@ export default function ManagerInvoices() {
     <div className="p-6 space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('common.invoices')}</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{t('manager.invoices.subtitle')}</p>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{t('common.receipts')}</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{t('manager.receipts.subtitle')}</p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-hm border bg-white p-4">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.invoices.totalInvoices')}</p>
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.receipts.totalInvoices')}</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">{invoices.length}</p>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.invoices.paid')}</p>
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.receipts.paid')}</p>
           <p className="text-2xl font-bold text-green-700 mt-1">{fmt(totals.paid)}</p>
         </div>
         <div className="rounded-hm border bg-white p-4">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.invoices.pending')}</p>
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">{t('manager.receipts.pending')}</p>
           <p className="text-2xl font-bold text-orange-600 mt-1">{fmt(totals.pending)}</p>
         </div>
       </div>
@@ -199,13 +199,13 @@ export default function ManagerInvoices() {
         <table className="min-w-[600px] w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-400 tracking-wide">
             <tr>
-              <th className="px-4 py-3">{t('manager.invoices.date')}</th>
-              <th className="px-4 py-3">{t('manager.invoices.client')}</th>
+              <th className="px-4 py-3">{t('manager.receipts.date')}</th>
+              <th className="px-4 py-3">{t('manager.receipts.client')}</th>
               <th className="px-4 py-3">{t('common.description')}</th>
-              <th className="px-4 py-3">{t('manager.invoices.due')}</th>
-              <th className="px-4 py-3 text-right">{t('manager.invoices.amount')}</th>
-              <th className="px-4 py-3">{t('manager.invoices.status')}</th>
-              <th className="px-4 py-3 text-right">{t('manager.invoices.actions')}</th>
+              <th className="px-4 py-3">{t('manager.receipts.due')}</th>
+              <th className="px-4 py-3 text-right">{t('manager.receipts.amount')}</th>
+              <th className="px-4 py-3">{t('manager.receipts.status')}</th>
+              <th className="px-4 py-3 text-right">{t('manager.receipts.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -215,8 +215,8 @@ export default function ManagerInvoices() {
             {!loading && invoices.length === 0 && (
               <tr><td colSpan={7} className="py-12 text-center">
                 <FileText className="h-10 w-10 mx-auto text-gray-300 mb-2" />
-                <p className="font-serif font-bold text-hm-black">{t('manager.invoices.noInvoices')}</p>
-                <p className="text-sm text-gray-500 mt-0.5">{t('manager.invoices.createFirst')}</p>
+                <p className="font-serif font-bold text-hm-black">{t('manager.receipts.noInvoices')}</p>
+                <p className="text-sm text-gray-500 mt-0.5">{t('manager.receipts.createFirst')}</p>
               </td></tr>
             )}
             {invoices.map(i => (
@@ -285,9 +285,9 @@ export default function ManagerInvoices() {
 
       <ConfirmDialog
         open={confirmAction?.type === 'markPaid'}
-        title={t('manager.invoices.markAsPaid')}
-        message={confirmAction?.type === 'markPaid' ? `${t('manager.invoices.markAsPaidConfirm')} ${confirmAction.label}?` : ''}
-        confirmLabel={t('manager.invoices.markPaid')}
+        title={t('manager.receipts.markAsPaid')}
+        message={confirmAction?.type === 'markPaid' ? `${t('manager.receipts.markAsPaidConfirm')} ${confirmAction.label}?` : ''}
+        confirmLabel={t('manager.receipts.markPaid')}
         onConfirm={() => {
           if (confirmAction?.type === 'markPaid') markPaid(confirmAction.id)
           setConfirmAction(null)
@@ -297,9 +297,9 @@ export default function ManagerInvoices() {
 
       <ConfirmDialog
         open={confirmAction?.type === 'delete'}
-        title={t('manager.invoices.deleteInvoice')}
-        message={confirmAction?.type === 'delete' ? `${t('manager.invoices.deleteConfirm')} ${confirmAction.label}?` : ''}
-        confirmLabel={t('manager.invoices.delete')}
+        title={t('manager.receipts.deleteInvoice')}
+        message={confirmAction?.type === 'delete' ? `${t('manager.receipts.deleteConfirm')} ${confirmAction.label}?` : ''}
+        confirmLabel={t('manager.receipts.delete')}
         variant="danger"
         onConfirm={() => {
           if (confirmAction?.type === 'delete') deleteInvoice(confirmAction.id)

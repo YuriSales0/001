@@ -55,7 +55,6 @@
     "clientPortal": "Client Portal",
     "crewPortal": "Crew Portal",
     "messages": "Messages",
-    "invoices": "Invoices",
     "payouts": "Payouts",
     "setup": "Setup",
     "team": "Team",
@@ -68,7 +67,8 @@
     "ownerReports": "Owner Reports",
     "crmPipeline": "CRM Pipeline",
     "marketing": "Marketing",
-    "aiPricing": "AI Pricing"
+    "aiPricing": "AI Pricing",
+    "receipts": "Payment Receipts"
   },
   "owner": {
     "welcome": "Welcome back",
@@ -509,12 +509,12 @@
       "selectConversation": "Select a conversation",
       "failedToSend": "Failed to send message"
     },
-    "invoices": {
-      "subtitle": "Manage and send invoices to property owners",
-      "totalInvoices": "Total invoices",
+    "receipts": {
+      "subtitle": "Manage and send payment receipts to property owners",
+      "totalInvoices": "Total receipts",
       "paid": "Paid",
       "pending": "Pending",
-      "editInvoice": "Edit invoice",
+      "editInvoice": "Edit receipt",
       "client": "Client",
       "amountEur": "Amount (EUR)",
       "dueDate": "Due date",
@@ -527,16 +527,16 @@
       "amount": "Amount",
       "status": "Status",
       "actions": "Actions",
-      "noInvoices": "No invoices yet",
-      "createFirst": "Create your first invoice using the form above.",
-      "markAsPaid": "Mark invoice as paid",
-      "markAsPaidConfirm": "Mark invoice as paid for",
+      "noInvoices": "No payment receipts yet",
+      "createFirst": "Create your first payment receipt using the form above.",
+      "markAsPaid": "Mark receipt as paid",
+      "markAsPaidConfirm": "Mark receipt as paid for",
       "markPaid": "Mark paid",
-      "deleteInvoice": "Delete invoice",
-      "deleteConfirm": "Delete invoice for",
+      "deleteInvoice": "Delete receipt",
+      "deleteConfirm": "Delete receipt for",
       "delete": "Delete",
-      "failedToMarkPaid": "Failed to mark invoice as paid",
-      "failedToDelete": "Failed to delete invoice"
+      "failedToMarkPaid": "Failed to mark receipt as paid",
+      "failedToDelete": "Failed to delete receipt"
     }
   },
   "admin": {
@@ -546,11 +546,11 @@
       "liveReservations": "Live reservations",
       "hmRevenueThisMonth": "HM revenue this month",
       "rentals": "Rentals",
-      "invoices": "Invoices",
+      "invoices": "Payment Receipts",
       "openPayouts": "Open payouts",
       "scheduled": "scheduled",
       "sent": "sent",
-      "pendingInvoices": "Pending invoices",
+      "pendingInvoices": "Pending receipts",
       "overdueTasks": "Overdue tasks",
       "openLeads": "Open leads",
       "systemLive": "System live",
@@ -562,7 +562,7 @@
       "thisMonthAtAGlance": "This month at a glance",
       "rentalVolume": "Rental volume",
       "rentalCommission": "Rental commission",
-      "invoicesPaid": "Invoices paid",
+      "invoicesPaid": "Receipts paid",
       "totalHMRevenue": "Total HM revenue",
       "pendingOwnerPayouts": "Pending payouts to owners",
       "navCalendar": "Calendar",
@@ -571,19 +571,22 @@
       "navProperties": "Properties",
       "navCrmPipeline": "CRM Pipeline",
       "navReports": "Reports",
-      "fetchError": "Failed to load dashboard data. Please try again."
+      "fetchError": "Failed to load dashboard data. Please try again.",
+      "receipts": "Payment Receipts",
+      "receiptsPaid": "Receipts paid",
+      "pendingReceipts": "Pending receipts"
     },
     "systemLive": "System Live",
     "hmRevenue": "HM Revenue",
     "openPayouts": "Open Payouts",
-    "pendingInvoices": "Pending Invoices",
+    "pendingInvoices": "Pending Receipts",
     "overdueTasksAlert": "Overdue Tasks Alert",
     "upcomingCheckIns": "Upcoming Check-ins",
     "upcomingCheckOuts": "Upcoming Check-outs",
     "revenueBreakdown": "Revenue Breakdown",
     "rentalVolume": "Rental Volume",
     "rentalCommission": "Rental Commission",
-    "invoicesPaid": "Invoices Paid",
+    "invoicesPaid": "Receipts Paid",
     "totalRevenue": "Total Revenue",
     "quickNav": "Quick Navigation",
     "userManagement": "User Management",
@@ -1025,7 +1028,7 @@
       "subtitle": "Automatic payments by platform — commission calculated by plan",
       "howItWorks": "How it works",
       "howItWorksTitle": "How it works — Payouts",
-      "invoices": "Invoices",
+      "invoices": "Payment Receipts",
       "createPayout": "Create payout",
       "scheduledNet": "Scheduled (net)",
       "pendingCommission": "Pending commission",
@@ -1265,7 +1268,7 @@
       "avgPricePerNight": "Avg price/night",
       "hmTotalRevenue": "HM total revenue",
       "commissionPlusInvoices": "commission + invoices",
-      "invoicesPaid": "Invoices paid",
+      "invoicesPaid": "Receipts paid",
       "subscriptionsAndAdjustments": "subscriptions + adjustments",
       "paidToOwners": "Paid to owners",
       "nightsOccupied": "Nights occupied",
@@ -1283,7 +1286,8 @@
       "clientCount": "Clients",
       "grossRevenuePortfolio": "Gross revenue (portfolio)",
       "subscriptionsPerMonth": "Subscriptions/month",
-      "fromYourClients": "from your clients"
+      "fromYourClients": "from your clients",
+      "receiptsPaid": "Receipts paid"
     },
     "consumables": {
       "title": "Consumables",
@@ -1313,7 +1317,9 @@
       "create": "Create",
       "failedToLoad": "Failed to load consumables",
       "failedToCreate": "Failed to create category"
-    }
+    },
+    "receiptsPaid": "Receipts Paid",
+    "pendingReceipts": "Pending Receipts"
   },
   "crew": {
     "myTasks": "My Tasks",
@@ -2425,7 +2431,7 @@
       "title": "My Payouts",
       "subtitle": "Earnings from your rentals and any service invoices.",
       "scheduledReceive": "Scheduled to receive",
-      "pendingInvoices": "Pending invoices to pay",
+      "pendingInvoices": "Pending receipts to pay",
       "rentalPayouts": "Rental payouts",
       "serviceInvoices": "Service invoices",
       "noPayouts": "No payouts yet",
@@ -2442,7 +2448,8 @@
       "thDescription": "Description",
       "thIssuedBy": "Issued by",
       "thDue": "Due",
-      "thAmount": "Amount"
+      "thAmount": "Amount",
+      "pendingReceipts": "Pending receipts to pay"
     },
     "bookings": {
       "title": "My Bookings",

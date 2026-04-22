@@ -5,10 +5,10 @@ import {
   taskCompletedEmail,
   monthlyReportEmail,
   monthlyStatementEmail,
-  invoiceCreatedEmail,
-  invoicePaidEmail,
+  receiptCreatedEmail,
+  receiptPaidEmail,
   ownerStatementEmail,
-  subscriptionInvoiceEmail,
+  subscriptionReceiptEmail,
 } from '@/lib/email'
 
 describe('newBookingEmail', () => {
@@ -142,9 +142,9 @@ describe('monthlyStatementEmail', () => {
   })
 })
 
-describe('invoiceCreatedEmail', () => {
+describe('receiptCreatedEmail', () => {
   it('returns HTML with invoice details', () => {
-    const html = invoiceCreatedEmail({
+    const html = receiptCreatedEmail({
       clientName: 'Maria Silva',
       invoiceId: 'inv_abc12345',
       description: 'Subscription MID — April 2026',
@@ -158,7 +158,7 @@ describe('invoiceCreatedEmail', () => {
   })
 
   it('includes due date when provided', () => {
-    const html = invoiceCreatedEmail({
+    const html = receiptCreatedEmail({
       clientName: 'Owner',
       invoiceId: 'inv_xyz',
       description: 'Test',
@@ -170,9 +170,9 @@ describe('invoiceCreatedEmail', () => {
   })
 })
 
-describe('invoicePaidEmail', () => {
+describe('receiptPaidEmail', () => {
   it('returns HTML with payment confirmation', () => {
-    const html = invoicePaidEmail({
+    const html = receiptPaidEmail({
       clientName: 'João Costa',
       invoiceId: 'inv_paid123',
       description: 'Rental payout — Villa Sol',
@@ -230,9 +230,9 @@ describe('ownerStatementEmail', () => {
   })
 })
 
-describe('subscriptionInvoiceEmail', () => {
+describe('subscriptionReceiptEmail', () => {
   it('returns HTML with subscription details', () => {
-    const html = subscriptionInvoiceEmail({
+    const html = subscriptionReceiptEmail({
       clientName: 'Pedro Santos',
       plan: 'MID',
       amount: 159,
