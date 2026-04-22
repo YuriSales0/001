@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CheckCircle2, ArrowRight, FileText, User, Briefcase, Shield, Globe } from 'lucide-react'
+import { CheckCircle2, ArrowRight, FileText, User, Briefcase, Shield, Globe, Sparkles, MessageCircle } from 'lucide-react'
 import { useLocale } from '@/i18n/provider'
 import { LOCALES, type Locale } from '@/i18n'
 
@@ -60,7 +60,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
       })
   }, [])
 
-  // Step 0 = Language, then role-specific steps
+  // Step 0 = Language, then role-specific steps, then contract, AI intro, confirm
   const stepLabels = [
     t('onboarding.languageStep'),
     t('onboarding.profileStep'),
@@ -70,6 +70,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
       ? [t('onboarding.managerCompStep')]
       : [t('onboarding.clientPropertyStep')]),
     t('onboarding.contractStep'),
+    t('onboarding.aiStep'),
     t('onboarding.confirmStep'),
   ]
 
@@ -148,6 +149,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
   const roleStep1Idx = 2
   const roleStep2Idx = role === 'CREW' ? 3 : -1
   const contractIdx = role === 'CREW' ? 4 : 3
+  const aiIdx = contractIdx + 1
   const confirmIdx = stepLabels.length - 1
 
   return (
@@ -361,6 +363,65 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
                   {t('onboarding.contractNone')}
                 </div>
               )}
+            </>
+          )}
+
+          {/* AI Assistant intro */}
+          {step === aiIdx && (
+            <>
+              <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
+                <Sparkles className="h-5 w-5 text-[#B08A3E]" />
+                {t('onboarding.aiStepTitle')}
+              </div>
+              <p className="text-xs text-gray-500 mb-4">{t('onboarding.aiStepDesc')}</p>
+              <div className="rounded-xl border-2 p-4 space-y-3" style={{ borderColor: 'rgba(176,138,62,0.3)', background: 'rgba(176,138,62,0.05)' }}>
+                <div className="flex items-start gap-3">
+                  <div className="shrink-0 h-8 w-8 rounded-full flex items-center justify-center" style={{ background: '#0B1E3A' }}>
+                    <MessageCircle className="h-4 w-4" style={{ color: '#B08A3E' }} />
+                  </div>
+                  <div className="flex-1 text-xs text-gray-700">
+                    <p className="font-semibold text-hm-black mb-1">{t('onboarding.aiFeatureIntro')}</p>
+                    <ul className="space-y-1.5">
+                      {role === 'CLIENT' && (
+                        <>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureClient1')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureClient2')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureClient3')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureClient4')}</li>
+                        </>
+                      )}
+                      {role === 'CREW' && (
+                        <>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureCrew1')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureCrew2')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureCrew3')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureCrew4')}</li>
+                        </>
+                      )}
+                      {role === 'MANAGER' && (
+                        <>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureManager1')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureManager2')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureManager3')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureManager4')}</li>
+                        </>
+                      )}
+                      {role === 'ADMIN' && (
+                        <>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureAdmin1')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureAdmin2')}</li>
+                          <li className="flex gap-2"><span className="text-[#B08A3E]">•</span>{t('onboarding.aiFeatureAdmin3')}</li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-3 flex items-center gap-1.5">
+                <Sparkles className="h-3 w-3 text-[#B08A3E]" />
+                {t('onboarding.aiLanguageNote').replace('{lang}', LOCALES.find(l => l.code === selectedLang)?.label ?? 'English')}
+              </p>
+              <p className="text-xs text-gray-400 mt-2">{t('onboarding.aiAccessHint')}</p>
             </>
           )}
 
