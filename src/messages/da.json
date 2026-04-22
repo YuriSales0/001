@@ -2709,6 +2709,17 @@
     "feedback": {
       "title": "Ejendomsfeedback",
       "subtitle": "Hvad gæster siger om din ejendom efter hvert ophold."
+    },
+    "plus": {
+      "navLabel": "Lås op",
+      "badge": "Din ejendom præsterer under sit potentiale",
+      "heroTitle": "Lås op for det, din ejendom mangler",
+      "heroSub": "Du er på Starter-planen. Din ejendom fungerer — men vokser ikke. Oplev, hvad HostMasters kan gøre for dig.",
+      "missing": "Hvad du går glip af",
+      "cardBadge": "Starter-plan",
+      "cardTitle": "Din ejendom når ikke sit potentiale",
+      "cardBody": "Se 10+ funktioner, du ikke har — AI-priser, smart lås, skatteoverholdelse, stemmefeedback. Opgrader eller køb enkeltvis, uden forpligtelse.",
+      "cardCta": "Se hvad du går glip af"
     }
   },
   "aiChat": {

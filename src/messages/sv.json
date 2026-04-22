@@ -2709,6 +2709,17 @@
     "feedback": {
       "title": "Fastighetsfeedback",
       "subtitle": "Vad gäster säger om din fastighet efter varje vistelse."
+    },
+    "plus": {
+      "navLabel": "Lås upp",
+      "badge": "Din fastighet presterar under sin potential",
+      "heroTitle": "Lås upp det din fastighet saknar",
+      "heroSub": "Du är på Starter-planen. Din fastighet fungerar — men växer inte. Upptäck vad HostMasters kan göra för dig.",
+      "missing": "Vad du missar",
+      "cardBadge": "Starter-plan",
+      "cardTitle": "Din fastighet når inte sin potential",
+      "cardBody": "Se 10+ funktioner du saknar — AI-prissättning, smart lås, skatteefterlevnad, röstfeedback. Uppgradera eller köp separat, utan åtagande.",
+      "cardCta": "Se vad du missar"
     }
   },
   "aiChat": {

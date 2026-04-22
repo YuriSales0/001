@@ -2709,6 +2709,17 @@
     "feedback": {
       "title": "Retours sur la propriété",
       "subtitle": "Ce que disent les invités sur votre propriété après chaque séjour."
+    },
+    "plus": {
+      "navLabel": "Débloquer",
+      "badge": "Votre propriété rend moins",
+      "heroTitle": "Débloquez ce qui manque à votre propriété",
+      "heroSub": "Vous êtes sur le plan Starter. Votre propriété fonctionne — mais ne grandit pas. Découvrez ce que HostMasters peut faire pour vous.",
+      "missing": "Ce qui vous manque",
+      "cardBadge": "Plan Starter",
+      "cardTitle": "Votre propriété n'atteint pas son potentiel",
+      "cardBody": "Voyez 10+ fonctionnalités qui vous manquent — tarification IA, smart lock, conformité fiscale, feedback vocal. Passez au plan supérieur ou achetez à l'unité, sans engagement.",
+      "cardCta": "Voir ce qui vous manque"
     }
   },
   "aiChat": {

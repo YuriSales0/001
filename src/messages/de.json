@@ -2709,6 +2709,17 @@
     "feedback": {
       "title": "Immobilien-Feedback",
       "subtitle": "Was Gäste nach jedem Aufenthalt über Ihre Immobilie sagen."
+    },
+    "plus": {
+      "navLabel": "Freischalten",
+      "badge": "Ihre Immobilie bleibt unter ihrem Potenzial",
+      "heroTitle": "Schalten Sie frei, was Ihrer Immobilie fehlt",
+      "heroSub": "Sie sind im Starter-Plan. Ihre Immobilie funktioniert — aber wächst nicht. Entdecken Sie, was HostMasters für Sie tun kann.",
+      "missing": "Was Sie verpassen",
+      "cardBadge": "Starter-Plan",
+      "cardTitle": "Ihre Immobilie erreicht ihr Potenzial nicht",
+      "cardBody": "Sehen Sie 10+ Funktionen, die Ihnen fehlen — KI-Preise, Smart Lock, Steuer-Compliance, Sprachfeedback. Upgrade oder einzeln kaufen, ohne Bindung.",
+      "cardCta": "Sehen, was Sie verpassen"
     }
   },
   "aiChat": {

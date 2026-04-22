@@ -4,7 +4,7 @@ import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import {
   Home, TrendingUp, CalendarDays, Star, MessageCircle,
-  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles, FileText,
+  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles, FileText, Zap,
 } from 'lucide-react'
 import { HmLogo } from '@/components/hm/hm-logo'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
@@ -40,11 +40,17 @@ export default async function ClientLayout({ children }: { children: React.React
     : 'CL'
 
   const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { subscriptionPlan: true } })
-  const hasAI = AI_PLANS.includes(dbUser?.subscriptionPlan ?? '')
+  const currentPlan = dbUser?.subscriptionPlan ?? 'STARTER'
+  const hasAI = AI_PLANS.includes(currentPlan)
+  const isStarter = currentPlan === 'STARTER'
+
   const navLinks = [
     ...baseLinks,
     ...(hasAI ? [{ href: '/client/ai', label: t(msgs, 'common.aiPricing'), icon: Sparkles }] : []),
-    { href: '/client/intelligence', label: t(msgs, 'client.intelligence.title'), icon: TrendingUp },
+    // Intelligence hidden for Starter — consolidated into /plus
+    ...(!isStarter ? [{ href: '/client/intelligence', label: t(msgs, 'client.intelligence.title'), icon: TrendingUp }] : []),
+    // Upsell for everyone but especially prominent on Starter
+    { href: '/client/plus', label: t(msgs, 'client.plus.navLabel'), icon: Zap },
   ]
 
   return (

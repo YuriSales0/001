@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { PlanBadge } from "@/components/hm/plan-badge"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
+import { UpsellCard } from "@/components/hm/upsell-card"
 import { useLocale } from "@/i18n/provider"
 
 type DashboardData = {
@@ -229,6 +230,9 @@ export default function OwnerDashboard() {
         headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
         dateClass="mt-1 font-sans text-hm-slate/70 text-base"
       />
+
+      {/* Starter upsell — hidden for BASIC/MID/PREMIUM */}
+      <UpsellCard />
 
       {/* Partial fetch errors banner */}
       {fetchErrors.length > 0 && (

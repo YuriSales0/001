@@ -2735,6 +2735,17 @@
     "feedback": {
       "title": "Feedback da Propriedade",
       "subtitle": "O que os hóspedes dizem sobre a tua propriedade após cada estadia."
+    },
+    "plus": {
+      "navLabel": "Desbloquear",
+      "badge": "A tua propriedade está a render menos",
+      "heroTitle": "Desbloqueia o que a tua propriedade está a perder",
+      "heroSub": "Estás no plano Starter. A tua propriedade funciona — mas não está a crescer. Descobre o que o HostMasters pode fazer por ti.",
+      "missing": "O que estás a perder",
+      "cardBadge": "Plano Starter",
+      "cardTitle": "A tua propriedade não está a atingir o potencial",
+      "cardBody": "Vê 10+ features que não tens — AI pricing, smart lock, compliance fiscal, feedback por voz. Faz upgrade ou compra à peça, sem compromisso.",
+      "cardCta": "Ver o que estás a perder"
     }
   },
   "aiChat": {

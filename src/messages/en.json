@@ -2734,6 +2734,17 @@
     "feedback": {
       "title": "Property Feedback",
       "subtitle": "What guests say about your property after each stay."
+    },
+    "plus": {
+      "navLabel": "Unlock",
+      "badge": "Your property is underperforming",
+      "heroTitle": "Unlock what your property is missing",
+      "heroSub": "You are on the Starter plan. Your property works — but it is not growing. Discover what HostMasters can do for you.",
+      "missing": "What you're missing",
+      "cardBadge": "Starter Plan",
+      "cardTitle": "Your property isn't reaching its potential",
+      "cardBody": "See 10+ features you are missing — AI pricing, smart lock, fiscal compliance, voice feedback. Upgrade or buy individually, no commitment.",
+      "cardCta": "See what you are missing"
     }
   },
   "aiChat": {

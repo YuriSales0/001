@@ -2709,6 +2709,17 @@
     "feedback": {
       "title": "Vastgoed-feedback",
       "subtitle": "Wat gasten zeggen over uw pand na elk verblijf."
+    },
+    "plus": {
+      "navLabel": "Ontgrendelen",
+      "badge": "Uw pand presteert onder zijn potentieel",
+      "heroTitle": "Ontgrendel wat uw pand mist",
+      "heroSub": "U zit op het Starter-plan. Uw pand werkt — maar groeit niet. Ontdek wat HostMasters voor u kan doen.",
+      "missing": "Wat u mist",
+      "cardBadge": "Starter-plan",
+      "cardTitle": "Uw pand bereikt zijn potentieel niet",
+      "cardBody": "Zie 10+ functies die u niet heeft — AI-prijzen, smart lock, fiscale compliance, voice feedback. Upgrade of koop apart, zonder verplichting.",
+      "cardCta": "Zie wat u mist"
     }
   },
   "aiChat": {
