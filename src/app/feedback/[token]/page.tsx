@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from "react"
 import { Star, CheckCircle2, Home, Users, Sparkles, AlertCircle, Send } from "lucide-react"
+import { gt } from "@/lib/guest-i18n"
 
 interface FeedbackData {
   propertyName: string
@@ -55,6 +56,17 @@ export default function WebFeedbackPage({ params }: { params: Promise<{ token: s
   }, [token])
 
   const submit = async () => {
+    // Require at least one score OR one qualitative answer
+    const hasAnyScore = [
+      scorePropertyStructure, scorePropertyAmenities, scoreLocation, scoreValueForMoney,
+      scorePropertyState, scoreCleanliness,
+      scoreCommunication, scorePlatformOverall, scoreNps,
+    ].some(s => s !== null)
+    const hasAnyText = [positive, improvement, recommendation].some(t => t.trim().length > 0)
+    if (!hasAnyScore && !hasAnyText) {
+      alert('Please rate at least one dimension or share a comment.')
+      return
+    }
     setSubmitting(true)
     const res = await fetch(`/api/feedback/${token}`, {
       method: 'POST',
@@ -86,14 +98,13 @@ export default function WebFeedbackPage({ params }: { params: Promise<{ token: s
   }
 
   if (submitted || !data) {
+    const lang = data?.language ?? 'en'
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <div className="max-w-md rounded-2xl bg-white p-8 text-center shadow-sm border">
           <CheckCircle2 className="h-12 w-12 mx-auto text-emerald-500 mb-4" />
-          <h1 className="text-xl font-serif font-bold text-hm-black">Thank you!</h1>
-          <p className="text-sm text-gray-500 mt-2">
-            Your feedback has been received. It helps us improve.
-          </p>
+          <h1 className="text-xl font-serif font-bold text-hm-black">{gt('feedback', 'thankYou', lang)}</h1>
+          <p className="text-sm text-gray-500 mt-2">{gt('feedback', 'thankYouDesc', lang)}</p>
         </div>
       </div>
     )
@@ -104,17 +115,18 @@ export default function WebFeedbackPage({ params }: { params: Promise<{ token: s
       <header className="sticky top-0 z-10 bg-white border-b px-4 py-3">
         <div className="max-w-2xl mx-auto">
           <p className="text-[10px] uppercase tracking-wider text-gray-400">HostMasters</p>
-          <h1 className="text-lg font-serif font-bold text-hm-black">Feedback — {data.propertyName}</h1>
+          <h1 className="text-lg font-serif font-bold text-hm-black">{gt('feedback', 'title', data.language)} — {data.propertyName}</h1>
           <p className="text-xs text-gray-500">
-            Hi {data.guestName}, thank you for staying with us.
-            A few quick questions take about 2 minutes.
+            {gt('feedback', 'intro', data.language, { name: data.guestName })}
           </p>
         </div>
       </header>
 
       <div className="max-w-2xl mx-auto p-4 space-y-4">
         {/* Property — Owner accountability */}
-        <Section icon={Home} color="blue" title="About the property" desc="Structure, amenities, location, value — what the owner provides.">
+        <Section icon={Home} color="blue"
+          title={gt('feedback', 'propertySection', data.language)}
+          desc={gt('feedback', 'propertyDesc', data.language)}>
           <ScoreRow label="Structure (bedrooms, furniture, comfort)" value={scorePropertyStructure} onChange={setScorePropertyStructure} />
           <ScoreRow label="Amenities (WiFi, kitchen, AC)" value={scorePropertyAmenities} onChange={setScorePropertyAmenities} />
           <ScoreRow label="Location" value={scoreLocation} onChange={setScoreLocation} />
@@ -122,13 +134,17 @@ export default function WebFeedbackPage({ params }: { params: Promise<{ token: s
         </Section>
 
         {/* Crew — delivery accountability */}
-        <Section icon={Users} color="amber" title="How you received it" desc="Cleanliness and condition on arrival.">
+        <Section icon={Users} color="amber"
+          title={gt('feedback', 'crewSection', data.language)}
+          desc={gt('feedback', 'crewDesc', data.language)}>
           <ScoreRow label="Condition on arrival" value={scorePropertyState} onChange={setScorePropertyState} />
           <ScoreRow label="Cleanliness (bathroom, kitchen, bedroom)" value={scoreCleanliness} onChange={setScoreCleanliness} />
         </Section>
 
         {/* Platform — HostMasters accountability */}
-        <Section icon={Sparkles} color="emerald" title="HostMasters management" desc="Communication, check-in, check-out, support.">
+        <Section icon={Sparkles} color="emerald"
+          title={gt('feedback', 'platformSection', data.language)}
+          desc={gt('feedback', 'platformDesc', data.language)}>
           <ScoreRow label="Communication (info before & during)" value={scoreCommunication} onChange={setScoreCommunication} />
           <ScoreRow label="Overall HostMasters experience" value={scorePlatformOverall} onChange={setScorePlatformOverall} />
           <ScoreRow label="How likely are you to recommend HostMasters? (0-10)" value={scoreNps} onChange={setScoreNps} max={10} />
@@ -136,20 +152,20 @@ export default function WebFeedbackPage({ params }: { params: Promise<{ token: s
 
         {/* Qualitative */}
         <div className="rounded-2xl bg-white border p-5 space-y-3">
-          <h3 className="font-semibold text-hm-black">Tell us more</h3>
-          <TextArea label="What stood out positively?" value={positive} onChange={setPositive} />
-          <TextArea label="What could we improve?" value={improvement} onChange={setImprovement} />
-          <TextArea label="What would you tell a friend about staying here?" value={recommendation} onChange={setRecommendation} />
+          <h3 className="font-semibold text-hm-black">{gt('feedback', 'tellUsMore', data.language)}</h3>
+          <TextArea label={gt('feedback', 'positive', data.language)} value={positive} onChange={setPositive} />
+          <TextArea label={gt('feedback', 'improvement', data.language)} value={improvement} onChange={setImprovement} />
+          <TextArea label={gt('feedback', 'recommendation', data.language)} value={recommendation} onChange={setRecommendation} />
           <label className="flex items-start gap-2 text-sm text-gray-700">
             <input type="checkbox" checked={wantsToReview} onChange={e => setWantsToReview(e.target.checked)}
               className="mt-0.5 accent-hm-gold" />
-            <span>Send me a link to leave a review on Airbnb/Booking.com</span>
+            <span>{gt('feedback', 'reviewOptIn', data.language)}</span>
           </label>
         </div>
 
         <button onClick={submit} disabled={submitting}
           className="w-full rounded-xl bg-hm-black text-white py-3 text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
-          <Send className="h-4 w-4" /> {submitting ? 'Sending…' : 'Send feedback'}
+          <Send className="h-4 w-4" /> {submitting ? gt('feedback', 'sending', data.language) : gt('feedback', 'submit', data.language)}
         </button>
       </div>
     </div>

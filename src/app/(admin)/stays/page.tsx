@@ -22,6 +22,9 @@ export default function StaysPage() {
   const [chats, setChats] = useState<StayChat[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'escalated'>('escalated')
+  const [search, setSearch] = useState('')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   useEffect(() => {
     setLoading(true)
@@ -37,6 +40,22 @@ export default function StaysPage() {
   const activeEscalations = chats.filter(c =>
     c.escalationStatus === 'PENDING_MANAGER' || c.escalationStatus === 'PENDING_ADMIN'
   )
+
+  // Client-side filtering (search + date range)
+  const filtered = chats.filter(c => {
+    const q = search.trim().toLowerCase()
+    if (q) {
+      const hay = `${c.reservation.guestName} ${c.property.name} ${c.property.city}`.toLowerCase()
+      if (!hay.includes(q)) return false
+    }
+    if (dateFrom) {
+      if (new Date(c.reservation.checkIn) < new Date(dateFrom)) return false
+    }
+    if (dateTo) {
+      if (new Date(c.reservation.checkIn) > new Date(dateTo + 'T23:59:59')) return false
+    }
+    return true
+  })
 
   return (
     <div className="p-6 space-y-6">
@@ -63,11 +82,42 @@ export default function StaysPage() {
         </div>
       </div>
 
+      {/* Search + date range */}
+      <div className="flex flex-wrap gap-2">
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by guest, property or city…"
+          className="flex-1 min-w-[220px] rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+        />
+        <input
+          type="date"
+          value={dateFrom}
+          onChange={e => setDateFrom(e.target.value)}
+          className="rounded-lg border bg-white px-3 py-2 text-sm"
+          title="Check-in from"
+        />
+        <input
+          type="date"
+          value={dateTo}
+          onChange={e => setDateTo(e.target.value)}
+          className="rounded-lg border bg-white px-3 py-2 text-sm"
+          title="Check-in to"
+        />
+        {(search || dateFrom || dateTo) && (
+          <button onClick={() => { setSearch(''); setDateFrom(''); setDateTo('') }}
+            className="rounded-lg border bg-white px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50">
+            Clear
+          </button>
+        )}
+      </div>
+
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map(i => <div key={i} className="h-20 rounded-xl bg-gray-100 animate-pulse" />)}
         </div>
-      ) : chats.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed p-12 text-center">
           <MessageCircle className="h-10 w-10 mx-auto text-gray-300 mb-3" />
           <p className="font-semibold text-hm-black">No {filter === 'escalated' ? 'escalated ' : ''}chats</p>
@@ -77,7 +127,7 @@ export default function StaysPage() {
         </div>
       ) : (
         <div className="rounded-xl border bg-white divide-y">
-          {chats.map(c => <StayChatRow key={c.id} chat={c} />)}
+          {filtered.map(c => <StayChatRow key={c.id} chat={c} />)}
         </div>
       )}
     </div>

@@ -2,6 +2,7 @@
 
 import { use, useEffect, useRef, useState } from "react"
 import { Send, User, Bot, Phone, AlertCircle, Home, Calendar } from "lucide-react"
+import { gt } from "@/lib/guest-i18n"
 
 interface Message {
   id: string
@@ -34,7 +35,7 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
   const load = async () => {
     const res = await fetch(`/api/guest-stay/${token}`)
     if (!res.ok) {
-      setError(res.status === 410 ? 'This chat has expired.' : 'Chat not found.')
+      setError(res.status === 410 ? gt('stay', 'expired', 'en') : 'Chat not found.')
       setLoading(false)
       return
     }
@@ -74,8 +75,15 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
     })
 
     if (res.ok) {
-      // Reload for fresh state
       await load()
+    } else if (res.status === 429) {
+      alert(gt('stay', 'rateLimit', data?.language ?? 'en'))
+      // Remove optimistic message
+      setData(d => d ? { ...d, messages: d.messages.filter(m => !m.id.startsWith('tmp-')) } : d)
+    } else {
+      // Other error — remove optimistic and restore input
+      setData(d => d ? { ...d, messages: d.messages.filter(m => !m.id.startsWith('tmp-')) } : d)
+      setInput(msg)
     }
     setSending(false)
   }
@@ -127,7 +135,7 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
           {!escalated && (
             <button onClick={escalate}
               className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1">
-              <Phone className="h-3 w-3" /> Human
+              <Phone className="h-3 w-3" /> {gt('stay', 'humanButton', data.language)}
             </button>
           )}
         </div>
@@ -138,7 +146,7 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2">
           <div className="max-w-2xl mx-auto text-xs text-amber-800 flex items-center gap-2">
             <AlertCircle className="h-4 w-4" />
-            A person from HostMasters is reviewing your conversation and will reply shortly.
+            {gt('stay', 'escalationBanner', data.language)}
           </div>
         </div>
       )}
@@ -150,9 +158,9 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
             <div className="text-center py-8">
               <Bot className="h-12 w-12 mx-auto text-gray-300 mb-3" />
               <p className="text-sm text-gray-500">
-                Hi {data.guestName}! I'm HostMasters' AI assistant. I'm here to help during your stay.
+                {gt('stay', 'greeting', data.language, { name: data.guestName })}
               </p>
-              <p className="text-xs text-gray-400 mt-1">Ask me about WiFi, amenities, local tips, or anything else.</p>
+              <p className="text-xs text-gray-400 mt-1">{gt('stay', 'greetingSub', data.language)}</p>
             </div>
           ) : (
             data.messages.filter(m => m.author !== 'SYSTEM').map(m => (
@@ -184,7 +192,7 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') send() }}
-            placeholder="Type a message..."
+            placeholder={gt('stay', 'placeholder', data.language)}
             disabled={sending}
             className="flex-1 rounded-full border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
           />
@@ -194,7 +202,7 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
           </button>
         </div>
         <p className="max-w-2xl mx-auto text-[10px] text-gray-400 mt-2 text-center">
-          AI responses are generated instantly. A human is available via the Human button.
+          {gt('stay', 'footerNote', data.language)}
         </p>
       </div>
     </div>

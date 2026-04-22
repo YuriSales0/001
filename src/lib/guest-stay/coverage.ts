@@ -19,22 +19,24 @@ export function coverageFromProperty(p: {
   breakerLocation?: string | null
   waterShutoffLocation?: string | null
 }): { filled: number; total: number; pct: number } {
+  // Treat whitespace-only strings as empty (e.g., "   " should not count)
+  const has = (v?: string | null) => !!(v && v.trim().length > 0)
   // CRITICAL fields (6) — these must be filled for the AI to handle
   // 90%+ of guest questions. Used as the coverage baseline.
   const critical = [
-    !!p.wifiSsid,
-    !!p.wifiPassword,
-    !!(p.doorCode || p.smartLockPassword),
-    !!p.checkInInstructions,
-    !!p.checkOutInstructions,
-    !!p.emergencyWhatsapp,
+    has(p.wifiSsid),
+    has(p.wifiPassword),
+    has(p.doorCode) || has(p.smartLockPassword),
+    has(p.checkInInstructions),
+    has(p.checkOutInstructions),
+    has(p.emergencyWhatsapp),
   ]
-  // BONUS fields (4) — boost coverage past 100% baseline when filled.
+  // BONUS fields (3) — boost coverage past 100% baseline when filled.
   // Not required for a healthy property.
   const bonus = [
-    !!p.appliancesInfo,
-    !!p.breakerLocation,
-    !!p.waterShutoffLocation,
+    has(p.appliancesInfo),
+    has(p.breakerLocation),
+    has(p.waterShutoffLocation),
   ]
   const filledCritical = critical.filter(Boolean).length
   const filledBonus = bonus.filter(Boolean).length

@@ -31,13 +31,21 @@ export async function POST(
   if (guard.user!.role === 'MANAGER' && feedback.client.managerId !== guard.user!.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
-  if (!feedback.transcriptionFull) {
-    return NextResponse.json({ error: 'No transcript to analyze' }, { status: 400 })
+  const transcript = feedback.transcriptionFull?.trim() ?? ''
+  if (transcript.length < 50) {
+    return NextResponse.json(
+      { error: 'Transcript too short to analyze (min 50 chars)' },
+      { status: 400 },
+    )
   }
+  // Truncate abnormally huge transcripts to protect token budget
+  const safeTranscript = transcript.length > 50000
+    ? transcript.slice(0, 50000) + '…[truncated]'
+    : transcript
 
   let analysis
   try {
-    analysis = await analyzeTranscription(feedback.transcriptionFull)
+    analysis = await analyzeTranscription(safeTranscript)
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Analysis failed' },
@@ -80,7 +88,9 @@ export async function POST(
     },
   })
 
-  await runPostFeedbackWorkflows(feedback.id)
+  // Skip CrewScore delta to avoid double-counting on re-analysis
+  // (original analysis already applied the delta)
+  await runPostFeedbackWorkflows(feedback.id, { skipScoreEngine: true })
 
   return NextResponse.json({ ok: true, sentiment: analysis.sentiment, complete: analysis.complete })
 }

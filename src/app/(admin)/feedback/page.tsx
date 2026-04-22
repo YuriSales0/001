@@ -48,6 +48,7 @@ interface FeedbackItem {
   feedbackProperty: string | null
   feedbackCrew: string | null
   feedbackPlatform: string | null
+  categoryTags: string[]
   createdAt: string
   property: { id: string; name: string; city: string }
   client: { id: string; name: string | null; email: string }
@@ -126,6 +127,7 @@ export default function FeedbackDashboardPage() {
   const [items, setItems] = useState<FeedbackItem[]>([])
   const [loading, setLoading] = useState(true)
   const [days, setDays] = useState(90)
+  const [selectedFeedbackId, setSelectedFeedbackId] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'escalated'>('all')
 
   useEffect(() => {
@@ -293,18 +295,36 @@ export default function FeedbackDashboardPage() {
             No feedback yet. Voice calls start after guest checkouts.
           </div>
         ) : (
-          <div className="divide-y">
-            {items.map(f => (
-              <FeedbackRow key={f.id} feedback={f} />
-            ))}
-          </div>
+          <>
+            <div className="divide-y">
+              {items.map(f => (
+                <FeedbackRow key={f.id} feedback={f} onClick={() => setSelectedFeedbackId(f.id)} />
+              ))}
+            </div>
+            {selectedFeedbackId && (
+              <FeedbackDrawer
+                feedbackId={selectedFeedbackId}
+                feedback={items.find(i => i.id === selectedFeedbackId)!}
+                onClose={() => setSelectedFeedbackId(null)}
+                onReanalyze={async () => {
+                  const res = await fetch(`/api/admin/feedback/${selectedFeedbackId}/reanalyze`, { method: 'POST' })
+                  if (res.ok) {
+                    alert('Re-analysis complete — refresh to see updated data')
+                  } else {
+                    const data = await res.json().catch(() => ({ error: 'Unknown' }))
+                    alert(`Re-analysis failed: ${data.error}`)
+                  }
+                }}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
   )
 }
 
-function FeedbackRow({ feedback: f }: { feedback: FeedbackItem }) {
+function FeedbackRow({ feedback: f, onClick }: { feedback: FeedbackItem; onClick?: () => void }) {
   const statusBadge = (() => {
     const map: Record<string, { bg: string; text: string; icon: any }> = {
       COMPLETED_SUCCESS:     { bg: 'bg-emerald-50', text: 'text-emerald-700', icon: CheckCircle },
@@ -325,7 +345,7 @@ function FeedbackRow({ feedback: f }: { feedback: FeedbackItem }) {
   const avgPlatform = avg([f.scoreCommunication, f.scoreCheckInExperience, f.scoreCheckOutExperience, f.scorePlatformOverall])
 
   return (
-    <div className="p-4 hover:bg-gray-50/50 transition-colors">
+    <div onClick={onClick} className="p-4 hover:bg-gray-50/50 transition-colors cursor-pointer">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -386,4 +406,109 @@ function MiniDimScore({ label, value, dim }: { label: string; value: number | nu
 function avg(values: (number | null)[]): number | null {
   const nums = values.filter((v): v is number => v !== null)
   return nums.length ? +(nums.reduce((a, b) => a + b, 0) / nums.length).toFixed(1) : null
+}
+
+function FeedbackDrawer({ feedback: f, onClose, onReanalyze }: {
+  feedbackId: string
+  feedback: FeedbackItem
+  onClose: () => void
+  onReanalyze: () => void | Promise<void>
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/40" />
+      <div onClick={e => e.stopPropagation()}
+        className="relative w-full max-w-2xl bg-white shadow-2xl overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+          <div>
+            <h2 className="font-serif font-bold text-hm-black">
+              {f.reservation.guestName}
+            </h2>
+            <p className="text-xs text-gray-500">
+              {f.property.name}, {f.property.city} · checked out {new Date(f.reservation.checkOut).toLocaleDateString()}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {f.callStatus === 'COMPLETED_PARTIAL' && (
+              <button onClick={onReanalyze}
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-hm-gold/30 bg-hm-gold/5 text-hm-gold hover:bg-hm-gold/10">
+                Re-analyze
+              </button>
+            )}
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-700">✕</button>
+          </div>
+        </div>
+        <div className="p-6 space-y-5">
+          {/* All scores */}
+          <section>
+            <h3 className="font-bold text-sm text-blue-700 mb-2">Property scores</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <MiniScore label="Structure" value={f.scorePropertyStructure} />
+              <MiniScore label="Amenities" value={f.scorePropertyAmenities} />
+              <MiniScore label="Location" value={f.scoreLocation} />
+              <MiniScore label="Value" value={f.scoreValueForMoney} />
+            </div>
+          </section>
+          <section>
+            <h3 className="font-bold text-sm text-amber-700 mb-2">Crew scores</h3>
+            <div className="grid grid-cols-3 gap-2">
+              <MiniScore label="State arrival" value={f.scorePropertyState} />
+              <MiniScore label="Cleanliness" value={f.scoreCleanliness} />
+              <MiniScore label="Presentation" value={f.scoreCrewPresentation} />
+            </div>
+          </section>
+          <section>
+            <h3 className="font-bold text-sm text-emerald-700 mb-2">HostMasters scores</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <MiniScore label="Communication" value={f.scoreCommunication} />
+              <MiniScore label="Check-in" value={f.scoreCheckInExperience} />
+              <MiniScore label="Check-out" value={f.scoreCheckOutExperience} />
+              <MiniScore label="Overall" value={f.scorePlatformOverall} />
+            </div>
+            {f.scoreNps !== null && (
+              <div className="mt-2 rounded-lg bg-gray-50 p-3">
+                <span className="text-xs text-gray-500">NPS: </span>
+                <span className={`font-bold ${scoreColor(f.scoreNps)}`}>{f.scoreNps}/10</span>
+                {f.npsCategory && <span className="ml-2 text-xs text-gray-500">({f.npsCategory})</span>}
+              </div>
+            )}
+          </section>
+          {/* Qualitative */}
+          {f.feedbackProperty && <QualBlock label="Property" color="blue" text={f.feedbackProperty} />}
+          {f.feedbackCrew && <QualBlock label="How received" color="amber" text={f.feedbackCrew} />}
+          {f.feedbackPlatform && <QualBlock label="HostMasters" color="emerald" text={f.feedbackPlatform} />}
+          {/* Tags */}
+          {f.categoryTags && f.categoryTags.length > 0 && (
+            <section>
+              <h3 className="font-bold text-sm text-gray-700 mb-2">Topics</h3>
+              <div className="flex flex-wrap gap-1">
+                {f.categoryTags.map(t => (
+                  <span key={t} className="text-[10px] bg-gray-100 text-gray-700 rounded-full px-2 py-0.5">{t.replace(/_/g, ' ')}</span>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MiniScore({ label, value }: { label: string; value: number | null }) {
+  return (
+    <div className="rounded-lg border bg-white p-2 text-center">
+      <p className="text-[9px] uppercase tracking-wider text-gray-500">{label}</p>
+      <p className={`text-lg font-bold ${scoreColor(value)}`}>{value !== null ? value.toFixed(0) : '—'}</p>
+    </div>
+  )
+}
+
+function QualBlock({ label, color, text }: { label: string; color: 'blue'|'amber'|'emerald'; text: string }) {
+  const bg = color === 'blue' ? 'bg-blue-50 text-blue-700' : color === 'amber' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'
+  return (
+    <div className={`rounded-lg ${bg} p-3`}>
+      <p className="text-[10px] uppercase tracking-wider font-bold">{label}</p>
+      <p className="text-sm mt-1 text-gray-800">{text}</p>
+    </div>
+  )
 }

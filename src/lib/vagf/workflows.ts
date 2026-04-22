@@ -5,8 +5,15 @@ import type { GuestFeedback } from '@prisma/client'
 
 /**
  * Run all post-feedback workflows after a call completes.
+ *
+ * @param feedbackId
+ * @param options.skipScoreEngine — pass true on re-analysis to prevent
+ *   double-counting CrewScore deltas that were already applied.
  */
-export async function runPostFeedbackWorkflows(feedbackId: string) {
+export async function runPostFeedbackWorkflows(
+  feedbackId: string,
+  options: { skipScoreEngine?: boolean } = {},
+) {
   const feedback = await prisma.guestFeedback.findUnique({
     where: { id: feedbackId },
     include: {
@@ -17,7 +24,9 @@ export async function runPostFeedbackWorkflows(feedbackId: string) {
   if (!feedback) return
 
   await updateCrewScoreAggregate(feedback.crewMemberId)
-  await applyGuestFeedbackToScoreEngine(feedback)
+  if (!options.skipScoreEngine) {
+    await applyGuestFeedbackToScoreEngine(feedback)
+  }
   await checkEscalation(feedback)
   await notifyStakeholders(feedback)
 }

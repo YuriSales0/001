@@ -35,6 +35,23 @@ export async function POST(
     return NextResponse.json({ error: 'Reservation has no phone number' }, { status: 400 })
   }
 
+  // Rate limit: max 3 SMS resends per chat per hour (anti-spam)
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+  const recentResends = await prisma.guestStayMessage.count({
+    where: {
+      chatId: chat.id,
+      author: 'SYSTEM',
+      content: { contains: 'SMS resent by' },
+      createdAt: { gte: oneHourAgo },
+    },
+  })
+  if (recentResends >= 3) {
+    return NextResponse.json(
+      { error: 'SMS resend limit reached (3/hour). Contact the guest via another channel.' },
+      { status: 429 },
+    )
+  }
+
   const url = stayChatUrl(chat.token)
   const body = stayChatWelcomeSms(
     chat.reservation.guestLanguage ?? chat.language,
