@@ -3,17 +3,30 @@ import { headers } from 'next/headers'
 import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, subscriptionReceiptEmail } from '@/lib/email'
+import { notify } from '@/lib/notifications'
 import Stripe from 'stripe'
 
 export const dynamic = 'force-dynamic'
 
 const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
-// Map Stripe price IDs to our plan names
 const PRICE_TO_PLAN: Record<string, string> = {
   [process.env.STRIPE_BASIC_PRICE_ID   || 'price_basic']:   'BASIC',
   [process.env.STRIPE_MID_PRICE_ID     || 'price_mid']:     'MID',
   [process.env.STRIPE_PREMIUM_PRICE_ID || 'price_premium']: 'PREMIUM',
+}
+
+const VALID_PLANS = ['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const
+type Plan = typeof VALID_PLANS[number]
+
+function resolvePlan(priceId: string | undefined | null, fallback: string): Plan {
+  if (!priceId) return (fallback as Plan) || 'BASIC'
+  const mapped = PRICE_TO_PLAN[priceId]
+  return (mapped && VALID_PLANS.includes(mapped as Plan)) ? mapped as Plan : (fallback as Plan) || 'BASIC'
+}
+
+async function findUserByCustomerId(customerId: string) {
+  return prisma.user.findFirst({ where: { stripeCustomerId: customerId } })
 }
 
 export async function POST(req: NextRequest) {
@@ -30,51 +43,135 @@ export async function POST(req: NextRequest) {
   try {
     event = getStripe().webhooks.constructEvent(body, sig, webhookSecret)
   } catch (err) {
-    console.error('Stripe webhook signature verification failed:', err)
+    console.error('Stripe webhook verification failed:', err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
   try {
     switch (event.type) {
 
-      // ── Subscription payment succeeded ──────────────────────────────────────
+      // ═══════════════════════════════════════════════════════════
+      // SUBSCRIPTIONS
+      // ═══════════════════════════════════════════════════════════
+
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session
+        if (session.mode !== 'subscription') break
+        const customerId = session.customer as string
+        const subscriptionId = session.subscription as string
+        const user = await findUserByCustomerId(customerId)
+        if (!user) break
+
+        const sub = await getStripe().subscriptions.retrieve(subscriptionId)
+        const priceId = sub.items.data[0]?.price?.id
+        const plan = resolvePlan(priceId, user.subscriptionPlan as string)
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { subscriptionPlan: plan, subscriptionStatus: 'active' },
+        })
+        break
+      }
+
+      case 'customer.subscription.created': {
+        const sub = event.data.object as Stripe.Subscription
+        const customerId = sub.customer as string
+        const user = await findUserByCustomerId(customerId)
+        if (!user) break
+
+        const priceId = sub.items.data[0]?.price?.id
+        const plan = resolvePlan(priceId, user.subscriptionPlan as string)
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { subscriptionPlan: plan, subscriptionStatus: sub.status },
+        })
+        break
+      }
+
+      case 'customer.subscription.updated': {
+        const sub = event.data.object as Stripe.Subscription
+        const customerId = sub.customer as string
+        const user = await findUserByCustomerId(customerId)
+        if (!user) break
+
+        const priceId = sub.items.data[0]?.price?.id
+        const plan = resolvePlan(priceId, user.subscriptionPlan as string)
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { subscriptionPlan: plan, subscriptionStatus: sub.status },
+        })
+        break
+      }
+
+      case 'customer.subscription.deleted': {
+        const sub = event.data.object as Stripe.Subscription
+        const user = await findUserByCustomerId(sub.customer as string)
+        if (user) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { subscriptionStatus: 'cancelled' },
+          })
+        }
+        break
+      }
+
+      case 'customer.subscription.paused': {
+        const sub = event.data.object as Stripe.Subscription
+        const user = await findUserByCustomerId(sub.customer as string)
+        if (user) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { subscriptionStatus: 'paused' },
+          })
+        }
+        break
+      }
+
+      case 'customer.subscription.resumed': {
+        const sub = event.data.object as Stripe.Subscription
+        const user = await findUserByCustomerId(sub.customer as string)
+        if (user) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { subscriptionStatus: 'active' },
+          })
+        }
+        break
+      }
+
+      // ═══════════════════════════════════════════════════════════
+      // INVOICES & PAYMENTS
+      // ═══════════════════════════════════════════════════════════
+
       case 'invoice.payment_succeeded': {
         const stripeInvoice = event.data.object as Stripe.Invoice
         const customerId = stripeInvoice.customer as string
-        const subscriptionId = (stripeInvoice as Stripe.Invoice & { subscription?: string }).subscription ?? null
+        const subscriptionId = (stripeInvoice as any).subscription as string | null
         const amountPaid = (stripeInvoice.amount_paid ?? 0) / 100
         const currency = (stripeInvoice.currency ?? 'eur').toUpperCase()
         const periodStart = stripeInvoice.period_start ? new Date(stripeInvoice.period_start * 1000).toISOString() : new Date().toISOString()
         const periodEnd   = stripeInvoice.period_end   ? new Date(stripeInvoice.period_end   * 1000).toISOString() : new Date().toISOString()
 
-        // Skip zero-amount invoices (trials, etc.)
         if (amountPaid <= 0) break
 
-        // Find the user by Stripe customer ID
-        const user = await prisma.user.findFirst({ where: { stripeCustomerId: customerId } })
-        if (!user) {
-          console.warn(`No user found for Stripe customer ${customerId}`)
-          break
-        }
+        const user = await findUserByCustomerId(customerId)
+        if (!user) { console.warn(`No user for customer ${customerId}`); break }
 
-        // Determine plan from subscription price
-        const validPlans = ['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const
-        type Plan = typeof validPlans[number]
         let planName: Plan = (user.subscriptionPlan as Plan) ?? 'BASIC'
         if (subscriptionId) {
-          const sub = await getStripe().subscriptions.retrieve(subscriptionId)
-          const priceId = sub.items.data[0]?.price?.id
-          const mapped = priceId ? PRICE_TO_PLAN[priceId] : undefined
-          if (mapped && validPlans.includes(mapped as Plan)) planName = mapped as Plan
+          try {
+            const sub = await getStripe().subscriptions.retrieve(subscriptionId)
+            planName = resolvePlan(sub.items.data[0]?.price?.id, planName)
+          } catch { /* subscription may be deleted */ }
         }
 
-        // Find admin (createdBy)
         const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' } })
-
-        // Create PaymentReceipt record
         const { generateReceiptNumber, vatFromTotal } = await import('@/lib/receipts')
         const vat = vatFromTotal(amountPaid)
-        const invoice = await prisma.paymentReceipt.create({
+
+        const receipt = await prisma.paymentReceipt.create({
           data: {
             receiptNumber: await generateReceiptNumber(),
             type: 'SUBSCRIPTION',
@@ -96,18 +193,13 @@ export async function POST(req: NextRequest) {
           },
         })
 
-        // Update user subscription status
         await prisma.user.update({
           where: { id: user.id },
-          data: {
-            subscriptionPlan: planName,
-            subscriptionStatus: 'active',
-          },
+          data: { subscriptionPlan: planName, subscriptionStatus: 'active' },
         })
 
-        // Send thank-you + invoice email
         if (user.email) {
-          await sendEmail({
+          sendEmail({
             to: user.email,
             subject: `Thank you — HostMasters ${planName} subscription`,
             html: subscriptionReceiptEmail({
@@ -117,7 +209,7 @@ export async function POST(req: NextRequest) {
               currency,
               periodStart,
               periodEnd,
-              invoiceId: invoice.id,
+              invoiceId: receipt.id,
               dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
             }),
           }).catch(e => console.error('Subscription email error:', e))
@@ -125,22 +217,44 @@ export async function POST(req: NextRequest) {
         break
       }
 
-      // ── Subscription cancelled / payment failed ──────────────────────────────
-      case 'customer.subscription.deleted':
       case 'invoice.payment_failed': {
-        const obj = event.data.object as Stripe.Subscription | Stripe.Invoice
-        const customerId = 'customer' in obj ? obj.customer as string : (obj as Stripe.Subscription).customer as string
-        const user = await prisma.user.findFirst({ where: { stripeCustomerId: customerId } })
+        const inv = event.data.object as Stripe.Invoice
+        const user = await findUserByCustomerId(inv.customer as string)
         if (user) {
           await prisma.user.update({
             where: { id: user.id },
-            data: { subscriptionStatus: event.type === 'customer.subscription.deleted' ? 'cancelled' : 'past_due' },
+            data: { subscriptionStatus: 'past_due' },
           })
+          notify({
+            userId: user.id,
+            type: 'GENERAL',
+            title: 'Payment failed',
+            body: 'Your subscription payment could not be processed. Please update your payment method.',
+            link: '/client/plan',
+          }).catch(() => {})
         }
         break
       }
 
-      // ── Customer created — store Stripe ID ───────────────────────────────────
+      case 'invoice.payment_action_required': {
+        const inv = event.data.object as Stripe.Invoice
+        const user = await findUserByCustomerId(inv.customer as string)
+        if (user) {
+          notify({
+            userId: user.id,
+            type: 'GENERAL',
+            title: 'Action required for payment',
+            body: 'Your bank requires additional verification (3D Secure). Please complete the payment.',
+            link: (inv as any).hosted_invoice_url || '/client/plan',
+          }).catch(() => {})
+        }
+        break
+      }
+
+      // ═══════════════════════════════════════════════════════════
+      // CUSTOMER
+      // ═══════════════════════════════════════════════════════════
+
       case 'customer.created': {
         const customer = event.data.object as Stripe.Customer
         if (customer.email) {
@@ -151,6 +265,181 @@ export async function POST(req: NextRequest) {
         }
         break
       }
+
+      case 'customer.updated': {
+        const customer = event.data.object as Stripe.Customer
+        if (customer.id) {
+          const user = await findUserByCustomerId(customer.id)
+          if (user && customer.email && customer.email !== user.email) {
+            console.log(`[Stripe] Customer ${customer.id} email changed: ${user.email} → ${customer.email}`)
+          }
+        }
+        break
+      }
+
+      // ═══════════════════════════════════════════════════════════
+      // STRIPE CONNECT
+      // ═══════════════════════════════════════════════════════════
+
+      case 'account.updated': {
+        const account = event.data.object as Stripe.Account
+        const user = await prisma.user.findFirst({ where: { stripeConnectId: account.id } })
+        if (user) {
+          const ready = account.charges_enabled && account.payouts_enabled
+          console.log(`[Stripe Connect] Account ${account.id} (${user.email}): ready=${ready}, charges=${account.charges_enabled}, payouts=${account.payouts_enabled}`)
+          if (ready) {
+            notify({
+              userId: user.id,
+              type: 'GENERAL',
+              title: 'Stripe account ready',
+              body: 'Your Stripe account is verified and ready to receive payouts.',
+              link: user.role === 'CREW' ? '/crew' : '/manager/profile',
+            }).catch(() => {})
+          }
+        }
+        break
+      }
+
+      case 'account.application.deauthorized': {
+        const account = event.data.object as unknown as { id: string }
+        const user = await prisma.user.findFirst({ where: { stripeConnectId: account.id } })
+        if (user) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { stripeConnectId: null },
+          })
+          console.warn(`[Stripe Connect] Account ${account.id} deauthorized by ${user.email}`)
+
+          const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+          for (const admin of admins) {
+            notify({
+              userId: admin.id,
+              type: 'AI_ALERT',
+              title: `Connect account disconnected: ${user.name || user.email}`,
+              body: `${user.role} ${user.name || user.email} disconnected their Stripe account. Payouts to this user are suspended.`,
+              link: '/team',
+            }).catch(() => {})
+          }
+        }
+        break
+      }
+
+      case 'transfer.created':
+      case 'transfer.updated': {
+        const transfer = event.data.object as Stripe.Transfer
+        console.log(`[Stripe Connect] Transfer ${transfer.id}: amount=${transfer.amount / 100} EUR, destination=${transfer.destination}, reversed=${transfer.reversed}`)
+
+        if (transfer.metadata?.crewPayoutId) {
+          await prisma.crewPayout.update({
+            where: { id: transfer.metadata.crewPayoutId },
+            data: { stripeTransferId: transfer.id, status: transfer.reversed ? 'FAILED' : 'PROCESSING' },
+          }).catch(() => {})
+        }
+        if (transfer.metadata?.managerPayoutId) {
+          await prisma.managerPayout.update({
+            where: { id: transfer.metadata.managerPayoutId },
+            data: { stripeTransferId: transfer.id },
+          }).catch(() => {})
+        }
+        break
+      }
+
+      case 'transfer.reversed': {
+        const transfer = event.data.object as Stripe.Transfer
+        console.error(`[Stripe Connect] Transfer REVERSED: ${transfer.id}, amount=${transfer.amount / 100} EUR`)
+
+        if (transfer.metadata?.crewPayoutId) {
+          await prisma.crewPayout.update({
+            where: { id: transfer.metadata.crewPayoutId },
+            data: { status: 'FAILED', failedReason: 'Transfer reversed by Stripe' },
+          }).catch(() => {})
+        }
+
+        const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+        for (const admin of admins) {
+          notify({
+            userId: admin.id,
+            type: 'AI_ALERT',
+            title: 'Transfer reversed',
+            body: `Transfer ${transfer.id} of €${(transfer.amount / 100).toFixed(2)} was reversed. Check the connected account.`,
+            link: '/payouts',
+          }).catch(() => {})
+        }
+        break
+      }
+
+      case 'payout.paid': {
+        const payout = event.data.object as Stripe.Payout
+        console.log(`[Stripe Connect] Payout arrived: ${payout.id}, amount=${(payout.amount / 100).toFixed(2)} ${payout.currency}`)
+        break
+      }
+
+      case 'payout.failed': {
+        const payout = event.data.object as Stripe.Payout
+        console.error(`[Stripe Connect] Payout FAILED: ${payout.id}, reason=${payout.failure_code}/${payout.failure_message}`)
+
+        const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+        for (const admin of admins) {
+          notify({
+            userId: admin.id,
+            type: 'AI_ALERT',
+            title: 'Payout to bank failed',
+            body: `Payout ${payout.id} failed: ${payout.failure_message || payout.failure_code || 'Unknown error'}. The connected account may need to update their bank details.`,
+            link: '/team',
+          }).catch(() => {})
+        }
+        break
+      }
+
+      // ═══════════════════════════════════════════════════════════
+      // DISPUTES & REFUNDS
+      // ═══════════════════════════════════════════════════════════
+
+      case 'charge.dispute.created': {
+        const dispute = event.data.object as Stripe.Dispute
+        console.error(`[Stripe] DISPUTE CREATED: ${dispute.id}, amount=${(dispute.amount / 100).toFixed(2)}, reason=${dispute.reason}`)
+
+        const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+        for (const admin of admins) {
+          notify({
+            userId: admin.id,
+            type: 'AI_ALERT',
+            title: 'CHARGEBACK — Immediate action required',
+            body: `Dispute ${dispute.id} for €${(dispute.amount / 100).toFixed(2)} (${dispute.reason}). Respond within the deadline to avoid automatic loss.`,
+            link: '/payouts',
+          }).catch(() => {})
+        }
+        break
+      }
+
+      case 'charge.dispute.closed': {
+        const dispute = event.data.object as Stripe.Dispute
+        console.log(`[Stripe] Dispute closed: ${dispute.id}, status=${dispute.status}`)
+        break
+      }
+
+      case 'charge.refunded': {
+        const charge = event.data.object as Stripe.Charge
+        console.log(`[Stripe] Charge refunded: ${charge.id}, amount_refunded=${(charge.amount_refunded / 100).toFixed(2)}`)
+
+        if (charge.payment_intent) {
+          await prisma.paymentReceipt.updateMany({
+            where: { stripePaymentIntentId: charge.payment_intent as string },
+            data: { status: 'REFUNDED' },
+          }).catch(() => {})
+        }
+        break
+      }
+
+      case 'payment_intent.payment_failed': {
+        const pi = event.data.object as Stripe.PaymentIntent
+        const error = pi.last_payment_error
+        console.warn(`[Stripe] PaymentIntent failed: ${pi.id}, code=${error?.code}, message=${error?.message}`)
+        break
+      }
+
+      default:
+        console.log(`[Stripe] Unhandled event: ${event.type}`)
     }
   } catch (err) {
     console.error('Webhook handler error:', err)
