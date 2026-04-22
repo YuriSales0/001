@@ -154,7 +154,7 @@ describe('receiptCreatedEmail', () => {
     expect(html).toContain('Maria')
     expect(html).toContain('Subscription MID')
     expect(html).toContain('HostMasters')
-    expect(html).toContain('New invoice')
+    expect(html).toContain('payment receipt')
   })
 
   it('includes due date when provided', () => {
