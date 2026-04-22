@@ -2688,6 +2688,10 @@
       "manager": "Manager",
       "failedToSend": "Failed to send message",
       "loadError": "Failed to load messages. Try refreshing."
+    },
+    "feedback": {
+      "title": "Vastgoed-feedback",
+      "subtitle": "Wat gasten zeggen over uw pand na elk verblijf."
     }
   },
   "aiChat": {

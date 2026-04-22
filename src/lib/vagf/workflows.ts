@@ -1,5 +1,6 @@
 import { prisma } from '../prisma'
 import { notify } from '../notifications'
+import { crewScoreEngine } from '../crew-score'
 import type { GuestFeedback } from '@prisma/client'
 
 /**
@@ -16,8 +17,36 @@ export async function runPostFeedbackWorkflows(feedbackId: string) {
   if (!feedback) return
 
   await updateCrewScoreAggregate(feedback.crewMemberId)
+  await applyGuestFeedbackToScoreEngine(feedback)
   await checkEscalation(feedback)
   await notifyStakeholders(feedback)
+}
+
+/**
+ * Bridge VAGF → CrewScore points engine.
+ * Translates guest cleanliness score (1-10) into CrewScore delta events.
+ */
+async function applyGuestFeedbackToScoreEngine(
+  feedback: GuestFeedback,
+) {
+  if (!feedback.crewMemberId || feedback.scoreCleanliness == null) return
+
+  const score = feedback.scoreCleanliness
+  let reason: string | null = null
+
+  if (score >= 9) reason = 'GUEST_EXCELLENT'
+  else if (score >= 7) reason = 'GUEST_GOOD'
+  else if (score >= 5) reason = null // neutral, no delta
+  else if (score >= 3) reason = 'GUEST_POOR'
+  else reason = 'GUEST_COMPLAINT'
+
+  if (!reason) return
+
+  try {
+    await crewScoreEngine.applyDelta(feedback.crewMemberId, reason)
+  } catch (err) {
+    console.error('[VAGF] Failed to apply CrewScore delta:', err)
+  }
 }
 
 async function updateCrewScoreAggregate(crewMemberId: string | null) {

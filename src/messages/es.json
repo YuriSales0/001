@@ -2714,6 +2714,10 @@
       "manager": "Gestor",
       "failedToSend": "Error al enviar mensaje",
       "loadError": "Error al cargar mensajes. Intenta refrescar."
+    },
+    "feedback": {
+      "title": "Comentarios de la Propiedad",
+      "subtitle": "Lo que dicen los huéspedes sobre tu propiedad después de cada estancia."
     }
   },
   "aiChat": {

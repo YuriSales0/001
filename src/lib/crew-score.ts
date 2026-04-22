@@ -12,6 +12,11 @@ const SCORE_TABLE: Record<string, number> = {
   COMPLAINT:           -40,
   UNREPORTED_DAMAGE:   -50,
   MONTHLY_DECAY:       0, // calculated dynamically, not a fixed delta
+  // VAGF-driven events (from guest voice feedback)
+  GUEST_EXCELLENT:     +20, // cleanliness 9-10
+  GUEST_GOOD:          +10, // cleanliness 7-8
+  GUEST_POOR:          -20, // cleanliness 3-4
+  GUEST_COMPLAINT:     -40, // cleanliness 1-2 (also triggers suspension)
 }
 
 function levelForScore(score: number): CrewScoreLevel {

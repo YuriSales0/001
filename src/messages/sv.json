@@ -2688,6 +2688,10 @@
       "manager": "Manager",
       "failedToSend": "Failed to send message",
       "loadError": "Failed to load messages. Try refreshing."
+    },
+    "feedback": {
+      "title": "Fastighetsfeedback",
+      "subtitle": "Vad gäster säger om din fastighet efter varje vistelse."
     }
   },
   "aiChat": {
