@@ -1294,7 +1294,11 @@
       "failedToCreate": "Failed to create category"
     },
     "receiptsPaid": "Receipts Paid",
-    "pendingReceipts": "Pending Receipts"
+    "pendingReceipts": "Pending Receipts",
+    "feedback": {
+      "title": "Gæstefeedback",
+      "subtitle": "Stemmeindsamlede indsigter fra gæster — grupperet efter ansvar."
+    }
   },
   "crew": {
     "myTasks": "My Tasks",

@@ -1294,7 +1294,11 @@
       "failedToCreate": "Failed to create category"
     },
     "receiptsPaid": "Receipts Paid",
-    "pendingReceipts": "Pending Receipts"
+    "pendingReceipts": "Pending Receipts",
+    "feedback": {
+      "title": "Gästefeedback",
+      "subtitle": "Per Sprachanruf erfasste Gäste-Insights — nach Verantwortlichkeit gruppiert."
+    }
   },
   "crew": {
     "myTasks": "My Tasks",

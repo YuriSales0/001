@@ -589,18 +589,43 @@ model GuestFeedback {
   transcriptionFull     String?           @db.Text
 
   // Structured scores (1-10, nullable if not captured)
-  scorePropertyState    Int?
-  scoreCleanliness      Int?
-  scoreCommunication    Int?
-  scorePlatformOverall  Int?
-  scoreNps              Int?
+  // ── PROPERTY dimension (Owner accountability) ──
+  scorePropertyStructure  Int?          // Building quality, furniture, bed comfort
+  scorePropertyAmenities  Int?          // WiFi, AC, kitchen gear, TV, extras offered
+  scoreLocation           Int?          // Location quality and neighbourhood
+  scoreValueForMoney      Int?          // Value vs price paid
+
+  // ── CREW dimension (turnover team accountability) ──
+  scorePropertyState      Int?          // Condition on arrival (cleanliness + order)
+  scoreCleanliness        Int?          // Detailed cleaning quality
+  scoreCrewPresentation   Int?          // Welcome, smart lock handoff, first contact
+
+  // ── PLATFORM dimension (HostMasters accountability) ──
+  scoreCommunication      Int?          // Pre-arrival info (WiFi, codes, directions)
+  scoreCheckInExperience  Int?          // Check-in smoothness
+  scoreCheckOutExperience Int?          // Check-out smoothness
+  scorePlatformOverall    Int?          // Overall HostMasters experience
+  scoreNps                Int?          // Net Promoter Score (0-10)
 
   // Calculated
   npsCategory           NpsCategory?
   sentimentOverall      FeedbackSentiment @default(NEUTRAL)
 
-  // Qualitative
+  // Qualitative feedback — grouped by accountability dimension
   feedbackFirstImpression String?         @db.Text
+  // Property (owner)
+  feedbackProperty       String?          @db.Text
+  feedbackPropertyPositive String?        @db.Text
+  feedbackPropertyImprovement String?     @db.Text
+  // Crew (delivery)
+  feedbackCrew           String?          @db.Text
+  feedbackCrewPositive   String?          @db.Text
+  feedbackCrewImprovement String?         @db.Text
+  // Platform (HostMasters)
+  feedbackPlatform       String?          @db.Text
+  feedbackPlatformPositive String?        @db.Text
+  feedbackPlatformImprovement String?     @db.Text
+  // Generic (kept for legacy)
   feedbackPositive      String?           @db.Text
   feedbackImprovement   String?           @db.Text
   feedbackNegative      String?           @db.Text

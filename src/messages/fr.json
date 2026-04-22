@@ -1294,7 +1294,11 @@
       "failedToCreate": "Failed to create category"
     },
     "receiptsPaid": "Receipts Paid",
-    "pendingReceipts": "Pending Receipts"
+    "pendingReceipts": "Pending Receipts",
+    "feedback": {
+      "title": "Avis des invités",
+      "subtitle": "Retours vocaux des invités — regroupés par responsabilité."
+    }
   },
   "crew": {
     "myTasks": "My Tasks",

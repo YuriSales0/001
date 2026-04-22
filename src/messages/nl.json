@@ -1294,7 +1294,11 @@
       "failedToCreate": "Failed to create category"
     },
     "receiptsPaid": "Receipts Paid",
-    "pendingReceipts": "Pending Receipts"
+    "pendingReceipts": "Pending Receipts",
+    "feedback": {
+      "title": "Gastenfeedback",
+      "subtitle": "Per spraakgesprek vastgelegde inzichten — gegroepeerd per verantwoordelijkheid."
+    }
   },
   "crew": {
     "myTasks": "My Tasks",

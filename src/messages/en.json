@@ -1319,7 +1319,11 @@
       "failedToCreate": "Failed to create category"
     },
     "receiptsPaid": "Receipts Paid",
-    "pendingReceipts": "Pending Receipts"
+    "pendingReceipts": "Pending Receipts",
+    "feedback": {
+      "title": "Guest Feedback",
+      "subtitle": "Voice-captured insights from guests — grouped by accountability."
+    }
   },
   "crew": {
     "myTasks": "My Tasks",

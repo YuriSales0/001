@@ -1320,7 +1320,11 @@
       "failedToCreate": "Erro ao criar categoria"
     },
     "receiptsPaid": "Facturas Pagas",
-    "pendingReceipts": "Facturas Pendentes"
+    "pendingReceipts": "Facturas Pendentes",
+    "feedback": {
+      "title": "Feedback de Hóspedes",
+      "subtitle": "Opiniões capturadas por voz — agrupadas por responsabilidade."
+    }
   },
   "crew": {
     "myTasks": "As Minhas Tarefas",

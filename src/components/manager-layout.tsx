@@ -65,6 +65,7 @@ function useAdminNav(): NavEntry[] {
       label: t('admin.hmAi'), icon: Brain, items: [
         { href: "/ai", label: t('common.aiPricing'), icon: Sparkles },
         { href: "/ai-monitor", label: t('admin.aiMonitor'), icon: Activity },
+        { href: "/feedback", label: t('admin.feedback.title'), icon: Star },
       ],
     },
     { href: "/messages", label: t('common.messages'), icon: MessageCircle },
