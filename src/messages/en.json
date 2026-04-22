@@ -1847,38 +1847,50 @@
   },
   "aiTools": {
     "badge": "Powered by AI",
-    "title": "5 intelligent tools working for you",
-    "subtitle": "HostMasters is not just a management company — it's a technology platform. Our AI tools work 24/7 to maximize your revenue and protect your property.",
+    "title": "7 intelligent tools working for you",
+    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
     "tools": [
       {
         "name": "AI Dynamic Pricing",
-        "desc": "Algorithm that analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings and occupancy — to set the optimal price for every single night.",
-        "stat": "Up to +25% revenue",
-        "statLabel": "vs. fixed pricing"
+        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "stat": "+25%",
+        "statLabel": "revenue vs fixed pricing"
       },
       {
-        "name": "AI Team Assistant",
-        "desc": "Intelligent chat assistant available in every portal. Ask about your earnings, next bookings, property status or any question — get instant answers based on your real data.",
-        "stat": "24/7",
-        "statLabel": "instant answers"
+        "name": "Guest Stay AI Chat",
+        "desc": "Every guest gets a private chat link on arrival. Claude-powered assistant answers WiFi, door code, amenities, local tips, 24/7 in their language.",
+        "stat": "70%",
+        "statLabel": "questions resolved without humans"
+      },
+      {
+        "name": "VAGF Voice Feedback",
+        "desc": "Voice agent calls every guest 24-48h after checkout. Captures scores for 3 dimensions (property, crew, platform) and turns them into action.",
+        "stat": "3 dim.",
+        "statLabel": "property · crew · platform"
+      },
+      {
+        "name": "AI Property Scorecard",
+        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "stat": "Live",
+        "statLabel": "score per property"
       },
       {
         "name": "AI Monitor",
-        "desc": "Autonomous system that runs 9 daily checks on every reservation, payout and task. Detects anomalies before they become problems — missed check-ins, overdue payouts, inactive properties.",
-        "stat": "9 checks",
-        "statLabel": "every day, automatically"
+        "desc": "Autonomous system runs 43 daily checks on reservations, payouts, tasks and properties. Detects anomalies before they become problems. Auto-fixes safe issues.",
+        "stat": "43 checks",
+        "statLabel": "every day"
       },
       {
         "name": "Market Intelligence",
-        "desc": "Weekly scraping of Airbnb and Booking.com in the Costa Tropical region. Real competitor data: prices, ratings, occupancy. Interactive map with zone analysis and market positioning.",
-        "stat": "50+ listings",
+        "desc": "Weekly scraping of Airbnb and Booking.com across Costa Tropical. Real competitor prices, ratings and occupancy. Interactive map by zone.",
+        "stat": "5 zones",
         "statLabel": "tracked weekly"
       },
       {
-        "name": "Client Pricing Analytics",
-        "desc": "Your property's pricing performance over time. Seasonal trends, average rates, occupancy patterns. Compare your prices against the market and identify optimization opportunities.",
-        "stat": "Real data",
-        "statLabel": "not estimates"
+        "name": "AI Team Assistant",
+        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
+        "stat": "24/7",
+        "statLabel": "in every role"
       }
     ]
   },
@@ -1981,9 +1993,9 @@
       "noMonthlyFee": "No monthly fee",
       "starter": {
         "features": [
-          "Full STR management",
+          "Full short-term rental management",
           "Airbnb, Booking.com & direct listings",
-          "24/7 guest communications",
+          "24/7 Guest AI assistant during stay",
           "Monthly owner statement",
           "Owner dashboard",
           "Cleaning: €70/turnover"
@@ -1994,26 +2006,28 @@
           "Everything in Starter",
           "Preventive maintenance (1x/month)",
           "Pre & post-stay inspection",
-          "Documentation management",
-          "Multi-language statements",
+          "VAGF voice feedback post-checkout",
+          "Multi-language owner statements",
           "Cleaning: €60/turnover"
         ]
       },
       "mid": {
         "features": [
           "Everything in Basic",
-          "AI pricing + Smart Lock",
+          "AI dynamic pricing + Smart Lock",
           "Priority response: 12h owner / 2h guest",
-          "Statement in any language",
+          "Manager WhatsApp emergency escalation",
+          "Property feedback scorecard",
           "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
         "features": [
           "Everything in Mid",
-          "Fiscal compliance (Modelo 179 + IRNR)",
+          "Full fiscal compliance (Modelo 179 + IRNR)",
           "Guest upsells: transfers, grocery, laundry",
           "Emergency response within 4h",
+          "AI Monitor daily property health checks",
           "Cleaning included ≥3 nights"
         ]
       }

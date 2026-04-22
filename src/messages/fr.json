@@ -1822,38 +1822,50 @@
   },
   "aiTools": {
     "badge": "Propulsé par l'IA",
-    "title": "5 outils intelligents qui travaillent pour vous",
-    "subtitle": "HostMasters n'est pas qu'une société de gestion — c'est une plateforme technologique. Nos outils IA travaillent 24/7.",
+    "title": "7 intelligent tools working for you",
+    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
     "tools": [
       {
-        "name": "Tarification Dynamique IA",
-        "desc": "Algorithme analysant 7 facteurs pour fixer le prix optimal de chaque nuit.",
-        "stat": "Jusqu'à +25% de revenus",
-        "statLabel": "vs. prix fixe"
+        "name": "AI Dynamic Pricing",
+        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "stat": "+25%",
+        "statLabel": "revenue vs fixed pricing"
       },
       {
-        "name": "Assistant d'Équipe IA",
-        "desc": "Chat intelligent disponible dans chaque portail. Posez des questions sur vos revenus, réservations ou l'état de votre propriété.",
+        "name": "Guest Stay AI Chat",
+        "desc": "Every guest gets a private chat link on arrival. Claude-powered assistant answers WiFi, door code, amenities, local tips, 24/7 in their language.",
+        "stat": "70%",
+        "statLabel": "questions resolved without humans"
+      },
+      {
+        "name": "VAGF Voice Feedback",
+        "desc": "Voice agent calls every guest 24-48h after checkout. Captures scores for 3 dimensions (property, crew, platform) and turns them into action.",
+        "stat": "3 dim.",
+        "statLabel": "property · crew · platform"
+      },
+      {
+        "name": "AI Property Scorecard",
+        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "stat": "Live",
+        "statLabel": "score per property"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Autonomous system runs 43 daily checks on reservations, payouts, tasks and properties. Detects anomalies before they become problems. Auto-fixes safe issues.",
+        "stat": "43 checks",
+        "statLabel": "every day"
+      },
+      {
+        "name": "Market Intelligence",
+        "desc": "Weekly scraping of Airbnb and Booking.com across Costa Tropical. Real competitor prices, ratings and occupancy. Interactive map by zone.",
+        "stat": "5 zones",
+        "statLabel": "tracked weekly"
+      },
+      {
+        "name": "AI Team Assistant",
+        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
         "stat": "24/7",
-        "statLabel": "réponses instantanées"
-      },
-      {
-        "name": "Moniteur IA",
-        "desc": "Système autonome effectuant 9 vérifications quotidiennes sur chaque réservation, versement et tâche.",
-        "stat": "9 vérifications",
-        "statLabel": "chaque jour, automatiquement"
-      },
-      {
-        "name": "Intelligence de Marché",
-        "desc": "Analyse hebdomadaire d'Airbnb et Booking.com dans la région Costa Tropical. Données réelles de la concurrence.",
-        "stat": "50+ annonces",
-        "statLabel": "suivies chaque semaine"
-      },
-      {
-        "name": "Analyse de Prix Client",
-        "desc": "Performance tarifaire de votre propriété dans le temps. Tendances saisonnières et comparaison avec le marché.",
-        "stat": "Données réelles",
-        "statLabel": "pas des estimations"
+        "statLabel": "in every role"
       }
     ]
   },
@@ -1956,40 +1968,42 @@
       "noMonthlyFee": "Pas de frais mensuels",
       "starter": {
         "features": [
-          "Gestion STR complète",
-          "Airbnb, Booking.com & annonces directes",
-          "Communication 24/7 avec les invités",
-          "Relevé mensuel propriétaire",
-          "Tableau de bord propriétaire",
-          "Ménage : 70€/rotation"
+          "Full short-term rental management",
+          "Airbnb, Booking.com & direct listings",
+          "24/7 Guest AI assistant during stay",
+          "Monthly owner statement",
+          "Owner dashboard",
+          "Cleaning: €70/turnover"
         ]
       },
       "basic": {
         "features": [
-          "Tout de Starter",
-          "Maintenance préventive (1x/mois)",
-          "Inspection avant et après séjour",
-          "Gestion documentaire",
-          "Relevés multilingues",
-          "Ménage : 60€/rotation"
+          "Everything in Starter",
+          "Preventive maintenance (1x/month)",
+          "Pre & post-stay inspection",
+          "VAGF voice feedback post-checkout",
+          "Multi-language owner statements",
+          "Cleaning: €60/turnover"
         ]
       },
       "mid": {
         "features": [
-          "Tout de Basic",
-          "Tarification IA + Smart Lock",
-          "Réponse prioritaire : 12h propriétaire / 2h invité",
-          "Relevé dans toute langue",
-          "Ménage inclus à partir de 5 nuits"
+          "Everything in Basic",
+          "AI dynamic pricing + Smart Lock",
+          "Priority response: 12h owner / 2h guest",
+          "Manager WhatsApp emergency escalation",
+          "Property feedback scorecard",
+          "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
         "features": [
-          "Tout de Mid",
-          "Conformité fiscale (Modelo 179 + IRNR)",
-          "Extras invités : transferts, courses, blanchisserie",
-          "Réponse d'urgence sous 4h",
-          "Ménage inclus à partir de 3 nuits"
+          "Everything in Mid",
+          "Full fiscal compliance (Modelo 179 + IRNR)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "AI Monitor daily property health checks",
+          "Cleaning included ≥3 nights"
         ]
       }
     },

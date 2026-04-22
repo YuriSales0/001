@@ -1,9 +1,9 @@
 "use client"
 
 import { useLocale } from "@/i18n/provider"
-import { Brain, MessageCircle, Shield, Globe, BarChart3 } from "lucide-react"
+import { Brain, MessageCircle, Shield, Globe, BarChart3, Phone, Star } from "lucide-react"
 
-const TOOL_ICONS = [Brain, MessageCircle, Shield, Globe, BarChart3]
+const TOOL_ICONS = [Brain, MessageCircle, Phone, Star, Shield, Globe, BarChart3]
 
 export function AiToolsShowcase() {
   const { t } = useLocale()
@@ -21,7 +21,7 @@ export function AiToolsShowcase() {
           <p className="mt-4 text-gray-500 text-lg">{t('aiTools.subtitle')}</p>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
           {TOOL_ICONS.map((Icon, i) => (
             <div
               key={i}

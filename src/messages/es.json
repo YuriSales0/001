@@ -1848,38 +1848,50 @@
   },
   "aiTools": {
     "badge": "Impulsado por IA",
-    "title": "5 herramientas inteligentes trabajando para ti",
-    "subtitle": "HostMasters no es solo una empresa de gestión — es una plataforma tecnológica. Nuestras herramientas de IA trabajan 24/7 para maximizar tus ingresos y proteger tu propiedad.",
+    "title": "7 herramientas inteligentes trabajando para ti",
+    "subtitle": "HostMasters no es solo una empresa de gestión — es una plataforma tecnológica. Las herramientas IA trabajan 24/7 para servir a los huéspedes, proteger la propiedad y aumentar los ingresos.",
     "tools": [
       {
-        "name": "Precio Dinámico con IA",
-        "desc": "Algoritmo que analiza 7 factores — estacionalidad, eventos, competencia, demanda, antelación, valoraciones y ocupación — para fijar el precio óptimo de cada noche.",
-        "stat": "Hasta +25% de ingresos",
-        "statLabel": "vs. precio fijo"
+        "name": "AI Pricing Dinámico",
+        "desc": "Algoritmo analiza 7 factores para fijar el precio óptimo cada noche.",
+        "stat": "+25%",
+        "statLabel": "vs precio fijo"
       },
       {
-        "name": "Asistente de Equipo con IA",
-        "desc": "Asistente de chat inteligente disponible en todos los portales. Pregunta sobre tus ingresos, próximas reservas, estado de la propiedad o cualquier duda — obtén respuestas instantáneas basadas en tus datos reales.",
+        "name": "Chat IA Durante Estancia",
+        "desc": "Cada huésped recibe enlace privado al llegar. IA responde 24/7 en su idioma — WiFi, códigos, consejos locales.",
+        "stat": "70%",
+        "statLabel": "preguntas sin humanos"
+      },
+      {
+        "name": "Feedback por Voz VAGF",
+        "desc": "Llamada IA 24-48h post-checkout. Captura puntuación en 3 dimensiones — propiedad, equipo, plataforma.",
+        "stat": "3 dim.",
+        "statLabel": "propiedad · equipo · plataforma"
+      },
+      {
+        "name": "Scorecard IA de la Propiedad",
+        "desc": "Cada propiedad recibe puntuación en vivo — estructura, amenities, ubicación y valor — alimentada por feedback real de huéspedes.",
+        "stat": "En vivo",
+        "statLabel": "por propiedad"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Sistema autónomo que ejecuta 43 comprobaciones diarias en reservas, pagos, tareas y propiedades. Autocorrección segura.",
+        "stat": "43 checks",
+        "statLabel": "cada día"
+      },
+      {
+        "name": "Market Intelligence",
+        "desc": "Scraping semanal de Airbnb y Booking.com por Costa Tropical. Precios, ratings y ocupación reales.",
+        "stat": "5 zonas",
+        "statLabel": "monitorizadas"
+      },
+      {
+        "name": "Asistente IA del Equipo",
+        "desc": "En todos los portales — pregunta sobre ingresos, reservas, estado de propiedad. Respuestas con tus datos reales.",
         "stat": "24/7",
-        "statLabel": "respuestas instantáneas"
-      },
-      {
-        "name": "Monitor de IA",
-        "desc": "Sistema autónomo que ejecuta 9 comprobaciones diarias en cada reserva, pago y tarea. Detecta anomalías antes de que se conviertan en problemas — check-ins fallidos, pagos vencidos, propiedades inactivas.",
-        "stat": "9 comprobaciones",
-        "statLabel": "cada día, automáticamente"
-      },
-      {
-        "name": "Inteligencia de Mercado",
-        "desc": "Rastreo semanal de Airbnb y Booking.com en la región de la Costa Tropical. Datos reales de la competencia: precios, valoraciones, ocupación. Mapa interactivo con análisis por zona y posicionamiento de mercado.",
-        "stat": "Más de 50 anuncios",
-        "statLabel": "rastreados semanalmente"
-      },
-      {
-        "name": "Analítica de Precios del Cliente",
-        "desc": "El rendimiento de precios de tu propiedad a lo largo del tiempo. Tendencias estacionales, tarifas medias, patrones de ocupación. Compara tus precios con el mercado e identifica oportunidades de optimización.",
-        "stat": "Datos reales",
-        "statLabel": "no estimaciones"
+        "statLabel": "en cada rol"
       }
     ]
   },
@@ -1982,39 +1994,41 @@
       "noMonthlyFee": "Sin cuota mensual",
       "starter": {
         "features": [
-          "Gestión completa de VUT",
-          "Airbnb, Booking.com y anuncios directos",
-          "Comunicación 24/7 con huéspedes",
-          "Extracto mensual del propietario",
+          "Gestión completa de alquiler vacacional",
+          "Airbnb, Booking.com y directo",
+          "Asistente IA para huésped 24/7 durante la estancia",
+          "Informe mensual al propietario",
           "Panel del propietario",
-          "Limpieza: €70/rotación"
+          "Limpieza: €70/salida"
         ]
       },
       "basic": {
         "features": [
-          "Todo en Starter",
+          "Todo de Starter",
           "Mantenimiento preventivo (1x/mes)",
           "Inspección pre y post estancia",
-          "Gestión de documentación",
-          "Extractos multilingüe",
-          "Limpieza: €60/rotación"
+          "VAGF feedback por voz post-checkout",
+          "Informes multilingüe",
+          "Limpieza: €60/salida"
         ]
       },
       "mid": {
         "features": [
-          "Todo en Basic",
-          "Precio con IA + Smart Lock",
+          "Todo de Basic",
+          "AI Pricing dinámico + Cerradura inteligente",
           "Respuesta prioritaria: 12h propietario / 2h huésped",
-          "Extracto en cualquier idioma",
+          "Escalación WhatsApp emergencia al Manager",
+          "Scorecard feedback de la propiedad",
           "Limpieza incluida ≥5 noches"
         ]
       },
       "premium": {
         "features": [
-          "Todo en Mid",
-          "Cumplimiento fiscal (Modelo 179 + IRNR)",
-          "Upsells para huéspedes: transfers, compra, lavandería",
+          "Todo de Mid",
+          "Cumplimiento fiscal completo (Modelo 179 + IRNR)",
+          "Upsells al huésped: traslados, compras, lavandería",
           "Respuesta de emergencia en 4h",
+          "AI Monitor — controles diarios de la propiedad",
           "Limpieza incluida ≥3 noches"
         ]
       }

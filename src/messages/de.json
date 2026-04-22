@@ -1822,38 +1822,50 @@
   },
   "aiTools": {
     "badge": "KI-gestützt",
-    "title": "5 intelligente Tools, die für Sie arbeiten",
-    "subtitle": "HostMasters ist nicht nur ein Verwaltungsunternehmen — es ist eine Technologieplattform. Unsere KI-Tools arbeiten rund um die Uhr, um Ihre Einnahmen zu maximieren und Ihre Immobilie zu schützen.",
+    "title": "7 intelligent tools working for you",
+    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
     "tools": [
       {
-        "name": "KI-Dynamische Preisgestaltung",
-        "desc": "Algorithmus, der 7 Faktoren analysiert — Saisonalität, Veranstaltungen, Wettbewerb, Nachfrage, Vorlaufzeit, Bewertungen und Belegung — um den optimalen Preis für jede einzelne Nacht festzulegen.",
-        "stat": "Bis zu +25% Einnahmen",
-        "statLabel": "ggü. Festpreisen"
+        "name": "AI Dynamic Pricing",
+        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "stat": "+25%",
+        "statLabel": "revenue vs fixed pricing"
       },
       {
-        "name": "KI-Team-Assistent",
-        "desc": "Intelligenter Chat-Assistent, verfügbar in jedem Portal. Fragen Sie nach Ihren Einnahmen, nächsten Buchungen, dem Zustand der Immobilie oder jeder anderen Frage — erhalten Sie sofortige Antworten auf Basis Ihrer echten Daten.",
+        "name": "Guest Stay AI Chat",
+        "desc": "Every guest gets a private chat link on arrival. Claude-powered assistant answers WiFi, door code, amenities, local tips, 24/7 in their language.",
+        "stat": "70%",
+        "statLabel": "questions resolved without humans"
+      },
+      {
+        "name": "VAGF Voice Feedback",
+        "desc": "Voice agent calls every guest 24-48h after checkout. Captures scores for 3 dimensions (property, crew, platform) and turns them into action.",
+        "stat": "3 dim.",
+        "statLabel": "property · crew · platform"
+      },
+      {
+        "name": "AI Property Scorecard",
+        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "stat": "Live",
+        "statLabel": "score per property"
+      },
+      {
+        "name": "AI Monitor",
+        "desc": "Autonomous system runs 43 daily checks on reservations, payouts, tasks and properties. Detects anomalies before they become problems. Auto-fixes safe issues.",
+        "stat": "43 checks",
+        "statLabel": "every day"
+      },
+      {
+        "name": "Market Intelligence",
+        "desc": "Weekly scraping of Airbnb and Booking.com across Costa Tropical. Real competitor prices, ratings and occupancy. Interactive map by zone.",
+        "stat": "5 zones",
+        "statLabel": "tracked weekly"
+      },
+      {
+        "name": "AI Team Assistant",
+        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
         "stat": "24/7",
-        "statLabel": "sofortige Antworten"
-      },
-      {
-        "name": "KI-Monitor",
-        "desc": "Autonomes System, das täglich 9 Prüfungen für jede Reservierung, Auszahlung und Aufgabe durchführt. Erkennt Anomalien, bevor sie zu Problemen werden — verpasste Check-ins, überfällige Auszahlungen, inaktive Immobilien.",
-        "stat": "9 Prüfungen",
-        "statLabel": "jeden Tag, automatisch"
-      },
-      {
-        "name": "Marktintelligenz",
-        "desc": "Wöchentliche Datenerhebung von Airbnb und Booking.com in der Region Costa Tropical. Echte Wettbewerbsdaten: Preise, Bewertungen, Belegung. Interaktive Karte mit Zonenanalyse und Marktpositionierung.",
-        "stat": "Über 50 Inserate",
-        "statLabel": "wöchentlich erfasst"
-      },
-      {
-        "name": "Preisanalyse für Eigentümer",
-        "desc": "Die Preisentwicklung Ihrer Immobilie im Zeitverlauf. Saisonale Trends, Durchschnittsraten, Belegungsmuster. Vergleichen Sie Ihre Preise mit dem Markt und erkennen Sie Optimierungspotenziale.",
-        "stat": "Echte Daten",
-        "statLabel": "keine Schätzungen"
+        "statLabel": "in every role"
       }
     ]
   },
@@ -1956,40 +1968,42 @@
       "noMonthlyFee": "Keine Monatsgebühr",
       "starter": {
         "features": [
-          "Komplettes STR-Management",
-          "Airbnb, Booking.com & Direktinserate",
-          "24/7 Gästekommunikation",
-          "Monatliche Eigentümerabrechnung",
-          "Eigentümer-Dashboard",
-          "Reinigung: €70/Wechsel"
+          "Full short-term rental management",
+          "Airbnb, Booking.com & direct listings",
+          "24/7 Guest AI assistant during stay",
+          "Monthly owner statement",
+          "Owner dashboard",
+          "Cleaning: €70/turnover"
         ]
       },
       "basic": {
         "features": [
-          "Alles aus Starter",
-          "Vorbeugende Wartung (1x/Monat)",
-          "Inspektion vor & nach Aufenthalt",
-          "Dokumentenmanagement",
-          "Mehrsprachige Abrechnungen",
-          "Reinigung: €60/Wechsel"
+          "Everything in Starter",
+          "Preventive maintenance (1x/month)",
+          "Pre & post-stay inspection",
+          "VAGF voice feedback post-checkout",
+          "Multi-language owner statements",
+          "Cleaning: €60/turnover"
         ]
       },
       "mid": {
         "features": [
-          "Alles aus Basic",
-          "KI-Preisgestaltung + Smart Lock",
-          "Prioritätsantwort: 12h Eigentümer / 2h Gast",
-          "Abrechnung in jeder Sprache",
-          "Reinigung inklusive ab 5 Nächten"
+          "Everything in Basic",
+          "AI dynamic pricing + Smart Lock",
+          "Priority response: 12h owner / 2h guest",
+          "Manager WhatsApp emergency escalation",
+          "Property feedback scorecard",
+          "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
         "features": [
-          "Alles aus Mid",
-          "Steuer-Compliance (Modelo 179 + IRNR)",
-          "Gäste-Extras: Transfers, Einkäufe, Wäsche",
-          "Notfallreaktion innerhalb 4h",
-          "Reinigung inklusive ab 3 Nächten"
+          "Everything in Mid",
+          "Full fiscal compliance (Modelo 179 + IRNR)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "AI Monitor daily property health checks",
+          "Cleaning included ≥3 nights"
         ]
       }
     },

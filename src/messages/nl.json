@@ -1822,38 +1822,50 @@
   },
   "aiTools": {
     "badge": "Aangedreven door AI",
-    "title": "5 intelligente tools die voor u werken",
-    "subtitle": "HostMasters is niet zomaar een beheerbedrijf — het is een technologieplatform. Onze AI-tools werken 24/7 om uw inkomsten te maximaliseren.",
+    "title": "7 intelligent tools working for you",
+    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
     "tools": [
       {
-        "name": "AI Dynamische Prijzen",
-        "desc": "Algoritme dat 7 factoren analyseert — seizoen, evenementen, concurrentie, vraag, boekingstermijn, beoordelingen en bezetting — om de optimale prijs voor elke nacht te bepalen.",
-        "stat": "Tot +25% omzet",
-        "statLabel": "vs. vaste prijzen"
+        "name": "AI Dynamic Pricing",
+        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "stat": "+25%",
+        "statLabel": "revenue vs fixed pricing"
       },
       {
-        "name": "AI Team Assistent",
-        "desc": "Intelligente chatassistent beschikbaar in elk portaal. Vraag naar uw inkomsten, volgende boekingen of vastgoedstatus — krijg direct antwoord op basis van uw echte gegevens.",
-        "stat": "24/7",
-        "statLabel": "directe antwoorden"
+        "name": "Guest Stay AI Chat",
+        "desc": "Every guest gets a private chat link on arrival. Claude-powered assistant answers WiFi, door code, amenities, local tips, 24/7 in their language.",
+        "stat": "70%",
+        "statLabel": "questions resolved without humans"
+      },
+      {
+        "name": "VAGF Voice Feedback",
+        "desc": "Voice agent calls every guest 24-48h after checkout. Captures scores for 3 dimensions (property, crew, platform) and turns them into action.",
+        "stat": "3 dim.",
+        "statLabel": "property · crew · platform"
+      },
+      {
+        "name": "AI Property Scorecard",
+        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "stat": "Live",
+        "statLabel": "score per property"
       },
       {
         "name": "AI Monitor",
-        "desc": "Autonoom systeem dat dagelijks 9 controles uitvoert op elke reservering, uitbetaling en taak. Detecteert anomalieën voordat ze problemen worden.",
-        "stat": "9 controles",
-        "statLabel": "elke dag, automatisch"
+        "desc": "Autonomous system runs 43 daily checks on reservations, payouts, tasks and properties. Detects anomalies before they become problems. Auto-fixes safe issues.",
+        "stat": "43 checks",
+        "statLabel": "every day"
       },
       {
-        "name": "Marktintelligentie",
-        "desc": "Wekelijkse data-analyse van Airbnb en Booking.com in de regio Costa Tropical. Echte concurrentiegegevens: prijzen, beoordelingen, bezetting.",
-        "stat": "50+ advertenties",
-        "statLabel": "wekelijks gevolgd"
+        "name": "Market Intelligence",
+        "desc": "Weekly scraping of Airbnb and Booking.com across Costa Tropical. Real competitor prices, ratings and occupancy. Interactive map by zone.",
+        "stat": "5 zones",
+        "statLabel": "tracked weekly"
       },
       {
-        "name": "Prijsanalyse voor Eigenaren",
-        "desc": "De prijsprestaties van uw vastgoed in de tijd. Seizoentrends, gemiddelde tarieven, bezettingspatronen. Vergelijk uw prijzen met de markt.",
-        "stat": "Echte gegevens",
-        "statLabel": "geen schattingen"
+        "name": "AI Team Assistant",
+        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
+        "stat": "24/7",
+        "statLabel": "in every role"
       }
     ]
   },
@@ -1956,40 +1968,42 @@
       "noMonthlyFee": "Geen maandelijkse kosten",
       "starter": {
         "features": [
-          "Volledig STR-beheer",
-          "Airbnb, Booking.com & directe verhuur",
-          "24/7 gastencommunicatie",
-          "Maandelijks eigenaaroverzicht",
-          "Eigenaarsdashboard",
-          "Schoonmaak: €70/wissel"
+          "Full short-term rental management",
+          "Airbnb, Booking.com & direct listings",
+          "24/7 Guest AI assistant during stay",
+          "Monthly owner statement",
+          "Owner dashboard",
+          "Cleaning: €70/turnover"
         ]
       },
       "basic": {
         "features": [
-          "Alles in Starter",
-          "Preventief onderhoud (1x/maand)",
-          "Inspectie voor & na verblijf",
-          "Documentbeheer",
-          "Meertalige overzichten",
-          "Schoonmaak: €60/wissel"
+          "Everything in Starter",
+          "Preventive maintenance (1x/month)",
+          "Pre & post-stay inspection",
+          "VAGF voice feedback post-checkout",
+          "Multi-language owner statements",
+          "Cleaning: €60/turnover"
         ]
       },
       "mid": {
         "features": [
-          "Alles in Basic",
-          "AI-prijsbepaling + Smart Lock",
-          "Prioritaire respons: 12u eigenaar / 2u gast",
-          "Overzicht in elke taal",
-          "Schoonmaak inbegrepen vanaf 5 nachten"
+          "Everything in Basic",
+          "AI dynamic pricing + Smart Lock",
+          "Priority response: 12h owner / 2h guest",
+          "Manager WhatsApp emergency escalation",
+          "Property feedback scorecard",
+          "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
         "features": [
-          "Alles in Mid",
-          "Fiscale compliance (Modelo 179 + IRNR)",
-          "Gast-upsells: transfers, boodschappen, was",
-          "Noodrespons binnen 4u",
-          "Schoonmaak inbegrepen vanaf 3 nachten"
+          "Everything in Mid",
+          "Full fiscal compliance (Modelo 179 + IRNR)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "AI Monitor daily property health checks",
+          "Cleaning included ≥3 nights"
         ]
       }
     },

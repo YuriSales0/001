@@ -1822,38 +1822,50 @@
   },
   "aiTools": {
     "badge": "Drivs av AI",
-    "title": "5 intelligenta verktyg som arbetar för dig",
-    "subtitle": "HostMasters är inte bara ett förvaltningsbolag — det är en teknikplattform.",
+    "title": "7 intelligent tools working for you",
+    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
     "tools": [
       {
-        "name": "AI Dynamisk Prissättning",
-        "desc": "Algoritm som analyserar 7 faktorer för att sätta optimalt pris varje natt.",
-        "stat": "Upp till +25% intäkter",
-        "statLabel": "vs. fasta priser"
+        "name": "AI Dynamic Pricing",
+        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "stat": "+25%",
+        "statLabel": "revenue vs fixed pricing"
       },
       {
-        "name": "AI Teamassistent",
-        "desc": "Intelligent chattassistent tillgänglig i varje portal. Ställ frågor om intäkter, bokningar eller fastighetsstatus.",
-        "stat": "24/7",
-        "statLabel": "omedelbara svar"
+        "name": "Guest Stay AI Chat",
+        "desc": "Every guest gets a private chat link on arrival. Claude-powered assistant answers WiFi, door code, amenities, local tips, 24/7 in their language.",
+        "stat": "70%",
+        "statLabel": "questions resolved without humans"
+      },
+      {
+        "name": "VAGF Voice Feedback",
+        "desc": "Voice agent calls every guest 24-48h after checkout. Captures scores for 3 dimensions (property, crew, platform) and turns them into action.",
+        "stat": "3 dim.",
+        "statLabel": "property · crew · platform"
+      },
+      {
+        "name": "AI Property Scorecard",
+        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "stat": "Live",
+        "statLabel": "score per property"
       },
       {
         "name": "AI Monitor",
-        "desc": "Autonomt system som kör 9 dagliga kontroller på varje bokning, utbetalning och uppgift.",
-        "stat": "9 kontroller",
-        "statLabel": "varje dag, automatiskt"
+        "desc": "Autonomous system runs 43 daily checks on reservations, payouts, tasks and properties. Detects anomalies before they become problems. Auto-fixes safe issues.",
+        "stat": "43 checks",
+        "statLabel": "every day"
       },
       {
-        "name": "Marknadsintelligens",
-        "desc": "Veckovis datainsamling från Airbnb och Booking.com i Costa Tropical-regionen.",
-        "stat": "50+ annonser",
-        "statLabel": "spåras varje vecka"
+        "name": "Market Intelligence",
+        "desc": "Weekly scraping of Airbnb and Booking.com across Costa Tropical. Real competitor prices, ratings and occupancy. Interactive map by zone.",
+        "stat": "5 zones",
+        "statLabel": "tracked weekly"
       },
       {
-        "name": "Prisanalys för Ägare",
-        "desc": "Din fastighets prisprestanda över tid. Säsongstrender, snitttariffer, beläggning.",
-        "stat": "Riktig data",
-        "statLabel": "inga uppskattningar"
+        "name": "AI Team Assistant",
+        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
+        "stat": "24/7",
+        "statLabel": "in every role"
       }
     ]
   },
@@ -1956,40 +1968,42 @@
       "noMonthlyFee": "Ingen månadsavgift",
       "starter": {
         "features": [
-          "Fullständig korttidsuthyrningsförvaltning",
-          "Airbnb, Booking.com & direktannonser",
-          "Gästkommunikation dygnet runt",
-          "Månadsrapport till ägare",
-          "Ägarens dashboard",
-          "Städning: €70/gästväxling"
+          "Full short-term rental management",
+          "Airbnb, Booking.com & direct listings",
+          "24/7 Guest AI assistant during stay",
+          "Monthly owner statement",
+          "Owner dashboard",
+          "Cleaning: €70/turnover"
         ]
       },
       "basic": {
         "features": [
-          "Allt i Starter",
-          "Förebyggande underhåll (1x/månad)",
-          "Inspektion före och efter vistelse",
-          "Dokumenthantering",
-          "Rapporter på flera språk",
-          "Städning: €60/gästväxling"
+          "Everything in Starter",
+          "Preventive maintenance (1x/month)",
+          "Pre & post-stay inspection",
+          "VAGF voice feedback post-checkout",
+          "Multi-language owner statements",
+          "Cleaning: €60/turnover"
         ]
       },
       "mid": {
         "features": [
-          "Allt i Basic",
-          "AI-prissättning + Smart Lock",
-          "Prioriterad respons: 12h ägare / 2h gäst",
-          "Rapport på valfritt språk",
-          "Städning inkluderad vid minst 5 nätter"
+          "Everything in Basic",
+          "AI dynamic pricing + Smart Lock",
+          "Priority response: 12h owner / 2h guest",
+          "Manager WhatsApp emergency escalation",
+          "Property feedback scorecard",
+          "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
         "features": [
-          "Allt i Mid",
-          "Skatteefterlevnad (Modelo 179 + IRNR)",
-          "Gästtillägg: transfer, matinköp, tvätt",
-          "Akutrespons inom 4 timmar",
-          "Städning inkluderad vid minst 3 nätter"
+          "Everything in Mid",
+          "Full fiscal compliance (Modelo 179 + IRNR)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "AI Monitor daily property health checks",
+          "Cleaning included ≥3 nights"
         ]
       }
     },

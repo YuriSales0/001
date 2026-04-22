@@ -1822,38 +1822,50 @@
   },
   "aiTools": {
     "badge": "Drevet af AI",
-    "title": "5 intelligente værktøjer der arbejder for dig",
-    "subtitle": "HostMasters er ikke bare et administrationsselskab — det er en teknologiplatform.",
+    "title": "7 intelligent tools working for you",
+    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
     "tools": [
       {
-        "name": "AI Dynamisk Prissætning",
-        "desc": "Algoritme der analyserer 7 faktorer for at sætte den optimale pris for hver nat.",
-        "stat": "Op til +25% indtægter",
-        "statLabel": "vs. faste priser"
+        "name": "AI Dynamic Pricing",
+        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "stat": "+25%",
+        "statLabel": "revenue vs fixed pricing"
       },
       {
-        "name": "AI Teamassistent",
-        "desc": "Intelligent chatassistent tilgængelig i hver portal. Stil spørgsmål om indtægter, bookinger eller ejendomsstatus.",
-        "stat": "24/7",
-        "statLabel": "øjeblikkelige svar"
+        "name": "Guest Stay AI Chat",
+        "desc": "Every guest gets a private chat link on arrival. Claude-powered assistant answers WiFi, door code, amenities, local tips, 24/7 in their language.",
+        "stat": "70%",
+        "statLabel": "questions resolved without humans"
+      },
+      {
+        "name": "VAGF Voice Feedback",
+        "desc": "Voice agent calls every guest 24-48h after checkout. Captures scores for 3 dimensions (property, crew, platform) and turns them into action.",
+        "stat": "3 dim.",
+        "statLabel": "property · crew · platform"
+      },
+      {
+        "name": "AI Property Scorecard",
+        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "stat": "Live",
+        "statLabel": "score per property"
       },
       {
         "name": "AI Monitor",
-        "desc": "Autonomt system der kører 9 daglige tjek på hver reservation, udbetaling og opgave.",
-        "stat": "9 tjek",
-        "statLabel": "hver dag, automatisk"
+        "desc": "Autonomous system runs 43 daily checks on reservations, payouts, tasks and properties. Detects anomalies before they become problems. Auto-fixes safe issues.",
+        "stat": "43 checks",
+        "statLabel": "every day"
       },
       {
-        "name": "Markedsintelligens",
-        "desc": "Ugentlig dataindsamling fra Airbnb og Booking.com i Costa Tropical-regionen.",
-        "stat": "50+ opslag",
-        "statLabel": "spores ugentligt"
+        "name": "Market Intelligence",
+        "desc": "Weekly scraping of Airbnb and Booking.com across Costa Tropical. Real competitor prices, ratings and occupancy. Interactive map by zone.",
+        "stat": "5 zones",
+        "statLabel": "tracked weekly"
       },
       {
-        "name": "Prisanalyse for Ejere",
-        "desc": "Din ejendoms prispræstation over tid. Sæsontrends, gennemsnitspriser, belægningsmønstre.",
-        "stat": "Rigtige data",
-        "statLabel": "ikke estimater"
+        "name": "AI Team Assistant",
+        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
+        "stat": "24/7",
+        "statLabel": "in every role"
       }
     ]
   },
@@ -1956,40 +1968,42 @@
       "noMonthlyFee": "Ingen månedlig betaling",
       "starter": {
         "features": [
-          "Fuld korttidsudlejningsadministration",
-          "Airbnb, Booking.com & direkte annoncer",
-          "24/7 gæstekommunikation",
-          "Månedlig ejeropgørelse",
-          "Ejer-dashboard",
-          "Rengøring: €70/skift"
+          "Full short-term rental management",
+          "Airbnb, Booking.com & direct listings",
+          "24/7 Guest AI assistant during stay",
+          "Monthly owner statement",
+          "Owner dashboard",
+          "Cleaning: €70/turnover"
         ]
       },
       "basic": {
         "features": [
-          "Alt i Starter",
-          "Forebyggende vedligeholdelse (1x/måned)",
-          "Inspektion før & efter ophold",
-          "Dokumenthåndtering",
-          "Opgørelser på flere sprog",
-          "Rengøring: €60/skift"
+          "Everything in Starter",
+          "Preventive maintenance (1x/month)",
+          "Pre & post-stay inspection",
+          "VAGF voice feedback post-checkout",
+          "Multi-language owner statements",
+          "Cleaning: €60/turnover"
         ]
       },
       "mid": {
         "features": [
-          "Alt i Basic",
-          "AI-prissætning + Smart Lock",
-          "Prioriteret svar: 12t ejer / 2t gæst",
-          "Opgørelse på alle sprog",
-          "Rengøring inkluderet ≥5 nætter"
+          "Everything in Basic",
+          "AI dynamic pricing + Smart Lock",
+          "Priority response: 12h owner / 2h guest",
+          "Manager WhatsApp emergency escalation",
+          "Property feedback scorecard",
+          "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
         "features": [
-          "Alt i Mid",
-          "Skatteoverholdelse (Modelo 179 + IRNR)",
-          "Gæste-upsells: transport, dagligvarer, vaskeri",
-          "Nødberedskab inden for 4 timer",
-          "Rengøring inkluderet ≥3 nætter"
+          "Everything in Mid",
+          "Full fiscal compliance (Modelo 179 + IRNR)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "AI Monitor daily property health checks",
+          "Cleaning included ≥3 nights"
         ]
       }
     },
