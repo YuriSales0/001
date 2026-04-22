@@ -73,6 +73,13 @@ export async function POST(request: NextRequest) {
     const checkInDate = new Date(checkIn)
     const checkOutDate = new Date(checkOut)
 
+    // Validate check-in is not in the past (allow same-day)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    if (checkInDate < today) {
+      return NextResponse.json({ error: 'Check-in date cannot be in the past' }, { status: 400 })
+    }
+
     // Get owner's plan to calculate correct commission rate
     const property = await prisma.property.findUnique({
       where: { id: propertyId },
@@ -80,39 +87,6 @@ export async function POST(request: NextRequest) {
     })
     if (!property) {
       return NextResponse.json({ error: 'Property not found' }, { status: 404 })
-    }
-
-    // Check for blocked dates overlap
-    const blockedOverlap = await prisma.blockedDate.findFirst({
-      where: {
-        propertyId,
-        startDate: { lt: checkOutDate },
-        endDate: { gt: checkInDate },
-      },
-    })
-    if (blockedOverlap) {
-      const from = blockedOverlap.startDate.toISOString().slice(0, 10)
-      const to = blockedOverlap.endDate.toISOString().slice(0, 10)
-      return NextResponse.json(
-        { error: `Property is blocked from ${from} to ${to}${blockedOverlap.reason ? ` (${blockedOverlap.reason})` : ''}` },
-        { status: 409 },
-      )
-    }
-
-    // Check for overlapping reservations
-    const reservationOverlap = await prisma.reservation.findFirst({
-      where: {
-        propertyId,
-        status: { notIn: ['CANCELLED'] },
-        checkIn: { lt: checkOutDate },
-        checkOut: { gt: checkInDate },
-      },
-    })
-    if (reservationOverlap) {
-      return NextResponse.json(
-        { error: `Overlaps with existing reservation (${reservationOverlap.guestName}, ${reservationOverlap.checkIn.toISOString().slice(0, 10)} – ${reservationOverlap.checkOut.toISOString().slice(0, 10)})` },
-        { status: 409 },
-      )
     }
 
     // MANAGER can only create reservations for properties owned by their managed clients
@@ -131,45 +105,86 @@ export async function POST(request: NextRequest) {
     // Auto-calculate booking lead days
     const autoLeadDays = Math.max(0, Math.round((checkInDate.getTime() - Date.now()) / 86400000))
 
-    const reservation = await prisma.reservation.create({
-      data: {
-        propertyId,
-        guestName,
-        guestEmail,
-        guestPhone,
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
-        amount,
-        platform: platformValue,
-        // Guest demographics
-        guestNationality: guestNationality ?? null,
-        guestCountry: guestCountry ?? null,
-        guestAge: guestAge ? parseInt(guestAge) : null,
-        guestAgeGroup: guestAgeGroup ?? null,
-        guestGroupSize: guestGroupSize ? parseInt(guestGroupSize) : null,
-        hasChildren: hasChildren ?? null,
-        hasPets: hasPets ?? null,
-        isRepeatGuest: isRepeatGuest ?? false,
-        guestLanguage: guestLanguage ?? null,
-        bookingLeadDays: autoLeadDays,
-        bookingChannel: bookingChannel ?? null,
-        payouts: {
-          create: {
-            propertyId,
-            grossAmount: amount,
-            commission,
-            commissionRate,
-            netAmount: net,
-            scheduledFor: payoutDateFrom(checkOutDate, platformValue),
-            platform: platformValue,
+    // Atomic overlap check + create inside a transaction to prevent race conditions
+    const reservation = await prisma.$transaction(async (tx) => {
+      // Re-check blocked dates inside transaction
+      const blockedOverlap = await tx.blockedDate.findFirst({
+        where: {
+          propertyId,
+          startDate: { lt: checkOutDate },
+          endDate: { gt: checkInDate },
+        },
+      })
+      if (blockedOverlap) {
+        const from = blockedOverlap.startDate.toISOString().slice(0, 10)
+        const to = blockedOverlap.endDate.toISOString().slice(0, 10)
+        throw new Error(`BLOCKED:Property is blocked from ${from} to ${to}${blockedOverlap.reason ? ` (${blockedOverlap.reason})` : ''}`)
+      }
+
+      // Re-check overlapping reservations inside transaction
+      const reservationOverlap = await tx.reservation.findFirst({
+        where: {
+          propertyId,
+          status: { notIn: ['CANCELLED'] },
+          checkIn: { lt: checkOutDate },
+          checkOut: { gt: checkInDate },
+        },
+      })
+      if (reservationOverlap) {
+        throw new Error(`OVERLAP:Overlaps with existing reservation (${reservationOverlap.guestName}, ${reservationOverlap.checkIn.toISOString().slice(0, 10)} – ${reservationOverlap.checkOut.toISOString().slice(0, 10)})`)
+      }
+
+      return tx.reservation.create({
+        data: {
+          propertyId,
+          guestName,
+          guestEmail,
+          guestPhone,
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+          amount,
+          platform: platformValue,
+          guestNationality: guestNationality ?? null,
+          guestCountry: guestCountry ?? null,
+          guestAge: guestAge ? parseInt(guestAge) : null,
+          guestAgeGroup: guestAgeGroup ?? null,
+          guestGroupSize: guestGroupSize ? parseInt(guestGroupSize) : null,
+          hasChildren: hasChildren ?? null,
+          hasPets: hasPets ?? null,
+          isRepeatGuest: isRepeatGuest ?? false,
+          guestLanguage: guestLanguage ?? null,
+          bookingLeadDays: autoLeadDays,
+          bookingChannel: bookingChannel ?? null,
+          payouts: {
+            create: {
+              propertyId,
+              grossAmount: amount,
+              commission,
+              commissionRate,
+              netAmount: net,
+              scheduledFor: payoutDateFrom(checkOutDate, platformValue),
+              platform: platformValue,
+            },
           },
         },
-      },
-      include: {
-        property: { select: { id: true, name: true } },
-        payouts: true,
-      },
+        include: {
+          property: { select: { id: true, name: true } },
+          payouts: true,
+        },
+      })
+    }).catch((err: Error) => {
+      if (err.message.startsWith('BLOCKED:')) {
+        return { error: err.message.slice(8), status: 409 } as const
+      }
+      if (err.message.startsWith('OVERLAP:')) {
+        return { error: err.message.slice(8), status: 409 } as const
+      }
+      throw err
     })
+
+    if ('error' in reservation) {
+      return NextResponse.json({ error: reservation.error }, { status: reservation.status })
+    }
 
     // ── Auto-tasks ──────────────────────────────────────────────────────────
     const bestCrew = await findBestCrew(propertyId)

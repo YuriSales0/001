@@ -177,20 +177,13 @@ export async function calculateManagerPayout(
     ? { minProps: activeBasicPlusProps >= 30 ? 30 : activeBasicPlusProps >= 20 ? 20 : 10, amount: portfolioBonusAmount }
     : null
 
-  // Acquisition bonus: paid in the 2nd month after client activation
-  // (i.e. clients whose subscriptionStatus became active 2 months before period)
-  // For simplicity we use User.createdAt as proxy for activation timestamp
-  // since there's no dedicated activation field. Refine if one is added later.
-  const twoMonthsAgoStart = new Date(Date.UTC(
-    periodMonth <= 2 ? periodYear - 1 : periodYear,
-    (periodMonth - 3 + 12) % 12,
-    1, 0, 0, 0, 0,
-  ))
-  const twoMonthsAgoEnd = new Date(Date.UTC(
-    periodMonth <= 2 ? (periodMonth === 1 ? periodYear - 1 : periodYear) : periodYear,
-    (periodMonth - 2 + 12) % 12,
-    1, 0, 0, 0, 0,
-  ))
+  // Acquisition bonus: paid in the 2nd month after client activation.
+  // We look for clients activated during (periodMonth - 2). Example:
+  //   April 2026 payout → clients activated in February 2026
+  //   January 2026 payout → clients activated in November 2025
+  // Uses Date constructor's auto-rollover (month -1 = Dec of prior year).
+  const twoMonthsAgoStart = new Date(Date.UTC(periodYear, periodMonth - 1 - 2, 1, 0, 0, 0, 0))
+  const twoMonthsAgoEnd = new Date(Date.UTC(periodYear, periodMonth - 1 - 1, 1, 0, 0, 0, 0))
 
   const acquisitionBonuses: PayoutBreakdown['acquisitionBonuses'] = []
   let totalAcquisitionBonus = 0

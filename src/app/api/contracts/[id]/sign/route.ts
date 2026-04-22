@@ -11,43 +11,33 @@ const PARTNER_COMMISSION: Record<string, number> = {
 }
 
 async function convertLeadOnContractSign(userId: string) {
-  const lead = await prisma.lead.findFirst({
-    where: {
-      OR: [
-        { convertedUserId: userId },
-        { email: { not: null } },
-      ],
-      status: { not: 'CONVERTED' },
-    },
-    orderBy: { createdAt: 'desc' },
-  }) as any
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } }) as any
+  if (!user?.email) return
 
-  if (!lead) {
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } }) as any
-    if (!user?.email) return
-    const leadByEmail = await prisma.lead.findFirst({
-      where: { email: user.email, status: { not: 'CONVERTED' } },
+  // Use transaction to prevent double-conversion race condition
+  await prisma.$transaction(async (tx) => {
+    const lead = await tx.lead.findFirst({
+      where: {
+        OR: [
+          { convertedUserId: userId },
+          { email: user.email },
+        ],
+        status: { not: 'CONVERTED' },
+      },
       orderBy: { createdAt: 'desc' },
     }) as any
-    if (!leadByEmail) return
-    await convertLead(leadByEmail.id, leadByEmail.partnerId, userId, leadByEmail.name)
-    return
-  }
 
-  await convertLead(lead.id, lead.partnerId, userId, lead.name)
-}
+    if (!lead) return
 
-async function convertLead(leadId: string, partnerId: string | null, userId: string, leadName: string) {
-  await prisma.lead.update({
-    where: { id: leadId },
-    data: { status: 'CONVERTED', convertedUserId: userId },
-  })
+    await tx.lead.update({
+      where: { id: lead.id },
+      data: { status: 'CONVERTED', convertedUserId: userId },
+    })
 
-  if (!partnerId) return
+    if (!lead.partnerId) return
 
-  try {
-    const partner = await prisma.partner.findUnique({
-      where: { id: partnerId },
+    const partner = await tx.partner.findUnique({
+      where: { id: lead.partnerId },
       select: { id: true, tier: true, commissionFixed: true, name: true, email: true, status: true },
     })
     if (!partner || (partner as any).status !== 'ACTIVE') return
@@ -59,11 +49,11 @@ async function convertLead(leadId: string, partnerId: string | null, userId: str
     }
 
     const now = new Date()
-    await prisma.partnerPayout.create({
+    await tx.partnerPayout.create({
       data: {
         partnerId: partner.id,
-        leadId,
-        clientName: leadName || null,
+        leadId: lead.id,
+        clientName: lead.name || null,
         amount,
         status: 'PENDING',
         holdUntil: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
@@ -71,7 +61,7 @@ async function convertLead(leadId: string, partnerId: string | null, userId: str
       },
     })
 
-    await prisma.partner.update({
+    await tx.partner.update({
       where: { id: partner.id },
       data: {
         totalConversions: { increment: 1 },
@@ -80,13 +70,11 @@ async function convertLead(leadId: string, partnerId: string | null, userId: str
     })
 
     if (partner.email) {
-      // Notify partner about conversion (in-app not possible since partner
-      // uses separate auth — we log it for the partner portal to display)
-      console.log(`[Partner Conversion] ${partner.name} earns €${amount} from lead "${leadName}"`)
+      console.log(`[Partner Conversion] ${partner.name} earns €${amount} from lead "${lead.name}"`)
     }
-  } catch (err) {
-    console.error('[Contract Sign] Failed to process partner payout:', err)
-  }
+  }).catch((err) => {
+    console.error('[Contract Sign] Lead conversion failed:', err)
+  })
 }
 
 /**
