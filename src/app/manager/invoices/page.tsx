@@ -10,9 +10,10 @@ import { useLocale } from "@/i18n/provider"
 type Invoice = {
   id: string
   description: string
-  amount: number
+  grossAmount: number | string
+  totalAmount: number | string
   currency: string
-  status: 'DRAFT' | 'SENT' | 'PAID' | 'CANCELLED'
+  status: 'DRAFT' | 'PENDING' | 'PAID' | 'CANCELLED' | 'FAILED' | 'REFUNDED'
   dueDate: string | null
   notes: string | null
   createdAt: string
@@ -27,9 +28,11 @@ const fmtDate = (s: string) =>
 
 const STATUS_STYLES: Record<string, string> = {
   PAID:      'bg-green-50 text-green-700 border-green-200',
-  SENT:      'bg-blue-50 text-blue-700 border-blue-200',
+  PENDING:   'bg-blue-50 text-blue-700 border-blue-200',
   DRAFT:     'bg-gray-100 text-gray-600 border-gray-200',
   CANCELLED: 'bg-red-50 text-red-600 border-red-200',
+  FAILED:    'bg-red-50 text-red-700 border-red-200',
+  REFUNDED:  'bg-amber-50 text-amber-700 border-amber-200',
 }
 
 function EditModal({ invoice, onClose, onSaved }: {
@@ -40,7 +43,7 @@ function EditModal({ invoice, onClose, onSaved }: {
   const { t } = useLocale()
   const [form, setForm] = useState({
     description: invoice.description,
-    amount: String(invoice.amount),
+    amount: String(invoice.totalAmount ?? invoice.grossAmount ?? 0),
     dueDate: invoice.dueDate ? invoice.dueDate.slice(0, 10) : '',
     notes: invoice.notes ?? '',
   })
@@ -160,8 +163,9 @@ export default function ManagerInvoices() {
 
   const totals = invoices.reduce(
     (acc, i) => {
-      if (i.status === 'PAID') acc.paid += i.amount
-      else if (i.status !== 'CANCELLED') acc.pending += i.amount
+      const amt = Number(i.totalAmount ?? i.grossAmount ?? 0)
+      if (i.status === 'PAID') acc.paid += amt
+      else if (i.status !== 'CANCELLED') acc.pending += amt
       return acc
     },
     { paid: 0, pending: 0 },
@@ -231,7 +235,7 @@ export default function ManagerInvoices() {
                   {i.dueDate ? fmtDate(i.dueDate) : '—'}
                 </td>
                 <td className="px-4 py-3 text-right font-semibold text-gray-900">
-                  {fmt(i.amount, i.currency)}
+                  {fmt(Number(i.totalAmount ?? i.grossAmount ?? 0), i.currency)}
                 </td>
                 <td className="px-4 py-3">
                   <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[i.status] ?? ''}`}>

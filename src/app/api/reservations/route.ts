@@ -73,10 +73,12 @@ export async function POST(request: NextRequest) {
     const checkInDate = new Date(checkIn)
     const checkOutDate = new Date(checkOut)
 
-    // Validate check-in is not in the past (allow same-day)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    if (checkInDate < today) {
+    // Validate check-in is not in the past (UTC — allow same-day)
+    // Compare dates as YYYY-MM-DD strings to avoid timezone drift between
+    // server (UTC) and client (Europe/Madrid UTC+1/+2).
+    const todayUtc = new Date().toISOString().slice(0, 10)
+    const checkInUtc = checkInDate.toISOString().slice(0, 10)
+    if (checkInUtc < todayUtc) {
       return NextResponse.json({ error: 'Check-in date cannot be in the past' }, { status: 400 })
     }
 

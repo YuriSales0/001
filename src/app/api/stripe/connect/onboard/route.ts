@@ -31,6 +31,7 @@ export async function POST(_request: NextRequest) {
     if (!accountId) {
       const account = await getStripe().accounts.create({
         type: 'standard',
+        country: 'ES',
         email: user.email,
         metadata: { userId: user.id, role: user.role ?? '' },
         business_profile: {

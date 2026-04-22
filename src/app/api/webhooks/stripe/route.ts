@@ -57,8 +57,12 @@ export async function POST(req: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
         if (session.mode !== 'subscription') break
-        const customerId = session.customer as string
-        const subscriptionId = session.subscription as string
+        const customerId = session.customer as string | null
+        const subscriptionId = session.subscription as string | null
+        if (!customerId || !subscriptionId) {
+          console.warn('[Stripe] checkout.session.completed missing customer or subscription', session.id)
+          break
+        }
         const user = await findUserByCustomerId(customerId)
         if (!user) break
 
@@ -258,8 +262,10 @@ export async function POST(req: NextRequest) {
       case 'customer.created': {
         const customer = event.data.object as Stripe.Customer
         if (customer.email) {
+          // Only claim users that don't already have a Stripe customer.
+          // Prevents overwriting an existing linkage when two users share email.
           await prisma.user.updateMany({
-            where: { email: customer.email },
+            where: { email: customer.email, stripeCustomerId: null },
             data: { stripeCustomerId: customer.id },
           })
         }
