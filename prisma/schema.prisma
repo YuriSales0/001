@@ -275,6 +275,8 @@ model User {
   sentMessages         Message[]      @relation("SentMessages")
   campaigns            Campaign[]     @relation("CampaignCreator")
   taxObligations       TaxObligation[]
+  // Manager compensation payouts (monthly)
+  managerPayouts       ManagerPayout[]            @relation("ManagerPayouts")
   // Crew system
   crewScore            CrewScore?
   crewRelationships    CrewPropertyRelationship[] @relation("CrewRelationships")
@@ -1158,6 +1160,47 @@ model PartnerPayout {
   @@index([status])
 }
 
+enum ManagerPayoutStatus {
+  PENDING       // Calculated, awaiting admin approval
+  APPROVED      // Approved for transfer
+  PAID          // Transfer completed
+  CANCELLED     // Manually cancelled
+}
+
+/// Monthly manager commission payout.
+/// - Created by cron on/around day 10 of each month for the prior month
+/// - Covers: 15% subscription share + 3% gross rental share + portfolio bonus
+///   + acquisition bonuses for clients activated 2 months ago
+model ManagerPayout {
+  id                   String              @id @default(cuid())
+  managerId            String
+  manager              User                @relation("ManagerPayouts", fields: [managerId], references: [id])
+  periodYear           Int                 // e.g. 2026
+  periodMonth          Int                 // 1..12 (the month being paid for)
+  subscriptionEarnings Decimal             @db.Decimal(10,2)  // 15% of client subscriptions actually paid this month
+  rentalEarnings       Decimal             @db.Decimal(10,2)  // 3% of gross rental revenue this month
+  portfolioBonus       Decimal             @db.Decimal(10,2)  // 150/400/750 tier bonus
+  acquisitionBonus     Decimal             @db.Decimal(10,2)  // sum of one-time bonuses for clients activated 2 months ago
+  finalAmount          Decimal             @db.Decimal(10,2)  // sum of above 4
+  breakdown            Json?               // detail lines: clients, properties, bonuses
+  clientCount          Int                 @default(0)
+  activePropertyCount  Int                 @default(0)
+  status               ManagerPayoutStatus @default(PENDING)
+  payBy                DateTime            // day 10 of the following month
+  paidAt               DateTime?
+  cancelledAt          DateTime?
+  stripeTransferId     String?             // if paid via Stripe Connect
+  statementSentAt      DateTime?           // email statement timestamp
+  notes                String?             @db.Text
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  @@unique([managerId, periodYear, periodMonth])
+  @@index([managerId])
+  @@index([status])
+  @@index([periodYear, periodMonth])
+}
+
 enum RecruitRole {
   MANAGER
   CREW
@@ -1222,6 +1265,7 @@ enum NotificationType {
   NEW_LEAD
   CLIENT_REGISTERED
   CLIENT_PROPERTY_APPROVED
+  COMMISSION_STATEMENT
   COMMISSION_PAID
   // Client
   PROPERTY_APPROVED

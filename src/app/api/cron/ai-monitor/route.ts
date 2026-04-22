@@ -263,6 +263,11 @@ export async function GET(request: NextRequest) {
   if (new Date().getUTCDate() === 1) {
     jobs.push('/api/cron/crew-score-decay')
   }
+  // Manager monthly commission payout on the 5th of every month
+  // (between day 1 to guarantee prior-month data is settled, and day 10 deadline)
+  if (new Date().getUTCDate() === 5) {
+    jobs.push('/api/cron/manager-payout')
+  }
 
   await Promise.allSettled(
     jobs.map(path => fetch(`${baseUrl}${path}`, { method: 'POST', headers }).catch(() => {}))

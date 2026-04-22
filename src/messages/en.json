@@ -2729,7 +2729,11 @@
     "crewScoreChangeTitle": "Score update: {delta} points",
     "crewScoreChangeBody": "Your score is now {score} (reason: {reason}).",
     "taxDeadlineTitle": "Tax deadline approaching",
-    "taxDeadlineBody": "You have tax obligations due within the next 7 days. Check your tax dashboard."
+    "taxDeadlineBody": "You have tax obligations due within the next 7 days. Check your tax dashboard.",
+    "commissionStatementTitle": "Commission statement ready",
+    "commissionStatementBody": "Your {period} payout of €{amount} is pending admin approval.",
+    "commissionPaidTitle": "Commission paid: €{amount}",
+    "commissionPaidBody": "Your {period} commission has been transferred."
   },
   "contracts": {
     "serviceAgreement": "Service Agreement — HostMasters Costa Tropical",

@@ -2730,7 +2730,11 @@
     "crewScoreChangeTitle": "Actualización de puntuación: {delta} puntos",
     "crewScoreChangeBody": "Tu puntuación es ahora {score} (motivo: {reason}).",
     "taxDeadlineTitle": "Plazo fiscal próximo",
-    "taxDeadlineBody": "Tienes obligaciones fiscales con plazo en los próximos 7 días. Consulta tu panel fiscal."
+    "taxDeadlineBody": "Tienes obligaciones fiscales con plazo en los próximos 7 días. Consulta tu panel fiscal.",
+    "commissionStatementTitle": "Informe de comisión listo",
+    "commissionStatementBody": "Tu pago de {period} por €{amount} está pendiente de aprobación.",
+    "commissionPaidTitle": "Comisión pagada: €{amount}",
+    "commissionPaidBody": "Tu comisión de {period} ha sido transferida."
   },
   "contracts": {
     "serviceAgreement": "Contrato de Servicio — HostMasters Costa Tropical",

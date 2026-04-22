@@ -2704,7 +2704,11 @@
     "crewScoreChangeTitle": "Mise à jour du score : {delta} points",
     "crewScoreChangeBody": "Votre score est maintenant {score} (raison : {reason}).",
     "taxDeadlineTitle": "Échéance fiscale proche",
-    "taxDeadlineBody": "Vous avez des obligations fiscales dans les 7 prochains jours. Consultez votre tableau de bord fiscal."
+    "taxDeadlineBody": "Vous avez des obligations fiscales dans les 7 prochains jours. Consultez votre tableau de bord fiscal.",
+    "commissionStatementTitle": "Relevé de commission prêt",
+    "commissionStatementBody": "Votre paiement de {period} de €{amount} est en attente d'approbation admin.",
+    "commissionPaidTitle": "Commission payée : €{amount}",
+    "commissionPaidBody": "Votre commission de {period} a été virée."
   },
   "contracts": {
     "serviceAgreement": "Accord de service — HostMasters Costa Tropical",

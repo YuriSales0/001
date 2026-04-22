@@ -2704,7 +2704,11 @@
     "crewScoreChangeTitle": "Score-Aktualisierung: {delta} Punkte",
     "crewScoreChangeBody": "Ihr Score beträgt jetzt {score} (Grund: {reason}).",
     "taxDeadlineTitle": "Steuerfrist nähert sich",
-    "taxDeadlineBody": "Sie haben Steuerpflichten innerhalb der nächsten 7 Tage. Überprüfen Sie Ihr Steuer-Dashboard."
+    "taxDeadlineBody": "Sie haben Steuerpflichten innerhalb der nächsten 7 Tage. Überprüfen Sie Ihr Steuer-Dashboard.",
+    "commissionStatementTitle": "Provisionsabrechnung bereit",
+    "commissionStatementBody": "Ihre {period}-Auszahlung von €{amount} wartet auf Admin-Freigabe.",
+    "commissionPaidTitle": "Provision ausgezahlt: €{amount}",
+    "commissionPaidBody": "Ihre {period}-Provision wurde überwiesen."
   },
   "contracts": {
     "serviceAgreement": "Dienstleistungsvereinbarung — HostMasters Costa Tropical",

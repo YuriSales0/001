@@ -2704,7 +2704,11 @@
     "crewScoreChangeTitle": "Score-opdatering: {delta} point",
     "crewScoreChangeBody": "Din score er nu {score} (årsag: {reason}).",
     "taxDeadlineTitle": "Skattefrist nærmer sig",
-    "taxDeadlineBody": "Du har skatteforpligtelser inden for de næste 7 dage. Tjek dit skattedashboard."
+    "taxDeadlineBody": "Du har skatteforpligtelser inden for de næste 7 dage. Tjek dit skattedashboard.",
+    "commissionStatementTitle": "Provisionsopgørelse klar",
+    "commissionStatementBody": "Din udbetaling for {period} på €{amount} afventer admin-godkendelse.",
+    "commissionPaidTitle": "Provision udbetalt: €{amount}",
+    "commissionPaidBody": "Din provision for {period} er overført."
   },
   "contracts": {
     "serviceAgreement": "Serviceaftale — HostMasters Costa Tropical",

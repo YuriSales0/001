@@ -2704,7 +2704,11 @@
     "crewScoreChangeTitle": "Score-update: {delta} punten",
     "crewScoreChangeBody": "Uw score is nu {score} (reden: {reason}).",
     "taxDeadlineTitle": "Belastingdeadline nadert",
-    "taxDeadlineBody": "U heeft belastingverplichtingen binnen de komende 7 dagen. Controleer uw belastingdashboard."
+    "taxDeadlineBody": "U heeft belastingverplichtingen binnen de komende 7 dagen. Controleer uw belastingdashboard.",
+    "commissionStatementTitle": "Commissieoverzicht gereed",
+    "commissionStatementBody": "Uw uitbetaling van {period} van €{amount} wacht op admin-goedkeuring.",
+    "commissionPaidTitle": "Commissie uitbetaald: €{amount}",
+    "commissionPaidBody": "Uw commissie van {period} is overgemaakt."
   },
   "contracts": {
     "serviceAgreement": "Dienstovereenkomst — HostMasters Costa Tropical",

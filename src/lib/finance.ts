@@ -115,8 +115,28 @@ export function payoutDateFrom(checkOut: Date, platform?: PayoutPlatform): Date 
 }
 
 // ── Manager compensation ──────────────────────────────────────────────────
-export const DEFAULT_MANAGER_SUBSCRIPTION_SHARE = 0.10 // 10% of client subscription
-export const DEFAULT_MANAGER_COMMISSION_SHARE = 0.02   // 2% of gross rental revenue
+export const DEFAULT_MANAGER_SUBSCRIPTION_SHARE = 0.15 // 15% of client subscription
+export const DEFAULT_MANAGER_COMMISSION_SHARE = 0.03   // 3% of gross rental revenue
+
+/** Portfolio bonus tiers (monthly, cumulative — largest tier applies). */
+export const MANAGER_PORTFOLIO_BONUS: Array<{ minProps: number; amount: number }> = [
+  { minProps: 30, amount: 750 },
+  { minProps: 20, amount: 400 },
+  { minProps: 10, amount: 150 },
+]
+
+/** One-time acquisition bonus paid on the 2nd month after client activation. */
+export const MANAGER_ACQUISITION_BONUS: Record<string, number> = {
+  STARTER: 0,
+  BASIC:   50,
+  MID:     100,
+  PREMIUM: 150,
+}
+
+export function managerPortfolioBonus(activeBasicPlusProps: number): number {
+  const tier = MANAGER_PORTFOLIO_BONUS.find(t => activeBasicPlusProps >= t.minProps)
+  return tier?.amount ?? 0
+}
 
 export function calcManagerEarnings(opts: {
   grossRevenue: number
