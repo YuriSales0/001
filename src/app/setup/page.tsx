@@ -31,17 +31,17 @@ interface ChecklistItem {
 }
 
 const STEP_TEMPLATES: Omit<SetupStep, "status">[] = [
-  { day: 1,  title: "Welcome email sent to owner" },
-  { day: 2,  title: "Onboarding visit scheduled" },
-  { day: 5,  title: "Physical visit — inspection, inventory & photos" },
-  { day: 6,  title: "Condition report sent to owner" },
-  { day: 7,  title: "Nuki smart lock installed & tested" },
-  { day: 8,  title: "Airbnb + Booking.com + VRBO profiles created" },
-  { day: 9,  title: "PriceLabs activated — minimum prices set" },
-  { day: 10, title: "Owner approves listing" },
-  { day: 11, title: "Published on all channels" },
-  { day: 12, title: "Cleaning team briefed" },
-  { day: 13, title: "Property file created in system" },
+  { day: 1,  title: "Welcome email sent to owner — Manager" },
+  { day: 2,  title: "Onboarding call scheduled — Manager" },
+  { day: 5,  title: "Field inspection (photos, inventory, breaker, water, quirks) — Captain" },
+  { day: 6,  title: "Condition report sent to owner — Captain" },
+  { day: 7,  title: "Nuki smart lock installed & tested — Captain" },
+  { day: 8,  title: "Airbnb + Booking.com + VRBO profiles created — Admin" },
+  { day: 9,  title: "PriceLabs activated — minimum prices set — Admin" },
+  { day: 10, title: "Owner approves listing — Manager ↔ Owner" },
+  { day: 11, title: "AI Assistant context populated (coverage ≥ 80%) — Manager" },
+  { day: 12, title: "Published on all channels — Admin" },
+  { day: 13, title: "Cleaning team briefed — Captain" },
   { day: 14, title: "Setup complete — owner & manager notified" },
 ]
 

@@ -33,6 +33,8 @@ enum TaskType {
   TRANSFER
   SHOPPING
   LAUNDRY
+  SETUP_AI_CONTEXT          // Manager fills AI assistant context during property setup
+  SETUP_FIELD_INSPECTION    // Captain captures physical property data (breaker, water, quirks)
 }
 
 enum TaskStatus {

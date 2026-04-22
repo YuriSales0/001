@@ -242,6 +242,39 @@ const prop_activeNoPhotos: CheckFn = async () => {
   }
 }
 
+/**
+ * Flag ACTIVE properties whose AI Assistant context coverage is below 80%.
+ * Without enough context, the Guest AI has to escalate more questions to
+ * humans. Manager should populate via /setup → AI Assistant context tab.
+ */
+const prop_activeLowAiCoverage: CheckFn = async () => {
+  const props = await prisma.property.findMany({
+    where: { status: 'ACTIVE' },
+    select: {
+      id: true, name: true,
+      wifiSsid: true, wifiPassword: true, doorCode: true, smartLockPassword: true,
+      checkInInstructions: true, checkOutInstructions: true, emergencyWhatsapp: true,
+      appliancesInfo: true, breakerLocation: true, waterShutoffLocation: true,
+    },
+  })
+  const { coverageFromProperty } = await import('@/lib/guest-stay/coverage')
+  const lowCoverage = props
+    .map(p => ({ ...p, cov: coverageFromProperty(p) }))
+    .filter(p => p.cov.pct < 80)
+  if (lowCoverage.length === 0) return null
+  return {
+    checkType: 'PROPERTY_AI_CONTEXT_LOW',
+    severity: 'MEDIUM',
+    message: `${lowCoverage.length} ACTIVE property(ies) with AI context coverage < 80%`,
+    count: lowCoverage.length,
+    details: {
+      properties: lowCoverage.slice(0, 10).map(p => ({
+        id: p.id, name: p.name, coveragePct: p.cov.pct,
+      })),
+    },
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────
 // CATEGORY: USERS & ROLES
 // ─────────────────────────────────────────────────────────────────
@@ -792,10 +825,11 @@ export const ALL_CHECKS: CheckFn[] = [
   p3_commissionMismatch,
   p4_invoicesNoPaidAt,
   p5_financialIntegrity,
-  // Properties (3)
+  // Properties (4)
   prop_stale,
   prop_activeNoOwner,
   prop_activeNoPhotos,
+  prop_activeLowAiCoverage,
   // Users (3)
   u_duplicateEmails,
   u_clientsWithoutManager,
@@ -836,4 +870,4 @@ export const ALL_CHECKS: CheckFn[] = [
   stock_laundryStuck,
 ]
 
-// Total: 43 checks
+// Total: 44 checks

@@ -33,5 +33,10 @@ export async function POST(
     select: { id: true, status: true },
   })
 
+  // Provision setup tasks for Captain (field inspection) + Manager (AI context)
+  import('@/lib/setup-tasks')
+    .then(({ provisionSetupTasks }) => provisionSetupTasks(updated.id))
+    .catch(err => console.error('[Setup] provisionSetupTasks failed:', err))
+
   return NextResponse.json(updated)
 }

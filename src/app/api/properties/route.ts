@@ -134,6 +134,14 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    // Provision setup tasks when property needs setup workflow
+    // (PENDING_APPROVAL or ACTIVE — admin creates live but still needs AI context filled)
+    if (status === 'PENDING_APPROVAL' || status === 'ACTIVE') {
+      import('@/lib/setup-tasks')
+        .then(({ provisionSetupTasks }) => provisionSetupTasks(property.id))
+        .catch(err => console.error('[Setup] provisionSetupTasks failed:', err))
+    }
+
     return NextResponse.json(property, { status: 201 })
   } catch (error) {
     console.error('Error creating property:', error)
