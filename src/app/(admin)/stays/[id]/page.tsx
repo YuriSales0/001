@@ -76,6 +76,13 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
     await load()
   }
 
+  const resendSms = async () => {
+    const res = await fetch(`/api/admin/stay-chats/${id}/resend-sms`, { method: 'POST' })
+    const data = await res.json()
+    alert(data.ok ? 'SMS sent' : `SMS failed: ${data.error ?? 'unknown'}`)
+    await load()
+  }
+
   if (loading) {
     return <div className="p-6 text-sm text-gray-400">Loading…</div>
   }
@@ -111,6 +118,10 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={resendSms}
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 flex items-center gap-1">
+              <Send className="h-3 w-3" /> Resend SMS
+            </button>
             {escalated && (
               <>
                 <button onClick={escalateAdmin}

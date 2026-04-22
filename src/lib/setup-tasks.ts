@@ -43,8 +43,19 @@ export async function provisionSetupTasks(propertyId: string) {
     select: { id: true },
   })
 
-  // Manager from owner
-  const managerId = property.owner.managerId
+  // Manager from owner — fallback to first Admin if owner has no manager
+  // (prevents AI context task hanging unassigned forever)
+  let managerId: string | null = property.owner.managerId
+  if (!managerId) {
+    const admin = await prisma.user.findFirst({
+      where: { role: 'ADMIN' },
+      select: { id: true },
+    })
+    managerId = admin?.id ?? null
+    if (!managerId) {
+      console.error(`[Setup] No Manager or Admin to assign AI context task for property ${propertyId}`)
+    }
+  }
 
   const created: Array<{ id: string; type: string; assignee: string | null }> = []
 
