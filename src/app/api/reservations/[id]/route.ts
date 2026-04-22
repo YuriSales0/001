@@ -212,6 +212,13 @@ export async function PUT(
         .catch(err => console.error('[VAGF] Failed to schedule feedback call:', err))
     }
 
+    // Guest Stay Chat: provision AI chat when reservation becomes ACTIVE (check-in)
+    if (body.status === 'ACTIVE') {
+      import('@/lib/guest-stay/provision')
+        .then(({ provisionStayChat }) => provisionStayChat(reservation.id))
+        .catch(err => console.error('[StayChat] Failed to provision:', err))
+    }
+
     return NextResponse.json({ ...reservation, warning: paidPayoutsWarning })
   } catch (error) {
     console.error('Error updating reservation:', error)

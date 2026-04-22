@@ -1298,6 +1298,9 @@
     "feedback": {
       "title": "Gastenfeedback",
       "subtitle": "Per spraakgesprek vastgelegde inzichten — gegroepeerd per verantwoordelijkheid."
+    },
+    "stays": {
+      "title": "Verblijven"
     }
   },
   "crew": {

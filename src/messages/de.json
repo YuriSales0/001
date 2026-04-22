@@ -1298,6 +1298,9 @@
     "feedback": {
       "title": "Gästefeedback",
       "subtitle": "Per Sprachanruf erfasste Gäste-Insights — nach Verantwortlichkeit gruppiert."
+    },
+    "stays": {
+      "title": "Aufenthalte"
     }
   },
   "crew": {

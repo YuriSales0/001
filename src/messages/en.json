@@ -1323,6 +1323,9 @@
     "feedback": {
       "title": "Guest Feedback",
       "subtitle": "Voice-captured insights from guests — grouped by accountability."
+    },
+    "stays": {
+      "title": "Guest Stays"
     }
   },
   "crew": {

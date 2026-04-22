@@ -1298,6 +1298,9 @@
     "feedback": {
       "title": "Avis des invités",
       "subtitle": "Retours vocaux des invités — regroupés par responsabilité."
+    },
+    "stays": {
+      "title": "Séjours"
     }
   },
   "crew": {

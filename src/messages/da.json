@@ -1298,6 +1298,9 @@
     "feedback": {
       "title": "Gæstefeedback",
       "subtitle": "Stemmeindsamlede indsigter fra gæster — grupperet efter ansvar."
+    },
+    "stays": {
+      "title": "Ophold"
     }
   },
   "crew": {

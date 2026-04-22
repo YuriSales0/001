@@ -1298,6 +1298,9 @@
     "feedback": {
       "title": "Gästfeedback",
       "subtitle": "Röstinspelade insikter från gäster — grupperat efter ansvar."
+    },
+    "stays": {
+      "title": "Vistelser"
     }
   },
   "crew": {

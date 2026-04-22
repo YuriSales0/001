@@ -1324,6 +1324,9 @@
     "feedback": {
       "title": "Feedback de Hóspedes",
       "subtitle": "Opiniões capturadas por voz — agrupadas por responsabilidade."
+    },
+    "stays": {
+      "title": "Estadias"
     }
   },
   "crew": {

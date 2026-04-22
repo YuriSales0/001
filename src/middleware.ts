@@ -9,6 +9,8 @@ export function middleware(request: NextRequest) {
   if (
     publicPaths.some(p => pathname === p || pathname === p + '/') ||
     pathname.startsWith('/partner') ||
+    pathname.startsWith('/stay/') ||         // Guest stay chat — token-based auth
+    pathname.startsWith('/feedback/') ||     // Guest feedback web form — token-based auth
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next') ||
     pathname.includes('.')

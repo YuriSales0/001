@@ -244,6 +244,23 @@ enum EscalationLevel {
   CRITICAL
 }
 
+// ── Guest Stay Chat ──
+
+enum StayChatAuthor {
+  GUEST
+  AI
+  MANAGER
+  ADMIN
+  SYSTEM
+}
+
+enum StayChatEscalationStatus {
+  NONE
+  PENDING_MANAGER
+  PENDING_ADMIN
+  RESOLVED
+}
+
 enum ReceiptStatus {
   DRAFT
   PENDING
@@ -344,6 +361,8 @@ model User {
   stayReviews          StayReview[]                @relation("StayReviewer")
   feedbackAsClient     GuestFeedback[]             @relation("ClientFeedback")
   feedbackAsCrew       GuestFeedback[]             @relation("CrewFeedback")
+  stayChatsAsClient    GuestStayChat[]             @relation("ClientStayChats")
+  escalatedStayChats   GuestStayChat[]             @relation("EscalatedStayChats")
 
   // VAGF Crew fields
   guestScoreAverage    Float?            @default(0)
@@ -478,6 +497,7 @@ model Property {
   contracts          Contract[]
   crewRelationships  CrewPropertyRelationship[]
   guestFeedback      GuestFeedback[]            @relation("PropertyFeedback")
+  stayChats          GuestStayChat[]            @relation("PropertyStayChats")
   stayReviews        StayReview[]
   consumableItems     ConsumableItem[]
   consumableMovements ConsumableMovement[]
@@ -671,6 +691,54 @@ model GuestFeedbackCategory {
   createdAt   DateTime          @default(now())
 }
 
+/// Magic-link chat session between a guest and the platform during stay.
+/// AI (Claude) handles ~70%. Escalates to Manager → Admin when needed.
+model GuestStayChat {
+  id                String                    @id @default(cuid())
+  reservationId     String                    @unique
+  reservation       Reservation               @relation(fields: [reservationId], references: [id])
+  propertyId        String
+  property          Property                  @relation("PropertyStayChats", fields: [propertyId], references: [id])
+  clientId          String
+  client            User                      @relation("ClientStayChats", fields: [clientId], references: [id])
+  token             String                    @unique
+
+  language          String                    @default("en")
+  escalationStatus  StayChatEscalationStatus  @default(NONE)
+  escalatedAt       DateTime?
+  escalatedToUserId String?
+  escalatedTo       User?                     @relation("EscalatedStayChats", fields: [escalatedToUserId], references: [id])
+  resolvedAt        DateTime?
+
+  messageCount      Int                       @default(0)
+  lastMessageAt     DateTime?
+
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+
+  messages          GuestStayMessage[]
+
+  @@index([reservationId])
+  @@index([propertyId])
+  @@index([clientId])
+  @@index([escalationStatus])
+}
+
+model GuestStayMessage {
+  id            String         @id @default(cuid())
+  chatId        String
+  chat          GuestStayChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  author        StayChatAuthor
+  authorUserId  String?
+  content       String         @db.Text
+  aiConfidence  Float?
+  aiTopicTag    String?
+  createdAt     DateTime       @default(now())
+
+  @@index([chatId])
+  @@index([createdAt])
+}
+
 model Reservation {
   id            String            @id @default(cuid())
   propertyId    String
@@ -713,6 +781,7 @@ model Reservation {
   stayReview    StayReview?
   receipts      PaymentReceipt[]
   guestFeedback GuestFeedback?
+  stayChat      GuestStayChat?
 }
 
 model Payout {
