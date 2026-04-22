@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   else if (me.role === 'MANAGER') where.client = { managerId: me.id }
   else if (clientId) where.clientId = clientId
 
-  const invoices = await prisma.invoice.findMany({
+  const invoices = await prisma.paymentReceipt.findMany({
     where,
     include: {
       client: { select: { id: true, name: true, email: true } },
@@ -55,14 +55,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'forbidden' }, { status: 403 })
     }
 
-    const invoice = await prisma.invoice.create({
+    const { generateReceiptNumber, vatOnNet } = await import('@/lib/receipts')
+    const numAmount = Number(amount)
+    const vat = vatOnNet(numAmount)
+
+    const invoice = await prisma.paymentReceipt.create({
       data: {
+        receiptNumber: await generateReceiptNumber(),
+        type: 'ADJUSTMENT',
         clientId,
         propertyId: propertyId || null,
         createdById: me.id,
         description,
-        amount: Number(amount),
-        status: 'SENT', // manual invoices are immediately visible to client
+        grossAmount: vat.net,
+        netAmount: vat.net,
+        vatRate: vat.rate,
+        vatAmount: vat.vat,
+        totalAmount: vat.total,
+        status: 'PENDING',
         dueDate: dueDate ? new Date(dueDate) : null,
         notes: notes || null,
       },
@@ -78,7 +88,7 @@ export async function POST(req: NextRequest) {
           clientName: invoice.client.name || invoice.client.email,
           invoiceId: invoice.id,
           description: invoice.description,
-          amount: invoice.amount,
+          amount: Number(invoice.totalAmount),
           currency: invoice.currency,
           dueDate: invoice.dueDate?.toISOString() ?? null,
           notes: invoice.notes,

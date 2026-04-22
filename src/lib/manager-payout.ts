@@ -122,19 +122,19 @@ export async function calculateManagerPayout(
 
   // Load paid subscription invoices for these clients in this month
   const clientIds = clients.map(c => c.id)
-  const subInvoices = clientIds.length === 0 ? [] : await prisma.invoice.findMany({
+  const subInvoices = clientIds.length === 0 ? [] : await prisma.paymentReceipt.findMany({
     where: {
       clientId: { in: clientIds },
       type: 'SUBSCRIPTION',
       status: 'PAID',
       paidAt: { gte: start, lt: end },
     },
-    select: { clientId: true, amount: true },
+    select: { clientId: true, grossAmount: true },
   })
 
   const paidSubByClient = new Map<string, number>()
   for (const inv of subInvoices) {
-    paidSubByClient.set(inv.clientId, (paidSubByClient.get(inv.clientId) ?? 0) + inv.amount)
+    paidSubByClient.set(inv.clientId, (paidSubByClient.get(inv.clientId) ?? 0) + Number(inv.grossAmount))
   }
 
   // Per-client earnings

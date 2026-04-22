@@ -59,10 +59,10 @@ export async function GET() {
       orderBy: { checkOut: 'asc' },
       take: 10,
     }),
-    prisma.invoice.aggregate({
-      _sum: { amount: true },
+    prisma.paymentReceipt.aggregate({
+      _sum: { grossAmount: true },
       _count: true,
-      where: { status: 'SENT', client: clientWhere },
+      where: { status: 'PENDING', client: clientWhere },
     }),
   ])
 
@@ -82,7 +82,7 @@ export async function GET() {
     upcomingCheckOuts,
     pendingInvoices: {
       count: pendingInvoicesAgg._count,
-      total: pendingInvoicesAgg._sum.amount ?? 0,
+      total: Number(pendingInvoicesAgg._sum?.grossAmount ?? 0),
     },
   })
 }

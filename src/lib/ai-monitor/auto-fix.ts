@@ -77,7 +77,7 @@ async function fixCommissionMismatch(): Promise<AutoFixResult> {
 
 /** Backfills paidAt on invoices with status=PAID but null paidAt (defaults to createdAt). */
 async function fixInvoicePaidNoPaidAt(): Promise<AutoFixResult> {
-  const orphans = await prisma.invoice.findMany({
+  const orphans = await prisma.paymentReceipt.findMany({
     where: { status: 'PAID', paidAt: null },
     select: { id: true, createdAt: true },
   })
@@ -85,7 +85,7 @@ async function fixInvoicePaidNoPaidAt(): Promise<AutoFixResult> {
   if (orphans.length === 0) return { fixed: false, notes: 'Nothing to fix' }
 
   for (const inv of orphans) {
-    await prisma.invoice.update({
+    await prisma.paymentReceipt.update({
       where: { id: inv.id },
       data: { paidAt: inv.createdAt },
     })
