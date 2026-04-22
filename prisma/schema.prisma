@@ -463,6 +463,20 @@ model Property {
   smartLockId          String?
   smartLockInstalled   Boolean   @default(false)
   smartLockProvider    String?   // e.g. "Nuki", "TTLock", "Yale"
+  // ── AI Assistant context (populated during property setup) ──
+  wifiSsid             String?
+  wifiPassword         String?
+  doorCode             String?           // Permanent door code (if not smart lock rotation)
+  smartLockPassword    String?           // Current guest code
+  emergencyWhatsapp    String?           // Manager's emergency WhatsApp for critical escalations
+  parkingInstructions  String?   @db.Text
+  checkInInstructions  String?   @db.Text
+  checkOutInstructions String?   @db.Text
+  appliancesInfo       String?   @db.Text // "Don't run AC + oven + heater together — trips breaker"
+  breakerLocation      String?           // Where is the fuse box
+  waterShutoffLocation String?           // Where is main water valve
+  propertyQuirks       String[]          // List of specific quirks ("dryer is slow", "hot water takes 30s", etc.)
+  guestGuideUrl        String?           // Link to full digital house manual
   bedrooms             Int?
   sizeSqm          Int?
   airbnbConnected   Boolean        @default(false)

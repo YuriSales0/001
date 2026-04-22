@@ -126,7 +126,13 @@ export async function PUT(
     const allowedFields = ['name', 'address', 'city', 'postalCode', 'description',
                             'photos', 'commissionRate', 'airbnbIcalUrl', 'bookingIcalUrl',
                             'smartLockId', 'bedrooms', 'bathrooms', 'latitude', 'longitude',
-                            'houseRules']
+                            'houseRules',
+                            // AI Assistant context fields
+                            'wifiSsid', 'wifiPassword', 'doorCode', 'smartLockPassword',
+                            'emergencyWhatsapp', 'parkingInstructions',
+                            'checkInInstructions', 'checkOutInstructions',
+                            'appliancesInfo', 'breakerLocation', 'waterShutoffLocation',
+                            'propertyQuirks', 'guestGuideUrl']
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: any = {}
     for (const field of allowedFields) {

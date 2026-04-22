@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react"
 import {
-  AlertTriangle, CheckCircle2, Clock, Circle, Settings, Plus, Trash2, X,
+  AlertTriangle, CheckCircle2, Clock, Circle, Settings, Plus, Trash2, X, Sparkles,
 } from "lucide-react"
+import { AiContextConfig } from "@/components/hm/ai-context-config"
 
 type TaskStatus = "PENDING" | "IN_PROGRESS" | "COMPLETE" | "OVERDUE"
 
@@ -257,7 +258,7 @@ export default function SetupPage() {
   const [setups, setSetups] = useState<PropertySetup[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedSetup, setSelectedSetup] = useState<PropertySetup | null>(null)
-  const [activeTab, setActiveTab] = useState<'timeline' | 'config'>('timeline')
+  const [activeTab, setActiveTab] = useState<'timeline' | 'config' | 'ai'>('timeline')
 
   useEffect(() => {
     fetch("/api/properties")
@@ -392,6 +393,17 @@ export default function SetupPage() {
                 <Settings className="h-3.5 w-3.5" />
                 Checklist da casa
               </button>
+              <button
+                onClick={() => setActiveTab('ai')}
+                className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                  activeTab === 'ai'
+                    ? 'border-navy-900 text-hm-black'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                AI Assistant context
+              </button>
             </div>
 
             {activeTab === 'timeline' ? (
@@ -445,10 +457,12 @@ export default function SetupPage() {
                   })}
                 </div>
               </>
-            ) : (
+            ) : activeTab === 'config' ? (
               <ChecklistConfig
                 propertyId={selectedSetup.propertyId}
               />
+            ) : (
+              <AiContextConfig propertyId={selectedSetup.propertyId} />
             )}
           </div>
         ) : (

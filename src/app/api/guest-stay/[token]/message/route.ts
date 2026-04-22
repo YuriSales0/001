@@ -96,7 +96,7 @@ export async function POST(
       await escalateStayChat(
         chat.id,
         agentResponse.escalationReason ?? 'AI suggested escalation',
-        'MANAGER',
+        { emergency: agentResponse.isEmergency, level: 'MANAGER' },
       )
     }
 
@@ -107,7 +107,7 @@ export async function POST(
     })
   } catch (err) {
     console.error('[StayChat] AI error:', err)
-    await escalateStayChat(chat.id, 'AI agent error', 'MANAGER')
+    await escalateStayChat(chat.id, 'AI agent error', { level: 'MANAGER' })
     return NextResponse.json({
       guestMessage: guestMsg,
       aiMessage: null,

@@ -20,6 +20,6 @@ export async function POST(
     return NextResponse.json({ ok: true, alreadyEscalated: true })
   }
 
-  const result = await escalateStayChat(chat.id, 'Guest requested human', 'MANAGER')
+  const result = await escalateStayChat(chat.id, 'Guest requested human', { level: 'MANAGER' })
   return NextResponse.json({ ok: true, ...result })
 }
