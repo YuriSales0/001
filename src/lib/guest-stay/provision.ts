@@ -1,10 +1,18 @@
 import { prisma } from '../prisma'
 import crypto from 'crypto'
+import { sendSms, stayChatWelcomeSms } from '../sms'
 
 /**
  * Provision a GuestStayChat for a reservation.
  * Called when the reservation becomes ACTIVE (check-in happens).
- * Returns existing chat if one was already created.
+ *
+ * Steps:
+ *   1. Create chat + token (idempotent per reservation)
+ *   2. Persist SYSTEM welcome message
+ *   3. Dispatch SMS with stay chat URL to guest's phone (if available)
+ *
+ * SMS is best-effort — failures don't block chat creation.
+ * Guest can still access via direct URL shared by Manager.
  */
 export async function provisionStayChat(reservationId: string) {
   const existing = await prisma.guestStayChat.findUnique({
@@ -16,7 +24,7 @@ export async function provisionStayChat(reservationId: string) {
   const reservation = await prisma.reservation.findUnique({
     where: { id: reservationId },
     include: {
-      property: { select: { id: true, ownerId: true } },
+      property: { select: { id: true, name: true, ownerId: true } },
     },
   })
   if (!reservation) return null
@@ -35,7 +43,6 @@ export async function provisionStayChat(reservationId: string) {
     select: { id: true, token: true },
   })
 
-  // System welcome message (AI will greet on first guest interaction)
   await prisma.guestStayMessage.create({
     data: {
       chatId: chat.id,
@@ -43,6 +50,22 @@ export async function provisionStayChat(reservationId: string) {
       content: 'Stay chat provisioned. AI assistant ready.',
     },
   })
+
+  // Fire-and-forget SMS to guest with the stay chat URL
+  if (reservation.guestPhone) {
+    const url = stayChatUrl(token)
+    const body = stayChatWelcomeSms(
+      reservation.guestLanguage ?? 'en',
+      reservation.guestName,
+      reservation.property.name,
+      url,
+    )
+    sendSms({ to: reservation.guestPhone, body })
+      .then(r => {
+        if (!r.ok) console.warn(`[StayChat] SMS send failed for ${reservationId}: ${r.error}`)
+      })
+      .catch(err => console.error('[StayChat] SMS dispatch error:', err))
+  }
 
   return chat
 }
