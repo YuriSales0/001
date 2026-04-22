@@ -30,15 +30,21 @@ export async function POST(request: NextRequest) {
 
   for (const feedback of dueCalls) {
     try {
-      // Mark as in-progress
-      await prisma.guestFeedback.update({
-        where: { id: feedback.id },
+      // Atomically claim the call — updateMany with status=SCHEDULED filter
+      // prevents a concurrent cron execution from claiming the same feedback.
+      const claim = await prisma.guestFeedback.updateMany({
+        where: { id: feedback.id, callStatus: 'SCHEDULED' },
         data: {
           callStatus: 'IN_PROGRESS',
           callAttempts: { increment: 1 },
           callStartedAt: new Date(),
         },
       })
+      if (claim.count === 0) {
+        // Another cron instance already claimed this — skip
+        results.push({ feedbackId: feedback.id, status: 'skipped', error: 'already claimed' })
+        continue
+      }
 
       const elevenlabsApiKey = process.env.ELEVENLABS_API_KEY
       if (!elevenlabsApiKey) {

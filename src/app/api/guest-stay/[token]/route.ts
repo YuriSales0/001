@@ -31,11 +31,13 @@ export async function GET(
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 
-  // Token is valid only during stay + 24h after checkout
+  // Token is valid only during stay + 24h after checkout.
+  // Return 404 (not 410) on expiry to avoid confirming token existence
+  // to an attacker probing with expired/random tokens.
   const now = new Date()
   const expiresAt = new Date(chat.reservation.checkOut.getTime() + 24 * 60 * 60 * 1000)
   if (now > expiresAt) {
-    return NextResponse.json({ error: 'Chat expired' }, { status: 410 })
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 
   return NextResponse.json({

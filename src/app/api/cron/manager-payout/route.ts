@@ -62,7 +62,13 @@ export async function POST(request: NextRequest) {
 
       const calc = await calculateManagerPayout(mgr.id, periodYear, periodMonth)
 
-      // Skip if zero amount — nothing to pay
+      // Skip if manager has no clients — nothing to calculate
+      if (calc.clientCount === 0) {
+        skipped.push({ managerId: mgr.id, reason: 'no clients' })
+        continue
+      }
+
+      // Skip if zero amount — manager earned nothing this period
       if (calc.finalAmount <= 0) {
         skipped.push({ managerId: mgr.id, reason: 'zero amount' })
         continue

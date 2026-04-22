@@ -15,14 +15,22 @@ export async function POST(
   _request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  const guard = await requireRole(['ADMIN'])
+  const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
   const feedback = await prisma.guestFeedback.findUnique({
     where: { id: params.id },
-    select: { id: true, transcriptionFull: true, callStatus: true },
+    select: {
+      id: true, transcriptionFull: true, callStatus: true,
+      client: { select: { managerId: true } },
+    },
   })
   if (!feedback) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  // Manager can only re-analyze feedback for their own clients
+  if (guard.user!.role === 'MANAGER' && feedback.client.managerId !== guard.user!.id) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   if (!feedback.transcriptionFull) {
     return NextResponse.json({ error: 'No transcript to analyze' }, { status: 400 })
   }

@@ -601,13 +601,13 @@ model GuestFeedback {
   id                    String            @id @default(cuid())
 
   reservationId         String            @unique
-  reservation           Reservation       @relation(fields: [reservationId], references: [id])
+  reservation           Reservation       @relation(fields: [reservationId], references: [id], onDelete: Cascade)
   propertyId            String
-  property              Property          @relation("PropertyFeedback", fields: [propertyId], references: [id])
+  property              Property          @relation("PropertyFeedback", fields: [propertyId], references: [id], onDelete: Cascade)
   clientId              String
-  client                User              @relation("ClientFeedback", fields: [clientId], references: [id])
+  client                User              @relation("ClientFeedback", fields: [clientId], references: [id], onDelete: Restrict)
   crewMemberId          String?
-  crewMember            User?             @relation("CrewFeedback", fields: [crewMemberId], references: [id])
+  crewMember            User?             @relation("CrewFeedback", fields: [crewMemberId], references: [id], onDelete: SetNull)
 
   // Call metadata
   callStatus            CallStatus        @default(SCHEDULED)
@@ -712,18 +712,18 @@ model GuestFeedbackCategory {
 model GuestStayChat {
   id                String                    @id @default(cuid())
   reservationId     String                    @unique
-  reservation       Reservation               @relation(fields: [reservationId], references: [id])
+  reservation       Reservation               @relation(fields: [reservationId], references: [id], onDelete: Cascade)
   propertyId        String
-  property          Property                  @relation("PropertyStayChats", fields: [propertyId], references: [id])
+  property          Property                  @relation("PropertyStayChats", fields: [propertyId], references: [id], onDelete: Cascade)
   clientId          String
-  client            User                      @relation("ClientStayChats", fields: [clientId], references: [id])
+  client            User                      @relation("ClientStayChats", fields: [clientId], references: [id], onDelete: Restrict)
   token             String                    @unique
 
   language          String                    @default("en")
   escalationStatus  StayChatEscalationStatus  @default(NONE)
   escalatedAt       DateTime?
   escalatedToUserId String?
-  escalatedTo       User?                     @relation("EscalatedStayChats", fields: [escalatedToUserId], references: [id])
+  escalatedTo       User?                     @relation("EscalatedStayChats", fields: [escalatedToUserId], references: [id], onDelete: SetNull)
   resolvedAt        DateTime?
 
   messageCount      Int                       @default(0)

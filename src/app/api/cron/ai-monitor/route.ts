@@ -81,10 +81,29 @@ export async function GET(request: NextRequest) {
 
   // ═══════════════════════════════════════════════════════════════
   // TIER 2: AI ANALYSIS for CRITICAL/HIGH alerts (not auto-fixed)
+  // Dedupe: skip alerts whose existing SystemAlert already has an AI analysis
+  // (saves Claude API calls when checks keep triggering daily).
   // ═══════════════════════════════════════════════════════════════
-  const needsAnalysis = enrichedAlerts.filter(
-    a => (a.severity === 'CRITICAL' || a.severity === 'HIGH') && !a.autoFixNotes,
-  )
+  const existingAnalyses = await prisma.systemAlert.findMany({
+    where: {
+      resolvedAt: null,
+      aiAnalysis: { not: null },
+      checkType: { in: enrichedAlerts.map(a => a.checkType) },
+    },
+    select: { checkType: true, aiAnalysis: true },
+  })
+  const cachedAnalyses = new Map(existingAnalyses.map(a => [a.checkType, a.aiAnalysis]))
+
+  const needsAnalysis = enrichedAlerts.filter(a => {
+    if (a.severity !== 'CRITICAL' && a.severity !== 'HIGH') return false
+    if (a.autoFixNotes) return false
+    if (cachedAnalyses.has(a.checkType)) {
+      // Reuse existing analysis
+      a.aiAnalysis = cachedAnalyses.get(a.checkType) ?? null
+      return false
+    }
+    return true
+  })
 
   // Run AI analyses in parallel (up to 5 concurrent to avoid rate limits)
   const BATCH_SIZE = 5
