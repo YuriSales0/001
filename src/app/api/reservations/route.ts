@@ -61,6 +61,8 @@ export async function POST(request: NextRequest) {
       // Guest demographics
       guestNationality, guestCountry, guestAge, guestAgeGroup, guestGroupSize,
       hasChildren, hasPets, isRepeatGuest, guestLanguage, bookingChannel,
+      // SES / Registro de Viajeros
+      guestDocumentType, guestDocumentNumber, guestDateOfBirth, guestGender, guestAddress,
     } = body
     // Sanitize guest name to prevent XSS in notifications, task titles, and emails
     const guestName = typeof rawGuestName === 'string'
@@ -167,6 +169,12 @@ export async function POST(request: NextRequest) {
           guestLanguage: guestLanguage ?? null,
           bookingLeadDays: autoLeadDays,
           bookingChannel: bookingChannel ?? null,
+          // SES / Registro de Viajeros
+          guestDocumentType: guestDocumentType ?? null,
+          guestDocumentNumber: guestDocumentNumber ?? null,
+          guestDateOfBirth: guestDateOfBirth ? new Date(guestDateOfBirth) : null,
+          guestGender: guestGender ?? null,
+          guestAddress: guestAddress ?? null,
           payouts: {
             create: {
               propertyId,

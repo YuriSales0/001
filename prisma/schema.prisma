@@ -790,6 +790,15 @@ model Reservation {
   hasChildren       Boolean?
   hasPets           Boolean?
   isRepeatGuest     Boolean    @default(false)
+
+  // ── SES / Registro de Viajeros (mandatory in Spain) ──
+  guestDocumentType   String?    // PASSPORT | DNI | NIE | OTHER
+  guestDocumentNumber String?
+  guestDateOfBirth    DateTime?  @db.Date
+  guestGender         String?    // M | F | OTHER
+  guestAddress        String?
+  sesSubmittedAt      DateTime?
+  sesReference        String?    // reference ID from SES submission
   guestLanguage     String?    // língua principal (es, en, de, fr, nl...)
   bookingLeadDays   Int?       // dias entre booking e check-in (auto-calculado)
   bookingChannel    String?    // DIRECT_PLATFORM | WEBSITE | REFERRAL | REPEAT
