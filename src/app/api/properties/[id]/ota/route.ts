@@ -24,7 +24,11 @@ export async function PATCH(
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const { airbnbIcalUrl, airbnbListingId, bookingIcalUrl, bookingPropertyId } = body
 
   const updated = await prisma.property.update({

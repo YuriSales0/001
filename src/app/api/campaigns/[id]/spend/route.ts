@@ -8,7 +8,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const { amount, date, description, receiptUrl } = body
 
   if (!amount || amount <= 0) {

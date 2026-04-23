@@ -27,7 +27,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Only Captain can authorize stock withdrawal' }, { status: 403 })
   }
 
-  const { taskId, propertyId } = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let _body: any
+  try { _body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+  const { taskId, propertyId } = _body
   if (!propertyId) return NextResponse.json({ error: 'propertyId required' }, { status: 400 })
 
   // Get property setup

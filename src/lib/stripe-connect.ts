@@ -31,6 +31,7 @@ export async function transferToConnectedAccount(opts: {
   const amountCents = Math.round(opts.amountEur * 100)
   if (amountCents <= 0) return null
 
+  const idempotencyKey = `transfer_${opts.userId}_${opts.description?.replace(/\s/g, '_') ?? 'payout'}_${amountCents}`
   const transfer = await getStripe().transfers.create({
     amount: amountCents,
     currency: 'eur',
@@ -41,7 +42,7 @@ export async function transferToConnectedAccount(opts: {
       userName: user.name || user.email,
       ...opts.metadata,
     },
-  })
+  }, { idempotencyKey })
 
   return { transferId: transfer.id, status: transfer.reversed ? 'reversed' : 'created' }
 }

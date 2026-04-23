@@ -49,7 +49,10 @@ export async function POST(
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const body = await request.json() as { content?: string }
+  let body: { content?: string }
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const content = (body.content ?? '').trim().slice(0, 4000)
   if (!content) return NextResponse.json({ error: 'Empty message' }, { status: 400 })
 
@@ -75,7 +78,10 @@ export async function PATCH(
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-  const body = await request.json() as { action?: 'resolve' | 'escalate-admin' }
+  let body: { action?: 'resolve' | 'escalate-admin' }
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
 
   if (body.action === 'resolve') {
     const updated = await prisma.guestStayChat.update({

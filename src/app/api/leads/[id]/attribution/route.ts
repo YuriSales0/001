@@ -9,7 +9,12 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-  const { campaignId } = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let _body: any
+  try { _body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+  const { campaignId } = _body
   if (!campaignId) return NextResponse.json({ error: 'campaignId required' }, { status: 400 })
 
   // upsert — silently ignores duplicate attribution

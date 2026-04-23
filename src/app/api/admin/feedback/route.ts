@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/admin/feedback — list guest feedback with filters
  * Query: ?status=&dimension=property|crew|platform&escalation=true&limit=

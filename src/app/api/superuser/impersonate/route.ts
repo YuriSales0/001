@@ -9,7 +9,18 @@ export async function POST(request: NextRequest) {
   const me = await getCurrentUser()
   if (!me?.isSuperUser) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { userId } = await request.json()
+  // Fresh DB check — JWT isSuperUser might be stale if revoked mid-session
+  const freshUser = await prisma.user.findUnique({
+    where: { id: me.id },
+    select: { isSuperUser: true },
+  })
+  if (!freshUser?.isSuperUser) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  let body: { userId?: string }
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+  const { userId } = body
   if (!userId) return NextResponse.json({ error: 'userId required' }, { status: 400 })
 
   const target = await prisma.user.findUnique({
@@ -21,6 +32,7 @@ export async function POST(request: NextRequest) {
   const response = NextResponse.json({ ok: true, user: target })
   response.cookies.set('hm_view_as', JSON.stringify({ userId: target.id, name: target.name, email: target.email, role: target.role }), {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 8, // 8 hours

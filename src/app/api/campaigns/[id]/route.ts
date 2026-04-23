@@ -39,7 +39,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
   }
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const { name, status, channel, type, budgetAllocated, startDate, endDate, targetAudience, description, notes } = body
 
   const data: Record<string, unknown> = {}

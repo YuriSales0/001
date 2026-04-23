@@ -9,7 +9,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const { name, type, phone, email, notes } = body
 
   const data: Record<string, unknown> = {}

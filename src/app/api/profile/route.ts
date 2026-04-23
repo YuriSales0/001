@@ -24,7 +24,11 @@ export async function PATCH(request: NextRequest) {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const { name, phone, bio, image, commissionRate, language, currentPassword, newPassword } = body
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

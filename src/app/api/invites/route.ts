@@ -25,7 +25,11 @@ export async function POST(request: NextRequest) {
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const { email, name, role } = body
 
   if (!email || !role || !['MANAGER', 'CREW', 'CLIENT'].includes(role)) {

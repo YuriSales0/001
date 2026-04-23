@@ -23,8 +23,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Resolve priceId from planId if provided
+    // Validate priceId against known plans — reject arbitrary Stripe price IDs
+    const allowedPriceIds = new Set(
+      Object.values(STRIPE_PLANS).map(p => p.priceId).filter(Boolean)
+    )
     let resolvedPriceId = rawPriceId
+    if (resolvedPriceId && !allowedPriceIds.has(resolvedPriceId)) {
+      return NextResponse.json({ error: 'Invalid price ID' }, { status: 400 })
+    }
     if (!resolvedPriceId && planId) {
       const plan = STRIPE_PLANS[planId.toUpperCase() as StripePlanId]
       if (!plan) {

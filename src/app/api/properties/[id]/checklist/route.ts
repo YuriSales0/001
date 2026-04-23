@@ -59,7 +59,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }
   }
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
 
   // Seed with defaults if body contains { seed: true }
   if (body.seed) {
