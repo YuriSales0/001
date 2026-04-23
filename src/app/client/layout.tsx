@@ -39,10 +39,15 @@ export default async function ClientLayout({ children }: { children: React.React
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
     : 'CL'
 
-  const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { subscriptionPlan: true } })
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { subscriptionPlan: true, rentalIntent: true },
+  })
   const currentPlan = dbUser?.subscriptionPlan ?? 'STARTER'
+  const rentalIntent = dbUser?.rentalIntent ?? null
   const hasAI = AI_PLANS.includes(currentPlan)
-  const isStarter = currentPlan === 'STARTER'
+  // Minimal nav if: Starter plan, OR client explicitly doesn't want full STR management
+  const isStarter = currentPlan === 'STARTER' || rentalIntent === 'ONE_TIME_ONLY'
 
   // Starter: minimal menu — no features they can't use
   const starterLinks = [
