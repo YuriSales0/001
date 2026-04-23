@@ -3,9 +3,9 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail, receiptCreatedEmail } from '@/lib/email'
 
-const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
-
 export const dynamic = 'force-dynamic'
+
+const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
 export async function GET(req: NextRequest) {
   const { error, status, user } = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])

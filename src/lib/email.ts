@@ -24,10 +24,11 @@ export async function sendEmail({
     console.warn('RESEND_API_KEY not set, skipping email')
     return null
   }
+  const safeSubject = subject.replace(/[\r\n]/g, ' ').slice(0, 200)
   const result = await resend.emails.send({
     from: process.env.EMAIL_FROM || 'Hostmaster <noreply@hostmaster.es>',
     to,
-    subject,
+    subject: safeSubject,
     html,
   })
   if (result.error) {

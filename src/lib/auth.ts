@@ -5,20 +5,6 @@ import { prisma } from './prisma'
 
 export type AppRole = 'ADMIN' | 'MANAGER' | 'CREW' | 'CLIENT'
 
-// Fallback dev users (used only if DB is not reachable)
-const devUsers: Array<{
-  id: string
-  name: string
-  email: string
-  role: AppRole
-  language: string
-}> = [
-  { id: 'admin-1', name: 'Hostmaster Admin', email: 'admin@hostmaster.es', role: 'ADMIN', language: 'en' },
-  { id: 'manager-1', name: 'Carlos Manager', email: 'manager@hostmaster.es', role: 'MANAGER', language: 'en' },
-  { id: 'crew-1', name: 'Crew', email: 'crew@hostmaster.es', role: 'CREW', language: 'en' },
-  { id: 'client-1', name: 'Thomas Weber', email: 'client@hostmaster.es', role: 'CLIENT', language: 'en' },
-]
-
 const secret = process.env.NEXTAUTH_SECRET
 if (!secret && process.env.NODE_ENV === 'production') {
   throw new Error('NEXTAUTH_SECRET must be set in production')
@@ -43,8 +29,7 @@ export const authOptions: NextAuthOptions = {
             if (user?.password) {
               const ok = await bcrypt.compare(credentials.password, user.password)
               if (!ok) return null
-              // Block login if email is not verified (dev fallback password bypasses this)
-              if (!user.emailVerified && credentials.password !== 'dev') {
+              if (!user.emailVerified) {
                 throw new Error('EMAIL_NOT_VERIFIED')
               }
               return {
@@ -63,12 +48,6 @@ export const authOptions: NextAuthOptions = {
             throw err
           }
           // fall through to dev fallback on infra errors
-        }
-
-        // Dev fallback — only when not in production
-        if (process.env.NODE_ENV !== 'production' && credentials.password === 'dev') {
-          const devUser = devUsers.find(u => u.email === email)
-          if (devUser) return devUser
         }
 
         return null

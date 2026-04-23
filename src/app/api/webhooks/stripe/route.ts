@@ -119,8 +119,9 @@ export async function POST(req: NextRequest) {
         if (user) {
           await prisma.user.update({
             where: { id: user.id },
-            data: { subscriptionStatus: 'cancelled' },
+            data: { subscriptionPlan: 'STARTER', subscriptionStatus: 'cancelled' },
           })
+          await ensureClientMasterContract({ userId: user.id, plan: 'STARTER', ownerName: user.name })
         }
         break
       }

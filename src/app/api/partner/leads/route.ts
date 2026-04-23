@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getPartnerFromCookie } from '@/lib/partner-auth'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const partner = await getPartnerFromCookie()
   if (!partner) {

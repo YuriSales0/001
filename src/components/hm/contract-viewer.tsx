@@ -62,18 +62,21 @@ export function ContractViewer({ contract, onSigned, compact }: Props) {
   const handlePrint = () => {
     const w = window.open('', '_blank')
     if (!w) return
+    const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    const safeTitle = esc(contract.title)
+    const safeTerms = esc(contract.terms).replace(/\n/g, '<br/>')
     w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-      <title>${contract.title}</title>
+      <title>${safeTitle}</title>
       <style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a1a1a;line-height:1.7}
       h1{font-size:22px;border-bottom:2px solid #B08A3E;padding-bottom:8px;color:#0B1E3A}
       .meta{font-size:13px;color:#666;margin-bottom:24px}
       .signed{margin-top:32px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px}
       @media print{body{max-height:none !important;overflow:visible !important}}
       </style></head><body>
-      <h1>${contract.title}</h1>
-      <div class="meta">${t('contracts.serviceAgreement')}</div>
-      <div>${contract.terms.replace(/\n/g, '<br/>')}</div>
-      ${signed ? `<div class="signed"><strong>${t('contracts.agreementSigned')}</strong> ${contract.signedAt ? `${t('contracts.on')} ${fmtDate(contract.signedAt)}` : ''}</div>` : ''}
+      <h1>${safeTitle}</h1>
+      <div class="meta">${esc(t('contracts.serviceAgreement'))}</div>
+      <div>${safeTerms}</div>
+      ${signed ? `<div class="signed"><strong>${esc(t('contracts.agreementSigned'))}</strong> ${contract.signedAt ? `${esc(t('contracts.on'))} ${esc(fmtDate(contract.signedAt))}` : ''}</div>` : ''}
       </body></html>`)
     w.document.close()
     w.print()
