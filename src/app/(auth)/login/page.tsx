@@ -47,9 +47,20 @@ export default function LoginPage() {
         }
       }
 
-      setError(t("auth.invalidCredentials"))
-      // Offer resend option in case the issue is unverified email
-      setShowResend(true)
+      // Check if failure might be unverified email
+      const checkRes = await fetch("/api/auth/check-email-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      }).catch(() => null)
+      const emailStatus = await checkRes?.json().catch(() => null)
+
+      if (emailStatus?.unverified) {
+        setError(t("auth.emailNotVerified") || "Your email is not verified yet. Check your inbox or resend the verification link below.")
+        setShowResend(true)
+      } else {
+        setError(t("auth.invalidCredentials"))
+      }
     } catch {
       setError(t("common.error"))
     } finally {

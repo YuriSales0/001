@@ -4,7 +4,7 @@ import { HmLogo } from "@/components/hm/hm-logo"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowRight, Globe, Info } from "lucide-react"
+import { ArrowRight, Globe, Info, MailCheck } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LOCALES, type Locale } from "@/i18n"
 
@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [ref, setRef] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
 
   // Capture ?ref= from URL or cookie set by landing page
   useEffect(() => {
@@ -56,7 +57,8 @@ export default function RegisterPage() {
         })
       }
       setLocale(form.language as Locale)
-      router.push(`/login?registered=1&lang=${form.language}`)
+      setSuccess(true)
+      setTimeout(() => router.push(`/login?registered=1&lang=${form.language}`), 3000)
     } finally {
       setLoading(false)
     }
@@ -74,8 +76,18 @@ export default function RegisterPage() {
           <Link href="/"><HmLogo size={40} variant="compact" onDark /></Link>
         </div>
 
+        {success && (
+          <div className="rounded-2xl p-8 text-center shadow-2xl mb-6" style={{ background: "#142B4D", border: "1px solid rgba(34,197,94,0.3)" }}>
+            <div className="h-14 w-14 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(34,197,94,0.15)' }}>
+              <MailCheck className="h-7 w-7 text-emerald-400" />
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">{t('auth.accountCreated') || 'Account created!'}</h2>
+            <p className="text-sm text-white/70">{t('auth.checkEmailVerify') || 'Check your email to verify your account. Redirecting to login...'}</p>
+          </div>
+        )}
+
         {/* Card */}
-        <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
+        <div className={`rounded-2xl overflow-hidden shadow-2xl ${success ? 'opacity-30 pointer-events-none' : ''}`} style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
           <div className="p-8">
             <h1 className="text-2xl font-serif font-bold text-white text-center mb-1">{t("auth.createAccount")}</h1>
             <p className="text-sm text-gray-400 text-center mb-6">{t("auth.registerSubtitle")}</p>

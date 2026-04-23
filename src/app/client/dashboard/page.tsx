@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import {
-  CalendarDays, MessageCircle, FileText, Lock, Wifi, Wrench,
+  CalendarDays, MessageCircle, FileText, Lock, Wifi, Wrench, Home,
   CheckCircle2, TrendingUp, Phone, ArrowRight, Sparkles, ShieldCheck, AlertTriangle,
 } from "lucide-react"
 import { PlanBadge } from "@/components/hm/plan-badge"
@@ -562,27 +562,41 @@ export default function OwnerDashboard() {
           </div>
         </>
       ) : (
-        /* No property yet */
-        <div className="rounded-hm border border-hm-border p-10 text-center"
-             style={{ background: 'var(--hm-sand)' }}>
-          <div className="h-16 w-16 rounded-full mx-auto mb-4 flex items-center justify-center"
-               style={{ background: 'var(--hm-gold)', opacity: 0.8 }}>
-            <Phone className="h-8 w-8 text-white" />
+        /* No property yet — strong onboarding CTA */
+        <div className="rounded-2xl border-2 p-8 sm:p-10 text-center"
+             style={{ background: 'var(--hm-sand)', borderColor: 'rgba(176,138,62,0.3)' }}>
+          <div className="h-16 w-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
+               style={{ background: 'rgba(176,138,62,0.15)' }}>
+            <Home className="h-8 w-8" style={{ color: '#B08A3E' }} />
           </div>
           <h2 className="text-2xl font-serif font-bold text-hm-black mb-2">
             {t('client.dashboard.propertySetup')}
           </h2>
-          <p className="font-sans text-hm-slate/70 max-w-md mx-auto">
+          <p className="font-sans text-hm-slate/70 max-w-md mx-auto mb-6">
             {t('client.dashboard.propertySetupDesc')}
           </p>
-          <Link
-            href="/client/messages"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg px-6 py-3 font-sans font-semibold text-white transition-opacity hover:opacity-90"
-            style={{ background: 'var(--hm-black)' }}
-          >
-            <MessageCircle className="h-5 w-5" />
-            {t('client.dashboard.contactManager')}
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/client/messages"
+              className="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-sans font-bold text-sm transition-opacity hover:opacity-90"
+              style={{ background: '#B08A3E', color: '#0B1E3A' }}
+            >
+              <MessageCircle className="h-4 w-4" />
+              {t('client.dashboard.contactManager')}
+            </Link>
+            <Link
+              href="/client/contracts"
+              className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-sans font-semibold text-sm text-hm-black hover:bg-white/50 transition-colors"
+              style={{ borderColor: 'var(--hm-border)' }}
+            >
+              {t('contracts.myContract')}
+            </Link>
+          </div>
+          <div className="mt-6 grid grid-cols-3 gap-4 max-w-sm mx-auto text-xs text-hm-slate/60">
+            <div><span className="block text-lg mb-1">1</span>{t('client.dashboard.stepSign') || 'Sign contract'}</div>
+            <div><span className="block text-lg mb-1">2</span>{t('client.dashboard.stepProperty') || 'Add property'}</div>
+            <div><span className="block text-lg mb-1">3</span>{t('client.dashboard.stepEarn') || 'Start earning'}</div>
+          </div>
         </div>
       )}
     </div>
