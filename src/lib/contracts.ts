@@ -24,77 +24,97 @@ export function generateClientMasterTerms(plan: PlanTier, ownerName: string | nu
     ? `€${cleaningFee} per turnover, included for stays ≥ ${cleaningIncludedMin} nights`
     : `€${cleaningFee} per turnover (always charged)`
 
-  return `# HostMasters Master Service Agreement
+  return `# HostMasters — Master Service Agreement
 
-**Owner:** ${ownerName ?? '[Owner name to be confirmed]'}
+**Between:** HostMasters Costa Tropical S.L., Almuñécar, Granada, Spain ("HostMasters")
+**And:** ${ownerName ?? '[Owner name to be confirmed]'} ("Owner")
 **Plan:** ${PLAN_LABEL[plan]}
-
-## 1. Scope
-
-HostMasters Costa Tropical S.L. ("HostMasters") will provide short-term rental
-management services to the Owner for any properties enrolled under this
-agreement. A separate property addendum will be issued for each enrolled unit;
-this master agreement governs the commercial relationship overall.
-
-## 2. Commission & Fees
-
-- **Commission on gross rental revenue:** ${commissionPct}%
-- **Monthly subscription fee:** ${monthlyFee === 0 ? '€0 (free tier)' : `€${monthlyFee}/month`}
-- **Cleaning:** ${cleaningLine}
-
-Commission is deducted from gross revenue at payout time. The monthly
-subscription is billed via Stripe on the subscription anniversary.
-
-## 3. Services Included (${PLAN_LABEL[plan]})
-
-Full short-term rental management including:
-- Listing and channel management (Airbnb, Booking.com, direct)
-- 24/7 guest communication and Guest Stay AI assistant
-- Check-in / check-out coordination
-- Cleaning and turnover operations
-- Monthly owner statement and tax-ready reports
-${plan === 'BASIC' || plan === 'MID' || plan === 'PREMIUM' ? '- Preventive maintenance visits\n' : ''}${plan === 'MID' || plan === 'PREMIUM' ? '- AI dynamic pricing & Smart Lock integration\n' : ''}${plan === 'PREMIUM' ? '- Full fiscal compliance (Modelo 179 + IRNR Modelo 210)\n- Guest upsells and concierge services\n' : ''}
-## 4. Term
-
-This master agreement starts on the date of signing and continues on a
-month-to-month basis. Either party may terminate with 60 days written notice.
-Plan changes take effect on the next billing cycle and do not require a new
-master agreement — commercial terms are tracked via the compensation schedule
-attached to this contract.
-
-## 5. Owner Responsibilities
-
-- Maintain the property in good, habitable condition
-- Hold all required licenses and fiscal registrations (VUT, energy certificate,
-  NIE where applicable)
-- Respond to urgent maintenance requests within 48 hours
-- Maintain appropriate insurance coverage (civil liability minimum)
-
-## 6. HostMasters Responsibilities
-
-- Operate channel listings and dynamic pricing to maximise occupancy and revenue
-- Execute cleaning, maintenance and guest services to published standards
-- Remit net rental revenue to the Owner per the agreed payout schedule
-- Provide transparent monthly reporting through the Owner dashboard
-
-## 7. Liability & Insurance
-
-HostMasters is not liable for guest-caused damages beyond coverage provided by
-the booking platform (Airbnb AirCover, Booking.com Damage Policy). The Owner is
-responsible for maintaining an appropriate home insurance policy.
-
-## 8. Data & Confidentiality
-
-Both parties will treat all operational data, bookings, and owner financials as
-confidential. HostMasters will process personal data in accordance with GDPR.
+**Date:** ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
 
 ---
 
-*By signing, the Owner confirms they have read, understood and agree to these
-terms. The attached compensation schedule is binding and updates automatically
-on plan changes.*
+## 1. Scope
 
-HostMasters — Costa Tropical, España`
+HostMasters Costa Tropical S.L. ("HostMasters") will provide comprehensive short-term rental management services to the Owner for any properties enrolled on the HostMasters platform. This master agreement governs the commercial relationship overall — individual properties are enrolled via the HostMasters dashboard and covered under these same terms.
+
+## 2. Commission & Fees (${PLAN_LABEL[plan]})
+
+| Item | Value |
+|---|---|
+| Commission on gross rental revenue | ${commissionPct}% |
+| Monthly subscription fee | ${monthlyFee === 0 ? '€0 (free tier)' : `€${monthlyFee}/month`} |
+| Cleaning per turnover | ${cleaningLine} |
+
+Commission is deducted from gross revenue at each payout. The monthly subscription is billed via Stripe on the subscription anniversary. Plan changes take effect on the next billing cycle and update this schedule automatically — no new agreement needed.
+
+## 3. Services Included (${PLAN_LABEL[plan]})
+
+- Listing creation and management on Airbnb, Booking.com, and direct channels
+- 24/7 guest communication via AI-powered Guest Stay Chat
+- Check-in/check-out coordination with certified Crew
+- Cleaning and turnover to published quality standards (checklist + photo verification)
+- Monthly financial statements via the Owner dashboard
+${plan === 'BASIC' || plan === 'MID' || plan === 'PREMIUM' ? '- Preventive maintenance visits (monthly inspection)\n- VAGF post-checkout guest feedback analysis\n' : ''}${plan === 'MID' || plan === 'PREMIUM' ? '- AI dynamic pricing (estimated +18–25% revenue uplift)\n- Smart Lock integration with temporary guest codes\n- Priority response: 12h owner / 2h guest\n' : ''}${plan === 'PREMIUM' ? '- Full fiscal compliance: Modelo 179 (quarterly) + IRNR Modelo 210\n- NRU/NRA registration assistance\n- Guest upsells: airport transfers, grocery, laundry\n- Emergency response within 4 hours\n- AI Monitor: daily property health checks\n' : ''}
+## 4. Payout Schedule
+
+| Channel | Payout timing |
+|---|---|
+| Airbnb | Checkout date + 1 day + 2 business days |
+| Booking.com | End of month + 5 business days |
+| Direct bookings | 7 business days after guest checkout |
+
+Payouts are processed via Stripe Connect to the Owner's linked bank account. A detailed statement is available in the Owner dashboard after each payout.
+
+## 5. Smart Lock Requirement
+
+A compatible Smart Lock must be installed on each enrolled property (Nuki, TTLock, or Yale). HostMasters issues temporary access codes per guest and per Crew task. The Owner has full visibility of entry logs via the dashboard.
+
+## 6. Owner Responsibilities
+
+- Maintain the property in habitable, safe condition
+- Hold a valid VUT tourist license (Vivienda de Uso Turístico)
+- Maintain a valid energy certificate (Certificado de Eficiencia Energética)
+- Obtain NIE and appoint a fiscal representative if non-EU resident
+- Register guests with SES (Registro de Viajeros) — HostMasters assists on Premium
+- Respond to urgent maintenance requests within 48 hours
+- Carry appropriate home insurance with civil liability coverage
+
+## 7. HostMasters Responsibilities
+
+- Maximise occupancy and revenue within the Owner's chosen parameters
+- Execute all turnovers to published quality standards (checklist + Crew photo verification + Captain approval)
+- Remit net rental revenue per the payout schedule above
+- Provide transparent monthly reporting through the Owner dashboard
+- Handle all guest communication, complaints, and review management
+
+## 8. Liability & Insurance
+
+HostMasters is not liable for damage caused by guests beyond the platform guarantees (Airbnb AirCover, Booking.com Damage Policy). Claims under these policies are managed by HostMasters on the Owner's behalf. The Owner is responsible for maintaining appropriate home insurance.
+
+## 9. Data Protection
+
+Both parties shall process personal data in accordance with GDPR (EU 2016/679) and Spanish LOPD-GDD (LO 3/2018). Guest data collected for regulatory compliance (SES Registro de Viajeros) is retained for the legally mandated period only. HostMasters will never sell or share Owner data with third parties.
+
+## 10. Confidentiality
+
+All operational data, booking details, financial information, and pricing strategies are strictly confidential. This obligation survives termination.
+
+## 11. Term & Termination
+
+- **Minimum commitment:** none (month-to-month from signing date)
+- **Cancellation notice:** 60 days in writing
+- The Owner may upgrade or downgrade plans at any time; changes take effect on the next billing cycle
+- HostMasters may terminate for: non-payment (after 30-day cure period), fraud, illegal use of the property, or repeated failure to maintain the property in habitable condition
+
+## 12. Governing Law
+
+This agreement is governed by Spanish law. Any disputes shall be submitted to the courts of Granada, Spain.
+
+---
+
+*By signing, the Owner confirms they have read, understood and accept these terms. The compensation schedule above is binding and updates automatically when the Owner changes plan.*
+
+HostMasters Costa Tropical S.L. — Almuñécar, Costa Tropical, Granada, España`
 }
 
 /**
