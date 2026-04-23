@@ -66,6 +66,7 @@ export default function OwnerDashboard() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isStarter, setIsStarter] = useState<boolean | null>(null)
+  const [userName, setUserName] = useState<string>('')
 
   const { t } = useLocale()
   const [pendingInvoices, setPendingInvoices] = useState<{ count: number; total: number }>({ count: 0, total: 0 })
@@ -76,7 +77,12 @@ export default function OwnerDashboard() {
   useEffect(() => {
     fetch('/api/me')
       .then(r => r.ok ? r.json() : null)
-      .then(d => setIsStarter(!d?.subscriptionPlan || d.subscriptionPlan === 'STARTER'))
+      .then(d => {
+        setIsStarter(!d?.subscriptionPlan || d.subscriptionPlan === 'STARTER')
+        const first = d?.name?.split(' ')[0]
+        const emailFallback = d?.email?.split('@')[0]
+        setUserName(first || emailFallback || '')
+      })
       .catch(() => setIsStarter(false))
   }, [])
 
@@ -222,10 +228,13 @@ export default function OwnerDashboard() {
   if (isStarter) {
     return (
       <div className="space-y-6">
-        <DashboardGreeting
-          headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
-          dateClass="mt-1 font-sans text-hm-slate/70 text-base"
-        />
+        {userName && (
+          <DashboardGreeting
+            nameOverride={userName}
+            headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
+            dateClass="mt-1 font-sans text-hm-slate/70 text-base"
+          />
+        )}
         <StarterDashboard />
       </div>
     )
@@ -234,10 +243,18 @@ export default function OwnerDashboard() {
   if (loading || isStarter === null) {
     return (
       <div className="space-y-6">
-        <DashboardGreeting
-          headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
-          dateClass="mt-1 font-sans text-hm-slate/70 text-base"
-        />
+        {userName ? (
+          <DashboardGreeting
+            nameOverride={userName}
+            headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
+            dateClass="mt-1 font-sans text-hm-slate/70 text-base"
+          />
+        ) : (
+          <div>
+            <div className="h-10 w-64 rounded-lg bg-gray-100 animate-pulse" />
+            <div className="h-4 w-48 rounded-lg bg-gray-100 animate-pulse mt-2" />
+          </div>
+        )}
         <div className="space-y-6 animate-pulse">
           <div className="h-64 rounded-hm bg-hm-sand" />
           <div className="grid grid-cols-3 gap-4">
