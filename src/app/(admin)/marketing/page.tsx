@@ -501,7 +501,7 @@ function AnalyticsDashboard() {
                         </span>
                       </td>
                       <td className="px-5 py-2.5 text-gray-400 text-xs tabular-nums">
-                        {new Date(lead.createdAt).toLocaleDateString()}
+                        {new Date(lead.createdAt).toLocaleDateString('en-GB')}
                       </td>
                     </tr>
                   ))}
@@ -581,7 +581,7 @@ function AnalyticsDashboard() {
                     <td className="px-5 py-2.5 font-medium text-hm-black">{u.name ?? '—'}</td>
                     <td className="px-5 py-2.5 text-gray-500 truncate max-w-[180px]">{u.email}</td>
                     <td className="px-5 py-2.5"><span className="text-xs">{u.language?.toUpperCase()}</span></td>
-                    <td className="px-5 py-2.5 text-gray-400 text-xs">{new Date(u.createdAt).toLocaleDateString()}</td>
+                    <td className="px-5 py-2.5 text-gray-400 text-xs">{new Date(u.createdAt).toLocaleDateString('en-GB')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -620,7 +620,7 @@ function AnalyticsDashboard() {
                         'bg-amber-100 text-amber-700'
                       }`}>{r.role} · {r.status}</span>
                     </td>
-                    <td className="px-5 py-2.5 text-gray-400 text-xs">{new Date(r.createdAt).toLocaleDateString()}</td>
+                    <td className="px-5 py-2.5 text-gray-400 text-xs">{new Date(r.createdAt).toLocaleDateString('en-GB')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1112,7 +1112,7 @@ function MarketingPlanTracker() {
     { key: 'leadsViaPartners', targets: ['15%', '25-35%', '30-40%'], actual: m ? `${m.partnerPct}%` : '—' },
     { key: 'monthlyChurn', targets: ['<5%', '<3%', '<2%'], actual: m ? `${m.churnRate}%` : '—' },
     { key: 'nps', targets: ['>7', '>8', '>8.5'], actual: '—' },
-    { key: 'mrr', targets: ['€2,500+', '€13,000+', '€50,000+'], actual: m ? `€${m.mrr.toLocaleString()}` : '—' },
+    { key: 'mrr', targets: ['€2,500+', '€13,000+', '€50,000+'], actual: m ? `€${m.mrr.toLocaleString('en-GB')}` : '—' },
     { key: 'activeClients', targets: ['3-5', '25+', '100+'], actual: m ? String(m.activeClients) : '—' },
     { key: 'operationalManagers', targets: ['2', '4-5', '12+'], actual: m ? String(m.managers) : '—' },
     { key: 'validatedCrew', targets: ['3-5', '8-12', '15+'], actual: m ? String(m.crewValidated) : '—' },

@@ -107,7 +107,7 @@ export default function StayDetailPage({ params }: { params: Promise<{ id: strin
             <div className="flex flex-wrap gap-3 mt-1 text-xs text-gray-500">
               <span className="flex items-center gap-1"><Home className="h-3 w-3" /> {chat.property.city}</span>
               <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />
-                {new Date(chat.reservation.checkIn).toLocaleDateString()} – {new Date(chat.reservation.checkOut).toLocaleDateString()}
+                {new Date(chat.reservation.checkIn).toLocaleDateString('en-GB')} – {new Date(chat.reservation.checkOut).toLocaleDateString('en-GB')}
               </span>
               {chat.reservation.guestEmail && (
                 <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {chat.reservation.guestEmail}</span>
@@ -209,7 +209,7 @@ function AdminMessageBubble({ message: m }: { message: Chat['messages'][number] 
           <p className="text-sm whitespace-pre-wrap">{m.content}</p>
         </div>
         <p className={`text-[10px] text-gray-400 mt-1 ${isGuest ? 'text-left' : 'text-right'}`}>
-          {label}{m.aiTopicTag && isAI && ` · ${m.aiTopicTag}`} · {new Date(m.createdAt).toLocaleString()}
+          {label}{m.aiTopicTag && isAI && ` · ${m.aiTopicTag}`} · {new Date(m.createdAt).toLocaleString('en-GB')}
         </p>
       </div>
       {!isGuest && (

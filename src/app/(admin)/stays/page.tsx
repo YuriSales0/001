@@ -172,7 +172,7 @@ function StayChatRow({ chat }: { chat: StayChat }) {
           <span>{chat._count.messages} messages</span>
           <span>·</span>
           <span className="flex items-center gap-1"><Clock className="h-3 w-3" />
-            {chat.lastMessageAt ? new Date(chat.lastMessageAt).toLocaleString() : 'No activity yet'}
+            {chat.lastMessageAt ? new Date(chat.lastMessageAt).toLocaleString('en-GB') : 'No activity yet'}
           </span>
         </p>
       </div>

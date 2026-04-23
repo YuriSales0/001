@@ -159,7 +159,7 @@ export default function AIPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="rounded-hm border bg-white p-5">
                   <div className="text-xs uppercase text-gray-500">{t('admin.ai.nightsCollected')}</div>
-                  <div className="text-3xl font-bold text-hm-black mt-1">{totalPoints.toLocaleString()}</div>
+                  <div className="text-3xl font-bold text-hm-black mt-1">{totalPoints.toLocaleString('en-GB')}</div>
                   <div className="text-xs text-gray-400 mt-1">{t('admin.ai.priceDataAccumulated')}</div>
                 </div>
                 <div className="rounded-hm border bg-white p-5">

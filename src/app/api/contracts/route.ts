@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
   if (type) where.type = type
 
   const contracts = await prisma.contract.findMany({
+    take: 200,
     where,
     include: { user: { select: { id: true, name: true, email: true, role: true } } },
     orderBy: { createdAt: 'desc' },

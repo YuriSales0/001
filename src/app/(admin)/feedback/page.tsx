@@ -365,7 +365,7 @@ function FeedbackRow({ feedback: f, onClick }: { feedback: FeedbackItem; onClick
             )}
           </div>
           <p className="text-xs text-gray-400 mt-0.5">
-            Checked out {new Date(f.reservation.checkOut).toLocaleDateString()}
+            Checked out {new Date(f.reservation.checkOut).toLocaleDateString('en-GB')}
             {f.crewMember && ` · Crew: ${f.crewMember.name || f.crewMember.email}`}
             {f.scoreNps !== null && ` · NPS ${f.scoreNps}/10`}
           </p>
@@ -425,7 +425,7 @@ function FeedbackDrawer({ feedback: f, onClose, onReanalyze }: {
               {f.reservation.guestName}
             </h2>
             <p className="text-xs text-gray-500">
-              {f.property.name}, {f.property.city} · checked out {new Date(f.reservation.checkOut).toLocaleDateString()}
+              {f.property.name}, {f.property.city} · checked out {new Date(f.reservation.checkOut).toLocaleDateString('en-GB')}
             </p>
           </div>
           <div className="flex items-center gap-2">

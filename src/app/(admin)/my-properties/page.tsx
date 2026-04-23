@@ -313,7 +313,7 @@ export default function PropertiesPage() {
                     </div>
                     {result && (
                       <div className="text-xs rounded-md bg-gray-50 p-3">
-                        <div className="font-semibold mb-1">{t('admin.properties.lastSync')} — {new Date(result.syncedAt).toLocaleString()}</div>
+                        <div className="font-semibold mb-1">{t('admin.properties.lastSync')} — {new Date(result.syncedAt).toLocaleString('en-GB')}</div>
                         {Object.entries(result.summary).map(([src, info]) => (
                           <div key={src}>{src}: {info.error ? <span className="text-red-600">{t('admin.properties.error')} — {info.error}</span> : <span>{info.events} {t('admin.properties.events')}, {info.created} {t('admin.properties.newCreated')}</span>}</div>
                         ))}

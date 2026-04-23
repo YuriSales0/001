@@ -166,8 +166,8 @@ export default function ManagerCommissionPage() {
                       </td>
                       <td className="px-3 py-3 text-gray-500 text-xs">
                         {p.paidAt
-                          ? <><CheckCircle2 className="inline h-3 w-3 mr-1 text-emerald-600" />{new Date(p.paidAt).toLocaleDateString()}</>
-                          : <><Calendar className="inline h-3 w-3 mr-1" />{new Date(p.payBy).toLocaleDateString()}</>}
+                          ? <><CheckCircle2 className="inline h-3 w-3 mr-1 text-emerald-600" />{new Date(p.paidAt).toLocaleDateString('en-GB')}</>
+                          : <><Calendar className="inline h-3 w-3 mr-1" />{new Date(p.payBy).toLocaleDateString('en-GB')}</>}
                       </td>
                     </tr>
                   )

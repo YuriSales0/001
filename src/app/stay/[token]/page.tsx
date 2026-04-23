@@ -129,7 +129,7 @@ export default function GuestStayPage({ params }: { params: Promise<{ token: str
             </h1>
             <p className="text-xs text-gray-500 flex items-center gap-2">
               <Calendar className="h-3 w-3" />
-              {new Date(data.checkIn).toLocaleDateString()} – {new Date(data.checkOut).toLocaleDateString()}
+              {new Date(data.checkIn).toLocaleDateString('en-GB')} – {new Date(data.checkOut).toLocaleDateString('en-GB')}
             </p>
           </div>
           {!escalated && (

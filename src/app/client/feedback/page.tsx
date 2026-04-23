@@ -247,7 +247,7 @@ export default function ClientFeedbackPage() {
                         {f.reservation.guestName} · {f.property.name}
                       </p>
                       <p className="text-xs text-gray-400">
-                        {new Date(f.reservation.checkOut).toLocaleDateString()}
+                        {new Date(f.reservation.checkOut).toLocaleDateString('en-GB')}
                         {f.scoreNps !== null && ` · NPS ${f.scoreNps}/10`}
                       </p>
                     </div>
