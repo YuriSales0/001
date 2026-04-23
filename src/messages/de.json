@@ -1969,6 +1969,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Jetzt rechnen",
+      "title": "Sehen Sie, wie viel wirklich übrig bleibt",
+      "subtitle": "Verschieben Sie die Regler passend zu Ihrer Immobilie. Wir vergleichen alle 4 Tarife direkt — Provision, Monatsgebühr, Reinigung und KI-Preisaufschlag. Keine Tabelle nötig."
+    },
     "plans": {
       "badge": "Tarife",
       "title": "Wählen Sie das Service-Level, das Sie brauchen",

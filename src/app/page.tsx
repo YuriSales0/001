@@ -30,6 +30,7 @@ import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
 import { ReferralTracker } from "@/components/hm/referral-tracker"
 import { HmLogo } from "@/components/hm/hm-logo"
+import { RevenueSimulator } from "@/components/hm/revenue-simulator"
 
 /* ── Plan data from finance.ts ── */
 const plans = [
@@ -62,6 +63,7 @@ export default function LandingPage() {
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
             <a href="#solucao" className="hover:text-hm-ink transition-colors">{t('landing.nav.solution')}</a>
             <a href="#planos" className="hover:text-hm-ink transition-colors">{t('landing.nav.plans')}</a>
+            <a href="#simulator" className="hover:text-hm-ink transition-colors">{t('landing.simulator.badge')}</a>
             <a href="#contacto" className="hover:text-hm-ink transition-colors">{t('landing.nav.contact')}</a>
             <Link href="/careers" className="font-semibold hover:text-hm-ink transition-colors" style={{ color: "#B08A3E" }}>
               Careers
@@ -300,6 +302,24 @@ export default function LandingPage() {
               )
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ───────── Revenue simulator ───────── */}
+      <section id="simulator" className="py-20 sm:py-28" style={{ background: 'var(--hm-ivory, #FAF8F4)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: '#B08A3E' }}>
+              {t('landing.simulator.badge')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight mb-3" style={{ color: '#0B1E3A' }}>
+              {t('landing.simulator.title')}
+            </h2>
+            <p className="text-base text-gray-600">
+              {t('landing.simulator.subtitle')}
+            </p>
+          </div>
+          <RevenueSimulator />
         </div>
       </section>
 

@@ -1994,6 +1994,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Run the numbers",
+      "title": "See how much you actually keep",
+      "subtitle": "Move the sliders to match your property. We compare all four plans side-by-side — commission, monthly fee, cleaning, AI-pricing uplift. No spreadsheet needed."
+    },
     "plans": {
       "badge": "Plans",
       "title": "Choose the level of service you need",

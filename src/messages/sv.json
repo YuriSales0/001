@@ -1969,6 +1969,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Räkna själv",
+      "title": "Se hur mycket som faktiskt blir kvar",
+      "subtitle": "Dra reglagen så de passar din fastighet. Vi jämför alla fyra planer sida vid sida — provision, månadsavgift, städning och AI-prislyft. Inget kalkylark behövs."
+    },
     "plans": {
       "badge": "Planer",
       "title": "Välj den servicenivå du behöver",

@@ -1969,6 +1969,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Bereken het",
+      "title": "Zie hoeveel er echt overblijft",
+      "subtitle": "Beweeg de schuifregelaars passend bij jouw woning. We vergelijken alle 4 plannen naast elkaar — commissie, maandelijkse kosten, schoonmaak en AI-prijsverhoging. Geen spreadsheet nodig."
+    },
     "plans": {
       "badge": "Abonnementen",
       "title": "Kies het serviceniveau dat u nodig heeft",

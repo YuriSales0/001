@@ -1995,6 +1995,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Faz as contas",
+      "title": "Vê quanto realmente fica contigo",
+      "subtitle": "Move os sliders para bater com a tua propriedade. Comparamos os 4 planos lado a lado — comissão, mensalidade, limpeza e aumento de preço via AI. Sem folha de cálculo."
+    },
     "plans": {
       "badge": "Planos",
       "title": "Escolha o nível de serviço de que precisa",

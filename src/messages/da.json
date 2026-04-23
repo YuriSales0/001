@@ -1969,6 +1969,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Regn det ud",
+      "title": "Se hvor meget der reelt er tilbage",
+      "subtitle": "Træk skyderne så de passer til din ejendom. Vi sammenligner alle 4 planer side om side — provision, månedligt gebyr, rengøring og AI-prisforøgelse. Intet regneark."
+    },
     "plans": {
       "badge": "Planer",
       "title": "Vælg det serviceniveau du har brug for",

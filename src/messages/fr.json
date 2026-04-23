@@ -1969,6 +1969,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Faites le calcul",
+      "title": "Voyez ce qui vous reste vraiment",
+      "subtitle": "Déplacez les curseurs pour correspondre à votre bien. Nous comparons les 4 formules côte à côte — commission, abonnement, ménage et hausse tarifaire par IA. Sans tableur."
+    },
     "plans": {
       "badge": "Tarifs",
       "title": "Choisissez le niveau de service dont vous avez besoin",

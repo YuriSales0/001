@@ -1,0 +1,193 @@
+"use client"
+
+import { useState } from "react"
+import { TrendingUp } from "lucide-react"
+
+const PLAN_COMMISSION: Record<string, number> = {
+  STARTER: 0.22, BASIC: 0.20, MID: 0.17, PREMIUM: 0.13,
+}
+const PLAN_MONTHLY: Record<string, number> = {
+  STARTER: 0, BASIC: 89, MID: 159, PREMIUM: 269,
+}
+const PLAN_CLEANING: Record<string, number> = {
+  STARTER: 70, BASIC: 60, MID: 45, PREMIUM: 35,
+}
+
+// Deterministic number format (avoids hydration mismatch from locale-dependent toLocaleString)
+function fmt(n: number): string {
+  const abs = Math.abs(n)
+  const parts = abs.toString().split('.')
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  return (n < 0 ? '-' : '') + parts.join(',')
+}
+
+export function RevenueSimulator({
+  initialNights = 120,
+  initialAvgPrice = 110,
+  title = "See exactly how much you keep with each plan",
+  subtitle = "Adjust to your property. Numbers include AI pricing uplift, commission, fees and cleaning costs.",
+  className,
+}: {
+  initialNights?: number
+  initialAvgPrice?: number
+  title?: string
+  subtitle?: string
+  className?: string
+}) {
+  const [nights, setNights] = useState(initialNights)
+  const [avgPrice, setAvgPrice] = useState(initialAvgPrice)
+
+  const avgTurnovers = Math.ceil(nights / 4.5)
+  const grossAnnual = nights * avgPrice
+
+  const plans = (['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const).map(tier => {
+    const pricingUplift = tier === 'MID' ? 1.18 : tier === 'PREMIUM' ? 1.25 : 1.0
+    const occupancyUplift = tier === 'MID' || tier === 'PREMIUM' ? 1.08 : tier === 'BASIC' ? 1.04 : 1.0
+    const adjustedGross = Math.round(grossAnnual * pricingUplift * occupancyUplift)
+    const commission = Math.round(adjustedGross * PLAN_COMMISSION[tier])
+    const monthlyFee = PLAN_MONTHLY[tier] * 12
+    const cleaningCost = avgTurnovers * PLAN_CLEANING[tier]
+    const totalCost = commission + monthlyFee + cleaningCost
+    const net = adjustedGross - totalCost
+    return {
+      tier,
+      label: tier.charAt(0) + tier.slice(1).toLowerCase(),
+      adjustedGross,
+      commission,
+      monthlyFee,
+      cleaningCost,
+      totalCost,
+      net,
+      pricingUplift,
+    }
+  })
+
+  const best = plans.reduce((a, b) => a.net > b.net ? a : b)
+  const starter = plans[0]
+  const bestIdx = plans.findIndex(p => p.tier === best.tier)
+
+  return (
+    <section
+      className={`rounded-2xl border-2 p-6 md:p-8 bg-white ${className ?? ''}`}
+      style={{ borderColor: 'rgba(176,138,62,0.4)' }}
+    >
+      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#B08A3E' }}>
+        <TrendingUp className="h-3.5 w-3.5" /> Revenue simulator
+      </div>
+      <h3 className="text-2xl font-serif font-bold text-hm-black mb-1">{title}</h3>
+      <p className="text-sm text-gray-500 mb-6">{subtitle}</p>
+
+      {/* Sliders */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 max-w-2xl">
+        <div>
+          <label className="text-xs text-gray-600 flex justify-between mb-1">
+            <span>Rented nights / year</span>
+            <span className="font-bold text-hm-black">{nights}</span>
+          </label>
+          <input type="range" min={30} max={300} value={nights}
+            onChange={e => setNights(Number(e.target.value))}
+            className="w-full accent-hm-gold" />
+          <div className="flex justify-between text-[10px] text-gray-500 mt-0.5">
+            <span>30</span><span>150</span><span>300</span>
+          </div>
+        </div>
+        <div>
+          <label className="text-xs text-gray-600 flex justify-between mb-1">
+            <span>Avg price / night (€)</span>
+            <span className="font-bold text-hm-black">€{avgPrice}</span>
+          </label>
+          <input type="range" min={50} max={350} value={avgPrice}
+            onChange={e => setAvgPrice(Number(e.target.value))}
+            className="w-full accent-hm-gold" />
+          <div className="flex justify-between text-[10px] text-gray-500 mt-0.5">
+            <span>€50</span><span>€200</span><span>€350</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Plan comparison table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b-2">
+              <th className="text-left py-3 pr-4 text-xs text-gray-500 font-semibold" />
+              {plans.map(p => (
+                <th key={p.tier} className={`text-center py-3 px-3 ${p.tier === best.tier ? 'bg-hm-gold/5 rounded-t-xl' : ''}`}>
+                  <span className={`text-xs font-bold ${p.tier === best.tier ? '' : 'text-gray-700'}`}
+                    style={p.tier === best.tier ? { color: '#B08A3E' } : {}}>
+                    {p.label}
+                  </span>
+                  {p.tier === best.tier && (
+                    <span className="block text-[9px] font-bold uppercase tracking-wider mt-0.5"
+                      style={{ color: '#B08A3E' }}>Best for you</span>
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="text-xs">
+            <SimRow label="Gross revenue" values={plans.map(p => `€${fmt(p.adjustedGross)}`)}
+              sublabel={plans.map(p => p.pricingUplift > 1 ? `+${Math.round((p.pricingUplift - 1) * 100)}% AI` : 'static')}
+              bestIdx={bestIdx} />
+            <SimRow label="Commission" values={plans.map(p => `-€${fmt(p.commission)}`)}
+              sublabel={plans.map(p => `${Math.round(PLAN_COMMISSION[p.tier] * 100)}%`)}
+              bestIdx={bestIdx} neg />
+            <SimRow label="Monthly fee (×12)" values={plans.map(p => p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : '€0')}
+              sublabel={plans.map(p => p.monthlyFee ? `€${PLAN_MONTHLY[p.tier]}/mo` : 'free')}
+              bestIdx={bestIdx} neg />
+            <SimRow label={`Cleaning (×${avgTurnovers})`} values={plans.map(p => `-€${fmt(p.cleaningCost)}`)}
+              sublabel={plans.map(p => `€${PLAN_CLEANING[p.tier]}/turn`)}
+              bestIdx={bestIdx} neg />
+            <tr className="border-t-2 font-bold">
+              <td className="py-3 pr-4 text-hm-black">You keep</td>
+              {plans.map(p => (
+                <td key={p.tier} className={`text-center py-3 px-3 text-base ${
+                  p.tier === best.tier ? 'bg-hm-gold/5 rounded-b-xl' : ''
+                }`}>
+                  <span className={p.net === best.net ? '' : p.net < starter.net ? 'text-red-600' : 'text-emerald-600'}
+                    style={p.net === best.net ? { color: '#B08A3E' } : {}}>
+                    €{fmt(p.net)}
+                  </span>
+                  {p.tier !== 'STARTER' && (
+                    <span className={`block text-[10px] font-semibold mt-0.5 ${
+                      p.net > starter.net ? 'text-emerald-600' : 'text-red-600'
+                    }`}>
+                      {p.net > starter.net ? '+' : ''}{fmt(p.net - starter.net)}/yr vs Starter
+                    </span>
+                  )}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p className="text-[10px] text-gray-500 mt-4 text-center">
+        Estimates based on Costa Tropical market data. AI pricing uplift: +18% (Mid), +25% (Premium).
+        Occupancy uplift: +4% (Basic), +8% (Mid/Premium). Actual results vary by property and season.
+      </p>
+    </section>
+  )
+}
+
+function SimRow({ label, values, sublabel, bestIdx, neg }: {
+  label: string
+  values: string[]
+  sublabel?: string[]
+  bestIdx: number
+  neg?: boolean
+}) {
+  return (
+    <tr className="border-b">
+      <td className="py-2.5 pr-4 text-gray-600">{label}</td>
+      {values.map((v, i) => (
+        <td key={i} className={`text-center py-2.5 px-3 ${i === bestIdx ? 'bg-hm-gold/5' : ''}`}>
+          <span className={neg ? 'text-gray-500' : 'text-hm-black font-semibold'}>{v}</span>
+          {sublabel?.[i] && (
+            <span className="block text-[9px] text-gray-500">{sublabel[i]}</span>
+          )}
+        </td>
+      ))}
+    </tr>
+  )
+}

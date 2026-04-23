@@ -1995,6 +1995,11 @@
         }
       ]
     },
+    "simulator": {
+      "badge": "Haz los números",
+      "title": "Descubre cuánto te queda de verdad",
+      "subtitle": "Mueve los sliders según tu propiedad. Comparamos los 4 planes lado a lado — comisión, cuota mensual, limpieza y mejora de precio con IA. Sin hoja de cálculo."
+    },
     "plans": {
       "badge": "Planes",
       "title": "Elige el nivel de servicio que necesitas",
