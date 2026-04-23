@@ -1547,7 +1547,8 @@
       "monthlyDecayTitle": "Reset Mensual de Score",
       "monthlyDecayDesc": "El 1º de cada mes, tu score se recalcula al mínimo de tu nivel actual más el 30% del excedente. Esto garantiza que se requiere un rendimiento consistente para mantener tu nivel — el buffer acumulado se reduce mensualmente.",
       "monthlyDecayExample": "Ejemplo:"
-    }
+    },
+    "approvals": "Approvals"
   },
   "finance": {
     "grossRevenue": "Ingresos Brutos",

@@ -899,7 +899,19 @@
         "weeklyLeadFollowUp": "Follow up on all warm leads",
         "setAsCurrent": "Set as current phase",
         "metricsFilteredFrom": "Metrics counting from the start of"
-      }
+      },
+      "gaRealtime": "Site Analytics · Real-time",
+      "openGA": "Open Google Analytics",
+      "gaRegisterDesc": "Tracks sign-up conversions and registration funnel",
+      "gaCareersDesc": "Tracks Manager/Crew applications from careers page",
+      "gaNote": "For detailed real-time data, open Google Analytics directly. Connect Looker Studio for embedded dashboards.",
+      "recentSignups": "Recent Sign-ups",
+      "recentApplications": "Career Applications",
+      "noSignups": "No sign-ups yet",
+      "noApplications": "No applications yet",
+      "totalOnline": "Total Online",
+      "activeSessions": "Active sessions right now",
+      "loginsInPeriod": "logins in period"
     },
     "partners": {
       "title": "Partners",
@@ -1234,7 +1246,13 @@
         "creatingStockEntries": "Creating stock entries...",
         "stockEntriesCreated": "Stock entries created successfully",
         "stockEntriesFailed": "Some stock entries failed to create"
-      }
+      },
+      "scanInvoice": "Scan invoice",
+      "scanning": "Scanning...",
+      "manualEntry": "Manual entry",
+      "ocrSuccess": "Invoice scanned — review the data",
+      "ocrFailed": "Failed to scan invoice",
+      "imageTooLarge": "Image too large (max 10MB)"
     },
     "team": {
       "cannotDeleteSelf": "You cannot delete your own account."
@@ -1315,6 +1333,13 @@
     },
     "stays": {
       "title": "Vistelser"
+    },
+    "ai": {
+      "loadingMap": "Preparing the map...",
+      "nightsCollected": "Nights collected",
+      "priceDataAccumulated": "accumulated price data",
+      "modelStatus": "Model status",
+      "noDataYet": "No data yet"
     }
   },
   "crew": {
@@ -1521,7 +1546,8 @@
       "monthlyDecayTitle": "Monthly Score Reset",
       "monthlyDecayDesc": "On the 1st of every month, your score resets to the minimum of your current level plus 30% of any excess. This ensures consistent performance is required to maintain your level — accumulated buffer is reduced monthly.",
       "monthlyDecayExample": "Example:"
-    }
+    },
+    "approvals": "Approvals"
   },
   "finance": {
     "grossRevenue": "Gross Revenue",
@@ -2967,5 +2993,58 @@
       "statusReversed": "Client cancelled within 60 days — commission reversed"
     },
     "logout": "Logout"
+  },
+  "clientTasks": {
+    "title": "My Tasks",
+    "subtitle": "Track maintenance requests and property visits",
+    "requestTask": "Request a visit",
+    "requestNew": "Request a visit",
+    "noTasks": "No tasks yet",
+    "filterAll": "All",
+    "filterOpen": "Open",
+    "filterOverdue": "Overdue",
+    "filterCompleted": "Completed",
+    "overdue": "Overdue",
+    "completedTag": "Completed",
+    "crew": "Crew",
+    "modalNote": "Our crew will handle this for you. You will be notified when it is done.",
+    "property": "Property",
+    "taskType": "Task type",
+    "titleLabel": "Title",
+    "desiredDate": "Desired date",
+    "notesForCrew": "Notes for crew",
+    "notesPlaceholder": "Any details that might help the crew...",
+    "submitting": "Submitting...",
+    "extraCleaning": "Extra Cleaning",
+    "preArrivalShopping": "Pre-arrival Shopping",
+    "airportTransfer": "Airport Transfer",
+    "warningCorrective": "Corrective maintenance may incur additional costs depending on the issue found.",
+    "warningPremium": "This is a premium service. Costs will be confirmed before proceeding.",
+    "labels": {
+      "CHECK_IN": "Check-in",
+      "CHECK_OUT": "Check-out",
+      "CLEANING": "Cleaning",
+      "MAINTENANCE_PREVENTIVE": "Preventive Maintenance",
+      "MAINTENANCE_CORRECTIVE": "Corrective Maintenance",
+      "INSPECTION": "Inspection",
+      "TRANSFER": "Transfer",
+      "SHOPPING": "Shopping",
+      "LAUNDRY": "Laundry"
+    },
+    "descs": {
+      "correctiveMaintenance": "Something broken? Report it and we will fix it.",
+      "extraCleaning": "Request an additional cleaning outside the regular schedule.",
+      "shopping": "Need supplies before your arrival? We will stock up for you.",
+      "transfer": "Airport or station pickup for you or your guests.",
+      "preventiveMaintenance": "Scheduled check to keep everything in top shape.",
+      "inspection": "Request a general property inspection."
+    },
+    "placeholders": {
+      "maintenance": "e.g. Leaking tap in the kitchen",
+      "cleaning": "e.g. Deep clean before our arrival",
+      "shopping": "e.g. Groceries for 4 guests, 7 nights",
+      "transfer": "e.g. Malaga airport, 2 adults + luggage",
+      "default": "Brief description of the request"
+    }
   }
 }
