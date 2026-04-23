@@ -36,6 +36,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@sentry/nextjs": "^10.49.0",
     "@stripe/stripe-js": "^9.0.1",
     "@tanstack/react-query": "^5.96.1",
     "autoprefixer": "^10.4.27",
