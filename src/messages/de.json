@@ -2288,7 +2288,16 @@
     "aiFeatureManager4": "Monatliche Leistung vs. Ziele verfolgen",
     "aiFeatureAdmin1": "Plattformweite Metriken und Live-Einblicke",
     "aiFeatureAdmin2": "KI-Preisbildungs-Engine und Marktintelligenz",
-    "aiFeatureAdmin3": "Tägliche KI-Monitor-Warnungen und Auto-Fix-Logs"
+    "aiFeatureAdmin3": "Tägliche KI-Monitor-Warnungen und Auto-Fix-Logs",
+    "clientIntentStep": "Was möchten Sie von HostMasters?",
+    "clientIntentDesc": "Damit passen wir Ihr Dashboard und Empfehlungen an.",
+    "intentShortTermTitle": "Komplette Kurzzeitvermietung-Verwaltung",
+    "intentShortTermDesc": "HostMasters soll Anzeigen, Preise, Gäste, Reinigung und mehr übernehmen.",
+    "intentOneTimeTitle": "Nur einzelne Services, kein Abo",
+    "intentOneTimeDesc": "Ich verwalte selbst und brauche gelegentlich Hilfe (Reinigung, Fotografie, Steuer usw.).",
+    "intentUndecidedTitle": "Ich bin noch unentschieden",
+    "intentUndecidedDesc": "Zeigen Sie mir alles, damit ich mich erkunden kann. Ich entscheide später.",
+    "intentRequired": "Bitte wählen Sie eine Option, um fortzufahren."
   },
   "client": {
     "dashboard": {

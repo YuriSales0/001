@@ -2313,7 +2313,16 @@
     "aiFeatureManager4": "Track monthly performance vs. goals",
     "aiFeatureAdmin1": "Platform-wide metrics and live insights",
     "aiFeatureAdmin2": "AI Pricing engine and market intelligence",
-    "aiFeatureAdmin3": "Daily AI Monitor alerts and auto-fix logs"
+    "aiFeatureAdmin3": "Daily AI Monitor alerts and auto-fix logs",
+    "clientIntentStep": "What do you want from HostMasters?",
+    "clientIntentDesc": "This helps us tailor your dashboard and recommendations.",
+    "intentShortTermTitle": "Full short-term rental management",
+    "intentShortTermDesc": "I want HostMasters to handle listings, pricing, guests, cleaning, and more.",
+    "intentOneTimeTitle": "Only individual services, no subscription",
+    "intentOneTimeDesc": "I manage my property myself and occasionally need help (cleaning, photography, fiscal filings, etc).",
+    "intentUndecidedTitle": "I am still deciding",
+    "intentUndecidedDesc": "Show me everything so I can explore. I can decide later.",
+    "intentRequired": "Please select an option to continue."
   },
   "client": {
     "dashboard": {

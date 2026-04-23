@@ -2314,7 +2314,16 @@
     "aiFeatureManager4": "Acompanha desempenho mensal vs. objectivos",
     "aiFeatureAdmin1": "Métricas da plataforma e insights em tempo real",
     "aiFeatureAdmin2": "Motor de AI Pricing e inteligência de mercado",
-    "aiFeatureAdmin3": "Alertas diários do AI Monitor e logs de auto-correcção"
+    "aiFeatureAdmin3": "Alertas diários do AI Monitor e logs de auto-correcção",
+    "clientIntentStep": "O que quer da HostMasters?",
+    "clientIntentDesc": "Isto ajuda-nos a adaptar o seu painel e recomendações.",
+    "intentShortTermTitle": "Gestão completa de aluguer de curta duração",
+    "intentShortTermDesc": "Quero que a HostMasters trate dos anúncios, preços, hóspedes, limpeza, e tudo o resto.",
+    "intentOneTimeTitle": "Apenas serviços avulsos, sem assinatura",
+    "intentOneTimeDesc": "Geri a minha propriedade sozinho e ocasionalmente preciso de ajuda (limpeza, fotos, fiscal, etc.).",
+    "intentUndecidedTitle": "Ainda estou a decidir",
+    "intentUndecidedDesc": "Mostrem-me tudo para eu explorar. Decido depois.",
+    "intentRequired": "Seleccione uma opção para continuar."
   },
   "client": {
     "dashboard": {

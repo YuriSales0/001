@@ -39,6 +39,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
   const [commissionShare, setCommissionShare] = useState('')
 
   const [acceptedContracts, setAcceptedContracts] = useState<string[]>([])
+  const [rentalIntent, setRentalIntent] = useState<'SHORT_TERM_FULL' | 'ONE_TIME_ONLY' | 'UNDECIDED' | ''>('')
 
   useEffect(() => {
     fetch('/api/onboarding')
@@ -55,6 +56,7 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
           if (d.currentData.managerCommissionShare) setCommissionShare(String((d.currentData.managerCommissionShare as number) * 100))
           if (d.currentData.crewContractType) setContractType(d.currentData.crewContractType as string)
           if (d.currentData.crewMonthlyRate) setMonthlyRate(String(d.currentData.crewMonthlyRate))
+          if (d.currentData.rentalIntent) setRentalIntent(d.currentData.rentalIntent as 'SHORT_TERM_FULL' | 'ONE_TIME_ONLY' | 'UNDECIDED')
           if (d.currentData.crewTaskRate) setTaskRate(String(d.currentData.crewTaskRate))
         }
       })
@@ -127,6 +129,14 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
         subscriptionShare: parseFloat(subscriptionShare) / 100,
         commissionShare: parseFloat(commissionShare) / 100,
       })
+      if (!ok) return
+    }
+    if (step === 2 && role === 'CLIENT') {
+      if (!rentalIntent) {
+        setError(t('onboarding.intentRequired') || 'Please select an option to continue.')
+        return
+      }
+      const ok = await saveStep('intent', { rentalIntent })
       if (!ok) return
     }
     if (step === 3 && role === 'CREW') {
@@ -305,14 +315,39 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
             </>
           )}
 
-          {/* Role step 1: Client Property */}
+          {/* Role step 1: Client intent — what kind of service do they want? */}
           {step === roleStep1Idx && role === 'CLIENT' && (
             <>
               <div className="flex items-center gap-2 text-hm-black font-semibold mb-2">
                 <Briefcase className="h-5 w-5 text-gray-400" />
-                {t('onboarding.clientPropertyStep')}
+                {t('onboarding.clientIntentStep') || 'What do you want from HostMasters?'}
               </div>
-              <p className="text-sm text-gray-500">{t('onboarding.clientPropertyDesc')}</p>
+              <p className="text-xs text-gray-500 mb-4">
+                {t('onboarding.clientIntentDesc') || 'This helps us tailor your dashboard and recommendations.'}
+              </p>
+              <div className="space-y-2">
+                {[
+                  { v: 'SHORT_TERM_FULL', title: t('onboarding.intentShortTermTitle') || 'Full short-term rental management', desc: t('onboarding.intentShortTermDesc') || 'I want HostMasters to handle listings, pricing, guests, cleaning, and more.' },
+                  { v: 'ONE_TIME_ONLY', title: t('onboarding.intentOneTimeTitle') || 'Only individual services, no subscription', desc: t('onboarding.intentOneTimeDesc') || 'I manage my property myself and occasionally need help (cleaning, photography, fiscal filings, etc).' },
+                  { v: 'UNDECIDED', title: t('onboarding.intentUndecidedTitle') || 'I am still deciding', desc: t('onboarding.intentUndecidedDesc') || 'Show me everything so I can explore. I can decide later.' },
+                ].map(opt => (
+                  <label key={opt.v}
+                    className="flex items-start gap-3 rounded-xl border-2 p-3 cursor-pointer transition-colors"
+                    style={{
+                      borderColor: rentalIntent === opt.v ? '#B08A3E' : 'rgba(0,0,0,0.1)',
+                      background: rentalIntent === opt.v ? 'rgba(176,138,62,0.06)' : 'white',
+                    }}>
+                    <input type="radio" name="intent"
+                      checked={rentalIntent === opt.v}
+                      onChange={() => setRentalIntent(opt.v as typeof rentalIntent)}
+                      className="mt-0.5 accent-[#B08A3E]" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-hm-black">{opt.title}</div>
+                      <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{opt.desc}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
             </>
           )}
 

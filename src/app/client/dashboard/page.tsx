@@ -73,12 +73,20 @@ export default function OwnerDashboard() {
   const [hasContractPending, setHasContractPending] = useState(false)
   const [fetchErrors, setFetchErrors] = useState<string[]>([])
 
-  // Detect plan early — drives whether we show StarterDashboard or full
+  // Detect plan + intent early.
+  // Show StarterDashboard if:
+  //   - client explicitly chose ONE_TIME_ONLY, OR
+  //   - client hasn't chosen an intent AND is on STARTER plan
+  // Otherwise show full owner dashboard (they want short-term management).
   useEffect(() => {
     fetch('/api/me')
       .then(r => r.ok ? r.json() : null)
       .then(d => {
-        setIsStarter(!d?.subscriptionPlan || d.subscriptionPlan === 'STARTER')
+        const plan = d?.subscriptionPlan ?? null
+        const intent = d?.rentalIntent ?? null
+        const isOneTimeOnly = intent === 'ONE_TIME_ONLY'
+        const starterWithoutIntent = (!plan || plan === 'STARTER') && intent !== 'SHORT_TERM_FULL'
+        setIsStarter(isOneTimeOnly || starterWithoutIntent)
         const first = d?.name?.split(' ')[0]
         const emailFallback = d?.email?.split('@')[0]
         setUserName(first || emailFallback || '')

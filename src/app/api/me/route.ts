@@ -16,10 +16,15 @@ export async function GET() {
       crewContractType: true,
       crewMonthlyRate: true,
       crewTaskRate: true,
+      rentalIntent: true,
     },
   })
 
-  const base = { id, name, email, role, subscriptionPlan: user?.subscriptionPlan ?? null }
+  const base = {
+    id, name, email, role,
+    subscriptionPlan: user?.subscriptionPlan ?? null,
+    rentalIntent: user?.rentalIntent ?? null,
+  }
 
   // Include crew-specific fields for CREW users
   if (role === 'CREW') {

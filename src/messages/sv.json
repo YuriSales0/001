@@ -2288,7 +2288,16 @@
     "aiFeatureManager4": "Följ månatlig prestanda vs. mål",
     "aiFeatureAdmin1": "Plattformsövergripande mätvärden och liveinsikter",
     "aiFeatureAdmin2": "AI-prismotor och marknadsintelligens",
-    "aiFeatureAdmin3": "Dagliga AI Monitor-varningar och auto-fix-loggar"
+    "aiFeatureAdmin3": "Dagliga AI Monitor-varningar och auto-fix-loggar",
+    "clientIntentStep": "Vad vill du ha från HostMasters?",
+    "clientIntentDesc": "Det hjälper oss anpassa din instrumentpanel och rekommendationer.",
+    "intentShortTermTitle": "Fullständig korttidsuthyrning",
+    "intentShortTermDesc": "HostMasters ska sköta annonser, priser, gäster, städning med mera.",
+    "intentOneTimeTitle": "Bara enskilda tjänster, inget abonnemang",
+    "intentOneTimeDesc": "Jag sköter själv och behöver ibland hjälp (städning, foto, skatt osv.).",
+    "intentUndecidedTitle": "Jag är fortfarande osäker",
+    "intentUndecidedDesc": "Visa mig allt så jag kan utforska. Jag bestämmer senare.",
+    "intentRequired": "Välj ett alternativ för att fortsätta."
   },
   "client": {
     "dashboard": {

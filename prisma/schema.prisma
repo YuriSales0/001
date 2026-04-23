@@ -257,6 +257,14 @@ enum StayChatAuthor {
   SYSTEM
 }
 
+/// Indicates what kind of service the client signed up for.
+/// Drives dashboard experience: full STR management vs one-time services only.
+enum RentalIntent {
+  SHORT_TERM_FULL   // Wants full platform management (Starter/Basic/Mid/Premium)
+  ONE_TIME_ONLY     // Only wants to buy individual services (photography, cleaning, etc.)
+  UNDECIDED         // Hasn't chosen yet — show both paths
+}
+
 enum StayChatEscalationStatus {
   NONE
   PENDING_MANAGER
@@ -307,6 +315,7 @@ model User {
   stripeCustomerId   String?
   subscriptionPlan   SubscriptionPlan?
   subscriptionStatus String?
+  rentalIntent       RentalIntent?     // Client-only: what they signed up for
   managerId          String?
   satisfactionScore  Float?
   ltv                Float?    @default(0)

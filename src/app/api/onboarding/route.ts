@@ -25,6 +25,7 @@ export async function GET() {
       crewTaskRate: true,
       managerSubscriptionShare: true,
       managerCommissionShare: true,
+      rentalIntent: true,
       contracts: {
         where: { status: 'ACTIVE' },
         select: { id: true, type: true, title: true, signedByUser: true },
@@ -46,6 +47,7 @@ export async function GET() {
       crewTaskRate: user.crewTaskRate,
       managerSubscriptionShare: user.managerSubscriptionShare,
       managerCommissionShare: user.managerCommissionShare,
+      rentalIntent: user.rentalIntent,
     },
     pendingContracts: user.contracts.filter(c => !c.signedByUser),
     completedAt: user.onboardingData ? (user.onboardingData as { completedAt?: string }).completedAt : null,
@@ -83,6 +85,14 @@ export async function POST(request: NextRequest) {
   if (me.role === 'MANAGER') {
     if (data.subscriptionShare !== undefined) update.managerSubscriptionShare = Number(data.subscriptionShare) || null
     if (data.commissionShare !== undefined) update.managerCommissionShare = Number(data.commissionShare) || null
+  }
+
+  // Client-specific — rental intent (drives dashboard experience)
+  if (me.role === 'CLIENT' && data.rentalIntent) {
+    const validIntents = ['SHORT_TERM_FULL', 'ONE_TIME_ONLY', 'UNDECIDED']
+    if (validIntents.includes(data.rentalIntent as string)) {
+      update.rentalIntent = data.rentalIntent
+    }
   }
 
   // Sign pending contracts — only contracts belonging to this user

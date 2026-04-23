@@ -2288,7 +2288,16 @@
     "aiFeatureManager4": "Volg maandprestatie vs. doelen",
     "aiFeatureAdmin1": "Platformbrede metrics en live inzichten",
     "aiFeatureAdmin2": "AI-prijsbepalingsmotor en marktintelligentie",
-    "aiFeatureAdmin3": "Dagelijkse AI Monitor-alerts en auto-fix logs"
+    "aiFeatureAdmin3": "Dagelijkse AI Monitor-alerts en auto-fix logs",
+    "clientIntentStep": "Wat wilt u van HostMasters?",
+    "clientIntentDesc": "Dit helpt ons uw dashboard en aanbevelingen aan te passen.",
+    "intentShortTermTitle": "Volledig beheer korte verhuur",
+    "intentShortTermDesc": "HostMasters moet advertenties, prijzen, gasten, schoonmaak en alles regelen.",
+    "intentOneTimeTitle": "Alleen losse diensten, geen abonnement",
+    "intentOneTimeDesc": "Ik beheer zelf en heb af en toe hulp nodig (schoonmaak, fotografie, fiscaal, etc.).",
+    "intentUndecidedTitle": "Ik twijfel nog",
+    "intentUndecidedDesc": "Laat alles zien zodat ik kan verkennen. Ik beslis later.",
+    "intentRequired": "Selecteer een optie om door te gaan."
   },
   "client": {
     "dashboard": {
