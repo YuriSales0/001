@@ -217,22 +217,8 @@ export default function OwnerDashboard() {
     load()
   }, [])
 
-  if (loading) {
-    return (
-      <div className="space-y-6 animate-pulse">
-        <div className="h-64 rounded-hm bg-hm-sand" />
-        <div className="grid grid-cols-3 gap-4">
-          <div className="h-28 rounded-hm bg-hm-sand" />
-          <div className="h-28 rounded-hm bg-hm-sand" />
-          <div className="h-28 rounded-hm bg-hm-sand" />
-        </div>
-      </div>
-    )
-  }
-
-  const prop = data?.property
-
-  // Starter plan: completely different dashboard — services + upsell
+  // Starter plan: short-circuit BEFORE loading check.
+  // Starters don't need property/reservation data — they see services + upsell.
   if (isStarter) {
     return (
       <div className="space-y-6">
@@ -244,6 +230,27 @@ export default function OwnerDashboard() {
       </div>
     )
   }
+
+  if (loading || isStarter === null) {
+    return (
+      <div className="space-y-6">
+        <DashboardGreeting
+          headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
+          dateClass="mt-1 font-sans text-hm-slate/70 text-base"
+        />
+        <div className="space-y-6 animate-pulse">
+          <div className="h-64 rounded-hm bg-hm-sand" />
+          <div className="grid grid-cols-3 gap-4">
+            <div className="h-28 rounded-hm bg-hm-sand" />
+            <div className="h-28 rounded-hm bg-hm-sand" />
+            <div className="h-28 rounded-hm bg-hm-sand" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const prop = data?.property
 
   return (
     <div className="space-y-8">
