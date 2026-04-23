@@ -85,11 +85,13 @@ export default function OwnerFinancials() {
     new Intl.NumberFormat(intlLocale(locale as Locale), { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n)
   const [payouts, setPayouts] = useState<Payout[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     fetch("/api/payouts")
-      .then(r => r.ok ? r.json() : [])
+      .then(r => { if (!r.ok) throw new Error(); return r.json() })
       .then(setPayouts)
+      .catch(() => setError(true))
       .finally(() => setLoading(false))
   }, [])
 
@@ -110,6 +112,16 @@ export default function OwnerFinancials() {
       <div className="space-y-6 animate-pulse">
         <div className="h-32 rounded-hm bg-hm-sand" />
         <div className="h-64 rounded-hm bg-hm-sand" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-hm border border-red-200 bg-red-50 p-8 text-center">
+        <p className="text-sm font-semibold text-red-800 mb-2">{t('common.error')}</p>
+        <button onClick={() => { setError(false); setLoading(true); fetch("/api/payouts").then(r => r.ok ? r.json() : []).then(setPayouts).catch(() => setError(true)).finally(() => setLoading(false)) }}
+          className="text-sm text-red-600 underline hover:text-red-800">{t('common.tryAgain')}</button>
       </div>
     )
   }

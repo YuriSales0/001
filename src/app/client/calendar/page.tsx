@@ -171,7 +171,9 @@ export default function ClientCalendarPage() {
     Promise.all([
       fetch('/api/tasks').then(r=>r.ok?r.json():[]),
       fetch('/api/properties').then(r=>r.ok?r.json():[]),
-    ]).then(([t,p])=>{setTasks(t);setProperties(p);setLoading(false)})
+    ]).then(([t,p])=>{setTasks(t);setProperties(p)})
+      .catch(()=>{})
+      .finally(()=>setLoading(false))
   },[])
 
   const prevWeek = () => setWeekStart(s=>{const d=new Date(s);d.setDate(d.getDate()-7);return d})
