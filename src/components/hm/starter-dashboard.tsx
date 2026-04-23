@@ -45,8 +45,8 @@ export function StarterDashboard() {
                 <TrendingUp className="h-3.5 w-3.5" /> O seu imóvel pode render muito mais
               </div>
               <h2 className="text-xl md:text-2xl font-serif font-bold leading-tight text-white">
-                Coloque a sua propriedade em aluguer de curta duração com a HostMasters
-                e <span style={{ color: '#D4AF5A' }}>rentabilize muito mais</span>.
+                Alugue a sua propriedade a curto prazo com a HostMasters
+                e <span style={{ color: '#D4AF5A' }}>rentabilize até +25%</span>.
               </h2>
               <p className="text-sm mt-2 max-w-xl" style={{ color: 'rgba(255,255,255,0.75)' }}>
                 Simulador de receita · Veja quanto ganha com cada plano · Compare assinatura vs avulso
