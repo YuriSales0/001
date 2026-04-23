@@ -74,8 +74,19 @@ export default function ClientPlusPage() {
     }
   }
 
-  if (loading) {
-    return <div className="p-6 text-sm text-gray-400">Loading…</div>
+  // Client-only render — eliminates all server/client hydration mismatches
+  // (useLocale cookie reads, toLocaleString, plan-dependent conditionals)
+  if (!mounted || loading) {
+    return (
+      <div className="p-6 max-w-5xl mx-auto space-y-4">
+        <div className="h-48 rounded-2xl bg-gray-100 animate-pulse" />
+        <div className="grid grid-cols-3 gap-3">
+          <div className="h-24 rounded-xl bg-gray-100 animate-pulse" />
+          <div className="h-24 rounded-xl bg-gray-100 animate-pulse" />
+          <div className="h-24 rounded-xl bg-gray-100 animate-pulse" />
+        </div>
+      </div>
+    )
   }
 
   const unlocked = PLATFORM_FEATURES.filter(f => TIER_ORDER.indexOf(f.minTier) <= myTierIdx)
@@ -117,9 +128,7 @@ export default function ClientPlusPage() {
       </section>
 
       {/* ═══ REVENUE CALCULATOR + PLAN SIMULATION ═══ */}
-      {mounted && (
-        <PriceSimulator nights={nights} setNights={setNights} avgPrice={avgPrice} setAvgPrice={setAvgPrice} />
-      )}
+      <PriceSimulator nights={nights} setNights={setNights} avgPrice={avgPrice} setAvgPrice={setAvgPrice} />
 
       {/* What you HAVE */}
       <section>

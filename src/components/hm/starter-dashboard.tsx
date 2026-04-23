@@ -15,6 +15,9 @@ const ICONS: Record<string, any> = {
 export function StarterDashboard() {
   const [requesting, setRequesting] = useState<string | null>(null)
   const [requested, setRequested] = useState<Record<string, boolean>>({})
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   const requestService = async (s: OneTimeService) => {
     if (requesting) return
@@ -26,6 +29,21 @@ export function StarterDashboard() {
     })
     setRequesting(null)
     if (res.ok) setRequested(prev => ({ ...prev, [s.id]: true }))
+  }
+
+  // Client-only render — prevents hydration mismatches from locale cookies,
+  // toLocaleString, or any browser-specific DOM diffs.
+  if (!mounted) {
+    return (
+      <div className="space-y-6">
+        <div className="h-36 rounded-2xl bg-gray-100 animate-pulse" />
+        <div className="grid grid-cols-4 gap-3">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="h-48 rounded-xl bg-gray-100 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
