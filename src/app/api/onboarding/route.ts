@@ -27,7 +27,7 @@ export async function GET() {
       managerCommissionShare: true,
       rentalIntent: true,
       contracts: {
-        where: { status: 'ACTIVE' },
+        where: { status: { in: ['ACTIVE', 'DRAFT'] } },
         select: { id: true, type: true, title: true, signedByUser: true },
       },
     },

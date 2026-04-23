@@ -206,6 +206,8 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
               <div key={`group-${i}`}>
                 <button
                   onClick={() => toggleGroup(entry.label)}
+                  aria-expanded={isOpen}
+                  aria-label={`Toggle ${entry.label}`}
                   className={cn(
                     "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     hasActive ? "text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"
@@ -286,6 +288,7 @@ export default function ManagerLayout({ children, user, role }: ManagerLayoutPro
           <button
             className="lg:hidden rounded-md p-2 hover:bg-gray-100"
             onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
           >
             <Menu className="h-5 w-5 text-gray-600" />
           </button>

@@ -65,8 +65,14 @@ export function OnboardingGate({ role, children }: Props) {
     )
   }
 
-  // Still checking
-  if (needsOnboarding === null) return <>{children}</>
+  // Still checking — show skeleton, never the real dashboard
+  if (needsOnboarding === null) return (
+    <div className="p-6 space-y-4 animate-pulse">
+      <div className="h-8 w-48 rounded bg-gray-100" />
+      <div className="h-32 rounded-xl bg-gray-100" />
+      <div className="h-24 rounded-xl bg-gray-100" />
+    </div>
+  )
 
   // Show tour/wizard
   if (needsOnboarding) {

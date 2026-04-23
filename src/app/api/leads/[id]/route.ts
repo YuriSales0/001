@@ -29,9 +29,12 @@ export async function PATCH(
   }) as { id: string; assignedManagerId: string | null; status: string; partnerId: string | null; name: string } | null
   if (!lead) return NextResponse.json({ error: 'Lead not found' }, { status: 404 })
 
-  // MANAGER can only update leads assigned to them
   if (me.role === 'MANAGER' && lead.assignedManagerId !== me.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  if (lead.status === 'CONVERTED' && me.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Converted leads cannot be modified' }, { status: 409 })
   }
 
   const body = await request.json()
