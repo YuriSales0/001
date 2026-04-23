@@ -460,7 +460,8 @@
         "timeSoon": "1-3 months",
         "timeMedium": "3-6 months",
         "timeLong": "6+ months or unsure"
-      }
+      },
+      "leadCreated": "Lead created"
     },
     "calendar": {
       "subtitle": "Check-ins, check-outs, tasks and payouts for your clients.",
@@ -1125,7 +1126,8 @@
       "confirmDeleteTitle": "Delete payout",
       "confirmDeleteMsg": "Permanently delete the cancelled payout for {label}?\n\nThis action cannot be undone.",
       "confirmDeleteBtn": "Delete",
-      "confirmDeleteCancel": "Cancel"
+      "confirmDeleteCancel": "Cancel",
+      "markedPaid": "Payout marked as paid + receipt sent"
     },
     "expenses": {
       "title": "Dépenses",
@@ -1638,7 +1640,9 @@
     "signingIn": "Connexion en cours...",
     "betaBadge": "Programme Bêta · Accès limité",
     "betaMessage": "HostMasters est actuellement en phase Bêta. En créant votre compte, vous serez ajouté à notre base de données et un Manager dédié vous contactera prochainement. Les opérations débuteront le 1er août 2026.",
-    "betaCta": "Créez votre compte maintenant — un Manager vous contactera bientôt !"
+    "betaCta": "Créez votre compte maintenant — un Manager vous contactera bientôt !",
+    "accountCreated": "Account created!",
+    "checkEmailVerify": "Check your email to verify your account. Redirecting to login..."
   },
   "tour": {
     "next": "Suivant",
@@ -2381,7 +2385,10 @@
       "errorPayouts": "Payouts failed to load",
       "errorReservations": "Reservations failed to load",
       "errorTasks": "Tasks failed to load",
-      "errorInvoices": "Invoices failed to load"
+      "errorInvoices": "Invoices failed to load",
+      "stepSign": "Sign contract",
+      "stepProperty": "Add property",
+      "stepEarn": "Start earning"
     },
     "profileDocs": {
       "managementAgreement": "Property Management Agreement",
@@ -2860,7 +2867,9 @@
       "completed": "Terminé",
       "overdue": "En retard",
       "pending": "En attente"
-    }
+    },
+    "unsignedAlert": "Action required: You have unsigned contracts below",
+    "unsignedDesc": "Review and sign each contract to activate your properties and continue with HostMasters services."
   },
   "notifBell": {
     "title": "Notifications",

@@ -460,7 +460,8 @@
         "timeSoon": "1-3 months",
         "timeMedium": "3-6 months",
         "timeLong": "6+ months or unsure"
-      }
+      },
+      "leadCreated": "Lead created"
     },
     "calendar": {
       "subtitle": "Check-ins, check-outs, tasks and payouts for your clients.",
@@ -1125,7 +1126,8 @@
       "confirmDeleteTitle": "Delete payout",
       "confirmDeleteMsg": "Permanently delete the cancelled payout for {label}?\n\nThis action cannot be undone.",
       "confirmDeleteBtn": "Delete",
-      "confirmDeleteCancel": "Cancel"
+      "confirmDeleteCancel": "Cancel",
+      "markedPaid": "Payout marked as paid + receipt sent"
     },
     "expenses": {
       "title": "Uitgaven",
@@ -1638,7 +1640,9 @@
     "signingIn": "Bezig met inloggen...",
     "betaBadge": "Bètaprogramma · Beperkte toegang",
     "betaMessage": "HostMasters bevindt zich momenteel in de bètafase. Door uw account aan te maken, wordt u aan onze database toegevoegd en zal een toegewezen Manager binnenkort contact met u opnemen. De operaties starten naar verwachting op 1 augustus 2026.",
-    "betaCta": "Maak nu uw account aan — een Manager neemt binnenkort contact met u op!"
+    "betaCta": "Maak nu uw account aan — een Manager neemt binnenkort contact met u op!",
+    "accountCreated": "Account created!",
+    "checkEmailVerify": "Check your email to verify your account. Redirecting to login..."
   },
   "tour": {
     "next": "Volgende",
@@ -2381,7 +2385,10 @@
       "errorPayouts": "Payouts failed to load",
       "errorReservations": "Reservations failed to load",
       "errorTasks": "Tasks failed to load",
-      "errorInvoices": "Invoices failed to load"
+      "errorInvoices": "Invoices failed to load",
+      "stepSign": "Sign contract",
+      "stepProperty": "Add property",
+      "stepEarn": "Start earning"
     },
     "profileDocs": {
       "managementAgreement": "Property Management Agreement",
@@ -2860,7 +2867,9 @@
       "completed": "Voltooid",
       "overdue": "Te laat",
       "pending": "In behandeling"
-    }
+    },
+    "unsignedAlert": "Action required: You have unsigned contracts below",
+    "unsignedDesc": "Review and sign each contract to activate your properties and continue with HostMasters services."
   },
   "notifBell": {
     "title": "Meldingen",
