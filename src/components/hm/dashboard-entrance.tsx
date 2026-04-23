@@ -82,24 +82,39 @@ export function DashboardGreeting({
 }) {
   const { locale } = useLocale()
   const [name, setName] = useState(nameOverride ?? "")
+  const [loaded, setLoaded] = useState(!!nameOverride)
 
   useEffect(() => {
     if (nameOverride) return
     fetch("/api/me")
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        const n = data?.name?.split(" ")[0]
-        if (n) setName(n)
+        // Prefer given name, fall back to full name, then email prefix
+        const first = data?.name?.split(" ")[0]
+        const fallback = data?.email?.split("@")[0]
+        setName(first || fallback || "")
+        setLoaded(true)
       })
-      .catch(() => {})
+      .catch(() => setLoaded(true))
   }, [nameOverride])
 
-  if (!name) return null
+  // Render skeleton during load; then show with whatever name we have
+  // (never return null — greeting must always show)
+  if (!loaded) {
+    return (
+      <div>
+        <div className="h-8 w-64 rounded bg-gray-100 animate-pulse" />
+        <div className="h-4 w-48 rounded bg-gray-100 animate-pulse mt-2" />
+      </div>
+    )
+  }
+
+  const displayName = name || (locale === 'pt' ? 'olá' : locale === 'es' ? 'hola' : 'there')
 
   return (
     <div>
       <h1 className={headingClass}>
-        <TypewriterGreeting name={name} locale={locale} />
+        <TypewriterGreeting name={displayName} locale={locale} />
       </h1>
       <p className={dateClass}>{formatToday(locale)}</p>
     </div>
