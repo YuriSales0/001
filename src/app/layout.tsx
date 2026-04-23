@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { cookies } from 'next/headers'
 import { SuperuserBar } from '@/components/hm/superuser-bar'
+import { CookieBanner } from '@/components/hm/cookie-banner'
 import "./globals.css";
 
 const interTight = Inter_Tight({
@@ -108,6 +109,7 @@ export default async function RootLayout({
             viewAs={viewAs}
           />
         )}
+        <CookieBanner />
       </body>
     </html>
   );

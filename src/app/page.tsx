@@ -545,9 +545,9 @@ export default function LandingPage() {
             <span className="text-xs text-gray-400 ml-1">Costa Tropical · España</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="/partner/login" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-              Partner Portal
-            </a>
+            <a href="/privacy" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Privacy</a>
+            <a href="/terms" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Terms</a>
+            <a href="/partner/login" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Partner Portal</a>
             <p className="text-xs text-gray-400">
               {t('landing.footer.copyright')} {t('landing.footer.tagline')}
             </p>
