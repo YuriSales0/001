@@ -41,6 +41,7 @@ export async function GET(req: NextRequest) {
 
   const obligations = await prisma.taxObligation.findMany({
     where,
+    take: 500,
     include: {
       user: { select: { id: true, name: true, email: true } },
       property: { select: { id: true, name: true } },

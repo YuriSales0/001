@@ -38,14 +38,20 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       const events = await fetchAndParse(src.url)
       let created = 0
       for (const ev of events) {
-        // Use BlockedDate as the canonical "external booking" representation —
-        // these are syncs from third parties, not platform-managed reservations.
+        // Dedup: check by exact UID OR by same source + overlapping date range.
+        // This prevents duplicates when Airbnb/Booking regenerates UIDs or
+        // shifts dates by timezone rounding.
         const exists = await prisma.blockedDate.findFirst({
           where: {
             propertyId: property.id,
-            startDate: ev.start,
-            endDate: ev.end,
-            reason: `${src.name}:${ev.uid}`,
+            OR: [
+              { reason: `${src.name}:${ev.uid}` },
+              {
+                reason: { startsWith: `${src.name}:` },
+                startDate: ev.start,
+                endDate: ev.end,
+              },
+            ],
           },
         })
         if (!exists) {

@@ -14,6 +14,7 @@ export async function GET() {
   if (me.role === 'MANAGER') where.createdById = me.id
 
   const campaigns = await prisma.campaign.findMany({
+    take: 200,
     where,
     include: { _count: { select: { leadAttributions: true } } },
     orderBy: { createdAt: 'desc' },

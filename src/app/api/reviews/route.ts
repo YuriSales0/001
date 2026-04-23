@@ -46,6 +46,7 @@ export async function GET(req: NextRequest) {
 
     const reviews = await prisma.stayReview.findMany({
       where,
+      take: 200,
       orderBy: { createdAt: 'desc' },
       include: {
         reservation: {

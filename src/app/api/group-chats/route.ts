@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
   }
 
   const groups = await prisma.groupChat.findMany({
+    take: 100,
     where: {
       members: { some: { userId: me.id } },
     },

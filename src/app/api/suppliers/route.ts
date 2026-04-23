@@ -12,6 +12,7 @@ export async function GET() {
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
   const suppliers = await prisma.supplier.findMany({
+    take: 200,
     include: {
       properties: {
         include: { property: { select: { id: true, name: true, city: true } } },

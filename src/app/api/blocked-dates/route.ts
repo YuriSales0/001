@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
 
     const blockedDates = await prisma.blockedDate.findMany({
       where,
+      take: 500,
       include: { property: { select: { name: true } } },
       orderBy: { startDate: 'asc' },
     })
