@@ -41,22 +41,21 @@ export function StarterDashboard() {
           <div className="relative px-6 py-6 md:px-8 md:py-7 text-white flex items-center justify-between gap-6">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest mb-2"
-                style={{ color: '#B08A3E' }}>
-                <TrendingUp className="h-3.5 w-3.5" /> Seu imóvel está com baixo desempenho
+                style={{ color: '#D4AF5A' }}>
+                <TrendingUp className="h-3.5 w-3.5" /> O seu imóvel pode render muito mais
               </div>
-              <h2 className="text-xl md:text-2xl font-serif font-bold leading-tight">
-                Descubra quanto o seu imóvel pode render com{' '}
-                <span style={{ color: '#B08A3E' }}>AI Pricing</span> e{' '}
-                <span style={{ color: '#B08A3E' }}>Data Intelligence</span>
+              <h2 className="text-xl md:text-2xl font-serif font-bold leading-tight text-white">
+                Coloque a sua propriedade em aluguer de curta duração com a HostMasters
+                e <span style={{ color: '#D4AF5A' }}>rentabilize muito mais</span>.
               </h2>
-              <p className="text-sm text-white/60 mt-2 max-w-xl">
-                Calculadora interactiva · 10 features que está a perder · Comparação assinatura vs avulso
+              <p className="text-sm mt-2 max-w-xl" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                Simulador de receita · Veja quanto ganha com cada plano · Compare assinatura vs avulso
               </p>
             </div>
             <div className="shrink-0">
               <span className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-all group-hover:scale-105"
-                style={{ background: '#B08A3E', color: '#0B1E3A' }}>
-                Ver análise <ArrowRight className="h-4 w-4" />
+                style={{ background: '#D4AF5A', color: '#0B1E3A' }}>
+                Ver simulação <ArrowRight className="h-4 w-4" />
               </span>
             </div>
           </div>

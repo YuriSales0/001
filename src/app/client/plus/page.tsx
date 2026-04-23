@@ -89,13 +89,13 @@ export default function ClientPlusPage() {
       {/* Hero */}
       <section className="rounded-3xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #0B1E3A 0%, #1F3A66 100%)' }}>
         <div className="px-6 py-10 md:px-10 md:py-14 text-white">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B08A3E' }}>
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#D4AF5A' }}>
             <Zap className="h-3.5 w-3.5" /> {t('client.plus.badge') || 'Your property is underperforming'}
           </div>
           <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight mb-3">
             {t('client.plus.heroTitle') || 'Unlock what your property is missing'}
           </h1>
-          <p className="text-white/70 text-base md:text-lg max-w-2xl leading-relaxed">
+          <p className="text-white/85 text-base md:text-lg max-w-2xl leading-relaxed">
             {t('client.plus.heroSub') ||
               'You are on the Starter plan. Your property works — but it is not growing. Discover what HostMasters can do for you.'}
           </p>
@@ -219,7 +219,7 @@ export default function ClientPlusPage() {
         <h3 className="text-xl md:text-2xl font-serif font-bold mb-2">
           Not sure which plan is right for you?
         </h3>
-        <p className="text-white/70 text-sm mb-5 max-w-xl mx-auto">
+        <p className="text-white/85 text-sm mb-5 max-w-xl mx-auto">
           Your Manager knows your property. Ask them — or let us recommend based on your goals.
         </p>
         <a href="/client/messages"
@@ -282,7 +282,7 @@ function OneTimeServiceCard({ service: s, requesting, requested, onRequest }: {
         </div>
         <div className="text-right">
           <p className="text-2xl font-bold text-hm-black">€{s.price}</p>
-          {s.durationLabel && <p className="text-[10px] text-gray-400">{s.durationLabel}</p>}
+          {s.durationLabel && <p className="text-[10px] text-gray-500">{s.durationLabel}</p>}
         </div>
       </div>
       <div className="flex-1">
@@ -374,7 +374,7 @@ function PriceSimulator({
           <input type="range" min={30} max={300} value={nights}
             onChange={e => setNights(Number(e.target.value))}
             className="w-full accent-hm-gold" />
-          <div className="flex justify-between text-[10px] text-gray-400 mt-0.5">
+          <div className="flex justify-between text-[10px] text-gray-500 mt-0.5">
             <span>30</span><span>150</span><span>300</span>
           </div>
         </div>
@@ -386,7 +386,7 @@ function PriceSimulator({
           <input type="range" min={50} max={350} value={avgPrice}
             onChange={e => setAvgPrice(Number(e.target.value))}
             className="w-full accent-hm-gold" />
-          <div className="flex justify-between text-[10px] text-gray-400 mt-0.5">
+          <div className="flex justify-between text-[10px] text-gray-500 mt-0.5">
             <span>€50</span><span>€200</span><span>€350</span>
           </div>
         </div>
@@ -449,7 +449,7 @@ function PriceSimulator({
         </table>
       </div>
 
-      <p className="text-[10px] text-gray-400 mt-4 text-center">
+      <p className="text-[10px] text-gray-500 mt-4 text-center">
         Estimates based on Costa Tropical market data. AI pricing uplift: +18% (Mid), +25% (Premium).
         Occupancy uplift: +4% (Basic), +8% (Mid/Premium). Actual results vary by property and season.
       </p>
@@ -471,7 +471,7 @@ function SimRow({ label, values, sublabel, bestIdx, neg }: {
         <td key={i} className={`text-center py-2.5 px-3 ${i === bestIdx ? 'bg-hm-gold/5' : ''}`}>
           <span className={neg ? 'text-gray-500' : 'text-hm-black font-semibold'}>{v}</span>
           {sublabel?.[i] && (
-            <span className="block text-[9px] text-gray-400">{sublabel[i]}</span>
+            <span className="block text-[9px] text-gray-500">{sublabel[i]}</span>
           )}
         </td>
       ))}
