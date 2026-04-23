@@ -8,7 +8,7 @@ import {
 } from "lucide-react"
 import { PlanBadge } from "@/components/hm/plan-badge"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
-import { UpsellCard } from "@/components/hm/upsell-card"
+import { StarterDashboard } from "@/components/hm/starter-dashboard"
 import { useLocale } from "@/i18n/provider"
 
 type DashboardData = {
@@ -65,11 +65,20 @@ const FLAGS: Record<string, string> = {
 export default function OwnerDashboard() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isStarter, setIsStarter] = useState<boolean | null>(null)
 
   const { t } = useLocale()
   const [pendingInvoices, setPendingInvoices] = useState<{ count: number; total: number }>({ count: 0, total: 0 })
   const [hasContractPending, setHasContractPending] = useState(false)
   const [fetchErrors, setFetchErrors] = useState<string[]>([])
+
+  // Detect plan early — drives whether we show StarterDashboard or full
+  useEffect(() => {
+    fetch('/api/me')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => setIsStarter(!d?.subscriptionPlan || d.subscriptionPlan === 'STARTER'))
+      .catch(() => setIsStarter(false))
+  }, [])
 
   useEffect(() => {
     type Payout = { scheduledFor: string; status: string; netAmount: number }
@@ -223,6 +232,19 @@ export default function OwnerDashboard() {
 
   const prop = data?.property
 
+  // Starter plan: completely different dashboard — services + upsell
+  if (isStarter) {
+    return (
+      <div className="space-y-6">
+        <DashboardGreeting
+          headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
+          dateClass="mt-1 font-sans text-hm-slate/70 text-base"
+        />
+        <StarterDashboard />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       {/* Welcome */}
@@ -230,9 +252,6 @@ export default function OwnerDashboard() {
         headingClass="text-3xl sm:text-4xl font-serif font-bold text-hm-black"
         dateClass="mt-1 font-sans text-hm-slate/70 text-base"
       />
-
-      {/* Starter upsell — hidden for BASIC/MID/PREMIUM */}
-      <UpsellCard />
 
       {/* Partial fetch errors banner */}
       {fetchErrors.length > 0 && (

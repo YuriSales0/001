@@ -44,14 +44,21 @@ export default async function ClientLayout({ children }: { children: React.React
   const hasAI = AI_PLANS.includes(currentPlan)
   const isStarter = currentPlan === 'STARTER'
 
-  const navLinks = [
+  // Starter: minimal menu — no features they can't use
+  const starterLinks = [
+    { href: '/client/dashboard',  label: t(msgs, 'common.dashboard'),      icon: Home },
+    { href: '/client/contracts',  label: t(msgs, 'contracts.myContract'),   icon: FileText },
+    { href: '/client/plan',       label: t(msgs, 'common.myPlan'),         icon: Star },
+    { href: '/client/messages',   label: t(msgs, 'owner.contactManager'),  icon: MessageCircle },
+  ]
+
+  const fullLinks = [
     ...baseLinks,
     ...(hasAI ? [{ href: '/client/ai', label: t(msgs, 'common.aiPricing'), icon: Sparkles }] : []),
-    // Intelligence hidden for Starter — consolidated into /plus
-    ...(!isStarter ? [{ href: '/client/intelligence', label: t(msgs, 'client.intelligence.title'), icon: TrendingUp }] : []),
-    // Upsell for everyone but especially prominent on Starter
-    { href: '/client/plus', label: t(msgs, 'client.plus.navLabel'), icon: Zap },
+    { href: '/client/intelligence', label: t(msgs, 'client.intelligence.title'), icon: TrendingUp },
   ]
+
+  const navLinks = isStarter ? starterLinks : fullLinks
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--hm-ivory)' }}>
