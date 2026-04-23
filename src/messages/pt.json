@@ -149,6 +149,19 @@
       "helpContactTitle": "Contactar o Admin",
       "helpContactDesc": "Questões sobre processo, território ou comissão"
     },
+    "myCommission": {
+      "title": "A minha comissão",
+      "subtitle": "A sua compensação mensal da HostMasters. Calculada automaticamente no dia 5, paga até dia 10.",
+      "ytd": "Ganho este ano",
+      "paid": "Pago até agora",
+      "pending": "Pendente de aprovação/pagamento",
+      "history": "Histórico mensal",
+      "noData": "Ainda sem registos de comissão",
+      "howTitle": "Como é calculada a sua comissão"
+    },
+    "clientRevenue": {
+      "title": "Receita dos clientes"
+    },
     "clientsPage": {
       "title": "Os meus clientes",
       "thName": "Nome",

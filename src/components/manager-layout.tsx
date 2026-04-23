@@ -94,8 +94,8 @@ function useManagerNav(): NavEntry[] {
     },
     {
       label: t('finance.income'), icon: Wallet, items: [
-        { href: "/manager/invoices", label: t('common.receipts'), icon: Receipt },
-        { href: "/revenue", label: t('common.revenue'), icon: TrendingUp },
+        { href: "/manager/commission", label: t('manager.myCommission.title'), icon: Wallet },
+        { href: "/manager/payouts", label: t('manager.clientRevenue.title'), icon: TrendingUp },
         { href: "/reports", label: t('common.reports'), icon: FileBarChart },
       ],
     },

@@ -149,6 +149,19 @@
       "helpContactTitle": "Contact your Admin",
       "helpContactDesc": "Questions about process, territory, or commission"
     },
+    "myCommission": {
+      "title": "Min provision",
+      "subtitle": "Din månatliga ersättning från HostMasters. Beräknas automatiskt den 5:e, betalas senast den 10:e.",
+      "ytd": "Intjänat i år",
+      "paid": "Betalat hittills",
+      "pending": "Väntar på godkännande/betalning",
+      "history": "Månadshistorik",
+      "noData": "Inga provisionsregister än",
+      "howTitle": "Så beräknas din provision"
+    },
+    "clientRevenue": {
+      "title": "Kundintäkter"
+    },
     "clientsPage": {
       "title": "My Clients",
       "thName": "Name",

@@ -149,6 +149,19 @@
       "helpContactTitle": "Contact your Admin",
       "helpContactDesc": "Questions about process, territory, or commission"
     },
+    "myCommission": {
+      "title": "Ma commission",
+      "subtitle": "Votre rémunération mensuelle de HostMasters. Calculée automatiquement le 5, payée avant le 10.",
+      "ytd": "Gagné cette année",
+      "paid": "Payé jusqu'à présent",
+      "pending": "En attente d'approbation/paiement",
+      "history": "Historique mensuel",
+      "noData": "Aucun enregistrement de commission pour le moment",
+      "howTitle": "Comment votre commission est calculée"
+    },
+    "clientRevenue": {
+      "title": "Revenu des clients"
+    },
     "clientsPage": {
       "title": "My Clients",
       "thName": "Name",

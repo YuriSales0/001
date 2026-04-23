@@ -149,6 +149,19 @@
       "helpContactTitle": "Contact your Admin",
       "helpContactDesc": "Questions about process, territory, or commission"
     },
+    "myCommission": {
+      "title": "Meine Provision",
+      "subtitle": "Ihre monatliche Vergütung von HostMasters. Automatisch am 5. berechnet, bis zum 10. bezahlt.",
+      "ytd": "Dieses Jahr verdient",
+      "paid": "Bisher gezahlt",
+      "pending": "Ausstehend",
+      "history": "Monatsverlauf",
+      "noData": "Noch keine Provisionseinträge",
+      "howTitle": "Wie Ihre Provision berechnet wird"
+    },
+    "clientRevenue": {
+      "title": "Kundenumsatz"
+    },
     "clientsPage": {
       "title": "My Clients",
       "thName": "Name",

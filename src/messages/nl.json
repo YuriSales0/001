@@ -149,6 +149,19 @@
       "helpContactTitle": "Contact your Admin",
       "helpContactDesc": "Questions about process, territory, or commission"
     },
+    "myCommission": {
+      "title": "Mijn commissie",
+      "subtitle": "Je maandelijkse vergoeding van HostMasters. Automatisch berekend op de 5e, uitbetaald vóór de 10e.",
+      "ytd": "Dit jaar verdiend",
+      "paid": "Tot nu toe betaald",
+      "pending": "In afwachting van goedkeuring/betaling",
+      "history": "Maandelijkse geschiedenis",
+      "noData": "Nog geen commissieregistraties",
+      "howTitle": "Hoe je commissie wordt berekend"
+    },
+    "clientRevenue": {
+      "title": "Omzet klanten"
+    },
     "clientsPage": {
       "title": "My Clients",
       "thName": "Name",
