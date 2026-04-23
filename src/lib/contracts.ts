@@ -50,11 +50,10 @@ Commission is deducted from gross revenue at each payout. The monthly subscripti
 ## 3. Services Included (${PLAN_LABEL[plan]})
 
 - Listing creation and management on Airbnb, Booking.com, and direct channels
-- 24/7 guest communication via AI-powered Guest Stay Chat
 - Check-in/check-out coordination with certified Crew
 - Cleaning and turnover to published quality standards (checklist + photo verification)
-- Monthly financial statements via the Owner dashboard
-${plan === 'BASIC' || plan === 'MID' || plan === 'PREMIUM' ? '- Preventive maintenance visits (monthly inspection)\n- VAGF post-checkout guest feedback analysis\n' : ''}${plan === 'MID' || plan === 'PREMIUM' ? '- AI dynamic pricing (estimated +18–25% revenue uplift)\n- Smart Lock integration with temporary guest codes\n- Priority response: 12h owner / 2h guest\n' : ''}${plan === 'PREMIUM' ? '- Full fiscal compliance: Modelo 179 (quarterly) + IRNR Modelo 210\n- NRU/NRA registration assistance\n- Guest upsells: airport transfers, grocery, laundry\n- Emergency response within 4 hours\n- AI Monitor: daily property health checks\n' : ''}
+- Monthly transaction list (CSV export) via the Owner dashboard
+${plan === 'BASIC' || plan === 'MID' || plan === 'PREMIUM' ? '- **Preventive maintenance visits** (monthly inspection — HVAC, plumbing, locks, smoke detectors)\n- **24/7 AI Guest Stay Assistant** (answers WiFi, door code, local tips — 70% auto-resolved)\n- **VAGF voice feedback** after checkout (12-dimension analysis in guest\'s language)\n- **Premium monthly report (PDF)** with booking breakdown, demographics, occupancy charts\n- **Weekly payouts** via Stripe Connect (vs monthly on Starter)\n- Pricing analytics (seasonal trends, occupancy patterns)\n' : ''}${plan === 'MID' || plan === 'PREMIUM' ? '- AI dynamic pricing (estimated +18–25% revenue uplift)\n- Smart Lock integration with temporary guest codes\n- Market Intelligence (competitor prices via Costa Tropical dataset)\n- AI Team Assistant (ask anything about your property)\n- Multi-language owner statements\n- Priority response: 12h owner / 2h guest\n' : ''}${plan === 'PREMIUM' ? '- Full fiscal compliance: Modelo 179 (quarterly) + IRNR Modelo 210\n- NRU/NRA registration assistance\n- Guest upsells: airport transfers, grocery, laundry\n- Emergency response within 4 hours\n- AI Monitor: daily property health checks\n' : ''}
 ## 4. Payout Schedule
 
 | Channel | Payout timing |

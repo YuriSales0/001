@@ -2023,7 +2023,8 @@
           "Asistente IA para huésped 24/7 durante la estancia",
           "Informe mensual al propietario",
           "Panel del propietario",
-          "Limpieza: €70/salida"
+          "Limpieza: €70/salida",
+          "Cleaning: €70/turnover"
         ]
       },
       "basic": {
@@ -2033,7 +2034,9 @@
           "Inspección pre y post estancia",
           "VAGF feedback por voz post-checkout",
           "Informes multilingüe",
-          "Limpieza: €60/salida"
+          "Limpieza: €60/salida",
+          "Pricing analytics (trends + occupancy patterns)",
+          "Cleaning: €60/turnover"
         ]
       },
       "mid": {
@@ -2043,7 +2046,9 @@
           "Respuesta prioritaria: 12h propietario / 2h huésped",
           "Escalación WhatsApp emergencia al Manager",
           "Scorecard feedback de la propiedad",
-          "Limpieza incluida ≥5 noches"
+          "Limpieza incluida ≥5 noches",
+          "Priority response: 12h owner / 2h guest",
+          "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
@@ -2053,7 +2058,8 @@
           "Upsells al huésped: traslados, compras, lavandería",
           "Respuesta de emergencia en 4h",
           "AI Monitor — controles diarios de la propiedad",
-          "Limpieza incluida ≥3 noches"
+          "Limpieza incluida ≥3 noches",
+          "Cleaning included ≥3 nights"
         ]
       }
     },

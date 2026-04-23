@@ -42,7 +42,9 @@ export function RevenueSimulator({
 
   const plans = (['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const).map(tier => {
     const pricingUplift = tier === 'MID' ? 1.18 : tier === 'PREMIUM' ? 1.25 : 1.0
-    const occupancyUplift = tier === 'MID' || tier === 'PREMIUM' ? 1.08 : tier === 'BASIC' ? 1.04 : 1.0
+    // Occupancy uplift: Basic gets +8% from Guest Stay Chat + VAGF (better reviews → more repeat bookings)
+    // Mid/Premium also get +8% (same guest experience benefits on top of pricing).
+    const occupancyUplift = tier === 'MID' || tier === 'PREMIUM' || tier === 'BASIC' ? 1.08 : 1.0
     const adjustedGross = Math.round(grossAnnual * pricingUplift * occupancyUplift)
     const commission = Math.round(adjustedGross * PLAN_COMMISSION[tier])
     const monthlyFee = PLAN_MONTHLY[tier] * 12
@@ -164,7 +166,8 @@ export function RevenueSimulator({
 
       <p className="text-[10px] text-gray-500 mt-4 text-center">
         Estimates based on Costa Tropical market data. AI pricing uplift: +18% (Mid), +25% (Premium).
-        Occupancy uplift: +4% (Basic), +8% (Mid/Premium). Actual results vary by property and season.
+        Occupancy uplift: +8% on all paid plans (Basic+) from Guest Stay Chat + voice feedback driving better reviews.
+        Actual results vary by property and season.
       </p>
     </section>
   )

@@ -9,7 +9,12 @@ export async function scheduleGuestFeedbackCall(reservationId: string) {
   const reservation = await prisma.reservation.findUnique({
     where: { id: reservationId },
     include: {
-      property: { select: { id: true, name: true, city: true, ownerId: true } },
+      property: {
+        select: {
+          id: true, name: true, city: true, ownerId: true,
+          owner: { select: { subscriptionPlan: true } },
+        },
+      },
     },
   })
 
@@ -17,6 +22,13 @@ export async function scheduleGuestFeedbackCall(reservationId: string) {
   if (!reservation.feedbackEligible) return null
   if (!reservation.guestPhone) {
     console.warn(`[VAGF] No phone for reservation ${reservationId} — skipping`)
+    return null
+  }
+
+  // VAGF voice feedback is a paid feature — available from BASIC plan onwards
+  const plan = reservation.property.owner?.subscriptionPlan
+  if (!plan || plan === 'STARTER') {
+    console.log(`[VAGF] Skipped feedback scheduling for ${reservationId} — owner plan ${plan ?? 'null'} does not include voice feedback`)
     return null
   }
 

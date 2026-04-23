@@ -105,7 +105,7 @@ export const PLATFORM_FEATURES: PlatformFeature[] = [
     category: 'guest',
     title: 'Guest AI Assistant during stay',
     desc: '24/7 AI concierge answers guest questions about WiFi, door code, local tips. 70% resolved without human.',
-    minTier: 'STARTER',
+    minTier: 'BASIC',
     highlight: '70% auto-resolved',
     icon: 'MessageCircle',
   },
@@ -116,6 +116,14 @@ export const PLATFORM_FEATURES: PlatformFeature[] = [
     desc: 'AI calls every guest 24-48h after checkout. Captures 12 scores + qualitative feedback in their language.',
     minTier: 'BASIC',
     icon: 'Phone',
+  },
+  {
+    id: 'weekly_payouts',
+    category: 'finance',
+    title: 'Weekly Stripe Connect payouts',
+    desc: 'Get paid every Friday instead of monthly. Direct bank transfer via Stripe Connect.',
+    minTier: 'BASIC',
+    icon: 'TrendingUp',
   },
   {
     id: 'emergency_response',
@@ -147,12 +155,20 @@ export const PLATFORM_FEATURES: PlatformFeature[] = [
 
   // Finance
   {
-    id: 'detailed_reports',
+    id: 'transaction_list',
     category: 'finance',
-    title: 'Detailed monthly reports',
-    desc: 'Every euro tracked — rental income, commissions, cleaning fees, VAT. Export to PDF/CSV for your accountant.',
+    title: 'Monthly transaction list',
+    desc: 'Basic list of rental income, commissions, cleaning fees. CSV export for your accountant.',
     minTier: 'STARTER',
     icon: 'Receipt',
+  },
+  {
+    id: 'detailed_reports',
+    category: 'finance',
+    title: 'Premium monthly report (PDF)',
+    desc: 'Detailed monthly report with booking breakdown, guest demographics, occupancy charts, photos. PDF ready to send to your accountant.',
+    minTier: 'BASIC',
+    icon: 'FileText',
   },
   {
     id: 'pricing_analytics',

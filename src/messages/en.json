@@ -2019,36 +2019,42 @@
         "features": [
           "Full short-term rental management",
           "Airbnb, Booking.com & direct listings",
-          "24/7 Guest AI assistant during stay",
-          "Monthly owner statement",
+          "Check-in/out coordination with certified Crew",
+          "Monthly transaction list (CSV)",
           "Owner dashboard",
+          "Monthly payouts",
           "Cleaning: €70/turnover"
         ]
       },
       "basic": {
         "features": [
-          "Everything in Starter",
-          "Preventive maintenance (1x/month)",
-          "Pre & post-stay inspection",
-          "VAGF voice feedback post-checkout",
-          "Multi-language owner statements",
+          "Everything in Starter, plus:",
+          "24/7 Guest AI Assistant during stay (70% auto-resolved)",
+          "Voice AI feedback after every checkout (12-dimension analysis)",
+          "Preventive maintenance visits (monthly)",
+          "Premium monthly report (PDF, booking breakdown, photos)",
+          "Weekly payouts via Stripe Connect",
+          "Pricing analytics (trends + occupancy patterns)",
           "Cleaning: €60/turnover"
         ]
       },
       "mid": {
         "features": [
-          "Everything in Basic",
-          "AI dynamic pricing + Smart Lock",
+          "Everything in Basic, plus:",
+          "AI dynamic pricing (+18% estimated revenue)",
+          "Smart Lock with rotating guest codes",
+          "Market Intelligence (Costa Tropical competitors)",
+          "AI Team Assistant (ask anything about your property)",
+          "Multi-language owner statements",
           "Priority response: 12h owner / 2h guest",
-          "Manager WhatsApp emergency escalation",
-          "Property feedback scorecard",
           "Cleaning included ≥5 nights"
         ]
       },
       "premium": {
         "features": [
-          "Everything in Mid",
-          "Full fiscal compliance (Modelo 179 + IRNR)",
+          "Everything in Mid, plus:",
+          "AI pricing optimized (+25% estimated revenue)",
+          "Full fiscal compliance (Modelo 179 + IRNR + NRU)",
           "Guest upsells: transfers, grocery, laundry",
           "Emergency response within 4h",
           "AI Monitor daily property health checks",

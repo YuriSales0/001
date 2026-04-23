@@ -24,11 +24,23 @@ export async function provisionStayChat(reservationId: string) {
   const reservation = await prisma.reservation.findUnique({
     where: { id: reservationId },
     include: {
-      property: { select: { id: true, name: true, ownerId: true } },
+      property: {
+        select: {
+          id: true, name: true, ownerId: true,
+          owner: { select: { subscriptionPlan: true } },
+        },
+      },
     },
   })
   if (!reservation) return null
   if (!reservation.guestPhone && !reservation.guestEmail) return null
+
+  // Guest Stay Chat is a paid feature — available from BASIC plan onwards
+  const plan = reservation.property.owner?.subscriptionPlan
+  if (!plan || plan === 'STARTER') {
+    console.log(`[StayChat] Skipped provisioning for ${reservationId} — owner plan ${plan ?? 'null'} does not include Guest Stay Chat`)
+    return null
+  }
 
   const token = crypto.randomBytes(32).toString('hex')
 
