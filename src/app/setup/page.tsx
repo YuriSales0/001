@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import {
-  AlertTriangle, CheckCircle2, Clock, Circle, Settings, Plus, Trash2, X, Sparkles,
+  AlertTriangle, CheckCircle2, Clock, Circle, Settings, Plus, Trash2, X, Sparkles, Scale,
 } from "lucide-react"
 import { AiContextConfig } from "@/components/hm/ai-context-config"
 
@@ -361,6 +362,13 @@ export default function SetupPage() {
                 <p className="text-sm text-gray-500">
                   Owner: {selectedSetup.ownerName} · Since {fmtDate(selectedSetup.startDate)}
                 </p>
+                <Link
+                  href={`/tax?propertyId=${selectedSetup.propertyId}`}
+                  className="inline-flex items-center gap-1.5 mt-2 text-xs font-medium text-blue-700 hover:text-blue-900"
+                >
+                  <Scale className="h-3.5 w-3.5" />
+                  Tax &amp; regulations for this property
+                </Link>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-hm-black">

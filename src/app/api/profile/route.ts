@@ -13,6 +13,7 @@ export async function GET() {
       id: true, name: true, email: true, phone: true,
       image: true, bio: true, commissionRate: true,
       role: true, subscriptionPlan: true, subscriptionStatus: true,
+      isCaptain: true,
       createdAt: true,
     },
   })

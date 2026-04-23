@@ -17,9 +17,16 @@ export async function GET(request: NextRequest) {
     if (propertyId) where.propertyId = propertyId
     if (status) where.status = status
     if (type) where.type = type
+    const captainView = searchParams.get('captainView') === 'true'
     if (me.role === 'CLIENT') where.property = { ownerId: me.id }
     else if (me.role === 'MANAGER') where.property = { owner: { managerId: me.id } }
-    else if (me.role === 'CREW') where.assigneeId = me.id
+    else if (me.role === 'CREW') {
+      // Captain: can view all submitted tasks across the crew for approval.
+      // Default CREW view: only own assigned tasks.
+      if (!(captainView && me.isCaptain)) {
+        where.assigneeId = me.id
+      }
+    }
 
     const tasks = await prisma.task.findMany({
       where,

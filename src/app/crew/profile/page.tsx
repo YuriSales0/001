@@ -17,6 +17,7 @@ type ScoreData = {
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
   image: string | null; bio: string | null; commissionRate: number | null; role: string
+  isCaptain?: boolean
 }
 
 export default function CrewProfilePage() {
@@ -84,7 +85,18 @@ export default function CrewProfilePage() {
   return (
     <div className="space-y-8 p-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-serif font-bold text-hm-black">{t('common.myProfile')}</h1>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h1 className="text-2xl font-serif font-bold text-hm-black">{t('common.myProfile')}</h1>
+          {profile?.isCaptain && (
+            <span
+              className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-800"
+              title="Crew Captain — fixed supervisor of field operations"
+            >
+              <Shield className="h-3 w-3" />
+              Crew Captain
+            </span>
+          )}
+        </div>
         <p className="text-sm text-gray-500">{t('crew.profile.roleDesc')}</p>
       </div>
 

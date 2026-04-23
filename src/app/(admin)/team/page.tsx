@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { UserPlus, Trash2, Save, Loader2, Mail, X } from "lucide-react"
+import { UserPlus, Trash2, Save, Loader2, Mail, X, Shield } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
 import { useLocale } from "@/i18n/provider"
@@ -17,6 +17,7 @@ type User = {
   phone: string | null
   managerId: string | null
   subscriptionPlan: Plan
+  isCaptain?: boolean
   manager: { id: string; name: string | null; email: string } | null
 }
 
@@ -103,6 +104,21 @@ export default function TeamPage() {
     }
   }
 
+  const toggleCaptain = async (id: string, next: boolean) => {
+    const res = await fetch(`/api/admin/users/${id}/captain`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isCaptain: next }),
+    })
+    if (res.ok) {
+      showToast(next ? 'Promoted to Captain' : 'Captain role removed', 'success')
+      load()
+    } else {
+      const d = await res.json().catch(() => ({}))
+      showToast(d.error || 'Failed', 'error')
+    }
+  }
+
   const managers = users.filter(u => u.role === 'MANAGER')
   const grouped: Record<Role, User[]> = {
     ADMIN: users.filter(u => u.role === 'ADMIN'),
@@ -172,6 +188,7 @@ export default function TeamPage() {
                 <tr>
                   <th className="px-4 py-2 text-left font-normal">Name / Email</th>
                   <th className="px-4 py-2 text-left font-normal">Role</th>
+                  {role === 'CREW' && <th className="px-4 py-2 text-left font-normal">Captain</th>}
                   {role === 'CLIENT' && <th className="px-4 py-2 text-left font-normal">Plan</th>}
                   {role === 'CLIENT' && <th className="px-4 py-2 text-left font-normal">Manager</th>}
                   <th className="px-4 py-2"></th>
@@ -202,6 +219,23 @@ export default function TeamPage() {
                           <option value="CLIENT">CLIENT</option>
                         </select>
                       </td>
+                      {role === 'CREW' && (
+                        <td className="px-4 py-2">
+                          <button
+                            type="button"
+                            onClick={() => toggleCaptain(u.id, !u.isCaptain)}
+                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold border transition-colors ${
+                              u.isCaptain
+                                ? 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
+                                : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100'
+                            }`}
+                            title={u.isCaptain ? 'Click to revoke Captain' : 'Click to promote to Captain'}
+                          >
+                            <Shield className="h-3 w-3" />
+                            {u.isCaptain ? 'Captain' : 'Promote'}
+                          </button>
+                        </td>
+                      )}
                       {role === 'CLIENT' && (
                         <td className="px-4 py-2">
                           <select
@@ -251,7 +285,7 @@ export default function TeamPage() {
                   )
                 })}
                 {grouped[role].length === 0 && (
-                  <tr><td colSpan={role === 'CLIENT' ? 5 : 3} className="px-4 py-3 text-center text-gray-400">none</td></tr>
+                  <tr><td colSpan={role === 'CLIENT' ? 5 : role === 'CREW' ? 4 : 3} className="px-4 py-3 text-center text-gray-400">none</td></tr>
                 )}
               </tbody>
             </table>

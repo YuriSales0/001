@@ -553,6 +553,7 @@
     }
   },
   "admin": {
+    "taxAndRegulations": "Skatter og regulering",
     "dashboard": {
       "activeProperties": "Active properties",
       "activeOwners": "Active owners",

@@ -54,8 +54,17 @@ export default function AdminTaxPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>("all")
   const [clientFilter, setClientFilter] = useState<string>("")
+  const [propertyFilter, setPropertyFilter] = useState<string>("")
   const [showNewModal, setShowNewModal] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+
+  // Read ?propertyId=X from URL on first render
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    const pid = params.get('propertyId')
+    if (pid) setPropertyFilter(pid)
+  }, [])
 
   const load = async () => {
     const [obls, cs, props] = await Promise.all([
@@ -74,6 +83,7 @@ export default function AdminTaxPage() {
   const visible = obligations.filter(o => {
     if (filter !== "all" && o.status !== filter) return false
     if (clientFilter && o.userId !== clientFilter) return false
+    if (propertyFilter && o.propertyId !== propertyFilter) return false
     return true
   })
 
@@ -123,6 +133,18 @@ export default function AdminTaxPage() {
           <option value="">{t('admin.allClients')}</option>
           {clients.map(c => <option key={c.id} value={c.id}>{c.name ?? c.email}</option>)}
         </select>
+        <select value={propertyFilter} onChange={e => setPropertyFilter(e.target.value)} className="rounded-lg border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
+          <option value="">All properties</option>
+          {properties.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+        </select>
+        {propertyFilter && (
+          <button
+            onClick={() => setPropertyFilter("")}
+            className="text-xs font-medium text-hm-gold hover:underline"
+          >
+            Clear property filter
+          </button>
+        )}
         <span className="text-xs text-gray-400 ml-auto">{visible.length} item{visible.length !== 1 ? "s" : ""}</span>
       </div>
 

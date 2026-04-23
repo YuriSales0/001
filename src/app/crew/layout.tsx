@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
-import { ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet } from 'lucide-react'
+import { ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet, Shield } from 'lucide-react'
 import { HmLogo } from '@/components/hm/hm-logo'
 import { AiChat } from '@/components/hm/ai-chat'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
@@ -16,11 +16,15 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
   if (!realUser.isSuperUser && realUser.role !== 'CREW') redirect('/me')
   const user = realUser.isSuperUser ? await resolveEffectiveUser(realUser) : realUser
   const msgs = loadMessagesSync((user.language as Locale) ?? 'en')
+  const isCaptain = user.isCaptain === true
 
   const navLinks = [
     { href: '/crew',          label: t(msgs, 'crew.myTasks'),      icon: ClipboardList },
     { href: '/crew/calendar', label: t(msgs, 'common.calendar'),   icon: Calendar },
     { href: '/crew/earnings', label: t(msgs, 'common.revenue'),    icon: Wallet },
+    ...(isCaptain
+      ? [{ href: '/crew/approvals', label: t(msgs, 'crew.approvals') || 'Approvals', icon: Shield }]
+      : []),
     { href: '/crew/profile',  label: t(msgs, 'common.myProfile'),  icon: User },
   ]
 
@@ -48,8 +52,19 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
             <span className="font-semibold text-white text-sm tracking-tight">
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
-                  style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>Beta</span>
+            {isCaptain ? (
+              <span
+                className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest"
+                style={{ background: 'rgba(176,138,62,0.25)', color: '#D4AF5A' }}
+                title="You are a Crew Captain"
+              >
+                <Shield className="h-2.5 w-2.5" />
+                Captain
+              </span>
+            ) : (
+              <span className="rounded px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest"
+                    style={{ background: 'rgba(176,138,62,0.2)', color: '#B08A3E' }}>Beta</span>
+            )}
           </Link>
           <label htmlFor="crew-sidebar-toggle" className="lg:hidden cursor-pointer text-white/50 hover:text-white">
             <X className="h-4 w-4" />

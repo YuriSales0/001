@@ -553,6 +553,7 @@
     }
   },
   "admin": {
+    "taxAndRegulations": "Steuern & Vorschriften",
     "dashboard": {
       "activeProperties": "Active properties",
       "activeOwners": "Active owners",

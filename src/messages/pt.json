@@ -553,6 +553,7 @@
     }
   },
   "admin": {
+    "taxAndRegulations": "Impostos e regulamentação",
     "setup": {
       "setupStarted": "Configuração iniciada",
       "complete": "concluído",

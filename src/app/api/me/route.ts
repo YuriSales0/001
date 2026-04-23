@@ -17,6 +17,7 @@ export async function GET() {
       crewMonthlyRate: true,
       crewTaskRate: true,
       rentalIntent: true,
+      isCaptain: true,
     },
   })
 
@@ -33,6 +34,7 @@ export async function GET() {
       crewContractType: user?.crewContractType ?? null,
       crewMonthlyRate: user?.crewMonthlyRate ?? null,
       crewTaskRate: user?.crewTaskRate ?? null,
+      isCaptain: user?.isCaptain ?? false,
     })
   }
 
