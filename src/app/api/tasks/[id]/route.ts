@@ -14,7 +14,7 @@ const VALID_TRANSITIONS: Record<string, string[]> = {
   IN_PROGRESS:    ['SUBMITTED'],
   SUBMITTED:      ['APPROVED', 'REJECTED'],
   APPROVED:       [],
-  REJECTED:       ['REDISTRIBUTED', 'IN_PROGRESS'],
+  REJECTED:       ['REDISTRIBUTED'],
   REDISTRIBUTED:  ['NOTIFIED', 'PENDING'],
   COMPLETED:      [],
 }

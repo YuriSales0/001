@@ -35,7 +35,10 @@ export async function POST(
 
   const body = await req.json().catch(() => ({}))
   const photo = body?.photo
-  // Block uploads after task is APPROVED/COMPLETED (audit trail integrity)
+  // Block uploads after task is SUBMITTED/APPROVED/COMPLETED (audit trail integrity)
+  if (['SUBMITTED', 'APPROVED', 'COMPLETED'].includes(task.status) && me.role === 'CREW') {
+    return NextResponse.json({ error: 'Cannot modify photos after submission' }, { status: 403 })
+  }
   if (['APPROVED', 'COMPLETED'].includes(task.status)) {
     return NextResponse.json({ error: 'Cannot modify photos after approval' }, { status: 403 })
   }
@@ -88,9 +91,12 @@ export async function DELETE(
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  // Cannot modify photos after approval/completion (audit trail)
-  if (['APPROVED', 'COMPLETED', 'SUBMITTED'].includes(task.status) && me.role === 'CREW') {
+  // Cannot modify photos after submission (audit trail integrity)
+  if (['SUBMITTED', 'APPROVED', 'COMPLETED'].includes(task.status) && me.role === 'CREW') {
     return NextResponse.json({ error: 'Cannot modify photos after submission' }, { status: 403 })
+  }
+  if (['APPROVED', 'COMPLETED'].includes(task.status)) {
+    return NextResponse.json({ error: 'Cannot modify photos after approval' }, { status: 403 })
   }
 
   const next = task.photos.filter((_, i) => i !== idx)

@@ -2,6 +2,17 @@ import { Resend } from 'resend'
 
 export const resend = new Resend(process.env.RESEND_API_KEY || 'placeholder')
 
+function safeUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return undefined
+    return url
+  } catch {
+    return undefined
+  }
+}
+
 function escapeHtml(str: string): string {
   return String(str ?? '')
     .replace(/&/g, '&amp;')
@@ -143,7 +154,7 @@ export function monthlyStatementEmail(opts: {
       : ''
     }
 
-    ${opts.dashboardUrl ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View full report in portal</a></p>` : ''}
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View full report in portal</a></p>` : ''}
     <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for trusting us with your property.<br>— The HostMasters Team</p>
   `
   return baseWrapper(body)
@@ -228,7 +239,7 @@ export function receiptCreatedEmail(opts: {
     <p style="font-size:15px;color:#444;margin:0 0 8px;">Please find your invoice details below.</p>
     ${receiptTable(opts)}
     <p style="font-size:14px;color:#555;">You can view your account and invoices at any time through your owner portal.</p>
-    ${opts.dashboardUrl ? `<p style="margin:24px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">View in portal</a></p>` : ''}
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:24px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">View in portal</a></p>` : ''}
     <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for your trust.<br>— The HostMasters Team</p>
   `
   return baseWrapper(body)
@@ -264,7 +275,7 @@ export function receiptPaidEmail(opts: {
     </table>
     <p style="font-size:14px;color:#555;"><strong>Service:</strong> ${escapeHtml(opts.description)}</p>
     <p style="font-size:14px;color:#777;margin:24px 0 0;">We appreciate your continued partnership. Your property is in good hands.</p>
-    ${opts.dashboardUrl ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View your portal</a></p>` : ''}
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View your portal</a></p>` : ''}
     <p style="margin:32px 0 0;font-size:14px;color:#777;">Warm regards,<br>— The HostMasters Team</p>
   `
   return baseWrapper(body)
@@ -323,7 +334,7 @@ export function ownerStatementEmail(opts: {
     </table>
 
     <p style="font-size:13px;color:#777;">Payment was processed on <strong>${fmtDate(opts.paidAt)}</strong>. Funds should appear in your account within 1–3 business days depending on your bank.</p>
-    ${opts.dashboardUrl ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View in portal</a></p>` : ''}
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View in portal</a></p>` : ''}
     <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for entrusting us with your property.<br>— The HostMasters Team</p>
   `
   return baseWrapper(body)
@@ -358,7 +369,7 @@ export function subscriptionReceiptEmail(opts: {
       <tr><td style="padding:10px 16px;font-size:15px;font-weight:700;color:#111827;">Amount paid</td><td style="padding:10px 16px;font-size:18px;font-weight:700;color:#111827;text-align:right;">${fmt(opts.amount)}</td></tr>
     </table>
     <p style="font-size:14px;color:#555;">Your property management subscription is active. You have full access to your owner portal, reports, and our management team.</p>
-    ${opts.dashboardUrl ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">Go to my portal</a></p>` : ''}
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">Go to my portal</a></p>` : ''}
     <p style="margin:32px 0 0;font-size:14px;color:#777;">We look forward to another great month.<br>— The HostMasters Team</p>
   `
   return baseWrapper(body)

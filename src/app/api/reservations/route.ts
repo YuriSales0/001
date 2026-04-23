@@ -57,11 +57,15 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const {
-      propertyId, guestName, guestEmail, guestPhone, checkIn, checkOut, amount, platform,
+      propertyId, guestName: rawGuestName, guestEmail, guestPhone, checkIn, checkOut, amount, platform,
       // Guest demographics
       guestNationality, guestCountry, guestAge, guestAgeGroup, guestGroupSize,
       hasChildren, hasPets, isRepeatGuest, guestLanguage, bookingChannel,
     } = body
+    // Sanitize guest name to prevent XSS in notifications, task titles, and emails
+    const guestName = typeof rawGuestName === 'string'
+      ? rawGuestName.replace(/[<>&"']/g, '').trim().slice(0, 200)
+      : rawGuestName
 
     if (!propertyId || !guestName || !checkIn || !checkOut || amount == null) {
       return NextResponse.json(

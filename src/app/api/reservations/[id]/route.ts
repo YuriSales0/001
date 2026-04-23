@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
+const VALID_TRANSITIONS: Record<string, string[]> = {
+  UPCOMING:         ['ACTIVE', 'CANCELLED'],
+  ACTIVE:           ['COMPLETED', 'AWAITING_REPORT', 'CANCELLED'],
+  AWAITING_REPORT:  ['COMPLETED'],
+  COMPLETED:        [],
+  CANCELLED:        [],
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -183,6 +191,20 @@ export async function PUT(
             taskId: checkInTask?.id ?? null,
             taskStatus: checkInTask?.status ?? null,
           }, { status: 200 })
+        }
+      }
+    }
+
+    // Enforce valid status transitions
+    if (body.status) {
+      const current = await prisma.reservation.findUnique({ where: { id }, select: { status: true } })
+      if (current) {
+        const allowed = VALID_TRANSITIONS[current.status as string] ?? []
+        if (!allowed.includes(body.status)) {
+          return NextResponse.json(
+            { error: `Invalid transition: ${current.status} → ${body.status}. Allowed: ${allowed.join(', ') || 'none (terminal)'}` },
+            { status: 400 },
+          )
         }
       }
     }
