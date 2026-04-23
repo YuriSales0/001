@@ -58,6 +58,14 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Clear referral cookie on signout to prevent cross-user attribution
+  if (pathname === '/api/auth/signout') {
+    const response = NextResponse.next()
+    response.cookies.set('hm_ref', '', { maxAge: 0, path: '/' })
+    response.cookies.set('hm_view_as', '', { maxAge: 0, path: '/' })
+    return response
+  }
+
   // Allow public paths, API routes, static assets, and partner portal (separate auth)
   if (
     publicPaths.some(p => pathname === p || pathname === p + '/') ||

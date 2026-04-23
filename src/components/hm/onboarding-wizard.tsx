@@ -492,7 +492,11 @@ export function OnboardingWizard({ role, onComplete }: WizardProps) {
               {t('onboarding.back')}
             </button>
           ) : <div />}
-          <button onClick={next} disabled={saving || (step === profileIdx && !name)}
+          <button onClick={next} disabled={
+            saving ||
+            (step === profileIdx && !name) ||
+            (step === contractIdx && !!data && data.pendingContracts.length > 0 && acceptedContracts.length === 0)
+          }
             className="inline-flex items-center gap-2 rounded-lg bg-[#0B1E3A] text-white px-5 py-2 text-sm font-semibold hover:bg-gray-800 disabled:opacity-50">
             {saving ? t('onboarding.saving') : step === confirmIdx ? t('onboarding.finish') : t('onboarding.next')}
             {!saving && step < confirmIdx && <ArrowRight className="h-4 w-4" />}
