@@ -55,28 +55,40 @@ export async function POST(
     return NextResponse.json({ error: 'Already completed' }, { status: 410 })
   }
 
-  const body = await request.json()
+  let body: Record<string, unknown>
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid body' }, { status: 400 })
+  }
+  const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null)
+  const str = (v: unknown): string | null => (typeof v === 'string' && v.length > 0 ? v : null)
+  const bool = (v: unknown): boolean => v === true
 
+  const scoreNps = num(body.scoreNps)
   await prisma.guestFeedback.update({
     where: { id: feedback.id },
     data: {
       callStatus: 'FALLBACK_WEB_COMPLETED',
       callEndedAt: new Date(),
-      scorePropertyState: body.scorePropertyState ?? null,
-      scoreCleanliness: body.scoreCleanliness ?? null,
-      scoreCommunication: body.scoreCommunication ?? null,
-      scorePlatformOverall: body.scorePlatformOverall ?? null,
-      scoreNps: body.scoreNps ?? null,
-      npsCategory: calculateNpsCategory(body.scoreNps ?? null),
+      scorePropertyState: num(body.scorePropertyState),
+      scoreCleanliness: num(body.scoreCleanliness),
+      scoreCommunication: num(body.scoreCommunication),
+      scorePlatformOverall: num(body.scorePlatformOverall),
+      scoreNps: scoreNps,
+      npsCategory: calculateNpsCategory(scoreNps),
       sentimentOverall: deriveSentiment(body),
-      feedbackFirstImpression: body.firstImpression ?? null,
-      feedbackPositive: body.positive ?? null,
-      feedbackImprovement: body.improvement ?? null,
-      feedbackNegative: body.negative ?? null,
-      feedbackRecommendation: body.recommendation ?? null,
-      contactedDuringStay: body.contactedDuringStay ?? false,
-      contactResponseScore: body.contactResponseScore ?? null,
-      reviewPromptSent: body.wantsToReview ?? false,
+      feedbackFirstImpression: str(body.firstImpression),
+      feedbackPositive: str(body.positive),
+      feedbackImprovement: str(body.improvement),
+      feedbackNegative: str(body.negative),
+      feedbackRecommendation: str(body.recommendation),
+      contactedDuringStay: bool(body.contactedDuringStay),
+      contactResponseScore: num(body.contactResponseScore),
+      reviewPromptSent: bool(body.wantsToReview),
     },
   })
 

@@ -14,6 +14,12 @@ const GREETINGS: Record<string, { morning: string; afternoon: string; evening: s
   da: { morning: 'Godmorgen', afternoon: 'God eftermiddag', evening: 'Godaften' },
 }
 
+// Used when we have no name at all — shown after the greeting ("Bom dia, amigo")
+const NAMELESS_FALLBACK: Record<string, string> = {
+  en: 'friend', pt: 'amigo', es: 'amigo', de: 'Freund',
+  nl: 'vriend', fr: 'ami',   sv: 'vän',   da: 'ven',
+}
+
 function getGreeting(locale: string): string {
   const h = new Date().getHours()
   const g = GREETINGS[locale] ?? GREETINGS.en
@@ -109,7 +115,7 @@ export function DashboardGreeting({
     )
   }
 
-  const displayName = name || (locale === 'pt' ? 'olá' : locale === 'es' ? 'hola' : 'there')
+  const displayName = name || NAMELESS_FALLBACK[locale] || NAMELESS_FALLBACK.en
 
   return (
     <div>
