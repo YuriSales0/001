@@ -21,11 +21,17 @@ export interface OneTimeService {
   id: string
   title: string
   desc: string
-  price: number              // EUR
+  price: number              // EUR — base price; may be adjusted by Manager
   category: 'setup' | 'photography' | 'maintenance' | 'fiscal' | 'guest' | 'other'
   icon: 'Camera' | 'Lock' | 'Wrench' | 'FileText' | 'Package' | 'Home' | 'Sparkles'
   durationLabel?: string     // e.g. "2-hour visit", "One-time"
   popular?: boolean
+  /** Task kind created when service is confirmed and paid. */
+  taskType: 'INSPECTION' | 'CLEANING' | 'MAINTENANCE_PREVENTIVE' | 'MAINTENANCE_CORRECTIVE' | 'SHOPPING' | 'SETUP_FIELD_INSPECTION' | 'SETUP_AI_CONTEXT'
+  /** Who executes the task. */
+  assigneeRole: 'CAPTAIN' | 'CREW' | 'ADMIN'
+  /** Payment timing */
+  paymentTiming: 'PREPAID' | 'POSTPAID'
 }
 
 // ── FEATURES (included in plans) ──────────────────────────────────────────
@@ -170,6 +176,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     icon: 'Lock',
     durationLabel: 'One-time',
     popular: true,
+    taskType: 'SETUP_FIELD_INSPECTION',
+    assigneeRole: 'CAPTAIN',
+    paymentTiming: 'PREPAID',
   },
   {
     id: 'property_photography',
@@ -180,6 +189,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     icon: 'Camera',
     durationLabel: '2-hour visit',
     popular: true,
+    taskType: 'INSPECTION',
+    assigneeRole: 'CAPTAIN',
+    paymentTiming: 'PREPAID',
   },
   {
     id: 'channel_setup',
@@ -189,6 +201,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     category: 'setup',
     icon: 'Home',
     durationLabel: 'One-time',
+    taskType: 'SETUP_AI_CONTEXT',
+    assigneeRole: 'ADMIN',
+    paymentTiming: 'PREPAID',
   },
   {
     id: 'fiscal_irnr_filing',
@@ -198,6 +213,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     category: 'fiscal',
     icon: 'FileText',
     durationLabel: 'Per filing',
+    taskType: 'SETUP_AI_CONTEXT',
+    assigneeRole: 'ADMIN',
+    paymentTiming: 'POSTPAID',
   },
   {
     id: 'deep_cleaning',
@@ -207,6 +225,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     category: 'maintenance',
     icon: 'Sparkles',
     durationLabel: '3-4 hours',
+    taskType: 'CLEANING',
+    assigneeRole: 'CREW',
+    paymentTiming: 'POSTPAID',
   },
   {
     id: 'maintenance_inspection',
@@ -216,6 +237,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     category: 'maintenance',
     icon: 'Wrench',
     durationLabel: '1-hour visit',
+    taskType: 'INSPECTION',
+    assigneeRole: 'CAPTAIN',
+    paymentTiming: 'POSTPAID',
   },
   {
     id: 'welcome_kit',
@@ -225,6 +249,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     category: 'guest',
     icon: 'Package',
     durationLabel: 'Per arrival',
+    taskType: 'SHOPPING',
+    assigneeRole: 'CREW',
+    paymentTiming: 'PREPAID',
   },
   {
     id: 'energy_certificate',
@@ -234,6 +261,9 @@ export const ONE_TIME_SERVICES: OneTimeService[] = [
     category: 'fiscal',
     icon: 'FileText',
     durationLabel: 'One-time',
+    taskType: 'INSPECTION',
+    assigneeRole: 'CAPTAIN',
+    paymentTiming: 'PREPAID',
   },
 ]
 

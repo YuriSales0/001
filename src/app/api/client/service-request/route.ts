@@ -8,9 +8,14 @@ import { ONE_TIME_SERVICES } from '@/lib/platform-catalog'
  * POST /api/client/service-request
  *
  * Client requests a one-time service from the HostMasters catalog.
- * Creates a Lead-style record for the Manager to follow up.
  *
- * Body: { serviceId: string, notes?: string, propertyId?: string }
+ * Flow:
+ *   1. Create Lead (source=SERVICE_REQUEST) with service + property context
+ *   2. Auto-assign Manager (client's manager → zone match → least-busy)
+ *   3. Notify the assigned Manager + ALL admins (oversight)
+ *   4. Manager follows up to confirm one-time vs subscription upgrade
+ *
+ * Body: { serviceId: string, propertyId?: string, notes?: string }
  */
 export async function POST(request: NextRequest) {
   const guard = await requireRole(['CLIENT'])
@@ -19,8 +24,8 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json().catch(() => ({})) as {
     serviceId?: string
-    notes?: string
     propertyId?: string
+    notes?: string
   }
 
   if (!body.serviceId) {
@@ -34,55 +39,99 @@ export async function POST(request: NextRequest) {
 
   const user = await prisma.user.findUnique({
     where: { id: me.id },
-    select: { id: true, name: true, email: true, phone: true, managerId: true },
+    select: {
+      id: true, name: true, email: true, phone: true, managerId: true,
+      properties: {
+        where: body.propertyId ? { id: body.propertyId } : {},
+        select: { id: true, city: true, name: true },
+        take: 1,
+      },
+    },
   })
   if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
 
-  // Create a Lead record (source ONLINE) — Manager picks it up in CRM
+  const property = user.properties[0]
+
+  // ── Auto-assign Manager ──────────────────────────────────────
+  // Priority: existing managerId → zone match → least busy Manager
+  let managerId = user.managerId ?? null
+  if (!managerId && property?.city) {
+    const zoneManager = await prisma.user.findFirst({
+      where: { role: 'MANAGER', managerZone: { contains: property.city, mode: 'insensitive' } },
+      select: { id: true },
+    })
+    managerId = zoneManager?.id ?? null
+  }
+  if (!managerId) {
+    // Fallback: least-busy Manager (by number of assigned clients)
+    const managers = await prisma.user.findMany({
+      where: { role: 'MANAGER' },
+      select: { id: true, _count: { select: { clients: true } } },
+    })
+    managers.sort((a, b) => a._count.clients - b._count.clients)
+    managerId = managers[0]?.id ?? null
+  }
+  const autoAssigned = !user.managerId && !!managerId
+
+  // ── Create Lead (CRM pipeline) ───────────────────────────────
   const lead = await prisma.lead.create({
     data: {
       name: user.name ?? user.email,
       email: user.email,
       phone: user.phone,
-      source: 'ONLINE',
+      source: 'SERVICE_REQUEST',
       status: 'NEW',
       notes: [
         `[ONE-TIME SERVICE REQUEST]`,
-        `Service: ${service.title} (€${service.price})`,
-        body.propertyId ? `Property: ${body.propertyId}` : '',
+        `Service: ${service.title} (base €${service.price})`,
+        property ? `Property: ${property.name} (${property.city})` : 'No property specified',
+        `Payment: ${service.paymentTiming}`,
+        `Executor: ${service.assigneeRole}`,
+        autoAssigned ? `[AUTO-ASSIGNED to Manager via zone/load-balance]` : '',
         body.notes ? `Client notes: ${body.notes}` : '',
       ].filter(Boolean).join('\n'),
       message: service.title,
-      assignedManagerId: user.managerId ?? null,
+      assignedManagerId: managerId,
       convertedUserId: user.id,
       budget: service.price,
     },
   })
 
-  // Notify the Manager (or all Admins if no Manager assigned)
-  if (user.managerId) {
+  // ── Notifications ────────────────────────────────────────────
+  // ALWAYS notify all Admins for oversight (not only if no Manager)
+  const admins = await prisma.user.findMany({
+    where: { role: 'ADMIN' },
+    select: { id: true },
+  })
+  for (const admin of admins) {
     notify({
-      userId: user.managerId,
+      userId: admin.id,
       type: 'NEW_LEAD',
       title: `Service request: ${service.title}`,
-      body: `${user.name ?? user.email} wants ${service.title} (€${service.price})`,
-      link: '/crm',
+      body: `${user.name ?? user.email} wants ${service.title} (€${service.price})${property ? ` for ${property.name}` : ''}`,
+      link: `/crm?leadId=${lead.id}`,
     }).catch(() => {})
-  } else {
-    const admins = await prisma.user.findMany({
-      where: { role: 'ADMIN' },
-      select: { id: true },
-    })
-    for (const admin of admins) {
-      notify({
-        userId: admin.id,
-        type: 'NEW_LEAD',
-        title: `Unassigned service request: ${service.title}`,
-        body: `${user.name ?? user.email} wants ${service.title} (€${service.price})`,
-        link: '/crm',
-      }).catch(() => {})
-    }
   }
 
-  return NextResponse.json({ ok: true, leadId: lead.id, service: service.title, price: service.price })
+  // Notify the assigned Manager (skip if Manager is also an Admin to dedup)
+  if (managerId && !admins.find(a => a.id === managerId)) {
+    notify({
+      userId: managerId,
+      type: 'NEW_LEAD',
+      title: autoAssigned
+        ? `[Auto-assigned] ${service.title}`
+        : `Service request: ${service.title}`,
+      body: `${user.name ?? user.email} wants ${service.title} (€${service.price})${property ? ` for ${property.name}` : ''}`,
+      link: `/crm?leadId=${lead.id}`,
+    }).catch(() => {})
+  }
+
+  return NextResponse.json({
+    ok: true,
+    leadId: lead.id,
+    service: service.title,
+    price: service.price,
+    paymentTiming: service.paymentTiming,
+    autoAssignedManager: autoAssigned,
+  })
 }

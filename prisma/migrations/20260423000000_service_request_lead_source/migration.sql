@@ -1,0 +1,2 @@
+-- Add SERVICE_REQUEST value to LeadSource enum
+ALTER TYPE "LeadSource" ADD VALUE IF NOT EXISTS 'SERVICE_REQUEST';

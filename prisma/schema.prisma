@@ -130,6 +130,7 @@ enum LeadSource {
   WEBSITE
   EMAIL
   REFERRAL
+  SERVICE_REQUEST
   OTHER
 }
 
