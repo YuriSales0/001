@@ -2,14 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { notify, tForUser } from '@/lib/notifications'
+import { hasSignedMasterContract } from '@/lib/contracts'
 
 /**
  * POST /api/properties/[id]/approve
  *
- * Admin approves property → status goes to CONTRACT_PENDING.
- * Property only becomes ACTIVE after the client signs the contract.
+ * Admin approves property. The commercial relationship is already governed
+ * by the Client's signed Master Service Agreement (created at register /
+ * plan change), so we do not issue a per-property contract here.
  *
- * Flow: PENDING_APPROVAL → (approve) → CONTRACT_PENDING → (sign contract) → ACTIVE
+ * Flow: PENDING_APPROVAL → (approve) → ACTIVE (if master signed)
+ *                                    → CONTRACT_PENDING (if master not yet signed)
  */
 export async function POST(
   _request: NextRequest,
@@ -33,71 +36,28 @@ export async function POST(
     return NextResponse.json({ error: 'Property must have house rules selected before approval' }, { status: 400 })
   }
 
-  // Move to CONTRACT_PENDING and auto-generate a service contract
-  const [updated, contract] = await prisma.$transaction([
-    prisma.property.update({
-      where: { id: params.id },
-      data: { status: 'CONTRACT_PENDING' },
-      select: { id: true, status: true },
-    }),
-    prisma.contract.create({
-      data: {
-        userId: property.ownerId,
-        propertyId: property.id,
-        type: 'CLIENT_SERVICE',
-        title: `Service Agreement — ${property.name}`,
-        terms: generateContractTerms(property.name),
-        startDate: new Date(),
-        status: 'DRAFT',
-      },
-    }),
-  ])
+  const masterSigned = await hasSignedMasterContract(property.ownerId)
+  const nextStatus = masterSigned ? 'ACTIVE' : 'CONTRACT_PENDING'
 
-  // Translated notification
+  const updated = await prisma.property.update({
+    where: { id: params.id },
+    data: { status: nextStatus },
+    select: { id: true, status: true },
+  })
+
   Promise.all([
     tForUser(property.ownerId, 'notifications.propertyApprovedTitle', { name: property.name }),
     tForUser(property.ownerId, 'notifications.propertyApprovedBody'),
   ]).then(([title, body]) =>
-    notify({ userId: property.ownerId, type: 'PROPERTY_APPROVED', title, body, link: '/client/properties' })
+    notify({
+      userId: property.ownerId,
+      type: masterSigned ? 'PROPERTY_ACTIVE' : 'PROPERTY_APPROVED',
+      title,
+      body,
+      link: masterSigned ? '/client/dashboard' : '/client/contracts',
+    })
   ).catch(() => {})
 
-  return NextResponse.json({ ...updated, contractId: contract.id })
-}
-
-/** Generate standard service contract terms */
-function generateContractTerms(propertyName: string): string {
-  return `# HostMasters Service Agreement
-
-## Property: ${propertyName}
-
-### 1. Services
-HostMasters will provide full short-term rental management including:
-- Listing and marketing on Airbnb, Booking.com, and direct channels
-- Guest communication and support (24/7)
-- Check-in/check-out coordination
-- Cleaning and maintenance coordination
-- Financial reporting and payout processing
-
-### 2. Commission & Fees
-As per the selected subscription plan. Commission rates and monthly fees are detailed in your plan page.
-
-### 3. Term
-This agreement starts on the date of signing and continues on a month-to-month basis. Either party may terminate with 30 days written notice.
-
-### 4. Owner Responsibilities
-- Maintain property in good condition
-- Ensure all required licenses are valid (VUT, energy certificate, etc.)
-- Respond to urgent maintenance requests within 48h
-- Maintain appropriate insurance coverage
-
-### 5. House Rules
-The owner-selected house rules will be communicated to all guests and enforced by the HostMasters team.
-
-### 6. Liability
-HostMasters is not liable for guest damages beyond what is covered by platform guarantees (Airbnb AirCover, Booking.com Damage Policy).
-
----
-*By signing this agreement, you confirm that you have read, understood, and agree to these terms.*
-`
+  return NextResponse.json({ ...updated, masterContractSigned: masterSigned })
 }
 

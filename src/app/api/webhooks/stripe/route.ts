@@ -4,6 +4,7 @@ import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, subscriptionReceiptEmail } from '@/lib/email'
 import { notify } from '@/lib/notifications'
+import { ensureClientMasterContract } from '@/lib/contracts'
 import Stripe from 'stripe'
 
 export const dynamic = 'force-dynamic'
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest) {
           where: { id: user.id },
           data: { subscriptionPlan: plan, subscriptionStatus: 'active' },
         })
+        await ensureClientMasterContract({ userId: user.id, plan, ownerName: user.name })
         break
       }
 
@@ -90,6 +92,7 @@ export async function POST(req: NextRequest) {
           where: { id: user.id },
           data: { subscriptionPlan: plan, subscriptionStatus: sub.status },
         })
+        await ensureClientMasterContract({ userId: user.id, plan, ownerName: user.name })
         break
       }
 
@@ -106,6 +109,7 @@ export async function POST(req: NextRequest) {
           where: { id: user.id },
           data: { subscriptionPlan: plan, subscriptionStatus: sub.status },
         })
+        await ensureClientMasterContract({ userId: user.id, plan, ownerName: user.name })
         break
       }
 
@@ -200,6 +204,11 @@ export async function POST(req: NextRequest) {
         await prisma.user.update({
           where: { id: user.id },
           data: { subscriptionPlan: planName, subscriptionStatus: 'active' },
+        })
+        await ensureClientMasterContract({
+          userId: user.id,
+          plan: planName as 'STARTER' | 'BASIC' | 'MID' | 'PREMIUM',
+          ownerName: user.name,
         })
 
         if (user.email) {

@@ -108,12 +108,14 @@ export async function POST(
   }
 
   const now = new Date()
-  const shouldActivate =
+  const isMaster = contract.type === 'CLIENT_SERVICE' && !contract.propertyId
+  const isPerPropertyPending =
     contract.propertyId &&
     contract.property &&
     (contract.property.status as string) === 'CONTRACT_PENDING'
 
-  if (shouldActivate) {
+  // Case A: per-property legacy contract — activate just that property.
+  if (isPerPropertyPending) {
     const [updatedContract] = await prisma.$transaction([
       prisma.contract.update({
         where: { id: params.id },
@@ -142,6 +144,37 @@ export async function POST(
     })
   }
 
+  // Case B: master service agreement — activate any properties waiting for it.
+  if (isMaster) {
+    const [updated, activation] = await prisma.$transaction([
+      prisma.contract.update({
+        where: { id: params.id },
+        data: { signedByUser: true, signedAt: now, status: 'ACTIVE' },
+      }),
+      prisma.property.updateMany({
+        where: { ownerId: me.id, status: 'CONTRACT_PENDING' },
+        data: { status: 'ACTIVE' },
+      }),
+    ])
+
+    Promise.all([
+      tForUser(me.id, 'notifications.contractSignedTitle'),
+      tForUser(me.id, 'notifications.contractSignedBody'),
+    ]).then(([title, body]) =>
+      notify({ userId: me.id, type: 'CONTRACT_READY', title, body, link: '/client/dashboard' })
+    ).catch(() => {})
+
+    convertLeadOnContractSign(me.id).catch(console.error)
+
+    return NextResponse.json({
+      ok: true,
+      contractSigned: true,
+      contractId: updated.id,
+      propertiesActivated: activation.count,
+    })
+  }
+
+  // Case C: any other contract type (manager/crew) — just record signature.
   const updated = await prisma.contract.update({
     where: { id: params.id },
     data: { signedByUser: true, signedAt: now, status: 'ACTIVE' },

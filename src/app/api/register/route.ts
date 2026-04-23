@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
 import { verificationEmail } from '@/lib/email-verification'
 import { notify } from '@/lib/notifications'
+import { ensureClientMasterContract } from '@/lib/contracts'
 
 const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -47,6 +48,11 @@ export async function POST(req: NextRequest) {
         emailVerified: null,
       },
     })
+
+    // Generate Master Service Agreement (DRAFT, unsigned) so the client
+    // never has an active subscription without a contract on file.
+    ensureClientMasterContract({ userId: user.id, plan: 'STARTER', ownerName: user.name })
+      .catch(err => console.error('[Register] Failed to generate master contract:', err))
 
     // Issue verification token (24h) + send email
     const token = crypto.randomBytes(32).toString('hex')
