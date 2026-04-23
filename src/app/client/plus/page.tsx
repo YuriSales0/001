@@ -41,10 +41,13 @@ export default function ClientPlusPage() {
   const [loading, setLoading] = useState(true)
   const [requesting, setRequesting] = useState<string | null>(null)
   const [requested, setRequested] = useState<Record<string, boolean>>({})
+  const [mounted, setMounted] = useState(false)
 
   // Revenue calculator state
   const [nights, setNights] = useState(120)
   const [avgPrice, setAvgPrice] = useState(110)
+
+  useEffect(() => { setMounted(true) }, [])
   useEffect(() => {
     fetch('/api/profile')
       .then(r => r.json())
@@ -114,7 +117,9 @@ export default function ClientPlusPage() {
       </section>
 
       {/* ═══ REVENUE CALCULATOR + PLAN SIMULATION ═══ */}
-      <PriceSimulator nights={nights} setNights={setNights} avgPrice={avgPrice} setAvgPrice={setAvgPrice} />
+      {mounted && (
+        <PriceSimulator nights={nights} setNights={setNights} avgPrice={avgPrice} setAvgPrice={setAvgPrice} />
+      )}
 
       {/* What you HAVE */}
       <section>
@@ -323,7 +328,15 @@ function PriceSimulator({
   avgPrice: number
   setAvgPrice: (n: number) => void
 }) {
-  const avgTurnovers = Math.ceil(nights / 4.5) // ~4.5 nights avg stay
+  // Deterministic number format (avoids hydration mismatch from locale-dependent toLocaleString)
+  const fmt = (n: number) => {
+    const abs = Math.abs(n)
+    const parts = abs.toString().split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    return (n < 0 ? '-' : '') + parts.join(',')
+  }
+
+  const avgTurnovers = Math.ceil(nights / 4.5)
   const grossAnnual = nights * avgPrice
 
   const plans = (['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const).map(tier => {
@@ -413,16 +426,16 @@ function PriceSimulator({
             </tr>
           </thead>
           <tbody className="text-xs">
-            <SimRow label="Gross revenue" values={plans.map(p => `€${p.adjustedGross.toLocaleString('de-DE')}`)}
+            <SimRow label="Gross revenue" values={plans.map(p => `€${fmt(p.adjustedGross)}`)}
               sublabel={plans.map(p => p.pricingUplift > 1 ? `+${Math.round((p.pricingUplift - 1) * 100)}% AI` : 'static')}
               bestIdx={plans.findIndex(p => p.tier === best.tier)} />
-            <SimRow label="Commission" values={plans.map(p => `-€${p.commission.toLocaleString('de-DE')}`)}
+            <SimRow label="Commission" values={plans.map(p => `-€${fmt(p.commission)}`)}
               sublabel={plans.map(p => `${Math.round(PLAN_COMMISSION[p.tier] * 100)}%`)}
               bestIdx={plans.findIndex(p => p.tier === best.tier)} neg />
-            <SimRow label="Monthly fee (×12)" values={plans.map(p => p.monthlyFee ? `-€${p.monthlyFee.toLocaleString('de-DE')}` : '€0')}
+            <SimRow label="Monthly fee (×12)" values={plans.map(p => p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : '€0')}
               sublabel={plans.map(p => p.monthlyFee ? `€${PLAN_MONTHLY[p.tier]}/mo` : 'free')}
               bestIdx={plans.findIndex(p => p.tier === best.tier)} neg />
-            <SimRow label={`Cleaning (×${avgTurnovers})`} values={plans.map(p => `-€${p.cleaningCost.toLocaleString('de-DE')}`)}
+            <SimRow label={`Cleaning (×${avgTurnovers})`} values={plans.map(p => `-€${fmt(p.cleaningCost)}`)}
               sublabel={plans.map(p => `€${PLAN_CLEANING[p.tier]}/turn`)}
               bestIdx={plans.findIndex(p => p.tier === best.tier)} neg />
             <tr className="border-t-2 font-bold">
@@ -433,13 +446,13 @@ function PriceSimulator({
                 }`}>
                   <span className={p.net === best.net ? '' : p.net < starter.net ? 'text-red-600' : 'text-emerald-600'}
                     style={p.net === best.net ? { color: '#B08A3E' } : {}}>
-                    €{p.net.toLocaleString('de-DE')}
+                    €{fmt(p.net)}
                   </span>
                   {p.tier !== 'STARTER' && (
                     <span className={`block text-[10px] font-semibold mt-0.5 ${
                       p.net > starter.net ? 'text-emerald-600' : 'text-red-600'
                     }`}>
-                      {p.net > starter.net ? '+' : ''}{(p.net - starter.net).toLocaleString('de-DE')}/yr vs Starter
+                      {p.net > starter.net ? '+' : ''}{fmt(p.net - starter.net)}/yr vs Starter
                     </span>
                   )}
                 </td>
