@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import {
   Wrench, Calendar, MapPin, ClipboardCheck, CheckCircle2, PlayCircle,
   AlertTriangle, Clock, ChevronRight, Loader2, Camera, Save, X, ImagePlus,
-  Package, Info,
+  Package, Info, RefreshCw,
 } from "lucide-react"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 import { showToast } from "@/components/hm/toast"
@@ -257,7 +257,7 @@ export default function CrewHome() {
 
         <CrewScoreCard />
 
-        <div className="flex border-b hm-animate-in hm-stagger-2">
+        <div className="flex items-center border-b hm-animate-in hm-stagger-2">
           {[
             { k: "today", l: `${t('crew.today')} (${counts.today})` },
             { k: "open",  l: `${t('crew.open')} (${counts.open})` },
@@ -275,6 +275,15 @@ export default function CrewHome() {
               {f.l}
             </button>
           ))}
+          <button
+            onClick={() => load()}
+            disabled={loading}
+            className="px-3 py-2 text-gray-400 hover:text-gray-700 disabled:opacity-50 transition-colors"
+            aria-label="Refresh tasks"
+            title="Refresh tasks"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+          </button>
         </div>
 
         <div className="flex-1 overflow-y-auto divide-y hm-animate-in hm-stagger-3">

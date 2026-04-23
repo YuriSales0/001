@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import { useLocale } from "@/i18n/provider"
+import { showToast } from "@/components/hm/toast"
 import {
   Plus, X, Phone, Mail, Search, Clock, Copy, Check,
   Webhook, Code2, QrCode, MessageSquare, Zap, ChevronDown,
@@ -286,6 +287,10 @@ export default function CRMPage() {
       }, ...prev])
       setForm({ name: "", email: "", phone: "", source: "WEBSITE", notes: "", language: "EN" })
       setAddOpen(false)
+      showToast(t('manager.crm.leadCreated') || 'Lead created', 'success')
+    } else {
+      const d = await res.json().catch(() => ({}))
+      showToast(d.error || 'Failed to create lead', 'error')
     }
     setSaving(false)
   }

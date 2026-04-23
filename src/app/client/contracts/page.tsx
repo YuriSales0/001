@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { FileText, Loader2 } from "lucide-react"
+import { FileText, Loader2, AlertCircle } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { ContractViewer } from "@/components/hm/contract-viewer"
 
@@ -42,6 +42,20 @@ export default function ClientContractsPage() {
       <div>
         <h1 className="text-3xl font-serif font-bold text-hm-black">{t('contracts.contractsTitle')}</h1>
       </div>
+
+      {contracts.some(c => !c.signedByUser) && (
+        <div className="rounded-xl border-2 p-4 flex items-start gap-3" style={{ background: 'rgba(245,158,11,0.08)', borderColor: 'rgba(245,158,11,0.4)' }}>
+          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-amber-600" />
+          <div>
+            <p className="text-sm font-bold text-amber-900">
+              {t('contracts.unsignedAlert') || 'Action required: You have unsigned contracts below'}
+            </p>
+            <p className="text-xs text-amber-800 mt-0.5">
+              {t('contracts.unsignedDesc') || 'Review and sign each contract to activate your properties and continue with HostMasters services.'}
+            </p>
+          </div>
+        </div>
+      )}
 
       {contracts.length === 0 ? (
         <div className="rounded-hm border p-10 text-center" style={{ background: 'var(--hm-sand)' }}>
