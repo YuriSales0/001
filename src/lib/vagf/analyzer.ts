@@ -98,7 +98,8 @@ IMPORTANT:
 - Only include scores explicitly stated or clearly implied by guest
 - Use null when guest didn't address that dimension
 - Tags must only be from the predefined list
-- Escalate if guest mentions injury/safety/crime/emergency`
+- Escalate if guest mentions injury/safety/crime/emergency
+- Brand names NEVER translated: HostMasters, Airbnb, Booking.com, Smart Lock, Costa Tropical. If the guest said these in their language, keep them as-is in your output text fields.`
 
 export async function analyzeTranscription(transcript: string): Promise<FeedbackAnalysis> {
   const apiKey = process.env.ANTHROPIC_API_KEY
