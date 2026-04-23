@@ -7,6 +7,7 @@ import { useCurrency } from '@/contexts/currency-context'
 import { PLATFORM_LABELS, PLATFORM_RULES, PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from '@/lib/finance'
 import { ConfirmDialog } from '@/components/hm/confirm-dialog'
 import { useEscapeKey } from '@/lib/use-escape-key'
+import { showToast } from '@/components/hm/toast'
 import { useLocale } from '@/i18n/provider'
 
 type Payout = {
@@ -397,8 +398,14 @@ export default function PayoutsPage() {
 
   const doMarkPaid = async (id: string) => {
     setPaying(id)
-    await fetch(`/api/payouts/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'PAID' }) })
+    const res = await fetch(`/api/payouts/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'PAID' }) })
     setPaying(null)
+    if (res.ok) {
+      showToast(t('admin.payouts.markedPaid') || 'Payout marked as paid + receipt sent', 'success')
+    } else {
+      const d = await res.json().catch(() => ({}))
+      showToast(d.error || 'Failed to mark paid', 'error')
+    }
     load()
   }
 

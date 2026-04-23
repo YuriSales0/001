@@ -6,6 +6,7 @@ import {
   CheckCircle2, AlertCircle, ExternalLink,
 } from 'lucide-react'
 import { getSelectedRuleLabels } from '@/lib/house-rules'
+import { showToast } from '@/components/hm/toast'
 import { useLocale } from '@/i18n/provider'
 
 type Property = {
@@ -166,7 +167,13 @@ export default function PropertiesPage() {
       setApproveState(s => s ? { ...s, approving: false, error: err.error ?? t('admin.properties.errorApproving') } : s)
       return
     }
+    const result = await res.json()
     setApproveState(null)
+    if (result.masterContractSigned === false) {
+      showToast('Approved → CONTRACT_PENDING. Owner must sign master agreement to activate.', 'success')
+    } else {
+      showToast('Property approved and activated!', 'success')
+    }
     await load()
   }
 
