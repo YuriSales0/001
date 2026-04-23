@@ -69,6 +69,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+    if (typeof amount !== 'number' || amount < 0) {
+      return NextResponse.json({ error: 'Amount must be a non-negative number' }, { status: 400 })
+    }
 
     const checkInDate = new Date(checkIn)
     const checkOutDate = new Date(checkOut)
@@ -89,6 +92,9 @@ export async function POST(request: NextRequest) {
     })
     if (!property) {
       return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+    }
+    if ((property as { status?: string }).status !== 'ACTIVE') {
+      return NextResponse.json({ error: 'Property is not active — cannot create reservations' }, { status: 400 })
     }
 
     // MANAGER can only create reservations for properties owned by their managed clients

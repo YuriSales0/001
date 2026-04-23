@@ -64,11 +64,14 @@ export async function POST(
   if (!body || typeof body !== 'object') {
     return NextResponse.json({ error: 'Invalid body' }, { status: 400 })
   }
-  const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null)
+  const num = (v: unknown, min = 1, max = 10): number | null => {
+    if (typeof v !== 'number' || !Number.isFinite(v)) return null
+    return Math.max(min, Math.min(max, Math.round(v)))
+  }
   const str = (v: unknown): string | null => (typeof v === 'string' && v.length > 0 ? v : null)
   const bool = (v: unknown): boolean => v === true
 
-  const scoreNps = num(body.scoreNps)
+  const scoreNps = num(body.scoreNps, 0, 10)
   await prisma.guestFeedback.update({
     where: { id: feedback.id },
     data: {
