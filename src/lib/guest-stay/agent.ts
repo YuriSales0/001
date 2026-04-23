@@ -125,6 +125,7 @@ export async function queryAgent(
     body: JSON.stringify({
       model: process.env.STAY_CHAT_MODEL || 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
+      temperature: 0.3,
       system: SYSTEM_PROMPT(context),
       messages,
     }),

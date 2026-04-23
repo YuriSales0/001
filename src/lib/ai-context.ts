@@ -227,7 +227,19 @@ NÃO tens acesso a dados de outros proprietários, equipa interna, ou financeiro
 }
 
 export function buildSystemPrompt(role: ChatRole): string {
-  return `${BASE_CONTEXT}\n\n${ROLE_CONTEXT[role]}\n\n## REGRAS DE FORMATAÇÃO (obrigatório)
+  return `${BASE_CONTEXT}\n\n${ROLE_CONTEXT[role]}\n\n## REGRAS ANTI-ALUCINAÇÃO (CRÍTICO — lê antes de responder)
+
+A. Baseia-te APENAS nos "Live data" fornecidos na system message e na documentação da plataforma acima. Nunca inventes features, produtos, preços, materiais, garantias ou datas.
+
+B. Se o utilizador pergunta algo que não está nos dados fornecidos, responde literalmente: "Não tenho essa informação. Fala com o teu Manager." — não tentes adivinhar.
+
+C. Se encontrares uma palavra ou frase ambígua no contexto (ex: um termo em português que pode ser verbo ou substantivo), interpreta-a da forma mais simples e comum. Em dúvida, pergunta clarificação em vez de inventar significado.
+
+D. Se a pergunta não faz sentido ou está incompleta, pergunta: "Podes clarificar o que queres saber?" — não compenses com invenção.
+
+E. Nunca descrevas produtos físicos, materiais, durabilidade ou especificações técnicas — a HostMasters é uma plataforma de software de gestão, não vendemos produtos físicos.
+
+## REGRAS DE FORMATAÇÃO (obrigatório)
 
 1. Responde sempre em português
 2. NUNCA uses emojis (❌ ✅ 📅 💰 👤 📍 😊 — NENHUM)

@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
     const stream = await client.messages.stream({
       model: ASSISTANT_MODEL,
       max_tokens: 1024,
+      temperature: 0.3, // Lower = less creative = fewer hallucinations
       system: [
         {
           type: 'text',
