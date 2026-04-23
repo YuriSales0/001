@@ -33,14 +33,13 @@ export default function ManagerClients() {
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h1 className="text-3xl font-serif font-bold text-hm-black">{t('manager.clientsPage.title')}</h1>
-        {clients.length > 0 && (
-          <Link
-            href="/manager/clients/invite"
-            className="inline-flex items-center gap-2 rounded-lg bg-hm-black text-white px-4 py-2 text-sm font-semibold hover:bg-hm-black/90"
-          >
-            <UserPlus className="h-4 w-4" /> {t('manager.clientsPage.inviteBtn')}
-          </Link>
-        )}
+        <Link
+          href="/manager/clients/invite"
+          className="inline-flex items-center gap-2 rounded-lg text-white px-4 py-2 text-sm font-bold hover:opacity-90"
+          style={{ background: '#B08A3E' }}
+        >
+          <UserPlus className="h-4 w-4" /> {t('manager.clientsPage.inviteBtn')}
+        </Link>
       </div>
       <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">

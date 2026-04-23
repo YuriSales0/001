@@ -32,7 +32,12 @@ export default function ManagerPayouts() {
   }, [])
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-3xl font-serif font-bold text-hm-black">Payouts (my clients)</h1>
+      <div>
+        <h1 className="text-3xl font-serif font-bold text-hm-black">Client Revenue</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Payouts processed to your clients&apos; properties. Your own earnings are in <a href="/manager/commission" className="text-blue-600 underline">My Commission</a>.
+        </p>
+      </div>
       <div className="rounded-hm border bg-white overflow-hidden">
         <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="min-w-[600px] w-full text-sm">

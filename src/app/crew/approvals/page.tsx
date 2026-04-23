@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Shield, CheckCircle2, Clock, MapPin, User as UserIcon } from "lucide-react"
+import { Shield, CheckCircle2, Clock, MapPin, User as UserIcon, X as XIcon } from "lucide-react"
+import { showToast } from "@/components/hm/toast"
 import { useLocale } from "@/i18n/provider"
 
 type Task = {
@@ -24,6 +25,28 @@ export default function CaptainApprovalsPage() {
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
   const [denied, setDenied] = useState(false)
+  const [acting, setActing] = useState<string | null>(null)
+
+  const handleAction = async (taskId: string, action: 'APPROVED' | 'REJECTED') => {
+    setActing(taskId)
+    try {
+      const res = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: action }),
+      })
+      if (res.ok) {
+        setTasks(prev => prev.filter(t => t.id !== taskId))
+        showToast(action === 'APPROVED' ? 'Task approved' : 'Task rejected', 'success')
+      } else {
+        const d = await res.json().catch(() => ({}))
+        showToast(d.error || 'Action failed', 'error')
+      }
+    } catch {
+      showToast('Network error', 'error')
+    }
+    setActing(null)
+  }
 
   useEffect(() => { setMounted(true) }, [])
   useEffect(() => {
@@ -93,11 +116,7 @@ export default function CaptainApprovalsPage() {
         <div className="rounded-xl border bg-white overflow-hidden">
           <div className="divide-y">
             {tasks.map(task => (
-              <Link
-                key={task.id}
-                href={`/crew?taskId=${task.id}`}
-                className="flex items-start gap-4 p-4 hover:bg-gray-50 transition-colors"
-              >
+              <div key={task.id} className="flex items-start gap-4 p-4 hover:bg-gray-50 transition-colors">
                 <div className="h-10 w-10 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
                   <Clock className="h-5 w-5 text-amber-700" />
                 </div>
@@ -110,9 +129,9 @@ export default function CaptainApprovalsPage() {
                       SUBMITTED
                     </span>
                   </div>
-                  <div className="font-semibold text-hm-black truncate">
+                  <Link href={`/crew?taskId=${task.id}`} className="font-semibold text-hm-black truncate block hover:underline">
                     {task.property?.name ?? 'Property removed'}
-                  </div>
+                  </Link>
                   <div className="flex flex-wrap gap-4 mt-1 text-xs text-gray-500">
                     {task.property?.city && (
                       <span className="inline-flex items-center gap-1">
@@ -127,7 +146,25 @@ export default function CaptainApprovalsPage() {
                     <span>Due {fmtDate(task.dueDate)}</span>
                   </div>
                 </div>
-              </Link>
+                <div className="flex gap-2 shrink-0 self-center">
+                  <button
+                    onClick={() => handleAction(task.id, 'APPROVED')}
+                    disabled={acting === task.id}
+                    className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-semibold hover:bg-emerald-700 disabled:opacity-50"
+                    aria-label="Approve task"
+                  >
+                    <CheckCircle2 className="h-3.5 w-3.5" /> Approve
+                  </button>
+                  <button
+                    onClick={() => handleAction(task.id, 'REJECTED')}
+                    disabled={acting === task.id}
+                    className="inline-flex items-center gap-1 rounded-lg border border-red-200 text-red-600 px-3 py-1.5 text-xs font-semibold hover:bg-red-50 disabled:opacity-50"
+                    aria-label="Reject task"
+                  >
+                    <XIcon className="h-3.5 w-3.5" /> Reject
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
