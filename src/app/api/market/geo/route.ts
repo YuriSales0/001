@@ -187,10 +187,12 @@ function temperatureFor(score: number): MarketZone['temperature'] {
 }
 
 export async function GET(request: { nextUrl: URL } & Request) {
-  const guard = await requireRole(['ADMIN', 'MANAGER'])
+  const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
 
-  const showDemo = new URL(request.url).searchParams.get('demo') === 'true'
+  // CLIENT always sees demo data; ADMIN/MANAGER can toggle
+  const isClient = guard.user!.role === 'CLIENT'
+  const showDemo = isClient || new URL(request.url).searchParams.get('demo') === 'true'
 
   const ninetyDaysAgo = new Date()
   ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
