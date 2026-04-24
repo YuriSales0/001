@@ -78,5 +78,5 @@ export const authOptions: NextAuthOptions = {
   },
   pages: { signIn: '/login' },
   session: { strategy: 'jwt' },
-  secret: secret || 'dev-secret-hostmaster-2026',
+  secret,
 }

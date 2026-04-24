@@ -35,6 +35,13 @@ export async function getCurrentUser(): Promise<EffectiveUser | null> {
 export async function resolveEffectiveUser(realUser: EffectiveUser): Promise<EffectiveUser> {
   if (!realUser.isSuperUser) return realUser
 
+  // Fresh DB check — JWT isSuperUser could be stale if revoked mid-session
+  const freshSuperCheck = await prisma.user.findUnique({
+    where: { id: realUser.id },
+    select: { isSuperUser: true },
+  })
+  if (!freshSuperCheck?.isSuperUser) return realUser
+
   const cookieStore = cookies()
   const viewAs = cookieStore.get('hm_view_as')?.value
   if (!viewAs) return realUser
