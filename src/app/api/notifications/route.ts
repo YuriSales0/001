@@ -8,6 +8,8 @@ import {
   monthlyReportEmail,
 } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/notifications — list user's in-app notifications
  * ?unread=true — only unread
@@ -48,7 +50,11 @@ export async function PATCH(req: NextRequest) {
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
 
-  const body = await req.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await req.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const now = new Date()
 
   if (body.all === true) {
@@ -77,7 +83,11 @@ export async function POST(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   try {
-    const body = await request.json()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let body: any
+    try { body = await request.json() } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    }
     const { type, data } = body
 
     if (!type || !data) {

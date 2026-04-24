@@ -881,7 +881,7 @@ document.getElementById('hm-lead-form').addEventListener('submit', async e => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...data, source: 'WEBSITE' })
   });
-  e.target.innerHTML = '<p>Thank you! We will contact you shortly.</p>';
+  e.target.textContent = 'Thank you! We will contact you shortly.';
 });
 </script>`
 

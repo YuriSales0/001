@@ -37,7 +37,11 @@ export async function PATCH(
     return NextResponse.json({ error: 'Converted leads cannot be modified' }, { status: 409 })
   }
 
-  const body = await request.json()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let body: any
+  try { body = await request.json() } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
   const {
     status, notes, followUpDate, assignedManagerId,
     budget, propertyType, name, email, phone, source, message,

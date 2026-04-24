@@ -45,7 +45,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const body = await req.json()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let body: any
+    try { body = await req.json() } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    }
     const data: Record<string, unknown> = {}
     const now = new Date()
 

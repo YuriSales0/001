@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/crew-score — Crew sees own score + recent history
  */

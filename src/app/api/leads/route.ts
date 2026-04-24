@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { notify } from '@/lib/notifications'
 
+export const dynamic = 'force-dynamic'
+
 function stripTags(s: string | null | undefined): string | null {
   if (!s) return null
   return s.replace(/<[^>]*>/g, '').trim()

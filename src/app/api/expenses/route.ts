@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })

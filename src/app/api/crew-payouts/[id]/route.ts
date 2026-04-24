@@ -67,15 +67,22 @@ export async function PATCH(
     }
   }
 
+  // Atomic update with re-check: only transition if not already PAID.
+  // Stripe transfer already uses idempotency key (stripe-connect.ts) so
+  // duplicate transfers are prevented; this guards the DB status change.
   const updated = await prisma.crewPayout.update({
-    where: { id: params.id },
+    where: { id: params.id, status: { not: 'PAID' } },
     data: {
       status,
       paidAt: status === 'PAID' ? new Date() : undefined,
       stripeTransferId: stripeTransferId ?? undefined,
       failedReason: status === 'FAILED' ? (failedReason ?? 'Unknown') : undefined,
     },
-  })
+  }).catch(() => null)
+
+  if (!updated) {
+    return NextResponse.json({ error: 'Payout already processed' }, { status: 409 })
+  }
 
   if (status === 'PAID') {
     notify({

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/group-chats — list groups the user belongs to
  * POST /api/group-chats — Admin creates a group (or auto-seeds system groups)

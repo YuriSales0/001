@@ -1482,7 +1482,7 @@ model PartnerPayout {
   id               String              @id @default(cuid())
   partnerId        String
   partner          Partner             @relation(fields: [partnerId], references: [id])
-  leadId           String
+  leadId           String              @unique
   lead             Lead                @relation(fields: [leadId], references: [id], onDelete: Cascade)
   clientName       String?
   amount           Decimal             @db.Decimal(10,2)

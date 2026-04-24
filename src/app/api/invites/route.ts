@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+
 const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
 /**

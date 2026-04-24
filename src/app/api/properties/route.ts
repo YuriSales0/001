@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { HOUSE_RULES } from '@/lib/house-rules'
+import { DEFAULT_COMMISSION_RATE } from '@/lib/finance'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CLIENT'])
@@ -119,7 +122,7 @@ export async function POST(request: NextRequest) {
         photos: photos || [],
         houseRules: houseRules ?? [],
         ownerId,
-        commissionRate: me.role === 'ADMIN' ? (commissionRate ?? 17.0) : 17.0,
+        commissionRate: me.role === 'ADMIN' ? (commissionRate ?? DEFAULT_COMMISSION_RATE * 100) : DEFAULT_COMMISSION_RATE * 100,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         status: status as any,
       },

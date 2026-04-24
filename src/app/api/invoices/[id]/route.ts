@@ -10,7 +10,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
   try {
-    const { status } = await req.json() as { status?: 'DRAFT' | 'PENDING' | 'PAID' | 'CANCELLED' }
+    let status: 'DRAFT' | 'PENDING' | 'PAID' | 'CANCELLED' | undefined
+    try {
+      const body = await req.json() as { status?: 'DRAFT' | 'PENDING' | 'PAID' | 'CANCELLED' }
+      status = body.status
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    }
     if (!status) return NextResponse.json({ error: 'status required' }, { status: 400 })
 
     const VALID_STATUSES = ['DRAFT', 'PENDING', 'PAID', 'CANCELLED']
@@ -87,7 +93,13 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
   try {
-    const { description, amount, dueDate, notes, propertyId } = await req.json()
+    let description, amount, dueDate, notes, propertyId
+    try {
+      const body = await req.json()
+      ;({ description, amount, dueDate, notes, propertyId } = body)
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    }
     if (!description || amount == null) {
       return NextResponse.json({ error: 'description and amount required' }, { status: 400 })
     }

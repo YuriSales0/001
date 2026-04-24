@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { notify } from '@/lib/notifications'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const guard = await requireRole(['ADMIN', 'MANAGER', 'CREW', 'CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })

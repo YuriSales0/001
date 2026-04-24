@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * DELETE /api/pricing-data — clear all PricingDataPoints
  * Admin only. Use to reset demo/test data.
