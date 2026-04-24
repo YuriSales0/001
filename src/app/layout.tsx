@@ -24,6 +24,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL || 'https://hostmasters.es'),
   title: "HostMasters — Costa Tropical Property Management",
   description:
     "Professional short-term rental management on the Costa Tropical. Inspections, cleaning, maintenance, contracts, monthly returns.",
@@ -35,6 +36,22 @@ export const metadata: Metadata = {
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
+  openGraph: {
+    title: 'HostMasters — Costa Tropical Property Management',
+    description: 'Professional short-term rental management on the Costa Tropical. AI pricing, voice feedback, fiscal compliance.',
+    url: process.env.NEXTAUTH_URL || 'https://hostmasters.es',
+    siteName: 'HostMasters',
+    locale: 'en_GB',
+    type: 'website',
+    images: [{ url: '/icon.svg', width: 512, height: 512, alt: 'HostMasters' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'HostMasters — Costa Tropical Property Management',
+    description: 'Professional short-term rental management on the Costa Tropical.',
+    images: ['/icon.svg'],
+  },
+  robots: { index: true, follow: true },
 };
 
 export default async function RootLayout({

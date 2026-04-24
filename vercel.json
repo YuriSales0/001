@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx prisma generate && npx prisma db push --accept-data-loss && npx tsx prisma/seed.ts && next build",
+  "buildCommand": "npx prisma generate && npx prisma migrate deploy && next build",
   "framework": "nextjs",
   "crons": [
     {
@@ -9,6 +9,38 @@
     {
       "path": "/api/cron/monthly-statements",
       "schedule": "0 8 1 * *"
+    },
+    {
+      "path": "/api/cron/manager-payout",
+      "schedule": "0 9 5 * *"
+    },
+    {
+      "path": "/api/cron/crew-payout",
+      "schedule": "0 9 * * 3"
+    },
+    {
+      "path": "/api/cron/vagf-calls",
+      "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/crew-confirmation-timeout",
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/crew-score-decay",
+      "schedule": "0 4 1 * *"
+    },
+    {
+      "path": "/api/cron/notification-cleanup",
+      "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/cron/scrape-market",
+      "schedule": "0 5 * * 1"
+    },
+    {
+      "path": "/api/cron/partner-payout-approval",
+      "schedule": "0 11 * * *"
     }
   ]
 }
