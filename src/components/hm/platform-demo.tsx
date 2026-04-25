@@ -232,22 +232,28 @@ export function PlatformDemo() {
         </div>
 
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(176,138,62,0.2)", background: "#142B4D" }}>
-          {/* Tab bar — scrollable on mobile */}
-          <div className="flex border-b overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-px" style={{ borderColor: "rgba(255,255,255,0.1)", WebkitOverflowScrolling: 'touch' }}>
+          {/* Tab bar — icon-only on mobile (all 5 visible), icon+label on sm+ */}
+          <div className="flex border-b" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
             {TABS.map(({ key, icon: Icon }) => (
               <button
                 key={key}
                 onClick={() => setActive(key)}
-                className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 snap-start shrink-0 min-w-[120px] justify-center ${
+                aria-label={t(`demo.tabs.${key}`)}
+                className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-2 sm:px-5 py-3.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 sm:min-w-[120px] ${
                   active === key
                     ? "text-white border-[#B08A3E]"
                     : "text-gray-500 border-transparent hover:text-gray-300"
                 }`}
               >
-                <Icon className="h-4 w-4" />
-                {t(`demo.tabs.${key}`)}
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline">{t(`demo.tabs.${key}`)}</span>
               </button>
             ))}
+          </div>
+
+          {/* Active tab label — shown on mobile only, since desktop has it in the button */}
+          <div className="sm:hidden px-5 pt-4 pb-1 text-xs uppercase tracking-widest font-semibold" style={{ color: "#B08A3E" }}>
+            {t(`demo.tabs.${active}`)}
           </div>
 
           {/* Content */}
