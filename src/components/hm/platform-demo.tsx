@@ -44,7 +44,7 @@ function DashboardMock({ t }: { t: (k: string) => string }) {
             <span className="text-[10px] uppercase tracking-wider text-gray-400">{t('demo.dashboard.features.2')}</span>
           </div>
           <p className="font-semibold text-sm" style={{ color: "#0B1E3A" }}>🇬🇧 James W.</p>
-          <p className="text-xs text-gray-400">15 — 22 Jul</p>
+          <p className="text-xs text-gray-400">15–22 Jul</p>
         </div>
         <div className="rounded-lg p-3 border" style={{ borderColor: "#E8E3D8" }}>
           <div className="flex items-center gap-2 mb-1">
@@ -79,10 +79,10 @@ function DashboardMock({ t }: { t: (k: string) => string }) {
 
 function BookingsMock({ t }: { t: (k: string) => string }) {
   const bookings = [
-    { guest: "🇬🇧 James W.", dates: "Jul 15 — 22", platform: "Airbnb", amount: "€1,120" },
-    { guest: "🇩🇪 Anna K.", dates: "Jul 25 — Aug 1", platform: "Booking", amount: "€980" },
-    { guest: "🇳🇱 Peter V.", dates: "Aug 5 — 12", platform: "Direct", amount: "€1,340" },
-    { guest: "🇸🇪 Erik L.", dates: "Aug 18 — 25", platform: "Airbnb", amount: "€1,280" },
+    { guest: "🇬🇧 James W.", dates: "Jul 15–22", platform: "Airbnb", amount: "€1,120" },
+    { guest: "🇩🇪 Anna K.", dates: "Jul 25 – Aug 1", platform: "Booking", amount: "€980" },
+    { guest: "🇳🇱 Peter V.", dates: "Aug 5–12", platform: "Direct", amount: "€1,340" },
+    { guest: "🇸🇪 Erik L.", dates: "Aug 18–25", platform: "Airbnb", amount: "€1,280" },
   ]
   return (
     <div className="space-y-1">
@@ -98,7 +98,7 @@ function BookingsMock({ t }: { t: (k: string) => string }) {
         </div>
       ))}
       <div className="mt-3 rounded-lg p-3 text-center text-xs text-gray-400" style={{ background: "#FAFAF8", border: "1px dashed #E8E3D8" }}>
-        🔒 Aug 28 — Sep 4 · {t('demo.mock.personalUse')}
+        🔒 Aug 28 – Sep 4 · {t('demo.mock.personalUse')}
       </div>
     </div>
   )
@@ -186,7 +186,7 @@ function CommMock({ t }: { t: (k: string) => string }) {
           </div>
           <div className="flex justify-start">
             <div className="rounded-xl rounded-tl-sm px-4 py-2.5 text-sm max-w-[75%] border" style={{ background: "#fff", borderColor: "#E8E3D8", color: "#0B1E3A" }}>
-              Done! Technician visited today — filter was clogged. Cleaned and running perfectly now. No charge (preventive maintenance).
+              Done! Technician visited today. Filter was clogged, cleaned and running perfectly now. No charge (preventive maintenance).
             </div>
           </div>
           <div className="flex justify-end">

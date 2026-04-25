@@ -1784,7 +1784,7 @@
     },
     "dashboard": {
       "title": "Your property at a glance",
-      "desc": "Real-time earnings, occupancy rates, next guest information, and property condition — all in one premium dashboard. No more calling your manager for updates.",
+      "desc": "Real-time earnings, occupancy rates, next guest information, and property condition, all in one premium dashboard. No more calling your manager for updates.",
       "features": [
         "Net earnings this month",
         "Occupancy rate with visual bar",
@@ -1795,7 +1795,7 @@
     },
     "bookings": {
       "title": "Full booking visibility",
-      "desc": "See every reservation across all platforms — Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
+      "desc": "See every reservation across all platforms: Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
       "features": [
         "Unified calendar across all OTAs",
         "Guest details and nationality",
@@ -1868,11 +1868,11 @@
     "badge": "AI fra verdensmetropoler",
     "title": "Storbyteknologi, nu på Costa Tropical",
     "subtitle": "Kunstig intelligens der driver det regionale ejendomsmarked frem.",
-    "footer": "Bliv ikke efterladt — de der satser på AI vokser allerede hurtigere.",
+    "footer": "Bliv ikke efterladt. De der satser på AI vokser allerede hurtigere.",
     "tools": [
       {
         "name": "AI Dynamic Pricing",
-        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "desc": "Algorithm analyzes 7 factors (seasonality, events, competition, demand, lead time, ratings, occupancy) to set the optimal price every night.",
         "stat": "+25%",
         "statLabel": "revenue vs fixed pricing"
       },
@@ -1890,7 +1890,7 @@
       },
       {
         "name": "AI Property Scorecard",
-        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "desc": "Each property receives a live score across structure, amenities, location and value, fed directly by real guest feedback, benchmarked against platform average.",
         "stat": "Live",
         "statLabel": "score per property"
       },
@@ -1908,7 +1908,7 @@
       },
       {
         "name": "AI Team Assistant",
-        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
+        "desc": "In every portal: ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
         "stat": "24/7",
         "statLabel": "in every role"
       }
@@ -1928,7 +1928,7 @@
       "title1": "Din ejendom fortjener",
       "titleGold": "mere end administration.",
       "title2": "Den fortjener intelligens.",
-      "subtitle": "Du købte på Costa Tropical for at investere — ikke for at bekymre dig om rengøring, besværlige gæster eller forkerte priser. HostMasters håndterer alt med ægte data, AI-prissætning og fuld gennemsigtighed.",
+      "subtitle": "Du købte på Costa Tropical for at investere, ikke for at bekymre dig om rengøring, besværlige gæster eller forkerte priser. HostMasters håndterer alt med ægte data, AI-prissætning og fuld gennemsigtighed.",
       "cta": "1. måned gratis på Premium-planen",
       "ctaSub": "Ingen binding. Opsig når som helst.",
       "noLockin": "Ingen binding",
@@ -1969,7 +1969,7 @@
         },
         {
           "title": "Dine egne data, ikke estimater",
-          "desc": "Dashboard med ægte data fra dine bookinger, indtægter og omkostninger. Detaljerede månedlige rapporter ned til øren — ingen overraskelser.",
+          "desc": "Dashboard med ægte data fra dine bookinger, indtægter og omkostninger. Detaljerede månedlige rapporter ned til øren. Ingen overraskelser.",
           "highlight": "Total gennemsigtighed i tallene"
         },
         {
@@ -1994,7 +1994,7 @@
           "origin": "Costa Tropical Real Estate Trends"
         },
         {
-          "quote": "Kombinationen af dynamiske prisalgoritmer, markedsdata i realtid og gennemsigtige ejerportaler repræsenterer næste generation af ejendomsadministration — en der gavner både ejere og gæster.",
+          "quote": "Kombinationen af dynamiske prisalgoritmer, markedsdata i realtid og gennemsigtige ejerportaler repræsenterer næste generation af ejendomsadministration, en der gavner både ejere og gæster.",
           "name": "Teknologiperspektiv",
           "origin": "PropTech Innovation Review"
         }
@@ -2003,7 +2003,7 @@
     "simulator": {
       "badge": "Regn det ud",
       "title": "Se hvor meget der reelt er tilbage",
-      "subtitle": "Træk skyderne så de passer til din ejendom. Vi sammenligner alle 4 planer side om side — provision, månedligt gebyr, rengøring og AI-prisforøgelse. Intet regneark."
+      "subtitle": "Træk skyderne så de passer til din ejendom. Vi sammenligner alle 4 planer side om side: provision, månedligt gebyr, rengøring og AI-prisforøgelse. Intet regneark."
     },
     "plans": {
       "badge": "Planer",
@@ -2065,7 +2065,7 @@
     },
     "journey": {
       "badge": "Din rejse",
-      "title": "Fra tilmelding til fuld indtægt — i 5 trin",
+      "title": "Fra tilmelding til fuld indtægt, i 5 trin",
       "subtitle": "En klar, guidet proces. Du går aldrig alene.",
       "step1Title": "Tilmeld dig og vent på din Manager",
       "step1Desc": "Opret din konto. En lokal Manager der taler dit sprog flydende vil kontakte dig personligt.",
@@ -2076,7 +2076,7 @@
       "step4Title": "Ejendom registreret",
       "step4Desc": "Vi forbinder dine Airbnb og Booking.com kalendere, installerer Smart Lock og konfigurerer alt.",
       "step5Title": "Din ejendom arbejder for dig",
-      "step5Desc": "Alt kører — uden hovedpine.",
+      "step5Desc": "Alt kører, uden hovedpine.",
       "feat1": "Fuld korttidsudlejningsadministration",
       "feat2": "Forebyggende vedligeholdelse",
       "feat3": "Ejers blik på hver inspektion",
@@ -2087,10 +2087,10 @@
       "feat8": "Korrektiv vedligeholdelsesstyring",
       "feat9": "Renoveringer & forbedringer",
       "feat10": "Skatteadministration (Modelo 179, IRNR, NRU)",
-      "feat11": "AI Dynamisk Prissætning — optimal pris hver nat",
-      "feat12": "AI Monitor — 9 daglige automatiserede tjek af din ejendom",
-      "feat13": "AI Assistent — øjeblikkelige svar med dine ægte data",
-      "feat14": "Markedsintelligens — konkurrentovervågning & indsigter",
+      "feat11": "AI Dynamisk Prissætning med optimal pris hver nat",
+      "feat12": "AI Monitor med 9 daglige automatiserede tjek af din ejendom",
+      "feat13": "AI Assistent med øjeblikkelige svar med dine ægte data",
+      "feat14": "Markedsintelligens med konkurrentovervågning & indsigter",
       "cta": "Din ejendom tjener. Du hviler."
     },
     "finalCta": {

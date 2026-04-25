@@ -1784,7 +1784,7 @@
     },
     "dashboard": {
       "title": "Your property at a glance",
-      "desc": "Real-time earnings, occupancy rates, next guest information, and property condition — all in one premium dashboard. No more calling your manager for updates.",
+      "desc": "Real-time earnings, occupancy rates, next guest information, and property condition, all in one premium dashboard. No more calling your manager for updates.",
       "features": [
         "Net earnings this month",
         "Occupancy rate with visual bar",
@@ -1795,7 +1795,7 @@
     },
     "bookings": {
       "title": "Full booking visibility",
-      "desc": "See every reservation across all platforms — Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
+      "desc": "See every reservation across all platforms: Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
       "features": [
         "Unified calendar across all OTAs",
         "Guest details and nationality",
@@ -1868,11 +1868,11 @@
     "badge": "KI der Weltmetropolen",
     "title": "Technologie der großen Metropolen, jetzt an der Costa Tropical",
     "subtitle": "Künstliche Intelligenz, die den regionalen Immobilienmarkt vorantreibt.",
-    "footer": "Bleiben Sie nicht zurück — wer auf KI setzt, wächst bereits schneller.",
+    "footer": "Bleiben Sie nicht zurück. Wer auf KI setzt, wächst bereits schneller.",
     "tools": [
       {
         "name": "AI Dynamic Pricing",
-        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "desc": "Algorithm analyzes 7 factors (seasonality, events, competition, demand, lead time, ratings, occupancy) to set the optimal price every night.",
         "stat": "+25%",
         "statLabel": "revenue vs fixed pricing"
       },
@@ -1890,7 +1890,7 @@
       },
       {
         "name": "AI Property Scorecard",
-        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "desc": "Each property receives a live score across structure, amenities, location and value, fed directly by real guest feedback, benchmarked against platform average.",
         "stat": "Live",
         "statLabel": "score per property"
       },
@@ -1908,7 +1908,7 @@
       },
       {
         "name": "AI Team Assistant",
-        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
+        "desc": "In every portal: ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
         "stat": "24/7",
         "statLabel": "in every role"
       }
@@ -1928,7 +1928,7 @@
       "title1": "Ihre Immobilie verdient",
       "titleGold": "mehr als Verwaltung.",
       "title2": "Sie verdient Intelligenz.",
-      "subtitle": "Sie haben an der Costa Tropical investiert — nicht um sich um Reinigungen, schwierige Gäste oder falsche Preise zu sorgen. HostMasters übernimmt alles mit echten Daten, KI-Preisgestaltung und voller Transparenz.",
+      "subtitle": "Sie haben an der Costa Tropical investiert, nicht um sich um Reinigungen, schwierige Gäste oder falsche Preise zu sorgen. HostMasters übernimmt alles mit echten Daten, KI-Preisgestaltung und voller Transparenz.",
       "cta": "1. Monat gratis im Premium-Tarif",
       "ctaSub": "Keine Bindung. Jederzeit kündbar.",
       "noLockin": "Keine Bindung",
@@ -1969,7 +1969,7 @@
         },
         {
           "title": "Ihre eigenen Daten, keine Schätzungen",
-          "desc": "Dashboard mit echten Daten aus Ihren Buchungen, Einnahmen und Kosten. Detaillierte Monatsberichte auf den Cent genau — keine Überraschungen.",
+          "desc": "Dashboard mit echten Daten aus Ihren Buchungen, Einnahmen und Kosten. Detaillierte Monatsberichte auf den Cent genau. Keine Überraschungen.",
           "highlight": "Volle Transparenz bei den Zahlen"
         },
         {
@@ -2003,7 +2003,7 @@
     "simulator": {
       "badge": "Jetzt rechnen",
       "title": "Sehen Sie, wie viel wirklich übrig bleibt",
-      "subtitle": "Verschieben Sie die Regler passend zu Ihrer Immobilie. Wir vergleichen alle 4 Tarife direkt — Provision, Monatsgebühr, Reinigung und KI-Preisaufschlag. Keine Tabelle nötig."
+      "subtitle": "Verschieben Sie die Regler passend zu Ihrer Immobilie. Wir vergleichen alle 4 Tarife direkt: Provision, Monatsgebühr, Reinigung und KI-Preisaufschlag. Keine Tabelle nötig."
     },
     "plans": {
       "badge": "Tarife",
@@ -2065,7 +2065,7 @@
     },
     "journey": {
       "badge": "Ihre Reise",
-      "title": "Von der Anmeldung zum vollen Einkommen — in 5 Schritten",
+      "title": "Von der Anmeldung zum vollen Einkommen, in 5 Schritten",
       "subtitle": "Ein klarer, geführter Prozess. Sie gehen nie allein.",
       "step1Title": "Anmelden und auf Ihren Manager warten",
       "step1Desc": "Erstellen Sie Ihr Konto. Ein lokaler Manager, der Ihre Sprache spricht, wird Sie persönlich begrüßen.",
@@ -2076,7 +2076,7 @@
       "step4Title": "Immobilie eingerichtet",
       "step4Desc": "Wir verbinden Ihre Airbnb- und Booking.com-Kalender, installieren Smart Lock und konfigurieren alles.",
       "step5Title": "Ihre Immobilie arbeitet für Sie",
-      "step5Desc": "Alles läuft — ohne Kopfschmerzen.",
+      "step5Desc": "Alles läuft, ohne Kopfschmerzen.",
       "feat1": "Komplettes Kurzzeitvermietungsmanagement",
       "feat2": "Vorbeugende Wartung",
       "feat3": "Eigentümerblick bei jeder Inspektion",
@@ -2087,10 +2087,10 @@
       "feat8": "Korrektive Wartungsverwaltung",
       "feat9": "Renovierungen & Verbesserungen",
       "feat10": "Steuerverwaltung (Modelo 179, IRNR, NRU)",
-      "feat11": "KI-Dynamische Preisgestaltung — optimaler Preis jede Nacht",
-      "feat12": "KI-Monitor — 9 tägliche automatisierte Prüfungen Ihrer Immobilie",
-      "feat13": "KI-Assistent — sofortige Antworten mit Ihren echten Daten",
-      "feat14": "Markt-Intelligence — Wettbewerbsverfolgung & Einblicke",
+      "feat11": "KI-Dynamische Preisgestaltung mit optimalem Preis jede Nacht",
+      "feat12": "KI-Monitor mit 9 täglichen automatisierte Prüfungen Ihrer Immobilie",
+      "feat13": "KI-Assistent mit sofortigen Antworten mit Ihren echten Daten",
+      "feat14": "Markt-Intelligence mit Wettbewerbsverfolgung & Einblicke",
       "cta": "Ihre Immobilie verdient. Sie ruhen sich aus."
     },
     "finalCta": {

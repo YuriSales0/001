@@ -1785,7 +1785,7 @@
     },
     "dashboard": {
       "title": "A sua propriedade num relance",
-      "desc": "Rendimentos em tempo real, taxas de ocupação, informação do próximo hóspede e estado da propriedade — tudo num painel premium. Nunca mais precisa de ligar ao seu gestor para atualizações.",
+      "desc": "Rendimentos em tempo real, taxas de ocupação, informação do próximo hóspede e estado da propriedade, tudo num só painel premium. Nunca mais precisa de ligar ao seu gestor para atualizações.",
       "features": [
         "Rendimento líquido deste mês",
         "Taxa de ocupação com barra visual",
@@ -1796,7 +1796,7 @@
     },
     "bookings": {
       "title": "Visibilidade total das reservas",
-      "desc": "Veja todas as reservas em todas as plataformas — Airbnb, Booking.com e diretas. Bloqueie datas para uso pessoal. Nunca mais será surpreendido por uma reserva.",
+      "desc": "Veja todas as reservas em todas as plataformas: Airbnb, Booking.com e directas. Bloqueie datas para uso pessoal. Nunca mais será surpreendido por uma reserva.",
       "features": [
         "Calendário unificado de todas as OTAs",
         "Detalhes e nacionalidade do hóspede",
@@ -1869,7 +1869,7 @@
     "badge": "IA de ponta na Costa Tropical",
     "title": "A tecnologia das grandes metrópoles, agora na Costa Tropical",
     "subtitle": "Inteligência Artificial a impulsionar o mercado imobiliário de toda a região.",
-    "footer": "Não fiques para trás — quem aposta em IA já está a crescer mais rápido.",
+    "footer": "Não fiques para trás. Quem aposta em IA já está a crescer mais rápido.",
     "tools": [
       {
         "name": "AI Pricing Dinâmico",
@@ -1879,19 +1879,19 @@
       },
       {
         "name": "Chat IA Durante Estadia",
-        "desc": "Cada hóspede recebe link privado à chegada. IA responde 24/7 no idioma dele — WiFi, códigos, dicas locais.",
+        "desc": "Cada hóspede recebe link privado à chegada. IA responde 24/7 no idioma dele: WiFi, códigos, dicas locais.",
         "stat": "70%",
         "statLabel": "perguntas sem humanos"
       },
       {
         "name": "Feedback Vocal VAGF",
-        "desc": "Chamada IA 24-48h após checkout. Captura scores em 3 dimensões — propriedade, equipa, plataforma.",
+        "desc": "Chamada IA 24-48h após checkout. Captura scores em 3 dimensões: propriedade, equipa e plataforma.",
         "stat": "3 dim.",
         "statLabel": "propriedade · equipa · plataforma"
       },
       {
         "name": "Scorecard IA da Propriedade",
-        "desc": "Cada propriedade recebe score ao vivo em estrutura, amenities, localização e valor — alimentado pelo feedback real dos hóspedes.",
+        "desc": "Cada propriedade recebe score ao vivo em estrutura, amenities, localização e valor, alimentado pelo feedback real dos hóspedes.",
         "stat": "Ao vivo",
         "statLabel": "score por propriedade"
       },
@@ -1909,7 +1909,7 @@
       },
       {
         "name": "Assistente IA para Equipa",
-        "desc": "Em todos os portais — pergunta sobre receita, reservas, estado da propriedade. Respostas com os teus dados reais.",
+        "desc": "Em todos os portais: pergunta sobre receita, reservas ou estado da propriedade. Respostas com os teus dados reais.",
         "stat": "24/7",
         "statLabel": "em cada role"
       }
@@ -1929,7 +1929,7 @@
       "title1": "A sua propriedade merece",
       "titleGold": "mais do que gestão.",
       "title2": "Merece inteligência.",
-      "subtitle": "Comprou na Costa Tropical para investir — não para se preocupar com limpezas, hóspedes difíceis ou preços desajustados. A HostMasters trata de tudo com dados reais, preços com IA e total transparência.",
+      "subtitle": "Comprou na Costa Tropical para investir, não para se preocupar com limpezas, hóspedes difíceis ou preços desajustados. A HostMasters trata de tudo com dados reais, preços com IA e total transparência.",
       "cta": "1.º mês grátis no plano Premium",
       "ctaSub": "Sem compromisso. Cancele quando quiser.",
       "noLockin": "Sem fidelização",
@@ -1970,7 +1970,7 @@
         },
         {
           "title": "Os seus dados, não estimativas",
-          "desc": "Painel com dados reais das suas reservas, receitas e custos. Relatórios mensais detalhados ao cêntimo — sem surpresas.",
+          "desc": "Painel com dados reais das suas reservas, receitas e custos. Relatórios mensais detalhados ao cêntimo. Sem surpresas.",
           "highlight": "Transparência total nos números"
         },
         {
@@ -1995,7 +1995,7 @@
           "origin": "Costa Tropical Real Estate Trends"
         },
         {
-          "quote": "A combinação de algoritmos de preço dinâmico, dados de mercado em tempo real e portais transparentes para proprietários representa a próxima geração de gestão de propriedades — uma que beneficia tanto proprietários como hóspedes.",
+          "quote": "A combinação de algoritmos de preço dinâmico, dados de mercado em tempo real e portais transparentes para proprietários representa a próxima geração de gestão de propriedades, uma que beneficia tanto proprietários como hóspedes.",
           "name": "Perspectiva Tecnológica",
           "origin": "PropTech Innovation Review"
         }
@@ -2004,7 +2004,7 @@
     "simulator": {
       "badge": "Faz as contas",
       "title": "Vê quanto realmente fica contigo",
-      "subtitle": "Move os sliders para bater com a tua propriedade. Comparamos os 4 planos lado a lado — comissão, mensalidade, limpeza e aumento de preço via AI. Sem folha de cálculo."
+      "subtitle": "Move os sliders para bater com a tua propriedade. Comparamos os 4 planos lado a lado em comissão, mensalidade, limpeza e aumento de preço via AI. Sem folha de cálculo."
     },
     "plans": {
       "badge": "Planos",
@@ -2058,7 +2058,7 @@
           "Compliance fiscal completo (Modelo 179 + IRNR)",
           "Upsells ao hóspede: transfers, compras, lavandaria",
           "Resposta de emergência em 4h",
-          "AI Monitor — verificações diárias da propriedade",
+          "AI Monitor com verificações diárias da propriedade",
           "Limpeza incluída ≥3 noites",
           "Cleaning included ≥3 nights"
         ]
@@ -2066,7 +2066,7 @@
     },
     "journey": {
       "badge": "A tua Jornada",
-      "title": "Do registo ao rendimento total — em 5 passos",
+      "title": "Do registo ao rendimento total, em 5 passos",
       "subtitle": "Um processo claro e guiado. Nunca estás sozinho.",
       "step1Title": "Regista-te e aguarda o teu Manager",
       "step1Desc": "Cria a tua conta. Um Manager local, fluente na tua língua, vai contactar-te pessoalmente.",
@@ -2077,7 +2077,7 @@
       "step4Title": "Propriedade configurada",
       "step4Desc": "Conectamos os teus calendários Airbnb e Booking.com, instalamos Smart Lock e configuramos tudo.",
       "step5Title": "A tua propriedade trabalha por ti",
-      "step5Desc": "Tudo a funcionar — sem dores de cabeça.",
+      "step5Desc": "Tudo a funcionar, sem dores de cabeça.",
       "feat1": "Gestão completa de aluguer de curta duração",
       "feat2": "Manutenção preventiva",
       "feat3": "Olhar do dono em cada inspecção",
@@ -2088,10 +2088,10 @@
       "feat8": "Gestão de manutenções corretivas",
       "feat9": "Reformas e melhorias",
       "feat10": "Administração fiscal (Modelo 179, IRNR, NRU)",
-      "feat11": "AI Dynamic Pricing — tarifa óptima todas as noites",
-      "feat12": "AI Monitor — 9 verificações diárias automáticas na tua propriedade",
-      "feat13": "Assistente IA — respostas instantâneas com os teus dados reais",
-      "feat14": "Market Intelligence — acompanhamento da concorrência e insights",
+      "feat11": "AI Dynamic Pricing com tarifa óptima todas as noites",
+      "feat12": "AI Monitor com 9 verificações diárias automáticas na tua propriedade",
+      "feat13": "Assistente IA com respostas instantâneas baseadas nos teus dados reais",
+      "feat14": "Market Intelligence com acompanhamento da concorrência e insights",
       "cta": "A tua propriedade rentabiliza. Tu descansas."
     },
     "finalCta": {

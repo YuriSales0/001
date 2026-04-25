@@ -1784,7 +1784,7 @@
     },
     "dashboard": {
       "title": "Your property at a glance",
-      "desc": "Real-time earnings, occupancy rates, next guest information, and property condition — all in one premium dashboard. No more calling your manager for updates.",
+      "desc": "Real-time earnings, occupancy rates, next guest information, and property condition, all in one premium dashboard. No more calling your manager for updates.",
       "features": [
         "Net earnings this month",
         "Occupancy rate with visual bar",
@@ -1795,7 +1795,7 @@
     },
     "bookings": {
       "title": "Full booking visibility",
-      "desc": "See every reservation across all platforms — Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
+      "desc": "See every reservation across all platforms: Airbnb, Booking.com, and direct. Block dates for personal use. Never be surprised by a booking again.",
       "features": [
         "Unified calendar across all OTAs",
         "Guest details and nationality",
@@ -1868,11 +1868,11 @@
     "badge": "AI uit wereldsteden",
     "title": "De technologie van grootsteden, nu aan de Costa Tropical",
     "subtitle": "Kunstmatige intelligentie die de regionale vastgoedmarkt vooruit stuwt.",
-    "footer": "Blijf niet achter — wie op AI inzet, groeit al sneller.",
+    "footer": "Blijf niet achter. Wie op AI inzet, groeit al sneller.",
     "tools": [
       {
         "name": "AI Dynamic Pricing",
-        "desc": "Algorithm analyzes 7 factors — seasonality, events, competition, demand, lead time, ratings, occupancy — to set the optimal price every night.",
+        "desc": "Algorithm analyzes 7 factors (seasonality, events, competition, demand, lead time, ratings, occupancy) to set the optimal price every night.",
         "stat": "+25%",
         "statLabel": "revenue vs fixed pricing"
       },
@@ -1890,7 +1890,7 @@
       },
       {
         "name": "AI Property Scorecard",
-        "desc": "Each property receives a live score across structure, amenities, location and value — fed directly by real guest feedback, benchmarked against platform average.",
+        "desc": "Each property receives a live score across structure, amenities, location and value, fed directly by real guest feedback, benchmarked against platform average.",
         "stat": "Live",
         "statLabel": "score per property"
       },
@@ -1908,7 +1908,7 @@
       },
       {
         "name": "AI Team Assistant",
-        "desc": "In every portal — ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
+        "desc": "In every portal: ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
         "stat": "24/7",
         "statLabel": "in every role"
       }
@@ -1928,7 +1928,7 @@
       "title1": "Uw vastgoed verdient",
       "titleGold": "meer dan beheer.",
       "title2": "Het verdient intelligentie.",
-      "subtitle": "U heeft op de Costa Tropical gekocht om te investeren — niet om u zorgen te maken over schoonmaak, lastige gasten of verkeerde prijzen. HostMasters regelt alles met echte data, AI-prijsbepaling en volledige transparantie.",
+      "subtitle": "U heeft op de Costa Tropical gekocht om te investeren, niet om u zorgen te maken over schoonmaak, lastige gasten of verkeerde prijzen. HostMasters regelt alles met echte data, AI-prijsbepaling en volledige transparantie.",
       "cta": "1e maand gratis op Premium-abonnement",
       "ctaSub": "Geen verplichting. Altijd opzegbaar.",
       "noLockin": "Geen lock-in",
@@ -1969,7 +1969,7 @@
         },
         {
           "title": "Uw eigen data, geen schattingen",
-          "desc": "Dashboard met echte data uit uw boekingen, inkomsten en kosten. Gedetailleerde maandrapporten tot op de cent — geen verrassingen.",
+          "desc": "Dashboard met echte data uit uw boekingen, inkomsten en kosten. Gedetailleerde maandrapporten tot op de cent. Geen verrassingen.",
           "highlight": "Volledige transparantie in cijfers"
         },
         {
@@ -2003,7 +2003,7 @@
     "simulator": {
       "badge": "Bereken het",
       "title": "Zie hoeveel er echt overblijft",
-      "subtitle": "Beweeg de schuifregelaars passend bij jouw woning. We vergelijken alle 4 plannen naast elkaar — commissie, maandelijkse kosten, schoonmaak en AI-prijsverhoging. Geen spreadsheet nodig."
+      "subtitle": "Beweeg de schuifregelaars passend bij jouw woning. We vergelijken alle 4 plannen naast elkaar: commissie, maandelijkse kosten, schoonmaak en AI-prijsverhoging. Geen spreadsheet nodig."
     },
     "plans": {
       "badge": "Abonnementen",
@@ -2065,7 +2065,7 @@
     },
     "journey": {
       "badge": "Uw reis",
-      "title": "Van aanmelding tot volledig inkomen — in 5 stappen",
+      "title": "Van aanmelding tot volledig inkomen, in 5 stappen",
       "subtitle": "Een helder, begeleid proces. U loopt nooit alleen.",
       "step1Title": "Meld u aan en wacht op uw Manager",
       "step1Desc": "Maak uw account aan. Een lokale Manager die uw taal spreekt zal u persoonlijk verwelkomen.",
@@ -2076,7 +2076,7 @@
       "step4Title": "Pand ingericht",
       "step4Desc": "We koppelen uw Airbnb- en Booking.com-kalenders, installeren Smart Lock en configureren alles.",
       "step5Title": "Uw pand werkt voor u",
-      "step5Desc": "Alles draait — zonder kopzorgen.",
+      "step5Desc": "Alles draait, zonder kopzorgen.",
       "feat1": "Volledig kortverhuurbeheer",
       "feat2": "Preventief onderhoud",
       "feat3": "Eigenaarsoog bij elke inspectie",
@@ -2087,10 +2087,10 @@
       "feat8": "Correctief onderhoudsbeheer",
       "feat9": "Renovaties & verbeteringen",
       "feat10": "Belastingadministratie (Modelo 179, IRNR, NRU)",
-      "feat11": "AI dynamische prijsbepaling — optimale prijs elke nacht",
-      "feat12": "AI Monitor — 9 dagelijkse geautomatiseerde controles op uw pand",
-      "feat13": "AI Assistent — directe antwoorden met uw echte data",
-      "feat14": "Markt-intelligentie — concurrentiemonitoring & inzichten",
+      "feat11": "AI dynamische prijsbepaling met optimale prijs elke nacht",
+      "feat12": "AI Monitor met 9 dagelijkse geautomatiseerde controles op uw pand",
+      "feat13": "AI Assistent met directe antwoorden met uw echte data",
+      "feat14": "Markt-intelligentie met concurrentiemonitoring & inzichten",
       "cta": "Uw pand verdient. U rust uit."
     },
     "finalCta": {
