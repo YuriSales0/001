@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import {
   Camera, Save, Lock, FileText, Download, User, Crown,
-  Mail, Building2, TrendingUp, Calendar, ChevronRight, ChevronDown,
+  Mail, Building2, TrendingUp, Calendar, ChevronRight, ChevronDown, Sparkles,
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { showToast } from "@/components/hm/toast"
@@ -30,40 +30,12 @@ const PLAN_TIER_NAMES: Record<string, string> = {
   PREMIUM: 'Premium',
 }
 
-const PLAN_PERKS: Record<string, string[]> = {
-  STARTER: [
-    'Comissão 22% sobre rental líquido',
-    'Listagem em Airbnb, Booking.com, VRBO',
-    'Smart Lock incluído',
-    'Comunicação 24/7 com hóspedes',
-    'Relatórios mensais simples',
-  ],
-  BASIC: [
-    'Comissão 19% sobre rental líquido',
-    'Tudo do Starter',
-    'Manutenção preventiva mensal',
-    'VAGF — feedback por voz após checkout',
-    'Payouts semanais via Stripe',
-    'Relatórios premium em PDF',
-  ],
-  MID: [
-    'Comissão 17% sobre rental líquido',
-    'Tudo do Basic',
-    'AI Pricing dinâmico (+18% receita estimada)',
-    'Limpeza incluída em estadias ≥4 noites',
-    'Market Intelligence — concorrência local',
-    'Resposta prioritária <12h ao owner',
-  ],
-  PREMIUM: [
-    'Comissão 13% sobre rental líquido',
-    'Tudo do Mid',
-    'AI Pricing optimizado (+25% receita estimada)',
-    'Limpeza incluída em estadias ≥3 noites',
-    'Compliance fiscal completo (Modelo 179 + IRNR)',
-    'Transfer aeroporto Málaga/Granada',
-    'Lavandaria e roupa de cama premium',
-    'Resposta a emergências em <4h',
-  ],
+// PREMIUM owners get a slightly different hero gradient — subtle but premium signal.
+const HERO_GRADIENT: Record<string, string> = {
+  STARTER: 'linear-gradient(135deg, #0B1E3A 0%, #142B4D 100%)',
+  BASIC:   'linear-gradient(135deg, #0B1E3A 0%, #142B4D 100%)',
+  MID:     'linear-gradient(135deg, #0B1E3A 0%, #1a3358 60%, #142B4D 100%)',
+  PREMIUM: 'linear-gradient(135deg, #0B1E3A 0%, #1F2D5F 50%, #2A1F4B 100%)',
 }
 
 async function downloadDoc(type: "management" | "rules" | "guide", ownerName: string) {
@@ -102,8 +74,51 @@ async function downloadDoc(type: "management" | "rules" | "guide", ownerName: st
   doc.save(`HostMasters_${type}.pdf`)
 }
 
+/**
+ * Circular SVG progress ring — radius 32, stroke 5. Animates the dasharray
+ * via CSS transition. Replaces the bare "%" number for a more premium feel.
+ */
+function ProgressRing({ pct }: { pct: number }) {
+  const radius = 32
+  const stroke = 5
+  const normalised = radius - stroke / 2
+  const circumference = 2 * Math.PI * normalised
+  const offset = circumference - (Math.max(0, Math.min(100, pct)) / 100) * circumference
+  return (
+    <div className="relative h-[80px] w-[80px]">
+      <svg width={80} height={80} className="rotate-[-90deg]">
+        <circle
+          cx={40}
+          cy={40}
+          r={normalised}
+          stroke="rgba(176,138,62,0.15)"
+          strokeWidth={stroke}
+          fill="transparent"
+        />
+        <circle
+          cx={40}
+          cy={40}
+          r={normalised}
+          stroke="#B08A3E"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          fill="transparent"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          style={{ transition: 'stroke-dashoffset 600ms ease' }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="font-serif text-xl font-bold" style={{ color: '#B08A3E' }}>
+          {pct}%
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export default function ClientProfilePage() {
-  const { t } = useLocale()
+  const { t, messages } = useLocale()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -132,7 +147,6 @@ export default function ClientProfilePage() {
     }).catch(() => setLoading(false))
   }, [])
 
-  // H6 fix — scroll into view when admin/owner clicks "Complete your profile"
   const openInfoFormAndScroll = () => {
     setShowInfoForm(true)
     setTimeout(() => infoFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
@@ -176,35 +190,58 @@ export default function ClientProfilePage() {
   }
 
   if (loading) {
-    return <div className="p-8 text-sm text-gray-400">{t('common.loading')}</div>
+    return <div className="min-h-screen flex items-center justify-center" style={{ background: '#FAF8F4' }}>
+      <p className="text-sm text-gray-400">{t('common.loading')}</p>
+    </div>
   }
 
   const plan = profile?.subscriptionPlan ?? "STARTER"
   const ownerName = profile?.name ?? profile?.email ?? "Owner"
   const memberSince = profile ? new Date(profile.createdAt) : new Date()
   const monthsAsMember = Math.max(1, Math.round((Date.now() - memberSince.getTime()) / (1000 * 60 * 60 * 24 * 30)))
-  const fmtMember = memberSince.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' })
+  const fmtMember = memberSince.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
   const fmtEUR = (n: number) =>
     new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
   const fmtDate = (s: string | null) =>
-    s ? new Date(s).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' }) : ''
+    s ? new Date(s).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''
 
   const tier = PLAN_TIER_NAMES[plan]
-  const perks = PLAN_PERKS[plan] ?? []
+  // The t() helper only returns strings; perks live as arrays under
+  // clientProfileMember.perks.{plan} so we read them straight from messages.
+  const planKey = plan.toLowerCase()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const perksRaw = (messages as any)?.clientProfileMember?.perks?.[planKey]
+  const perks: string[] = Array.isArray(perksRaw) ? perksRaw : []
+
+  const tt = (k: string, replacements?: Record<string, string>) => {
+    let s = t(`clientProfileMember.${k}`)
+    if (replacements) for (const [rk, rv] of Object.entries(replacements)) s = s.replace(`{${rk}}`, rv)
+    return s
+  }
 
   return (
     <div className="min-h-screen pb-12" style={{ background: '#FAF8F4' }}>
       <div className="max-w-4xl mx-auto p-6 space-y-6">
 
-        {/* HERO */}
-        <section className="rounded-2xl overflow-hidden shadow-md"
-                 style={{ background: 'linear-gradient(135deg, #0B1E3A 0%, #142B4D 100%)' }}>
+        {/* HERO — top gold accent, tier-specific gradient, gold-ringed avatar, progress ring */}
+        <section className="rounded-2xl overflow-hidden shadow-md relative"
+                 style={{ background: HERO_GRADIENT[plan] ?? HERO_GRADIENT.STARTER }}>
+          {/* Top gold accent bar */}
+          <div className="absolute top-0 left-0 right-0 h-0.5"
+               style={{ background: 'linear-gradient(90deg, transparent 0%, #B08A3E 50%, transparent 100%)' }} />
+
           <div className="p-6 sm:p-8 text-white">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              {/* Avatar */}
+              {/* Avatar — gold ring + soft glow */}
               <div className="relative shrink-0">
-                <div className="h-24 w-24 rounded-full overflow-hidden flex items-center justify-center"
-                     style={{ background: '#142B4D', border: '3px solid #B08A3E', boxShadow: '0 0 0 4px rgba(176,138,62,0.15)' }}>
+                <div
+                  className="h-24 w-24 rounded-full overflow-hidden flex items-center justify-center transition-transform hover:scale-[1.02]"
+                  style={{
+                    background: '#142B4D',
+                    border: '3px solid #B08A3E',
+                    boxShadow: '0 0 0 4px rgba(176,138,62,0.18), 0 8px 24px rgba(0,0,0,0.25)',
+                  }}
+                >
                   {form.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={form.image} alt="" className="h-full w-full object-cover" />
@@ -217,6 +254,7 @@ export default function ClientProfilePage() {
                   onClick={() => fileRef.current?.click()}
                   className="absolute -bottom-1 -right-1 rounded-full p-2 shadow-md hover:brightness-110 transition-all"
                   style={{ background: '#B08A3E' }}
+                  aria-label="Change photo"
                 >
                   <Camera className="h-3.5 w-3.5" style={{ color: '#0B1E3A' }} />
                 </button>
@@ -225,37 +263,42 @@ export default function ClientProfilePage() {
 
               {/* Identity */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest"
-                        style={{ background: 'rgba(176,138,62,0.18)', color: '#B08A3E' }}>
-                    <Crown className="h-3 w-3" /> {tier} Member
+                <div className="flex items-center gap-2 mb-2">
+                  <span
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest"
+                    style={{
+                      background: 'rgba(176,138,62,0.20)',
+                      color: '#B08A3E',
+                      border: '1px solid rgba(176,138,62,0.4)',
+                    }}
+                  >
+                    <Crown className="h-3.5 w-3.5" />
+                    {tt('memberTier', { tier })}
                   </span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight">{ownerName}</h1>
-                <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                  <Mail className="inline h-3.5 w-3.5 mr-1" />{profile?.email}
+                <p className="text-sm mt-1.5 flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                  <Mail className="h-3.5 w-3.5" />
+                  {profile?.email}
                 </p>
-                <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Member since {fmtMember}
+                <p className="text-xs mt-1 italic" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                  {tt('memberSince', { date: fmtMember })}
                 </p>
               </div>
 
-              {/* Profile completion */}
-              <div className="text-center sm:text-right shrink-0">
-                <div className="text-[10px] uppercase tracking-widest mb-1"
-                     style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Profile completion
-                </div>
-                <div className="text-3xl font-serif font-bold" style={{ color: '#B08A3E' }}>
-                  {stats?.profileCompletion ?? 0}%
-                </div>
+              {/* Profile completion — SVG ring */}
+              <div className="flex flex-col items-center sm:items-end shrink-0 gap-1.5">
+                <ProgressRing pct={stats?.profileCompletion ?? 0} />
+                <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {tt('completionPct')}
+                </p>
                 {stats && stats.profileCompletion < 100 && (
                   <button
                     onClick={openInfoFormAndScroll}
-                    className="text-[11px] underline mt-1"
+                    className="text-[11px] underline mt-0.5 hover:text-white transition-colors"
                     style={{ color: 'rgba(255,255,255,0.7)' }}
                   >
-                    Complete your profile
+                    {tt('completionCta')}
                   </button>
                 )}
               </div>
@@ -263,60 +306,72 @@ export default function ClientProfilePage() {
           </div>
         </section>
 
-        {/* STATS STRIP */}
+        {/* STATS STRIP — premium variant: serif numbers, gold icon disc, hover lift */}
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { icon: Calendar, label: 'Member', value: `${monthsAsMember} ${monthsAsMember === 1 ? 'month' : 'months'}` },
-            { icon: Building2, label: 'Properties', value: String(stats?.propertyCount ?? 0) },
-            { icon: TrendingUp, label: 'Lifetime payouts', value: fmtEUR(stats?.totalPayouts ?? 0) },
-            { icon: Mail, label: 'Updates', value: String(stats?.broadcastsReceived ?? 0) },
+            { icon: Calendar,   label: tt('statMember'),         value: monthsAsMember === 1 ? tt('statMonth') : tt('statMonths', { n: String(monthsAsMember) }) },
+            { icon: Building2,  label: tt('statProperties'),     value: String(stats?.propertyCount ?? 0) },
+            { icon: TrendingUp, label: tt('statLifetimePayouts'),value: fmtEUR(stats?.totalPayouts ?? 0) },
+            { icon: Mail,       label: tt('statUpdates'),        value: String(stats?.broadcastsReceived ?? 0) },
           ].map(s => {
             const Icon = s.icon
             return (
-              <div key={s.label} className="rounded-xl border bg-white p-4"
-                   style={{ borderColor: '#E8E3D8' }}>
-                <Icon className="h-4 w-4 mb-2" style={{ color: '#B08A3E' }} />
-                <div className="text-lg font-bold" style={{ color: '#0B1E3A' }}>{s.value}</div>
-                <div className="text-[10px] uppercase tracking-widest text-gray-400">{s.label}</div>
+              <div
+                key={s.label}
+                className="group rounded-xl border bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                style={{ borderColor: '#E8E3D8' }}
+              >
+                <div
+                  className="h-8 w-8 rounded-lg flex items-center justify-center mb-3 transition-transform group-hover:scale-110"
+                  style={{ background: 'rgba(176,138,62,0.12)' }}
+                >
+                  <Icon className="h-4 w-4" style={{ color: '#B08A3E' }} />
+                </div>
+                <div className="font-serif text-2xl font-bold leading-none" style={{ color: '#0B1E3A' }}>{s.value}</div>
+                <div className="text-[10px] uppercase tracking-widest text-gray-400 mt-1.5">{s.label}</div>
               </div>
             )
           })}
         </section>
 
-        {/* MEMBERSHIP PERKS */}
+        {/* MEMBERSHIP PERKS — gradient header, sparkle gold icons */}
         <section className="rounded-2xl border bg-white overflow-hidden"
                  style={{ borderColor: '#E8E3D8' }}>
           <header className="px-6 py-4 border-b flex items-center justify-between"
-                  style={{ background: 'linear-gradient(180deg, #FAF8F4 0%, #ffffff 100%)', borderColor: '#E8E3D8' }}>
+                  style={{
+                    background: plan === 'PREMIUM'
+                      ? 'linear-gradient(180deg, rgba(176,138,62,0.10) 0%, #ffffff 100%)'
+                      : 'linear-gradient(180deg, #FAF8F4 0%, #ffffff 100%)',
+                    borderColor: '#E8E3D8',
+                  }}>
             <div className="flex items-center gap-2">
               <Crown className="h-4 w-4" style={{ color: '#B08A3E' }} />
               <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#0B1E3A' }}>
-                Your {tier} benefits
+                {tt('benefitsTitle', { tier })}
               </h2>
             </div>
-            <Link href="/client/plan" className="text-xs font-semibold inline-flex items-center gap-1"
+            <Link href="/client/plan" className="text-xs font-semibold inline-flex items-center gap-1 hover:underline"
                   style={{ color: '#B08A3E' }}>
-              Plan details <ChevronRight className="h-3.5 w-3.5" />
+              {tt('benefitsViewPlan')} <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </header>
           <ul className="divide-y" style={{ borderColor: '#f5f0e3' }}>
             {perks.map((perk, i) => (
-              <li key={i} className="flex items-start gap-3 px-6 py-3">
-                <div className="h-5 w-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                     style={{ background: 'rgba(176,138,62,0.12)' }}>
-                  <span style={{ color: '#B08A3E', fontSize: 12, fontWeight: 700 }}>✓</span>
-                </div>
+              <li key={i} className="flex items-start gap-3 px-6 py-3 group hover:bg-amber-50/20 transition-colors">
+                <Sparkles className="h-4 w-4 shrink-0 mt-0.5 transition-transform group-hover:scale-110"
+                          style={{ color: '#B08A3E' }} />
                 <span className="text-sm text-gray-700">{perk}</span>
               </li>
             ))}
           </ul>
           {plan !== 'PREMIUM' && (
-            <div className="px-6 py-3 border-t bg-amber-50/40" style={{ borderColor: '#f5f0e3' }}>
-              <Link href="/client/plan" className="text-xs font-semibold inline-flex items-center gap-1"
-                    style={{ color: '#B08A3E' }}>
-                Unlock more — upgrade your plan <ChevronRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
+            <Link href="/client/plan"
+                  className="block px-6 py-3 border-t text-xs font-semibold hover:bg-amber-50/40 transition-colors"
+                  style={{ background: 'rgba(176,138,62,0.04)', borderColor: '#f5f0e3', color: '#B08A3E' }}>
+              <span className="inline-flex items-center gap-1">
+                {tt('benefitsUpgrade')} <ChevronRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
           )}
         </section>
 
@@ -329,12 +384,12 @@ export default function ClientProfilePage() {
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" style={{ color: '#B08A3E' }} />
                 <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#0B1E3A' }}>
-                  From the founder
+                  {tt('recentTitle')}
                 </h2>
               </div>
-              <Link href="/client/broadcasts" className="text-xs font-semibold inline-flex items-center gap-1"
+              <Link href="/client/broadcasts" className="text-xs font-semibold inline-flex items-center gap-1 hover:underline"
                     style={{ color: '#B08A3E' }}>
-                View all <ChevronRight className="h-3.5 w-3.5" />
+                {tt('recentViewAll')} <ChevronRight className="h-3.5 w-3.5" />
               </Link>
             </header>
             <ul className="divide-y" style={{ borderColor: '#f5f0e3' }}>
@@ -371,7 +426,7 @@ export default function ClientProfilePage() {
             <div className="flex items-center gap-2">
               <User className="h-4 w-4" style={{ color: '#B08A3E' }} />
               <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#0B1E3A' }}>
-                Your information
+                {tt('infoSection')}
               </h2>
             </div>
             {showInfoForm ? <ChevronDown className="h-4 w-4 text-gray-400" /> : <ChevronRight className="h-4 w-4 text-gray-400" />}
@@ -382,13 +437,13 @@ export default function ClientProfilePage() {
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{t('profile.fullName')}</label>
                   <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold focus:border-transparent"
                     style={{ borderColor: '#E8E3D8' }} />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{t('common.phone')}</label>
                   <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold focus:border-transparent"
                     placeholder="+34 600 000 000"
                     style={{ borderColor: '#E8E3D8' }} />
                 </div>
@@ -403,7 +458,7 @@ export default function ClientProfilePage() {
               <div className="flex items-center justify-between">
                 {saved && <span className="text-sm font-medium text-emerald-600">{t('profile.savedSuccessfully')}</span>}
                 <button type="submit" disabled={saving}
-                  className="ml-auto inline-flex items-center gap-2 rounded-xl text-white px-4 py-2.5 text-sm font-semibold hover:brightness-110 disabled:opacity-50"
+                  className="ml-auto inline-flex items-center gap-2 rounded-xl text-white px-4 py-2.5 text-sm font-semibold hover:brightness-110 disabled:opacity-50 transition-all"
                   style={{ background: '#0B1E3A' }}>
                   <Save className="h-4 w-4" /> {saving ? t('profile.saving') : t('profile.saveChanges')}
                 </button>
@@ -412,34 +467,34 @@ export default function ClientProfilePage() {
           )}
         </section>
 
-        {/* DOCUMENTS */}
+        {/* DOCUMENTS — premium card style */}
         <section className="rounded-2xl border bg-white overflow-hidden"
                  style={{ borderColor: '#E8E3D8' }}>
           <header className="px-6 py-4 border-b flex items-center gap-2" style={{ borderColor: '#E8E3D8' }}>
             <FileText className="h-4 w-4" style={{ color: '#B08A3E' }} />
             <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#0B1E3A' }}>
-              Your documents
+              {tt('docsSection')}
             </h2>
           </header>
-          <div className="divide-y" style={{ borderColor: '#f5f0e3' }}>
+          <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { type: "management" as const, title: 'Management Agreement', desc: 'Your service contract with HostMasters' },
-              { type: "rules" as const,      title: 'House Rules',           desc: 'Standard rules applied to your property' },
-              { type: "guide" as const,      title: 'Owner Welcome Guide',   desc: 'How to get the most out of HostMasters' },
+              { type: "management" as const, title: 'Management Agreement', desc: 'Service contract' },
+              { type: "rules" as const,      title: 'House Rules',           desc: 'Standard rules' },
+              { type: "guide" as const,      title: 'Owner Guide',           desc: 'Get the most out' },
             ].map(doc => (
-              <div key={doc.type} className="flex items-center gap-3 px-6 py-3 hover:bg-amber-50/20 transition-colors">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg flex-shrink-0"
+              <div key={doc.type}
+                   className="group rounded-xl border p-4 hover:border-hm-gold hover:shadow-sm transition-all"
+                   style={{ borderColor: '#E8E3D8' }}>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl mb-3 transition-transform group-hover:scale-110"
                      style={{ background: 'rgba(176,138,62,0.12)' }}>
-                  <FileText className="h-4 w-4" style={{ color: '#B08A3E' }} />
+                  <FileText className="h-5 w-5" style={{ color: '#B08A3E' }} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold" style={{ color: '#0B1E3A' }}>{doc.title}</p>
-                  <p className="text-xs text-gray-400">{doc.desc}</p>
-                </div>
+                <p className="text-sm font-bold leading-tight" style={{ color: '#0B1E3A' }}>{doc.title}</p>
+                <p className="text-[11px] text-gray-400 mt-0.5">{doc.desc}</p>
                 <button
                   onClick={() => downloadDoc(doc.type, ownerName)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-gray-50 transition-colors flex-shrink-0"
-                  style={{ borderColor: '#E8E3D8' }}
+                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
+                  style={{ color: '#B08A3E' }}
                 >
                   <Download className="h-3 w-3" /> {t('common.download')}
                 </button>
@@ -459,7 +514,7 @@ export default function ClientProfilePage() {
             <div className="flex items-center gap-2">
               <Lock className="h-4 w-4" style={{ color: '#B08A3E' }} />
               <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: '#0B1E3A' }}>
-                Security
+                {tt('securitySection')}
               </h2>
             </div>
             {showSecurity ? <ChevronDown className="h-4 w-4 text-gray-400" /> : <ChevronRight className="h-4 w-4 text-gray-400" />}
@@ -478,7 +533,7 @@ export default function ClientProfilePage() {
                       type="password"
                       value={pw[key as keyof typeof pw]}
                       onChange={e => setPw(p => ({ ...p, [key]: e.target.value }))}
-                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none"
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold focus:border-transparent"
                       style={{ borderColor: '#E8E3D8' }}
                     />
                   </div>
@@ -489,7 +544,7 @@ export default function ClientProfilePage() {
                 {pwSaved && <span className="text-sm font-medium text-emerald-600">{t('profile.passwordUpdated')}</span>}
                 <button
                   type="submit"
-                  className="ml-auto inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium hover:bg-gray-50"
+                  className="ml-auto inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors"
                   style={{ borderColor: '#E8E3D8' }}
                 >
                   {t('profile.updatePassword')}

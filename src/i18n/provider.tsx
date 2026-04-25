@@ -107,5 +107,7 @@ export function useLocale() {
   if (!ctx) {
     throw new Error('useLocale must be used within a LocaleProvider')
   }
-  return { locale: ctx.locale, setLocale: ctx.setLocale, t: ctx.t }
+  // `messages` is exposed for cases where t() (string-only) isn't enough —
+  // e.g. reading nested arrays for plan perks. Prefer t() for normal lookups.
+  return { locale: ctx.locale, setLocale: ctx.setLocale, t: ctx.t, messages: ctx.messages }
 }
