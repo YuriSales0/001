@@ -208,16 +208,25 @@ export default function TeamPage() {
                         <div className="text-xs text-gray-500">{u.email}</div>
                       </td>
                       <td className="px-4 py-2">
-                        <select
-                          value={currentRole}
-                          onChange={ev => setEdit(u.id, { role: ev.target.value as Role })}
-                          className="rounded-md border px-2 py-1 text-xs"
-                        >
-                          <option value="ADMIN">ADMIN</option>
-                          <option value="MANAGER">MANAGER</option>
-                          <option value="CREW">CREW</option>
-                          <option value="CLIENT">CLIENT</option>
-                        </select>
+                        {u.role === 'CLIENT' ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-[11px] font-semibold text-gray-600" title="Client role is immutable from the team panel">
+                            CLIENT
+                          </span>
+                        ) : (
+                          <select
+                            value={currentRole}
+                            onChange={ev => {
+                              const next = ev.target.value as Role
+                              if (next === 'CLIENT') return
+                              setEdit(u.id, { role: next })
+                            }}
+                            className="rounded-md border px-2 py-1 text-xs"
+                          >
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="MANAGER">MANAGER</option>
+                            <option value="CREW">CREW</option>
+                          </select>
+                        )}
                       </td>
                       {role === 'CREW' && (
                         <td className="px-4 py-2">

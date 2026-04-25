@@ -20,6 +20,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (body.managerId !== undefined) data.managerId = body.managerId || null
     if (body.role !== undefined) {
       if (!ROLES.includes(body.role)) return NextResponse.json({ error: 'invalid role' }, { status: 400 })
+      // Block role reassignment involving CLIENT — clients must stay clients,
+      // and staff cannot be demoted to CLIENT (creates orphaned properties/leads).
+      const existing = await prisma.user.findUnique({ where: { id: params.id }, select: { role: true } })
+      if (existing?.role === 'CLIENT' && body.role !== 'CLIENT') {
+        return NextResponse.json({ error: 'Cannot change a CLIENT to another role — contact support' }, { status: 400 })
+      }
+      if (existing?.role !== 'CLIENT' && body.role === 'CLIENT') {
+        return NextResponse.json({ error: 'Cannot promote staff to CLIENT — create a new client account instead' }, { status: 400 })
+      }
       data.role = body.role
     }
     if (body.subscriptionPlan !== undefined) {
