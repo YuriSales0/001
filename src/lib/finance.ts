@@ -65,6 +65,14 @@ export const CLEANING_INCLUDED_MIN_NIGHTS: Record<string, number | null> = {
   PREMIUM: 3,
 }
 
+/**
+ * Assumed average guest stay length (nights) for revenue projection
+ * heuristics. Used by the revenue simulator and any future analytics
+ * that need to estimate turnover frequency from a "nights/year" input.
+ * Source: Costa Tropical market average; refresh when new data lands.
+ */
+export const AVG_STAY_NIGHTS = 4.5
+
 /** Default when plan is unknown */
 export const DEFAULT_COMMISSION_RATE = 0.22 // STARTER rate when plan is null/unknown
 

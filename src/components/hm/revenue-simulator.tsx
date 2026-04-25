@@ -7,11 +7,8 @@ import {
   PLAN_MONTHLY_FEE,
   CLEANING_FEE_STANDARD,
   CLEANING_INCLUDED_MIN_NIGHTS,
+  AVG_STAY_NIGHTS,
 } from "@/lib/finance"
-
-// Assumed average guest stay, used to estimate turnovers and decide
-// whether plan-level "cleaning included" thresholds apply.
-const AVG_STAY_NIGHTS = 4.5
 
 // Deterministic number format (avoids hydration mismatch from locale-dependent toLocaleString)
 function fmt(n: number): string {

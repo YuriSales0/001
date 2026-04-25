@@ -353,6 +353,13 @@ function BroadcastsTab({
 // ─── Composer ─────────────────────────────────────────────────────────────────
 
 function BroadcastComposer({ onClose, onSent }: { onClose: () => void; onSent: () => void }) {
+  // Esc key closes the modal (low-priority audit fix — modal accessibility)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   const [step, setStep] = useState<'compose' | 'preview' | 'sending'>('compose')
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
@@ -483,7 +490,7 @@ function BroadcastComposer({ onClose, onSent }: { onClose: () => void; onSent: (
               {step === 'sending' && (sending ? 'A traduzir e enviar…' : 'Resultado do envio')}
             </p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600 rounded-md p-1 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>

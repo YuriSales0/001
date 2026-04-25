@@ -436,6 +436,13 @@ function ItemActionModal({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
 
+  // Esc closes the modal (accessibility polish)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   const actions = ACTIONS_BY_STATUS[item.status] ?? []
 
   const submit = async () => {
@@ -481,7 +488,7 @@ function ItemActionModal({
               {item.serialNumber ?? item.id.slice(-6)} · {item.status}
             </p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600 rounded-md p-1 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -821,6 +828,13 @@ function AddCategoryModal({ onClose, onCreated }: { onClose: () => void; onCreat
     standardLifecycle: "",
   })
 
+  // Esc closes the modal
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   const TYPES = ["LAUNDERABLE", "DISPOSABLE", "DURABLE", "WELCOME_KIT"]
 
   const typeLabel = (type: string) => {
@@ -864,7 +878,7 @@ function AddCategoryModal({ onClose, onCreated }: { onClose: () => void; onCreat
       <div className="relative w-full max-w-md rounded-xl bg-white shadow-2xl mx-4">
         <div className="flex items-center justify-between border-b px-5 py-4">
           <h2 className="text-lg font-bold text-gray-900">{t("admin.consumables.addCategory")}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600 rounded-md p-1 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>

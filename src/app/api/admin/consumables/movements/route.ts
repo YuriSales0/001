@@ -19,6 +19,17 @@ export async function GET(req: NextRequest) {
     const dateFrom = searchParams.get('dateFrom')
     const dateTo = searchParams.get('dateTo')
 
+    // Validate movementType against the enum to surface 400 instead of a
+    // generic 500 from Prisma when an invalid string slips through.
+    const VALID_MOVEMENT_TYPES = [
+      'CHECKOUT_FROM_STORAGE', 'CHECKIN_TO_PROPERTY', 'PICKUP_FROM_PROPERTY',
+      'SEND_TO_LAUNDRY', 'RETURN_FROM_LAUNDRY', 'RETURN_TO_STORAGE',
+      'RETIRED', 'QUARANTINED', 'PURCHASE_ENTRY',
+    ]
+    if (movementType && !VALID_MOVEMENT_TYPES.includes(movementType)) {
+      return NextResponse.json({ error: `Invalid movementType: ${movementType}` }, { status: 400 })
+    }
+
     const where: Record<string, unknown> = {}
     if (movementType) where.movementType = movementType
     if (dateFrom || dateTo) {
