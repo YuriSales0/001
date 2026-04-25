@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Check, Star, Zap, Info } from 'lucide-react'
 import { useCurrency } from '@/contexts/currency-context'
 import { PLAN_COMMISSION, PLAN_MONTHLY_FEE } from '@/lib/finance'
+import { HmLogo } from '@/components/hm/hm-logo'
 
 type Billing = 'monthly' | 'annual'
 
@@ -98,12 +99,19 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-[#1e3a5f] py-5 px-4">
+      <header className="py-5 px-4" style={{ background: '#0B1E3A' }}>
         <div className="mx-auto max-w-6xl flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-white tracking-tight">
-            Unlock<span className="text-[#c9a96e]">Costa</span>
+          <Link href="/" className="flex items-center gap-2.5">
+            <HmLogo size={28} onDark />
+            <span className="text-lg font-semibold tracking-tight text-white">
+              Host<span style={{ color: '#B08A3E' }}>Masters</span>
+            </span>
           </Link>
-          <Link href="/login" className="rounded-md bg-[#c9a96e] px-4 py-2 text-sm font-medium text-[#1e3a5f] hover:bg-[#b8965d]">
+          <Link
+            href="/login"
+            className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:brightness-110"
+            style={{ background: '#B08A3E', color: '#0B1E3A' }}
+          >
             Entrar
           </Link>
         </div>
