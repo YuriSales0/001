@@ -134,10 +134,15 @@ export async function GET(request: NextRequest) {
   let updated = 0
   const persisted: { alert: CheckResult & { aiAnalysis?: string | null; autoFixNotes?: string | null }; notifiedAt: Date | null }[] = []
 
+  // Batch-load existing alerts to avoid N+1 sequential queries
+  const checkTypes = enrichedAlerts.map(a => a.checkType)
+  const existingAlerts = await prisma.systemAlert.findMany({
+    where: { checkType: { in: checkTypes }, resolvedAt: null },
+  })
+  const existingMap = new Map(existingAlerts.map(a => [a.checkType, a]))
+
   for (const item of enrichedAlerts) {
-    const existing = await prisma.systemAlert.findFirst({
-      where: { checkType: item.checkType, resolvedAt: null },
-    })
+    const existing = existingMap.get(item.checkType)
 
     if (!existing) {
       await prisma.systemAlert.create({

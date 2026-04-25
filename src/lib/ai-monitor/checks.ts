@@ -565,14 +565,16 @@ const lead_convertedNoContract: CheckFn = async () => {
     where: { status: 'CONVERTED', convertedUserId: { not: null } },
     select: { convertedUserId: true, name: true },
   })
-  let orphaned = 0
-  for (const lead of leads) {
-    if (!lead.convertedUserId) continue
-    const contract = await prisma.contract.findFirst({
-      where: { userId: lead.convertedUserId, signedByUser: true },
-    })
-    if (!contract) orphaned++
-  }
+  const userIds = leads.map(l => l.convertedUserId).filter(Boolean) as string[]
+  if (userIds.length === 0) return null
+
+  const signedContracts = await prisma.contract.findMany({
+    where: { userId: { in: userIds }, signedByUser: true },
+    select: { userId: true },
+  })
+  const signedSet = new Set(signedContracts.map(c => c.userId))
+  const orphaned = userIds.filter(id => !signedSet.has(id)).length
+
   if (orphaned === 0) return null
   return {
     checkType: 'LEAD_CONVERTED_NO_CONTRACT',
@@ -587,13 +589,19 @@ const lead_unattributedClients: CheckFn = async () => {
     where: { role: 'CLIENT' },
     select: { id: true, email: true },
   })
-  let unlinked = 0
-  for (const client of clients) {
-    const lead = await prisma.lead.findFirst({
-      where: { OR: [{ convertedUserId: client.id }, { email: client.email }] },
-    })
-    if (!lead) unlinked++
-  }
+  if (clients.length === 0) return null
+
+  const clientIds = clients.map(c => c.id)
+  const clientEmails = clients.map(c => c.email)
+
+  const linkedLeads = await prisma.lead.findMany({
+    where: { OR: [{ convertedUserId: { in: clientIds } }, { email: { in: clientEmails } }] },
+    select: { convertedUserId: true, email: true },
+  })
+  const linkedIds = new Set(linkedLeads.map(l => l.convertedUserId).filter(Boolean))
+  const linkedEmails = new Set(linkedLeads.map(l => l.email?.toLowerCase()).filter(Boolean))
+  const unlinked = clients.filter(c => !linkedIds.has(c.id) && !linkedEmails.has(c.email.toLowerCase())).length
+
   if (unlinked === 0) return null
   return {
     checkType: 'CLIENT_NO_LEAD_RECORD',
