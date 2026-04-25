@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
-import { ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet, Shield, Package } from 'lucide-react'
+import { ClipboardList, User, LogOut, Menu, X, ChevronRight, Calendar, Wallet, Shield, Package, Star } from 'lucide-react'
 import { HmLogo } from '@/components/hm/hm-logo'
 import { AiChat } from '@/components/hm/ai-chat'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
@@ -22,6 +22,7 @@ export default async function CrewLayout({ children }: { children: React.ReactNo
     { href: '/crew',          label: t(msgs, 'crew.myTasks'),      icon: ClipboardList },
     { href: '/crew/calendar', label: t(msgs, 'common.calendar'),   icon: Calendar },
     { href: '/crew/earnings', label: t(msgs, 'common.revenue'),    icon: Wallet },
+    { href: '/crew/feedback', label: t(msgs, 'crew.guestFeedback') || 'Guest feedback', icon: Star },
     ...(isCaptain
       ? [
           { href: '/crew/approvals',   label: t(msgs, 'crew.captainHub') || 'Captain Hub', icon: Shield },
