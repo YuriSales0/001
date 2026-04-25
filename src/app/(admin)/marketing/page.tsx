@@ -1298,18 +1298,141 @@ function MarketingPlanTracker() {
   )
 }
 
-// ─── Long-term strategic plan: validate → multi-zone → franchise → unicorn ──
+// ─── Long-term strategic plan: lean growth, self-funded, moats from operations ──
+// Mental model: "Direct Mode IS moat construction." Each Costa Tropical property
+// adds AI Pricing data + VAGF data + playbook learnings + testimonial seed +
+// case study material. Without 2-3 years of Direct Mode data, neither SaaS
+// Platform Mode nor Franchise are sellable. So Phase 1-3 are not validation
+// "before" something — they ARE the moat build.
 
 type ProofPointKey = 'aiPricingProof' | 'systemSansFounder' | 'secondZone' | 'caseStudies' | 'industryPresence'
 
-const STRATEGIC_PHASES: { id: string; year: string; title: string; desc: string; targetProps: string }[] = [
-  { id: 'foundation',     year: '2026',  title: 'Costa Tropical Proof',           desc: 'Validar economic unit. Primeiros owners pagantes, AI Pricing activo, VAGF a recolher dados.', targetProps: '15-25 props' },
-  { id: 'multi-zone',     year: '2027',  title: 'Multi-Zona Direct',              desc: 'Abrir 2ª zona (Algarve / Costa del Sol / Mallorca) operada direct, com Manager local recrutado.', targetProps: '40-60 props' },
-  { id: 'consolidate',    year: '2028',  title: 'Consolidação + 1ª Franquia',     desc: 'Multi-zona estabilizada. Estrutura legal de franchise pronta. 1ª franquia a partner pessoal (BR ou Algarve).', targetProps: '100-150 props' },
-  { id: 'franchise-val',  year: '2029',  title: 'Franchise Model Validation',     desc: '3-5 franquias activas. Brand recognition a crescer. Series A possível (€2-5M, valuation €15-30M).', targetProps: '250-400 props' },
-  { id: 'franchise-scale',year: '2030',  title: 'Franchise Scale',                desc: '10-15 franquias maduras. Internacional: 2-3 territórios fora da Espanha. Valuation €30-60M.', targetProps: '600-1000 props' },
-  { id: 'replication',    year: '2031',  title: 'Replication Engine',             desc: 'Self-serve franchise application + qualification. Series B (€10-20M, valuation €100-200M).', targetProps: '1500-2500 props' },
-  { id: 'unicorn',        year: '2032+', title: 'Unicorn Trajectory',             desc: 'Hybrid model: franchise (premium) + SaaS Platform Mode (commodity). 50-100 franquias activas. €1B valuation possível.', targetProps: '5000+ props' },
+const STRATEGIC_PHASES: { id: string; year: string; title: string; desc: string; targetProps: string; revenueModel: string }[] = [
+  {
+    id: 'foundation',
+    year: '2026',
+    title: 'Costa Tropical Foundation',
+    desc: 'Validar economic unit. AI Pricing começa a acumular dados. VAGF activo. Recrutar 1º Manager externo. Yuri delega Captain duties no mês 6.',
+    targetProps: '5 → 25 props',
+    revenueModel: 'Direct Mode only',
+  },
+  {
+    id: 'scale-ct',
+    year: '2027',
+    title: 'Costa Tropical Scale + 2ª Zona',
+    desc: 'Saturar Costa Tropical (40-50 props). Abrir Costa del Sol ou Algarve com Manager local. Operations Lead contratado. Yuri foca product + moats.',
+    targetProps: '25 → 80 props',
+    revenueModel: 'Direct Mode (2 zonas)',
+  },
+  {
+    id: 'consolidate',
+    year: '2028',
+    title: 'Multi-Zona Mature + Strategic Partner',
+    desc: 'Caminho B tech ready. 1º partner externo (BR ou Algarve, alguém da rede pessoal — excepção, não template). Case studies publicados. Industry presence começa.',
+    targetProps: '80 → 150 props',
+    revenueModel: 'Direct Mode + 1 strategic partner (excepção)',
+  },
+  {
+    id: 'platform-mode',
+    year: '2029',
+    title: 'Platform Mode SaaS Launch',
+    desc: 'Moats provados (AI uplift documentado, multi-zona, case studies). Lançar Platform Mode SaaS per-property pricing competitivo. Target: PMs mid-tier.',
+    targetProps: '150 → 250 props (Direct) + 5-10 SaaS clients',
+    revenueModel: 'Direct Mode + SaaS Platform Mode',
+  },
+  {
+    id: 'franchise-launch',
+    year: '2030',
+    title: 'Franchise Launch (com moats)',
+    desc: 'Brand recognition em zonas premium. Estrutura legal franchise pronta. 1ªs vendas a estranhos a €40-75k. Series A possível (€2-5M, valuation €15-30M).',
+    targetProps: '250 → 450 props (mix)',
+    revenueModel: 'Direct + SaaS + Franchise',
+  },
+  {
+    id: 'replication',
+    year: '2031',
+    title: 'Replication Engine',
+    desc: '10-15 franquias activas. Internacional fora ES. Self-serve franchise qualification. Series B (€10-20M, valuation €100-200M).',
+    targetProps: '450 → 800 props (todos modelos)',
+    revenueModel: 'Hybrid escalado',
+  },
+  {
+    id: 'unicorn',
+    year: '2032+',
+    title: 'Unicorn Trajectory',
+    desc: 'Hybrid: franchise (premium markets) + SaaS (commodity markets) + Direct (proof zones). 30-50 franquias maduras + 100+ SaaS. Valuation €500M-1B.',
+    targetProps: '1500-3000+ props',
+    revenueModel: 'Hybrid maduro',
+  },
+]
+
+const CASH_MILESTONES: { props: number; revenue: string; cogs: string; freeForMoats: string; unlocks: string }[] = [
+  { props: 5,   revenue: '€27k/yr',   cogs: '€60k',  freeForMoats: 'Negativo',     unlocks: 'Sustenta operação inicial (queima reservas)' },
+  { props: 25,  revenue: '€135k/yr',  cogs: '€100k', freeForMoats: '€35k/yr',      unlocks: 'Marketing modesto + content seed' },
+  { props: 60,  revenue: '€324k/yr',  cogs: '€180k', freeForMoats: '€144k/yr',     unlocks: 'Captain externo + Operations Lead + paid ads' },
+  { props: 100, revenue: '€540k/yr',  cogs: '€240k', freeForMoats: '€300k/yr',     unlocks: '2ª zona + lead gen + multi-país compliance research' },
+  { props: 150, revenue: '€810k/yr',  cogs: '€310k', freeForMoats: '€500k/yr',     unlocks: 'Franchise legal infra + brand campaigns' },
+  { props: 250, revenue: '€1.35M/yr', cogs: '€450k', freeForMoats: '€900k/yr',     unlocks: 'Franchise launch + 3ª zona + Platform Mode SaaS' },
+]
+
+const MONETIZATION_GATE: { stage: string; available: string[]; locked: string[]; reason: string }[] = [
+  {
+    stage: '2026 (M0-12)',
+    available: ['Direct Mode na Costa Tropical'],
+    locked: ['SaaS Platform Mode', 'Franchise', 'BR partner'],
+    reason: 'Zero moats. AI Pricing sem proof empírico. Sem brand. Vender qualquer coisa externa = vender ar.',
+  },
+  {
+    stage: '2027 (M12-24)',
+    available: ['Direct Mode (2 zonas)'],
+    locked: ['SaaS Platform Mode', 'Franchise'],
+    reason: 'AI Pricing começa a ter dados. Sem multi-zona provada nem case studies, ainda sem produto vendável externamente.',
+  },
+  {
+    stage: '2028 (M24-36)',
+    available: ['Direct Mode (multi-zona)', 'Strategic partner exception (BR ou similar)'],
+    locked: ['SaaS Platform Mode aberto', 'Franchise aberta'],
+    reason: 'Partner BR é excepção (relação pessoal, upside compartilhado). Não é template para vender a estranhos.',
+  },
+  {
+    stage: '2029 (M36-48)',
+    available: ['Direct Mode', 'Platform Mode SaaS (com moats)'],
+    locked: ['Franchise'],
+    reason: 'Moats provados → Platform Mode vendável. Mas brand ainda não tem equity para suportar fee €40k+ de franchise.',
+  },
+  {
+    stage: '2030+ (M48+)',
+    available: ['Direct Mode', 'Platform Mode SaaS', 'Franchise (com moats + brand)'],
+    locked: [],
+    reason: 'Todos os 3 modelos viáveis. Hybrid começa.',
+  },
+]
+
+const LEAN_RULES: { rule: string; detail: string }[] = [
+  {
+    rule: 'Saturar zona antes de abrir nova',
+    detail: 'Costa Tropical até 50+ props estabilizadas (NPS>60, churn<5%) ANTES de abrir Costa del Sol. Espalhar foco mata bootstrap.',
+  },
+  {
+    rule: 'Marketing budget ≤ 15% da receita',
+    detail: 'Mês 0-6: €500-1k. Mês 7-12: €2-4k. Mês 13-18: €5-10k. Nunca queimar mais que 15% de revenue em ads.',
+  },
+  {
+    rule: '3 meses de cash buffer sempre',
+    detail: 'Reserva mínima = 3× operating costs mensais. Nunca abaixo. Bootstrap não tem rede de segurança externa.',
+  },
+  {
+    rule: 'Hire when revenue allows, not when need bites',
+    detail: 'Captain externo quando receita > €100k/yr. Ops Lead quando > €250k/yr. CS quando > €400k/yr. Não antes.',
+  },
+  {
+    rule: 'Yuri delegado da operação até mês 12',
+    detail: 'Founder não pode ser Captain + Manager + dev + admin + CS forever. Mês 6-12 = transição. Sem isso, escala morre no Yuri.',
+  },
+  {
+    rule: 'Direct Mode é o produto, não validação',
+    detail: 'Cada propriedade Direct constrói os moats (AI data, VAGF data, testimonials, playbook). Não é "fase antes do produto" — é o produto.',
+  },
 ]
 
 const PROOF_POINTS: Array<{
@@ -1447,6 +1570,24 @@ function StrategicLongTermPlan() {
       {open && (
         <div className="border-t border-hm-border px-6 py-6 space-y-8">
 
+          {/* Mental Model banner — the reframe */}
+          <div className="rounded-lg p-5 border-l-4"
+               style={{ borderLeftColor: '#B08A3E', background: 'rgba(176,138,62,0.06)' }}>
+            <div className="flex items-start gap-3">
+              <Target className="h-5 w-5 shrink-0 mt-0.5" style={{ color: '#B08A3E' }} />
+              <div>
+                <h3 className="font-serif font-bold text-hm-black text-sm mb-1">
+                  Mental model: Direct Mode <em>é</em> a construção dos moats
+                </h3>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  Nem SaaS Platform Mode nem franchise vendem hoje porque os <strong>moats não existem ainda</strong>.
+                  Cada propriedade gerida directamente na Costa Tropical adiciona dados ao AI Pricing,
+                  captura VAGF, ensina o playbook e gera material de case study. <strong>Direct Mode não é "validação antes do produto" — é o produto.</strong> Os outros modelos de receita só se tornam vendáveis quando os moats existem como side-effect deste trabalho.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Phase Timeline 2026-2032 */}
           <div>
             <h3 className="font-serif font-bold text-hm-black mb-3">Roadmap 2026 → 2032+</h3>
@@ -1478,6 +1619,9 @@ function StrategicLongTermPlan() {
                       <p className="text-[10px] text-gray-500 mt-1 leading-relaxed line-clamp-3">{p.desc}</p>
                       <p className="text-[10px] mt-2 font-semibold" style={{ color: '#B08A3E' }}>
                         Target: {p.targetProps}
+                      </p>
+                      <p className="text-[9px] mt-1 text-gray-500 italic line-clamp-1">
+                        {p.revenueModel}
                       </p>
                       <span
                         className="inline-block mt-1.5 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
@@ -1609,6 +1753,116 @@ function StrategicLongTermPlan() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Cash Flow Milestones */}
+          <div>
+            <h3 className="font-serif font-bold text-hm-black mb-3">Marcos de cash flow — quando cada coisa desbloqueia</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Plano B autofinanciado significa que cada marco de propriedades desbloqueia o próximo investimento. Sem chegar ao marco, o investimento não pode acontecer.
+            </p>
+            <div className="rounded-lg border border-hm-border bg-white overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b bg-hm-ivory/40 text-gray-500 uppercase tracking-wider text-[10px]">
+                      <th className="px-4 py-2.5 text-left font-semibold">Props</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Receita HM/ano</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">COGS</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Cash livre p/ moats</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Desbloqueia</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-hm-border">
+                    {CASH_MILESTONES.map((m, i) => (
+                      <tr key={i} className={i === 0 ? 'bg-amber-50/40' : ''}>
+                        <td className="px-4 py-3 font-bold text-hm-black">{m.props}</td>
+                        <td className="px-4 py-3 text-emerald-700 font-semibold">{m.revenue}</td>
+                        <td className="px-4 py-3 text-gray-600">−{m.cogs}</td>
+                        <td className="px-4 py-3 font-bold"
+                            style={{ color: m.freeForMoats === 'Negativo' ? '#dc2626' : '#B08A3E' }}>
+                          {m.freeForMoats}
+                        </td>
+                        <td className="px-4 py-3 text-gray-700">{m.unlocks}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="px-4 py-2 text-[10px] text-gray-400 border-t bg-gray-50">
+                Mix de planos assumido: 60% Mid (€414/prop/mês) · 30% Basic (€345/prop/mês) · 10% Premium (€594/prop/mês). Média ~€450/prop/mês = €5.400/prop/ano.
+              </p>
+            </div>
+          </div>
+
+          {/* Monetization Gate */}
+          <div>
+            <h3 className="font-serif font-bold text-hm-black mb-3">O que é monetizável quando</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Cada modelo de receita só está disponível depois de moats suficientes existirem. Tentar abrir antes do tempo queima brand e tempo.
+            </p>
+            <div className="space-y-2">
+              {MONETIZATION_GATE.map((g, i) => (
+                <div key={i} className="rounded-lg border border-hm-border bg-white p-4">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <span className="font-bold text-hm-black text-sm">{g.stage}</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-emerald-600 font-bold mb-1">Disponível</p>
+                      <ul className="space-y-0.5">
+                        {g.available.map((a, j) => (
+                          <li key={j} className="text-xs text-gray-700 flex items-start gap-1.5">
+                            <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0 mt-0.5" />
+                            <span>{a}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold mb-1">Bloqueado</p>
+                      {g.locked.length === 0 ? (
+                        <p className="text-xs text-gray-400 italic">Nada bloqueado.</p>
+                      ) : (
+                        <ul className="space-y-0.5">
+                          {g.locked.map((l, j) => (
+                            <li key={j} className="text-xs text-gray-500 flex items-start gap-1.5">
+                              <LockIcon className="h-3 w-3 text-gray-300 shrink-0 mt-0.5" />
+                              <span>{l}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-gray-500 italic border-t pt-2 mt-1">{g.reason}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Lean Growth Rules */}
+          <div>
+            <h3 className="font-serif font-bold text-hm-black mb-3">Disciplinas do crescimento enxuto</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Plano B autofinanciado tem regras rígidas. Quebrar qualquer uma destas afunda o plano em 6 meses.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {LEAN_RULES.map((r, i) => (
+                <div key={i} className="rounded-lg border border-hm-border bg-white p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="h-7 w-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold"
+                         style={{ background: 'rgba(176,138,62,0.12)', color: '#B08A3E' }}>
+                      {i + 1}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-hm-black leading-snug">{r.rule}</p>
+                      <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{r.detail}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
