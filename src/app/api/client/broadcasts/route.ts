@@ -12,6 +12,9 @@ export async function GET() {
   const guard = await requireRole(['CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
+  // M13: requireRole short-circuits for ADMIN super-users; ensure the
+  // effective user is actually a CLIENT (not impersonating none).
+  if (me.role !== 'CLIENT') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const recipients = await prisma.broadcastRecipient.findMany({
     where: { userId: me.id },

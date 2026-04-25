@@ -75,68 +75,72 @@ export async function POST(req: NextRequest) {
 
     // For single-item movements (LAUNDERABLE tracking)
     if (itemId) {
-      const item = await prisma.consumableItem.findUnique({
-        where: { id: itemId },
-        include: { category: true },
-      })
-      if (!item) {
-        return NextResponse.json({ error: 'Item not found' }, { status: 404 })
-      }
+      // M2: read item AND validate stock inside the transaction so two
+      // concurrent movements can't both pass the negative-stock check
+      // before either commits. Outer findUnique was a TOCTOU window.
+      try {
+        const result = await prisma.$transaction(async (tx) => {
+          const item = await tx.consumableItem.findUnique({
+            where: { id: itemId },
+            include: { category: true },
+          })
+          if (!item) throw new Error('NOT_FOUND')
 
-      const statusUpdate = getStatusForMovement(movementType)
-      const stockDelta = getStockDelta(movementType, item.status)
+          const statusUpdate = getStatusForMovement(movementType)
+          const stockDelta = getStockDelta(movementType, item.status)
 
-      // Validate no negative stock before applying
-      if (stockDelta) {
-        const currentStock = await prisma.stockLevel.findUnique({
-          where: { categoryId: item.categoryId },
-        })
-        if (currentStock) {
-          const validationError = validateStockDelta(currentStock, stockDelta)
-          if (validationError) {
-            return NextResponse.json({ error: validationError }, { status: 400 })
+          if (stockDelta) {
+            const currentStock = await tx.stockLevel.findUnique({
+              where: { categoryId: item.categoryId },
+            })
+            if (currentStock) {
+              const validationError = validateStockDelta(currentStock, stockDelta)
+              if (validationError) throw new Error(`STOCK:${validationError}`)
+            }
           }
-        }
-      }
 
-      // Wrap item update + movement + stock level in a transaction
-      await prisma.$transaction(async (tx) => {
-        // Update item status
-        await tx.consumableItem.update({
-          where: { id: itemId },
-          data: {
-            status: statusUpdate,
-            currentPropertyId: propertyId || null,
-            ...(movementType === 'RETURN_FROM_LAUNDRY' ? { washCount: { increment: 1 } } : {}),
-            ...(movementType === 'RETIRED' ? { retiredAt: new Date(), retireReason: notes || 'Retired' } : {}),
-          },
-        })
-
-        // Create movement record
-        await tx.consumableMovement.create({
-          data: {
-            itemId,
-            movementType,
-            propertyId: propertyId || null,
-            crewMemberId: crewMemberId || null,
-            quantity: 1,
-            notes: notes || null,
-          },
-        })
-
-        // Update stock level
-        if (stockDelta) {
-          await tx.stockLevel.update({
-            where: { categoryId: item.categoryId },
-            data: stockDelta,
+          // Update item status
+          await tx.consumableItem.update({
+            where: { id: itemId },
+            data: {
+              status: statusUpdate,
+              currentPropertyId: propertyId || null,
+              ...(movementType === 'RETURN_FROM_LAUNDRY' ? { washCount: { increment: 1 } } : {}),
+              ...(movementType === 'RETIRED' ? { retiredAt: new Date(), retireReason: notes || 'Retired' } : {}),
+            },
           })
 
-          // Recalculate totalItems as sum of all counters (Issue 6.1)
-          await recalcTotalItems(tx, item.categoryId)
-        }
-      })
+          // Create movement record
+          await tx.consumableMovement.create({
+            data: {
+              itemId,
+              movementType,
+              propertyId: propertyId || null,
+              crewMemberId: crewMemberId || null,
+              quantity: 1,
+              notes: notes || null,
+            },
+          })
 
-      return NextResponse.json({ ok: true, itemId })
+          // Update stock level
+          if (stockDelta) {
+            await tx.stockLevel.update({
+              where: { categoryId: item.categoryId },
+              data: stockDelta,
+            })
+            // Recalculate totalItems as sum of all counters (Issue 6.1)
+            await recalcTotalItems(tx, item.categoryId)
+          }
+
+          return { itemId }
+        })
+        return NextResponse.json({ ok: true, ...result })
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : 'UNKNOWN'
+        if (msg === 'NOT_FOUND') return NextResponse.json({ error: 'Item not found' }, { status: 404 })
+        if (msg.startsWith('STOCK:')) return NextResponse.json({ error: msg.slice(6) }, { status: 400 })
+        throw e
+      }
     }
 
     // For bulk movements by category (DISPOSABLE)
@@ -155,76 +159,69 @@ export async function POST(req: NextRequest) {
         )
       }
 
-      // Find available items in the category
-      const items = await prisma.consumableItem.findMany({
-        where: { categoryId, status: 'AVAILABLE' },
-        take: qty,
-        orderBy: { createdAt: 'asc' },
-      })
-
-      if (items.length < qty) {
-        return NextResponse.json(
-          { error: `Only ${items.length} items available, requested ${qty}` },
-          { status: 400 },
-        )
-      }
-
-      const stockDelta = getStockDeltaBulk(movementType, qty)
-
-      // Validate no negative stock before applying
-      if (stockDelta) {
-        const currentStock = await prisma.stockLevel.findUnique({
-          where: { categoryId },
-        })
-        if (currentStock) {
-          const validationError = validateStockDelta(currentStock, stockDelta)
-          if (validationError) {
-            return NextResponse.json({ error: validationError }, { status: 400 })
+      // M2: read items + stock inside the transaction to close the TOCTOU
+      // window for concurrent bulk movements on the same category.
+      try {
+        await prisma.$transaction(async (tx) => {
+          const items = await tx.consumableItem.findMany({
+            where: { categoryId, status: 'AVAILABLE' },
+            take: qty,
+            orderBy: { createdAt: 'asc' },
+          })
+          if (items.length < qty) {
+            throw new Error(`STOCK:Only ${items.length} items available, requested ${qty}`)
           }
-        }
-      }
 
-      const statusUpdate = getStatusForMovement(movementType)
-      const itemIds = items.map(i => i.id)
+          const stockDelta = getStockDeltaBulk(movementType, qty)
 
-      // Wrap all updates in a transaction
-      await prisma.$transaction(async (tx) => {
-        // Update all items
-        await tx.consumableItem.updateMany({
-          where: { id: { in: itemIds } },
-          data: {
-            status: statusUpdate,
-            currentPropertyId: propertyId || null,
-          },
-        })
+          if (stockDelta) {
+            const currentStock = await tx.stockLevel.findUnique({ where: { categoryId } })
+            if (currentStock) {
+              const validationError = validateStockDelta(currentStock, stockDelta)
+              if (validationError) throw new Error(`STOCK:${validationError}`)
+            }
+          }
 
-        // Create movement records
-        for (const item of items) {
-          await tx.consumableMovement.create({
+          const statusUpdate = getStatusForMovement(movementType)
+          const itemIds = items.map(i => i.id)
+
+          // Update all items
+          await tx.consumableItem.updateMany({
+            where: { id: { in: itemIds } },
             data: {
+              status: statusUpdate,
+              currentPropertyId: propertyId || null,
+            },
+          })
+
+          // Create movement records (createMany — single roundtrip vs N inserts)
+          await tx.consumableMovement.createMany({
+            data: items.map(item => ({
               itemId: item.id,
               movementType,
               propertyId: propertyId || null,
               crewMemberId: crewMemberId || null,
               quantity: 1,
               notes: notes || null,
-            },
-          })
-        }
-
-        // Update stock level
-        if (stockDelta) {
-          await tx.stockLevel.update({
-            where: { categoryId },
-            data: stockDelta,
+            })),
           })
 
-          // Recalculate totalItems as sum of all counters (Issue 6.1)
-          await recalcTotalItems(tx, categoryId)
-        }
-      })
-
-      return NextResponse.json({ ok: true, itemsProcessed: qty })
+          // Update stock level
+          if (stockDelta) {
+            await tx.stockLevel.update({
+              where: { categoryId },
+              data: stockDelta,
+            })
+            // Recalculate totalItems as sum of all counters (Issue 6.1)
+            await recalcTotalItems(tx, categoryId)
+          }
+        })
+        return NextResponse.json({ ok: true, itemsProcessed: qty })
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : 'UNKNOWN'
+        if (msg.startsWith('STOCK:')) return NextResponse.json({ error: msg.slice(6) }, { status: 400 })
+        throw e
+      }
     }
 
     return NextResponse.json(

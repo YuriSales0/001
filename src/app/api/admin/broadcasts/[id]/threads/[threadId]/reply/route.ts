@@ -25,8 +25,14 @@ export async function POST(
   // Verify the thread owner is a real recipient of this broadcast
   const recipient = await prisma.broadcastRecipient.findUnique({
     where: { broadcastId_userId: { broadcastId: params.id, userId: params.threadId } },
+    include: { broadcast: { select: { status: true } } },
   })
   if (!recipient) return NextResponse.json({ error: 'Thread not found' }, { status: 404 })
+
+  // M5: only allow replies on broadcasts that have completed sending
+  if (recipient.broadcast.status !== 'SENT') {
+    return NextResponse.json({ error: 'Broadcast is not yet sent' }, { status: 409 })
+  }
 
   const reply = await prisma.broadcastReply.create({
     data: {

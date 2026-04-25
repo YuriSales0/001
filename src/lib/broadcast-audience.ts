@@ -5,6 +5,9 @@
  * arbitrary exports from route.ts files.
  */
 
+const SUPPORTED_LOCALES = ['en', 'pt', 'es', 'de', 'nl', 'fr', 'sv', 'da'] as const
+const VALID_PLANS = ['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const
+
 export function buildAudienceWhere(
   audienceType: string | undefined,
   audienceValue: string | null | undefined,
@@ -18,11 +21,14 @@ export function buildAudienceWhere(
     case 'ALL_CLIENTS':
       return base
     case 'BY_PLAN':
-      if (!audienceValue || !['STARTER', 'BASIC', 'MID', 'PREMIUM'].includes(audienceValue)) return null
+      if (!audienceValue || !(VALID_PLANS as readonly string[]).includes(audienceValue)) return null
       return { ...base, subscriptionPlan: audienceValue }
     case 'BY_LANGUAGE':
-      if (!audienceValue) return null
-      return { ...base, language: audienceValue, subscriptionPlan: { in: ['BASIC', 'MID', 'PREMIUM'] } }
+      // M14: validate against supported locales
+      if (!audienceValue || !(SUPPORTED_LOCALES as readonly string[]).includes(audienceValue)) return null
+      // M3: language filter applies to ALL clients (not just paid). If admin
+      // wants only paid speakers, they can use BY_PLAN per-plan instead.
+      return { ...base, language: audienceValue }
     default:
       return null
   }

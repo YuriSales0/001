@@ -13,6 +13,8 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   const guard = await requireRole(['CLIENT'])
   if (guard.error) return NextResponse.json({ error: guard.error }, { status: guard.status })
   const me = guard.user!
+  // M13: defensive role assertion (see note in /api/client/broadcasts/route.ts)
+  if (me.role !== 'CLIENT') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const recipient = await prisma.broadcastRecipient.findUnique({
     where: { broadcastId_userId: { broadcastId: params.id, userId: me.id } },

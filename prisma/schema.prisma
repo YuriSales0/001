@@ -1805,8 +1805,8 @@ model StockLevel {
 // ── Founder broadcasts (one-way email channel from admin → subscribers) ──
 model Broadcast {
   id              String           @id @default(cuid())
-  senderId        String
-  sender          User             @relation("BroadcastSender", fields: [senderId], references: [id])
+  senderId        String?
+  sender          User?            @relation("BroadcastSender", fields: [senderId], references: [id], onDelete: SetNull)
   subject         String
   bodyMarkdown    String           @db.Text
   ctaText         String?
@@ -1833,7 +1833,7 @@ model BroadcastRecipient {
   broadcastId   String
   broadcast     Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
   userId        String
-  user          User     @relation("BroadcastRecipient", fields: [userId], references: [id])
+  user          User     @relation("BroadcastRecipient", fields: [userId], references: [id], onDelete: Cascade)
   language      String   // locale this user received the broadcast in
   delivered     Boolean  @default(true)
   readAt        DateTime?

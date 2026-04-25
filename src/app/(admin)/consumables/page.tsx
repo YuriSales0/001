@@ -104,14 +104,17 @@ export default function ConsumablesPage() {
     }
   }, [])
 
+  // M15: parallelise both fetches instead of sequential — they're independent.
+  // Stock totals must refresh because per-item movements change category counters.
   const refreshItemsForCategory = async (categoryId: string) => {
-    const res = await fetch(`/api/admin/consumables/items?categoryId=${categoryId}`)
-    if (res.ok) {
-      const data = await res.json()
-      setItemsByCat(prev => ({ ...prev, [categoryId]: data }))
+    const [itemsRes, stockRes] = await Promise.all([
+      fetch(`/api/admin/consumables/items?categoryId=${categoryId}`),
+      fetch("/api/admin/consumables/stock"),
+    ])
+    if (itemsRes.ok) {
+      const items = await itemsRes.json()
+      setItemsByCat(prev => ({ ...prev, [categoryId]: items }))
     }
-    // Also refresh stock totals
-    const stockRes = await fetch("/api/admin/consumables/stock")
     if (stockRes.ok) setStock(await stockRes.json())
   }
 
@@ -796,7 +799,8 @@ function MovementsTab({ categories, properties }: { categories: Category[]; prop
             </ul>
           </>
         )}
-        {!loading && filtered.length === 100 && (
+        {/* M8: compare against raw API result, not the post-client-filter count */}
+        {!loading && movements.length === 100 && (
           <div className="px-4 py-2 text-[11px] text-gray-400 border-t bg-gray-50">
             A mostrar os 100 movimentos mais recentes. Refina os filtros para ver mais.
           </div>
