@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check, BarChart3, Users, TrendingUp, CreditCard, Filter, ChevronDown, ChevronUp, ListChecks, CheckCircle2, Circle, AlertTriangle } from 'lucide-react'
+import { Megaphone, Plus, X, Pencil, Trash2, PlusCircle, QrCode, Copy, Check, BarChart3, Users, TrendingUp, CreditCard, Filter, ChevronDown, ChevronUp, ListChecks, CheckCircle2, Circle, AlertTriangle, Crown, Target, MapPin, Mic, Sparkles, Lock as LockIcon } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useLocale } from '@/i18n/provider'
 import { intlLocale, type Locale } from '@/i18n'
@@ -1298,6 +1298,341 @@ function MarketingPlanTracker() {
   )
 }
 
+// ─── Long-term strategic plan: validate → multi-zone → franchise → unicorn ──
+
+type ProofPointKey = 'aiPricingProof' | 'systemSansFounder' | 'secondZone' | 'caseStudies' | 'industryPresence'
+
+const STRATEGIC_PHASES: { id: string; year: string; title: string; desc: string; targetProps: string }[] = [
+  { id: 'foundation',     year: '2026',  title: 'Costa Tropical Proof',           desc: 'Validar economic unit. Primeiros owners pagantes, AI Pricing activo, VAGF a recolher dados.', targetProps: '15-25 props' },
+  { id: 'multi-zone',     year: '2027',  title: 'Multi-Zona Direct',              desc: 'Abrir 2ª zona (Algarve / Costa del Sol / Mallorca) operada direct, com Manager local recrutado.', targetProps: '40-60 props' },
+  { id: 'consolidate',    year: '2028',  title: 'Consolidação + 1ª Franquia',     desc: 'Multi-zona estabilizada. Estrutura legal de franchise pronta. 1ª franquia a partner pessoal (BR ou Algarve).', targetProps: '100-150 props' },
+  { id: 'franchise-val',  year: '2029',  title: 'Franchise Model Validation',     desc: '3-5 franquias activas. Brand recognition a crescer. Series A possível (€2-5M, valuation €15-30M).', targetProps: '250-400 props' },
+  { id: 'franchise-scale',year: '2030',  title: 'Franchise Scale',                desc: '10-15 franquias maduras. Internacional: 2-3 territórios fora da Espanha. Valuation €30-60M.', targetProps: '600-1000 props' },
+  { id: 'replication',    year: '2031',  title: 'Replication Engine',             desc: 'Self-serve franchise application + qualification. Series B (€10-20M, valuation €100-200M).', targetProps: '1500-2500 props' },
+  { id: 'unicorn',        year: '2032+', title: 'Unicorn Trajectory',             desc: 'Hybrid model: franchise (premium) + SaaS Platform Mode (commodity). 50-100 franquias activas. €1B valuation possível.', targetProps: '5000+ props' },
+]
+
+const PROOF_POINTS: Array<{
+  id: ProofPointKey
+  title: string
+  why: string
+  icon: typeof Target
+  targetMonth: string
+  subitems: string[]
+}> = [
+  {
+    id: 'aiPricingProof',
+    title: 'AI Pricing entrega receita medida',
+    why: 'Sem dados empíricos (não estimados), nenhum comprador de franquia paga. Mínimo: 20 propriedades × 12+ meses.',
+    icon: TrendingUp,
+    targetMonth: 'Q4 2026',
+    subitems: [
+      'AI Pricing activo em ≥20 propriedades',
+      '12+ meses de histórico contínuo por propriedade',
+      'Benchmark vs preço fixo / vs zona documentado',
+      'Uplift médio publicável (X% revenue lift) com p-value',
+    ],
+  },
+  {
+    id: 'systemSansFounder',
+    title: 'O sistema funciona sem o Yuri',
+    why: 'Se Costa Tropical depende de ti como Captain, não há franquia. O sistema (VAGF + Score + checklists) tem de substituir a presença.',
+    icon: Users,
+    targetMonth: 'Q2 2027',
+    subitems: [
+      '1 Captain externo treinado e activo',
+      '2-3 Managers externos com clientes próprios',
+      'Captain auto-aprova tarefas Elite sem Yuri',
+      'Yuri < 20% do tempo em operações (focus em product)',
+    ],
+  },
+  {
+    id: 'secondZone',
+    title: 'Funciona numa 2ª zona',
+    why: 'Compradores de franquia exigem ver "isto não é só Costa Tropical". Tem de operar em zona análoga (Algarve / Costa del Sol / Mallorca).',
+    icon: MapPin,
+    targetMonth: 'Q4 2027',
+    subitems: [
+      '2ª zona escolhida (Algarve / Costa del Sol / Mallorca)',
+      'Manager local recrutado e operacional',
+      '5+ propriedades activas na 2ª zona',
+      'Métricas (NPS / churn / uplift) comparáveis a Costa Tropical',
+    ],
+  },
+  {
+    id: 'caseStudies',
+    title: 'Case studies publicáveis',
+    why: 'Owners reais a falar em vídeo. Press coverage. Sem isto, vendes promessas. Com isto, vendes evidência.',
+    icon: Sparkles,
+    targetMonth: 'Q2 2028',
+    subitems: [
+      '3-5 owner testimonials em vídeo (publicáveis)',
+      '1+ press feature (El País, Expresso, Sur in English, AirDNA)',
+      'Revenue uplift documentado por propriedade no website',
+      'NPS publicado (>60) com sample size relevante',
+    ],
+  },
+  {
+    id: 'industryPresence',
+    title: 'Recognized industry presence',
+    why: '"Yuri Sales é o gajo da AI no STR Mediterranean." Sem este reconhecimento, brand HostMasters tem zero equity.',
+    icon: Mic,
+    targetMonth: 'Q4 2028',
+    subitems: [
+      '1+ talk em STR conference (VRMA, Skift, ShortStay Mediterranean)',
+      'Founder LinkedIn 1k+ industry followers',
+      '1+ podcast / interview em outlet STR relevante',
+      'Brand recognition em search/social nos territórios alvo',
+    ],
+  },
+]
+
+function StrategicLongTermPlan() {
+  const [open, setOpen] = useState(false)
+  const [proofChecks, setProofChecks] = useLocalStorage<Record<string, boolean>>('hm_strategic_proof_checks', {})
+  const [phaseStatus, setPhaseStatus] = useLocalStorage<Record<string, 'pending' | 'active' | 'done'>>('hm_strategic_phase_status', {
+    foundation: 'active',
+  })
+  const [selectedPP, setSelectedPP] = useState<ProofPointKey | null>(null)
+
+  const totalSub = PROOF_POINTS.reduce((s, pp) => s + pp.subitems.length, 0)
+  const checkedSub = PROOF_POINTS.reduce(
+    (s, pp) => s + pp.subitems.filter((_, i) => proofChecks[`${pp.id}_${i}`]).length,
+    0,
+  )
+  const overallPct = totalSub > 0 ? Math.round((checkedSub / totalSub) * 100) : 0
+
+  const ppPct = (id: ProofPointKey) => {
+    const pp = PROOF_POINTS.find(p => p.id === id)
+    if (!pp) return 0
+    const checked = pp.subitems.filter((_, i) => proofChecks[`${id}_${i}`]).length
+    return Math.round((checked / pp.subitems.length) * 100)
+  }
+
+  const ppValidated = (id: ProofPointKey) => ppPct(id) === 100
+  const validatedCount = PROOF_POINTS.filter(p => ppValidated(p.id)).length
+
+  const cyclePhaseStatus = (id: string) => {
+    setPhaseStatus(prev => {
+      const cur = prev[id] ?? 'pending'
+      const next = cur === 'pending' ? 'active' : cur === 'active' ? 'done' : 'pending'
+      return { ...prev, [id]: next }
+    })
+  }
+
+  const phaseColor = (status: string) =>
+    status === 'done' ? '#2A7A4F'
+    : status === 'active' ? '#B08A3E'
+    : '#cbd5e1'
+
+  const selected = selectedPP ? PROOF_POINTS.find(p => p.id === selectedPP) : null
+
+  return (
+    <div className="rounded-hm border border-hm-border overflow-hidden" style={{ background: 'var(--hm-sand)' }}>
+      <button onClick={() => setOpen(!open)} className="w-full px-6 py-4 flex items-center justify-between hover:bg-hm-ivory/50 transition-colors">
+        <div className="flex items-center gap-3">
+          <Crown className="h-5 w-5" style={{ color: '#B08A3E' }} />
+          <div className="text-left">
+            <h2 className="font-serif font-bold text-hm-black text-lg">
+              Estratégia de Longo Prazo — Caminho à Franquia
+            </h2>
+            <p className="text-xs text-gray-500">
+              7 fases · 5 proof points · franchise readiness {overallPct}%
+            </p>
+          </div>
+        </div>
+        {open ? <ChevronUp className="h-5 w-5 text-gray-400" /> : <ChevronDown className="h-5 w-5 text-gray-400" />}
+      </button>
+
+      {open && (
+        <div className="border-t border-hm-border px-6 py-6 space-y-8">
+
+          {/* Phase Timeline 2026-2032 */}
+          <div>
+            <h3 className="font-serif font-bold text-hm-black mb-3">Roadmap 2026 → 2032+</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Calendário realista. Cada fase desbloqueia a próxima — não saltar etapas é o caminho mais rápido para franquia.
+            </p>
+            <div className="overflow-x-auto">
+              <div className="flex gap-2 min-w-max pb-2">
+                {STRATEGIC_PHASES.map((p, idx) => {
+                  const status = phaseStatus[p.id] ?? 'pending'
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => cyclePhaseStatus(p.id)}
+                      className="rounded-lg border-2 p-3 text-left transition-all hover:shadow-sm w-[210px] shrink-0"
+                      style={{
+                        borderColor: status === 'active' ? '#B08A3E' : status === 'done' ? '#2A7A4F' : '#E8E3D8',
+                        background: 'white',
+                      }}
+                      title="Click to cycle status"
+                    >
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <div className="h-2 w-2 rounded-full shrink-0" style={{ background: phaseColor(status) }} />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                          Phase {idx + 1} · {p.year}
+                        </span>
+                      </div>
+                      <p className="font-serif font-bold text-hm-black text-sm leading-tight">{p.title}</p>
+                      <p className="text-[10px] text-gray-500 mt-1 leading-relaxed line-clamp-3">{p.desc}</p>
+                      <p className="text-[10px] mt-2 font-semibold" style={{ color: '#B08A3E' }}>
+                        Target: {p.targetProps}
+                      </p>
+                      <span
+                        className="inline-block mt-1.5 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
+                        style={{
+                          background: status === 'active' ? 'rgba(176,138,62,0.15)'
+                                    : status === 'done' ? 'rgba(42,122,79,0.1)'
+                                    : 'rgba(203,213,225,0.4)',
+                          color: phaseColor(status),
+                        }}
+                      >
+                        {status}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            <p className="text-[11px] text-gray-400 mt-2">Click em cada fase para ciclar status: pending → active → done.</p>
+          </div>
+
+          {/* 5 Proof Points */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-serif font-bold text-hm-black">5 Proof Points para Franchise</h3>
+              <span className="text-xs font-bold px-2 py-1 rounded"
+                    style={{ background: validatedCount === 5 ? 'rgba(42,122,79,0.1)' : 'rgba(176,138,62,0.1)',
+                             color: validatedCount === 5 ? '#2A7A4F' : '#B08A3E' }}>
+                {validatedCount} / 5 validados
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mb-4">
+              Cada proof point tem subitens checkáveis. Só com todos os 5 a 100% é que a franquia é vendável a estranhos.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {PROOF_POINTS.map(pp => {
+                const Icon = pp.icon
+                const pct = ppPct(pp.id)
+                const validated = pct === 100
+                const isSelected = selectedPP === pp.id
+                return (
+                  <div key={pp.id}
+                       className="rounded-lg border-2 bg-white overflow-hidden transition-all"
+                       style={{ borderColor: isSelected ? '#B08A3E' : validated ? '#2A7A4F' : '#E8E3D8' }}>
+                    <button
+                      onClick={() => setSelectedPP(isSelected ? null : pp.id)}
+                      className="w-full text-left p-4 hover:bg-hm-ivory/30 transition-colors"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+                             style={{ background: validated ? 'rgba(42,122,79,0.1)' : 'rgba(176,138,62,0.12)' }}>
+                          <Icon className="h-5 w-5" style={{ color: validated ? '#2A7A4F' : '#B08A3E' }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2 mb-1">
+                            <h4 className="font-serif font-bold text-hm-black text-sm">{pp.title}</h4>
+                            <span className="text-[10px] font-bold whitespace-nowrap"
+                                  style={{ color: validated ? '#2A7A4F' : '#B08A3E' }}>
+                              {pct}%
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-gray-500 leading-snug">{pp.why}</p>
+                          <p className="text-[10px] text-gray-400 mt-1.5 font-semibold uppercase tracking-wider">
+                            Target: {pp.targetMonth}
+                          </p>
+                          {/* Progress bar */}
+                          <div className="h-1.5 rounded-full bg-gray-100 mt-2 overflow-hidden">
+                            <div className="h-full transition-all rounded-full"
+                                 style={{ width: `${pct}%`, background: validated ? '#2A7A4F' : '#B08A3E' }} />
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                    {isSelected && (
+                      <div className="border-t bg-hm-ivory/30 px-4 py-3 space-y-1.5">
+                        {pp.subitems.map((sub, i) => {
+                          const key = `${pp.id}_${i}`
+                          const checked = !!proofChecks[key]
+                          return (
+                            <label key={i} className="flex items-start gap-2 text-xs cursor-pointer hover:bg-white/60 rounded px-1 py-0.5">
+                              <input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={() => setProofChecks(prev => ({ ...prev, [key]: !prev[key] }))}
+                                className="mt-0.5 accent-hm-gold"
+                              />
+                              <span className={checked ? 'text-hm-black line-through' : 'text-gray-700'}>{sub}</span>
+                            </label>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Franchise Readiness Gate */}
+          <div className="rounded-lg p-5 border-2"
+               style={{
+                 borderColor: validatedCount === 5 ? '#2A7A4F' : '#E8E3D8',
+                 background: validatedCount === 5 ? 'rgba(42,122,79,0.05)' : 'white',
+               }}>
+            <div className="flex items-start gap-3">
+              <div className="h-12 w-12 rounded-lg flex items-center justify-center shrink-0"
+                   style={{ background: validatedCount === 5 ? '#2A7A4F' : 'rgba(203,213,225,0.4)' }}>
+                {validatedCount === 5
+                  ? <Crown className="h-6 w-6 text-white" />
+                  : <LockIcon className="h-6 w-6 text-gray-500" />}
+              </div>
+              <div className="flex-1">
+                <h3 className="font-serif font-bold text-hm-black">
+                  {validatedCount === 5 ? '🎯 Franchise pronta para venda' : '🔒 Franchise gate locked'}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {validatedCount === 5
+                    ? 'Todos os 5 proof points validados. Estrutura legal de franchise pode ser activada. Primeira venda a estranho viável.'
+                    : `Faltam ${5 - validatedCount} proof points. Não vendas franchise ainda — brand não tem equity para o suportar. Foca-te em validar.`}
+                </p>
+                <div className="mt-3">
+                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                    <span>Readiness</span>
+                    <strong className="text-hm-black">{overallPct}%</strong>
+                    <span className="text-gray-400">({checkedSub} / {totalSub} subitens)</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-full rounded-full transition-all"
+                         style={{ width: `${overallPct}%`, background: validatedCount === 5 ? '#2A7A4F' : '#B08A3E' }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Strategic notes */}
+          <div className="rounded-lg border border-hm-border bg-white p-5">
+            <h3 className="font-serif font-bold text-hm-black text-sm mb-2 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" style={{ color: '#B08A3E' }} />
+              Notas estratégicas
+            </h3>
+            <ul className="space-y-2 text-xs text-gray-600 leading-relaxed">
+              <li>• <strong className="text-hm-black">Brand HostMasters tem zero equity hoje</strong>. Compradores de franquia pagam por evidência (proof points), não por marca.</li>
+              <li>• <strong className="text-hm-black">O partner BR é excepção, não template</strong>. Compra porque te conhece pessoalmente. Estranhos exigem proof completo.</li>
+              <li>• <strong className="text-hm-black">Caminho B (deployments isolados) é tech infrastructure</strong>. Constrói só quando tiveres 1 cliente real assinado, não em vazio.</li>
+              <li>• <strong className="text-hm-black">Sem sócio operacional</strong> que conduza Costa Tropical → multi-zona enquanto Yuri foca em produto/tech, o cronograma escala 2x. A tech está pronta; falta operação.</li>
+              <li>• <strong className="text-hm-black">Franchise law EU é complexa</strong>. Antes da 1ª venda: advogado especializado (FDD-equivalent), €5-15k em legal. Antes da 2028, não é prioritário.</li>
+            </ul>
+          </div>
+
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Main Page ───────────────────────────────────────────────────────────────
 export default function MarketingPage() {
   const { t, locale } = useLocale()
@@ -1356,6 +1691,9 @@ export default function MarketingPage() {
 
       {/* Marketing Plan Tracker */}
       <MarketingPlanTracker />
+
+      {/* Long-term strategic plan: validate → multi-zone → franchise → unicorn */}
+      <StrategicLongTermPlan />
 
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
