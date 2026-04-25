@@ -1343,10 +1343,10 @@ const STRATEGIC_PHASES: { id: string; year: string; title: string; desc: string;
   {
     id: 'franchise-launch',
     year: '2030',
-    title: 'Franchise Launch (com moats)',
-    desc: 'Brand recognition em zonas premium. Estrutura legal franchise pronta. 1ªs vendas a estranhos a €40-75k. Series A possível (€2-5M, valuation €15-30M).',
+    title: 'Franchise Launch (Hybrid moat)',
+    desc: 'Brand recognition + AI fleet + playbook = pacote vendável. Franquia €25-40k entry + 4-5% royalty (fee menor que tradicional, mas moat técnico real). Series A possível.',
     targetProps: '250 → 450 props (mix)',
-    revenueModel: 'Direct + SaaS + Franchise',
+    revenueModel: 'Direct + SaaS + Franchise (hybrid)',
   },
   {
     id: 'replication',
@@ -1407,6 +1407,40 @@ const MONETIZATION_GATE: { stage: string; available: string[]; locked: string[];
     reason: 'Todos os 3 modelos viáveis. Hybrid começa.',
   },
 ]
+
+const AI_FLEET: {
+  agent: string
+  function: string
+  human: string
+  cost: string
+  category: 'pricing' | 'guest' | 'quality' | 'ops' | 'comms'
+}[] = [
+  { agent: 'AI Pricing Agent',           function: 'Optimiza preço por noite (7 factores)',                    human: 'Manager revê mensalmente; Captain valida ajustes >20%',     cost: '€0.05-0.20/refresh',  category: 'pricing' },
+  { agent: 'VAGF Voice Agent',           function: 'Liga ao hóspede 24-48h pós checkout, captura scores 3D',  human: 'Captain investiga scores baixos; Manager liga se severo',  cost: '€0.40-0.80/call',     category: 'quality' },
+  { agent: 'Cross-Validation (Sonnet)',  function: 'Re-valida scores VAGF para detectar erros do Haiku',     human: 'Crew pode disputar scores → Captain decide',                cost: '€0.10-0.20/feedback', category: 'quality' },
+  { agent: 'AI Monitor',                 function: '43 verificações diárias na DB, auto-fix de anomalias',    human: 'Yuri/Captain recebe alertas🔴🟡 para investigar',           cost: '€0.10-0.20/dia',       category: 'ops' },
+  { agent: 'Guest Stay AI Chat',         function: 'Atende hóspede 24/7 (WiFi, códigos, dicas)',              human: 'Escalation para Manager se sentimento detecta problema',    cost: '€0.05-0.15/msg',       category: 'guest' },
+  { agent: 'Crew Score Agent',           function: 'Calcula score automático (9 acções) + monthly decay',     human: 'Captain revê suspensões; Crew pode disputar via portal',    cost: '~€0',                  category: 'quality' },
+  { agent: 'Market Intelligence',        function: 'Scrape semanal Airbnb/Booking, processa concorrência',    human: 'Manager usa dados em conversas com owner',                  cost: '€5-10/zona/sem',       category: 'pricing' },
+  { agent: 'Property Scorecard',         function: 'Score ao vivo (estrutura/amenities/localização/valor)',    human: 'Owner vê no portal; Manager discute melhorias',             cost: '€0.10-0.20/refresh',  category: 'quality' },
+  { agent: 'Translation Agent',          function: 'Traduz broadcasts para 8 línguas (Sonnet, preserva md)',  human: 'Yuri compõe em 1 língua; revê traduções antes de enviar',  cost: '€0.20-0.40/email/lang', category: 'comms' },
+]
+
+const FLEET_CATEGORY_COLOR: Record<string, string> = {
+  pricing: 'rgba(176,138,62,0.12)',
+  guest:   'rgba(11,30,58,0.08)',
+  quality: 'rgba(42,122,79,0.08)',
+  ops:     'rgba(220,38,38,0.06)',
+  comms:   'rgba(124,58,237,0.08)',
+}
+
+const FLEET_CATEGORY_LABEL: Record<string, string> = {
+  pricing: 'Pricing',
+  guest:   'Guest',
+  quality: 'Quality',
+  ops:     'Ops',
+  comms:   'Comms',
+}
 
 const LEAN_RULES: { rule: string; detail: string }[] = [
   {
@@ -1570,20 +1604,28 @@ function StrategicLongTermPlan() {
       {open && (
         <div className="border-t border-hm-border px-6 py-6 space-y-8">
 
-          {/* Mental Model banner — the reframe */}
+          {/* Mental Model banner — hybrid positioning */}
           <div className="rounded-lg p-5 border-l-4"
                style={{ borderLeftColor: '#B08A3E', background: 'rgba(176,138,62,0.06)' }}>
             <div className="flex items-start gap-3">
               <Target className="h-5 w-5 shrink-0 mt-0.5" style={{ color: '#B08A3E' }} />
-              <div>
-                <h3 className="font-serif font-bold text-hm-black text-sm mb-1">
-                  Mental model: Direct Mode <em>é</em> a construção dos moats
-                </h3>
-                <p className="text-xs text-gray-600 leading-relaxed">
-                  Nem SaaS Platform Mode nem franchise vendem hoje porque os <strong>moats não existem ainda</strong>.
-                  Cada propriedade gerida directamente na Costa Tropical adiciona dados ao AI Pricing,
-                  captura VAGF, ensina o playbook e gera material de case study. <strong>Direct Mode não é "validação antes do produto" — é o produto.</strong> Os outros modelos de receita só se tornam vendáveis quando os moats existem como side-effect deste trabalho.
-                </p>
+              <div className="space-y-3">
+                <div>
+                  <h3 className="font-serif font-bold text-hm-black text-sm mb-1">
+                    Posicionamento: <em>Hybrid Operator</em> — AI + agentes + humano
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Não é SaaS puro (compete com Hostaway). Não é IaaS puro (alienha owner 50+ que não compra "AI runs everything"). É <strong>híbrido</strong>: AI executa a parte rotineira (pricing, monitoring, feedback), humano entrega a parte relacional (Manager, Crew, Captain). O schema + frota de agentes é o moat tecnológico; a operação humana é o que o buyer reconhece e confia. <strong>Esta combinação é a categoria nova — e é vendável como franquia.</strong>
+                  </p>
+                </div>
+                <div className="rounded-md p-3" style={{ background: 'rgba(255,255,255,0.6)' }}>
+                  <p className="text-[11px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#B08A3E' }}>
+                    Mental model
+                  </p>
+                  <p className="text-xs text-gray-700 leading-relaxed">
+                    <strong>Direct Mode <em>é</em> a construção dos moats.</strong> Cada propriedade Costa Tropical adiciona dados ao AI Pricing, treina VAGF, alimenta playbook, e gera testimonials. Phase 1-3 não são "validação antes do produto" — são o produto. Os outros modelos de receita (Partner, SaaS, Franchise) só se tornam vendáveis quando os moats existem como side-effect deste trabalho.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -1842,6 +1884,66 @@ function StrategicLongTermPlan() {
             </div>
           </div>
 
+          {/* AI Fleet — augmenting humans, not replacing them */}
+          <div>
+            <h3 className="font-serif font-bold text-hm-black mb-2 flex items-center gap-2">
+              <Sparkles className="h-4 w-4" style={{ color: '#B08A3E' }} />
+              Frota de agentes — IaaS + humano = excelência híbrida
+            </h3>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              {AI_FLEET.length} agentes em produção (ou perto disso). Concorrentes (Hostaway, Guesty) têm 0-1.
+              Cada agente faz a parte rotineira; humano (Manager, Captain, Crew, Owner, Yuri) faz a parte relacional. <strong>Esta combinação é o produto vendável a franquia/SaaS — não os agentes sozinhos.</strong>
+            </p>
+            <div className="rounded-lg border border-hm-border bg-white overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b bg-hm-ivory/40 text-gray-500 uppercase tracking-wider text-[10px]">
+                      <th className="px-4 py-2.5 text-left font-semibold">Agente</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Categoria</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Função autónoma</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Humano em loop</th>
+                      <th className="px-4 py-2.5 text-left font-semibold">Custo unit.</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-hm-border">
+                    {AI_FLEET.map((a, i) => (
+                      <tr key={i} className="hover:bg-amber-50/20 transition-colors">
+                        <td className="px-4 py-3 font-bold text-hm-black whitespace-nowrap">{a.agent}</td>
+                        <td className="px-4 py-3">
+                          <span className="inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase"
+                                style={{ background: FLEET_CATEGORY_COLOR[a.category], color: '#0B1E3A' }}>
+                            {FLEET_CATEGORY_LABEL[a.category]}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-gray-700">{a.function}</td>
+                        <td className="px-4 py-3 text-gray-600 italic">{a.human}</td>
+                        <td className="px-4 py-3 text-gray-500 whitespace-nowrap font-mono text-[10px]">{a.cost}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="border-t bg-gray-50 px-4 py-2.5 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px]">
+                <div>
+                  <span className="font-bold text-hm-black">{AI_FLEET.length}</span>
+                  <span className="text-gray-500"> agentes em produção</span>
+                </div>
+                <div>
+                  <span className="font-bold text-hm-black">Categoria nova</span>
+                  <span className="text-gray-500"> · zero concorrentes diretos</span>
+                </div>
+                <div>
+                  <span className="font-bold text-hm-black">100% com human-in-loop</span>
+                  <span className="text-gray-500"> · não substitui, augmenta</span>
+                </div>
+              </div>
+            </div>
+            <p className="text-[11px] text-gray-500 italic mt-2 leading-relaxed">
+              <strong>Defensibilidade:</strong> agentes melhoram com dados de Costa Tropical. Cada propriedade alimenta o AI Pricing, calibra VAGF, refina playbook. <strong>O moat compounds com cada propriedade gerida.</strong> Concorrente que tente replicar parte de zero, sem dados, sem human-in-loop tooling, leva 3-5 anos.
+            </p>
+          </div>
+
           {/* Lean Growth Rules */}
           <div>
             <h3 className="font-serif font-bold text-hm-black mb-3">Disciplinas do crescimento enxuto</h3>
@@ -1873,11 +1975,13 @@ function StrategicLongTermPlan() {
               Notas estratégicas
             </h3>
             <ul className="space-y-2 text-xs text-gray-600 leading-relaxed">
-              <li>• <strong className="text-hm-black">Brand HostMasters tem zero equity hoje</strong>. Compradores de franquia pagam por evidência (proof points), não por marca.</li>
-              <li>• <strong className="text-hm-black">O partner BR é excepção, não template</strong>. Compra porque te conhece pessoalmente. Estranhos exigem proof completo.</li>
-              <li>• <strong className="text-hm-black">Caminho B (deployments isolados) é tech infrastructure</strong>. Constrói só quando tiveres 1 cliente real assinado, não em vazio.</li>
-              <li>• <strong className="text-hm-black">Sem sócio operacional</strong> que conduza Costa Tropical → multi-zona enquanto Yuri foca em produto/tech, o cronograma escala 2x. A tech está pronta; falta operação.</li>
-              <li>• <strong className="text-hm-black">Franchise law EU é complexa</strong>. Antes da 1ª venda: advogado especializado (FDD-equivalent), €5-15k em legal. Antes da 2028, não é prioritário.</li>
+              <li>• <strong className="text-hm-black">Hybrid (AI + agents + humano) é o moat vendável</strong>. Schema + 9 agentes + playbook + brand operacional = franquia sustentável, mesmo que fee menor (€25-40k em vez de €40-75k). Concorrentes tradicionais não conseguem replicar a coordenação tech + humano sem 3-5 anos de investimento.</li>
+              <li>• <strong className="text-hm-black">Buyer persona 50+ não compra IaaS puro</strong>. Owner internacional quer falar com pessoa, ver inspecções com fotos, receber relatório PDF mensal. AI tem de ser invisível e silenciosa por trás. Vendes "tranquilidade premium", não "AI workforce".</li>
+              <li>• <strong className="text-hm-black">Brand HostMasters tem zero equity hoje, mas o moat técnico já existe</strong>. 9 agentes em produção é a tua tese para investidores e franquiados. Brand cresce com case studies; tech moat já te diferencia agora.</li>
+              <li>• <strong className="text-hm-black">O partner BR é excepção, não template</strong>. Compra porque te conhece pessoalmente. Estranhos exigem proof completo (case studies + multi-zona + AI uplift documentado).</li>
+              <li>• <strong className="text-hm-black">Caminho B (deployments isolados) é tech infra para franquia, não SaaS</strong>. Cada franquiado opera com brand HostMasters [Cidade], usa o agent fleet, segue o playbook. Fee menor recupera-se em royalty + revenue share contínuo.</li>
+              <li>• <strong className="text-hm-black">Sem sócio operacional</strong> que conduza Costa Tropical → multi-zona enquanto Yuri foca em produto/agentes, o cronograma escala 2x. A tech está pronta; falta operação humana de campo.</li>
+              <li>• <strong className="text-hm-black">Franchise law EU é complexa</strong>. Antes da 1ª venda: advogado especializado (FDD-equivalent), €5-15k em legal. Prioritário mês 18-24, não antes.</li>
             </ul>
           </div>
 
