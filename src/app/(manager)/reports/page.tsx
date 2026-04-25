@@ -8,13 +8,14 @@ interface Reservation {
   amount: number
   checkIn: string
   checkOut: string
-  property: { id: string; name: string; city: string }
+  property: { id: string; name: string; city: string; commissionRate: number }
 }
 
 interface Property {
   id: string
   name: string
   city: string
+  commissionRate: number
 }
 
 interface ReportSummary {
@@ -24,6 +25,7 @@ interface ReportSummary {
   revenue: number
   reservations: number
   nights: number
+  commissionRate: number
 }
 
 const MONTHS = [
@@ -82,6 +84,7 @@ export default function ReportsPage() {
         revenue: r.amount,
         reservations: 1,
         nights,
+        commissionRate: r.property.commissionRate,
       })
     }
   })
@@ -103,6 +106,7 @@ export default function ReportsPage() {
     const revenue = filtered.reduce((s, r) => s + r.amount, 0)
     const nights  = filtered.reduce((s, r) =>
       s + Math.round((new Date(r.checkOut).getTime() - new Date(r.checkIn).getTime()) / 86400000), 0)
+    const commissionRate = properties.find(p => p.id === selectedProperty)?.commissionRate ?? 0
 
     setSelected({
       propertyId: selectedProperty,
@@ -111,6 +115,7 @@ export default function ReportsPage() {
       revenue,
       reservations: filtered.length,
       nights,
+      commissionRate,
     })
     setGenerating(false)
   }
@@ -136,8 +141,8 @@ export default function ReportsPage() {
         ["Reservations", String(summary.reservations)],
         ["Total Nights", String(summary.nights)],
         ["Gross Revenue", fmtMoney(summary.revenue)],
-        ["Commission (17%)", fmtMoney(summary.revenue * 0.17)],
-        ["Net to Owner", fmtMoney(summary.revenue * 0.83)],
+        [`Commission (${summary.commissionRate}%)`, fmtMoney(summary.revenue * summary.commissionRate / 100)],
+        ["Net to Owner", fmtMoney(summary.revenue * (100 - summary.commissionRate) / 100)],
       ],
     })
     doc.save(`report-${summary.propertyName.replace(/\s+/g, "-")}-${summary.month.replace(/\s+/g, "-")}.pdf`)
@@ -259,9 +264,9 @@ export default function ReportsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Revenue",      value: fmtMoney(selected.revenue),                      color: "text-emerald-700" },
-                  { label: "Commission",   value: fmtMoney(selected.revenue * 0.17),               color: "text-gray-700" },
-                  { label: "Net to owner", value: fmtMoney(selected.revenue * 0.83),               color: "text-hm-black" },
+                  { label: "Revenue",      value: fmtMoney(selected.revenue),                                               color: "text-emerald-700" },
+                  { label: `Commission (${selected.commissionRate}%)`, value: fmtMoney(selected.revenue * selected.commissionRate / 100), color: "text-gray-700" },
+                  { label: "Net to owner", value: fmtMoney(selected.revenue * (100 - selected.commissionRate) / 100),       color: "text-hm-black" },
                   { label: "Reservations", value: String(selected.reservations),                    color: "text-hm-black" },
                   { label: "Nights",       value: String(selected.nights),                          color: "text-hm-black" },
                   { label: "ADR",          value: selected.nights ? fmtMoney(selected.revenue / selected.nights) : "—", color: "text-hm-black" },

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Plus, X, User, Home, CalendarDays, DollarSign, LayoutList, Columns, CheckCircle2, Clock, XCircle, Play, CheckCheck, Ban, Trash2 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
+import { PLAN_COMMISSION, DEFAULT_COMMISSION_RATE } from "@/lib/finance"
 
 type ReservationStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED"
 type Platform = "AIRBNB" | "BOOKING" | "DIRECT" | "OTHER"
@@ -71,6 +72,8 @@ function PipelineDetail({ r, onClose }: { r: Reservation; onClose: ()=>void }) {
   const plan = r.property.owner?.subscriptionPlan ?? "STARTER"
   const sla = PLAN_SLA[plan]
   const gross = r.grossAmount ?? r.amount
+  const commissionRate = PLAN_COMMISSION[plan] ?? DEFAULT_COMMISSION_RATE
+  const commissionPct = Math.round(commissionRate * 100)
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-end bg-black/30">
       <div className="w-full max-w-md h-full bg-white shadow-2xl overflow-y-auto">
@@ -108,8 +111,8 @@ function PipelineDetail({ r, onClose }: { r: Reservation; onClose: ()=>void }) {
                 <span className="font-semibold">{fmtMoney(gross)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">{t('manager.reservations.hmCommission')}</span>
-                <span className="text-emerald-600 font-semibold">{fmtMoney(gross*0.2)}</span>
+                <span className="text-gray-500">{t('manager.reservations.hmCommission')} ({commissionPct}%)</span>
+                <span className="text-emerald-600 font-semibold">{fmtMoney(gross * commissionRate)}</span>
               </div>
             </div>
           </div>
