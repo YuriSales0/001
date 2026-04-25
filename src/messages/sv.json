@@ -1865,9 +1865,10 @@
     }
   },
   "aiTools": {
-    "badge": "Drivs av AI",
-    "title": "7 intelligent tools working for you",
-    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
+    "badge": "AI från världsmetropoler",
+    "title": "Storstadsteknik, nu på Costa Tropical",
+    "subtitle": "Artificiell intelligens som driver den regionala fastighetsmarknaden framåt.",
+    "footer": "Hamna inte efter — de som satsar på AI växer redan snabbare.",
     "tools": [
       {
         "name": "AI Dynamic Pricing",

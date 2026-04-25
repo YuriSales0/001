@@ -1866,9 +1866,10 @@
     }
   },
   "aiTools": {
-    "badge": "Potenciado por IA",
-    "title": "7 ferramentas inteligentes a trabalhar para ti",
-    "subtitle": "A HostMasters não é apenas uma empresa de gestão — é uma plataforma tecnológica. Ferramentas IA trabalham 24/7 para servir os hóspedes, proteger a propriedade e aumentar a receita.",
+    "badge": "IA de ponta na Costa Tropical",
+    "title": "A tecnologia das grandes metrópoles, agora na Costa Tropical",
+    "subtitle": "Inteligência Artificial a impulsionar o mercado imobiliário de toda a região.",
+    "footer": "Não fiques para trás — quem aposta em IA já está a crescer mais rápido.",
     "tools": [
       {
         "name": "AI Pricing Dinâmico",

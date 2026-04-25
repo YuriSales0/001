@@ -1865,9 +1865,10 @@
     }
   },
   "aiTools": {
-    "badge": "KI-gestützt",
-    "title": "7 intelligent tools working for you",
-    "subtitle": "HostMasters is not just a management company — it is a technology platform. AI tools work 24/7 to serve your guests, protect your property, and grow your revenue.",
+    "badge": "KI der Weltmetropolen",
+    "title": "Technologie der großen Metropolen, jetzt an der Costa Tropical",
+    "subtitle": "Künstliche Intelligenz, die den regionalen Immobilienmarkt vorantreibt.",
+    "footer": "Bleiben Sie nicht zurück — wer auf KI setzt, wächst bereits schneller.",
     "tools": [
       {
         "name": "AI Dynamic Pricing",
