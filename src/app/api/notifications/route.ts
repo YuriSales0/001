@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { priorityOf } from '@/lib/notifications'
 import {
   sendEmail,
   newBookingEmail,
@@ -27,16 +28,32 @@ export async function GET(req: NextRequest) {
   const where: Record<string, unknown> = { userId: me.id }
   if (unreadOnly) where.read = false
 
-  const [notifications, unreadCount] = await Promise.all([
+  // Pull more rows than `limit` so we can re-sort by priority and still
+  // return the requested page size; cap pulled at 200 for safety.
+  const pullLimit = Math.min(limit * 3, 200)
+  const [raw, unreadCount] = await Promise.all([
     prisma.notification.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      take: limit,
+      take: pullLimit,
     }),
     prisma.notification.count({
       where: { userId: me.id, read: false },
     }),
   ])
+
+  // Sort: unread first (highest priority anywhere), then priority desc, then createdAt desc
+  const notifications = raw
+    .map(n => ({ ...n, priority: priorityOf(n.type) }))
+    .sort((a, b) => {
+      // unread before read
+      if (a.read !== b.read) return a.read ? 1 : -1
+      // higher priority first
+      if (b.priority !== a.priority) return b.priority - a.priority
+      // newer first
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    })
+    .slice(0, limit)
 
   return NextResponse.json({ notifications, unreadCount })
 }

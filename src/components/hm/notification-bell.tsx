@@ -13,7 +13,17 @@ type Notification = {
   body: string | null
   link: string | null
   read: boolean
+  count: number
+  priority: number
   createdAt: string
+}
+
+// Visual band by priority value (matches lib/notifications.ts NOTIFICATION_PRIORITY)
+function priorityStyle(priority: number, unread: boolean) {
+  if (priority >= 90) return { stripe: '#dc2626', label: 'critical' }
+  if (priority >= 70) return { stripe: '#B08A3E', label: 'high' }
+  if (priority >= 40) return { stripe: unread ? '#B08A3E' : 'transparent', label: 'medium' }
+  return { stripe: 'transparent', label: 'low' }
 }
 
 const TYPE_ICON: Record<string, string> = {
@@ -168,30 +178,47 @@ export function NotificationBell() {
                 {t('notifBell.empty')}
               </div>
             )}
-            {items.map(n => (
-              <button
-                key={n.id}
-                onClick={() => handleClick(n)}
-                className={cn(
-                  "w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors border-b border-gray-50",
-                  !n.read && "bg-amber-50/40"
-                )}
-              >
-                <span className="text-base mt-0.5 shrink-0">{TYPE_ICON[n.type] ?? "🔔"}</span>
-                <div className="flex-1 min-w-0">
-                  <p className={cn("text-sm leading-snug", !n.read ? "font-semibold text-gray-900" : "text-gray-700")}>
-                    {n.title}
-                  </p>
-                  {n.body && (
-                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>
+            {items.map(n => {
+              const ps = priorityStyle(n.priority, !n.read)
+              return (
+                <button
+                  key={n.id}
+                  onClick={() => handleClick(n)}
+                  className={cn(
+                    "w-full text-left pl-3 pr-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors border-b border-gray-50 relative",
+                    !n.read && "bg-amber-50/40"
                   )}
-                  <p className="text-[10px] text-gray-400 mt-1">{timeAgoMap[n.id]}</p>
-                </div>
-                {!n.read && (
-                  <span className="mt-1.5 h-2 w-2 rounded-full shrink-0" style={{ background: "#B08A3E" }} />
-                )}
-              </button>
-            ))}
+                >
+                  {/* Priority stripe on the left */}
+                  <span
+                    aria-hidden
+                    className="absolute left-0 top-0 bottom-0 w-1"
+                    style={{ background: ps.stripe }}
+                  />
+                  <span className="text-base mt-0.5 shrink-0">{TYPE_ICON[n.type] ?? "🔔"}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-1.5">
+                      <p className={cn("text-sm leading-snug flex-1 min-w-0", !n.read ? "font-semibold text-gray-900" : "text-gray-700")}>
+                        {n.title}
+                      </p>
+                      {n.count > 1 && (
+                        <span className="inline-flex items-center justify-center rounded-full px-1.5 py-0.5 text-[9px] font-bold shrink-0"
+                              style={{ background: '#0B1E3A', color: '#B08A3E' }}>
+                          ×{n.count}
+                        </span>
+                      )}
+                    </div>
+                    {n.body && (
+                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>
+                    )}
+                    <p className="text-[10px] text-gray-400 mt-1">{timeAgoMap[n.id]}</p>
+                  </div>
+                  {!n.read && (
+                    <span className="mt-1.5 h-2 w-2 rounded-full shrink-0" style={{ background: "#B08A3E" }} />
+                  )}
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
