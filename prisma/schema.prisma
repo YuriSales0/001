@@ -375,6 +375,7 @@ model User {
   feedbackAsCrew       GuestFeedback[]             @relation("CrewFeedback")
   stayChatsAsClient    GuestStayChat[]             @relation("ClientStayChats")
   escalatedStayChats   GuestStayChat[]             @relation("EscalatedStayChats")
+  broadcasts           Broadcast[]                 @relation("BroadcastSender")
 
   // VAGF Crew fields
   guestScoreAverage    Float?            @default(0)
@@ -1791,4 +1792,41 @@ model StockLevel {
   minimumLevel      Int             @default(0)
   criticalLevel     Int             @default(0)
   lastUpdated       DateTime        @updatedAt
+}
+
+// ── Founder broadcasts (one-way email channel from admin → subscribers) ──
+model Broadcast {
+  id              String           @id @default(cuid())
+  senderId        String
+  sender          User             @relation("BroadcastSender", fields: [senderId], references: [id])
+  subject         String
+  bodyMarkdown    String           @db.Text
+  ctaText         String?
+  ctaUrl          String?
+  audienceType    BroadcastAudience @default(ALL_PAID)
+  audienceValue   String?          // plan name, language code, etc. depending on audienceType
+  status          BroadcastStatus  @default(DRAFT)
+  sentAt          DateTime?
+  recipientCount  Int              @default(0)
+  failedCount     Int              @default(0)
+  translations    Json?            // cached translations per locale: { "pt": {...}, "en": {...} }
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([senderId])
+  @@index([sentAt])
+}
+
+enum BroadcastStatus {
+  DRAFT
+  SENDING
+  SENT
+  FAILED
+}
+
+enum BroadcastAudience {
+  ALL_PAID       // all CLIENT users with subscriptionPlan != STARTER
+  ALL_CLIENTS    // all CLIENT users (any plan, including Starter)
+  BY_PLAN        // audienceValue = 'BASIC' | 'MID' | 'PREMIUM'
+  BY_LANGUAGE    // audienceValue = locale code
 }

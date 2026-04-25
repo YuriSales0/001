@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { MessageCircle, Lock } from 'lucide-react'
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { MessageCircle, Lock, Send, Eye, Loader2, Plus, X, CheckCircle2, Globe, Users } from 'lucide-react'
+import { showToast } from '@/components/hm/toast'
 
 type Sender = { id: string; name: string | null; role: string; image?: string | null }
 type Message = { id: string; body: string; createdAt: string; sender: Sender }
@@ -21,6 +22,7 @@ function Avatar({ name, image, size=7 }: { name: string; image?: string|null; si
 }
 
 export default function AdminMessagesPage() {
+  const [tab, setTab] = useState<'inbox' | 'broadcasts'>('inbox')
   const [convs, setConvs] = useState<ConvSummary[]>([])
   const [active, setActive] = useState<ConvSummary | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
@@ -67,12 +69,39 @@ export default function AdminMessagesPage() {
     <div className="p-6">
       <div className="mb-4">
         <h1 className="text-2xl font-serif font-bold text-gray-900">Mensagens</h1>
-        <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-          <Lock className="h-3.5 w-3.5"/> Acesso só de leitura — {convs.length} conversa(s)
-        </p>
+        {tab === 'inbox' ? (
+          <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+            <Lock className="h-3.5 w-3.5"/> Acesso só de leitura — {convs.length} conversa(s)
+          </p>
+        ) : (
+          <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+            <Send className="h-3.5 w-3.5"/> Canal directo do founder para os assinantes
+          </p>
+        )}
       </div>
 
-      <div className="flex h-[calc(100vh-200px)] max-h-[650px] rounded-hm border bg-white overflow-hidden">
+      {/* Tab bar */}
+      <div className="flex gap-1 border-b mb-4">
+        <button
+          onClick={() => setTab('inbox')}
+          className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+            tab === 'inbox' ? 'border-hm-gold text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          Conversas Manager ↔ Cliente
+        </button>
+        <button
+          onClick={() => setTab('broadcasts')}
+          className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+            tab === 'broadcasts' ? 'border-hm-gold text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          Broadcasts (founder → assinantes)
+        </button>
+      </div>
+
+      {tab === 'broadcasts' ? <BroadcastsTab /> : (
+      <div className="flex h-[calc(100vh-260px)] max-h-[650px] rounded-hm border bg-white overflow-hidden">
         {/* Sidebar */}
         <aside className="w-72 border-r flex flex-col shrink-0">
           <div className="p-3 border-b">
@@ -153,6 +182,452 @@ export default function AdminMessagesPage() {
               <MessageCircle className="h-12 w-12 mx-auto mb-2 text-gray-300"/>
               <p className="text-sm">Selecciona uma conversa</p>
             </div>
+          </div>
+        )}
+      </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Broadcasts Tab ───────────────────────────────────────────────────────────
+
+type Broadcast = {
+  id: string
+  subject: string
+  bodyMarkdown: string
+  ctaText: string | null
+  ctaUrl: string | null
+  audienceType: string
+  audienceValue: string | null
+  status: string
+  sentAt: string | null
+  recipientCount: number
+  failedCount: number
+  createdAt: string
+  sender: { id: string; name: string | null; email: string }
+}
+
+const LANGUAGES: { code: string; label: string }[] = [
+  { code: 'pt', label: 'Português' },
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'nl', label: 'Nederlands' },
+  { code: 'fr', label: 'Français' },
+  { code: 'sv', label: 'Svenska' },
+  { code: 'da', label: 'Dansk' },
+]
+
+function BroadcastsTab() {
+  const [broadcasts, setBroadcasts] = useState<Broadcast[]>([])
+  const [loading, setLoading] = useState(true)
+  const [showComposer, setShowComposer] = useState(false)
+
+  const load = useCallback(async () => {
+    setLoading(true)
+    const res = await fetch('/api/admin/broadcasts')
+    if (res.ok) setBroadcasts(await res.json())
+    setLoading(false)
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  const fmt = (s: string) =>
+    new Date(s).toLocaleString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+
+  const audienceLabel = (b: Broadcast) => {
+    switch (b.audienceType) {
+      case 'ALL_PAID': return 'Todos os assinantes pagos'
+      case 'ALL_CLIENTS': return 'Todos os clientes'
+      case 'BY_PLAN': return `Plano ${b.audienceValue}`
+      case 'BY_LANGUAGE': return `Idioma ${b.audienceValue?.toUpperCase()}`
+      default: return b.audienceType
+    }
+  }
+
+  const statusBadge = (s: string) => {
+    const map: Record<string, string> = {
+      DRAFT: 'bg-gray-100 text-gray-600',
+      SENDING: 'bg-amber-100 text-amber-700',
+      SENT: 'bg-emerald-100 text-emerald-700',
+      FAILED: 'bg-red-100 text-red-700',
+    }
+    return map[s] ?? 'bg-gray-100 text-gray-600'
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-gray-700">Histórico</h2>
+        <button
+          onClick={() => setShowComposer(true)}
+          className="inline-flex items-center gap-2 rounded-xl bg-hm-black text-white px-4 py-2.5 text-sm font-semibold hover:bg-hm-black/90"
+          style={{ background: '#0B1E3A' }}
+        >
+          <Plus className="h-4 w-4" /> Novo broadcast
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-16"><Loader2 className="h-5 w-5 animate-spin text-gray-400" /></div>
+      ) : broadcasts.length === 0 ? (
+        <div className="rounded-hm border bg-white py-16 text-center text-sm text-gray-400">
+          <Send className="h-8 w-8 mx-auto mb-2 text-gray-200" />
+          Ainda não enviaste nenhum broadcast. Clica em &ldquo;Novo broadcast&rdquo; para começar.
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {broadcasts.map(b => (
+            <div key={b.id} className="rounded-hm border bg-white p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${statusBadge(b.status)}`}>
+                      {b.status}
+                    </span>
+                    <h3 className="font-semibold text-gray-900 truncate">{b.subject}</h3>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">{b.bodyMarkdown.slice(0, 160)}{b.bodyMarkdown.length > 160 && '…'}</p>
+                  <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400">
+                    <span><Users className="inline h-3 w-3 mr-1" />{audienceLabel(b)}</span>
+                    {b.sentAt && <span>Enviado: {fmt(b.sentAt)}</span>}
+                    {b.status === 'SENT' && (
+                      <span className="text-emerald-600">
+                        <CheckCircle2 className="inline h-3 w-3 mr-1" />
+                        {b.recipientCount} entregues
+                        {b.failedCount > 0 && <span className="text-red-500 ml-1">· {b.failedCount} falhados</span>}
+                      </span>
+                    )}
+                    {b.status === 'DRAFT' && <span className="text-gray-500">Criado: {fmt(b.createdAt)}</span>}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {showComposer && (
+        <BroadcastComposer
+          onClose={() => setShowComposer(false)}
+          onSent={() => { setShowComposer(false); load() }}
+        />
+      )}
+    </div>
+  )
+}
+
+// ─── Composer ─────────────────────────────────────────────────────────────────
+
+function BroadcastComposer({ onClose, onSent }: { onClose: () => void; onSent: () => void }) {
+  const [step, setStep] = useState<'compose' | 'preview' | 'sending'>('compose')
+  const [subject, setSubject] = useState('')
+  const [body, setBody] = useState('')
+  const [ctaText, setCtaText] = useState('')
+  const [ctaUrl, setCtaUrl] = useState('')
+  const [audienceType, setAudienceType] = useState<'ALL_PAID' | 'ALL_CLIENTS' | 'BY_PLAN' | 'BY_LANGUAGE'>('ALL_PAID')
+  const [audienceValue, setAudienceValue] = useState('')
+  const [sourceLocale, setSourceLocale] = useState('pt')
+  const [audienceCount, setAudienceCount] = useState<number | null>(null)
+  const [previewHtml, setPreviewHtml] = useState('')
+  const [sending, setSending] = useState(false)
+  const [result, setResult] = useState<{ sent: number; failed: number; total: number } | null>(null)
+
+  // Live audience count
+  useEffect(() => {
+    const t = setTimeout(async () => {
+      const res = await fetch('/api/admin/broadcasts/audience-count', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ audienceType, audienceValue: audienceValue || null }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setAudienceCount(data.count)
+      } else {
+        setAudienceCount(null)
+      }
+    }, 200)
+    return () => clearTimeout(t)
+  }, [audienceType, audienceValue])
+
+  const goPreview = async () => {
+    if (subject.trim().length < 3 || body.trim().length < 10) {
+      showToast('Assunto e corpo são obrigatórios', 'error')
+      return
+    }
+    const res = await fetch('/api/admin/broadcasts/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subject, bodyMarkdown: body, ctaText: ctaText || null, ctaUrl: ctaUrl || null }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      setPreviewHtml(data.html)
+      setStep('preview')
+    } else {
+      showToast('Falhou a gerar preview', 'error')
+    }
+  }
+
+  const send = async () => {
+    setSending(true)
+    setStep('sending')
+    try {
+      // 1) Create broadcast as draft
+      const draftRes = await fetch('/api/admin/broadcasts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject,
+          bodyMarkdown: body,
+          ctaText: ctaText || null,
+          ctaUrl: ctaUrl || null,
+          audienceType,
+          audienceValue: audienceValue || null,
+        }),
+      })
+      if (!draftRes.ok) {
+        const e = await draftRes.json().catch(() => ({}))
+        showToast(e.error ?? 'Falhou criar broadcast', 'error')
+        setSending(false)
+        setStep('preview')
+        return
+      }
+      const draft = await draftRes.json()
+
+      // 2) Send (translates + dispatches)
+      const sendRes = await fetch(`/api/admin/broadcasts/${draft.id}/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceLocale }),
+      })
+      if (!sendRes.ok) {
+        const e = await sendRes.json().catch(() => ({}))
+        showToast(e.error ?? 'Falhou envio', 'error')
+        setSending(false)
+        setStep('preview')
+        return
+      }
+      const data = await sendRes.json()
+      setResult({ sent: data.sent, failed: data.failed, total: data.total })
+    } catch {
+      showToast('Erro ao enviar', 'error')
+      setStep('preview')
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="relative w-full max-w-4xl rounded-xl bg-white shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b px-5 py-4 shrink-0">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">Novo Broadcast</h2>
+            <p className="text-xs text-gray-500">
+              {step === 'compose' && 'Compõe a mensagem em qualquer língua. Tradução automática para todos os idiomas no envio.'}
+              {step === 'preview' && 'Pré-visualização — assim vai chegar aos teus assinantes (na tua língua).'}
+              {step === 'sending' && (sending ? 'A traduzir e enviar…' : 'Resultado do envio')}
+            </p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto">
+          {step === 'compose' && (
+            <div className="p-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Assunto</label>
+                <input
+                  value={subject}
+                  onChange={e => setSubject(e.target.value)}
+                  maxLength={200}
+                  placeholder="ex: Novidades de Maio"
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Corpo (markdown simples — **negrito**, *itálico*, [link](url), - listas, ## subtítulos)
+                </label>
+                <textarea
+                  value={body}
+                  onChange={e => setBody(e.target.value)}
+                  rows={10}
+                  placeholder="Olá!&#10;&#10;Queria partilhar contigo as novidades..."
+                  className="w-full rounded-lg border px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Botão CTA (opcional)</label>
+                  <input
+                    value={ctaText}
+                    onChange={e => setCtaText(e.target.value)}
+                    maxLength={60}
+                    placeholder="ex: Entrar no portal"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">URL do CTA</label>
+                  <input
+                    value={ctaUrl}
+                    onChange={e => setCtaUrl(e.target.value)}
+                    placeholder="https://hostmasters.es/client"
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                  />
+                </div>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Audience</label>
+                  <select
+                    value={audienceType}
+                    onChange={e => { setAudienceType(e.target.value as typeof audienceType); setAudienceValue('') }}
+                    className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                  >
+                    <option value="ALL_PAID">Todos os assinantes pagos (Basic+)</option>
+                    <option value="ALL_CLIENTS">Todos os clientes</option>
+                    <option value="BY_PLAN">Por plano</option>
+                    <option value="BY_LANGUAGE">Por idioma</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    {audienceType === 'BY_PLAN' && 'Plano'}
+                    {audienceType === 'BY_LANGUAGE' && 'Idioma'}
+                    {(audienceType === 'ALL_PAID' || audienceType === 'ALL_CLIENTS') && 'Filtro'}
+                  </label>
+                  {audienceType === 'BY_PLAN' ? (
+                    <select
+                      value={audienceValue}
+                      onChange={e => setAudienceValue(e.target.value)}
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                    >
+                      <option value="">Selecciona…</option>
+                      <option value="STARTER">Starter</option>
+                      <option value="BASIC">Basic</option>
+                      <option value="MID">Mid</option>
+                      <option value="PREMIUM">Premium</option>
+                    </select>
+                  ) : audienceType === 'BY_LANGUAGE' ? (
+                    <select
+                      value={audienceValue}
+                      onChange={e => setAudienceValue(e.target.value)}
+                      className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                    >
+                      <option value="">Selecciona…</option>
+                      {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+                    </select>
+                  ) : (
+                    <input disabled placeholder="—" className="w-full rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-400" />
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Língua de origem (em que estás a escrever)</label>
+                <select
+                  value={sourceLocale}
+                  onChange={e => setSourceLocale(e.target.value)}
+                  className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+                >
+                  {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+                </select>
+              </div>
+
+              <div className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2.5 text-xs text-amber-800 flex items-center gap-2">
+                <Globe className="h-4 w-4 shrink-0" />
+                {audienceCount !== null
+                  ? <span>Vai enviar para <strong>{audienceCount}</strong> destinatário(s) — traduzido automaticamente para as línguas deles.</span>
+                  : 'A calcular destinatários…'}
+              </div>
+            </div>
+          )}
+
+          {step === 'preview' && (
+            <div className="p-5 space-y-3">
+              <div className="rounded-lg bg-gray-50 border px-3 py-2 text-xs text-gray-600">
+                <strong>Para:</strong> {audienceCount ?? '?'} destinatário(s) · <strong>Língua origem:</strong> {LANGUAGES.find(l => l.code === sourceLocale)?.label}
+              </div>
+              <iframe
+                srcDoc={previewHtml}
+                title="Preview"
+                className="w-full h-[480px] rounded-lg border bg-white"
+              />
+            </div>
+          )}
+
+          {step === 'sending' && (
+            <div className="p-10 text-center">
+              {sending ? (
+                <div>
+                  <Loader2 className="h-8 w-8 animate-spin text-amber-500 mx-auto mb-3" />
+                  <p className="text-sm font-semibold text-gray-700">A traduzir e a enviar…</p>
+                  <p className="text-xs text-gray-500 mt-1">Pode demorar 30-60s consoante o número de línguas únicas.</p>
+                </div>
+              ) : result && (
+                <div>
+                  <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-3" />
+                  <p className="text-lg font-bold text-gray-900">Enviado</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {result.sent} de {result.total} entregues
+                    {result.failed > 0 && <span className="text-red-600"> · {result.failed} falharam</span>}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer actions */}
+        {step !== 'sending' && (
+          <div className="border-t px-5 py-3 flex justify-between items-center shrink-0 bg-gray-50">
+            {step === 'compose' ? (
+              <>
+                <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+                <button
+                  onClick={goPreview}
+                  className="inline-flex items-center gap-2 rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800"
+                >
+                  <Eye className="h-4 w-4" /> Pré-visualizar
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setStep('compose')} className="text-sm text-gray-500 hover:text-gray-700">← Voltar</button>
+                <button
+                  onClick={send}
+                  disabled={!audienceCount}
+                  className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold disabled:opacity-50"
+                  style={{ background: '#B08A3E', color: '#0B1E3A' }}
+                >
+                  <Send className="h-4 w-4" /> Enviar a {audienceCount} destinatário(s)
+                </button>
+              </>
+            )}
+          </div>
+        )}
+        {step === 'sending' && !sending && result && (
+          <div className="border-t px-5 py-3 flex justify-end shrink-0 bg-gray-50">
+            <button
+              onClick={onSent}
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-900 text-white px-4 py-2 text-sm font-semibold hover:bg-gray-800"
+            >
+              Fechar
+            </button>
           </div>
         )}
       </div>
