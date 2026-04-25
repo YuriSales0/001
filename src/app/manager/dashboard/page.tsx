@@ -10,6 +10,7 @@ import {
 import { AlertBanner } from "@/components/hm/alert-banner"
 import { DashboardGreeting } from "@/components/hm/dashboard-entrance"
 import { ManagerEmptyState } from "@/components/hm/manager-empty-state"
+import { ManagerCopilot } from "@/components/hm/manager-copilot"
 import { useLocale } from "@/i18n/provider"
 
 type DashboardStats = {
@@ -87,6 +88,9 @@ export default function ManagerDashboard() {
       {stats && stats.clientsCount === 0 && !error && (
         <ManagerEmptyState />
       )}
+
+      {/* AI Co-pilot — productivity layer (only show when manager has work) */}
+      {stats && stats.clientsCount > 0 && <ManagerCopilot />}
 
       {/* Pending reviews alert */}
       {pendingReviews > 0 && (
