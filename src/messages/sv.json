@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "flowMap": {
+    "badge": "Hur det fungerar, i praktiken",
+    "title": "AI sköter det osynliga. Människor tar hand om dig.",
+    "subtitle": "Varje bokning går genom 3 steg. AI-agenter sköter rutinerna 24/7. Människor (Manager, Crew, Captain) hanterar relationerna och besluten som spelar roll. Du ser bara resultaten.",
+    "principle": "Du driver inget. AI arbetar 24/7. Riktiga människor fattar de viktiga besluten. Allt som når din panel är redo för dig."
+  },
   "aiTools": {
     "badge": "AI från världsmetropoler",
     "title": "Storstadsteknik, nu på Costa Tropical",

@@ -1865,6 +1865,12 @@
       "personalUse": "Uso personal"
     }
   },
+  "flowMap": {
+    "badge": "Cómo funciona, en la práctica",
+    "title": "La IA gestiona lo invisible. Las personas cuidan de ti.",
+    "subtitle": "Cada reserva pasa por 3 etapas. Los agentes IA hacen el trabajo rutinario 24/7. Las personas (Manager, Crew, Captain) se ocupan de las relaciones y decisiones que importan. Tú solo ves los resultados.",
+    "principle": "Tú no operas nada. La IA trabaja 24/7. Personas reales toman las decisiones importantes. Todo lo que llega a tu panel está listo para ti."
+  },
   "aiTools": {
     "badge": "IA de gran metrópolis",
     "title": "La tecnología de las grandes metrópolis, ahora en la Costa Tropical",

@@ -1865,6 +1865,12 @@
       "personalUse": "Uso pessoal"
     }
   },
+  "flowMap": {
+    "badge": "Como funciona, na prática",
+    "title": "IA executa o invisível. Pessoas tratam de si.",
+    "subtitle": "Cada reserva passa por 3 estágios. Os agentes IA fazem o trabalho rotineiro 24/7. As pessoas (Manager, Crew, Captain) tratam das relações e decisões que importam. Você só vê os resultados.",
+    "principle": "Você não opera nada. AI cuida do trabalho 24/7. Pessoas reais cuidam das decisões importantes. Tudo o que chega ao seu painel está pronto para si."
+  },
   "aiTools": {
     "badge": "IA de ponta na Costa Tropical",
     "title": "A tecnologia das grandes metrópoles, agora na Costa Tropical",

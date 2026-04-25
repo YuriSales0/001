@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "flowMap": {
+    "badge": "How it works, in practice",
+    "title": "AI handles the invisible. People take care of you.",
+    "subtitle": "Every reservation flows through 3 stages. AI agents handle the routine 24/7. Real people (Manager, Crew, Captain) handle the relationships and decisions that matter. You only see the results.",
+    "principle": "You operate nothing. AI handles 24/7. Real people handle the decisions. Everything that reaches your dashboard is ready for you."
+  },
   "aiTools": {
     "badge": "Metropolitan-grade AI",
     "title": "World-class technology, now on Costa Tropical",

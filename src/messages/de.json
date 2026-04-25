@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "flowMap": {
+    "badge": "So funktioniert es in der Praxis",
+    "title": "KI kümmert sich um das Unsichtbare. Menschen kümmern sich um Sie.",
+    "subtitle": "Jede Reservierung durchläuft 3 Phasen. KI-Agenten erledigen die Routine 24/7. Menschen (Manager, Crew, Captain) kümmern sich um die Beziehungen und Entscheidungen, die zählen. Sie sehen nur die Ergebnisse.",
+    "principle": "Sie operieren nichts. KI arbeitet 24/7. Echte Menschen treffen die wichtigen Entscheidungen. Alles, was Ihr Dashboard erreicht, ist für Sie bereit."
+  },
   "aiTools": {
     "badge": "KI der Weltmetropolen",
     "title": "Technologie der großen Metropolen, jetzt an der Costa Tropical",

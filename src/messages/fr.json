@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "flowMap": {
+    "badge": "Comment ça marche, en pratique",
+    "title": "L'IA gère l'invisible. Les humains s'occupent de vous.",
+    "subtitle": "Chaque réservation passe par 3 étapes. Les agents IA gèrent la routine 24/7. Les humains (Manager, Crew, Captain) gèrent les relations et les décisions qui comptent. Vous ne voyez que les résultats.",
+    "principle": "Vous n'opérez rien. L'IA travaille 24/7. De vraies personnes prennent les décisions importantes. Tout ce qui arrive à votre tableau de bord est prêt pour vous."
+  },
   "aiTools": {
     "badge": "IA des grandes métropoles",
     "title": "La technologie des grandes métropoles, désormais sur la Costa Tropical",

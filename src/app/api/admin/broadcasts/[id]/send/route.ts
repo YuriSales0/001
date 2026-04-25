@@ -4,7 +4,7 @@ import { requireRole } from '@/lib/session'
 import { sendEmail } from '@/lib/email'
 import { notify } from '@/lib/notifications'
 import { broadcastEmailHtml, translateBroadcast, isSupportedLocale, type Locale } from '@/lib/broadcast'
-import { buildAudienceWhere } from '../../audience-count/route'
+import { buildAudienceWhere } from '@/lib/broadcast-audience'
 
 export const dynamic = 'force-dynamic'
 

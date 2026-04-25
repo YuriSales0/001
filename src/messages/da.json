@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "flowMap": {
+    "badge": "Sådan fungerer det, i praksis",
+    "title": "AI klarer det usynlige. Mennesker tager sig af dig.",
+    "subtitle": "Hver booking går gennem 3 faser. AI-agenter håndterer rutinearbejdet 24/7. Mennesker (Manager, Crew, Captain) håndterer relationerne og beslutningerne, der betyder noget. Du ser kun resultaterne.",
+    "principle": "Du opererer intet. AI arbejder 24/7. Rigtige mennesker træffer de vigtige beslutninger. Alt der når dit dashboard er klar til dig."
+  },
   "aiTools": {
     "badge": "AI fra verdensmetropoler",
     "title": "Storbyteknologi, nu på Costa Tropical",

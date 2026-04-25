@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "flowMap": {
+    "badge": "Hoe het werkt, in de praktijk",
+    "title": "AI regelt het onzichtbare. Mensen zorgen voor u.",
+    "subtitle": "Elke reservering doorloopt 3 fases. AI-agenten doen het routinewerk 24/7. Mensen (Manager, Crew, Captain) zorgen voor de relaties en beslissingen die ertoe doen. U ziet alleen de resultaten.",
+    "principle": "U bedient niets. AI werkt 24/7. Echte mensen nemen de belangrijke beslissingen. Alles wat uw dashboard bereikt, is klaar voor u."
+  },
   "aiTools": {
     "badge": "AI uit wereldsteden",
     "title": "De technologie van grootsteden, nu aan de Costa Tropical",
