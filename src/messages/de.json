@@ -3121,6 +3121,41 @@
     "recentViewAll": "Alle ansehen",
     "infoSection": "Ihre Daten",
     "docsSection": "Ihre Dokumente",
-    "securitySection": "Sicherheit"
+    "securitySection": "Sicherheit",
+    "perks": {
+      "starter": [
+        "22% Provision auf Nettomiete",
+        "Inseriert auf Airbnb, Booking.com, VRBO",
+        "Smart Lock inklusive",
+        "24/7 Gästekommunikation",
+        "Monatliche Berichte"
+      ],
+      "basic": [
+        "19% Provision auf Nettomiete",
+        "Alles von Starter",
+        "Monatliche vorbeugende Wartung",
+        "VAGF — Sprach-Feedback nach Checkout",
+        "Wöchentliche Stripe-Auszahlungen",
+        "Premium PDF-Berichte"
+      ],
+      "mid": [
+        "17% Provision auf Nettomiete",
+        "Alles von Basic",
+        "KI-Preisgestaltung dynamisch (+18% gesch. Umsatz)",
+        "Reinigung inklusive ab 4 Nächten",
+        "Market Intelligence — lokale Konkurrenz",
+        "Priority-Antwort <12h an Eigentümer"
+      ],
+      "premium": [
+        "13% Provision auf Nettomiete",
+        "Alles von Mid",
+        "KI-Preisgestaltung optimiert (+25% gesch. Umsatz)",
+        "Reinigung inklusive ab 3 Nächten",
+        "Vollständige steuerliche Compliance (Modelo 179 + IRNR)",
+        "Flughafentransfer (Málaga/Granada)",
+        "Premium-Wäsche und Bettwäsche",
+        "Notfallreaktion in <4h"
+      ]
+    }
   }
 }

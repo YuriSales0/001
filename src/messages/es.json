@@ -3122,6 +3122,41 @@
     "recentViewAll": "Ver todo",
     "infoSection": "Tus datos",
     "docsSection": "Tus documentos",
-    "securitySection": "Seguridad"
+    "securitySection": "Seguridad",
+    "perks": {
+      "starter": [
+        "22% comisión sobre alquiler neto",
+        "Listado en Airbnb, Booking.com, VRBO",
+        "Smart Lock incluido",
+        "Comunicación 24/7 con huéspedes",
+        "Informes mensuales"
+      ],
+      "basic": [
+        "19% comisión sobre alquiler neto",
+        "Todo de Starter",
+        "Mantenimiento preventivo mensual",
+        "VAGF — feedback por voz tras check-out",
+        "Payouts semanales vía Stripe",
+        "Informes premium en PDF"
+      ],
+      "mid": [
+        "17% comisión sobre alquiler neto",
+        "Todo de Basic",
+        "AI Pricing dinámico (+18% ingresos estimados)",
+        "Limpieza incluida en estancias ≥4 noches",
+        "Market Intelligence — competencia local",
+        "Respuesta prioritaria <12h al propietario"
+      ],
+      "premium": [
+        "13% comisión sobre alquiler neto",
+        "Todo de Mid",
+        "AI Pricing optimizado (+25% ingresos estimados)",
+        "Limpieza incluida en estancias ≥3 noches",
+        "Compliance fiscal completo (Modelo 179 + IRNR)",
+        "Transfer aeropuerto Málaga/Granada",
+        "Lavandería y ropa de cama premium",
+        "Respuesta a emergencias en <4h"
+      ]
+    }
   }
 }

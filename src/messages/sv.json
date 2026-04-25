@@ -3121,6 +3121,41 @@
     "recentViewAll": "Visa alla",
     "infoSection": "Dina uppgifter",
     "docsSection": "Dina dokument",
-    "securitySection": "Säkerhet"
+    "securitySection": "Säkerhet",
+    "perks": {
+      "starter": [
+        "22% provision på nettouthyrning",
+        "Listad på Airbnb, Booking.com, VRBO",
+        "Smart Lock ingår",
+        "Gästkommunikation 24/7",
+        "Månatliga rapporter"
+      ],
+      "basic": [
+        "19% provision på nettouthyrning",
+        "Allt i Starter",
+        "Månatligt förebyggande underhåll",
+        "VAGF — röstfeedback efter utcheckning",
+        "Veckovisa Stripe-utbetalningar",
+        "Premium PDF-rapporter"
+      ],
+      "mid": [
+        "17% provision på nettouthyrning",
+        "Allt i Basic",
+        "AI-prissättning dynamisk (+18% upps. intäkter)",
+        "Städning ingår vid vistelser ≥4 nätter",
+        "Market Intelligence — lokal konkurrens",
+        "Prioriterad respons <12h till ägare"
+      ],
+      "premium": [
+        "13% provision på nettouthyrning",
+        "Allt i Mid",
+        "AI-prissättning optimerad (+25% upps. intäkter)",
+        "Städning ingår vid vistelser ≥3 nätter",
+        "Full skatteefterlevnad (Modelo 179 + IRNR)",
+        "Flygplatstransfer (Málaga/Granada)",
+        "Premium tvätt och sängkläder",
+        "Akutrespons inom <4h"
+      ]
+    }
   }
 }

@@ -3121,6 +3121,41 @@
     "recentViewAll": "View all",
     "infoSection": "Your information",
     "docsSection": "Your documents",
-    "securitySection": "Security"
+    "securitySection": "Security",
+    "perks": {
+      "starter": [
+        "22% commission on net rental",
+        "Listed on Airbnb, Booking.com, VRBO",
+        "Smart Lock included",
+        "24/7 guest communication",
+        "Monthly statement reports"
+      ],
+      "basic": [
+        "19% commission on net rental",
+        "Everything in Starter",
+        "Monthly preventive maintenance",
+        "VAGF — voice feedback after checkout",
+        "Weekly Stripe payouts",
+        "Premium PDF reports"
+      ],
+      "mid": [
+        "17% commission on net rental",
+        "Everything in Basic",
+        "AI Pricing dynamic (+18% est. revenue)",
+        "Cleaning included on stays ≥4 nights",
+        "Market Intelligence — local competition",
+        "Priority response <12h to owner"
+      ],
+      "premium": [
+        "13% commission on net rental",
+        "Everything in Mid",
+        "AI Pricing optimised (+25% est. revenue)",
+        "Cleaning included on stays ≥3 nights",
+        "Full fiscal compliance (Modelo 179 + IRNR)",
+        "Airport transfers (Málaga/Granada)",
+        "Premium laundry & linens",
+        "Emergency response in <4h"
+      ]
+    }
   }
 }

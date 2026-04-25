@@ -3121,6 +3121,41 @@
     "recentViewAll": "Alles bekijken",
     "infoSection": "Uw gegevens",
     "docsSection": "Uw documenten",
-    "securitySection": "Beveiliging"
+    "securitySection": "Beveiliging",
+    "perks": {
+      "starter": [
+        "22% commissie op netto huur",
+        "Vermeld op Airbnb, Booking.com, VRBO",
+        "Smart Lock inbegrepen",
+        "24/7 gastencommunicatie",
+        "Maandelijkse rapporten"
+      ],
+      "basic": [
+        "19% commissie op netto huur",
+        "Alles van Starter",
+        "Maandelijks preventief onderhoud",
+        "VAGF — spraakfeedback na uitchecken",
+        "Wekelijkse Stripe-uitbetalingen",
+        "Premium PDF-rapporten"
+      ],
+      "mid": [
+        "17% commissie op netto huur",
+        "Alles van Basic",
+        "AI Pricing dynamisch (+18% gesch. inkomsten)",
+        "Schoonmaak inbegrepen bij verblijven ≥4 nachten",
+        "Market Intelligence — lokale concurrentie",
+        "Prioriteitsreactie <12u aan eigenaar"
+      ],
+      "premium": [
+        "13% commissie op netto huur",
+        "Alles van Mid",
+        "AI Pricing geoptimaliseerd (+25% gesch. inkomsten)",
+        "Schoonmaak inbegrepen bij verblijven ≥3 nachten",
+        "Volledige fiscale compliance (Modelo 179 + IRNR)",
+        "Luchthaventransfer (Málaga/Granada)",
+        "Premium wasserij en linnen",
+        "Noodreactie binnen <4u"
+      ]
+    }
   }
 }

@@ -3121,6 +3121,41 @@
     "recentViewAll": "Vis alle",
     "infoSection": "Dine oplysninger",
     "docsSection": "Dine dokumenter",
-    "securitySection": "Sikkerhed"
+    "securitySection": "Sikkerhed",
+    "perks": {
+      "starter": [
+        "22% provision på nettoudlejning",
+        "Listet på Airbnb, Booking.com, VRBO",
+        "Smart Lock inkluderet",
+        "Gæstkommunikation 24/7",
+        "Månedlige rapporter"
+      ],
+      "basic": [
+        "19% provision på nettoudlejning",
+        "Alt i Starter",
+        "Månedlig forebyggende vedligeholdelse",
+        "VAGF — stemmefeedback efter check-out",
+        "Ugentlige Stripe-udbetalinger",
+        "Premium PDF-rapporter"
+      ],
+      "mid": [
+        "17% provision på nettoudlejning",
+        "Alt i Basic",
+        "AI-prissætning dynamisk (+18% est. indtægt)",
+        "Rengøring inkluderet ved ophold ≥4 nætter",
+        "Market Intelligence — lokal konkurrence",
+        "Prioritetsrespons <12t til ejer"
+      ],
+      "premium": [
+        "13% provision på nettoudlejning",
+        "Alt i Mid",
+        "AI-prissætning optimeret (+25% est. indtægt)",
+        "Rengøring inkluderet ved ophold ≥3 nætter",
+        "Fuld skattecompliance (Modelo 179 + IRNR)",
+        "Lufthavnstransfer (Málaga/Granada)",
+        "Premium vask og sengetøj",
+        "Nødrespons inden for <4t"
+      ]
+    }
   }
 }

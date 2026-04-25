@@ -3122,6 +3122,41 @@
     "recentViewAll": "Ver tudo",
     "infoSection": "Os teus dados",
     "docsSection": "Os teus documentos",
-    "securitySection": "Segurança"
+    "securitySection": "Segurança",
+    "perks": {
+      "starter": [
+        "Comissão 22% sobre rental líquido",
+        "Listagem em Airbnb, Booking.com, VRBO",
+        "Smart Lock incluído",
+        "Comunicação 24/7 com hóspedes",
+        "Relatórios mensais simples"
+      ],
+      "basic": [
+        "Comissão 19% sobre rental líquido",
+        "Tudo do Starter",
+        "Manutenção preventiva mensal",
+        "VAGF — feedback por voz após checkout",
+        "Payouts semanais via Stripe",
+        "Relatórios premium em PDF"
+      ],
+      "mid": [
+        "Comissão 17% sobre rental líquido",
+        "Tudo do Basic",
+        "AI Pricing dinâmico (+18% receita estimada)",
+        "Limpeza incluída em estadias ≥4 noites",
+        "Market Intelligence — concorrência local",
+        "Resposta prioritária <12h ao owner"
+      ],
+      "premium": [
+        "Comissão 13% sobre rental líquido",
+        "Tudo do Mid",
+        "AI Pricing optimizado (+25% receita estimada)",
+        "Limpeza incluída em estadias ≥3 noites",
+        "Compliance fiscal completo (Modelo 179 + IRNR)",
+        "Transfer aeroporto Málaga/Granada",
+        "Lavandaria e roupa de cama premium",
+        "Resposta a emergências em <4h"
+      ]
+    }
   }
 }
