@@ -16,7 +16,7 @@ import {
 describe('commissionRateForPlan', () => {
   it('returns correct rate for each plan', () => {
     expect(commissionRateForPlan('STARTER')).toBe(0.22)
-    expect(commissionRateForPlan('BASIC')).toBe(0.20)
+    expect(commissionRateForPlan('BASIC')).toBe(0.19)
     expect(commissionRateForPlan('MID')).toBe(0.17)
     expect(commissionRateForPlan('PREMIUM')).toBe(0.13)
   })
@@ -53,11 +53,11 @@ describe('calcCommission', () => {
     expect(result.commissionRate).toBe(17)
   })
 
-  it('calculates correctly for BASIC (20%)', () => {
+  it('calculates correctly for BASIC (19%)', () => {
     const result = calcCommission(1000, 'BASIC')
-    expect(result.commission).toBe(200)
-    expect(result.net).toBe(800)
-    expect(result.commissionRate).toBe(20)
+    expect(result.commission).toBe(190)
+    expect(result.net).toBe(810)
+    expect(result.commissionRate).toBe(19)
   })
 
   it('calculates correctly for STARTER (22%)', () => {
@@ -177,7 +177,7 @@ describe('CLEANING_FEE_STANDARD', () => {
 describe('CLEANING_INCLUDED_MIN_NIGHTS', () => {
   it('STARTER: never included (null)',  () => expect(CLEANING_INCLUDED_MIN_NIGHTS['STARTER']).toBeNull())
   it('BASIC: never included (null)',    () => expect(CLEANING_INCLUDED_MIN_NIGHTS['BASIC']).toBeNull())
-  it('MID: included from 5 nights',    () => expect(CLEANING_INCLUDED_MIN_NIGHTS['MID']).toBe(5))
+  it('MID: included from 4 nights',    () => expect(CLEANING_INCLUDED_MIN_NIGHTS['MID']).toBe(4))
   it('PREMIUM: included from 3 nights',() => expect(CLEANING_INCLUDED_MIN_NIGHTS['PREMIUM']).toBe(3))
 })
 
@@ -234,9 +234,9 @@ describe('calcCommission edge cases', () => {
 
   it('handles very large amounts (six figures)', () => {
     const result = calcCommission(999999.99, 'BASIC')
-    // 999999.99 * 0.20 = 199999.998 → rounds to 200000.00
-    expect(result.commission).toBe(200000)
-    expect(result.net).toBe(799999.99)
+    // 999999.99 * 0.19 = 189999.9981 → rounds to 190000.00
+    expect(result.commission).toBe(190000)
+    expect(result.net).toBe(809999.99)
     expect(result.commission + result.net).toBeCloseTo(999999.99, 2)
   })
 
@@ -258,7 +258,7 @@ describe('calcCommission edge cases', () => {
 describe('commissionRateForPlan (additional)', () => {
   it('returns correct rate for each plan', () => {
     expect(commissionRateForPlan('STARTER')).toBe(0.22)
-    expect(commissionRateForPlan('BASIC')).toBe(0.20)
+    expect(commissionRateForPlan('BASIC')).toBe(0.19)
     expect(commissionRateForPlan('MID')).toBe(0.17)
     expect(commissionRateForPlan('PREMIUM')).toBe(0.13)
   })

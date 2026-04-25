@@ -3,7 +3,7 @@
  *
  * Commission per subscription plan:
  *   STARTER  → 22%
- *   BASIC    → 20%
+ *   BASIC    → 19%
  *   MID      → 17%  (most popular)
  *   PREMIUM  → 13%
  *
@@ -16,7 +16,7 @@
  * Cleaning fee per turnover (EUR):
  *   STARTER  → 70 (always charged)
  *   BASIC    → 60 (always charged)
- *   MID      → 45 if stay < 5 nights, included if stay ≥ 5 nights
+ *   MID      → 45 if stay < 4 nights, included if stay ≥ 4 nights
  *   PREMIUM  → 35 if stay < 3 nights, included if stay ≥ 3 nights
  *
  * Payout scheduling:
@@ -34,7 +34,7 @@
 
 export const PLAN_COMMISSION: Record<string, number> = {
   STARTER: 0.22,
-  BASIC:   0.20,
+  BASIC:   0.19,
   MID:     0.17,
   PREMIUM: 0.13,
 }
@@ -61,7 +61,7 @@ export const CLEANING_FEE_STANDARD: Record<string, number> = {
 export const CLEANING_INCLUDED_MIN_NIGHTS: Record<string, number | null> = {
   STARTER: null,
   BASIC:   null,
-  MID:     5,
+  MID:     4,
   PREMIUM: 3,
 }
 

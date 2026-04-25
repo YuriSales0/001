@@ -14,8 +14,8 @@ const BASE_CONTEXT = `
 | Plano | Comissão | Mensalidade | Taxa limpeza |
 |-------|----------|-------------|--------------|
 | STARTER | 22% | €0 | €70/saída (sempre) |
-| BASIC | 20% | €89/mês | €60/saída (sempre) |
-| MID | 17% | €159/mês | €45 se <5 noites / incluída ≥5 |
+| BASIC | 19% | €89/mês | €60/saída (sempre) |
+| MID | 17% | €159/mês | €45 se <4 noites / incluída ≥4 |
 | PREMIUM | 13% | €269/mês | €35 se <3 noites / incluída ≥3 |
 
 ## Fluxo de reserva completo

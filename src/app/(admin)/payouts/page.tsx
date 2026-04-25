@@ -81,7 +81,7 @@ function HowItWorksModal({ onClose }: { onClose: () => void }) {
             <div className="grid grid-cols-2 gap-1 text-xs">
               {[
                 { plan: 'STARTER', rate: '22%', price: t('admin.payouts.free') },
-                { plan: 'BASIC',   rate: '20%', price: '€89/m' },
+                { plan: 'BASIC',   rate: '19%', price: '€89/m' },
                 { plan: 'MID',     rate: '17%', price: '€159/m' },
                 { plan: 'PREMIUM', rate: '13%', price: '€269/m' },
               ].map(r => (

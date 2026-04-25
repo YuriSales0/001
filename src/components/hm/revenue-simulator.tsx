@@ -172,7 +172,7 @@ export function RevenueSimulator({
         Estimates based on Costa Tropical market data. Assumes avg stay {AVG_STAY_NIGHTS} nights.
         AI pricing uplift: +18% (Mid), +25% (Premium).
         Occupancy uplift: +8% on all paid plans (Basic+) from Guest Stay Chat + voice feedback driving better reviews.
-        Cleaning included on Mid (stays ≥5 nights) and Premium (stays ≥3 nights).
+        Cleaning included on Mid (stays ≥4 nights) and Premium (stays ≥3 nights).
         Actual results vary by property and season.
       </p>
     </section>

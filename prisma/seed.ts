@@ -3,14 +3,14 @@ import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
-/** Commission rates per plan */
+/** Commission rates per plan (must mirror src/lib/finance.ts) */
 const PLAN_COMMISSION: Record<string, number> = {
-  STARTER: 0.20,
-  BASIC:   0.20,
-  MID:     0.18,
-  PREMIUM: 0.15,
+  STARTER: 0.22,
+  BASIC:   0.19,
+  MID:     0.17,
+  PREMIUM: 0.13,
 }
-const DEFAULT_COMMISSION = 0.18
+const DEFAULT_COMMISSION = 0.22
 const PAYOUT_DELAY_DAYS = 7
 
 async function main() {

@@ -86,8 +86,8 @@ Yuri é também o primeiro **Crew Captain** até ter volume para delegar.
 | Plano | Fee/mês | Comissão | Limpeza | Diferencial |
 |-------|---------|----------|---------|-------------|
 | Starter | €0 | 22% | €70/saída | Base — sem manutenção |
-| Basic | €89 | 20% | €60/saída | Manutenção preventiva mensal |
-| Mid | €159 | 17% | €45 ou incluída ≥5n | AI pricing + Smart Lock |
+| Basic | €89 | 19% | €60/saída | Manutenção preventiva mensal |
+| Mid | €159 | 17% | €45 ou incluída ≥4n | AI pricing + Smart Lock |
 | Premium | €269 | 13% | €35 ou incluída ≥3n | Fiscal completo, NRU, resposta 4h |
 
 ## Remuneração do Manager

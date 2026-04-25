@@ -11,7 +11,7 @@ type Plan = "STARTER" | "BASIC" | "MID" | "PREMIUM"
 
 const PLAN_OPTIONS: { value: Plan; label: string; fee: string; commission: string }[] = [
   { value: "STARTER", label: "Starter", fee: "€0/mo", commission: "22%" },
-  { value: "BASIC", label: "Basic", fee: "€89/mo", commission: "20%" },
+  { value: "BASIC", label: "Basic", fee: "€89/mo", commission: "19%" },
   { value: "MID", label: "Mid", fee: "€159/mo", commission: "17%" },
   { value: "PREMIUM", label: "Premium", fee: "€269/mo", commission: "13%" },
 ]

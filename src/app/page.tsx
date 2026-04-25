@@ -31,14 +31,20 @@ import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
 import { ReferralTracker } from "@/components/hm/referral-tracker"
 import { HmLogo } from "@/components/hm/hm-logo"
 import { RevenueSimulator } from "@/components/hm/revenue-simulator"
+import { PLAN_COMMISSION, PLAN_MONTHLY_FEE } from "@/lib/finance"
 
-/* ── Plan data from finance.ts ── */
-const plans = [
-  { id: "STARTER", commission: "22%", monthlyFee: null, annualFee: null, firstMonthFree: false },
-  { id: "BASIC",   commission: "20%", monthlyFee: 89,   annualFee: 890,  firstMonthFree: true },
-  { id: "MID",     commission: "17%", monthlyFee: 159,  annualFee: 1590, firstMonthFree: true, popular: true },
-  { id: "PREMIUM", commission: "13%", monthlyFee: 269,  annualFee: 2690, firstMonthFree: false },
-]
+/* ── Plan data derived from finance.ts (single source of truth) ── */
+const plans = (['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const).map(id => {
+  const monthly = PLAN_MONTHLY_FEE[id]
+  return {
+    id,
+    commission: `${Math.round(PLAN_COMMISSION[id] * 100)}%`,
+    monthlyFee: monthly > 0 ? monthly : null,
+    annualFee: monthly > 0 ? monthly * 10 : null, // 2 months free on annual
+    firstMonthFree: id === 'BASIC' || id === 'MID',
+    popular: id === 'MID',
+  }
+})
 
 const fmtEUR = (n: number) => `€${n}`
 

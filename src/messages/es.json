@@ -2046,9 +2046,9 @@
           "Respuesta prioritaria: 12h propietario / 2h huésped",
           "Escalación WhatsApp emergencia al Manager",
           "Scorecard feedback de la propiedad",
-          "Limpieza incluida ≥5 noches",
+          "Limpieza incluida ≥4 noches",
           "Priority response: 12h owner / 2h guest",
-          "Cleaning included ≥5 nights"
+          "Cleaning included ≥4 nights"
         ]
       },
       "premium": {
@@ -2452,7 +2452,7 @@
       "feat_aiPricing": "Pricing con IA + Smart Lock",
       "feat_priority12h": "Respuesta prioritaria: 12h propietario / 2h huésped",
       "feat_anyLanguage": "Extracto en cualquier idioma",
-      "feat_cleaningMid": "Limpieza: €45 si <5n / incluida ≥5n",
+      "feat_cleaningMid": "Limpieza: €45 si <4n / incluida ≥4n",
       "feat_fiscal": "Modelo 179 + IRNR (no residentes)",
       "feat_upsells": "Upsells: transfers, compra y lavandería",
       "feat_emergency4h": "Respuesta de emergencia en 4 horas",

@@ -252,8 +252,8 @@ HostMasters will provide comprehensive short-term rental management for the Owne
 | | Starter | Basic | Mid | Premium |
 |---|---|---|---|---|
 | Monthly fee | €0 | €89 | €159 | €269 |
-| Commission | 22% | 20% | 17% | 13% |
-| Cleaning | €70/turn | €60/turn | €45 (incl. ≥5n) | €35 (incl. ≥3n) |
+| Commission | 22% | 19% | 17% | 13% |
+| Cleaning | €70/turn | €60/turn | €45 (incl. ≥4n) | €35 (incl. ≥3n) |
 
 Commission is calculated on gross rental revenue and deducted at payout. Monthly subscription is billed via Stripe.
 

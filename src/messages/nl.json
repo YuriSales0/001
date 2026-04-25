@@ -2045,9 +2045,9 @@
           "Priority response: 12h owner / 2h guest",
           "Manager WhatsApp emergency escalation",
           "Property feedback scorecard",
-          "Cleaning included ≥5 nights",
+          "Cleaning included ≥4 nights",
           "Priority response: 12h owner / 2h guest",
-          "Cleaning included ≥5 nights"
+          "Cleaning included ≥4 nights"
         ]
       },
       "premium": {
@@ -2451,7 +2451,7 @@
       "feat_aiPricing": "AI pricing + Smart Lock integration",
       "feat_priority12h": "Priority response: 12h owner / 2h guest",
       "feat_anyLanguage": "Statement in any language",
-      "feat_cleaningMid": "Cleaning: €45 if <5n / included ≥5n",
+      "feat_cleaningMid": "Cleaning: €45 if <4n / included ≥4n",
       "feat_fiscal": "Modelo 179 + IRNR fiscal compliance",
       "feat_upsells": "Guest upsells: transfers, grocery & laundry",
       "feat_emergency4h": "Emergency response within 4 hours",
