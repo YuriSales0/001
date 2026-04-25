@@ -2,16 +2,16 @@
 
 import { useState } from "react"
 import { TrendingUp } from "lucide-react"
+import {
+  PLAN_COMMISSION,
+  PLAN_MONTHLY_FEE,
+  CLEANING_FEE_STANDARD,
+  CLEANING_INCLUDED_MIN_NIGHTS,
+} from "@/lib/finance"
 
-const PLAN_COMMISSION: Record<string, number> = {
-  STARTER: 0.22, BASIC: 0.20, MID: 0.17, PREMIUM: 0.13,
-}
-const PLAN_MONTHLY: Record<string, number> = {
-  STARTER: 0, BASIC: 89, MID: 159, PREMIUM: 269,
-}
-const PLAN_CLEANING: Record<string, number> = {
-  STARTER: 70, BASIC: 60, MID: 45, PREMIUM: 35,
-}
+// Assumed average guest stay, used to estimate turnovers and decide
+// whether plan-level "cleaning included" thresholds apply.
+const AVG_STAY_NIGHTS = 4.5
 
 // Deterministic number format (avoids hydration mismatch from locale-dependent toLocaleString)
 function fmt(n: number): string {
@@ -37,7 +37,7 @@ export function RevenueSimulator({
   const [nights, setNights] = useState(initialNights)
   const [avgPrice, setAvgPrice] = useState(initialAvgPrice)
 
-  const avgTurnovers = Math.ceil(nights / 4.5)
+  const avgTurnovers = Math.ceil(nights / AVG_STAY_NIGHTS)
   const grossAnnual = nights * avgPrice
 
   const plans = (['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const).map(tier => {
@@ -47,8 +47,10 @@ export function RevenueSimulator({
     const occupancyUplift = tier === 'MID' || tier === 'PREMIUM' || tier === 'BASIC' ? 1.08 : 1.0
     const adjustedGross = Math.round(grossAnnual * pricingUplift * occupancyUplift)
     const commission = Math.round(adjustedGross * PLAN_COMMISSION[tier])
-    const monthlyFee = PLAN_MONTHLY[tier] * 12
-    const cleaningCost = avgTurnovers * PLAN_CLEANING[tier]
+    const monthlyFee = PLAN_MONTHLY_FEE[tier] * 12
+    const cleaningThreshold = CLEANING_INCLUDED_MIN_NIGHTS[tier]
+    const cleaningIncluded = cleaningThreshold !== null && AVG_STAY_NIGHTS >= cleaningThreshold
+    const cleaningCost = cleaningIncluded ? 0 : avgTurnovers * CLEANING_FEE_STANDARD[tier]
     const totalCost = commission + monthlyFee + cleaningCost
     const net = adjustedGross - totalCost
     return {
@@ -58,6 +60,7 @@ export function RevenueSimulator({
       commission,
       monthlyFee,
       cleaningCost,
+      cleaningIncluded,
       totalCost,
       net,
       pricingUplift,
@@ -135,10 +138,11 @@ export function RevenueSimulator({
               sublabel={plans.map(p => `${Math.round(PLAN_COMMISSION[p.tier] * 100)}%`)}
               bestIdx={bestIdx} neg />
             <SimRow label="Monthly fee (×12)" values={plans.map(p => p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : '€0')}
-              sublabel={plans.map(p => p.monthlyFee ? `€${PLAN_MONTHLY[p.tier]}/mo` : 'free')}
+              sublabel={plans.map(p => p.monthlyFee ? `€${PLAN_MONTHLY_FEE[p.tier]}/mo` : 'free')}
               bestIdx={bestIdx} neg />
-            <SimRow label={`Cleaning (×${avgTurnovers})`} values={plans.map(p => `-€${fmt(p.cleaningCost)}`)}
-              sublabel={plans.map(p => `€${PLAN_CLEANING[p.tier]}/turn`)}
+            <SimRow label={`Cleaning (×${avgTurnovers})`}
+              values={plans.map(p => p.cleaningIncluded ? '€0' : `-€${fmt(p.cleaningCost)}`)}
+              sublabel={plans.map(p => p.cleaningIncluded ? 'included' : `€${CLEANING_FEE_STANDARD[p.tier]}/turn`)}
               bestIdx={bestIdx} neg />
             <tr className="border-t-2 font-bold">
               <td className="py-3 pr-4 text-hm-black">You keep</td>
@@ -165,8 +169,10 @@ export function RevenueSimulator({
       </div>
 
       <p className="text-[10px] text-gray-500 mt-4 text-center">
-        Estimates based on Costa Tropical market data. AI pricing uplift: +18% (Mid), +25% (Premium).
+        Estimates based on Costa Tropical market data. Assumes avg stay {AVG_STAY_NIGHTS} nights.
+        AI pricing uplift: +18% (Mid), +25% (Premium).
         Occupancy uplift: +8% on all paid plans (Basic+) from Guest Stay Chat + voice feedback driving better reviews.
+        Cleaning included on Mid (stays ≥5 nights) and Premium (stays ≥3 nights).
         Actual results vary by property and season.
       </p>
     </section>
