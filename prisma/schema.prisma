@@ -528,6 +528,9 @@ model Property {
   consumableItems     ConsumableItem[]
   consumableMovements ConsumableMovement[]
   consumableSetups    PropertyConsumableSetup[]
+
+  @@index([ownerId])
+  @@index([status])
 }
 
 model PaymentReceipt {
@@ -817,6 +820,11 @@ model Reservation {
   receipts      PaymentReceipt[]
   guestFeedback GuestFeedback?
   stayChat      GuestStayChat?
+
+  @@index([propertyId])
+  @@index([status])
+  @@index([propertyId, status])
+  @@index([checkIn])
 }
 
 model Payout {
@@ -838,6 +846,10 @@ model Payout {
 
   property    Property     @relation(fields: [propertyId], references: [id])
   reservation Reservation? @relation(fields: [reservationId], references: [id])
+
+  @@index([propertyId])
+  @@index([status])
+  @@index([scheduledFor])
 }
 
 model Expense {
@@ -894,6 +906,7 @@ model MonthlyReport {
   property Property @relation(fields: [propertyId], references: [id])
 
   @@unique([propertyId, month, year])
+  @@index([propertyId])
 }
 
 model Task {
@@ -932,6 +945,9 @@ model Task {
 
   @@index([assigneeId, status])
   @@index([crewPayoutId])
+  @@index([propertyId])
+  @@index([propertyId, status])
+  @@index([dueDate])
 }
 
 // ─── Crew System ────────────────────────────────────────────────────────────
@@ -1100,6 +1116,8 @@ model Lead {
   partnerPayouts  PartnerPayout[]
 
   @@index([partnerId])
+  @@index([assignedManagerId])
+  @@index([status])
 }
 
 model Conversation {
