@@ -28,6 +28,7 @@ import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
 import { PlatformDemo } from "@/components/hm/platform-demo"
 import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
+import { HybridFlowMap } from "@/components/hm/hybrid-flow-map"
 import { ReferralTracker } from "@/components/hm/referral-tracker"
 import { HmLogo } from "@/components/hm/hm-logo"
 import { RevenueSimulator } from "@/components/hm/revenue-simulator"
@@ -218,6 +219,9 @@ export default function LandingPage() {
 
       {/* ───────── AI Tools ───────── */}
       <AiToolsShowcase />
+
+      {/* ───────── Hybrid flow map: AI + humans + owner ───────── */}
+      <HybridFlowMap />
 
       {/* ───────── Plans ───────── */}
       <section id="planos" className="py-20 sm:py-28 bg-white">
