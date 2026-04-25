@@ -6,6 +6,7 @@ import { showToast } from "@/components/hm/toast"
 import {
   Plus, X, Phone, Mail, Search, Clock, Copy, Check,
   Webhook, Code2, QrCode, MessageSquare, Zap, ChevronDown,
+  Sparkles, RefreshCw, Loader2, AlertOctagon, PhoneCall, Send, Globe,
 } from "lucide-react"
 
 type LeadStage =
@@ -18,6 +19,18 @@ type BantAnswers = {
   authority?: string
   property?: string
   timeline?: string
+}
+
+type AiTriage = {
+  score: number
+  priority: 'hot' | 'warm' | 'cold'
+  riskFlags: string[]
+  language: string
+  reasoning: string
+  suggestedAction: 'call' | 'email' | 'whatsapp' | 'wait' | 'skip'
+  suggestedActionDetail: string
+  draftMessage: string | null
+  followUpInDays: number | null
 }
 
 type Lead = {
@@ -37,6 +50,8 @@ type Lead = {
   assignedManager: { id: string; name: string | null } | null
   score: number | null
   bantData: BantAnswers | null
+  aiTriage: AiTriage | null
+  aiTriagedAt: string | null
   createdAt: string
   updatedAt?: string
   leadAttributions: { campaign: { id: string; name: string; channel: string } }[]
@@ -483,6 +498,15 @@ export default function CRMPage() {
             </div>
 
             <div className="p-5 space-y-5">
+              {/* AI Triage card */}
+              <AiTriageCard
+                lead={selectedLead}
+                onTriaged={(updated) => {
+                  setLeads(prev => prev.map(l => l.id === selectedLead.id ? { ...l, ...updated } : l))
+                  setSelectedLead(l => l ? { ...l, ...updated } : l)
+                }}
+              />
+
               {/* Contact */}
               <div>
                 <h3 className="text-xs uppercase tracking-wider text-gray-400 mb-2">{t('manager.crm.contact')}</h3>
@@ -1071,6 +1095,187 @@ x-integration-token: ${token}
             )
           })}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── AI Triage card (shown inside lead detail) ─────────────────────────────────
+
+const PRIORITY_STYLE: Record<string, { bg: string; border: string; color: string; label: string }> = {
+  hot:  { bg: 'rgba(220,38,38,0.06)',  border: '#fecaca', color: '#dc2626', label: 'Hot' },
+  warm: { bg: 'rgba(176,138,62,0.07)', border: '#e8d9b6', color: '#B08A3E', label: 'Warm' },
+  cold: { bg: 'rgba(11,30,58,0.04)',   border: '#e5e7eb', color: '#0B1E3A', label: 'Cold' },
+}
+
+const ACTION_ICON: Record<string, typeof Phone> = {
+  call: PhoneCall,
+  email: Mail,
+  whatsapp: MessageSquare,
+  wait: Clock,
+  skip: X,
+}
+
+const RISK_LABELS: Record<string, string> = {
+  incomplete_contact: 'Contacto incompleto',
+  spammy_message: 'Mensagem suspeita',
+  price_only: 'Só pergunta preço',
+  low_intent: 'Baixa intenção',
+  duplicate_signal: 'Possível duplicado',
+  language_mismatch: 'Língua não corresponde',
+  competitor: 'Possível concorrente',
+}
+
+function AiTriageCard({ lead, onTriaged }: {
+  lead: Lead
+  onTriaged: (updated: Partial<Lead>) => void
+}) {
+  const [running, setRunning] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const t = lead.aiTriage
+
+  const runTriage = async () => {
+    setRunning(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/leads/${lead.id}/triage`, { method: 'POST' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setError(data.error ?? 'Failed to triage')
+        return
+      }
+      const triage = await res.json() as AiTriage
+      onTriaged({ aiTriage: triage, aiTriagedAt: new Date().toISOString(), score: triage.score })
+      showToast('AI triage updated', 'success')
+    } catch {
+      setError('Network error')
+    } finally {
+      setRunning(false)
+    }
+  }
+
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {}
+  }
+
+  if (!t) {
+    return (
+      <div className="rounded-lg p-4 border" style={{ borderColor: '#E8E3D8', background: 'rgba(176,138,62,0.03)' }}>
+        <div className="flex items-start gap-3">
+          <Sparkles className="h-5 w-5 mt-0.5 shrink-0" style={{ color: '#B08A3E' }} />
+          <div className="flex-1">
+            <p className="text-sm font-bold text-hm-black">AI Triage não disponível</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Lead criada antes do triage automático. Clica para gerar agora.
+            </p>
+            {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+          </div>
+          <button
+            onClick={runTriage}
+            disabled={running}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-hm-black text-white px-3 py-1.5 text-xs font-semibold hover:opacity-90 disabled:opacity-50"
+          >
+            {running ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+            Gerar
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const style = PRIORITY_STYLE[t.priority] ?? PRIORITY_STYLE.cold
+  const Icon = ACTION_ICON[t.suggestedAction] ?? Phone
+
+  return (
+    <div className="rounded-lg border overflow-hidden" style={{ borderColor: style.border, background: style.bg }}>
+      <div className="px-4 py-3 flex items-center justify-between border-b" style={{ borderColor: style.border }}>
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4" style={{ color: style.color }} />
+          <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: style.color }}>
+            AI Triage
+          </span>
+          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase"
+                style={{ background: style.color, color: 'white' }}>
+            {style.label} · score {t.score}
+          </span>
+        </div>
+        <button
+          onClick={runTriage}
+          disabled={running}
+          className="text-gray-400 hover:text-gray-700 disabled:opacity-50"
+          title="Re-analisar"
+        >
+          <RefreshCw className={`h-3.5 w-3.5 ${running ? 'animate-spin' : ''}`} />
+        </button>
+      </div>
+
+      <div className="p-4 space-y-3 bg-white/60">
+        {/* Reasoning */}
+        <p className="text-xs text-gray-700 leading-relaxed italic">{t.reasoning}</p>
+
+        {/* Risk flags */}
+        {t.riskFlags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {t.riskFlags.map(flag => (
+              <span key={flag} className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold border"
+                    style={{ borderColor: '#fecaca', background: 'rgba(220,38,38,0.06)', color: '#dc2626' }}>
+                <AlertOctagon className="h-2.5 w-2.5" />
+                {RISK_LABELS[flag] ?? flag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Suggested action */}
+        <div className="rounded-lg border p-3 bg-white" style={{ borderColor: '#E8E3D8' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Icon className="h-3.5 w-3.5" style={{ color: '#B08A3E' }} />
+            <span className="text-[10px] uppercase tracking-widest font-bold" style={{ color: '#B08A3E' }}>
+              Próximo passo
+            </span>
+            {t.followUpInDays && (
+              <span className="text-[10px] text-gray-500 ml-auto">
+                Follow-up {t.followUpInDays}d
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-gray-700">{t.suggestedActionDetail}</p>
+        </div>
+
+        {/* Draft message */}
+        {t.draftMessage && (
+          <div className="rounded-lg border p-3" style={{ borderColor: '#E8E3D8', background: 'rgba(176,138,62,0.04)' }}>
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center gap-1.5">
+                <Send className="h-3 w-3" style={{ color: '#B08A3E' }} />
+                <span className="text-[10px] uppercase tracking-widest font-bold" style={{ color: '#B08A3E' }}>
+                  Draft de abertura
+                </span>
+                <span className="inline-flex items-center gap-0.5 text-[10px] text-gray-500">
+                  <Globe className="h-2.5 w-2.5" />
+                  {t.language.toUpperCase()}
+                </span>
+              </div>
+              <button
+                onClick={() => copy(t.draftMessage!)}
+                className="inline-flex items-center gap-1 text-[10px] text-gray-500 hover:text-gray-700"
+              >
+                {copied ? <><Check className="h-3 w-3 text-emerald-500" /> Copiado</> : <><Copy className="h-3 w-3" /> Copiar</>}
+              </button>
+            </div>
+            <p className="text-xs text-gray-700 whitespace-pre-wrap leading-relaxed">{t.draftMessage}</p>
+            <p className="text-[10px] text-gray-400 italic mt-2">
+              Revê e personaliza antes de enviar. AI sugere — tu fechas.
+            </p>
+          </div>
+        )}
+
+        {error && <p className="text-xs text-red-600">{error}</p>}
       </div>
     </div>
   )

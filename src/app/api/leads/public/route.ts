@@ -2,6 +2,7 @@
 // Used by: embeddable form, Meta Lead Ads webhook, Zapier, Make, etc.
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { triageAndPersist } from '@/lib/lead-triage'
 
 // Simple HMAC-style token validation: INTEGRATION_SECRET env var (optional)
 function isValidToken(req: NextRequest): boolean {
@@ -88,6 +89,9 @@ export async function POST(request: NextRequest) {
         data: { leadId: lead.id, campaignId },
       }).catch(() => {}) // ignore duplicate if somehow already exists
     }
+
+    // Fire-and-forget AI triage
+    triageAndPersist(lead.id).catch(() => {})
 
     return NextResponse.json({ ok: true, lead }, { status: 201 })
   } catch (error) {

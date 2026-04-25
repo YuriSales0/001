@@ -1122,6 +1122,8 @@ model Lead {
   followUpDate      DateTime?
   score             Int?
   bantData          Json?
+  aiTriage          Json?      // AI Co-pilot triage output: priority, riskFlags, opening draft, suggestedAction
+  aiTriagedAt       DateTime?
   ownerId           String?
   assignedManagerId String?
   convertedUserId   String?

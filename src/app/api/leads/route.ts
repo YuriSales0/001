@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { notify } from '@/lib/notifications'
+import { triageAndPersist } from '@/lib/lead-triage'
 
 export const dynamic = 'force-dynamic'
 
@@ -111,6 +112,9 @@ export async function POST(request: NextRequest) {
       link: '/crm',
     }).catch(() => {})
   }
+
+  // Fire-and-forget AI triage — refines score, drafts opening message
+  triageAndPersist(lead.id).catch(() => {})
 
   return NextResponse.json(lead, { status: 201 })
 }
