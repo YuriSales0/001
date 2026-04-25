@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { notify } from '@/lib/notifications'
 
 const VALID_TRANSITIONS: Record<string, string[]> = {
   UPCOMING:         ['ACTIVE', 'CANCELLED'],
@@ -157,6 +158,22 @@ export async function PUT(
             where: { id: { in: payoutIds }, status: 'PENDING' },
             data: { status: 'FAILED', failedReason: 'Reservation cancelled' },
           })
+        }
+      }
+      // Notify property owner about cancellation
+      if (res) {
+        const prop = await prisma.property.findUnique({
+          where: { id: res.propertyId },
+          select: { ownerId: true, name: true },
+        })
+        if (prop) {
+          notify({
+            userId: prop.ownerId,
+            type: 'RESERVATION_CANCELLED',
+            title: `Reservation cancelled: ${body.guestName ?? 'Guest'}`,
+            body: `${prop.name} — ${new Date(res.checkIn).toLocaleDateString('en-GB')}`,
+            link: '/client/bookings',
+          }).catch(() => {})
         }
       }
     }

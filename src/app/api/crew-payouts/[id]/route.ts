@@ -94,5 +94,15 @@ export async function PATCH(
     }).catch(() => {})
   }
 
+  if (status === 'FAILED') {
+    notify({
+      userId: payout.crewId,
+      type: 'CREW_PAYOUT_FAILED',
+      title: 'Payout failed',
+      body: `Week of ${updated.weekStart.toISOString().slice(0, 10)} — contact Admin for details`,
+      link: '/crew/earnings',
+    }).catch(() => {})
+  }
+
   return NextResponse.json(updated)
 }

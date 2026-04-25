@@ -146,12 +146,27 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           data.rejectedAt = now
           data.captainId = me.id
           break
-        case 'REDISTRIBUTED':
-          data.assigneeId = null
+        case 'REDISTRIBUTED': {
           data.notifiedAt = null
           data.confirmedAt = null
           data.submittedAt = null
+          // Auto-assign to next available crew (exclude the rejected assignee)
+          const { pickLeastBusyCrew } = await import('@/lib/crew')
+          const nextCrew = await pickLeastBusyCrew(existing.assigneeId ?? undefined)
+          data.assigneeId = nextCrew ?? null
+          if (nextCrew) {
+            data.status = 'NOTIFIED'
+            data.notifiedAt = now
+            notify({
+              userId: nextCrew,
+              type: 'TASK_ASSIGNED',
+              title: `Redistributed task: ${existing.title ?? existing.type}`,
+              body: `${existing.property?.name ?? 'Property'} — ${existing.dueDate?.toLocaleDateString('en-GB') ?? 'TBD'}`,
+              link: '/crew',
+            }).catch(() => {})
+          }
           break
+        }
       }
     }
 

@@ -104,10 +104,12 @@ export function autoTasksForPlan(plan: string | null | undefined): string[] {
  * Load-balance: devolve o utilizador CREW com menos tasks abertas.
  * Devolve null se não existir nenhum crew.
  */
-export async function pickLeastBusyCrew(): Promise<string | null> {
+export async function pickLeastBusyCrew(excludeId?: string): Promise<string | null> {
   if (!prisma) return null
+  const where: Record<string, unknown> = { role: 'CREW' }
+  if (excludeId) where.id = { not: excludeId }
   const crews = await prisma.user.findMany({
-    where: { role: 'CREW' },
+    where,
     select: {
       id: true,
       _count: { select: { tasks: { where: { status: { not: 'COMPLETED' } } } } },

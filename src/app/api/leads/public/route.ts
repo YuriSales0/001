@@ -97,13 +97,6 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  // Source count query (used by /beta spots counter)
-  const source = request.nextUrl.searchParams.get('source')
-  if (source) {
-    const count = await prisma.lead.count({ where: { source: source as any } })
-    return NextResponse.json({ count })
-  }
-
   // Meta webhook verification
   const challenge = request.nextUrl.searchParams.get('hub.challenge')
   const verify_token = request.nextUrl.searchParams.get('hub.verify_token')
