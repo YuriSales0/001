@@ -333,42 +333,48 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ───────── Social proof — platform potential ───────── */}
-      <section className="py-20 sm:py-28" style={{ background: "#FAFAF8" }}>
+      {/* ───────── Trust badges — infra real (substitui social proof) ───────── */}
+      <section className="py-16 sm:py-20" style={{ background: "#FAFAF8" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-10">
             <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
-              {t('landing.social.badge')}
+              {t('landing.trust.badge')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
-              {t('landing.social.title')}
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+              {t('landing.trust.title')}
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[0, 1, 2].map((i) => (
+          {/* 6 logos — grayscale, hover restores brand */}
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 sm:gap-8 items-center max-w-4xl mx-auto">
+            {[
+              { name: 'Airbnb',      label: 'A i r b n b',  color: '#FF5A5F' },
+              { name: 'Booking.com', label: 'Booking.com',  color: '#003B95' },
+              { name: 'VRBO',        label: 'VRBO',         color: '#0F3B66' },
+              { name: 'Stripe',      label: 'stripe',       color: '#635BFF' },
+              { name: 'Revolut',     label: 'Revolut',      color: '#0075EB' },
+              { name: 'Nuki',        label: 'Nuki',         color: '#1A1A1A' },
+            ].map(b => (
               <div
-                key={i}
-                className="rounded-2xl p-8 border"
-                style={{ background: "#fff", borderColor: "#E8E3D8" }}
+                key={b.name}
+                className="group flex items-center justify-center h-14 transition-all"
+                title={b.name}
               >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, si) => (
-                    <Star key={si} className="h-4 w-4 fill-current" style={{ color: "#B08A3E" }} />
-                  ))}
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  &ldquo;{t(`landing.social.items.${i}.quote`)}&rdquo;
-                </p>
-                <div>
-                  <p className="font-semibold text-sm" style={{ color: "#0B1E3A" }}>
-                    {t(`landing.social.items.${i}.name`)}
-                  </p>
-                  <p className="text-xs text-gray-400">{t(`landing.social.items.${i}.origin`)}</p>
-                </div>
+                <span
+                  className="font-bold text-base sm:text-lg tracking-tight transition-colors duration-200 grayscale group-hover:grayscale-0"
+                  style={{ color: '#0B1E3A' }}
+                  onMouseEnter={(e) => { (e.target as HTMLSpanElement).style.color = b.color }}
+                  onMouseLeave={(e) => { (e.target as HTMLSpanElement).style.color = '#0B1E3A' }}
+                >
+                  {b.label}
+                </span>
               </div>
             ))}
           </div>
+
+          <p className="text-center text-xs text-gray-500 mt-8 max-w-2xl mx-auto leading-relaxed">
+            {t('landing.trust.description')}
+          </p>
         </div>
       </section>
 
@@ -718,7 +724,19 @@ function ContactSection() {
                       <MapPin className="h-5 w-5" style={{ color: "#B08A3E" }} />
                     </div>
                     <span className="text-sm text-gray-300">
-                      Costa Tropical, Granada
+                      {t("landing.contact.hqLocation")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(176,138,62,0.15)" }}
+                    >
+                      <Globe className="h-5 w-5" style={{ color: "#B08A3E" }} />
+                    </div>
+                    <span className="text-sm text-gray-300">
+                      {t("landing.contact.languages")}
                     </span>
                   </div>
                 </div>
@@ -728,7 +746,7 @@ function ContactSection() {
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4" style={{ color: "#B08A3E" }} />
                   <span className="text-xs text-gray-400">
-                    No commitment. No spam. Just a conversation.
+                    {t("landing.contact.noCommitment")}
                   </span>
                 </div>
               </div>

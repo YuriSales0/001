@@ -2021,7 +2021,23 @@
     "simulator": {
       "badge": "Jetzt rechnen",
       "title": "Sehen Sie, wie viel wirklich übrig bleibt",
-      "subtitle": "Verschieben Sie die Regler passend zu Ihrer Immobilie. Wir vergleichen alle 4 Tarife direkt: Provision, Monatsgebühr, Reinigung und KI-Preisaufschlag. Keine Tabelle nötig."
+      "subtitle": "Verschieben Sie die Regler passend zu Ihrer Immobilie. Wir vergleichen alle 4 Tarife direkt: Provision, Monatsgebühr, Reinigung und KI-Preisaufschlag. Keine Tabelle nötig.",
+      "rentedNights": "Vermietete Nächte / Jahr",
+      "avgPrice": "Ø Preis / Nacht (€)",
+      "bestForYou": "Am besten für Sie",
+      "youKeep": "Bleibt bei Ihnen",
+      "grossRevenue": "Bruttoumsatz",
+      "commission": "Provision",
+      "monthlyFee": "Monatsgebühr (×12)",
+      "cleaning": "Reinigung",
+      "aiUplift": "+{n}% KI",
+      "static": "statisch",
+      "free": "kostenlos",
+      "included": "inklusive",
+      "perTurn": "/Wechsel",
+      "perMonthShort": "/Mon",
+      "vsStarter": "/Jahr vs Starter",
+      "footer": "Schätzungen basierend auf Costa-Tropical-Marktdaten. Geht von durchschnittlich {nights} Nächten Aufenthalt aus. KI-Preisaufschlag: +18% (Mid), +25% (Premium). Auslastungssteigerung: +8% bei allen kostenpflichtigen Tarifen (Basic+) durch Stay Chat + Sprach-Feedback, das bessere Bewertungen generiert. Reinigung inklusive bei Mid (≥4 Nächte) und Premium (≥3 Nächte). Tatsächliche Ergebnisse variieren je nach Immobilie und Saison."
     },
     "plans": {
       "badge": "Tarife",
@@ -2131,8 +2147,8 @@
       "responsePromise": "Wir antworten innerhalb von 24 Stunden",
       "whyTitle": "Warum uns kontaktieren?",
       "whyDesc": "Erhalten Sie eine personalisierte Bewertung des Mietpotenzials Ihrer Immobilie, erfahren Sie mehr über unsere Verwaltungstarife oder stellen Sie einfach eine Frage. Kein Druck, keine Verpflichtung.",
-      "whatsappNumber": "+34 600 000 000",
-      "emailAddress": "hello@hostmasters.es",
+      "whatsappNumber": "+34 657 190 788",
+      "emailAddress": "info@hostmasters.es",
       "nameLabel": "Name",
       "namePlaceholder": "Ihr vollständiger Name",
       "emailLabel": "E-Mail",
@@ -2153,7 +2169,10 @@
       "thankYouDesc": "Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24 Stunden. In der Zwischenzeit können Sie unsere Tarife erkunden.",
       "required": "Bitte füllen Sie Name, E-Mail und Nachricht aus.",
       "partnerCodeLabel": "Partner-Code (optional)",
-      "partnerCodePlaceholder": "z.B. HM-AB12CD"
+      "partnerCodePlaceholder": "z.B. HM-AB12CD",
+      "hqLocation": "Almuñécar Zentrum · physischer Hauptsitz ab Januar 2026",
+      "languages": "EN · PT · ES · DE · NL · FR · SV · DA",
+      "noCommitment": "Keine Verpflichtung. Kein Spam. Nur ein Gespräch."
     },
     "join": {
       "badge": "Unser Team",
@@ -2295,6 +2314,11 @@
       "card3Title": "Lokales Expertenteam",
       "card3Desc": "Ein zertifiziertes Vor-Ort-Team kümmert sich um Reinigung, Wartung, Check-ins und Inspektionen. Qualität garantiert durch Checklisten und Fotoverifizierung.",
       "footerContact": "Fragen? Kontakt hello@hostmasters.es oder WhatsApp +34 XXX XXX XXX"
+    },
+    "trust": {
+      "badge": "Vertrauenswürdige Infrastruktur",
+      "title": "Aufgebaut auf den Plattformen, denen Sie bereits vertrauen",
+      "description": "Inserate in Echtzeit synchronisiert. PCI-zertifizierte Zahlungen. Smart Lock pro Immobilie. Null Custom-Risiko — jede Ebene ist Industriestandard."
     }
   },
   "onboarding": {

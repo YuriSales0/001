@@ -9,6 +9,7 @@ import {
   CLEANING_INCLUDED_MIN_NIGHTS,
   AVG_STAY_NIGHTS,
 } from "@/lib/finance"
+import { useLocale } from "@/i18n/provider"
 
 // Deterministic number format (avoids hydration mismatch from locale-dependent toLocaleString)
 function fmt(n: number): string {
@@ -21,18 +22,23 @@ function fmt(n: number): string {
 export function RevenueSimulator({
   initialNights = 120,
   initialAvgPrice = 110,
-  title = "See exactly how much you keep with each plan",
-  subtitle = "Adjust to your property. Numbers include AI pricing uplift, commission, fees and cleaning costs.",
+  title,
+  subtitle,
   className,
 }: {
   initialNights?: number
   initialAvgPrice?: number
+  /** Override the localised title (rare — pages already render their own header) */
   title?: string
+  /** Override the localised subtitle */
   subtitle?: string
   className?: string
 }) {
+  const { t } = useLocale()
   const [nights, setNights] = useState(initialNights)
   const [avgPrice, setAvgPrice] = useState(initialAvgPrice)
+  const resolvedTitle = title ?? t('landing.simulator.title')
+  const resolvedSubtitle = subtitle ?? t('landing.simulator.subtitle')
 
   const avgTurnovers = Math.ceil(nights / AVG_STAY_NIGHTS)
   const grossAnnual = nights * avgPrice
@@ -74,16 +80,16 @@ export function RevenueSimulator({
       style={{ borderColor: 'rgba(176,138,62,0.4)' }}
     >
       <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#B08A3E' }}>
-        <TrendingUp className="h-3.5 w-3.5" /> Revenue simulator
+        <TrendingUp className="h-3.5 w-3.5" /> {t('landing.simulator.badge')}
       </div>
-      <h3 className="text-2xl font-serif font-bold text-hm-black mb-1">{title}</h3>
-      <p className="text-sm text-gray-500 mb-6">{subtitle}</p>
+      <h3 className="text-2xl font-serif font-bold text-hm-black mb-1">{resolvedTitle}</h3>
+      <p className="text-sm text-gray-500 mb-6">{resolvedSubtitle}</p>
 
       {/* Sliders */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 max-w-2xl">
         <div>
           <label className="text-xs text-gray-600 flex justify-between mb-1">
-            <span>Rented nights / year</span>
+            <span>{t('landing.simulator.rentedNights')}</span>
             <span className="font-bold text-hm-black">{nights}</span>
           </label>
           <input type="range" min={30} max={300} value={nights}
@@ -95,7 +101,7 @@ export function RevenueSimulator({
         </div>
         <div>
           <label className="text-xs text-gray-600 flex justify-between mb-1">
-            <span>Avg price / night (€)</span>
+            <span>{t('landing.simulator.avgPrice')}</span>
             <span className="font-bold text-hm-black">€{avgPrice}</span>
           </label>
           <input type="range" min={50} max={350} value={avgPrice}
@@ -126,7 +132,7 @@ export function RevenueSimulator({
                   {isBest && (
                     <span className="text-[9px] font-bold uppercase tracking-wider rounded-full px-2 py-0.5"
                       style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>
-                      Best for you
+                      {t('landing.simulator.bestForYou')}
                     </span>
                   )}
                 </div>
@@ -134,29 +140,29 @@ export function RevenueSimulator({
                   <div className="text-lg font-bold" style={isBest ? { color: '#B08A3E' } : { color: '#0B1E3A' }}>
                     €{fmt(p.net)}
                   </div>
-                  <div className="text-[10px] uppercase tracking-wider text-gray-400">You keep</div>
+                  <div className="text-[10px] uppercase tracking-wider text-gray-400">{t('landing.simulator.youKeep')}</div>
                 </div>
               </div>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
                   <span className="text-gray-500">
-                    Gross revenue {p.pricingUplift > 1 && <span className="text-[10px] text-gray-400">(+{Math.round((p.pricingUplift - 1) * 100)}% AI)</span>}
+                    {t('landing.simulator.grossRevenue')} {p.pricingUplift > 1 && <span className="text-[10px] text-gray-400">({t('landing.simulator.aiUplift').replace('{n}', String(Math.round((p.pricingUplift - 1) * 100)))})</span>}
                   </span>
                   <span className="text-hm-black font-semibold">€{fmt(p.adjustedGross)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Commission ({Math.round(PLAN_COMMISSION[p.tier] * 100)}%)</span>
+                  <span className="text-gray-500">{t('landing.simulator.commission')} ({Math.round(PLAN_COMMISSION[p.tier] * 100)}%)</span>
                   <span className="text-gray-500">-€{fmt(p.commission)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">
-                    Monthly fee {p.monthlyFee > 0 ? `(€${PLAN_MONTHLY_FEE[p.tier]}/mo × 12)` : ''}
+                    {t('landing.simulator.monthlyFee')} {p.monthlyFee > 0 ? `(€${PLAN_MONTHLY_FEE[p.tier]}${t('landing.simulator.perMonthShort')} × 12)` : ''}
                   </span>
-                  <span className="text-gray-500">{p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : 'free'}</span>
+                  <span className="text-gray-500">{p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : t('landing.simulator.free')}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">
-                    Cleaning (×{avgTurnovers}) {p.cleaningIncluded && <span className="text-[10px] text-emerald-600 font-semibold">included</span>}
+                    {t('landing.simulator.cleaning')} (×{avgTurnovers}) {p.cleaningIncluded && <span className="text-[10px] text-emerald-600 font-semibold">{t('landing.simulator.included')}</span>}
                   </span>
                   <span className="text-gray-500">{p.cleaningIncluded ? '€0' : `-€${fmt(p.cleaningCost)}`}</span>
                 </div>
@@ -164,7 +170,7 @@ export function RevenueSimulator({
               {p.tier !== 'STARTER' && (
                 <div className={`mt-3 pt-2 border-t text-[11px] font-semibold ${delta > 0 ? 'text-emerald-600' : 'text-red-600'}`}
                      style={{ borderColor: '#f0ece3' }}>
-                  {delta > 0 ? '+' : ''}{fmt(delta)}/yr vs Starter
+                  {delta > 0 ? '+' : ''}{fmt(delta)}{t('landing.simulator.vsStarter')}
                 </div>
               )}
             </div>
@@ -186,28 +192,28 @@ export function RevenueSimulator({
                   </span>
                   {p.tier === best.tier && (
                     <span className="block text-[9px] font-bold uppercase tracking-wider mt-0.5"
-                      style={{ color: '#B08A3E' }}>Best for you</span>
+                      style={{ color: '#B08A3E' }}>{t('landing.simulator.bestForYou')}</span>
                   )}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody className="text-xs">
-            <SimRow label="Gross revenue" values={plans.map(p => `€${fmt(p.adjustedGross)}`)}
-              sublabel={plans.map(p => p.pricingUplift > 1 ? `+${Math.round((p.pricingUplift - 1) * 100)}% AI` : 'static')}
+            <SimRow label={t('landing.simulator.grossRevenue')} values={plans.map(p => `€${fmt(p.adjustedGross)}`)}
+              sublabel={plans.map(p => p.pricingUplift > 1 ? t('landing.simulator.aiUplift').replace('{n}', String(Math.round((p.pricingUplift - 1) * 100))) : t('landing.simulator.static'))}
               bestIdx={bestIdx} />
-            <SimRow label="Commission" values={plans.map(p => `-€${fmt(p.commission)}`)}
+            <SimRow label={t('landing.simulator.commission')} values={plans.map(p => `-€${fmt(p.commission)}`)}
               sublabel={plans.map(p => `${Math.round(PLAN_COMMISSION[p.tier] * 100)}%`)}
               bestIdx={bestIdx} neg />
-            <SimRow label="Monthly fee (×12)" values={plans.map(p => p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : '€0')}
-              sublabel={plans.map(p => p.monthlyFee ? `€${PLAN_MONTHLY_FEE[p.tier]}/mo` : 'free')}
+            <SimRow label={t('landing.simulator.monthlyFee')} values={plans.map(p => p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : '€0')}
+              sublabel={plans.map(p => p.monthlyFee ? `€${PLAN_MONTHLY_FEE[p.tier]}${t('landing.simulator.perMonthShort')}` : t('landing.simulator.free'))}
               bestIdx={bestIdx} neg />
-            <SimRow label={`Cleaning (×${avgTurnovers})`}
+            <SimRow label={`${t('landing.simulator.cleaning')} (×${avgTurnovers})`}
               values={plans.map(p => p.cleaningIncluded ? '€0' : `-€${fmt(p.cleaningCost)}`)}
-              sublabel={plans.map(p => p.cleaningIncluded ? 'included' : `€${CLEANING_FEE_STANDARD[p.tier]}/turn`)}
+              sublabel={plans.map(p => p.cleaningIncluded ? t('landing.simulator.included') : `€${CLEANING_FEE_STANDARD[p.tier]}${t('landing.simulator.perTurn')}`)}
               bestIdx={bestIdx} neg />
             <tr className="border-t-2 font-bold">
-              <td className="py-3 pr-4 text-hm-black">You keep</td>
+              <td className="py-3 pr-4 text-hm-black">{t('landing.simulator.youKeep')}</td>
               {plans.map(p => (
                 <td key={p.tier} className={`text-center py-3 px-3 text-base ${
                   p.tier === best.tier ? 'bg-hm-gold/5 rounded-b-xl' : ''
@@ -220,7 +226,7 @@ export function RevenueSimulator({
                     <span className={`block text-[10px] font-semibold mt-0.5 ${
                       p.net > starter.net ? 'text-emerald-600' : 'text-red-600'
                     }`}>
-                      {p.net > starter.net ? '+' : ''}{fmt(p.net - starter.net)}/yr vs Starter
+                      {p.net > starter.net ? '+' : ''}{fmt(p.net - starter.net)}{t('landing.simulator.vsStarter')}
                     </span>
                   )}
                 </td>
@@ -231,11 +237,7 @@ export function RevenueSimulator({
       </div>
 
       <p className="text-[10px] text-gray-500 mt-4 text-center">
-        Estimates based on Costa Tropical market data. Assumes avg stay {AVG_STAY_NIGHTS} nights.
-        AI pricing uplift: +18% (Mid), +25% (Premium).
-        Occupancy uplift: +8% on all paid plans (Basic+) from Guest Stay Chat + voice feedback driving better reviews.
-        Cleaning included on Mid (stays ≥4 nights) and Premium (stays ≥3 nights).
-        Actual results vary by property and season.
+        {t('landing.simulator.footer').replace('{nights}', String(AVG_STAY_NIGHTS))}
       </p>
     </section>
   )

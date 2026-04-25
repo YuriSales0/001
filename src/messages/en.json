@@ -2021,7 +2021,23 @@
     "simulator": {
       "badge": "Run the numbers",
       "title": "See how much you actually keep",
-      "subtitle": "Move the sliders to match your property. We compare all four plans side by side: commission, monthly fee, cleaning, AI-pricing uplift. No spreadsheet needed."
+      "subtitle": "Move the sliders to match your property. We compare all four plans side by side: commission, monthly fee, cleaning, AI-pricing uplift. No spreadsheet needed.",
+      "rentedNights": "Rented nights / year",
+      "avgPrice": "Avg price / night (€)",
+      "bestForYou": "Best for you",
+      "youKeep": "You keep",
+      "grossRevenue": "Gross revenue",
+      "commission": "Commission",
+      "monthlyFee": "Monthly fee (×12)",
+      "cleaning": "Cleaning",
+      "aiUplift": "+{n}% AI",
+      "static": "static",
+      "free": "free",
+      "included": "included",
+      "perTurn": "/turn",
+      "perMonthShort": "/mo",
+      "vsStarter": "/yr vs Starter",
+      "footer": "Estimates based on Costa Tropical market data. Assumes avg stay {nights} nights. AI pricing uplift: +18% (Mid), +25% (Premium). Occupancy uplift: +8% on all paid plans (Basic+) from Guest Stay Chat + voice feedback driving better reviews. Cleaning included on Mid (stays ≥4 nights) and Premium (stays ≥3 nights). Actual results vary by property and season."
     },
     "plans": {
       "badge": "Plans",
@@ -2131,8 +2147,8 @@
       "responsePromise": "We respond within 24 hours",
       "whyTitle": "Why contact us?",
       "whyDesc": "Get a personalised assessment of your property's rental potential, understand our management plans, or simply ask a question. No pressure, no obligation.",
-      "whatsappNumber": "+34 600 000 000",
-      "emailAddress": "hello@hostmasters.es",
+      "whatsappNumber": "+34 657 190 788",
+      "emailAddress": "info@hostmasters.es",
       "nameLabel": "Name",
       "namePlaceholder": "Your full name",
       "emailLabel": "Email",
@@ -2153,7 +2169,10 @@
       "thankYouDesc": "We have received your message and will get back to you within 24 hours. In the meantime, feel free to explore our plans.",
       "required": "Please fill in your name, email and message.",
       "partnerCodeLabel": "Partner code (optional)",
-      "partnerCodePlaceholder": "e.g. HM-AB12CD"
+      "partnerCodePlaceholder": "e.g. HM-AB12CD",
+      "hqLocation": "Almuñécar centro · physical HQ from Jan 2026",
+      "languages": "EN · PT · ES · DE · NL · FR · SV · DA",
+      "noCommitment": "No commitment. No spam. Just a conversation."
     },
     "join": {
       "badge": "Join Our Team",
@@ -2295,6 +2314,11 @@
       "card3Title": "Local Expert Team",
       "card3Desc": "A certified on-the-ground crew handles cleaning, maintenance, check-ins and inspections. Quality guaranteed by checklists and photo verification.",
       "footerContact": "Questions? Contact hello@hostmasters.es or WhatsApp +34 XXX XXX XXX"
+    },
+    "trust": {
+      "badge": "Trusted infrastructure",
+      "title": "Built on the platforms you already trust",
+      "description": "Listings synced in real time. Payments PCI-certified. Smart Lock per property. Zero custom risk — every layer is industry-standard."
     }
   },
   "onboarding": {

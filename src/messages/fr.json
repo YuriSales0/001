@@ -2021,7 +2021,23 @@
     "simulator": {
       "badge": "Faites le calcul",
       "title": "Voyez ce qui vous reste vraiment",
-      "subtitle": "Déplacez les curseurs pour correspondre à votre bien. Nous comparons les 4 formules côte à côte : commission, abonnement, ménage et hausse tarifaire par IA. Sans tableur."
+      "subtitle": "Déplacez les curseurs pour correspondre à votre bien. Nous comparons les 4 formules côte à côte : commission, abonnement, ménage et hausse tarifaire par IA. Sans tableur.",
+      "rentedNights": "Nuits louées / an",
+      "avgPrice": "Prix moyen / nuit (€)",
+      "bestForYou": "Meilleur pour vous",
+      "youKeep": "Il vous reste",
+      "grossRevenue": "Revenu brut",
+      "commission": "Commission",
+      "monthlyFee": "Abonnement (×12)",
+      "cleaning": "Ménage",
+      "aiUplift": "+{n}% IA",
+      "static": "fixe",
+      "free": "gratuit",
+      "included": "inclus",
+      "perTurn": "/passage",
+      "perMonthShort": "/mois",
+      "vsStarter": "/an vs Starter",
+      "footer": "Estimations basées sur les données du marché Costa Tropical. Suppose un séjour moyen de {nights} nuits. Hausse IA Pricing : +18% (Mid), +25% (Premium). Hausse d'occupation : +8% sur toutes les formules payantes (Basic+) grâce à Stay Chat + feedback vocal qui génère de meilleures évaluations. Ménage inclus sur Mid (séjours ≥4 nuits) et Premium (≥3 nuits). Les résultats réels varient selon le bien et la saison."
     },
     "plans": {
       "badge": "Tarifs",
@@ -2131,8 +2147,8 @@
       "responsePromise": "Nous répondons sous 24 heures",
       "whyTitle": "Pourquoi nous contacter ?",
       "whyDesc": "Obtenez une évaluation personnalisée du potentiel locatif de votre propriété, comprenez nos plans de gestion, ou posez simplement une question. Sans pression, sans engagement.",
-      "whatsappNumber": "+34 600 000 000",
-      "emailAddress": "hello@hostmasters.es",
+      "whatsappNumber": "+34 657 190 788",
+      "emailAddress": "info@hostmasters.es",
       "nameLabel": "Nom",
       "namePlaceholder": "Votre nom complet",
       "emailLabel": "E-mail",
@@ -2153,7 +2169,10 @@
       "thankYouDesc": "Nous avons reçu votre message et vous répondrons sous 24 heures. En attendant, explorez nos plans.",
       "required": "Veuillez remplir le nom, l'e-mail et le message.",
       "partnerCodeLabel": "Code partenaire (optionnel)",
-      "partnerCodePlaceholder": "ex. HM-AB12CD"
+      "partnerCodePlaceholder": "ex. HM-AB12CD",
+      "hqLocation": "Almuñécar centre · siège physique à partir de janvier 2026",
+      "languages": "EN · PT · ES · DE · NL · FR · SV · DA",
+      "noCommitment": "Aucun engagement. Pas de spam. Juste une conversation."
     },
     "join": {
       "badge": "Notre équipe",
@@ -2295,6 +2314,11 @@
       "card3Title": "Équipe d'experts locaux",
       "card3Desc": "Une équipe certifiée sur le terrain s'occupe du ménage, de la maintenance, des check-ins et des inspections. Qualité garantie par checklists et vérification photo.",
       "footerContact": "Des questions ? Contact hello@hostmasters.es ou WhatsApp +34 XXX XXX XXX"
+    },
+    "trust": {
+      "badge": "Infrastructure de confiance",
+      "title": "Construit sur les plateformes auxquelles vous faites déjà confiance",
+      "description": "Annonces synchronisées en temps réel. Paiements certifiés PCI. Smart Lock par propriété. Zéro risque sur mesure — chaque couche est aux standards de l'industrie."
     }
   },
   "onboarding": {

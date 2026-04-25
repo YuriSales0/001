@@ -2021,7 +2021,23 @@
     "simulator": {
       "badge": "Bereken het",
       "title": "Zie hoeveel er echt overblijft",
-      "subtitle": "Beweeg de schuifregelaars passend bij jouw woning. We vergelijken alle 4 plannen naast elkaar: commissie, maandelijkse kosten, schoonmaak en AI-prijsverhoging. Geen spreadsheet nodig."
+      "subtitle": "Beweeg de schuifregelaars passend bij jouw woning. We vergelijken alle 4 plannen naast elkaar: commissie, maandelijkse kosten, schoonmaak en AI-prijsverhoging. Geen spreadsheet nodig.",
+      "rentedNights": "Verhuurde nachten / jaar",
+      "avgPrice": "Gem. prijs / nacht (€)",
+      "bestForYou": "Beste voor u",
+      "youKeep": "U houdt over",
+      "grossRevenue": "Bruto-inkomsten",
+      "commission": "Commissie",
+      "monthlyFee": "Maandkosten (×12)",
+      "cleaning": "Schoonmaak",
+      "aiUplift": "+{n}% AI",
+      "static": "vast",
+      "free": "gratis",
+      "included": "inbegrepen",
+      "perTurn": "/wissel",
+      "perMonthShort": "/mnd",
+      "vsStarter": "/jaar vs Starter",
+      "footer": "Schattingen op basis van Costa-Tropical-marktgegevens. Gaat uit van gem. verblijf van {nights} nachten. AI-prijsverhoging: +18% (Mid), +25% (Premium). Bezettingstoename: +8% op alle betaalde plannen (Basic+) door Stay Chat + spraakfeedback dat betere reviews genereert. Schoonmaak inbegrepen bij Mid (≥4 nachten) en Premium (≥3 nachten). Werkelijke resultaten verschillen per woning en seizoen."
     },
     "plans": {
       "badge": "Abonnementen",
@@ -2131,8 +2147,8 @@
       "responsePromise": "Wij reageren binnen 24 uur",
       "whyTitle": "Waarom contact opnemen?",
       "whyDesc": "Krijg een persoonlijke beoordeling van het verhuurpotentieel van uw pand, begrijp onze beheerabonnementen of stel gewoon een vraag. Geen druk, geen verplichting.",
-      "whatsappNumber": "+34 600 000 000",
-      "emailAddress": "hello@hostmasters.es",
+      "whatsappNumber": "+34 657 190 788",
+      "emailAddress": "info@hostmasters.es",
       "nameLabel": "Naam",
       "namePlaceholder": "Uw volledige naam",
       "emailLabel": "E-mail",
@@ -2153,7 +2169,10 @@
       "thankYouDesc": "Wij hebben uw bericht ontvangen en nemen binnen 24 uur contact op. Ondertussen kunt u onze abonnementen verkennen.",
       "required": "Vul uw naam, e-mail en bericht in.",
       "partnerCodeLabel": "Partnercode (optioneel)",
-      "partnerCodePlaceholder": "bv. HM-AB12CD"
+      "partnerCodePlaceholder": "bv. HM-AB12CD",
+      "hqLocation": "Almuñécar centrum · fysiek hoofdkantoor vanaf januari 2026",
+      "languages": "EN · PT · ES · DE · NL · FR · SV · DA",
+      "noCommitment": "Geen verplichting. Geen spam. Alleen een gesprek."
     },
     "join": {
       "badge": "Ons team",
@@ -2295,6 +2314,11 @@
       "card3Title": "Lokaal expertteam",
       "card3Desc": "Een gecertificeerd veldteam regelt schoonmaak, onderhoud, check-ins en inspecties. Kwaliteit gegarandeerd door checklists en fotoverificatie.",
       "footerContact": "Vragen? Contact hello@hostmasters.es of WhatsApp +34 XXX XXX XXX"
+    },
+    "trust": {
+      "badge": "Vertrouwde infrastructuur",
+      "title": "Gebouwd op de platforms die u al vertrouwt",
+      "description": "Advertenties realtime gesynchroniseerd. PCI-gecertificeerde betalingen. Smart Lock per woning. Nul custom risico — elke laag is industriestandaard."
     }
   },
   "onboarding": {

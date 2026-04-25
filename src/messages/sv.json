@@ -2021,7 +2021,23 @@
     "simulator": {
       "badge": "Räkna själv",
       "title": "Se hur mycket som faktiskt blir kvar",
-      "subtitle": "Dra reglagen så de passar din fastighet. Vi jämför alla fyra planer sida vid sida: provision, månadsavgift, städning och AI-prislyft. Inget kalkylark behövs."
+      "subtitle": "Dra reglagen så de passar din fastighet. Vi jämför alla fyra planer sida vid sida: provision, månadsavgift, städning och AI-prislyft. Inget kalkylark behövs.",
+      "rentedNights": "Uthyrda nätter / år",
+      "avgPrice": "Snittpris / natt (€)",
+      "bestForYou": "Bäst för dig",
+      "youKeep": "Du behåller",
+      "grossRevenue": "Bruttointäkter",
+      "commission": "Provision",
+      "monthlyFee": "Månadsavgift (×12)",
+      "cleaning": "Städning",
+      "aiUplift": "+{n}% AI",
+      "static": "fast",
+      "free": "gratis",
+      "included": "ingår",
+      "perTurn": "/omstart",
+      "perMonthShort": "/mån",
+      "vsStarter": "/år vs Starter",
+      "footer": "Uppskattningar baserade på Costa Tropical-marknadsdata. Antar genomsnittlig vistelse på {nights} nätter. AI-prislyft: +18% (Mid), +25% (Premium). Beläggningslyft: +8% på alla betalda planer (Basic+) tack vare Stay Chat + röstfeedback som ger bättre recensioner. Städning ingår vid Mid (≥4 nätter) och Premium (≥3 nätter). Faktiska resultat varierar per fastighet och säsong."
     },
     "plans": {
       "badge": "Planer",
@@ -2131,8 +2147,8 @@
       "responsePromise": "Vi svarar inom 24 timmar",
       "whyTitle": "Varför kontakta oss?",
       "whyDesc": "Få en personlig bedömning av din fastighets uthyrningspotential, förstå våra förvaltningsplaner, eller ställ helt enkelt en fråga. Ingen press, ingen förpliktelse.",
-      "whatsappNumber": "+34 600 000 000",
-      "emailAddress": "hello@hostmasters.es",
+      "whatsappNumber": "+34 657 190 788",
+      "emailAddress": "info@hostmasters.es",
       "nameLabel": "Namn",
       "namePlaceholder": "Ditt fullständiga namn",
       "emailLabel": "E-post",
@@ -2153,7 +2169,10 @@
       "thankYouDesc": "Vi har tagit emot ditt meddelande och återkommer inom 24 timmar. Under tiden får du gärna utforska våra planer.",
       "required": "Vänligen fyll i namn, e-post och meddelande.",
       "partnerCodeLabel": "Partnerkod (valfritt)",
-      "partnerCodePlaceholder": "t.ex. HM-AB12CD"
+      "partnerCodePlaceholder": "t.ex. HM-AB12CD",
+      "hqLocation": "Almuñécar centrum · fysiskt huvudkontor från januari 2026",
+      "languages": "EN · PT · ES · DE · NL · FR · SV · DA",
+      "noCommitment": "Inga åtaganden. Ingen spam. Bara en konversation."
     },
     "join": {
       "badge": "Gå med i vårt team",
@@ -2295,6 +2314,11 @@
       "card3Title": "Lokalt expertteam",
       "card3Desc": "Ett certifierat team på plats sköter städning, underhåll, check-in och inspektioner. Kvalitet garanterad genom checklistor och fotoverifiering.",
       "footerContact": "Frågor? Kontakta hello@hostmasters.es eller WhatsApp +34 XXX XXX XXX"
+    },
+    "trust": {
+      "badge": "Pålitlig infrastruktur",
+      "title": "Byggd på plattformarna du redan litar på",
+      "description": "Annonser synkroniserade i realtid. PCI-certifierade betalningar. Smart Lock per fastighet. Noll anpassad risk — varje lager är industristandard."
     }
   },
   "onboarding": {

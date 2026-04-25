@@ -2022,7 +2022,23 @@
     "simulator": {
       "badge": "Haz los números",
       "title": "Descubre cuánto te queda de verdad",
-      "subtitle": "Mueve los sliders según tu propiedad. Comparamos los 4 planes lado a lado: comisión, cuota mensual, limpieza y mejora de precio con IA. Sin hoja de cálculo."
+      "subtitle": "Mueve los sliders según tu propiedad. Comparamos los 4 planes lado a lado: comisión, cuota mensual, limpieza y mejora de precio con IA. Sin hoja de cálculo.",
+      "rentedNights": "Noches alquiladas / año",
+      "avgPrice": "Precio medio / noche (€)",
+      "bestForYou": "Mejor para ti",
+      "youKeep": "Te quedas",
+      "grossRevenue": "Ingresos brutos",
+      "commission": "Comisión",
+      "monthlyFee": "Cuota mensual (×12)",
+      "cleaning": "Limpieza",
+      "aiUplift": "+{n}% IA",
+      "static": "fijo",
+      "free": "gratis",
+      "included": "incluida",
+      "perTurn": "/salida",
+      "perMonthShort": "/mes",
+      "vsStarter": "/año vs Starter",
+      "footer": "Estimaciones basadas en datos de mercado de Costa Tropical. Asume estancia media de {nights} noches. Aumento por AI Pricing: +18% (Mid), +25% (Premium). Aumento de ocupación: +8% en todos los planes pagos (Basic+) gracias a Stay Chat + feedback por voz que genera mejores reseñas. Limpieza incluida en Mid (estancias ≥4 noches) y Premium (≥3 noches). Los resultados reales varían según propiedad y temporada."
     },
     "plans": {
       "badge": "Planes",
@@ -2132,8 +2148,8 @@
       "responsePromise": "Respondemos en 24 horas",
       "whyTitle": "¿Por qué contactarnos?",
       "whyDesc": "Obtén una evaluación personalizada del potencial de alquiler de tu propiedad, conoce nuestros planes de gestión, o simplemente haz una pregunta. Sin presión, sin compromiso.",
-      "whatsappNumber": "+34 600 000 000",
-      "emailAddress": "hello@hostmasters.es",
+      "whatsappNumber": "+34 657 190 788",
+      "emailAddress": "info@hostmasters.es",
       "nameLabel": "Nombre",
       "namePlaceholder": "Tu nombre completo",
       "emailLabel": "Email",
@@ -2154,7 +2170,10 @@
       "thankYouDesc": "Hemos recibido tu mensaje y te responderemos en 24 horas. Mientras tanto, explora nuestros planes.",
       "required": "Por favor rellena nombre, email y mensaje.",
       "partnerCodeLabel": "Código de socio (opcional)",
-      "partnerCodePlaceholder": "ej: HM-AB12CD"
+      "partnerCodePlaceholder": "ej: HM-AB12CD",
+      "hqLocation": "Almuñécar centro · sede física desde enero 2026",
+      "languages": "EN · PT · ES · DE · NL · FR · SV · DA",
+      "noCommitment": "Sin compromiso. Sin spam. Solo una conversación."
     },
     "join": {
       "badge": "Únete al Equipo",
@@ -2296,6 +2315,11 @@
       "card3Title": "Equipo Local Experto",
       "card3Desc": "Un equipo certificado sobre el terreno se encarga de limpiezas, mantenimiento, check-ins e inspecciones. Calidad garantizada por checklists y verificación fotográfica.",
       "footerContact": "¿Preguntas? Contacta hello@hostmasters.es o WhatsApp +34 XXX XXX XXX"
+    },
+    "trust": {
+      "badge": "Infraestructura de confianza",
+      "title": "Construido sobre las plataformas en las que ya confías",
+      "description": "Anuncios sincronizados en tiempo real. Pagos certificados PCI. Smart Lock por propiedad. Cero riesgo a medida — cada capa es estándar de la industria."
     }
   },
   "onboarding": {
