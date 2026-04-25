@@ -24,7 +24,7 @@
     },
     {
       "path": "/api/cron/crew-confirmation-timeout",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 8 * * *"
     },
     {
       "path": "/api/cron/crew-score-decay",
