@@ -110,8 +110,73 @@ export function RevenueSimulator({
         </div>
       </div>
 
-      {/* Plan comparison table */}
-      <div className="overflow-x-auto">
+      {/* Mobile: stacked plan cards (all 4 plans visible without horizontal scroll) */}
+      <div className="sm:hidden space-y-3">
+        {plans.map(p => {
+          const isBest = p.tier === best.tier
+          const delta = p.net - starter.net
+          return (
+            <div
+              key={p.tier}
+              className={`rounded-xl border p-4 ${isBest ? 'bg-hm-gold/5' : 'bg-white'}`}
+              style={{ borderColor: isBest ? 'rgba(176,138,62,0.5)' : '#E5E7EB' }}
+            >
+              <div className="flex items-baseline justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-base" style={isBest ? { color: '#B08A3E' } : { color: '#0B1E3A' }}>
+                    {p.label}
+                  </span>
+                  {isBest && (
+                    <span className="text-[9px] font-bold uppercase tracking-wider rounded-full px-2 py-0.5"
+                      style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>
+                      Best for you
+                    </span>
+                  )}
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold" style={isBest ? { color: '#B08A3E' } : { color: '#0B1E3A' }}>
+                    €{fmt(p.net)}
+                  </div>
+                  <div className="text-[10px] uppercase tracking-wider text-gray-400">You keep</div>
+                </div>
+              </div>
+              <div className="space-y-1 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Gross revenue {p.pricingUplift > 1 && <span className="text-[10px] text-gray-400">(+{Math.round((p.pricingUplift - 1) * 100)}% AI)</span>}
+                  </span>
+                  <span className="text-hm-black font-semibold">€{fmt(p.adjustedGross)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Commission ({Math.round(PLAN_COMMISSION[p.tier] * 100)}%)</span>
+                  <span className="text-gray-500">-€{fmt(p.commission)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Monthly fee {p.monthlyFee > 0 ? `(€${PLAN_MONTHLY_FEE[p.tier]}/mo × 12)` : ''}
+                  </span>
+                  <span className="text-gray-500">{p.monthlyFee ? `-€${fmt(p.monthlyFee)}` : 'free'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Cleaning (×{avgTurnovers}) {p.cleaningIncluded && <span className="text-[10px] text-emerald-600 font-semibold">included</span>}
+                  </span>
+                  <span className="text-gray-500">{p.cleaningIncluded ? '€0' : `-€${fmt(p.cleaningCost)}`}</span>
+                </div>
+              </div>
+              {p.tier !== 'STARTER' && (
+                <div className={`mt-3 pt-2 border-t text-[11px] font-semibold ${delta > 0 ? 'text-emerald-600' : 'text-red-600'}`}
+                     style={{ borderColor: '#f0ece3' }}>
+                  {delta > 0 ? '+' : ''}{fmt(delta)}/yr vs Starter
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Desktop/tablet: comparison table */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b-2">
