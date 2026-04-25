@@ -3086,5 +3086,41 @@
       "transfer": "e.g. Malaga airport, 2 adults + luggage",
       "default": "Brief description of the request"
     }
+  },
+  "clientBroadcasts": {
+    "navLabel": "HostMasters Updates",
+    "fromFounder": "Från grundaren",
+    "pageTitle": "HostMasters meddelanden",
+    "pageSubtitle": "Direkt kommunikation från plattformens grundare.",
+    "unreadCount": "{n} olästa",
+    "emptyTitle": "Inga meddelanden ännu.",
+    "emptySubtitle": "Framtida kommunikation från grundaren kommer hit.",
+    "detailContinueChat": "Fortsätt samtalet",
+    "detailReplyPlaceholder": "Skriv ditt svar…",
+    "detailSendButton": "Skicka",
+    "detailSending": "Skickar…",
+    "detailNotFound": "Meddelandet hittades inte.",
+    "detailBack": "Meddelanden",
+    "replierMonthlyLabel": "Grundare, HostMasters"
+  },
+  "clientProfileMember": {
+    "memberSince": "Medlem sedan {date}",
+    "completionPct": "Profilen klar",
+    "completionCta": "Komplettera din profil",
+    "memberTier": "{tier}-medlem",
+    "statMember": "Medlem",
+    "statMonths": "{n} månader",
+    "statMonth": "1 månad",
+    "statProperties": "Fastigheter",
+    "statLifetimePayouts": "Totala utbetalningar",
+    "statUpdates": "Updates",
+    "benefitsTitle": "Dina {tier}-förmåner",
+    "benefitsViewPlan": "Plandetaljer",
+    "benefitsUpgrade": "Lås upp mer — uppgradera din plan",
+    "recentTitle": "Från grundaren",
+    "recentViewAll": "Visa alla",
+    "infoSection": "Dina uppgifter",
+    "docsSection": "Dina dokument",
+    "securitySection": "Säkerhet"
   }
 }

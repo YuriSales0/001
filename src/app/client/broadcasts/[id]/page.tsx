@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { ArrowLeft, Send, Loader2, MessageCircle } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type Reply = {
   id: string
@@ -100,6 +101,7 @@ function Avatar({ name, image, size = 32 }: { name: string; image: string | null
 }
 
 export default function ClientBroadcastDetailPage() {
+  const { t } = useLocale()
   const params = useParams()
   const id = params?.id as string
   const [data, setData] = useState<BroadcastDetail | null>(null)
@@ -154,10 +156,10 @@ export default function ClientBroadcastDetailPage() {
   if (!data) {
     return (
       <div className="p-6 max-w-3xl mx-auto">
-        <p className="text-sm text-gray-500">Mensagem não encontrada.</p>
+        <p className="text-sm text-gray-500">{t('clientBroadcasts.detailNotFound')}</p>
         <Link href="/client/broadcasts" className="text-sm font-semibold mt-3 inline-flex items-center gap-1"
               style={{ color: '#B08A3E' }}>
-          <ArrowLeft className="h-4 w-4" /> Voltar
+          <ArrowLeft className="h-4 w-4" /> {t('clientBroadcasts.detailBack')}
         </Link>
       </div>
     )
@@ -166,7 +168,7 @@ export default function ClientBroadcastDetailPage() {
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
       <Link href="/client/broadcasts" className="text-xs font-semibold inline-flex items-center gap-1 text-gray-500 hover:text-gray-700">
-        <ArrowLeft className="h-3.5 w-3.5" /> Mensagens
+        <ArrowLeft className="h-3.5 w-3.5" /> {t('clientBroadcasts.detailBack')}
       </Link>
 
       {/* Broadcast card */}
@@ -181,7 +183,7 @@ export default function ClientBroadcastDetailPage() {
                 {data.sender.name ?? 'HostMasters'}
               </p>
               <p className="text-[11px] uppercase tracking-widest" style={{ color: '#B08A3E' }}>
-                Founder, HostMasters
+                {t('clientBroadcasts.replierMonthlyLabel')}
               </p>
             </div>
             <span className="text-xs text-gray-400">{data.sentAt && fmt(data.sentAt)}</span>
@@ -208,7 +210,7 @@ export default function ClientBroadcastDetailPage() {
                style={{ borderColor: '#E8E3D8' }}>
         <header className="px-5 py-4 border-b flex items-center gap-2" style={{ borderColor: '#E8E3D8' }}>
           <MessageCircle className="h-4 w-4" style={{ color: '#B08A3E' }} />
-          <span className="text-sm font-bold" style={{ color: '#0B1E3A' }}>Continua a conversa</span>
+          <span className="text-sm font-bold" style={{ color: '#0B1E3A' }}>{t('clientBroadcasts.detailContinueChat')}</span>
         </header>
 
         {data.replies.length > 0 && (
@@ -241,7 +243,7 @@ export default function ClientBroadcastDetailPage() {
             value={replyText}
             onChange={e => setReplyText(e.target.value)}
             rows={3}
-            placeholder="Escreve a tua resposta…"
+            placeholder={t('clientBroadcasts.detailReplyPlaceholder')}
             className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
             style={{ borderColor: '#E8E3D8' }}
             maxLength={5000}
@@ -254,7 +256,7 @@ export default function ClientBroadcastDetailPage() {
               className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-50 hover:brightness-110"
               style={{ background: '#0B1E3A', color: '#ffffff' }}
             >
-              {posting ? <><Loader2 className="h-4 w-4 animate-spin" /> A enviar…</> : <><Send className="h-4 w-4" /> Enviar</>}
+              {posting ? <><Loader2 className="h-4 w-4 animate-spin" /> {t('clientBroadcasts.detailSending')}</> : <><Send className="h-4 w-4" /> {t('clientBroadcasts.detailSendButton')}</>}
             </button>
           </div>
         </form>

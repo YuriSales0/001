@@ -3086,5 +3086,41 @@
       "transfer": "e.g. Malaga airport, 2 adults + luggage",
       "default": "Brief description of the request"
     }
+  },
+  "clientBroadcasts": {
+    "navLabel": "HostMasters Updates",
+    "fromFounder": "Van de oprichter",
+    "pageTitle": "HostMasters berichten",
+    "pageSubtitle": "Directe communicatie van de oprichter van het platform.",
+    "unreadCount": "{n} ongelezen",
+    "emptyTitle": "Nog geen berichten.",
+    "emptySubtitle": "Toekomstige berichten van de oprichter komen hier aan.",
+    "detailContinueChat": "Zet het gesprek voort",
+    "detailReplyPlaceholder": "Schrijf je antwoord…",
+    "detailSendButton": "Verzenden",
+    "detailSending": "Bezig met verzenden…",
+    "detailNotFound": "Bericht niet gevonden.",
+    "detailBack": "Berichten",
+    "replierMonthlyLabel": "Oprichter, HostMasters"
+  },
+  "clientProfileMember": {
+    "memberSince": "Lid sinds {date}",
+    "completionPct": "Profiel voltooid",
+    "completionCta": "Voltooi uw profiel",
+    "memberTier": "{tier} Lid",
+    "statMember": "Lid",
+    "statMonths": "{n} maanden",
+    "statMonth": "1 maand",
+    "statProperties": "Woningen",
+    "statLifetimePayouts": "Totale uitbetalingen",
+    "statUpdates": "Updates",
+    "benefitsTitle": "Uw {tier}-voordelen",
+    "benefitsViewPlan": "Plan-details",
+    "benefitsUpgrade": "Ontgrendel meer — upgrade uw plan",
+    "recentTitle": "Van de oprichter",
+    "recentViewAll": "Alles bekijken",
+    "infoSection": "Uw gegevens",
+    "docsSection": "Uw documenten",
+    "securitySection": "Beveiliging"
   }
 }

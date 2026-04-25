@@ -3086,5 +3086,41 @@
       "transfer": "e.g. Malaga airport, 2 adults + luggage",
       "default": "Brief description of the request"
     }
+  },
+  "clientBroadcasts": {
+    "navLabel": "HostMasters Updates",
+    "fromFounder": "Fra grundlæggeren",
+    "pageTitle": "HostMasters beskeder",
+    "pageSubtitle": "Direkte kommunikation fra platformens grundlægger.",
+    "unreadCount": "{n} ulæste",
+    "emptyTitle": "Ingen beskeder endnu.",
+    "emptySubtitle": "Fremtidige beskeder fra grundlæggeren kommer her.",
+    "detailContinueChat": "Fortsæt samtalen",
+    "detailReplyPlaceholder": "Skriv dit svar…",
+    "detailSendButton": "Send",
+    "detailSending": "Sender…",
+    "detailNotFound": "Besked ikke fundet.",
+    "detailBack": "Beskeder",
+    "replierMonthlyLabel": "Grundlægger, HostMasters"
+  },
+  "clientProfileMember": {
+    "memberSince": "Medlem siden {date}",
+    "completionPct": "Profil komplet",
+    "completionCta": "Færdiggør din profil",
+    "memberTier": "{tier}-medlem",
+    "statMember": "Medlem",
+    "statMonths": "{n} måneder",
+    "statMonth": "1 måned",
+    "statProperties": "Ejendomme",
+    "statLifetimePayouts": "Samlede udbetalinger",
+    "statUpdates": "Updates",
+    "benefitsTitle": "Dine {tier}-fordele",
+    "benefitsViewPlan": "Planoplysninger",
+    "benefitsUpgrade": "Lås mere op — opgrader dit abonnement",
+    "recentTitle": "Fra grundlæggeren",
+    "recentViewAll": "Vis alle",
+    "infoSection": "Dine oplysninger",
+    "docsSection": "Dine dokumenter",
+    "securitySection": "Sikkerhed"
   }
 }

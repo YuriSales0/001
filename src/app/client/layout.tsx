@@ -33,7 +33,7 @@ export default async function ClientLayout({ children }: { children: React.React
     { href: '/client/contracts',   label: t(msgs, 'contracts.myContract'),    icon: FileText },
     { href: '/client/plan',        label: t(msgs, 'common.myPlan'),           icon: Star },
     { href: '/client/messages',   label: t(msgs, 'owner.contactManager'),    icon: MessageCircle },
-    { href: '/client/broadcasts', label: 'HostMasters Updates',              icon: Mail },
+    { href: '/client/broadcasts', label: t(msgs, 'clientBroadcasts.navLabel'), icon: Mail },
   ]
 
   const initials = user.name

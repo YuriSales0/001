@@ -3086,5 +3086,41 @@
       "transfer": "e.g. Malaga airport, 2 adults + luggage",
       "default": "Brief description of the request"
     }
+  },
+  "clientBroadcasts": {
+    "navLabel": "HostMasters Updates",
+    "fromFounder": "Vom Gründer",
+    "pageTitle": "HostMasters Nachrichten",
+    "pageSubtitle": "Direkte Mitteilungen vom Gründer der Plattform.",
+    "unreadCount": "{n} ungelesen",
+    "emptyTitle": "Noch keine Nachrichten.",
+    "emptySubtitle": "Zukünftige Mitteilungen des Gründers erscheinen hier.",
+    "detailContinueChat": "Gespräch fortsetzen",
+    "detailReplyPlaceholder": "Schreiben Sie Ihre Antwort…",
+    "detailSendButton": "Senden",
+    "detailSending": "Wird gesendet…",
+    "detailNotFound": "Nachricht nicht gefunden.",
+    "detailBack": "Nachrichten",
+    "replierMonthlyLabel": "Gründer, HostMasters"
+  },
+  "clientProfileMember": {
+    "memberSince": "Mitglied seit {date}",
+    "completionPct": "Profil-Vollständigkeit",
+    "completionCta": "Profil vervollständigen",
+    "memberTier": "{tier} Mitglied",
+    "statMember": "Mitglied",
+    "statMonths": "{n} Monate",
+    "statMonth": "1 Monat",
+    "statProperties": "Immobilien",
+    "statLifetimePayouts": "Gesamtauszahlungen",
+    "statUpdates": "Updates",
+    "benefitsTitle": "Ihre {tier}-Vorteile",
+    "benefitsViewPlan": "Plandetails",
+    "benefitsUpgrade": "Mehr freischalten — Plan upgraden",
+    "recentTitle": "Vom Gründer",
+    "recentViewAll": "Alle ansehen",
+    "infoSection": "Ihre Daten",
+    "docsSection": "Ihre Dokumente",
+    "securitySection": "Sicherheit"
   }
 }

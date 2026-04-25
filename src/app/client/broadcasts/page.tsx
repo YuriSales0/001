@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Mail, ChevronRight, Loader2, Inbox } from "lucide-react"
+import { useLocale } from "@/i18n/provider"
 
 type BroadcastItem = {
   id: string
@@ -14,6 +15,7 @@ type BroadcastItem = {
 }
 
 export default function ClientBroadcastsPage() {
+  const { t } = useLocale()
   const [items, setItems] = useState<BroadcastItem[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -38,17 +40,17 @@ export default function ClientBroadcastsPage() {
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-2"
              style={{ color: '#B08A3E' }}>
           <Mail className="h-3.5 w-3.5" />
-          From the founder
+          {t('clientBroadcasts.fromFounder')}
         </div>
         <h1 className="text-2xl font-serif font-bold" style={{ color: '#0B1E3A' }}>
-          Mensagens da HostMasters
+          {t('clientBroadcasts.pageTitle')}
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Comunicações directas do fundador da plataforma.
+          {t('clientBroadcasts.pageSubtitle')}
           {unreadCount > 0 && (
             <span className="ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold"
                   style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>
-              {unreadCount} não lida(s)
+              {t('clientBroadcasts.unreadCount').replace('{n}', String(unreadCount))}
             </span>
           )}
         </p>
@@ -62,8 +64,8 @@ export default function ClientBroadcastsPage() {
         <div className="rounded-2xl border bg-white py-20 text-center"
              style={{ borderColor: '#E8E3D8' }}>
           <Inbox className="h-10 w-10 mx-auto mb-3 text-gray-300" />
-          <p className="text-sm text-gray-500">Sem mensagens por agora.</p>
-          <p className="text-xs text-gray-400 mt-1">As próximas comunicações do fundador chegarão aqui.</p>
+          <p className="text-sm text-gray-500">{t('clientBroadcasts.emptyTitle')}</p>
+          <p className="text-xs text-gray-400 mt-1">{t('clientBroadcasts.emptySubtitle')}</p>
         </div>
       ) : (
         <div className="space-y-2">
