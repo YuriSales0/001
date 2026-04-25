@@ -1,17 +1,20 @@
 "use client"
 
 import { useLocale } from "@/i18n/provider"
-import { Brain, MessageCircle, Shield, Globe, BarChart3, Phone, Star } from "lucide-react"
+import { Brain, MessageCircle, Shield, Globe, BarChart3, Phone, Star, Sparkles, Target } from "lucide-react"
 
 // Icons indexed to match aiTools.tools[] order in i18n messages.
-const TOOL_ICONS = [Brain, MessageCircle, Phone, Star, Shield, Globe, BarChart3]
+// Order: AI Pricing, Chat IA, VAGF, Scorecard, AI Monitor, Market Intel,
+//        Team Assistant, Manager Co-pilot, Lead Triage Agent.
+const TOOL_ICONS = [Brain, MessageCircle, Phone, Star, Shield, Globe, BarChart3, Sparkles, Target]
 
 // Bento layout order (indices into aiTools.tools[]):
 //   Row 1 (lg): AI Pricing (hero, 2-col) · Market Intelligence
 //   Row 2 (lg): Chat IA · VAGF · Scorecard
 //   Row 3 (lg): AI Monitor · Team Assistant (hero, 2-col)
-const BENTO_ORDER = [0, 5, 1, 2, 3, 4, 6] as const
-const HERO_SET = new Set<number>([0, 6])
+//   Row 4 (lg): Manager Co-pilot (hero, 2-col) · Lead Triage Agent
+const BENTO_ORDER = [0, 5, 1, 2, 3, 4, 6, 7, 8] as const
+const HERO_SET = new Set<number>([0, 6, 7])
 
 export function AiToolsShowcase() {
   const { t } = useLocale()

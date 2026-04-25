@@ -1918,6 +1918,18 @@
         "desc": "En todos los portales: pregunta sobre ingresos, reservas, estado de propiedad. Respuestas con tus datos reales.",
         "stat": "24/7",
         "statLabel": "en cada rol"
+      },
+      {
+        "name": "Co-pilot del Manager",
+        "desc": "Briefing diario de IA con leads, clientes y tareas que necesitan atención. Mensajes pre-redactados en el idioma del propietario.",
+        "stat": "+2-3x",
+        "statLabel": "productividad del Manager"
+      },
+      {
+        "name": "Triaje de Leads",
+        "desc": "Cada nuevo lead recibe puntuación, prioridad, plan de acción y borrador de apertura — automáticamente, en el idioma correcto.",
+        "stat": "0s",
+        "statLabel": "tiempo de triaje"
       }
     ]
   },

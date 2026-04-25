@@ -1918,6 +1918,18 @@
         "desc": "Em todos os portais: pergunta sobre receita, reservas ou estado da propriedade. Respostas com os teus dados reais.",
         "stat": "24/7",
         "statLabel": "em cada role"
+      },
+      {
+        "name": "Co-pilot do Manager",
+        "desc": "Briefing diário de IA com leads, clientes e tarefas que precisam atenção. Drafts prontos no idioma do owner.",
+        "stat": "+2-3x",
+        "statLabel": "produtividade do Manager"
+      },
+      {
+        "name": "Triagem de Leads",
+        "desc": "Cada nova lead recebe score, prioridade, action plan e draft de abertura — automaticamente, na língua certa.",
+        "stat": "0s",
+        "statLabel": "tempo de triagem"
       }
     ]
   },

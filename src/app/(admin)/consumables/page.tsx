@@ -719,46 +719,82 @@ function MovementsTab({ categories, properties }: { categories: Category[]; prop
             Sem movimentos para os filtros seleccionados
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
-                  <th className="px-4 py-2.5 text-left font-semibold">Quando</th>
-                  <th className="px-4 py-2.5 text-left font-semibold">Tipo</th>
-                  <th className="px-4 py-2.5 text-left font-semibold">Item</th>
-                  <th className="px-4 py-2.5 text-left font-semibold">Categoria</th>
-                  <th className="px-4 py-2.5 text-left font-semibold">Localização</th>
-                  <th className="px-4 py-2.5 text-left font-semibold">Notas</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {filtered.map(m => (
-                  <tr key={m.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{fmt(m.executedAt)}</td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${MOVEMENT_BADGE[m.movementType] ?? 'bg-gray-100 text-gray-600'}`}>
+          <>
+            {/* Desktop: table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-2.5 text-left font-semibold">Quando</th>
+                    <th className="px-4 py-2.5 text-left font-semibold">Tipo</th>
+                    <th className="px-4 py-2.5 text-left font-semibold">Item</th>
+                    <th className="px-4 py-2.5 text-left font-semibold">Categoria</th>
+                    <th className="px-4 py-2.5 text-left font-semibold">Localização</th>
+                    <th className="px-4 py-2.5 text-left font-semibold">Notas</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {filtered.map(m => (
+                    <tr key={m.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{fmt(m.executedAt)}</td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${MOVEMENT_BADGE[m.movementType] ?? 'bg-gray-100 text-gray-600'}`}>
+                          {MOVEMENT_LABEL[m.movementType] ?? m.movementType}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs text-gray-600">
+                        {m.item.serialNumber ?? m.item.id.slice(-6)}
+                      </td>
+                      <td className="px-4 py-3 text-gray-700">{m.item.category.name}</td>
+                      <td className="px-4 py-3 text-gray-600 text-xs">
+                        {m.fromLocation && m.toLocation
+                          ? `${m.fromLocation} → ${m.toLocation}`
+                          : m.toLocation
+                            ? `→ ${m.toLocation}`
+                            : m.property?.name ?? '—'}
+                      </td>
+                      <td className="px-4 py-3 text-gray-500 text-xs max-w-xs truncate" title={m.notes ?? ''}>
+                        {m.notes ?? '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile: stacked cards */}
+            <ul className="sm:hidden divide-y" style={{ borderColor: '#f3f4f6' }}>
+              {filtered.map(m => {
+                const loc = m.fromLocation && m.toLocation
+                  ? `${m.fromLocation} → ${m.toLocation}`
+                  : m.toLocation
+                    ? `→ ${m.toLocation}`
+                    : m.property?.name ?? null
+                return (
+                  <li key={m.id} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase shrink-0 ${MOVEMENT_BADGE[m.movementType] ?? 'bg-gray-100 text-gray-600'}`}>
                         {MOVEMENT_LABEL[m.movementType] ?? m.movementType}
                       </span>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-600">
-                      {m.item.serialNumber ?? m.item.id.slice(-6)}
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">{m.item.category.name}</td>
-                    <td className="px-4 py-3 text-gray-600 text-xs">
-                      {m.fromLocation && m.toLocation
-                        ? `${m.fromLocation} → ${m.toLocation}`
-                        : m.toLocation
-                          ? `→ ${m.toLocation}`
-                          : m.property?.name ?? '—'}
-                    </td>
-                    <td className="px-4 py-3 text-gray-500 text-xs max-w-xs truncate" title={m.notes ?? ''}>
-                      {m.notes ?? '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <span className="text-[10px] text-gray-400 whitespace-nowrap">{fmt(m.executedAt)}</span>
+                    </div>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-mono text-gray-500 shrink-0">{m.item.serialNumber ?? m.item.id.slice(-6)}</span>
+                        <span className="text-gray-700 truncate">{m.item.category.name}</span>
+                      </div>
+                      {loc && (
+                        <p className="text-gray-600">{loc}</p>
+                      )}
+                      {m.notes && (
+                        <p className="text-gray-500 italic line-clamp-2">{m.notes}</p>
+                      )}
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          </>
         )}
         {!loading && filtered.length === 100 && (
           <div className="px-4 py-2 text-[11px] text-gray-400 border-t bg-gray-50">

@@ -1424,6 +1424,8 @@ const AI_FLEET: {
   { agent: 'Market Intelligence',        function: 'Scrape semanal Airbnb/Booking, processa concorrência',    human: 'Manager usa dados em conversas com owner',                  cost: '€5-10/zona/sem',       category: 'pricing' },
   { agent: 'Property Scorecard',         function: 'Score ao vivo (estrutura/amenities/localização/valor)',    human: 'Owner vê no portal; Manager discute melhorias',             cost: '€0.10-0.20/refresh',  category: 'quality' },
   { agent: 'Translation Agent',          function: 'Traduz broadcasts para 8 línguas (Sonnet, preserva md)',  human: 'Yuri compõe em 1 língua; revê traduções antes de enviar',  cost: '€0.20-0.40/email/lang', category: 'comms' },
+  { agent: 'Manager Co-pilot',           function: 'Briefing diário priorizado: leads, clientes, tarefas, drafts',human: 'Manager dispensa, edita ou aceita as sugestões antes de agir', cost: '€0.005/briefing',     category: 'ops' },
+  { agent: 'Lead Triage Agent',          function: 'Score, prioridade, action plan e draft no idioma da lead',   human: 'Manager decide se contacta agora, agenda, ou ignora',         cost: '€0.003/lead',          category: 'ops' },
 ]
 
 const FLEET_CATEGORY_COLOR: Record<string, string> = {
@@ -1895,7 +1897,8 @@ function StrategicLongTermPlan() {
               Cada agente faz a parte rotineira; humano (Manager, Captain, Crew, Owner, Yuri) faz a parte relacional. <strong>Esta combinação é o produto vendável a franquia/SaaS — não os agentes sozinhos.</strong>
             </p>
             <div className="rounded-lg border border-hm-border bg-white overflow-hidden">
-              <div className="overflow-x-auto">
+              {/* Desktop: table */}
+              <div className="hidden sm:block overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b bg-hm-ivory/40 text-gray-500 uppercase tracking-wider text-[10px]">
@@ -1924,6 +1927,26 @@ function StrategicLongTermPlan() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile: stacked cards */}
+              <ul className="sm:hidden divide-y divide-hm-border">
+                {AI_FLEET.map((a, i) => (
+                  <li key={i} className="p-4 hover:bg-amber-50/20 transition-colors">
+                    <div className="flex items-baseline justify-between gap-2 mb-1">
+                      <h4 className="text-sm font-bold text-hm-black flex-1 min-w-0">{a.agent}</h4>
+                      <span className="inline-flex rounded-full px-2 py-0.5 text-[9px] font-bold uppercase shrink-0"
+                            style={{ background: FLEET_CATEGORY_COLOR[a.category], color: '#0B1E3A' }}>
+                        {FLEET_CATEGORY_LABEL[a.category]}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-700 leading-relaxed">{a.function}</p>
+                    <p className="text-xs text-gray-500 italic mt-1.5 leading-relaxed">
+                      <span className="font-semibold not-italic" style={{ color: '#B08A3E' }}>Humano:</span> {a.human}
+                    </p>
+                    <p className="text-[10px] text-gray-500 font-mono mt-2">{a.cost}</p>
+                  </li>
+                ))}
+              </ul>
               <div className="border-t bg-gray-50 px-4 py-2.5 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px]">
                 <div>
                   <span className="font-bold text-hm-black">{AI_FLEET.length}</span>

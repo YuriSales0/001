@@ -1917,6 +1917,18 @@
         "desc": "In every portal: ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
         "stat": "24/7",
         "statLabel": "in every role"
+      },
+      {
+        "name": "Co-pilot du Manager",
+        "desc": "Briefing IA quotidien des leads, clients et tâches qui nécessitent de l'attention. Messages pré-rédigés dans la langue du propriétaire.",
+        "stat": "+2-3x",
+        "statLabel": "productivité du Manager"
+      },
+      {
+        "name": "Agent de Triage de Leads",
+        "desc": "Chaque nouveau lead reçoit score, priorité, plan d'action et brouillon d'ouverture — automatiquement, dans la bonne langue.",
+        "stat": "0s",
+        "statLabel": "latence de triage"
       }
     ]
   },

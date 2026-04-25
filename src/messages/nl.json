@@ -1917,6 +1917,18 @@
         "desc": "In every portal: ask about your earnings, bookings, property status, commissions. Instant answers backed by your real data, your language.",
         "stat": "24/7",
         "statLabel": "in every role"
+      },
+      {
+        "name": "Manager Co-pilot",
+        "desc": "Dagelijkse AI-briefing van leads, klanten en taken die aandacht nodig hebben. Vooraf opgestelde berichten in de taal van de eigenaar.",
+        "stat": "+2-3x",
+        "statLabel": "Manager-productiviteit"
+      },
+      {
+        "name": "Lead Triage Agent",
+        "desc": "Elke nieuwe lead krijgt score, prioriteit, actieplan en openingsbericht — automatisch, in de juiste taal.",
+        "stat": "0s",
+        "statLabel": "triage-latentie"
       }
     ]
   },
