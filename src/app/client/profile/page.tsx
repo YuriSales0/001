@@ -118,18 +118,25 @@ export default function ClientProfilePage() {
   const [pwSaved, setPwSaved] = useState(false)
   const [showInfoForm, setShowInfoForm] = useState(false)
   const [showSecurity, setShowSecurity] = useState(false)
+  const infoFormRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/profile").then(r => r.json()),
+      fetch("/api/profile").then(r => r.ok ? r.json() : null),
       fetch("/api/client/profile-stats").then(r => r.ok ? r.json() : null),
     ]).then(([p, s]) => {
       setProfile(p)
       setStats(s)
-      setForm({ name: p.name ?? "", phone: p.phone ?? "", image: p.image ?? "" })
+      if (p) setForm({ name: p.name ?? "", phone: p.phone ?? "", image: p.image ?? "" })
       setLoading(false)
-    })
+    }).catch(() => setLoading(false))
   }, [])
+
+  // H6 fix — scroll into view when admin/owner clicks "Complete your profile"
+  const openInfoFormAndScroll = () => {
+    setShowInfoForm(true)
+    setTimeout(() => infoFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+  }
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -244,7 +251,7 @@ export default function ClientProfilePage() {
                 </div>
                 {stats && stats.profileCompletion < 100 && (
                   <button
-                    onClick={() => setShowInfoForm(true)}
+                    onClick={openInfoFormAndScroll}
                     className="text-[11px] underline mt-1"
                     style={{ color: 'rgba(255,255,255,0.7)' }}
                   >
@@ -354,7 +361,7 @@ export default function ClientProfilePage() {
         )}
 
         {/* YOUR INFORMATION (collapsible) */}
-        <section className="rounded-2xl border bg-white overflow-hidden"
+        <section ref={infoFormRef} className="rounded-2xl border bg-white overflow-hidden scroll-mt-6"
                  style={{ borderColor: '#E8E3D8' }}>
           <button
             type="button"

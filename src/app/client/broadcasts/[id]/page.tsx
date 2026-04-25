@@ -24,6 +24,28 @@ type BroadcastDetail = {
   replies: Reply[]
 }
 
+const URL_FORBIDDEN_CHARS = new Set(['"', '<', '>', '\\', '^', '`', '{', '|', '}', ' ', '\t', '\n', '\r'])
+
+// Validate a URL is safe to render — returns null if not.
+function safeHref(url: string): string | null {
+  if (!url || typeof url !== 'string') return null
+  const trimmed = url.trim()
+  if (!trimmed) return null
+  for (let i = 0; i < trimmed.length; i++) {
+    const ch = trimmed.charAt(i)
+    const code = trimmed.charCodeAt(i)
+    if (URL_FORBIDDEN_CHARS.has(ch)) return null
+    if (code < 32 || code === 127) return null
+  }
+  try {
+    const u = new URL(trimmed)
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null
+    return u.toString()
+  } catch {
+    return null
+  }
+}
+
 // Tiny inline-only markdown render for the broadcast body.
 function renderMarkdown(md: string): string {
   const escape = (s: string) => s
@@ -37,7 +59,11 @@ function renderMarkdown(md: string): string {
   const inline = (s: string) => s
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/(^|\W)\*(?!\s)([^*]+?)\*(?!\w)/g, '$1<em>$2</em>')
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" style="color:#B08A3E;text-decoration:underline">$1</a>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_m, text, url) => {
+      const safe = safeHref(url)
+      if (!safe) return text // drop link, keep visible text
+      return `<a href="${escape(safe)}" target="_blank" rel="noopener" style="color:#B08A3E;text-decoration:underline">${text}</a>`
+    })
 
   for (const raw of lines) {
     const line = raw.trim()
@@ -166,9 +192,9 @@ export default function ClientBroadcastDetailPage() {
         </header>
         <div className="px-6 py-5 text-[15px] text-gray-700"
              dangerouslySetInnerHTML={{ __html: renderMarkdown(data.bodyMarkdown) }} />
-        {data.ctaText && data.ctaUrl && (
+        {data.ctaText && safeHref(data.ctaUrl ?? '') && (
           <div className="px-6 pb-6">
-            <a href={data.ctaUrl} target="_blank" rel="noopener"
+            <a href={safeHref(data.ctaUrl ?? '') ?? '#'} target="_blank" rel="noopener"
                className="inline-block rounded-lg px-5 py-2.5 text-sm font-bold transition-all hover:brightness-110"
                style={{ background: '#B08A3E', color: '#0B1E3A' }}>
               {data.ctaText}

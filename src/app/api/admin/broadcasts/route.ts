@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
+import { safeHttpUrl } from '@/lib/broadcast'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,13 +45,22 @@ export async function POST(req: NextRequest) {
   const validAudience = ['ALL_PAID', 'ALL_CLIENTS', 'BY_PLAN', 'BY_LANGUAGE']
   const audType = audienceType && validAudience.includes(audienceType) ? audienceType : 'ALL_PAID'
 
+  // Validate ctaUrl protocol (reject javascript:, data:, etc.) before persisting
+  let validatedCtaUrl: string | null = null
+  if (ctaUrl?.trim()) {
+    validatedCtaUrl = safeHttpUrl(ctaUrl.trim())
+    if (!validatedCtaUrl) {
+      return NextResponse.json({ error: 'ctaUrl must be a valid http(s) URL' }, { status: 400 })
+    }
+  }
+
   const draft = await prisma.broadcast.create({
     data: {
       senderId: guard.user!.id,
       subject: subject.trim().slice(0, 200),
       bodyMarkdown: bodyMarkdown.trim().slice(0, 20_000),
       ctaText: ctaText?.trim().slice(0, 60) || null,
-      ctaUrl: ctaUrl?.trim().slice(0, 500) || null,
+      ctaUrl: validatedCtaUrl?.slice(0, 500) || null,
       audienceType: audType,
       audienceValue: audienceValue?.trim().slice(0, 60) || null,
       status: 'DRAFT',

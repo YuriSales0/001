@@ -22,7 +22,15 @@ function Avatar({ name, image, size=7 }: { name: string; image?: string|null; si
 }
 
 export default function AdminMessagesPage() {
-  const [tab, setTab] = useState<'inbox' | 'broadcasts'>('inbox')
+  // H4 fix — read deep-link query (?broadcast=X&thread=Y) on mount so
+  // notifications open the correct broadcast thread immediately.
+  const initialDeepLink = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search)
+    : null
+  const initialBroadcastId = initialDeepLink?.get('broadcast') ?? null
+  const initialThreadOwnerId = initialDeepLink?.get('thread') ?? null
+
+  const [tab, setTab] = useState<'inbox' | 'broadcasts'>(initialBroadcastId ? 'broadcasts' : 'inbox')
   const [convs, setConvs] = useState<ConvSummary[]>([])
   const [active, setActive] = useState<ConvSummary | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
@@ -100,7 +108,7 @@ export default function AdminMessagesPage() {
         </button>
       </div>
 
-      {tab === 'broadcasts' ? <BroadcastsTab /> : (
+      {tab === 'broadcasts' ? <BroadcastsTab initialBroadcastId={initialBroadcastId} initialThreadOwnerId={initialThreadOwnerId} /> : (
       <div className="flex h-[calc(100vh-260px)] max-h-[650px] rounded-hm border bg-white overflow-hidden">
         {/* Sidebar */}
         <aside className="w-72 border-r flex flex-col shrink-0">
@@ -219,11 +227,17 @@ const LANGUAGES: { code: string; label: string }[] = [
   { code: 'da', label: 'Dansk' },
 ]
 
-function BroadcastsTab() {
+function BroadcastsTab({
+  initialBroadcastId,
+  initialThreadOwnerId,
+}: {
+  initialBroadcastId?: string | null
+  initialThreadOwnerId?: string | null
+}) {
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([])
   const [loading, setLoading] = useState(true)
   const [showComposer, setShowComposer] = useState(false)
-  const [openThreads, setOpenThreads] = useState<string | null>(null) // broadcastId
+  const [openThreads, setOpenThreads] = useState<string | null>(initialBroadcastId ?? null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -314,7 +328,12 @@ function BroadcastsTab() {
                     )}
                   </div>
                 </button>
-                {isOpen && <BroadcastThreads broadcastId={b.id} />}
+                {isOpen && (
+                  <BroadcastThreads
+                    broadcastId={b.id}
+                    initialThreadOwnerId={b.id === initialBroadcastId ? initialThreadOwnerId ?? null : null}
+                  />
+                )}
               </div>
             )
           })}
@@ -664,10 +683,16 @@ type Thread = {
   unreadFromClient: number
 }
 
-function BroadcastThreads({ broadcastId }: { broadcastId: string }) {
+function BroadcastThreads({
+  broadcastId,
+  initialThreadOwnerId,
+}: {
+  broadcastId: string
+  initialThreadOwnerId?: string | null
+}) {
   const [threads, setThreads] = useState<Thread[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeOwnerId, setActiveOwnerId] = useState<string | null>(null)
+  const [activeOwnerId, setActiveOwnerId] = useState<string | null>(initialThreadOwnerId ?? null)
 
   const load = useCallback(() => {
     setLoading(true)
@@ -675,7 +700,14 @@ function BroadcastThreads({ broadcastId }: { broadcastId: string }) {
       .then(r => r.ok ? r.json() : [])
       .then(d => {
         setThreads(d)
-        if (d.length > 0 && !activeOwnerId) setActiveOwnerId(d[0].owner.id)
+        // If a deep-link target was passed, prefer it; else first thread.
+        setActiveOwnerId(prev => {
+          if (prev) return prev
+          if (initialThreadOwnerId && d.some((t: Thread) => t.owner.id === initialThreadOwnerId)) {
+            return initialThreadOwnerId
+          }
+          return d.length > 0 ? d[0].owner.id : null
+        })
         setLoading(false)
       })
       .catch(() => setLoading(false))

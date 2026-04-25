@@ -30,6 +30,36 @@ function escapeHtml(s: string): string {
     .replace(/'/g, '&#39;')
 }
 
+const URL_FORBIDDEN_CHARS = new Set([
+  '"', '<', '>', '\\', '^', '`', '{', '|', '}', ' ', '\t', '\n', '\r',
+])
+
+/**
+ * Validate a URL is safe to render as an href: must be parseable, http(s)
+ * protocol only, and contain no characters that could break out of an
+ * attribute or smuggle a different protocol. Returns the parsed URL string
+ * if safe, or null. Defense-in-depth against attribute-breakout and
+ * javascript:/data: smuggling.
+ */
+export function safeHttpUrl(url: string | null | undefined): string | null {
+  if (!url || typeof url !== 'string') return null
+  const trimmed = url.trim()
+  if (!trimmed) return null
+  for (let i = 0; i < trimmed.length; i++) {
+    const ch = trimmed.charAt(i)
+    const code = trimmed.charCodeAt(i)
+    if (URL_FORBIDDEN_CHARS.has(ch)) return null
+    if (code < 32 || code === 127) return null
+  }
+  try {
+    const u = new URL(trimmed)
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null
+    return u.toString()
+  } catch {
+    return null
+  }
+}
+
 /**
  * Minimal markdown → HTML for broadcast bodies.
  * Supports: paragraphs, **bold**, *italic*, [link](url), - bullets, ## headings.
@@ -56,10 +86,12 @@ export function mdToHtml(md: string): string {
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       // italic
       .replace(/(^|\W)\*(?!\s)([^*]+?)\*(?!\w)/g, '$1<em>$2</em>')
-      // links: [text](url) — only allow http(s)
-      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_m, text, url) =>
-        `<a href="${url}" style="color:#B08A3E;text-decoration:underline;">${text}</a>`,
-      )
+      // links: [text](url) — only allow http(s), validate URL with safeHttpUrl
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_m, text, url) => {
+        const safe = safeHttpUrl(url)
+        if (!safe) return text // drop the link, keep the visible text
+        return `<a href="${escapeHtml(safe)}" style="color:#B08A3E;text-decoration:underline;">${text}</a>`
+      })
   }
 
   for (const raw of lines) {
@@ -107,21 +139,10 @@ export function broadcastEmailHtml(opts: {
 
   const bodyHtml = mdToHtml(opts.bodyMarkdown)
 
-  const safeUrl = (url: string | null | undefined): string | null => {
-    if (!url) return null
-    try {
-      const u = new URL(url)
-      if (u.protocol !== 'http:' && u.protocol !== 'https:') return null
-      return url
-    } catch {
-      return null
-    }
-  }
-
-  const ctaUrl = safeUrl(opts.ctaUrl)
+  const ctaUrl = safeHttpUrl(opts.ctaUrl)
   const ctaButton = opts.ctaText && ctaUrl
     ? `<p style="margin:24px 0;text-align:center;">
-         <a href="${ctaUrl}" style="display:inline-block;background:#B08A3E;color:#0B1E3A;font-weight:700;font-size:14px;padding:12px 28px;border-radius:6px;text-decoration:none;">
+         <a href="${escapeHtml(ctaUrl)}" style="display:inline-block;background:#B08A3E;color:#0B1E3A;font-weight:700;font-size:14px;padding:12px 28px;border-radius:6px;text-decoration:none;">
            ${escapeHtml(opts.ctaText)}
          </a>
        </p>`
