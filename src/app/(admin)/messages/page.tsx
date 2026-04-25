@@ -362,26 +362,44 @@ function BroadcastComposer({ onClose, onSent }: { onClose: () => void; onSent: (
   const [audienceValue, setAudienceValue] = useState('')
   const [sourceLocale, setSourceLocale] = useState('pt')
   const [audienceCount, setAudienceCount] = useState<number | null>(null)
+  const [audienceError, setAudienceError] = useState<string | null>(null)
   const [previewHtml, setPreviewHtml] = useState('')
   const [sending, setSending] = useState(false)
   const [result, setResult] = useState<{ sent: number; failed: number; total: number } | null>(null)
 
-  // Live audience count
+  // M9 — Live audience count with debounce + AbortController so rapid filter
+  // changes don't allow stale responses to overwrite fresh ones.
+  // M12 — surfaces an error when fetch fails so the Send button stuck-disabled
+  // state has a visible reason.
   useEffect(() => {
+    const controller = new AbortController()
+    setAudienceError(null)
     const t = setTimeout(async () => {
-      const res = await fetch('/api/admin/broadcasts/audience-count', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ audienceType, audienceValue: audienceValue || null }),
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setAudienceCount(data.count)
-      } else {
+      try {
+        const res = await fetch('/api/admin/broadcasts/audience-count', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ audienceType, audienceValue: audienceValue || null }),
+          signal: controller.signal,
+        })
+        if (controller.signal.aborted) return
+        if (res.ok) {
+          const data = await res.json()
+          setAudienceCount(data.count)
+        } else {
+          setAudienceCount(null)
+          setAudienceError('Falhou calcular destinatários — verifica os filtros')
+        }
+      } catch (e) {
+        if (controller.signal.aborted || (e instanceof Error && e.name === 'AbortError')) return
         setAudienceCount(null)
+        setAudienceError('Falhou calcular destinatários — tenta novamente')
       }
     }, 200)
-    return () => clearTimeout(t)
+    return () => {
+      clearTimeout(t)
+      controller.abort()
+    }
   }, [audienceType, audienceValue])
 
   const goPreview = async () => {
@@ -580,25 +598,39 @@ function BroadcastComposer({ onClose, onSent }: { onClose: () => void; onSent: (
                 </select>
               </div>
 
-              <div className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2.5 text-xs text-amber-800 flex items-center gap-2">
-                <Globe className="h-4 w-4 shrink-0" />
-                {audienceCount !== null
-                  ? <span>Vai enviar para <strong>{audienceCount}</strong> destinatário(s) — traduzido automaticamente para as línguas deles.</span>
-                  : 'A calcular destinatários…'}
-              </div>
+              {/* M12 — explicit error/empty/loading states so user understands disabled Send */}
+              {audienceError ? (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-700 flex items-center gap-2">
+                  <Globe className="h-4 w-4 shrink-0" />
+                  <span>{audienceError}</span>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2.5 text-xs text-amber-800 flex items-center gap-2">
+                  <Globe className="h-4 w-4 shrink-0" />
+                  {audienceCount === null
+                    ? 'A calcular destinatários…'
+                    : audienceCount === 0
+                      ? <span>Nenhum destinatário corresponde a este filtro. Ajusta os critérios acima.</span>
+                      : <span>Vai enviar para <strong>{audienceCount}</strong> destinatário(s) — traduzido automaticamente para as línguas deles.</span>}
+                </div>
+              )}
             </div>
           )}
 
           {step === 'preview' && (
-            <div className="p-5 space-y-3">
+            <div className="p-5 space-y-3 min-w-0">
               <div className="rounded-lg bg-gray-50 border px-3 py-2 text-xs text-gray-600">
                 <strong>Para:</strong> {audienceCount ?? '?'} destinatário(s) · <strong>Língua origem:</strong> {LANGUAGES.find(l => l.code === sourceLocale)?.label}
               </div>
-              <iframe
-                srcDoc={previewHtml}
-                title="Preview"
-                className="w-full h-[480px] rounded-lg border bg-white"
-              />
+              {/* M10 — wrap in min-w-0 + max-w-full so the iframe doesn't push the modal wider on mobile */}
+              <div className="min-w-0 w-full overflow-hidden rounded-lg border bg-white">
+                <iframe
+                  srcDoc={previewHtml}
+                  title="Preview"
+                  className="block w-full h-[420px] sm:h-[480px]"
+                  style={{ maxWidth: '100%' }}
+                />
+              </div>
             </div>
           )}
 
@@ -726,9 +758,10 @@ function BroadcastThreads({
       ) : threads.length === 0 ? (
         <p className="p-6 text-center text-xs text-gray-400">Ainda sem respostas dos assinantes.</p>
       ) : (
+        // M11 — mobile: show list OR chat (not both stacked). Tablet+: side-by-side.
         <div className="grid grid-cols-1 sm:grid-cols-3 min-h-[300px]">
-          {/* Threads list */}
-          <div className="border-r bg-white">
+          {/* Threads list — hidden on mobile when a thread is active */}
+          <div className={`border-r bg-white ${active ? 'hidden sm:block' : 'block'}`}>
             <div className="px-3 py-2 border-b text-[11px] font-semibold uppercase tracking-wider text-gray-500">
               {threads.length} thread(s)
             </div>
@@ -761,13 +794,20 @@ function BroadcastThreads({
             </div>
           </div>
 
-          {/* Thread view */}
+          {/* Thread view — hidden on mobile when nothing selected (mobile shows list instead) */}
           {active ? (
             <div className="sm:col-span-2 flex flex-col bg-white">
+              {/* M11 — back button on mobile to return to list */}
+              <button
+                onClick={() => setActiveOwnerId(null)}
+                className="sm:hidden flex items-center gap-1.5 px-4 py-2 border-b text-xs font-semibold text-gray-500 hover:bg-gray-50"
+              >
+                ← Voltar à lista
+              </button>
               <ThreadView broadcastId={broadcastId} thread={active} onMessageSent={load} />
             </div>
           ) : (
-            <div className="sm:col-span-2 flex items-center justify-center text-xs text-gray-400">
+            <div className="hidden sm:flex sm:col-span-2 items-center justify-center text-xs text-gray-400">
               Selecciona um assinante
             </div>
           )}
