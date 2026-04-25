@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "ownerValue": {
+    "badge": "For your property",
+    "title": "Each agent + each person = a measurable outcome for you",
+    "subtitle": "Combining AI with real people is not abstract. These are the 6 concrete results that go straight to your investment.",
+    "closer": "Quiet technology. Visible people. Results you can measure every month."
+  },
   "flowMap": {
     "badge": "How it works, in practice",
     "title": "AI handles the invisible. People take care of you.",

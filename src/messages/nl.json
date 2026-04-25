@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "ownerValue": {
+    "badge": "Voor uw woning",
+    "title": "Elke agent + elke persoon = een meetbaar resultaat voor u",
+    "subtitle": "AI combineren met echte mensen is niet abstract. Dit zijn de 6 concrete resultaten die direct naar uw investering gaan.",
+    "closer": "Stille technologie. Zichtbare mensen. Resultaten die u elke maand kunt meten."
+  },
   "flowMap": {
     "badge": "Hoe het werkt, in de praktijk",
     "title": "AI regelt het onzichtbare. Mensen zorgen voor u.",

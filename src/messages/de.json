@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "ownerValue": {
+    "badge": "Für Ihre Immobilie",
+    "title": "Jeder Agent + jeder Mensch = ein messbares Ergebnis für Sie",
+    "subtitle": "Die Kombination aus KI und echten Menschen ist nicht abstrakt. Dies sind die 6 konkreten Ergebnisse, die direkt in Ihre Investition fließen.",
+    "closer": "Leise Technologie. Sichtbare Menschen. Ergebnisse, die Sie jeden Monat messen können."
+  },
   "flowMap": {
     "badge": "So funktioniert es in der Praxis",
     "title": "KI kümmert sich um das Unsichtbare. Menschen kümmern sich um Sie.",

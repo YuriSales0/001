@@ -1864,6 +1864,12 @@
       "personalUse": "Personal use"
     }
   },
+  "ownerValue": {
+    "badge": "För din fastighet",
+    "title": "Varje agent + varje person = ett mätbart resultat för dig",
+    "subtitle": "Att kombinera AI med riktiga människor är inte abstrakt. Detta är de 6 konkreta resultaten som går direkt till din investering.",
+    "closer": "Tyst teknik. Synliga människor. Resultat du kan mäta varje månad."
+  },
   "flowMap": {
     "badge": "Hur det fungerar, i praktiken",
     "title": "AI sköter det osynliga. Människor tar hand om dig.",

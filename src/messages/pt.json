@@ -1865,6 +1865,12 @@
       "personalUse": "Uso pessoal"
     }
   },
+  "ownerValue": {
+    "badge": "Para a sua propriedade",
+    "title": "Cada agente + cada pessoa = um resultado para si",
+    "subtitle": "A combinação de IA com pessoas reais não é abstracta. Estes são os 6 resultados concretos que vão directamente ao seu investimento.",
+    "closer": "Tecnologia silenciosa. Pessoas visíveis. Resultados que pode medir todos os meses."
+  },
   "flowMap": {
     "badge": "Como funciona, na prática",
     "title": "IA executa o invisível. Pessoas tratam de si.",
