@@ -33,20 +33,49 @@ export async function runPostFeedbackWorkflows(
 
 /**
  * Bridge VAGF → CrewScore points engine.
- * Translates guest cleanliness score (1-10) into CrewScore delta events.
+ *
+ * Uses WEIGHTED aggregation across 3 crew-accountability dimensions
+ * (cleanliness 50%, propertyState 30%, crewPresentation 20%)
+ * instead of the old single-dimension cleanliness-only approach.
+ *
+ * CONFIDENCE GUARD: if cross-validation confidence < 0.75, the delta
+ * is NOT applied automatically — the feedback is flagged for Captain
+ * review in the Captain Hub. Captain (or Admin) can approve/override.
  */
 async function applyGuestFeedbackToScoreEngine(
   feedback: GuestFeedback,
 ) {
-  if (!feedback.crewMemberId || feedback.scoreCleanliness == null) return
+  if (!feedback.crewMemberId) return
 
-  const score = feedback.scoreCleanliness
+  // Check if this feedback has confidence data (stored in JSON details field)
+  const details = (feedback as unknown as { analysisConfidence?: number })
+  const confidence = details.analysisConfidence ?? 1.0
+
+  // Guard: if confidence below threshold, skip auto-apply
+  if (confidence < 0.75) {
+    console.log(`[VAGF] Skipping auto-score for feedback ${feedback.id} — confidence ${confidence.toFixed(2)} < 0.75. Queued for Captain review.`)
+    return
+  }
+
+  // Weighted crew score: 50% cleanliness + 30% propertyState + 20% crewPresentation
+  const scores = [
+    { val: feedback.scoreCleanliness, weight: 0.5 },
+    { val: feedback.scorePropertyState, weight: 0.3 },
+    { val: feedback.scoreCrewPresentation, weight: 0.2 },
+  ].filter(s => s.val !== null && s.val !== undefined) as { val: number; weight: number }[]
+
+  if (scores.length === 0) return
+
+  // Normalize weights to sum to 1
+  const totalWeight = scores.reduce((sum, s) => sum + s.weight, 0)
+  const weighted = scores.reduce((sum, s) => sum + s.val * (s.weight / totalWeight), 0)
+  const avgScore = Math.round(weighted * 10) / 10
+
   let reason: string | null = null
-
-  if (score >= 9) reason = 'GUEST_EXCELLENT'
-  else if (score >= 7) reason = 'GUEST_GOOD'
-  else if (score >= 5) reason = null // neutral, no delta
-  else if (score >= 3) reason = 'GUEST_POOR'
+  if (avgScore >= 9) reason = 'GUEST_EXCELLENT'
+  else if (avgScore >= 7) reason = 'GUEST_GOOD'
+  else if (avgScore >= 5) reason = null // neutral
+  else if (avgScore >= 3) reason = 'GUEST_POOR'
   else reason = 'GUEST_COMPLAINT'
 
   if (!reason) return

@@ -697,6 +697,21 @@ model GuestFeedback {
   escalationLevel       EscalationLevel?
   escalationNotifiedTo  String[]
 
+  // Confidence + cross-validation (VAGF pipeline v2)
+  analysisConfidence       Float?          // 0.0–1.0 weighted crew-dimension confidence
+  analysisCrossValidated   Boolean         @default(false)
+  analysisReviewRequired   Boolean         @default(false) // true → queued for Captain review
+  analysisReviewedAt       DateTime?
+  analysisReviewedBy       String?         // Captain or Admin userId who reviewed
+
+  // Crew score dispute
+  scoreDisputed            Boolean         @default(false)
+  scoreDisputeReason       String?         @db.Text
+  scoreDisputedAt          DateTime?
+  scoreDisputeResolvedAt   DateTime?
+  scoreDisputeResolvedBy   String?         // Captain/Admin who resolved
+  scoreDisputeOutcome      String?         // UPHELD | OVERRIDDEN | ADJUSTED
+
   // Web fallback token
   webToken              String?           @unique
 
@@ -707,6 +722,7 @@ model GuestFeedback {
   @@index([crewMemberId])
   @@index([clientId])
   @@index([propertyId])
+  @@index([analysisReviewRequired])
   @@index([callStatus])
   @@index([createdAt])
 }

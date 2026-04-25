@@ -161,6 +161,10 @@ export async function POST(
             contactedDuringStay: analysis.contactedDuringStay,
             contactResponseScore: analysis.contactResponseScore,
             reviewPromptSent: analysis.reviewSmsRequested,
+            // Confidence data for score guard
+            analysisConfidence: analysis.confidence?.overall ?? null,
+            analysisCrossValidated: analysis.crossValidated ?? false,
+            analysisReviewRequired: analysis.reviewRequired ?? false,
           },
         })
 
