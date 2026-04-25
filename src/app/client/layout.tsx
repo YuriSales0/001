@@ -4,7 +4,7 @@ import { getCurrentUser, resolveEffectiveUser } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import {
   Home, TrendingUp, CalendarDays, Star, MessageCircle,
-  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles, FileText, Zap,
+  Wrench, User, LogOut, Menu, X, ChevronRight, Sparkles, FileText, Zap, Mail,
 } from 'lucide-react'
 import { HmLogo } from '@/components/hm/hm-logo'
 import { OnboardingGate } from '@/components/hm/onboarding-gate'
@@ -33,6 +33,7 @@ export default async function ClientLayout({ children }: { children: React.React
     { href: '/client/contracts',   label: t(msgs, 'contracts.myContract'),    icon: FileText },
     { href: '/client/plan',        label: t(msgs, 'common.myPlan'),           icon: Star },
     { href: '/client/messages',   label: t(msgs, 'owner.contactManager'),    icon: MessageCircle },
+    { href: '/client/broadcasts', label: 'HostMasters Updates',              icon: Mail },
   ]
 
   const initials = user.name

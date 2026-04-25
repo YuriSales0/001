@@ -223,6 +223,7 @@ function BroadcastsTab() {
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([])
   const [loading, setLoading] = useState(true)
   const [showComposer, setShowComposer] = useState(false)
+  const [openThreads, setOpenThreads] = useState<string | null>(null) // broadcastId
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -278,33 +279,45 @@ function BroadcastsTab() {
         </div>
       ) : (
         <div className="space-y-2">
-          {broadcasts.map(b => (
-            <div key={b.id} className="rounded-hm border bg-white p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${statusBadge(b.status)}`}>
-                      {b.status}
-                    </span>
-                    <h3 className="font-semibold text-gray-900 truncate">{b.subject}</h3>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">{b.bodyMarkdown.slice(0, 160)}{b.bodyMarkdown.length > 160 && '…'}</p>
-                  <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400">
-                    <span><Users className="inline h-3 w-3 mr-1" />{audienceLabel(b)}</span>
-                    {b.sentAt && <span>Enviado: {fmt(b.sentAt)}</span>}
+          {broadcasts.map(b => {
+            const isOpen = openThreads === b.id
+            return (
+              <div key={b.id} className="rounded-hm border bg-white">
+                <button
+                  onClick={() => b.status === 'SENT' ? setOpenThreads(isOpen ? null : b.id) : null}
+                  className={`w-full text-left p-4 ${b.status === 'SENT' ? 'cursor-pointer hover:bg-gray-50' : ''} transition-colors`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${statusBadge(b.status)}`}>
+                          {b.status}
+                        </span>
+                        <h3 className="font-semibold text-gray-900 truncate">{b.subject}</h3>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">{b.bodyMarkdown.slice(0, 160)}{b.bodyMarkdown.length > 160 && '…'}</p>
+                      <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400">
+                        <span><Users className="inline h-3 w-3 mr-1" />{audienceLabel(b)}</span>
+                        {b.sentAt && <span>Enviado: {fmt(b.sentAt)}</span>}
+                        {b.status === 'SENT' && (
+                          <span className="text-emerald-600">
+                            <CheckCircle2 className="inline h-3 w-3 mr-1" />
+                            {b.recipientCount} entregues
+                            {b.failedCount > 0 && <span className="text-red-500 ml-1">· {b.failedCount} falhados</span>}
+                          </span>
+                        )}
+                        {b.status === 'DRAFT' && <span className="text-gray-500">Criado: {fmt(b.createdAt)}</span>}
+                      </div>
+                    </div>
                     {b.status === 'SENT' && (
-                      <span className="text-emerald-600">
-                        <CheckCircle2 className="inline h-3 w-3 mr-1" />
-                        {b.recipientCount} entregues
-                        {b.failedCount > 0 && <span className="text-red-500 ml-1">· {b.failedCount} falhados</span>}
-                      </span>
+                      <span className="text-xs text-gray-400 shrink-0">{isOpen ? 'Fechar' : 'Ver respostas →'}</span>
                     )}
-                    {b.status === 'DRAFT' && <span className="text-gray-500">Criado: {fmt(b.createdAt)}</span>}
                   </div>
-                </div>
+                </button>
+                {isOpen && <BroadcastThreads broadcastId={b.id} />}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
@@ -632,5 +645,183 @@ function BroadcastComposer({ onClose, onSent }: { onClose: () => void; onSent: (
         )}
       </div>
     </div>
+  )
+}
+
+// ─── Broadcast threads (admin view) ───────────────────────────────────────────
+type ThreadOwner = { id: string; name: string | null; email: string; image: string | null }
+type ThreadMessage = {
+  id: string
+  bodyText: string
+  createdAt: string
+  readAt: string | null
+  author: { id: string; name: string | null; email: string; role: string }
+}
+type Thread = {
+  owner: ThreadOwner
+  messages: ThreadMessage[]
+  lastAt: string
+  unreadFromClient: number
+}
+
+function BroadcastThreads({ broadcastId }: { broadcastId: string }) {
+  const [threads, setThreads] = useState<Thread[]>([])
+  const [loading, setLoading] = useState(true)
+  const [activeOwnerId, setActiveOwnerId] = useState<string | null>(null)
+
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch(`/api/admin/broadcasts/${broadcastId}/threads`)
+      .then(r => r.ok ? r.json() : [])
+      .then(d => {
+        setThreads(d)
+        if (d.length > 0 && !activeOwnerId) setActiveOwnerId(d[0].owner.id)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+    // activeOwnerId intentionally omitted from deps to avoid loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [broadcastId])
+
+  useEffect(() => { load() }, [load])
+
+  const active = threads.find(t => t.owner.id === activeOwnerId)
+
+  return (
+    <div className="border-t bg-gray-50/50">
+      {loading ? (
+        <div className="p-6 flex justify-center"><Loader2 className="h-4 w-4 animate-spin text-gray-400" /></div>
+      ) : threads.length === 0 ? (
+        <p className="p-6 text-center text-xs text-gray-400">Ainda sem respostas dos assinantes.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-3 min-h-[300px]">
+          {/* Threads list */}
+          <div className="border-r bg-white">
+            <div className="px-3 py-2 border-b text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              {threads.length} thread(s)
+            </div>
+            <div className="overflow-y-auto max-h-[400px]">
+              {threads.map(t => (
+                <button
+                  key={t.owner.id}
+                  onClick={() => setActiveOwnerId(t.owner.id)}
+                  className={`w-full text-left px-3 py-2.5 border-b transition-colors hover:bg-gray-50 ${
+                    activeOwnerId === t.owner.id ? 'bg-amber-50/60' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
+                         style={{ background: '#0B1E3A', color: '#B08A3E' }}>
+                      {(t.owner.name ?? t.owner.email).split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-gray-900 truncate">{t.owner.name ?? t.owner.email}</p>
+                      <p className="text-[10px] text-gray-500">{t.messages.length} mensagens</p>
+                    </div>
+                    {t.unreadFromClient > 0 && (
+                      <span className="inline-flex items-center justify-center h-4 min-w-[16px] rounded-full bg-amber-500 text-white text-[9px] font-bold px-1">
+                        {t.unreadFromClient}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Thread view */}
+          {active ? (
+            <div className="sm:col-span-2 flex flex-col bg-white">
+              <ThreadView broadcastId={broadcastId} thread={active} onMessageSent={load} />
+            </div>
+          ) : (
+            <div className="sm:col-span-2 flex items-center justify-center text-xs text-gray-400">
+              Selecciona um assinante
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ThreadView({
+  broadcastId,
+  thread,
+  onMessageSent,
+}: {
+  broadcastId: string
+  thread: Thread
+  onMessageSent: () => void
+}) {
+  const [reply, setReply] = useState('')
+  const [posting, setPosting] = useState(false)
+
+  const fmtT = (s: string) =>
+    new Date(s).toLocaleString('pt-PT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!reply.trim()) return
+    setPosting(true)
+    try {
+      const res = await fetch(`/api/admin/broadcasts/${broadcastId}/threads/${thread.owner.id}/reply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bodyText: reply.trim() }),
+      })
+      if (res.ok) {
+        setReply('')
+        onMessageSent()
+      } else {
+        showToast('Falhou enviar resposta', 'error')
+      }
+    } finally {
+      setPosting(false)
+    }
+  }
+
+  return (
+    <>
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[400px]">
+        {thread.messages.map(m => {
+          const isAdmin = m.author.role === 'ADMIN'
+          return (
+            <div key={m.id} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
+              <div className="max-w-[80%]">
+                <div className={`rounded-2xl px-3 py-2 text-sm ${isAdmin ? 'rounded-br-sm text-white' : 'rounded-bl-sm border'}`}
+                     style={isAdmin
+                       ? { background: '#0B1E3A' }
+                       : { background: '#FAF8F4', borderColor: '#E8E3D8', color: '#374151' }}>
+                  <p className="whitespace-pre-wrap break-words">{m.bodyText}</p>
+                </div>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  {isAdmin ? 'Tu' : (m.author.name ?? thread.owner.email)} · {fmtT(m.createdAt)}
+                </p>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <form onSubmit={submit} className="border-t p-3" style={{ borderColor: '#E8E3D8' }}>
+        <div className="flex gap-2">
+          <input
+            value={reply}
+            onChange={e => setReply(e.target.value)}
+            placeholder={`Responder a ${thread.owner.name ?? thread.owner.email}…`}
+            className="flex-1 rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold"
+            maxLength={5000}
+          />
+          <button
+            type="submit"
+            disabled={posting || !reply.trim()}
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold disabled:opacity-50"
+            style={{ background: '#B08A3E', color: '#0B1E3A' }}
+          >
+            {posting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+          </button>
+        </div>
+      </form>
+    </>
   )
 }

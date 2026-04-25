@@ -376,6 +376,9 @@ model User {
   stayChatsAsClient    GuestStayChat[]             @relation("ClientStayChats")
   escalatedStayChats   GuestStayChat[]             @relation("EscalatedStayChats")
   broadcasts           Broadcast[]                 @relation("BroadcastSender")
+  broadcastsReceived   BroadcastRecipient[]        @relation("BroadcastRecipient")
+  broadcastThreads     BroadcastReply[]            @relation("BroadcastThreadOwner")
+  broadcastRepliesAuthored BroadcastReply[]        @relation("BroadcastReplyAuthor")
 
   // VAGF Crew fields
   guestScoreAverage    Float?            @default(0)
@@ -1651,6 +1654,9 @@ enum NotificationType {
   PAYOUT_COMPLETED
   VISIT_COMPLETED
   TAX_DEADLINE
+  // Broadcast (founder ↔ subscribers)
+  BROADCAST_RECEIVED
+  BROADCAST_REPLY
   // System
   INTERVENTION_OPENED
   INTERVENTION_RESOLVED
@@ -1813,8 +1819,41 @@ model Broadcast {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
+  recipients      BroadcastRecipient[]
+  replies         BroadcastReply[]
+
   @@index([senderId])
   @@index([sentAt])
+}
+
+model BroadcastRecipient {
+  id            String   @id @default(cuid())
+  broadcastId   String
+  broadcast     Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User     @relation("BroadcastRecipient", fields: [userId], references: [id])
+  language      String   // locale this user received the broadcast in
+  delivered     Boolean  @default(true)
+  readAt        DateTime?
+  createdAt     DateTime @default(now())
+
+  @@unique([broadcastId, userId])
+  @@index([userId, readAt])
+}
+
+model BroadcastReply {
+  id              String   @id @default(cuid())
+  broadcastId     String
+  broadcast       Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+  threadOwnerId   String   // the subscriber the thread belongs to (groups admin↔client messages)
+  threadOwner     User     @relation("BroadcastThreadOwner", fields: [threadOwnerId], references: [id])
+  authorId        String   // who wrote this specific message (subscriber OR admin)
+  author          User     @relation("BroadcastReplyAuthor", fields: [authorId], references: [id])
+  bodyText        String   @db.Text
+  readAt          DateTime?
+  createdAt       DateTime @default(now())
+
+  @@index([broadcastId, threadOwnerId])
 }
 
 enum BroadcastStatus {
