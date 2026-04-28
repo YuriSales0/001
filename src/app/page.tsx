@@ -52,7 +52,6 @@ const plans = (['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const).map(id => {
     id,
     commission: `${Math.round(PLAN_COMMISSION[id] * 100)}%`,
     monthlyFee: monthly > 0 ? monthly : null,
-    annualFee: monthly > 0 ? monthly * 10 : null, // 2 months free on annual
     firstMonthFree: id === 'BASIC' || id === 'MID',
     popular: id === 'MID',
   }
