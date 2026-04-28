@@ -1940,7 +1940,8 @@
       "plans": "Plans",
       "enter": "Enter",
       "startFree": "Get assessment",
-      "contact": "Contact"
+      "contact": "Contact",
+      "careers": "Careers"
     },
     "hero": {
       "badge": "Costa Tropical · España",
@@ -2141,7 +2142,11 @@
           "Daily automated property health checks",
           "Cleaning included on stays ≥3 nights"
         ]
-      }
+      },
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium"
     },
     "credibility": {
       "badge": "Local presence",
@@ -2386,7 +2391,11 @@
     },
     "footer": {
       "tagline": "Premium short-term rental management.",
-      "copyright": "© 2026 HostMasters."
+      "copyright": "© 2026 HostMasters.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "partnerPortal": "Partner Portal",
+      "location": "Costa Tropical · España"
     }
   },
   "onboarding": {

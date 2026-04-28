@@ -1940,7 +1940,8 @@
       "plans": "Abonnementen",
       "enter": "Inloggen",
       "startFree": "Gratis starten",
-      "contact": "Contact"
+      "contact": "Contact",
+      "careers": "Vacatures"
     },
     "hero": {
       "badge": "Costa Tropical · España",
@@ -2141,7 +2142,11 @@
           "Cleaning included ≥3 nights",
           "Cleaning included ≥3 nights"
         ]
-      }
+      },
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium"
     },
     "credibility": {
       "badge": "Local presence",
@@ -2386,7 +2391,11 @@
     },
     "footer": {
       "tagline": "Premium kortverhuurbeheer.",
-      "copyright": "© 2026 HostMasters."
+      "copyright": "© 2026 HostMasters.",
+      "privacy": "Privacy",
+      "terms": "Voorwaarden",
+      "partnerPortal": "Partner Portaal",
+      "location": "Costa Tropical · Spanje"
     }
   },
   "onboarding": {

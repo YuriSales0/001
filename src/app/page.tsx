@@ -35,6 +35,8 @@ import {
   Sparkles,
   Moon,
   Calculator,
+  Menu,
+  X,
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
@@ -60,6 +62,15 @@ const fmtEUR = (n: number) => `€${n}`
 
 export default function LandingPage() {
   const { t } = useLocale()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const navLinks = [
+    { href: '#problema', label: t('landing.nav.problem') },
+    { href: '#como-funciona', label: t('landing.nav.howItWorks') },
+    { href: '#modelo', label: t('landing.nav.model') },
+    { href: '#planos', label: t('landing.nav.plans') },
+    { href: '#contacto', label: t('landing.nav.contact') },
+  ]
 
   return (
     <div className="min-h-screen font-sans">
@@ -76,13 +87,11 @@ export default function LandingPage() {
                   style={{ background: 'rgba(176,138,62,0.15)', color: '#B08A3E' }}>Beta</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: '#4A5568' }}>
-            <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
-            <a href="#como-funciona" className="hover:text-hm-ink transition-colors">{t('landing.nav.howItWorks')}</a>
-            <a href="#modelo" className="hover:text-hm-ink transition-colors">{t('landing.nav.model')}</a>
-            <a href="#planos" className="hover:text-hm-ink transition-colors">{t('landing.nav.plans')}</a>
-            <a href="#contacto" className="hover:text-hm-ink transition-colors">{t('landing.nav.contact')}</a>
+            {navLinks.map(l => (
+              <a key={l.href} href={l.href} className="hover:text-hm-ink transition-colors">{l.label}</a>
+            ))}
             <Link href="/careers" className="font-semibold hover:text-hm-ink transition-colors" style={{ color: "#B08A3E" }}>
-              Careers
+              {t('landing.nav.careers')}
             </Link>
           </nav>
           <div className="flex items-center gap-3">
@@ -92,13 +101,40 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/register"
-              className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-all hover:brightness-110"
+              className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-all hover:brightness-110 hidden sm:block"
               style={{ background: "#0B1E3A", color: "#F6F2EA" }}
             >
               {t('landing.nav.startFree')}
             </Link>
+            <button
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" style={{ color: '#0B1E3A' }} /> : <Menu className="h-5 w-5" style={{ color: '#0B1E3A' }} />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t px-4 py-4 space-y-3" style={{ borderColor: 'var(--hm-cream-dark)', background: '#FAFAF8' }}>
+            {navLinks.map(l => (
+              <a key={l.href} href={l.href} className="block text-sm py-1.5 transition-colors hover:text-hm-ink" style={{ color: '#4A5568' }}
+                 onClick={() => setMobileMenuOpen(false)}>{l.label}</a>
+            ))}
+            <Link href="/careers" className="block text-sm py-1.5 font-semibold" style={{ color: '#B08A3E' }}
+                  onClick={() => setMobileMenuOpen(false)}>{t('landing.nav.careers')}</Link>
+            <div className="pt-2 flex flex-col gap-2">
+              <Link href="/login" className="text-sm text-center py-2.5 rounded-lg border transition-colors" style={{ borderColor: '#E8E3D8', color: '#0B1E3A' }}>
+                {t('landing.nav.enter')}
+              </Link>
+              <Link href="/register" className="text-sm font-semibold text-center py-2.5 rounded-lg" style={{ background: '#0B1E3A', color: '#F6F2EA' }}>
+                {t('landing.nav.startFree')}
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* ───────── Hero ───────── */}
@@ -441,7 +477,7 @@ export default function LandingPage() {
                   )}
                   <h3 className={`text-xl font-bold ${plan.popular ? "text-white" : ""}`}
                       style={!plan.popular ? { color: "#0B1E3A" } : {}}>
-                    {plan.id.charAt(0) + plan.id.slice(1).toLowerCase()}
+                    {t(`landing.plans.${planKey}Name`)}
                   </h3>
                   <div className="mt-4 flex items-baseline gap-1">
                     {plan.monthlyFee ? (
@@ -499,7 +535,7 @@ export default function LandingPage() {
       </section>
 
       {/* ───────── Revenue simulator ───────── */}
-      <section id="simulator" className="py-20 sm:py-28" style={{ background: 'var(--hm-ivory, #FAF8F4)' }}>
+      <section id="simulator" className="py-20 sm:py-28" style={{ background: 'var(--hm-ivory, #FAFAF8)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: '#B08A3E' }}>
@@ -621,12 +657,12 @@ export default function LandingPage() {
             <span className="text-sm font-semibold tracking-tight" style={{ color: '#0B1E3A' }}>
               Host<span style={{ color: '#B08A3E' }}>Masters</span>
             </span>
-            <span className="text-xs text-gray-400 ml-1">Costa Tropical · España</span>
+            <span className="text-xs text-gray-400 ml-1">{t('landing.footer.location')}</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="/privacy" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Privacy</a>
-            <a href="/terms" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Terms</a>
-            <a href="/partner/login" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Partner Portal</a>
+            <a href="/privacy" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">{t('landing.footer.privacy')}</a>
+            <a href="/terms" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">{t('landing.footer.terms')}</a>
+            <a href="/partner/login" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">{t('landing.footer.partnerPortal')}</a>
             <p className="text-xs text-gray-400">
               {t('landing.footer.copyright')} {t('landing.footer.tagline')}
             </p>
@@ -702,7 +738,7 @@ function ContactSection() {
   }
 
   return (
-    <section id="contacto" className="py-20 sm:py-28" style={{ background: "var(--hm-ivory, #FAF8F4)" }}>
+    <section id="contacto" className="py-20 sm:py-28" style={{ background: "var(--hm-ivory, #FAFAF8)" }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section header */}
         <div className="text-center max-w-2xl mx-auto mb-14">

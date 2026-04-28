@@ -1940,7 +1940,8 @@
       "plans": "Planer",
       "enter": "Logga in",
       "startFree": "Starta gratis",
-      "contact": "Kontakt"
+      "contact": "Kontakt",
+      "careers": "Karriär"
     },
     "hero": {
       "badge": "Costa Tropical · España",
@@ -2141,7 +2142,11 @@
           "Cleaning included ≥3 nights",
           "Cleaning included ≥3 nights"
         ]
-      }
+      },
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium"
     },
     "credibility": {
       "badge": "Local presence",
@@ -2386,7 +2391,11 @@
     },
     "footer": {
       "tagline": "Premium korttidsuthyrningsförvaltning.",
-      "copyright": "© 2026 HostMasters."
+      "copyright": "© 2026 HostMasters.",
+      "privacy": "Integritet",
+      "terms": "Villkor",
+      "partnerPortal": "Partnerportal",
+      "location": "Costa Tropical · Spanien"
     }
   },
   "onboarding": {

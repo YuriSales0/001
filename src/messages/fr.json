@@ -1940,7 +1940,8 @@
       "plans": "Tarifs",
       "enter": "Accès",
       "startFree": "Commencer gratuitement",
-      "contact": "Contact"
+      "contact": "Contact",
+      "careers": "Carrières"
     },
     "hero": {
       "badge": "Costa Tropical · España",
@@ -2141,7 +2142,11 @@
           "Cleaning included ≥3 nights",
           "Cleaning included ≥3 nights"
         ]
-      }
+      },
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium"
     },
     "credibility": {
       "badge": "Local presence",
@@ -2386,7 +2391,11 @@
     },
     "footer": {
       "tagline": "Gestion premium de location courte durée.",
-      "copyright": "© 2026 HostMasters."
+      "copyright": "© 2026 HostMasters.",
+      "privacy": "Confidentialité",
+      "terms": "Conditions",
+      "partnerPortal": "Portail Partenaire",
+      "location": "Costa Tropical · Espagne"
     }
   },
   "onboarding": {
