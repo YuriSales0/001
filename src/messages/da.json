@@ -1982,6 +1982,14 @@
         {
           "title": "Ugennemsigtige provisioner",
           "desc": "Du ved ikke, hvor meget der er tilbage til dig. Skjulte omkostninger æder din rentabilitet uden varsel."
+        },
+        {
+          "title": "Maintenance gaps",
+          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
         }
       ]
     },

@@ -1983,6 +1983,14 @@
         {
           "title": "Comissões opacas",
           "desc": "Não sabe quanto fica para si. Custos escondidos corroem a sua rentabilidade sem aviso."
+        },
+        {
+          "title": "Maintenance gaps",
+          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
         }
       ]
     },

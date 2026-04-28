@@ -1982,6 +1982,14 @@
         {
           "title": "Ogenomskinliga provisioner",
           "desc": "Du vet inte hur mycket som blir kvar åt dig. Dolda kostnader äter upp din lönsamhet utan förvarning."
+        },
+        {
+          "title": "Maintenance gaps",
+          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
         }
       ]
     },

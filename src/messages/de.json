@@ -1982,6 +1982,14 @@
         {
           "title": "Undurchsichtige Provisionen",
           "desc": "Sie wissen nicht, was für Sie übrig bleibt. Versteckte Kosten fressen Ihre Rentabilität ohne Vorwarnung."
+        },
+        {
+          "title": "Maintenance gaps",
+          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
         }
       ]
     },
