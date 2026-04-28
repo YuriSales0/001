@@ -1935,89 +1935,237 @@
   "landing": {
     "nav": {
       "problem": "Problem",
-      "solution": "Solution",
+      "howItWorks": "How it works",
+      "model": "Model",
       "plans": "Plans",
       "enter": "Enter",
-      "startFree": "Start free",
-      "contact": "Contact"
+      "startFree": "Get assessment",
+      "contact": "Contact",
+      "careers": "Careers"
     },
-    "badge": "Costa Tropical · España",
     "hero": {
-      "title1": "Your property deserves",
-      "titleGold": "more than management.",
-      "title2": "It deserves intelligence.",
-      "subtitle": "You bought on the Costa Tropical to invest, not to worry about cleanings, difficult guests or misaligned prices. HostMasters handles everything with real data, AI pricing and total transparency.",
-      "cta": "1st month free on Premium plan",
-      "ctaSub": "No commitment. Cancel anytime.",
+      "badge": "Costa Tropical · España",
+      "title1": "Local property management",
+      "titleGold": "on the Costa Tropical",
+      "subtitle": "Powered by real operational intelligence.",
+      "desc": "Your dedicated Manager, certified Crew and intelligent systems work together to manage, measure and continuously improve your rental operation.",
+      "cta": "Request a property assessment",
+      "ctaSub": "Free assessment. No commitment.",
       "noLockin": "No lock-in",
-      "intlOwners": "International owners",
-      "aiPowered": "AI-powered pricing"
+      "localTeam": "Local team on the ground",
+      "ownerPortal": "Full owner portal"
+    },
+    "trustLine": {
+      "item0": "Local team",
+      "item1": "Owner dashboard",
+      "item2": "Guest support",
+      "item3": "Cleaning verification",
+      "item4": "Dynamic pricing",
+      "item5": "Monthly reporting"
     },
     "problem": {
-      "badge": "The problem",
-      "title": "Being a remote owner shouldn't be this hard",
+      "badge": "The remote owner problem",
+      "title": "Being a remote property owner shouldn’t be this hard",
       "items": [
         {
-          "title": "Random pricing",
-          "desc": "Without market data, pricing is guesswork. You lose revenue in peaks and can't attract in low seasons."
+          "title": "Pricing guesswork",
+          "desc": "Without local market data, you set prices by gut feeling. Too high in low season, too low in peak — revenue slips through the cracks."
         },
         {
-          "title": "Zero visibility",
-          "desc": "You don't know what's happening at your property until you get a complaint or a surprise bill."
+          "title": "No visibility",
+          "desc": "You don’t know what’s happening at your property until a guest complains or a surprise bill arrives."
         },
         {
-          "title": "Slow communication",
-          "desc": "Lost emails, photos that never arrive, reports that only come when you insist."
+          "title": "Cleaning uncertainty",
+          "desc": "Was the property actually cleaned properly? Were linens changed? Without verification, you rely on trust alone."
+        },
+        {
+          "title": "Guest issues at 2am",
+          "desc": "WiFi down, lock not working, noisy neighbours — and you’re 2,000 km away trying to solve it by phone."
+        },
+        {
+          "title": "Maintenance gaps",
+          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
         },
         {
           "title": "Opaque commissions",
-          "desc": "You don't know how much is left for you. Hidden costs eat your profitability without warning."
+          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
         }
       ]
     },
-    "solution": {
-      "badge": "The solution",
-      "title": "Management with intelligence, not guesswork",
-      "subtitle": "Three pillars that make HostMasters different from any traditional property manager.",
-      "items": [
-        {
-          "title": "AI Dynamic Pricing",
-          "desc": "Algorithm that analyzes seasonality, local events, competition and real-time demand to set the optimal price for each night.",
-          "highlight": "Up to +25% revenue vs. fixed pricing"
-        },
-        {
-          "title": "Your own data, not estimates",
-          "desc": "Dashboard with real data from your bookings, revenue and costs. Detailed monthly reports to the cent, no surprises.",
-          "highlight": "Total transparency in numbers"
-        },
-        {
-          "title": "Market Intelligence",
-          "desc": "Access to Costa Tropical market data: occupancy rates by zone, average prices, demand trends and benchmarks.",
-          "highlight": "Decisions based on real data"
-        }
+    "whatWeDo": {
+      "badge": "What HostMasters does",
+      "title": "We manage your property physically and digitally",
+      "subtitle": "A complete operation — from the ground to the dashboard.",
+      "physicalTitle": "On the ground",
+      "physicalItems": [
+        "Certified Crew handles cleaning, check-in and check-out",
+        "Preventive maintenance visits every month",
+        "Crew Captain inspects and approves every job",
+        "Photo verification of every completed task",
+        "Emergency response for urgent issues",
+        "Smart Lock with rotating guest codes"
+      ],
+      "digitalTitle": "In the platform",
+      "digitalItems": [
+        "Owner portal with real-time earnings and reports",
+        "Automated monthly financial statements",
+        "Guest communication handled 24/7",
+        "Calendar sync across Airbnb, Booking.com and direct",
+        "Pricing adjusted to local demand",
+        "Tax obligation tracking and deadline alerts"
       ]
     },
-    "social": {
-      "badge": "What the market says",
-      "title": "A platform built for the future",
-      "items": [
-        {
-          "quote": "The short-term rental market on the Costa Tropical is growing fast, but most management is still done manually. A platform that combines AI pricing with real data has enormous potential to professionalize the sector.",
-          "name": "Industry Analysis",
-          "origin": "European STR Market Report 2025"
-        },
-        {
-          "quote": "Property owners investing in southern Spain need transparency and technology. The gap between what traditional managers offer and what technology enables is exactly where innovation happens.",
-          "name": "Market Outlook",
-          "origin": "Costa Tropical Real Estate Trends"
-        },
-        {
-          "quote": "The combination of dynamic pricing algorithms, real-time market data and transparent owner portals represents the next generation of property management, one that benefits both owners and guests.",
-          "name": "Technology Perspective",
-          "origin": "PropTech Innovation Review"
-        }
-      ]
+    "model": {
+      "badge": "The operating model",
+      "title": "A system, not a person",
+      "subtitle": "Your Manager may change. The standards don’t.",
+      "desc": "Quality comes from the system — checklists, photo verification, Captain approval and operational intelligence. Not from any single individual.",
+      "role0": "Owner",
+      "role0Desc": "You. Full visibility via your portal. Earnings, reports, bookings, property condition — always up to date.",
+      "role1": "Manager",
+      "role1Desc": "Your local contact. Speaks your language, knows your goals, handles your relationship with HostMasters.",
+      "role2": "Crew",
+      "role2Desc": "Certified field team. Cleaning, check-in, maintenance, inspections. Every task verified with photos.",
+      "role3": "Captain",
+      "role3Desc": "Quality supervisor. Approves every job, trains the Crew, resolves exceptions on the ground.",
+      "role4": "Intelligent Systems",
+      "role4Desc": "Pricing, monitoring, guest support, scoring, reporting. The invisible layer that measures and improves everything."
     },
+    "journey": {
+      "badge": "Client journey",
+      "title": "From assessment to monthly income",
+      "subtitle": "A clear path. You always know what’s next.",
+      "step0Title": "Property assessment",
+      "step0Desc": "We evaluate your property’s rental potential, location and condition. Free, no commitment.",
+      "step1Title": "Property audit",
+      "step1Desc": "On-site visit to document the property, identify improvements and prepare for listing.",
+      "step2Title": "Setup",
+      "step2Desc": "Calendar sync, listing creation, Smart Lock installation, house rules and pricing configuration.",
+      "step3Title": "Go live",
+      "step3Desc": "Your property is listed and accepting reservations. You monitor everything from your portal.",
+      "step4Title": "Reservations flow",
+      "step4Desc": "Guests book, our Crew handles cleaning and check-in, you see the revenue in real time.",
+      "step5Title": "Guest feedback",
+      "step5Desc": "After every stay, we collect structured feedback to continuously improve the guest experience.",
+      "step6Title": "Monthly reporting",
+      "step6Desc": "Detailed financial statement, occupancy data, maintenance log and property condition report."
+    },
+    "faces": {
+      "badge": "Platform",
+      "title": "Everyone has their own view",
+      "subtitle": "One platform, six perspectives. Each role sees exactly what they need.",
+      "face0": "Owner Portal",
+      "face0Desc": "Earnings, bookings, reports, property condition, payouts, tax tracking and documents.",
+      "face1": "Manager Portal",
+      "face1Desc": "CRM pipeline, client portfolio, commission tracking, lead management and performance.",
+      "face2": "Crew Portal",
+      "face2Desc": "Task queue, checklists, photo submission, score tracking and weekly payout statements.",
+      "face3": "Captain View",
+      "face3Desc": "Quality approval, Crew supervision, exception handling and field operations.",
+      "face4": "Guest Chat",
+      "face4Desc": "AI-powered assistant during the stay. Property info, local tips, issue reporting — 24/7.",
+      "face5": "Admin Console",
+      "face5Desc": "Full operational oversight. Monitoring, pricing engine, market intelligence and system health."
+    },
+    "tech": {
+      "badge": "Technology layer",
+      "title": "Intelligent systems that work behind the scenes",
+      "subtitle": "You don’t see the technology. You see the results: better pricing, faster response, fewer problems.",
+      "item0": "Dynamic Pricing",
+      "item0Desc": "Analyses seasonality, local events and competitor rates to set the right price every night.",
+      "item1": "Market Intelligence",
+      "item1Desc": "Costa Tropical market data — occupancy rates, price trends and competitive benchmarks.",
+      "item2": "Operations Monitor",
+      "item2Desc": "Daily automated checks on reservations, payouts, listings and property health.",
+      "item3": "Guest Assistant",
+      "item3Desc": "Handles guest questions during the stay — property info, WiFi, local recommendations.",
+      "item4": "Voice Feedback",
+      "item4Desc": "Structured guest feedback after every checkout. Scores the property across multiple dimensions.",
+      "item5": "Property Scorecard",
+      "item5Desc": "Continuous assessment of each property’s performance, condition and improvement opportunities."
+    },
+    "plans": {
+      "badge": "Plans",
+      "title": "Choose the level of service you need",
+      "subtitle": "All plans include full management. Higher plans unlock more tools, lower commissions and included services.",
+      "recommended": "Recommended",
+      "monthlyFee": "/month",
+      "annualFee": "/year",
+      "commission": "Commission",
+      "startNow": "Start now",
+      "firstMonthFree": "1st month free",
+      "noMonthlyFee": "No monthly fee",
+      "starter": {
+        "features": [
+          "Full short-term rental management",
+          "Airbnb, Booking.com & direct listings",
+          "Check-in/out coordination with certified Crew",
+          "Monthly transaction list",
+          "Owner dashboard",
+          "Monthly payouts",
+          "Cleaning: €70/turnover"
+        ]
+      },
+      "basic": {
+        "features": [
+          "Everything in Starter, plus:",
+          "24/7 Guest AI Assistant during stay",
+          "Voice feedback after every checkout",
+          "Preventive maintenance visits (monthly)",
+          "Detailed monthly report (PDF with booking breakdown)",
+          "Weekly payouts via Stripe Connect",
+          "Pricing analytics and occupancy trends",
+          "Cleaning: €60/turnover"
+        ]
+      },
+      "mid": {
+        "features": [
+          "Everything in Basic, plus:",
+          "AI dynamic pricing engine",
+          "Smart Lock with rotating guest codes",
+          "Market intelligence for Costa Tropical",
+          "AI Team Assistant for your property",
+          "Multi-language owner statements",
+          "Priority response: 12h owner / 2h guest",
+          "Cleaning included on stays ≥4 nights"
+        ]
+      },
+      "premium": {
+        "features": [
+          "Everything in Mid, plus:",
+          "AI pricing fully optimised for your market",
+          "Full fiscal compliance (Modelo 179 + IRNR + NRU)",
+          "Guest upsells: transfers, grocery, laundry",
+          "Emergency response within 4h",
+          "Daily automated property health checks",
+          "Cleaning included on stays ≥3 nights"
+        ]
+      },
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium"
+    },
+    "credibility": {
+      "badge": "Local presence",
+      "title": "Based on the Costa Tropical",
+      "subtitle": "We’re not a remote platform. We’re here.",
+      "zone": "Operating across Almuñécar, La Herradura, Salobreña, Motril and Nerja.",
+      "hq": "Physical HQ in Almuñécar centro from January 2026.",
+      "team": "Local Crew and Captains who know every street.",
+      "languages": "We speak your language: EN · PT · ES · DE · NL · FR · SV · DA",
+      "process": "Every property goes through the same onboarding, audit and quality process.",
+      "contactInfo": "info@hostmasters.es · +34 657 190 788"
+    },
+    "finalCta": {
+      "title": "Request a property assessment",
+      "subtitle": "We evaluate your property, explain the options and let you decide. No commitment, no pressure.",
+      "cta": "Request assessment",
+      "enterPortal": "Enter portal",
+      "disclaimer": "Free assessment · No commitment · No credit card"
+    },
+    "centralNarrative": "HostMasters turns every property into a managed, measured and continuously improved rental operation.",
     "simulator": {
       "badge": "Run the numbers",
       "title": "See how much you actually keep",
@@ -2037,108 +2185,7 @@
       "perTurn": "/turn",
       "perMonthShort": "/mo",
       "vsStarter": "/yr vs Starter",
-      "footer": "Estimates based on Costa Tropical market data. Assumes avg stay {nights} nights. AI pricing uplift: +18% (Mid), +25% (Premium). Occupancy uplift: +8% on all paid plans (Basic+) from Guest Stay Chat + voice feedback driving better reviews. Cleaning included on Mid (stays ≥4 nights) and Premium (stays ≥3 nights). Actual results vary by property and season."
-    },
-    "plans": {
-      "badge": "Plans",
-      "title": "Choose the level of service you need",
-      "subtitle": "All plans include full management. The more you invest, the lower the commission and the more intelligent tools you get.",
-      "recommended": "Recommended",
-      "monthlyFee": "/month",
-      "annualFee": "/year",
-      "commission": "Commission",
-      "startNow": "Start now",
-      "firstMonthFree": "1st month free",
-      "noMonthlyFee": "No monthly fee",
-      "starter": {
-        "features": [
-          "Full short-term rental management",
-          "Airbnb, Booking.com & direct listings",
-          "Check-in/out coordination with certified Crew",
-          "Monthly transaction list (CSV)",
-          "Owner dashboard",
-          "Monthly payouts",
-          "Cleaning: €70/turnover"
-        ]
-      },
-      "basic": {
-        "features": [
-          "Everything in Starter, plus:",
-          "24/7 Guest AI Assistant during stay (70% auto-resolved)",
-          "Voice AI feedback after every checkout (12-dimension analysis)",
-          "Preventive maintenance visits (monthly)",
-          "Premium monthly report (PDF, booking breakdown, photos)",
-          "Weekly payouts via Stripe Connect",
-          "Pricing analytics (trends + occupancy patterns)",
-          "Cleaning: €60/turnover"
-        ]
-      },
-      "mid": {
-        "features": [
-          "Everything in Basic, plus:",
-          "AI dynamic pricing (+18% estimated revenue)",
-          "Smart Lock with rotating guest codes",
-          "Market Intelligence (Costa Tropical competitors)",
-          "AI Team Assistant (ask anything about your property)",
-          "Multi-language owner statements",
-          "Priority response: 12h owner / 2h guest",
-          "Cleaning included ≥4 nights"
-        ]
-      },
-      "premium": {
-        "features": [
-          "Everything in Mid, plus:",
-          "AI pricing optimized (+25% estimated revenue)",
-          "Full fiscal compliance (Modelo 179 + IRNR + NRU)",
-          "Guest upsells: transfers, grocery, laundry",
-          "Emergency response within 4h",
-          "AI Monitor daily property health checks",
-          "Cleaning included ≥3 nights"
-        ]
-      }
-    },
-    "journey": {
-      "badge": "Your Journey",
-      "title": "From sign-up to full income, in 5 steps",
-      "subtitle": "A clear, guided process. You never walk alone.",
-      "step1Title": "Sign up and wait for your Manager",
-      "step1Desc": "Create your account. A local Manager fluent in your language will reach out to welcome you personally.",
-      "step2Title": "Choose the right plan for you",
-      "step2Desc": "Your Manager explains each plan in detail and recommends the one that fits your property and goals.",
-      "step3Title": "Sign the service agreement",
-      "step3Desc": "Review and sign your contract digitally. Transparent terms, no hidden fees, cancel anytime.",
-      "step4Title": "Property onboarded",
-      "step4Desc": "We connect your Airbnb and Booking.com calendars, install Smart Lock, and configure everything.",
-      "step5Title": "Your property works for you",
-      "step5Desc": "Everything running, without the headaches.",
-      "feat1": "Full short-term rental management",
-      "feat2": "Preventive maintenance",
-      "feat3": "Owner's eye on every inspection",
-      "feat4": "Automated monthly reports",
-      "feat5": "Local presence on the ground",
-      "feat6": "Unannounced inspections by Crew Captain",
-      "feat7": "Automatic scheduled payouts",
-      "feat8": "Corrective maintenance management",
-      "feat9": "Renovations & improvements",
-      "feat10": "Tax administration (Modelo 179, IRNR, NRU)",
-      "feat11": "AI Dynamic Pricing with optimal rate every night",
-      "feat12": "AI Monitor with 9 daily automated checks on your property",
-      "feat13": "AI Assistant with instant answers with your real data",
-      "feat14": "Market Intelligence with competitor tracking & insights",
-      "cta": "Your property earns. You rest."
-    },
-    "finalCta": {
-      "title1": "Ready to have",
-      "titleGold": "real control",
-      "title2": "over your property?",
-      "subtitle": "Start with the Premium plan for 1 month at no cost. See the difference that real data and AI pricing make to your revenue.",
-      "cta": "Start 1 month free",
-      "enterPortal": "Enter portal",
-      "disclaimer": "No commitment · No credit card · Cancel anytime"
-    },
-    "footer": {
-      "tagline": "Premium short-term rental management.",
-      "copyright": "© 2026 HostMasters."
+      "footer": "Estimates based on Costa Tropical market data. Assumes avg stay {nights} nights. AI pricing and occupancy uplift vary by property, season and local demand. Cleaning included on Mid (stays ≥4 nights) and Premium (stays ≥3 nights). Actual results may differ."
     },
     "contact": {
       "badge": "Get in Touch",
@@ -2315,10 +2362,39 @@
       "card3Desc": "A certified on-the-ground crew handles cleaning, maintenance, check-ins and inspections. Quality guaranteed by checklists and photo verification.",
       "footerContact": "Questions? Contact hello@hostmasters.es or WhatsApp +34 XXX XXX XXX"
     },
+    "social": {
+      "badge": "What the market says",
+      "title": "A platform built for the future",
+      "items": [
+        {
+          "quote": "The short-term rental market on the Costa Tropical is growing fast, but most management is still done manually. A platform that combines AI pricing with real data has enormous potential to professionalize the sector.",
+          "name": "Industry Analysis",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Property owners investing in southern Spain need transparency and technology. The gap between what traditional managers offer and what technology enables is exactly where innovation happens.",
+          "name": "Market Outlook",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "The combination of dynamic pricing algorithms, real-time market data and transparent owner portals represents the next generation of property management, one that benefits both owners and guests.",
+          "name": "Technology Perspective",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
     "trust": {
       "badge": "Trusted infrastructure",
       "title": "Built on the platforms you already trust",
       "description": "Listings synced in real time. Payments PCI-certified. Smart Lock per property. Zero custom risk — every layer is industry-standard."
+    },
+    "footer": {
+      "tagline": "Premium short-term rental management.",
+      "copyright": "© 2026 HostMasters.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "partnerPortal": "Partner Portal",
+      "location": "Costa Tropical · España"
     }
   },
   "onboarding": {

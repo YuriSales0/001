@@ -1935,23 +1935,33 @@
   "landing": {
     "nav": {
       "problem": "Probleem",
-      "solution": "Oplossing",
+      "howItWorks": "How it works",
+      "model": "Model",
       "plans": "Abonnementen",
       "enter": "Inloggen",
       "startFree": "Gratis starten",
-      "contact": "Contact"
+      "contact": "Contact",
+      "careers": "Vacatures"
     },
-    "badge": "Costa Tropical · España",
     "hero": {
+      "badge": "Costa Tropical · España",
       "title1": "Uw vastgoed verdient",
       "titleGold": "meer dan beheer.",
-      "title2": "Het verdient intelligentie.",
       "subtitle": "U heeft op de Costa Tropical gekocht om te investeren, niet om u zorgen te maken over schoonmaak, lastige gasten of verkeerde prijzen. HostMasters regelt alles met echte data, AI-prijsbepaling en volledige transparantie.",
+      "desc": "Your dedicated Manager, certified Crew and intelligent systems work together to manage, measure and continuously improve your rental operation.",
       "cta": "1e maand gratis op Premium-abonnement",
       "ctaSub": "Geen verplichting. Altijd opzegbaar.",
       "noLockin": "Geen lock-in",
-      "intlOwners": "Internationale eigenaren",
-      "aiPowered": "AI-gestuurde prijsbepaling"
+      "localTeam": "Local team on the ground",
+      "ownerPortal": "Full owner portal"
+    },
+    "trustLine": {
+      "item0": "Local team",
+      "item1": "Owner dashboard",
+      "item2": "Guest support",
+      "item3": "Cleaning verification",
+      "item4": "Dynamic pricing",
+      "item5": "Monthly reporting"
     },
     "problem": {
       "badge": "Het probleem",
@@ -1972,72 +1982,108 @@
         {
           "title": "Ondoorzichtige commissies",
           "desc": "U weet niet hoeveel er voor u overblijft. Verborgen kosten vreten uw winstgevendheid op zonder waarschuwing."
+        },
+        {
+          "title": "Maintenance gaps",
+          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
         }
       ]
     },
-    "solution": {
-      "badge": "De oplossing",
-      "title": "Beheer met intelligentie, niet met gokwerk",
-      "subtitle": "Drie pijlers die HostMasters onderscheiden van elke traditionele vastgoedbeheerder.",
-      "items": [
-        {
-          "title": "AI dynamische prijsbepaling",
-          "desc": "Algoritme dat seizoensgebondenheid, lokale evenementen, concurrentie en realtime vraag analyseert om de optimale prijs per nacht te bepalen.",
-          "highlight": "Tot +25% omzet vs. vaste prijzen"
-        },
-        {
-          "title": "Uw eigen data, geen schattingen",
-          "desc": "Dashboard met echte data uit uw boekingen, inkomsten en kosten. Gedetailleerde maandrapporten tot op de cent. Geen verrassingen.",
-          "highlight": "Volledige transparantie in cijfers"
-        },
-        {
-          "title": "Markt-intelligentie",
-          "desc": "Toegang tot marktdata van Costa Tropical: bezettingsgraad per zone, gemiddelde prijzen, vraagtrends en benchmarks.",
-          "highlight": "Beslissingen op basis van echte data"
-        }
+    "whatWeDo": {
+      "badge": "What HostMasters does",
+      "title": "We manage your property physically and digitally",
+      "subtitle": "A complete operation — from the ground to the dashboard.",
+      "physicalTitle": "On the ground",
+      "physicalItems": [
+        "Certified Crew handles cleaning, check-in and check-out",
+        "Preventive maintenance visits every month",
+        "Crew Captain inspects and approves every job",
+        "Photo verification of every completed task",
+        "Emergency response for urgent issues",
+        "Smart Lock with rotating guest codes"
+      ],
+      "digitalTitle": "In the platform",
+      "digitalItems": [
+        "Owner portal with real-time earnings and reports",
+        "Automated monthly financial statements",
+        "Guest communication handled 24/7",
+        "Calendar sync across Airbnb, Booking.com and direct",
+        "Pricing adjusted to local demand",
+        "Tax obligation tracking and deadline alerts"
       ]
     },
-    "social": {
-      "badge": "Wat de markt zegt",
-      "title": "Een platform gebouwd voor de toekomst",
-      "items": [
-        {
-          "quote": "De kortverhuurmarkt op de Costa Tropical groeit snel, maar het meeste beheer gebeurt nog handmatig. Een platform dat AI-prijsbepaling combineert met echte data heeft enorm potentieel om de sector te professionaliseren.",
-          "name": "Sectoranalyse",
-          "origin": "European STR Market Report 2025"
-        },
-        {
-          "quote": "Eigenaren die in Zuid-Spanje investeren hebben transparantie en technologie nodig. De kloof tussen wat traditionele beheerders bieden en wat technologie mogelijk maakt is precies waar innovatie ontstaat.",
-          "name": "Marktvooruitzichten",
-          "origin": "Costa Tropical Real Estate Trends"
-        },
-        {
-          "quote": "De combinatie van dynamische prijsalgoritmes, realtime marktdata en transparante eigenaarportalen vertegenwoordigt de volgende generatie vastgoedbeheer.",
-          "name": "Technologie-perspectief",
-          "origin": "PropTech Innovation Review"
-        }
-      ]
+    "model": {
+      "badge": "The operating model",
+      "title": "A system, not a person",
+      "subtitle": "Your Manager may change. The standards don’t.",
+      "desc": "Quality comes from the system — checklists, photo verification, Captain approval and operational intelligence. Not from any single individual.",
+      "role0": "Owner",
+      "role0Desc": "You. Full visibility via your portal. Earnings, reports, bookings, property condition — always up to date.",
+      "role1": "Manager",
+      "role1Desc": "Your local contact. Speaks your language, knows your goals, handles your relationship with HostMasters.",
+      "role2": "Crew",
+      "role2Desc": "Certified field team. Cleaning, check-in, maintenance, inspections. Every task verified with photos.",
+      "role3": "Captain",
+      "role3Desc": "Quality supervisor. Approves every job, trains the Crew, resolves exceptions on the ground.",
+      "role4": "Intelligent Systems",
+      "role4Desc": "Pricing, monitoring, guest support, scoring, reporting. The invisible layer that measures and improves everything."
     },
-    "simulator": {
-      "badge": "Bereken het",
-      "title": "Zie hoeveel er echt overblijft",
-      "subtitle": "Beweeg de schuifregelaars passend bij jouw woning. We vergelijken alle 4 plannen naast elkaar: commissie, maandelijkse kosten, schoonmaak en AI-prijsverhoging. Geen spreadsheet nodig.",
-      "rentedNights": "Verhuurde nachten / jaar",
-      "avgPrice": "Gem. prijs / nacht (€)",
-      "bestForYou": "Beste voor u",
-      "youKeep": "U houdt over",
-      "grossRevenue": "Bruto-inkomsten",
-      "commission": "Commissie",
-      "monthlyFee": "Maandkosten (×12)",
-      "cleaning": "Schoonmaak",
-      "aiUplift": "+{n}% AI",
-      "static": "vast",
-      "free": "gratis",
-      "included": "inbegrepen",
-      "perTurn": "/wissel",
-      "perMonthShort": "/mnd",
-      "vsStarter": "/jaar vs Starter",
-      "footer": "Schattingen op basis van Costa-Tropical-marktgegevens. Gaat uit van gem. verblijf van {nights} nachten. AI-prijsverhoging: +18% (Mid), +25% (Premium). Bezettingstoename: +8% op alle betaalde plannen (Basic+) door Stay Chat + spraakfeedback dat betere reviews genereert. Schoonmaak inbegrepen bij Mid (≥4 nachten) en Premium (≥3 nachten). Werkelijke resultaten verschillen per woning en seizoen."
+    "journey": {
+      "badge": "Uw reis",
+      "title": "Van aanmelding tot volledig inkomen, in 5 stappen",
+      "subtitle": "Een helder, begeleid proces. U loopt nooit alleen.",
+      "step0Title": "Property assessment",
+      "step0Desc": "We evaluate your property’s rental potential, location and condition. Free, no commitment.",
+      "step1Title": "Meld u aan en wacht op uw Manager",
+      "step1Desc": "Maak uw account aan. Een lokale Manager die uw taal spreekt zal u persoonlijk verwelkomen.",
+      "step2Title": "Kies het juiste abonnement",
+      "step2Desc": "Uw Manager legt elk abonnement in detail uit en beveelt het beste aan voor uw pand en doelen.",
+      "step3Title": "Onderteken de dienstovereenkomst",
+      "step3Desc": "Bekijk en onderteken uw contract digitaal. Transparante voorwaarden, geen verborgen kosten, altijd opzegbaar.",
+      "step4Title": "Pand ingericht",
+      "step4Desc": "We koppelen uw Airbnb- en Booking.com-kalenders, installeren Smart Lock en configureren alles.",
+      "step5Title": "Uw pand werkt voor u",
+      "step5Desc": "Alles draait, zonder kopzorgen.",
+      "step6Title": "Monthly reporting",
+      "step6Desc": "Detailed financial statement, occupancy data, maintenance log and property condition report."
+    },
+    "faces": {
+      "badge": "Platform",
+      "title": "Everyone has their own view",
+      "subtitle": "One platform, six perspectives. Each role sees exactly what they need.",
+      "face0": "Owner Portal",
+      "face0Desc": "Earnings, bookings, reports, property condition, payouts, tax tracking and documents.",
+      "face1": "Manager Portal",
+      "face1Desc": "CRM pipeline, client portfolio, commission tracking, lead management and performance.",
+      "face2": "Crew Portal",
+      "face2Desc": "Task queue, checklists, photo submission, score tracking and weekly payout statements.",
+      "face3": "Captain View",
+      "face3Desc": "Quality approval, Crew supervision, exception handling and field operations.",
+      "face4": "Guest Chat",
+      "face4Desc": "AI-powered assistant during the stay. Property info, local tips, issue reporting — 24/7.",
+      "face5": "Admin Console",
+      "face5Desc": "Full operational oversight. Monitoring, pricing engine, market intelligence and system health."
+    },
+    "tech": {
+      "badge": "Technology layer",
+      "title": "Intelligent systems that work behind the scenes",
+      "subtitle": "You don’t see the technology. You see the results: better pricing, faster response, fewer problems.",
+      "item0": "Dynamic Pricing",
+      "item0Desc": "Analyses seasonality, local events and competitor rates to set the right price every night.",
+      "item1": "Market Intelligence",
+      "item1Desc": "Costa Tropical market data — occupancy rates, price trends and competitive benchmarks.",
+      "item2": "Operations Monitor",
+      "item2Desc": "Daily automated checks on reservations, payouts, listings and property health.",
+      "item3": "Guest Assistant",
+      "item3Desc": "Handles guest questions during the stay — property info, WiFi, local recommendations.",
+      "item4": "Voice Feedback",
+      "item4Desc": "Structured guest feedback after every checkout. Scores the property across multiple dimensions.",
+      "item5": "Property Scorecard",
+      "item5Desc": "Continuous assessment of each property’s performance, condition and improvement opportunities."
     },
     "plans": {
       "badge": "Abonnementen",
@@ -2095,50 +2141,51 @@
           "Cleaning included ≥3 nights",
           "Cleaning included ≥3 nights"
         ]
-      }
+      },
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium"
     },
-    "journey": {
-      "badge": "Uw reis",
-      "title": "Van aanmelding tot volledig inkomen, in 5 stappen",
-      "subtitle": "Een helder, begeleid proces. U loopt nooit alleen.",
-      "step1Title": "Meld u aan en wacht op uw Manager",
-      "step1Desc": "Maak uw account aan. Een lokale Manager die uw taal spreekt zal u persoonlijk verwelkomen.",
-      "step2Title": "Kies het juiste abonnement",
-      "step2Desc": "Uw Manager legt elk abonnement in detail uit en beveelt het beste aan voor uw pand en doelen.",
-      "step3Title": "Onderteken de dienstovereenkomst",
-      "step3Desc": "Bekijk en onderteken uw contract digitaal. Transparante voorwaarden, geen verborgen kosten, altijd opzegbaar.",
-      "step4Title": "Pand ingericht",
-      "step4Desc": "We koppelen uw Airbnb- en Booking.com-kalenders, installeren Smart Lock en configureren alles.",
-      "step5Title": "Uw pand werkt voor u",
-      "step5Desc": "Alles draait, zonder kopzorgen.",
-      "feat1": "Volledig kortverhuurbeheer",
-      "feat2": "Preventief onderhoud",
-      "feat3": "Eigenaarsoog bij elke inspectie",
-      "feat4": "Geautomatiseerde maandrapporten",
-      "feat5": "Lokale aanwezigheid ter plaatse",
-      "feat6": "Onaangekondigde inspecties door Crew Captain",
-      "feat7": "Automatische geplande uitbetalingen",
-      "feat8": "Correctief onderhoudsbeheer",
-      "feat9": "Renovaties & verbeteringen",
-      "feat10": "Belastingadministratie (Modelo 179, IRNR, NRU)",
-      "feat11": "AI dynamische prijsbepaling met optimale prijs elke nacht",
-      "feat12": "AI Monitor met 9 dagelijkse geautomatiseerde controles op uw pand",
-      "feat13": "AI Assistent met directe antwoorden met uw echte data",
-      "feat14": "Markt-intelligentie met concurrentiemonitoring & inzichten",
-      "cta": "Uw pand verdient. U rust uit."
+    "credibility": {
+      "badge": "Local presence",
+      "title": "Based on the Costa Tropical",
+      "subtitle": "We’re not a remote platform. We’re here.",
+      "zone": "Operating across Almuñécar, La Herradura, Salobreña, Motril and Nerja.",
+      "hq": "Physical HQ in Almuñécar centro from January 2026.",
+      "team": "Local Crew and Captains who know every street.",
+      "languages": "We speak your language: EN · PT · ES · DE · NL · FR · SV · DA",
+      "process": "Every property goes through the same onboarding, audit and quality process.",
+      "contactInfo": "info@hostmasters.es · +34 657 190 788"
     },
     "finalCta": {
-      "title1": "Klaar om",
-      "titleGold": "echte controle",
-      "title2": "over uw pand te hebben?",
+      "title": "Request a property assessment",
       "subtitle": "Start met het Premium-abonnement 1 maand gratis. Zie het verschil dat echte data en AI-prijsbepaling maken voor uw omzet.",
       "cta": "1 maand gratis starten",
       "enterPortal": "Portaal openen",
       "disclaimer": "Geen verplichting · Geen creditcard · Altijd opzegbaar"
     },
-    "footer": {
-      "tagline": "Premium kortverhuurbeheer.",
-      "copyright": "© 2026 HostMasters."
+    "centralNarrative": "HostMasters turns every property into a managed, measured and continuously improved rental operation.",
+    "simulator": {
+      "badge": "Bereken het",
+      "title": "Zie hoeveel er echt overblijft",
+      "subtitle": "Beweeg de schuifregelaars passend bij jouw woning. We vergelijken alle 4 plannen naast elkaar: commissie, maandelijkse kosten, schoonmaak en AI-prijsverhoging. Geen spreadsheet nodig.",
+      "rentedNights": "Verhuurde nachten / jaar",
+      "avgPrice": "Gem. prijs / nacht (€)",
+      "bestForYou": "Beste voor u",
+      "youKeep": "U houdt over",
+      "grossRevenue": "Bruto-inkomsten",
+      "commission": "Commissie",
+      "monthlyFee": "Maandkosten (×12)",
+      "cleaning": "Schoonmaak",
+      "aiUplift": "+{n}% AI",
+      "static": "vast",
+      "free": "gratis",
+      "included": "inbegrepen",
+      "perTurn": "/wissel",
+      "perMonthShort": "/mnd",
+      "vsStarter": "/jaar vs Starter",
+      "footer": "Schattingen op basis van Costa-Tropical-marktgegevens. Gaat uit van gem. verblijf van {nights} nachten. AI-prijsverhoging: +18% (Mid), +25% (Premium). Bezettingstoename: +8% op alle betaalde plannen (Basic+) door Stay Chat + spraakfeedback dat betere reviews genereert. Schoonmaak inbegrepen bij Mid (≥4 nachten) en Premium (≥3 nachten). Werkelijke resultaten verschillen per woning en seizoen."
     },
     "contact": {
       "badge": "Neem contact op",
@@ -2315,10 +2362,39 @@
       "card3Desc": "Een gecertificeerd veldteam regelt schoonmaak, onderhoud, check-ins en inspecties. Kwaliteit gegarandeerd door checklists en fotoverificatie.",
       "footerContact": "Vragen? Contact hello@hostmasters.es of WhatsApp +34 XXX XXX XXX"
     },
+    "social": {
+      "badge": "Wat de markt zegt",
+      "title": "Een platform gebouwd voor de toekomst",
+      "items": [
+        {
+          "quote": "De kortverhuurmarkt op de Costa Tropical groeit snel, maar het meeste beheer gebeurt nog handmatig. Een platform dat AI-prijsbepaling combineert met echte data heeft enorm potentieel om de sector te professionaliseren.",
+          "name": "Sectoranalyse",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Eigenaren die in Zuid-Spanje investeren hebben transparantie en technologie nodig. De kloof tussen wat traditionele beheerders bieden en wat technologie mogelijk maakt is precies waar innovatie ontstaat.",
+          "name": "Marktvooruitzichten",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "De combinatie van dynamische prijsalgoritmes, realtime marktdata en transparante eigenaarportalen vertegenwoordigt de volgende generatie vastgoedbeheer.",
+          "name": "Technologie-perspectief",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
     "trust": {
       "badge": "Vertrouwde infrastructuur",
       "title": "Gebouwd op de platforms die u al vertrouwt",
       "description": "Advertenties realtime gesynchroniseerd. PCI-gecertificeerde betalingen. Smart Lock per woning. Nul custom risico — elke laag is industriestandaard."
+    },
+    "footer": {
+      "tagline": "Premium kortverhuurbeheer.",
+      "copyright": "© 2026 HostMasters.",
+      "privacy": "Privacy",
+      "terms": "Voorwaarden",
+      "partnerPortal": "Partner Portaal",
+      "location": "Costa Tropical · Spanje"
     }
   },
   "onboarding": {

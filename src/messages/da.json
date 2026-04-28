@@ -1935,23 +1935,33 @@
   "landing": {
     "nav": {
       "problem": "Problem",
-      "solution": "Løsning",
+      "howItWorks": "How it works",
+      "model": "Model",
       "plans": "Planer",
       "enter": "Log ind",
       "startFree": "Start gratis",
-      "contact": "Kontakt"
+      "contact": "Kontakt",
+      "careers": "Karriere"
     },
-    "badge": "Costa Tropical · España",
     "hero": {
+      "badge": "Costa Tropical · España",
       "title1": "Din ejendom fortjener",
       "titleGold": "mere end administration.",
-      "title2": "Den fortjener intelligens.",
       "subtitle": "Du købte på Costa Tropical for at investere, ikke for at bekymre dig om rengøring, besværlige gæster eller forkerte priser. HostMasters håndterer alt med ægte data, AI-prissætning og fuld gennemsigtighed.",
+      "desc": "Your dedicated Manager, certified Crew and intelligent systems work together to manage, measure and continuously improve your rental operation.",
       "cta": "1. måned gratis på Premium-planen",
       "ctaSub": "Ingen binding. Opsig når som helst.",
       "noLockin": "Ingen binding",
-      "intlOwners": "Internationale ejere",
-      "aiPowered": "AI-drevet prissætning"
+      "localTeam": "Local team on the ground",
+      "ownerPortal": "Full owner portal"
+    },
+    "trustLine": {
+      "item0": "Local team",
+      "item1": "Owner dashboard",
+      "item2": "Guest support",
+      "item3": "Cleaning verification",
+      "item4": "Dynamic pricing",
+      "item5": "Monthly reporting"
     },
     "problem": {
       "badge": "Problemet",
@@ -1972,72 +1982,108 @@
         {
           "title": "Ugennemsigtige provisioner",
           "desc": "Du ved ikke, hvor meget der er tilbage til dig. Skjulte omkostninger æder din rentabilitet uden varsel."
+        },
+        {
+          "title": "Maintenance gaps",
+          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
+        },
+        {
+          "title": "Opaque commissions",
+          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
         }
       ]
     },
-    "solution": {
-      "badge": "Løsningen",
-      "title": "Administration med intelligens, ikke gætværk",
-      "subtitle": "Tre søjler der gør HostMasters anderledes end enhver traditionel ejendomsadministrator.",
-      "items": [
-        {
-          "title": "AI Dynamisk Prissætning",
-          "desc": "Algoritme der analyserer sæsonudsving, lokale begivenheder, konkurrence og efterspørgsel i realtid for at fastsætte den optimale pris for hver nat.",
-          "highlight": "Op til +25% indtægt vs. fast prissætning"
-        },
-        {
-          "title": "Dine egne data, ikke estimater",
-          "desc": "Dashboard med ægte data fra dine bookinger, indtægter og omkostninger. Detaljerede månedlige rapporter ned til øren. Ingen overraskelser.",
-          "highlight": "Total gennemsigtighed i tallene"
-        },
-        {
-          "title": "Markedsintelligens",
-          "desc": "Adgang til Costa Tropical markedsdata: belægningsgrader pr. zone, gennemsnitspriser, efterspørgselstendenser og benchmarks.",
-          "highlight": "Beslutninger baseret på ægte data"
-        }
+    "whatWeDo": {
+      "badge": "What HostMasters does",
+      "title": "We manage your property physically and digitally",
+      "subtitle": "A complete operation — from the ground to the dashboard.",
+      "physicalTitle": "On the ground",
+      "physicalItems": [
+        "Certified Crew handles cleaning, check-in and check-out",
+        "Preventive maintenance visits every month",
+        "Crew Captain inspects and approves every job",
+        "Photo verification of every completed task",
+        "Emergency response for urgent issues",
+        "Smart Lock with rotating guest codes"
+      ],
+      "digitalTitle": "In the platform",
+      "digitalItems": [
+        "Owner portal with real-time earnings and reports",
+        "Automated monthly financial statements",
+        "Guest communication handled 24/7",
+        "Calendar sync across Airbnb, Booking.com and direct",
+        "Pricing adjusted to local demand",
+        "Tax obligation tracking and deadline alerts"
       ]
     },
-    "social": {
-      "badge": "Hvad markedet siger",
-      "title": "En platform bygget til fremtiden",
-      "items": [
-        {
-          "quote": "Markedet for korttidsudlejning på Costa Tropical vokser hurtigt, men det meste administration foregår stadig manuelt. En platform der kombinerer AI-prissætning med ægte data har et enormt potentiale for at professionalisere sektoren.",
-          "name": "Brancheanalyse",
-          "origin": "European STR Market Report 2025"
-        },
-        {
-          "quote": "Ejendomsejere der investerer i det sydlige Spanien har brug for gennemsigtighed og teknologi. Kløften mellem hvad traditionelle administratorer tilbyder og hvad teknologi muliggør er præcis der, hvor innovation sker.",
-          "name": "Markedsudsigt",
-          "origin": "Costa Tropical Real Estate Trends"
-        },
-        {
-          "quote": "Kombinationen af dynamiske prisalgoritmer, markedsdata i realtid og gennemsigtige ejerportaler repræsenterer næste generation af ejendomsadministration, en der gavner både ejere og gæster.",
-          "name": "Teknologiperspektiv",
-          "origin": "PropTech Innovation Review"
-        }
-      ]
+    "model": {
+      "badge": "The operating model",
+      "title": "A system, not a person",
+      "subtitle": "Your Manager may change. The standards don’t.",
+      "desc": "Quality comes from the system — checklists, photo verification, Captain approval and operational intelligence. Not from any single individual.",
+      "role0": "Owner",
+      "role0Desc": "You. Full visibility via your portal. Earnings, reports, bookings, property condition — always up to date.",
+      "role1": "Manager",
+      "role1Desc": "Your local contact. Speaks your language, knows your goals, handles your relationship with HostMasters.",
+      "role2": "Crew",
+      "role2Desc": "Certified field team. Cleaning, check-in, maintenance, inspections. Every task verified with photos.",
+      "role3": "Captain",
+      "role3Desc": "Quality supervisor. Approves every job, trains the Crew, resolves exceptions on the ground.",
+      "role4": "Intelligent Systems",
+      "role4Desc": "Pricing, monitoring, guest support, scoring, reporting. The invisible layer that measures and improves everything."
     },
-    "simulator": {
-      "badge": "Regn det ud",
-      "title": "Se hvor meget der reelt er tilbage",
-      "subtitle": "Træk skyderne så de passer til din ejendom. Vi sammenligner alle 4 planer side om side: provision, månedligt gebyr, rengøring og AI-prisforøgelse. Intet regneark.",
-      "rentedNights": "Udlejede nætter / år",
-      "avgPrice": "Gns. pris / nat (€)",
-      "bestForYou": "Bedst for dig",
-      "youKeep": "Du beholder",
-      "grossRevenue": "Bruttoindtægter",
-      "commission": "Provision",
-      "monthlyFee": "Månedsgebyr (×12)",
-      "cleaning": "Rengøring",
-      "aiUplift": "+{n}% AI",
-      "static": "fast",
-      "free": "gratis",
-      "included": "inkluderet",
-      "perTurn": "/skift",
-      "perMonthShort": "/mdr",
-      "vsStarter": "/år vs Starter",
-      "footer": "Skøn baseret på Costa Tropical-markedsdata. Forudsætter gennemsnitligt ophold på {nights} nætter. AI-prisløft: +18% (Mid), +25% (Premium). Belægningsløft: +8% på alle betalte planer (Basic+) takket være Stay Chat + stemmefeedback der giver bedre anmeldelser. Rengøring inkluderet ved Mid (≥4 nætter) og Premium (≥3 nætter). Faktiske resultater varierer pr. ejendom og sæson."
+    "journey": {
+      "badge": "Din rejse",
+      "title": "Fra tilmelding til fuld indtægt, i 5 trin",
+      "subtitle": "En klar, guidet proces. Du går aldrig alene.",
+      "step0Title": "Property assessment",
+      "step0Desc": "We evaluate your property’s rental potential, location and condition. Free, no commitment.",
+      "step1Title": "Tilmeld dig og vent på din Manager",
+      "step1Desc": "Opret din konto. En lokal Manager der taler dit sprog flydende vil kontakte dig personligt.",
+      "step2Title": "Vælg den rette plan for dig",
+      "step2Desc": "Din Manager forklarer hver plan i detaljer og anbefaler den der passer til din ejendom og dine mål.",
+      "step3Title": "Underskriv serviceaftalen",
+      "step3Desc": "Gennemgå og underskriv din kontrakt digitalt. Gennemsigtige vilkår, ingen skjulte gebyrer, opsig når som helst.",
+      "step4Title": "Ejendom registreret",
+      "step4Desc": "Vi forbinder dine Airbnb og Booking.com kalendere, installerer Smart Lock og konfigurerer alt.",
+      "step5Title": "Din ejendom arbejder for dig",
+      "step5Desc": "Alt kører, uden hovedpine.",
+      "step6Title": "Monthly reporting",
+      "step6Desc": "Detailed financial statement, occupancy data, maintenance log and property condition report."
+    },
+    "faces": {
+      "badge": "Platform",
+      "title": "Everyone has their own view",
+      "subtitle": "One platform, six perspectives. Each role sees exactly what they need.",
+      "face0": "Owner Portal",
+      "face0Desc": "Earnings, bookings, reports, property condition, payouts, tax tracking and documents.",
+      "face1": "Manager Portal",
+      "face1Desc": "CRM pipeline, client portfolio, commission tracking, lead management and performance.",
+      "face2": "Crew Portal",
+      "face2Desc": "Task queue, checklists, photo submission, score tracking and weekly payout statements.",
+      "face3": "Captain View",
+      "face3Desc": "Quality approval, Crew supervision, exception handling and field operations.",
+      "face4": "Guest Chat",
+      "face4Desc": "AI-powered assistant during the stay. Property info, local tips, issue reporting — 24/7.",
+      "face5": "Admin Console",
+      "face5Desc": "Full operational oversight. Monitoring, pricing engine, market intelligence and system health."
+    },
+    "tech": {
+      "badge": "Technology layer",
+      "title": "Intelligent systems that work behind the scenes",
+      "subtitle": "You don’t see the technology. You see the results: better pricing, faster response, fewer problems.",
+      "item0": "Dynamic Pricing",
+      "item0Desc": "Analyses seasonality, local events and competitor rates to set the right price every night.",
+      "item1": "Market Intelligence",
+      "item1Desc": "Costa Tropical market data — occupancy rates, price trends and competitive benchmarks.",
+      "item2": "Operations Monitor",
+      "item2Desc": "Daily automated checks on reservations, payouts, listings and property health.",
+      "item3": "Guest Assistant",
+      "item3Desc": "Handles guest questions during the stay — property info, WiFi, local recommendations.",
+      "item4": "Voice Feedback",
+      "item4Desc": "Structured guest feedback after every checkout. Scores the property across multiple dimensions.",
+      "item5": "Property Scorecard",
+      "item5Desc": "Continuous assessment of each property’s performance, condition and improvement opportunities."
     },
     "plans": {
       "badge": "Planer",
@@ -2095,50 +2141,51 @@
           "Cleaning included ≥3 nights",
           "Cleaning included ≥3 nights"
         ]
-      }
+      },
+      "starterName": "Starter",
+      "basicName": "Basic",
+      "midName": "Mid",
+      "premiumName": "Premium"
     },
-    "journey": {
-      "badge": "Din rejse",
-      "title": "Fra tilmelding til fuld indtægt, i 5 trin",
-      "subtitle": "En klar, guidet proces. Du går aldrig alene.",
-      "step1Title": "Tilmeld dig og vent på din Manager",
-      "step1Desc": "Opret din konto. En lokal Manager der taler dit sprog flydende vil kontakte dig personligt.",
-      "step2Title": "Vælg den rette plan for dig",
-      "step2Desc": "Din Manager forklarer hver plan i detaljer og anbefaler den der passer til din ejendom og dine mål.",
-      "step3Title": "Underskriv serviceaftalen",
-      "step3Desc": "Gennemgå og underskriv din kontrakt digitalt. Gennemsigtige vilkår, ingen skjulte gebyrer, opsig når som helst.",
-      "step4Title": "Ejendom registreret",
-      "step4Desc": "Vi forbinder dine Airbnb og Booking.com kalendere, installerer Smart Lock og konfigurerer alt.",
-      "step5Title": "Din ejendom arbejder for dig",
-      "step5Desc": "Alt kører, uden hovedpine.",
-      "feat1": "Fuld korttidsudlejningsadministration",
-      "feat2": "Forebyggende vedligeholdelse",
-      "feat3": "Ejers blik på hver inspektion",
-      "feat4": "Automatiserede månedlige rapporter",
-      "feat5": "Lokal tilstedeværelse på stedet",
-      "feat6": "Uanmeldte inspektioner af Crew Captain",
-      "feat7": "Automatisk planlagte udbetalinger",
-      "feat8": "Korrektiv vedligeholdelsesstyring",
-      "feat9": "Renoveringer & forbedringer",
-      "feat10": "Skatteadministration (Modelo 179, IRNR, NRU)",
-      "feat11": "AI Dynamisk Prissætning med optimal pris hver nat",
-      "feat12": "AI Monitor med 9 daglige automatiserede tjek af din ejendom",
-      "feat13": "AI Assistent med øjeblikkelige svar med dine ægte data",
-      "feat14": "Markedsintelligens med konkurrentovervågning & indsigter",
-      "cta": "Din ejendom tjener. Du hviler."
+    "credibility": {
+      "badge": "Local presence",
+      "title": "Based on the Costa Tropical",
+      "subtitle": "We’re not a remote platform. We’re here.",
+      "zone": "Operating across Almuñécar, La Herradura, Salobreña, Motril and Nerja.",
+      "hq": "Physical HQ in Almuñécar centro from January 2026.",
+      "team": "Local Crew and Captains who know every street.",
+      "languages": "We speak your language: EN · PT · ES · DE · NL · FR · SV · DA",
+      "process": "Every property goes through the same onboarding, audit and quality process.",
+      "contactInfo": "info@hostmasters.es · +34 657 190 788"
     },
     "finalCta": {
-      "title1": "Klar til at have",
-      "titleGold": "ægte kontrol",
-      "title2": "over din ejendom?",
+      "title": "Request a property assessment",
       "subtitle": "Start med Premium-planen i 1 måned uden omkostninger. Se den forskel ægte data og AI-prissætning gør for din indtægt.",
       "cta": "Start 1 måned gratis",
       "enterPortal": "Gå til portalen",
       "disclaimer": "Ingen binding · Intet kreditkort · Opsig når som helst"
     },
-    "footer": {
-      "tagline": "Premium korttidsudlejningsadministration.",
-      "copyright": "© 2026 HostMasters."
+    "centralNarrative": "HostMasters turns every property into a managed, measured and continuously improved rental operation.",
+    "simulator": {
+      "badge": "Regn det ud",
+      "title": "Se hvor meget der reelt er tilbage",
+      "subtitle": "Træk skyderne så de passer til din ejendom. Vi sammenligner alle 4 planer side om side: provision, månedligt gebyr, rengøring og AI-prisforøgelse. Intet regneark.",
+      "rentedNights": "Udlejede nætter / år",
+      "avgPrice": "Gns. pris / nat (€)",
+      "bestForYou": "Bedst for dig",
+      "youKeep": "Du beholder",
+      "grossRevenue": "Bruttoindtægter",
+      "commission": "Provision",
+      "monthlyFee": "Månedsgebyr (×12)",
+      "cleaning": "Rengøring",
+      "aiUplift": "+{n}% AI",
+      "static": "fast",
+      "free": "gratis",
+      "included": "inkluderet",
+      "perTurn": "/skift",
+      "perMonthShort": "/mdr",
+      "vsStarter": "/år vs Starter",
+      "footer": "Skøn baseret på Costa Tropical-markedsdata. Forudsætter gennemsnitligt ophold på {nights} nætter. AI-prisløft: +18% (Mid), +25% (Premium). Belægningsløft: +8% på alle betalte planer (Basic+) takket være Stay Chat + stemmefeedback der giver bedre anmeldelser. Rengøring inkluderet ved Mid (≥4 nætter) og Premium (≥3 nætter). Faktiske resultater varierer pr. ejendom og sæson."
     },
     "contact": {
       "badge": "Kontakt os",
@@ -2315,10 +2362,39 @@
       "card3Desc": "Et certificeret team på stedet håndterer rengøring, vedligeholdelse, check-ins og inspektioner. Kvalitet garanteret af tjeklister og fotoverifikation.",
       "footerContact": "Spørgsmål? Kontakt hello@hostmasters.es eller WhatsApp +34 XXX XXX XXX"
     },
+    "social": {
+      "badge": "Hvad markedet siger",
+      "title": "En platform bygget til fremtiden",
+      "items": [
+        {
+          "quote": "Markedet for korttidsudlejning på Costa Tropical vokser hurtigt, men det meste administration foregår stadig manuelt. En platform der kombinerer AI-prissætning med ægte data har et enormt potentiale for at professionalisere sektoren.",
+          "name": "Brancheanalyse",
+          "origin": "European STR Market Report 2025"
+        },
+        {
+          "quote": "Ejendomsejere der investerer i det sydlige Spanien har brug for gennemsigtighed og teknologi. Kløften mellem hvad traditionelle administratorer tilbyder og hvad teknologi muliggør er præcis der, hvor innovation sker.",
+          "name": "Markedsudsigt",
+          "origin": "Costa Tropical Real Estate Trends"
+        },
+        {
+          "quote": "Kombinationen af dynamiske prisalgoritmer, markedsdata i realtid og gennemsigtige ejerportaler repræsenterer næste generation af ejendomsadministration, en der gavner både ejere og gæster.",
+          "name": "Teknologiperspektiv",
+          "origin": "PropTech Innovation Review"
+        }
+      ]
+    },
     "trust": {
       "badge": "Pålidelig infrastruktur",
       "title": "Bygget på platformene du allerede stoler på",
       "description": "Annoncer synkroniseret i realtid. PCI-certificerede betalinger. Smart Lock pr. ejendom. Nul tilpasset risiko — hvert lag er industristandard."
+    },
+    "footer": {
+      "tagline": "Premium korttidsudlejningsadministration.",
+      "copyright": "© 2026 HostMasters.",
+      "privacy": "Privatliv",
+      "terms": "Vilkår",
+      "partnerPortal": "Partnerportal",
+      "location": "Costa Tropical · Spanien"
     }
   },
   "onboarding": {
