@@ -39,6 +39,8 @@ export const PLAN_COMMISSION: Record<string, number> = {
   PREMIUM: 0.13,
 }
 
+export const AVG_STAY_NIGHTS = 4.5
+
 export const PLAN_MONTHLY_FEE: Record<string, number> = {
   STARTER:   0,
   BASIC:    89,

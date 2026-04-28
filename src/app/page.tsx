@@ -8,36 +8,54 @@ import {
   TrendingDown,
   Clock,
   Eye,
+  EyeOff,
   Brain,
   BarChart3,
   Shield,
-  Star,
-  Zap,
   Globe,
-  UserPlus,
+  Users,
+  UserCheck,
   MessageCircle,
-  FileSignature,
+  Wrench,
   Settings,
   Rocket,
   Mail,
   Phone,
   MapPin,
   Send,
+  Home,
+  Hammer,
+  Monitor,
+  Search,
+  Calendar,
+  Mic,
+  Activity,
+  TrendingUp,
+  Briefcase,
+  ClipboardList,
+  Sparkles,
+  Moon,
+  Calculator,
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LanguageSelector } from "@/components/hm/language-selector"
-import { PlatformDemo } from "@/components/hm/platform-demo"
-import { AiToolsShowcase } from "@/components/hm/ai-tools-showcase"
 import { ReferralTracker } from "@/components/hm/referral-tracker"
 import { HmLogo } from "@/components/hm/hm-logo"
+import { RevenueSimulator } from "@/components/hm/revenue-simulator"
+import { PLAN_COMMISSION, PLAN_MONTHLY_FEE } from "@/lib/finance"
 
-/* ── Plan data from finance.ts ── */
-const plans = [
-  { id: "STARTER", commission: "22%", monthlyFee: null, annualFee: null, firstMonthFree: false },
-  { id: "BASIC",   commission: "20%", monthlyFee: 89,   annualFee: 890,  firstMonthFree: true },
-  { id: "MID",     commission: "17%", monthlyFee: 159,  annualFee: 1590, firstMonthFree: true, popular: true },
-  { id: "PREMIUM", commission: "13%", monthlyFee: 269,  annualFee: 2690, firstMonthFree: false },
-]
+/* ── Plan data derived from finance.ts (single source of truth) ── */
+const plans = (['STARTER', 'BASIC', 'MID', 'PREMIUM'] as const).map(id => {
+  const monthly = PLAN_MONTHLY_FEE[id]
+  return {
+    id,
+    commission: `${Math.round(PLAN_COMMISSION[id] * 100)}%`,
+    monthlyFee: monthly > 0 ? monthly : null,
+    annualFee: monthly > 0 ? monthly * 10 : null, // 2 months free on annual
+    firstMonthFree: id === 'BASIC' || id === 'MID',
+    popular: id === 'MID',
+  }
+})
 
 const fmtEUR = (n: number) => `€${n}`
 
@@ -60,7 +78,8 @@ export default function LandingPage() {
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm" style={{ color: '#4A5568' }}>
             <a href="#problema" className="hover:text-hm-ink transition-colors">{t('landing.nav.problem')}</a>
-            <a href="#solucao" className="hover:text-hm-ink transition-colors">{t('landing.nav.solution')}</a>
+            <a href="#como-funciona" className="hover:text-hm-ink transition-colors">{t('landing.nav.howItWorks')}</a>
+            <a href="#modelo" className="hover:text-hm-ink transition-colors">{t('landing.nav.model')}</a>
             <a href="#planos" className="hover:text-hm-ink transition-colors">{t('landing.nav.plans')}</a>
             <a href="#contacto" className="hover:text-hm-ink transition-colors">{t('landing.nav.contact')}</a>
             <Link href="/careers" className="font-semibold hover:text-hm-ink transition-colors" style={{ color: "#B08A3E" }}>
@@ -90,23 +109,25 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-24 sm:py-32 lg:py-40">
           <div className="max-w-3xl">
             <div className="hm-hero-animate hm-hero-delay-1 hm-eyebrow mb-8" style={{ color: "#B08A3E" }}>
-              {t('landing.badge')}
+              {t('landing.hero.badge')}
             </div>
 
             <h1 className="hm-hero-animate hm-hero-delay-1 text-3xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-[-0.025em]" style={{ color: '#F6F2EA' }}>
               {t('landing.hero.title1')}{" "}
               <span style={{ color: "#B08A3E" }}>{t('landing.hero.titleGold')}</span>
-              <br />
-              {t('landing.hero.title2')}
             </h1>
 
-            <p className="hm-hero-animate hm-hero-delay-2 mt-6 text-lg sm:text-xl max-w-2xl leading-relaxed" style={{ color: 'var(--hm-stone)' }}>
+            <p className="hm-hero-animate hm-hero-delay-2 mt-4 text-lg sm:text-xl font-medium" style={{ color: '#C9A84C' }}>
               {t('landing.hero.subtitle')}
+            </p>
+
+            <p className="hm-hero-animate hm-hero-delay-2 mt-4 text-base sm:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--hm-stone)' }}>
+              {t('landing.hero.desc')}
             </p>
 
             <div className="hm-hero-animate hm-hero-delay-3 mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
-                href="/register"
+                href="#contacto"
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-lg text-base font-bold transition-all hover:brightness-110"
                 style={{ background: "#B08A3E", color: "#0B1E3A" }}
               >
@@ -121,17 +142,31 @@ export default function LandingPage() {
                 <Shield className="h-4 w-4 text-gray-400" /> {t('landing.hero.noLockin')}
               </span>
               <span className="flex items-center gap-1.5">
-                <Globe className="h-4 w-4 text-gray-400" /> {t('landing.hero.intlOwners')}
+                <Users className="h-4 w-4 text-gray-400" /> {t('landing.hero.localTeam')}
               </span>
               <span className="flex items-center gap-1.5">
-                <Star className="h-4 w-4 text-gray-400" /> {t('landing.hero.aiPowered')}
+                <Monitor className="h-4 w-4 text-gray-400" /> {t('landing.hero.ownerPortal')}
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ───────── Problem ───────── */}
+      {/* ───────── Trust line ───────── */}
+      <section className="border-b" style={{ background: '#fff', borderColor: '#E8E3D8' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs sm:text-sm font-medium" style={{ color: '#4A5568' }}>
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <span key={i} className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5" style={{ color: '#B08A3E' }} />
+                {t(`landing.trustLine.item${i}`)}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Problem — 6 pain points ───────── */}
       <section id="problema" className="py-20 sm:py-28 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -143,8 +178,8 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[TrendingDown, Eye, Clock, BarChart3].map((Icon, i) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[TrendingDown, EyeOff, Sparkles, Moon, Wrench, Calculator].map((Icon, i) => (
               <div
                 key={i}
                 className="rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all"
@@ -165,51 +200,212 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ───────── Solution ───────── */}
-      <section id="solucao" className="py-20 sm:py-28" style={{ background: "#FAFAF8" }}>
+      {/* ───────── What we do — physical + digital ───────── */}
+      <section id="como-funciona" className="py-20 sm:py-28" style={{ background: "#FAFAF8" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
-              {t('landing.solution.badge')}
+              {t('landing.whatWeDo.badge')}
             </p>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
-              {t('landing.solution.title')}
+              {t('landing.whatWeDo.title')}
             </h2>
-            <p className="mt-4 text-gray-500 text-lg">{t('landing.solution.subtitle')}</p>
+            <p className="mt-4 text-gray-500 text-lg">{t('landing.whatWeDo.subtitle')}</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[Brain, BarChart3, Eye].map((Icon, i) => (
-              <div
-                key={i}
-                className="rounded-2xl p-8 border transition-all hover:shadow-lg"
-                style={{ background: "#fff", borderColor: "#E8E3D8" }}
-              >
-                <div className="h-12 w-12 rounded-xl flex items-center justify-center mb-5"
-                     style={{ background: "rgba(176,138,62,0.12)" }}>
-                  <Icon className="h-6 w-6" style={{ color: "#B08A3E" }} />
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Physical */}
+            <div className="rounded-2xl p-8 border" style={{ background: "#fff", borderColor: "#E8E3D8" }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-11 w-11 rounded-lg flex items-center justify-center" style={{ background: "rgba(176,138,62,0.12)" }}>
+                  <Users className="h-5 w-5" style={{ color: "#B08A3E" }} />
                 </div>
-                <h3 className="text-xl font-bold mb-3" style={{ color: "#0B1E3A" }}>
-                  {t(`landing.solution.items.${i}.title`)}
-                </h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-4">
-                  {t(`landing.solution.items.${i}.desc`)}
-                </p>
-                <p className="text-sm font-semibold" style={{ color: "#2A7A4F" }}>
-                  <CheckCircle2 className="h-4 w-4 inline mr-1" />
-                  {t(`landing.solution.items.${i}.highlight`)}
-                </p>
+                <h3 className="text-xl font-bold" style={{ color: "#0B1E3A" }}>{t('landing.whatWeDo.physicalTitle')}</h3>
+              </div>
+              <ul className="space-y-3">
+                {[0, 1, 2, 3, 4, 5].map((i) => {
+                  const item = t(`landing.whatWeDo.physicalItems.${i}`)
+                  if (item === `landing.whatWeDo.physicalItems.${i}`) return null
+                  return (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" style={{ color: "#2A7A4F" }} />
+                      <span className="text-sm text-gray-600">{item}</span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+            {/* Digital */}
+            <div className="rounded-2xl p-8 border" style={{ background: "#fff", borderColor: "#E8E3D8" }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-11 w-11 rounded-lg flex items-center justify-center" style={{ background: "rgba(176,138,62,0.12)" }}>
+                  <Monitor className="h-5 w-5" style={{ color: "#B08A3E" }} />
+                </div>
+                <h3 className="text-xl font-bold" style={{ color: "#0B1E3A" }}>{t('landing.whatWeDo.digitalTitle')}</h3>
+              </div>
+              <ul className="space-y-3">
+                {[0, 1, 2, 3, 4, 5].map((i) => {
+                  const item = t(`landing.whatWeDo.digitalItems.${i}`)
+                  if (item === `landing.whatWeDo.digitalItems.${i}`) return null
+                  return (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" style={{ color: "#2A7A4F" }} />
+                      <span className="text-sm text-gray-600">{item}</span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Operating model — 5 roles ───────── */}
+      <section id="modelo" className="py-20 sm:py-28 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-6">
+            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
+              {t('landing.model.badge')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+              {t('landing.model.title')}
+            </h2>
+            <p className="mt-2 text-lg font-medium" style={{ color: "#B08A3E" }}>{t('landing.model.subtitle')}</p>
+            <p className="mt-3 text-gray-500">{t('landing.model.desc')}</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5 mt-12">
+            {[
+              { icon: Home, color: '#2A7A4F' },
+              { icon: UserCheck, color: '#B08A3E' },
+              { icon: Hammer, color: '#0B1E3A' },
+              { icon: Shield, color: '#6B21A8' },
+              { icon: Brain, color: '#4A5568' },
+            ].map(({ icon: Icon, color }, i) => (
+              <div key={i} className="rounded-xl border border-gray-100 p-5 text-center hover:shadow-lg transition-all">
+                <div className="h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: `${color}12` }}>
+                  <Icon className="h-5 w-5" style={{ color }} />
+                </div>
+                <h4 className="font-bold text-sm mb-1" style={{ color: "#0B1E3A" }}>{t(`landing.model.role${i}`)}</h4>
+                <p className="text-xs text-gray-500 leading-relaxed">{t(`landing.model.role${i}Desc`)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ───────── Platform Demo ───────── */}
-      <PlatformDemo />
+      {/* ───────── Client journey — 7 steps ───────── */}
+      <section className="py-20 sm:py-28" style={{ background: '#FAFAF8' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B08A3E' }}>
+              {t('landing.journey.badge')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: '#0B1E3A' }}>
+              {t('landing.journey.title')}
+            </h2>
+            <p className="mt-3 text-gray-500 max-w-lg mx-auto">{t('landing.journey.subtitle')}</p>
+          </div>
 
-      {/* ───────── AI Tools ───────── */}
-      <AiToolsShowcase />
+          <div className="relative">
+            <div className="absolute left-6 sm:left-8 top-0 bottom-0 w-px hidden sm:block" style={{ background: 'rgba(176,138,62,0.2)' }} />
+            <div className="space-y-8">
+              {[
+                { icon: Search },
+                { icon: ClipboardList },
+                { icon: Settings },
+                { icon: Rocket },
+                { icon: Calendar },
+                { icon: MessageCircle },
+                { icon: BarChart3 },
+              ].map(({ icon: Icon }, i) => (
+                <div key={i} className="flex gap-5 sm:gap-7 items-start">
+                  <div className="relative z-10 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shrink-0 shadow-md" style={{ background: '#0B1E3A' }}>
+                    <Icon className="h-5 w-5" style={{ color: '#B08A3E' }} />
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white" style={{ background: '#B08A3E' }}>
+                      {i + 1}
+                    </span>
+                  </div>
+                  <div className="pt-1 sm:pt-3">
+                    <h3 className="text-lg font-bold" style={{ color: '#0B1E3A' }}>{t(`landing.journey.step${i}Title`)}</h3>
+                    <p className="mt-1 text-sm text-gray-500 max-w-md">{t(`landing.journey.step${i}Desc`)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Platform faces — 6 portals ───────── */}
+      <section className="py-20 sm:py-28 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
+              {t('landing.faces.badge')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+              {t('landing.faces.title')}
+            </h2>
+            <p className="mt-4 text-gray-500 text-lg">{t('landing.faces.subtitle')}</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { icon: BarChart3, color: '#2A7A4F' },
+              { icon: Briefcase, color: '#B08A3E' },
+              { icon: ClipboardList, color: '#0B1E3A' },
+              { icon: Shield, color: '#6B21A8' },
+              { icon: MessageCircle, color: '#0891B2' },
+              { icon: Settings, color: '#4A5568' },
+            ].map(({ icon: Icon, color }, i) => (
+              <div key={i} className="rounded-xl border border-gray-100 p-6 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-lg flex items-center justify-center" style={{ background: `${color}12` }}>
+                    <Icon className="h-5 w-5" style={{ color }} />
+                  </div>
+                  <h3 className="font-bold" style={{ color: "#0B1E3A" }}>{t(`landing.faces.face${i}`)}</h3>
+                </div>
+                <p className="text-sm text-gray-500 leading-relaxed">{t(`landing.faces.face${i}Desc`)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Technology layer — 6 tools ───────── */}
+      <section className="py-20 sm:py-28" style={{ background: "#FAFAF8" }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
+              {t('landing.tech.badge')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+              {t('landing.tech.title')}
+            </h2>
+            <p className="mt-4 text-gray-500 text-lg">{t('landing.tech.subtitle')}</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { icon: TrendingUp, color: '#2A7A4F' },
+              { icon: Globe, color: '#0B1E3A' },
+              { icon: Activity, color: '#B08A3E' },
+              { icon: MessageCircle, color: '#0891B2' },
+              { icon: Mic, color: '#6B21A8' },
+              { icon: BarChart3, color: '#4A5568' },
+            ].map(({ icon: Icon, color }, i) => (
+              <div key={i} className="rounded-xl border border-gray-100 bg-white p-6 hover:shadow-lg transition-all">
+                <div className="h-10 w-10 rounded-lg flex items-center justify-center mb-3" style={{ background: `${color}12` }}>
+                  <Icon className="h-5 w-5" style={{ color }} />
+                </div>
+                <h3 className="font-bold mb-1" style={{ color: "#0B1E3A" }}>{t(`landing.tech.item${i}`)}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{t(`landing.tech.item${i}Desc`)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ───────── Plans ───────── */}
       <section id="planos" className="py-20 sm:py-28 bg-white">
@@ -269,7 +465,7 @@ export default function LandingPage() {
                     {t('landing.plans.commission')}: {plan.commission}
                   </p>
                   <ul className="mt-5 space-y-2.5">
-                    {[0, 1, 2, 3, 4, 5].map((fi) => {
+                    {[0, 1, 2, 3, 4, 5, 6, 7].map((fi) => {
                       const feat = t(`landing.plans.${planKey}.features.${fi}`)
                       if (feat === `landing.plans.${planKey}.features.${fi}`) return null
                       return (
@@ -303,150 +499,56 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ───────── Social proof — platform potential ───────── */}
-      <section className="py-20 sm:py-28" style={{ background: "#FAFAF8" }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
-              {t('landing.social.badge')}
+      {/* ───────── Revenue simulator ───────── */}
+      <section id="simulator" className="py-20 sm:py-28" style={{ background: 'var(--hm-ivory, #FAF8F4)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: '#B08A3E' }}>
+              {t('landing.simulator.badge')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
-              {t('landing.social.title')}
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight mb-3" style={{ color: '#0B1E3A' }}>
+              {t('landing.simulator.title')}
             </h2>
+            <p className="text-base text-gray-600">
+              {t('landing.simulator.subtitle')}
+            </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="rounded-2xl p-8 border"
-                style={{ background: "#fff", borderColor: "#E8E3D8" }}
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, si) => (
-                    <Star key={si} className="h-4 w-4 fill-current" style={{ color: "#B08A3E" }} />
-                  ))}
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  &ldquo;{t(`landing.social.items.${i}.quote`)}&rdquo;
-                </p>
-                <div>
-                  <p className="font-semibold text-sm" style={{ color: "#0B1E3A" }}>
-                    {t(`landing.social.items.${i}.name`)}
-                  </p>
-                  <p className="text-xs text-gray-400">{t(`landing.social.items.${i}.origin`)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <RevenueSimulator />
         </div>
       </section>
 
-      {/* ───────── Client Journey ───────── */}
-      <section className="py-20 sm:py-28" style={{ background: 'var(--hm-ivory)' }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-14">
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B08A3E' }}>
-              {t('landing.journey.badge')}
+      {/* ───────── Local credibility ───────── */}
+      <section className="py-16 sm:py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
+              {t('landing.credibility.badge')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: '#0B1E3A' }}>
-              {t('landing.journey.title')}
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
+              {t('landing.credibility.title')}
             </h2>
-            <p className="mt-3 text-gray-500 max-w-lg mx-auto">
-              {t('landing.journey.subtitle')}
-            </p>
+            <p className="mt-2 text-gray-500">{t('landing.credibility.subtitle')}</p>
           </div>
 
-          {/* Steps 1-4 */}
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-6 sm:left-8 top-0 bottom-0 w-px hidden sm:block" style={{ background: 'rgba(176,138,62,0.2)' }} />
-
-            <div className="space-y-8">
-              {[
-                { step: 1, icon: UserPlus, titleKey: 'step1Title', descKey: 'step1Desc' },
-                { step: 2, icon: MessageCircle, titleKey: 'step2Title', descKey: 'step2Desc' },
-                { step: 3, icon: FileSignature, titleKey: 'step3Title', descKey: 'step3Desc' },
-                { step: 4, icon: Settings, titleKey: 'step4Title', descKey: 'step4Desc' },
-              ].map(({ step, icon: Icon, titleKey, descKey }) => (
-                <div key={step} className="flex gap-5 sm:gap-7 items-start">
-                  <div className="relative z-10 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full shrink-0 shadow-md"
-                       style={{ background: '#0B1E3A' }}>
-                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: '#B08A3E' }} />
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                          style={{ background: '#B08A3E' }}>
-                      {step}
-                    </span>
-                  </div>
-                  <div className="pt-2 sm:pt-4">
-                    <h3 className="text-lg font-bold" style={{ color: '#0B1E3A' }}>
-                      {t(`landing.journey.${titleKey}`)}
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500 max-w-md">
-                      {t(`landing.journey.${descKey}`)}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { icon: MapPin, key: 'zone' },
+              { icon: Home, key: 'hq' },
+              { icon: Users, key: 'team' },
+              { icon: Globe, key: 'languages' },
+              { icon: CheckCircle2, key: 'process' },
+              { icon: Mail, key: 'contactInfo' },
+            ].map(({ icon: Icon, key }) => (
+              <div key={key} className="flex items-start gap-3 rounded-lg border border-gray-100 p-4">
+                <Icon className="h-5 w-5 shrink-0 mt-0.5" style={{ color: '#B08A3E' }} />
+                <span className="text-sm text-gray-600">{t(`landing.credibility.${key}`)}</span>
+              </div>
+            ))}
           </div>
 
-          {/* Step 5 — the big one */}
-          <div className="mt-12 rounded-2xl overflow-hidden" style={{ background: '#0B1E3A' }}>
-            <div className="px-6 sm:px-10 py-8 sm:py-10">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full shrink-0"
-                     style={{ background: 'rgba(176,138,62,0.15)' }}>
-                  <Rocket className="h-7 w-7" style={{ color: '#B08A3E' }} />
-                </div>
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#B08A3E' }}>
-                    Step 5
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white">
-                    {t('landing.journey.step5Title')}
-                  </h3>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-400 mb-6 max-w-lg">
-                {t('landing.journey.step5Desc')}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {Array.from({ length: 10 }, (_, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: '#B08A3E' }} />
-                    <span className="text-sm text-gray-300">{t(`landing.journey.feat${i + 1}`)}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* AI Features highlight */}
-              <div className="mt-6 pt-6 border-t" style={{ borderColor: 'rgba(176,138,62,0.15)' }}>
-                <div className="flex items-center gap-2 mb-4">
-                  <Brain className="h-5 w-5" style={{ color: '#B08A3E' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#B08A3E' }}>
-                    Powered by AI
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {Array.from({ length: 4 }, (_, i) => (
-                    <div key={i} className="flex items-center gap-2.5">
-                      <Zap className="h-4 w-4 shrink-0" style={{ color: '#B08A3E' }} />
-                      <span className="text-sm text-gray-300">{t(`landing.journey.feat${i + 11}`)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(176,138,62,0.15)' }}>
-                <p className="text-lg sm:text-xl font-bold text-center" style={{ color: '#B08A3E' }}>
-                  {t('landing.journey.cta')}
-                </p>
-              </div>
-            </div>
-          </div>
+          <p className="text-center text-sm font-medium mt-10" style={{ color: '#B08A3E' }}>
+            {t('landing.centralNarrative')}
+          </p>
         </div>
       </section>
 
@@ -484,16 +586,14 @@ export default function LandingPage() {
       <section className="py-20 sm:py-28" style={{ background: "#0B1E3A" }}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white tracking-tight">
-            {t('landing.finalCta.title1')}{" "}
-            <span style={{ color: "#B08A3E" }}>{t('landing.finalCta.titleGold')}</span>{" "}
-            {t('landing.finalCta.title2')}
+            {t('landing.finalCta.title')}
           </h2>
           <p className="mt-5 text-lg text-gray-400 max-w-xl mx-auto">
             {t('landing.finalCta.subtitle')}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/register"
+              href="#contacto"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-lg text-base font-semibold transition-all hover:scale-[1.02]"
               style={{ background: "#B08A3E", color: "#0B1E3A" }}
             >
@@ -525,9 +625,9 @@ export default function LandingPage() {
             <span className="text-xs text-gray-400 ml-1">Costa Tropical · España</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="/partner/login" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-              Partner Portal
-            </a>
+            <a href="/privacy" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Privacy</a>
+            <a href="/terms" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Terms</a>
+            <a href="/partner/login" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Partner Portal</a>
             <p className="text-xs text-gray-400">
               {t('landing.footer.copyright')} {t('landing.footer.tagline')}
             </p>
@@ -688,7 +788,19 @@ function ContactSection() {
                       <MapPin className="h-5 w-5" style={{ color: "#B08A3E" }} />
                     </div>
                     <span className="text-sm text-gray-300">
-                      Costa Tropical, Granada
+                      {t("landing.contact.hqLocation")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(176,138,62,0.15)" }}
+                    >
+                      <Globe className="h-5 w-5" style={{ color: "#B08A3E" }} />
+                    </div>
+                    <span className="text-sm text-gray-300">
+                      {t("landing.contact.languages")}
                     </span>
                   </div>
                 </div>
@@ -698,7 +810,7 @@ function ContactSection() {
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4" style={{ color: "#B08A3E" }} />
                   <span className="text-xs text-gray-400">
-                    No commitment. No spam. Just a conversation.
+                    {t("landing.contact.noCommitment")}
                   </span>
                 </div>
               </div>
