@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   TrendingDown,
   Clock,
-  Eye,
   EyeOff,
   Brain,
   BarChart3,
