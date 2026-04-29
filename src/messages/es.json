@@ -1936,8 +1936,8 @@
   "landing": {
     "nav": {
       "problem": "Problema",
-      "howItWorks": "How it works",
-      "model": "Model",
+      "howItWorks": "Cómo funciona",
+      "model": "Modelo",
       "plans": "Planes",
       "enter": "Entrar",
       "startFree": "Empezar gratis",
@@ -1949,20 +1949,20 @@
       "title1": "Tu propiedad merece",
       "titleGold": "más que gestión.",
       "subtitle": "Compraste en la Costa Tropical para invertir, no para preocuparte por limpiezas, huéspedes difíciles o precios desajustados. HostMasters se encarga de todo con datos reales, precios con IA y total transparencia.",
-      "desc": "Your dedicated Manager, certified Crew and intelligent systems work together to manage, measure and continuously improve your rental operation.",
+      "desc": "Tu Manager dedicado, Crew certificada y sistemas inteligentes trabajan juntos para gestionar, medir y mejorar continuamente la operación de tu propiedad.",
       "cta": "1er mes gratis en el plan Premium",
       "ctaSub": "Sin compromiso. Cancela cuando quieras.",
       "noLockin": "Sin permanencia",
-      "localTeam": "Local team on the ground",
-      "ownerPortal": "Full owner portal"
+      "localTeam": "Equipo local sobre el terreno",
+      "ownerPortal": "Portal completo del propietario"
     },
     "trustLine": {
-      "item0": "Local team",
-      "item1": "Owner dashboard",
-      "item2": "Guest support",
-      "item3": "Cleaning verification",
-      "item4": "Dynamic pricing",
-      "item5": "Monthly reporting"
+      "item0": "Equipo local",
+      "item1": "Panel del propietario",
+      "item2": "Soporte a huéspedes",
+      "item3": "Verificación de limpieza",
+      "item4": "Precios dinámicos",
+      "item5": "Informes mensuales"
     },
     "problem": {
       "badge": "El problema",
@@ -1985,60 +1985,60 @@
           "desc": "No sabes cuánto te queda. Los costes ocultos se comen tu rentabilidad sin previo aviso."
         },
         {
-          "title": "Maintenance gaps",
-          "desc": "Small problems become expensive repairs because nobody catches them early. No preventive routine, no inspections."
+          "title": "Brechas en el mantenimiento",
+          "desc": "Pequeños problemas se convierten en reparaciones costosas porque nadie los detecta a tiempo. Sin rutina preventiva, sin inspecciones."
         },
         {
-          "title": "Opaque commissions",
-          "desc": "You don’t know how much you actually keep. Hidden costs, unclear fees, reports that only come when you ask."
+          "title": "Comisiones opacas",
+          "desc": "No sabes cuánto te queda realmente. Costes ocultos, tarifas poco claras, informes que solo llegan cuando insistes."
         }
       ]
     },
     "whatWeDo": {
-      "badge": "What HostMasters does",
-      "title": "We manage your property physically and digitally",
-      "subtitle": "A complete operation — from the ground to the dashboard.",
-      "physicalTitle": "On the ground",
+      "badge": "Lo que hacemos",
+      "title": "Gestionamos tu propiedad física y digitalmente",
+      "subtitle": "Una operación completa — desde el terreno hasta el panel.",
+      "physicalTitle": "Sobre el terreno",
       "physicalItems": [
-        "Certified Crew handles cleaning, check-in and check-out",
-        "Preventive maintenance visits every month",
-        "Crew Captain inspects and approves every job",
-        "Photo verification of every completed task",
-        "Emergency response for urgent issues",
-        "Smart Lock with rotating guest codes"
+        "Crew certificado gestiona limpieza, check-in y check-out",
+        "Visitas de mantenimiento preventivo cada mes",
+        "Crew Captain inspecciona y aprueba cada servicio",
+        "Verificación fotográfica de cada tarea completada",
+        "Respuesta de emergencia para problemas urgentes",
+        "Smart Lock con códigos rotativos para huéspedes"
       ],
-      "digitalTitle": "In the platform",
+      "digitalTitle": "En la plataforma",
       "digitalItems": [
-        "Owner portal with real-time earnings and reports",
-        "Automated monthly financial statements",
-        "Guest communication handled 24/7",
-        "Calendar sync across Airbnb, Booking.com and direct",
-        "Pricing adjusted to local demand",
-        "Tax obligation tracking and deadline alerts"
+        "Portal del propietario con ingresos e informes en tiempo real",
+        "Extractos financieros mensuales automáticos",
+        "Comunicación con huéspedes 24/7",
+        "Sincronización de calendarios Airbnb, Booking.com y directos",
+        "Pricing ajustado a la demanda local",
+        "Seguimiento fiscal y alertas de plazos"
       ]
     },
     "model": {
-      "badge": "The operating model",
-      "title": "A system, not a person",
-      "subtitle": "Your Manager may change. The standards don’t.",
-      "desc": "Quality comes from the system — checklists, photo verification, Captain approval and operational intelligence. Not from any single individual.",
-      "role0": "Owner",
-      "role0Desc": "You. Full visibility via your portal. Earnings, reports, bookings, property condition — always up to date.",
+      "badge": "El modelo operativo",
+      "title": "Un sistema, no una persona",
+      "subtitle": "Tu Manager puede cambiar. Los estándares no.",
+      "desc": "La calidad viene del sistema — checklists, verificación por foto, aprobación del Captain e inteligencia operativa. No de una sola persona.",
+      "role0": "Propietario",
+      "role0Desc": "Tú. Visibilidad total vía portal. Ingresos, informes, reservas, condición de la propiedad — siempre actualizado.",
       "role1": "Manager",
-      "role1Desc": "Your local contact. Speaks your language, knows your goals, handles your relationship with HostMasters.",
+      "role1Desc": "Tu contacto local. Habla tu idioma, conoce tus objetivos, gestiona tu relación con HostMasters.",
       "role2": "Crew",
-      "role2Desc": "Certified field team. Cleaning, check-in, maintenance, inspections. Every task verified with photos.",
+      "role2Desc": "Equipo de campo certificado. Limpieza, check-in, mantenimiento, inspecciones. Cada tarea verificada con fotos.",
       "role3": "Captain",
-      "role3Desc": "Quality supervisor. Approves every job, trains the Crew, resolves exceptions on the ground.",
-      "role4": "Intelligent Systems",
-      "role4Desc": "Pricing, monitoring, guest support, scoring, reporting. The invisible layer that measures and improves everything."
+      "role3Desc": "Supervisor de calidad. Aprueba cada servicio, forma al Crew, resuelve excepciones en el terreno.",
+      "role4": "Sistemas Inteligentes",
+      "role4Desc": "Pricing, monitorización, soporte a huéspedes, scoring, informes. La capa invisible que mide y mejora todo."
     },
     "journey": {
       "badge": "Tu Recorrido",
       "title": "Del registro a los ingresos, en 5 pasos",
       "subtitle": "Un proceso claro y guiado. Nunca caminas solo.",
-      "step0Title": "Property assessment",
-      "step0Desc": "We evaluate your property’s rental potential, location and condition. Free, no commitment.",
+      "step0Title": "Evaluación de la propiedad",
+      "step0Desc": "Evaluamos el potencial de alquiler, ubicación y estado de tu propiedad. Gratis, sin compromiso.",
       "step1Title": "Regístrate y espera a tu Manager",
       "step1Desc": "Crea tu cuenta. Un Manager local, que habla tu idioma, te contactará personalmente.",
       "step2Title": "Elige el plan ideal para ti",
@@ -2049,47 +2049,47 @@
       "step4Desc": "Conectamos tus calendarios de Airbnb y Booking.com, instalamos Smart Lock y configuramos todo.",
       "step5Title": "Tu propiedad trabaja para ti",
       "step5Desc": "Todo funcionando, sin dolores de cabeza.",
-      "step6Title": "Monthly reporting",
-      "step6Desc": "Detailed financial statement, occupancy data, maintenance log and property condition report."
+      "step6Title": "Informes mensuales",
+      "step6Desc": "Extracto financiero detallado, datos de ocupación, registro de mantenimiento e informe del estado de la propiedad."
     },
     "faces": {
-      "badge": "Platform",
-      "title": "Everyone has their own view",
-      "subtitle": "One platform, six perspectives. Each role sees exactly what they need.",
-      "face0": "Owner Portal",
-      "face0Desc": "Earnings, bookings, reports, property condition, payouts, tax tracking and documents.",
-      "face1": "Manager Portal",
-      "face1Desc": "CRM pipeline, client portfolio, commission tracking, lead management and performance.",
-      "face2": "Crew Portal",
-      "face2Desc": "Task queue, checklists, photo submission, score tracking and weekly payout statements.",
-      "face3": "Captain View",
-      "face3Desc": "Quality approval, Crew supervision, exception handling and field operations.",
-      "face4": "Guest Chat",
-      "face4Desc": "AI-powered assistant during the stay. Property info, local tips, issue reporting — 24/7.",
-      "face5": "Admin Console",
-      "face5Desc": "Full operational oversight. Monitoring, pricing engine, market intelligence and system health."
+      "badge": "Plataforma",
+      "title": "Cada uno tiene su propia vista",
+      "subtitle": "Una plataforma, seis perspectivas. Cada rol ve exactamente lo que necesita.",
+      "face0": "Portal del Propietario",
+      "face0Desc": "Ingresos, reservas, informes, condición de la propiedad, payouts, fiscal y documentos.",
+      "face1": "Portal del Manager",
+      "face1Desc": "Pipeline CRM, cartera de clientes, comisiones, gestión de leads y rendimiento.",
+      "face2": "Portal del Crew",
+      "face2Desc": "Cola de tareas, checklists, envío de fotos, score y extractos semanales de pago.",
+      "face3": "Vista del Captain",
+      "face3Desc": "Aprobación de calidad, supervisión del Crew, gestión de excepciones y operaciones de campo.",
+      "face4": "Chat de Huéspedes",
+      "face4Desc": "Asistente IA durante la estancia. Info de la propiedad, consejos locales, reporte de problemas — 24/7.",
+      "face5": "Consola de Admin",
+      "face5Desc": "Supervisión operativa total. Monitorización, motor de pricing, market intelligence y salud del sistema."
     },
     "tech": {
-      "badge": "Technology layer",
-      "title": "Intelligent systems that work behind the scenes",
-      "subtitle": "You don’t see the technology. You see the results: better pricing, faster response, fewer problems.",
-      "item0": "Dynamic Pricing",
-      "item0Desc": "Analyses seasonality, local events and competitor rates to set the right price every night.",
+      "badge": "Capa tecnológica",
+      "title": "Sistemas inteligentes que trabajan tras bastidores",
+      "subtitle": "No ves la tecnología. Ves los resultados: mejor pricing, respuesta más rápida, menos problemas.",
+      "item0": "Pricing Dinámico",
+      "item0Desc": "Analiza estacionalidad, eventos locales y competencia para fijar el precio adecuado cada noche.",
       "item1": "Market Intelligence",
-      "item1Desc": "Costa Tropical market data — occupancy rates, price trends and competitive benchmarks.",
-      "item2": "Operations Monitor",
-      "item2Desc": "Daily automated checks on reservations, payouts, listings and property health.",
-      "item3": "Guest Assistant",
-      "item3Desc": "Handles guest questions during the stay — property info, WiFi, local recommendations.",
-      "item4": "Voice Feedback",
-      "item4Desc": "Structured guest feedback after every checkout. Scores the property across multiple dimensions.",
-      "item5": "Property Scorecard",
-      "item5Desc": "Continuous assessment of each property’s performance, condition and improvement opportunities."
+      "item1Desc": "Datos del mercado de la Costa Tropical — tasas de ocupación, tendencias de precios y benchmarks competitivos.",
+      "item2": "Monitor Operativo",
+      "item2Desc": "Comprobaciones automáticas diarias en reservas, payouts, anuncios y estado de las propiedades.",
+      "item3": "Asistente de Huéspedes",
+      "item3Desc": "Responde a preguntas de huéspedes durante la estancia — info de la propiedad, WiFi, recomendaciones locales.",
+      "item4": "Feedback por Voz",
+      "item4Desc": "Feedback estructurado de huéspedes tras cada checkout. Evalúa la propiedad en varias dimensiones.",
+      "item5": "Scorecard de la Propiedad",
+      "item5Desc": "Evaluación continua del rendimiento, condición y oportunidades de mejora de cada propiedad."
     },
     "plans": {
       "badge": "Planes",
       "title": "Elige el nivel de servicio que necesitas",
-      "subtitle": "Todos los planes incluyen gestión completa. Cuanto más inviertas, menor la comisión y más herramientas inteligentes recibes.",
+      "subtitle": "Todos los planes incluyen gestión completa. Los planes superiores desbloquean más herramientas, comisiones más bajas y servicios incluidos.",
       "recommended": "Recomendado",
       "monthlyFee": "/mes",
       "annualFee": "/año",
@@ -2099,48 +2099,48 @@
       "noMonthlyFee": "Sin cuota mensual",
       "starter": {
         "features": [
-          "Gestión completa de alquiler vacacional",
-          "Airbnb, Booking.com y directo",
-          "Asistente IA para huésped 24/7 durante la estancia",
-          "Informe mensual al propietario",
+          "Gestión completa de alquiler de corta duración",
+          "Anuncios en Airbnb, Booking.com y directos",
+          "Coordinación de check-in/out con Crew certificado",
+          "Lista mensual de transacciones",
           "Panel del propietario",
-          "Limpieza: €70/salida",
-          "Cleaning: €70/turnover"
+          "Payouts mensuales",
+          "Limpieza: €70/salida"
         ]
       },
       "basic": {
         "features": [
-          "Todo de Starter",
-          "Mantenimiento preventivo (1x/mes)",
-          "Inspección pre y post estancia",
-          "VAGF feedback por voz post-checkout",
-          "Informes multilingüe",
-          "Limpieza: €60/salida",
-          "Pricing analytics (trends + occupancy patterns)",
-          "Cleaning: €60/turnover"
+          "Todo de Starter, más:",
+          "Asistente IA a huéspedes 24/7 durante la estancia",
+          "Feedback por voz tras cada checkout",
+          "Visitas de mantenimiento preventivo (mensuales)",
+          "Informe mensual detallado (PDF con desglose de reservas)",
+          "Payouts semanales via Stripe Connect",
+          "Análisis de pricing y tendencias de ocupación",
+          "Limpieza: €60/salida"
         ]
       },
       "mid": {
         "features": [
-          "Todo de Basic",
-          "AI Pricing dinámico + Cerradura inteligente",
+          "Todo de Basic, más:",
+          "Motor de pricing dinámico con IA",
+          "Smart Lock con códigos rotativos para huéspedes",
+          "Market intelligence para la Costa Tropical",
+          "Asistente IA para tu propiedad",
+          "Extractos del propietario en varios idiomas",
           "Respuesta prioritaria: 12h propietario / 2h huésped",
-          "Escalación WhatsApp emergencia al Manager",
-          "Scorecard feedback de la propiedad",
-          "Limpieza incluida ≥4 noches",
-          "Priority response: 12h owner / 2h guest",
-          "Cleaning included ≥4 nights"
+          "Limpieza incluida en estancias ≥4 noches"
         ]
       },
       "premium": {
         "features": [
-          "Todo de Mid",
-          "Cumplimiento fiscal completo (Modelo 179 + IRNR)",
-          "Upsells al huésped: traslados, compras, lavandería",
+          "Todo de Mid, más:",
+          "Pricing IA totalmente optimizado para tu mercado",
+          "Cumplimiento fiscal completo (Modelo 179 + IRNR + NRU)",
+          "Upsells para huéspedes: transfers, compras, lavandería",
           "Respuesta de emergencia en 4h",
-          "AI Monitor con controles diarios de la propiedad",
-          "Limpieza incluida ≥3 noches",
-          "Cleaning included ≥3 nights"
+          "Comprobaciones automáticas diarias del estado de la propiedad",
+          "Limpieza incluida en estancias ≥3 noches"
         ]
       },
       "starterName": "Starter",
@@ -2149,24 +2149,24 @@
       "premiumName": "Premium"
     },
     "credibility": {
-      "badge": "Local presence",
-      "title": "Based on the Costa Tropical",
-      "subtitle": "We’re not a remote platform. We’re here.",
-      "zone": "Operating across Almuñécar, La Herradura, Salobreña, Motril and Nerja.",
-      "hq": "Physical HQ in Almuñécar centro from January 2026.",
-      "team": "Local Crew and Captains who know every street.",
-      "languages": "We speak your language: EN · PT · ES · DE · NL · FR · SV · DA",
-      "process": "Every property goes through the same onboarding, audit and quality process.",
+      "badge": "Presencia local",
+      "title": "Con base en la Costa Tropical",
+      "subtitle": "No somos una plataforma remota. Estamos aquí.",
+      "zone": "Operamos en Almuñécar, La Herradura, Salobreña, Motril y Nerja.",
+      "hq": "Sede física en Almuñécar centro a partir de enero 2026.",
+      "team": "Crew local y Captains que conocen cada calle.",
+      "languages": "Hablamos tu idioma: EN · PT · ES · DE · NL · FR · SV · DA",
+      "process": "Cada propiedad pasa por el mismo onboarding, auditoría y proceso de calidad.",
       "contactInfo": "info@hostmasters.es · +34 657 190 788"
     },
     "finalCta": {
-      "title": "Request a property assessment",
+      "title": "Solicita una evaluación de tu propiedad",
       "subtitle": "Empieza con el plan Premium durante 1 mes sin coste. Descubre la diferencia que los datos reales y los precios con IA hacen en tus ingresos.",
       "cta": "Empezar 1 mes gratis",
       "enterPortal": "Entrar al portal",
       "disclaimer": "Sin compromiso · Sin tarjeta de crédito · Cancela cuando quieras"
     },
-    "centralNarrative": "HostMasters turns every property into a managed, measured and continuously improved rental operation.",
+    "centralNarrative": "HostMasters convierte cada propiedad en una operación de alquiler gestionada, medida y mejorada continuamente.",
     "simulator": {
       "badge": "Haz los números",
       "title": "Descubre cuánto te queda de verdad",
