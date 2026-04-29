@@ -1968,20 +1968,20 @@
       "title": "Eigenaar op afstand zijn zou niet zo moeilijk moeten zijn",
       "items": [
         {
-          "title": "Willekeurige prijzen",
-          "desc": "Zonder marktdata is prijsbepaling gokwerk. U verliest omzet in pieken en kunt geen gasten aantrekken in laagseizoen."
+          "title": "Prijzen op gevoel",
+          "desc": "Zonder lokale marktgegevens stelt u prijzen op gevoel vast. Te hoog in laagseizoen, te laag in piek — inkomsten lekken weg."
         },
         {
-          "title": "Geen zicht",
-          "desc": "U weet niet wat er gebeurt in uw pand tot u een klacht of onverwachte rekening krijgt."
+          "title": "Geen zichtbaarheid",
+          "desc": "U weet niet wat er in uw woning gebeurt totdat een gast klaagt of een onverwachte rekening binnenkomt."
         },
         {
-          "title": "Trage communicatie",
-          "desc": "Verloren e-mails, foto's die nooit aankomen, rapporten die alleen komen als u erom vraagt."
+          "title": "Schoonmaak onzeker",
+          "desc": "Is de woning werkelijk goed schoongemaakt? Is het beddengoed verschoond? Zonder verificatie vertrouwt u alleen op goed geloof."
         },
         {
-          "title": "Ondoorzichtige commissies",
-          "desc": "U weet niet hoeveel er voor u overblijft. Verborgen kosten vreten uw winstgevendheid op zonder waarschuwing."
+          "title": "Gasten om 2 uur ’s nachts",
+          "desc": "WiFi storing, slot dat niet werkt, lawaaiige buren — en u zit 2.000 km verderop en probeert het telefonisch op te lossen."
         },
         {
           "title": "Onderhoudsachterstand",
@@ -2064,7 +2064,7 @@
       "face3": "Captain-weergave",
       "face3Desc": "Kwaliteitsgoedkeuring, Crew-toezicht, uitzonderingsbeheer en veldoperaties.",
       "face4": "Gasten-chat",
-      "face4Desc": "AI-assistent tijdens het verblijf. Wonin­ginfo, lokale tips, probleemmeldingen — 24/7.",
+      "face4Desc": "AI-assistent tijdens het verblijf. Woninginfo, lokale tips, probleemmeldingen — 24/7.",
       "face5": "Admin-console",
       "face5Desc": "Volledige operationele controle. Monitoring, pricing-engine, marktinformatie en systeemstatus."
     },
@@ -2079,7 +2079,7 @@
       "item2": "Operationele Monitor",
       "item2Desc": "Geautomatiseerde dagelijkse controles op boekingen, uitbetalingen, advertenties en woningstatus.",
       "item3": "Gastenassistent",
-      "item3Desc": "Beantwoordt gastenvragen tijdens het verblijf — wonin­ginfo, WiFi, lokale aanbevelingen.",
+      "item3Desc": "Beantwoordt gastenvragen tijdens het verblijf — woninginfo, WiFi, lokale aanbevelingen.",
       "item4": "Spraakfeedback",
       "item4Desc": "Gestructureerde gastenfeedback na elke checkout. Beoordeelt de woning op meerdere dimensies.",
       "item5": "Woning-Scorecard",

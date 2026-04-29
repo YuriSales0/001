@@ -1970,19 +1970,19 @@
       "items": [
         {
           "title": "Precios al azar",
-          "desc": "Sin datos de mercado, fijar precios es pura adivinación. Pierdes ingresos en temporada alta y no atraes en temporada baja."
+          "desc": "Sin datos del mercado local, fijas precios por intuición. Demasiado altos en temporada baja, demasiado bajos en pico — los ingresos se escapan."
         },
         {
-          "title": "Cero visibilidad",
-          "desc": "No sabes qué pasa en tu propiedad hasta que recibes una queja o una factura sorpresa."
+          "title": "Sin visibilidad",
+          "desc": "No sabes qué ocurre en tu propiedad hasta que un huésped se queja o aparece una factura sorpresa."
         },
         {
-          "title": "Comunicación lenta",
-          "desc": "Correos perdidos, fotos que nunca llegan, informes que solo aparecen cuando insistes."
+          "title": "Limpieza incierta",
+          "desc": "¿Se limpió realmente la propiedad? ¿Se cambiaron las sábanas? Sin verificación, solo te queda confiar."
         },
         {
-          "title": "Comisiones opacas",
-          "desc": "No sabes cuánto te queda. Los costes ocultos se comen tu rentabilidad sin previo aviso."
+          "title": "Huéspedes a las 2 de la mañana",
+          "desc": "WiFi caído, cerradura que no funciona, vecinos ruidosos — y tú estás a 2.000 km intentando resolverlo por teléfono."
         },
         {
           "title": "Brechas en el mantenimiento",

@@ -1968,20 +1968,20 @@
       "title": "Fernbesitz sollte nicht so schwierig sein",
       "items": [
         {
-          "title": "Zufällige Preisgestaltung",
-          "desc": "Ohne Marktdaten ist die Preisgestaltung Rätselraten. Sie verlieren Einnahmen in Spitzenzeiten und können in der Nebensaison keine Gäste gewinnen."
+          "title": "Preise nach Bauchgefühl",
+          "desc": "Ohne lokale Marktdaten setzen Sie Preise nach Gefühl. In der Nebensaison zu hoch, in der Hochsaison zu niedrig — Einnahmen gehen verloren."
         },
         {
-          "title": "Null Transparenz",
-          "desc": "Sie wissen nicht, was in Ihrer Immobilie passiert, bis eine Beschwerde oder eine überraschende Rechnung kommt."
+          "title": "Keine Transparenz",
+          "desc": "Sie wissen nicht, was in Ihrer Immobilie passiert, bis sich ein Gast beschwert oder eine unerwartete Rechnung kommt."
         },
         {
-          "title": "Langsame Kommunikation",
-          "desc": "Verlorene E-Mails, Fotos die nie ankommen, Berichte die nur kommen, wenn Sie darauf bestehen."
+          "title": "Reinigungsunsicherheit",
+          "desc": "Wurde die Immobilie wirklich richtig gereinigt? Wurde Bettwäsche gewechselt? Ohne Verifizierung verlassen Sie sich nur auf Vertrauen."
         },
         {
-          "title": "Undurchsichtige Provisionen",
-          "desc": "Sie wissen nicht, was für Sie übrig bleibt. Versteckte Kosten fressen Ihre Rentabilität ohne Vorwarnung."
+          "title": "Probleme um 2 Uhr nachts",
+          "desc": "WLAN ausgefallen, Schloss klemmt, laute Nachbarn — und Sie sind 2.000 km entfernt und versuchen, es per Telefon zu lösen."
         },
         {
           "title": "Wartungslücken",

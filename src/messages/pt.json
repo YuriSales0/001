@@ -1969,20 +1969,20 @@
       "title": "Ser proprietário à distância não devia ser tão difícil",
       "items": [
         {
-          "title": "Preços aleatórios",
-          "desc": "Sem dados de mercado, definir preços é um jogo de adivinhação. Perde receita nos picos e não consegue atrair em época baixa."
+          "title": "Preços às cegas",
+          "desc": "Sem dados do mercado local, defines preços por intuição. Demasiado caro fora de época, demasiado barato no pico — perdes receita pelas frestas."
         },
         {
-          "title": "Zero visibilidade",
-          "desc": "Não sabe o que se passa na sua propriedade até receber uma reclamação ou uma conta surpresa."
+          "title": "Sem visibilidade",
+          "desc": "Não sabes o que se passa no teu imóvel até um hóspede reclamar ou aparecer uma factura inesperada."
         },
         {
-          "title": "Comunicação lenta",
-          "desc": "Emails perdidos, fotografias que nunca chegam, relatórios que só aparecem quando insiste."
+          "title": "Limpeza incerta",
+          "desc": "A casa foi de facto limpa? Os lençóis foram trocados? Sem verificação, dependes apenas de confiança."
         },
         {
-          "title": "Comissões opacas",
-          "desc": "Não sabe quanto fica para si. Custos escondidos corroem a sua rentabilidade sem aviso."
+          "title": "Hóspedes às 2 da manhã",
+          "desc": "WiFi em baixo, fechadura não funciona, vizinhos barulhentos — e tu estás a 2.000 km a tentar resolver por telefone."
         },
         {
           "title": "Manutenção falha",

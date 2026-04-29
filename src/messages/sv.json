@@ -1968,20 +1968,20 @@
       "title": "Att vara fjärrägare borde inte vara så här svårt",
       "items": [
         {
-          "title": "Slumpmässig prissättning",
-          "desc": "Utan marknadsdata blir prissättning gissningar. Du förlorar intäkter under högsäsong och kan inte attrahera gäster under lågsäsong."
+          "title": "Prissättning på känn",
+          "desc": "Utan lokala marknadsdata sätter du priser på magkänsla. För högt under lågsäsong, för lågt under topp — intäkterna sipprar bort."
         },
         {
-          "title": "Noll insyn",
-          "desc": "Du vet inte vad som händer med din fastighet förrän du får ett klagomål eller en oväntad räkning."
+          "title": "Ingen insyn",
+          "desc": "Du vet inte vad som händer i din fastighet förrän en gäst klagar eller en oväntad faktura dyker upp."
         },
         {
-          "title": "Långsam kommunikation",
-          "desc": "Borttappade mejl, foton som aldrig kommer, rapporter som bara dyker upp när du insisterar."
+          "title": "Osäker städning",
+          "desc": "Blev fastigheten verkligen ordentligt städad? Byttes sängkläderna? Utan verifiering förlitar du dig bara på förtroende."
         },
         {
-          "title": "Ogenomskinliga provisioner",
-          "desc": "Du vet inte hur mycket som blir kvar åt dig. Dolda kostnader äter upp din lönsamhet utan förvarning."
+          "title": "Gästproblem klockan 02",
+          "desc": "WiFi nere, lås som inte fungerar, högljudda grannar — och du är 2 000 km bort och försöker lösa det per telefon."
         },
         {
           "title": "Underhållsluckor",

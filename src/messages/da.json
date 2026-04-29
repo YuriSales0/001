@@ -1968,20 +1968,20 @@
       "title": "At være fjernejer burde ikke være så svært",
       "items": [
         {
-          "title": "Tilfældig prissætning",
-          "desc": "Uden markedsdata er prissætning gætværk. Du taber indtægter i højsæsonen og kan ikke tiltrække gæster i lavsæsonen."
+          "title": "Prissætning i blinde",
+          "desc": "Uden lokale markedsdata fastsætter du priser efter mavefornemmelse. For højt uden for sæson, for lavt i højsæson — indtægter siver væk."
         },
         {
-          "title": "Nul synlighed",
-          "desc": "Du ved ikke, hvad der sker med din ejendom, før du får en klage eller en uventet regning."
+          "title": "Ingen synlighed",
+          "desc": "Du ved ikke, hvad der foregår i din ejendom, før en gæst klager, eller en uventet regning dukker op."
         },
         {
-          "title": "Langsom kommunikation",
-          "desc": "Tabte e-mails, fotos der aldrig ankommer, rapporter der først kommer, når du insisterer."
+          "title": "Usikker rengøring",
+          "desc": "Blev ejendommen virkelig ordentligt rengjort? Blev sengetøjet skiftet? Uden verifikation er du kun afhængig af tillid."
         },
         {
-          "title": "Ugennemsigtige provisioner",
-          "desc": "Du ved ikke, hvor meget der er tilbage til dig. Skjulte omkostninger æder din rentabilitet uden varsel."
+          "title": "Gæsteproblemer kl. 02 om natten",
+          "desc": "WiFi nede, lås der ikke virker, larmende naboer — og du er 2.000 km væk og prøver at løse det per telefon."
         },
         {
           "title": "Vedligeholdelseshuller",
