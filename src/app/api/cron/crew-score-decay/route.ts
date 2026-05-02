@@ -6,7 +6,8 @@ import { crewScoreEngine } from '@/lib/crew-score'
  * Monthly crew score decay — resets scores to level minimum + 30% of excess.
  * Runs on the 1st of every month via AI Monitor.
  */
-export async function POST(request: NextRequest) {
+export const maxDuration = 30
+export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
   const auth = request.headers.get('authorization')
   if (!cronSecret || auth !== `Bearer ${cronSecret}`) {

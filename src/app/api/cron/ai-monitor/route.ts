@@ -268,7 +268,9 @@ export async function GET(request: NextRequest) {
   console.log('[AI Monitor] Cron complete:', JSON.stringify(summary))
 
   // Piggyback other daily jobs (Hobby plan only allows 2 crons)
-  const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  const baseUrl =
+    process.env.NEXTAUTH_URL
+    || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
   const headers: Record<string, string> = {}
   if (cronSecret) headers['authorization'] = `Bearer ${cronSecret}`
 
@@ -296,7 +298,7 @@ export async function GET(request: NextRequest) {
   }
 
   await Promise.allSettled(
-    jobs.map(path => fetch(`${baseUrl}${path}`, { method: 'POST', headers }).catch(() => {}))
+    jobs.map(path => fetch(`${baseUrl}${path}`, { method: 'GET', headers }).catch(() => {}))
   )
 
   return NextResponse.json(summary)

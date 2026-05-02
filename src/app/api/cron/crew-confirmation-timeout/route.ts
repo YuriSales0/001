@@ -8,7 +8,8 @@ import { findBestCrew } from '@/lib/crew-assignment'
  * POST /api/cron/crew-confirmation-timeout
  * Runs every 10 minutes. Redistributes NOTIFIED tasks older than 30 minutes.
  */
-export async function POST(request: NextRequest) {
+export const maxDuration = 30
+export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
   const auth = request.headers.get('authorization')
   if (!cronSecret || auth !== `Bearer ${cronSecret}`) {

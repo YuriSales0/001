@@ -101,19 +101,35 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Sign pending contracts — only contracts belonging to this user
+  // Sign pending contracts — only contracts belonging to this user.
+  // For CLIENT master agreements, also activate any properties waiting on
+  // CONTRACT_PENDING and flip the contract status to ACTIVE so
+  // hasSignedMasterContract() returns true.
   if (data.signContractIds && Array.isArray(data.signContractIds)) {
     for (const contractId of data.signContractIds) {
       const contract = await prisma.contract.findUnique({
         where: { id: contractId as string },
-        select: { userId: true },
+        select: { userId: true, type: true, status: true },
       })
       if (!contract || contract.userId !== me.id) {
         return NextResponse.json({ error: 'Forbidden: contract does not belong to you' }, { status: 403 })
       }
-      await prisma.contract.update({
-        where: { id: contractId as string },
-        data: { signedByUser: true, signedAt: new Date() },
+      await prisma.$transaction(async (tx) => {
+        await tx.contract.update({
+          where: { id: contractId as string },
+          data: {
+            signedByUser: true,
+            signedAt: new Date(),
+            status: 'ACTIVE',
+          },
+        })
+        // If this is a CLIENT master agreement, activate any waiting properties.
+        if (me.role === 'CLIENT' && contract.type === 'CLIENT_SERVICE') {
+          await tx.property.updateMany({
+            where: { ownerId: me.id, status: 'CONTRACT_PENDING' },
+            data: { status: 'ACTIVE' },
+          })
+        }
       })
     }
   }
@@ -134,6 +150,33 @@ export async function POST(request: NextRequest) {
 
   if (complete) {
     update.onboardingCompleted = true
+
+    // CLIENT: auto-sign any pending master CLIENT_SERVICE contracts on completion.
+    // ClientTour doesn't pass signContractIds, so without this clients stay
+    // stuck in CONTRACT_PENDING after property approval.
+    if (me.role === 'CLIENT') {
+      const pendingMaster = await prisma.contract.findMany({
+        where: {
+          userId: me.id,
+          type: 'CLIENT_SERVICE',
+          signedByUser: false,
+          status: { in: ['DRAFT', 'ACTIVE'] },
+        },
+        select: { id: true },
+      })
+      for (const c of pendingMaster) {
+        await prisma.$transaction(async (tx) => {
+          await tx.contract.update({
+            where: { id: c.id },
+            data: { signedByUser: true, signedAt: new Date(), status: 'ACTIVE' },
+          })
+          await tx.property.updateMany({
+            where: { ownerId: me.id, status: 'CONTRACT_PENDING' },
+            data: { status: 'ACTIVE' },
+          })
+        })
+      }
+    }
   }
 
   const user = await prisma.user.update({

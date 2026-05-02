@@ -8,7 +8,8 @@ import { notify, notifyMany, tForUser } from '@/lib/notifications'
  *
  * Runs every Wednesday 09:00 UTC (called by Vercel Cron or manual trigger).
  */
-export async function POST(request: NextRequest) {
+export const maxDuration = 60
+export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
   const auth = request.headers.get('authorization')
   if (!cronSecret || auth !== `Bearer ${cronSecret}`) {

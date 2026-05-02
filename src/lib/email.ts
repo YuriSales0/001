@@ -37,7 +37,7 @@ export async function sendEmail({
   }
   const safeSubject = subject.replace(/[\r\n]/g, ' ').slice(0, 200)
   const result = await resend.emails.send({
-    from: process.env.EMAIL_FROM || 'Hostmaster <noreply@hostmaster.es>',
+    from: process.env.EMAIL_FROM || 'HostMasters <noreply@hostmasters.es>',
     to,
     subject: safeSubject,
     html,

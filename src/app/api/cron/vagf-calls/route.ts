@@ -3,7 +3,7 @@ import { getDueScheduledCalls } from '@/lib/vagf/scheduler'
 import { prisma } from '@/lib/prisma'
 
 /**
- * POST /api/cron/vagf-calls
+ * GET /api/cron/vagf-calls
  *
  * Processes scheduled VAGF calls that are due. Triggered by
  * AI Monitor umbrella cron (runs every hour during 10:00-18:00 UTC).
@@ -11,7 +11,8 @@ import { prisma } from '@/lib/prisma'
  * For each due call, marks IN_PROGRESS and triggers ElevenLabs
  * outbound call via their API. Results come back via webhook.
  */
-export async function POST(request: NextRequest) {
+export const maxDuration = 120
+export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
   const auth = request.headers.get('authorization')
   if (!cronSecret || auth !== `Bearer ${cronSecret}`) {
@@ -62,8 +63,9 @@ export async function POST(request: NextRequest) {
         continue
       }
 
-      const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+      const baseUrl =
+        process.env.NEXTAUTH_URL
+        || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
 
       // Initiate outbound call via ElevenLabs
       const callRes = await fetch('https://api.elevenlabs.io/v1/convai/conversation/create-outbound-call', {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail } from '@/lib/email'
+import { randomBytes } from 'crypto'
 
 export const dynamic = 'force-dynamic'
 
@@ -112,8 +113,18 @@ export async function POST(request: NextRequest) {
     })
   }
 
+  // Generate single-use set-password token (24h)
+  const setPwToken = randomBytes(32).toString('hex')
+  await prisma.verificationToken.create({
+    data: {
+      identifier: `set-password:${user.id}`,
+      token: setPwToken,
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    },
+  }).catch(err => console.error('[invites] failed to create set-pw token:', err))
+
   // Generate signup link
-  const signupUrl = `${APP_URL}/register?email=${encodeURIComponent(email)}&role=${role}`
+  const signupUrl = `${APP_URL}/set-password?token=${setPwToken}`
 
   // Send invite email
   try {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail } from '@/lib/email'
+import { randomBytes } from 'crypto'
 
 const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -108,8 +109,19 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return { user, contract }
   })
 
+  // Generate single-use set-password token (24h expiry)
+  const setPwToken = randomBytes(32).toString('hex')
+  const setPwExpires = new Date(Date.now() + 24 * 60 * 60 * 1000)
+  await prisma.verificationToken.create({
+    data: {
+      identifier: `set-password:${user.id}`,
+      token: setPwToken,
+      expires: setPwExpires,
+    },
+  }).catch(err => console.error('[recruit/convert] failed to create set-pw token:', err))
+
   // Send invite email (best-effort — don't fail if email service down)
-  const signupUrl = `${APP_URL}/register?email=${encodeURIComponent(app.email)}&role=${app.role}`
+  const signupUrl = `${APP_URL}/set-password?token=${setPwToken}`
   const firstName = app.name.split(' ')[0]
   const roleLabel = app.role === 'MANAGER' ? 'Manager' : 'Crew'
 
@@ -133,10 +145,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
           </p>
           <p style="margin:0 0 24px;">
             <a href="${signupUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">
-              Create my account →
+              Set my password →
             </a>
           </p>
-          <p style="font-size:13px;color:#999;">This link is exclusive to you. After creating your account you'll review and sign your service agreement.</p>
+          <p style="font-size:13px;color:#999;">This link is exclusive to you and expires in 24 hours. After setting your password you'll review and sign your service agreement.</p>
         </td></tr>
         <tr><td style="background:#f9f9f7;padding:20px 32px;border-top:1px solid #ececec;">
           <p style="margin:0;font-size:12px;color:#999;">HostMasters · Costa Tropical, Spain</p>
