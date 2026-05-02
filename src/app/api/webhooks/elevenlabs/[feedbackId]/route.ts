@@ -10,9 +10,12 @@ import { runPostFeedbackWorkflows } from '@/lib/vagf/workflows'
  */
 function verifyElevenLabsSignature(rawBody: string, signatureHeader: string | null): boolean {
   const secret = process.env.ELEVENLABS_WEBHOOK_SECRET
-  // Dev mode: if no secret configured, allow (but log a warning)
   if (!secret) {
-    console.warn('[VAGF] ELEVENLABS_WEBHOOK_SECRET not set — accepting webhook without verification')
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[VAGF] ELEVENLABS_WEBHOOK_SECRET not set — rejecting webhook in production')
+      return false
+    }
+    console.warn('[VAGF] ELEVENLABS_WEBHOOK_SECRET not set — accepting (dev only)')
     return true
   }
   if (!signatureHeader) return false

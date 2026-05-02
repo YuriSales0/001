@@ -23,7 +23,7 @@ export async function POST(
 
   const property = await prisma.property.findUnique({
     where: { id: params.id },
-    select: { id: true, status: true, photos: true, houseRules: true, ownerId: true, name: true },
+    select: { id: true, status: true, photos: true, houseRules: true, smartLockId: true, ownerId: true, name: true },
   })
   if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   if ((property.status as string) !== 'PENDING_APPROVAL') {
@@ -34,6 +34,9 @@ export async function POST(
   }
   if (!property.houseRules || property.houseRules.length === 0) {
     return NextResponse.json({ error: 'Property must have house rules selected before approval' }, { status: 400 })
+  }
+  if (!property.smartLockId) {
+    return NextResponse.json({ error: 'Smart Lock must be installed before approval' }, { status: 400 })
   }
 
   const masterSigned = await hasSignedMasterContract(property.ownerId)
