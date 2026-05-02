@@ -551,36 +551,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ───────── Local credibility ───────── */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <p className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: "#B08A3E" }}>
-              {t('landing.credibility.badge')}
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight" style={{ color: "#0B1E3A" }}>
-              {t('landing.credibility.title')}
-            </h2>
-            <p className="mt-2 text-gray-500">{t('landing.credibility.subtitle')}</p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { icon: MapPin, key: 'zone' },
-              { icon: Home, key: 'hq' },
-              { icon: Users, key: 'team' },
-              { icon: Globe, key: 'languages' },
-              { icon: CheckCircle2, key: 'process' },
-              { icon: Mail, key: 'contactInfo' },
-            ].map(({ icon: Icon, key }) => (
-              <div key={key} className="flex items-start gap-3 rounded-lg border border-gray-100 p-4">
-                <Icon className="h-5 w-5 shrink-0 mt-0.5" style={{ color: '#B08A3E' }} />
-                <span className="text-sm text-gray-600">{t(`landing.credibility.${key}`)}</span>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-center text-sm font-medium mt-10" style={{ color: '#B08A3E' }}>
+      {/* ───────── Central narrative ───────── */}
+      <section className="py-10 sm:py-14 bg-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <p className="text-center text-sm sm:text-base font-medium" style={{ color: '#B08A3E' }}>
             {t('landing.centralNarrative')}
           </p>
         </div>
