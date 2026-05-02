@@ -1017,10 +1017,10 @@ x-integration-token: ${token}
         <div className="space-y-3">
           <p className="text-xs text-gray-600">Add a WhatsApp click-to-chat button to your website or ads. When a prospect messages you, manually create the lead in the CRM.</p>
           <p className="text-xs font-semibold text-gray-700">Generate a click-to-chat link:</p>
-          <CodeBlock code={`https://wa.me/34XXXXXXXXX?text=Hi%20HostMasters%2C%20I%27m%20interested%20in%20property%20management`} />
+          <CodeBlock code={`https://wa.me/34657190788?text=Hi%20HostMasters%2C%20I%27m%20interested%20in%20property%20management`} />
           <p className="text-xs text-gray-600"><strong>Tip:</strong> Add UTM parameters to your ad links to track which campaign generated the lead, then note it in the lead source.</p>
           <p className="text-xs font-semibold text-gray-700 mt-2">HTML button:</p>
-          <CodeBlock code={`<a href="https://wa.me/34XXXXXXXXX?text=Hi%20HostMasters" 
+          <CodeBlock code={`<a href="https://wa.me/34657190788?text=Hi%20HostMasters" 
    target="_blank"
    style="background:#25D366;color:white;padding:12px 24px;border-radius:8px;text-decoration:none">
   💬 Chat on WhatsApp

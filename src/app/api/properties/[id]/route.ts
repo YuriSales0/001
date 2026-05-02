@@ -172,8 +172,22 @@ export async function DELETE(
   try {
     const { id } = params
 
-    await prisma.property.delete({
-      where: { id },
+    const property = await prisma.property.findUnique({ where: { id }, select: { id: true, status: true } })
+    if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    if (property.status === 'ACTIVE') {
+      return NextResponse.json({ error: 'Cannot delete an ACTIVE property. Deactivate it first.' }, { status: 400 })
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.task.deleteMany({ where: { propertyId: id } })
+      await tx.reservation.deleteMany({ where: { propertyId: id } })
+      await tx.payout.deleteMany({ where: { propertyId: id } })
+      await tx.monthlyReport.deleteMany({ where: { propertyId: id } })
+      await tx.expense.deleteMany({ where: { propertyId: id } })
+      await tx.blockedDate.deleteMany({ where: { propertyId: id } })
+      await tx.contract.deleteMany({ where: { propertyId: id } })
+      await tx.paymentReceipt.updateMany({ where: { propertyId: id }, data: { propertyId: null } })
+      await tx.property.delete({ where: { id } })
     })
 
     return NextResponse.json({ message: 'Property deleted successfully' })

@@ -31,10 +31,6 @@ export async function POST(request: NextRequest) {
       data: { loginToken },
     })
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[Partner Auth] Login URL: /partner?token=${loginToken}`)
-    }
-
     return NextResponse.json({ ok: true })
   } catch (error) {
     console.error('[Partner Auth] Error:', error)

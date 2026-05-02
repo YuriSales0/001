@@ -1,17 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe'
+import { requireRole } from '@/lib/session'
+import { prisma } from '@/lib/prisma'
 
 const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
-/**
- * GET /api/stripe/connect/onboard-refresh
- *
- * Called by Stripe when the AccountLink expires or the user refreshes.
- * Creates a new AccountLink and redirects the user back to onboarding.
- */
 export async function GET(request: NextRequest) {
+  const guard = await requireRole(['CREW', 'ADMIN'])
+  if (guard.error) {
+    return NextResponse.redirect(`${APP_URL}/login`)
+  }
+
   const accountId = request.nextUrl.searchParams.get('accountId')
   if (!accountId) {
+    return NextResponse.redirect(`${APP_URL}/crew?connect=error`)
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: guard.user!.id },
+    select: { stripeConnectId: true },
+  })
+  if (user?.stripeConnectId !== accountId) {
     return NextResponse.redirect(`${APP_URL}/crew?connect=error`)
   }
 

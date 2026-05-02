@@ -12,6 +12,9 @@ const RATE_LIMITS: Record<string, { max: number; windowMs: number }> = {
   '/api/leads/public':              { max: 10, windowMs: 60_000 },    // contact form: 10/min
   '/api/feedback':                  { max: 20, windowMs: 60_000 },    // feedback: 20/min
   '/api/guest-stay':                { max: 30, windowMs: 60_000 },    // guest chat: 30/min
+  '/api/auth/resend-verification':  { max: 3,  windowMs: 60_000 },    // resend: 3/min
+  '/api/auth/check-email-status':   { max: 5,  windowMs: 60_000 },    // email check: 5/min
+  '/api/partner/auth':              { max: 5,  windowMs: 60_000 },    // partner login: 5/min
 }
 
 function checkRateLimit(ip: string, path: string): boolean {

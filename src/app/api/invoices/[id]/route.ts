@@ -53,10 +53,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     const data: Record<string, unknown> = { status }
     if (status === 'PAID') data.paidAt = new Date()
 
-    const invoice = await prisma.paymentReceipt.update({
-      where: { id: params.id },
-      data,
-      include: { client: { select: { name: true, email: true } } },
+    const invoice = await prisma.$transaction(async (tx) => {
+      const fresh = await tx.paymentReceipt.findUnique({ where: { id: params.id }, select: { status: true } })
+      if (fresh?.status === 'PAID' && status === 'PAID') throw new Error('ALREADY_PAID')
+      if (fresh?.status === 'CANCELLED') throw new Error('ALREADY_CANCELLED')
+      return tx.paymentReceipt.update({
+        where: { id: params.id },
+        data,
+        include: { client: { select: { name: true, email: true } } },
+      })
     })
 
     // Send thank-you email when marked paid
@@ -83,6 +88,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     return NextResponse.json(invoice)
   } catch (e) {
+    if (e instanceof Error && e.message === 'ALREADY_PAID') {
+      return NextResponse.json({ error: 'Invoice already paid' }, { status: 409 })
+    }
+    if (e instanceof Error && e.message === 'ALREADY_CANCELLED') {
+      return NextResponse.json({ error: 'Invoice already cancelled' }, { status: 409 })
+    }
     console.error(e)
     return NextResponse.json({ error: 'Failed' }, { status: 500 })
   }

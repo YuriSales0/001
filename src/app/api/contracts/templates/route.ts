@@ -6,7 +6,7 @@ const TEMPLATES: Record<string, { title: string; terms: string }> = {
     title: 'Manager Service Agreement',
     terms: `# MANAGER SERVICE AGREEMENT
 
-**Between:** HostMasters Costa Tropical S.L., CIF B-XXXXXXXX, Almuñécar, Granada, Spain ("HostMasters")
+**Between:** HostMasters Costa Tropical S.L., CIF pending registration, Almuñécar, Granada, Spain ("HostMasters")
 **And:** [Manager full name], NIF/NIE [number] ("Manager")
 
 ---
