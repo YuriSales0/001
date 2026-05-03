@@ -19,38 +19,51 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        // DEBUG MODE: throw errors with descriptive codes so they appear in URL
-        if (!credentials?.email) throw new Error('DBG_NO_EMAIL')
-        if (!credentials?.password) throw new Error('DBG_NO_PASSWORD')
-
+        if (!credentials?.email || !credentials?.password) return null
         const email = credentials.email.toLowerCase().trim()
 
-        if (!prisma) throw new Error('DBG_PRISMA_NULL')
-
-        let user
         try {
-          user = await prisma.user.findUnique({ where: { email } })
-        } catch (e) {
-          throw new Error('DBG_DB_ERROR_' + (e instanceof Error ? e.message.slice(0, 50) : 'unknown'))
+          if (prisma) {
+            // Use select to avoid failing on missing schema columns in DB
+            const user = await prisma.user.findUnique({
+              where: { email },
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                password: true,
+                emailVerified: true,
+                role: true,
+                language: true,
+                isSuperUser: true,
+                isCaptain: true,
+              },
+            })
+            if (user?.password) {
+              const ok = await bcrypt.compare(credentials.password, user.password)
+              if (!ok) return null
+              if (!user.emailVerified) {
+                throw new Error('EMAIL_NOT_VERIFIED')
+              }
+              return {
+                id: user.id,
+                name: user.name ?? email,
+                email: user.email,
+                role: user.role as AppRole,
+                language: user.language,
+                isSuperUser: user.isSuperUser ?? false,
+                isCaptain: user.isCaptain ?? false,
+              }
+            }
+          }
+        } catch (err) {
+          if (err instanceof Error && err.message === 'EMAIL_NOT_VERIFIED') {
+            throw err
+          }
+          // fall through to dev fallback on infra errors
         }
 
-        if (!user) throw new Error('DBG_USER_NOT_FOUND_' + email)
-        if (!user.password) throw new Error('DBG_NO_PASSWORD_IN_DB')
-
-        const ok = await bcrypt.compare(credentials.password, user.password)
-        if (!ok) throw new Error('DBG_BCRYPT_MISMATCH')
-
-        if (!user.emailVerified) throw new Error('EMAIL_NOT_VERIFIED')
-
-        return {
-          id: user.id,
-          name: user.name ?? email,
-          email: user.email,
-          role: user.role as AppRole,
-          language: user.language,
-          isSuperUser: (user as unknown as { isSuperUser?: boolean }).isSuperUser ?? false,
-          isCaptain: (user as unknown as { isCaptain?: boolean }).isCaptain ?? false,
-        }
+        return null
       },
     }),
   ],
