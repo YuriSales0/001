@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
 import { randomBytes } from 'crypto'
+import { forgotPasswordSubject, forgotPasswordBody, normalizeEmailLocale } from '@/lib/email-i18n'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
   // Always respond ok regardless of whether user exists (prevent enumeration)
   const user = await prisma.user.findUnique({
     where: { email },
-    select: { id: true, name: true, email: true },
+    select: { id: true, name: true, email: true, language: true },
   })
 
   if (!user) {
@@ -59,14 +60,15 @@ export async function POST(request: NextRequest) {
 
   const resetUrl = `${APP_URL}/set-password?token=${token}`
   const firstName = user.name?.split(' ')[0] || ''
+  const loc = normalizeEmailLocale(user.language)
 
   // Best-effort email send
   try {
     await sendEmail({
       to: user.email,
-      subject: 'Reset your HostMasters password',
+      subject: forgotPasswordSubject[loc],
       html: `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"></head>
+<html lang="${loc}"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f4f4f0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f0;padding:40px 0;">
     <tr><td align="center">
@@ -75,16 +77,16 @@ export async function POST(request: NextRequest) {
           <span style="font-size:20px;font-weight:700;color:#fff;">Host<span style="color:#B08A3E;">Masters</span></span>
         </td></tr>
         <tr><td style="padding:32px;">
-          <h2 style="margin:0 0 8px;font-size:20px;color:#0B1E3A;">Reset your password${firstName ? `, ${firstName}` : ''}</h2>
+          <h2 style="margin:0 0 8px;font-size:20px;color:#0B1E3A;">${forgotPasswordBody.title(loc, firstName)}</h2>
           <p style="font-size:15px;color:#555;margin:0 0 24px;">
-            We received a request to reset the password for your HostMasters account. Click the button below to choose a new password. This link expires in 1 hour.
+            ${forgotPasswordBody.intro(loc)}
           </p>
           <p style="margin:0 0 24px;">
             <a href="${resetUrl}" style="display:inline-block;background:#B08A3E;color:#0B1E3A;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">
-              Reset my password →
+              ${forgotPasswordBody.cta(loc)}
             </a>
           </p>
-          <p style="font-size:13px;color:#999;margin:0;">If you didn't request this, ignore this email — your password will not change.</p>
+          <p style="font-size:13px;color:#999;margin:0;">${forgotPasswordBody.footer(loc)}</p>
         </td></tr>
         <tr><td style="background:#f9f9f7;padding:20px 32px;border-top:1px solid #ececec;">
           <p style="margin:0;font-size:12px;color:#999;">HostMasters · Costa Tropical, Spain</p>

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
 import bcrypt from 'bcryptjs'
 import { randomInt } from 'crypto'
+import { twoFASubject, twoFABody, normalizeEmailLocale } from '@/lib/email-i18n'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
       email: true,
       password: true,
       emailVerified: true,
+      language: true,
       twoFactorEnabled: true,
       twoFactorMethod: true,
     },
@@ -90,12 +92,13 @@ export async function POST(request: NextRequest) {
   })
 
   // Send email (best-effort; failure surfaces to client)
+  const loc = normalizeEmailLocale(user.language)
   try {
     await sendEmail({
       to: user.email,
-      subject: `Your HostMasters verification code: ${code}`,
+      subject: twoFASubject(loc, code),
       html: `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"></head>
+<html lang="${loc}"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f4f4f0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f0;padding:40px 0;">
     <tr><td align="center">
@@ -104,14 +107,12 @@ export async function POST(request: NextRequest) {
           <span style="font-size:20px;font-weight:700;color:#fff;">Host<span style="color:#B08A3E;">Masters</span></span>
         </td></tr>
         <tr><td style="padding:32px;">
-          <h2 style="margin:0 0 8px;font-size:20px;color:#0B1E3A;">Verification code</h2>
-          <p style="font-size:15px;color:#555;margin:0 0 24px;">
-            Use this code to complete your sign-in. It expires in 10 minutes.
-          </p>
+          <h2 style="margin:0 0 8px;font-size:20px;color:#0B1E3A;">${twoFABody.title(loc)}</h2>
+          <p style="font-size:15px;color:#555;margin:0 0 24px;">${twoFABody.intro(loc)}</p>
           <div style="text-align:center;padding:24px;background:#f9f9f7;border-radius:8px;margin:0 0 24px;">
             <span style="font-family:'Courier New',monospace;font-size:36px;font-weight:700;letter-spacing:8px;color:#0B1E3A;">${code}</span>
           </div>
-          <p style="font-size:13px;color:#999;margin:0;">If you didn't try to sign in, ignore this email and consider changing your password.</p>
+          <p style="font-size:13px;color:#999;margin:0;">${twoFABody.footer(loc)}</p>
         </td></tr>
         <tr><td style="background:#f9f9f7;padding:20px 32px;border-top:1px solid #ececec;">
           <p style="margin:0;font-size:12px;color:#999;">HostMasters · Costa Tropical, Spain</p>
