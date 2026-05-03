@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail, receiptCreatedEmail, receiptPaidEmail } from '@/lib/email'
+import { normalizeEmailLocale, receiptPaidI18n } from '@/lib/email-i18n'
 
 const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -60,16 +61,17 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return tx.paymentReceipt.update({
         where: { id: params.id },
         data,
-        include: { client: { select: { name: true, email: true } } },
+        include: { client: { select: { name: true, email: true, language: true } } },
       })
     })
 
     // Send thank-you email when marked paid
     if (status === 'PAID' && invoice.client?.email) {
+      const clientLocale = normalizeEmailLocale(invoice.client.language)
       try {
         await sendEmail({
           to: invoice.client.email,
-          subject: `Payment confirmed — HostMasters`,
+          subject: receiptPaidI18n.subject(clientLocale, 'HostMasters'),
           html: receiptPaidEmail({
             clientName: invoice.client.name || invoice.client.email,
             invoiceId: invoice.id,
@@ -78,6 +80,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
             currency: invoice.currency,
             paidAt: invoice.paidAt?.toISOString(),
             dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
+            locale: clientLocale,
           }),
         })
       } catch (e) {

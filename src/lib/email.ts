@@ -9,6 +9,9 @@ import {
   monthlyStatementI18n,
   ownerStatementI18n,
   subscriptionReceiptI18n,
+  taskCompletedI18n,
+  receiptCreatedI18n,
+  receiptPaidI18n,
 } from './email-i18n'
 
 export const resend = new Resend(process.env.RESEND_API_KEY || 'placeholder')
@@ -94,22 +97,25 @@ export function taskCompletedEmail(opts: {
   condition?: string
   issues?: string
   notes?: string
+  locale?: EmailLocale
 }) {
   const { propertyName, taskTitle, taskType, condition, issues, notes } = opts
-  const conditionLabel = condition === 'good' ? 'Good condition'
-    : condition === 'minor' ? 'Minor issues observed'
-    : condition === 'major' ? 'Major issues — follow-up required'
+  const loc = opts.locale ?? 'en'
+  const t = taskCompletedI18n
+  const conditionLabel = condition === 'good' ? t.conditionGood[loc]
+    : condition === 'minor' ? t.conditionMinor[loc]
+    : condition === 'major' ? t.conditionMajor[loc]
     : ''
   return `
     <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1A1A1A;">
       <div style="border-bottom: 2px solid #C9A84C; padding-bottom: 12px; margin-bottom: 24px;">
-        <h2 style="color: #1A1A1A; margin: 0;">Visit completed at ${escapeHtml(propertyName)}</h2>
+        <h2 style="color: #1A1A1A; margin: 0;">${t.titlePrefix[loc]} ${escapeHtml(propertyName)}</h2>
         <p style="color: #777; margin: 4px 0 0 0; font-size: 13px;">${escapeHtml(taskTitle)} · ${escapeHtml(taskType.replace(/_/g, ' ').toLowerCase())}</p>
       </div>
-      ${conditionLabel ? `<p><strong>Status:</strong> ${escapeHtml(conditionLabel)}</p>` : ''}
-      ${issues ? `<p><strong>Notes from our team:</strong><br/>${escapeHtml(issues).replace(/\n/g, '<br/>')}</p>` : ''}
+      ${conditionLabel ? `<p><strong>${t.status[loc]}</strong> ${escapeHtml(conditionLabel)}</p>` : ''}
+      ${issues ? `<p><strong>${t.notesLabel[loc]}</strong><br/>${escapeHtml(issues).replace(/\n/g, '<br/>')}</p>` : ''}
       ${notes ? `<p style="color: #555;">${escapeHtml(notes).replace(/\n/g, '<br/>')}</p>` : ''}
-      <p style="margin-top: 24px;">You can view the full report in your dashboard at any time.</p>
+      <p style="margin-top: 24px;">${t.fullReport[loc]}</p>
       <p style="color: #999; margin-top: 24px; font-size: 12px;">— HostMasters · Costa Tropical, Spain</p>
     </div>
   `
@@ -216,22 +222,25 @@ function receiptTable(opts: {
   currency: string
   dueDate?: string | null
   notes?: string | null
+  locale?: EmailLocale
 }) {
-  const fmtAmount = new Intl.NumberFormat('en-IE', { style: 'currency', currency: opts.currency || 'EUR' }).format(opts.amount)
+  const loc = opts.locale ?? 'en'
+  const t = receiptCreatedI18n
+  const fmtAmount = fmtMoney(opts.amount, loc, opts.currency || 'EUR')
   const shortId = opts.invoiceId.slice(-8).toUpperCase()
   return `
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:20px 0;">
       <tr style="background:#f9f9f7;">
-        <td style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Invoice #</td>
-        <td style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Description</td>
-        <td style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;text-align:right;">Amount</td>
+        <td style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">${t.invoiceCol[loc]}</td>
+        <td style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">${t.descriptionCol[loc]}</td>
+        <td style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;text-align:right;">${t.amountCol[loc]}</td>
       </tr>
       <tr>
         <td style="padding:14px 16px;font-size:13px;color:#555;font-family:monospace;">${shortId}</td>
         <td style="padding:14px 16px;font-size:14px;color:#111;">${escapeHtml(opts.description)}</td>
         <td style="padding:14px 16px;font-size:18px;font-weight:700;color:#111827;text-align:right;">${fmtAmount}</td>
       </tr>
-      ${opts.dueDate ? `<tr style="background:#fffbf0;"><td colspan="2" style="padding:10px 16px;font-size:13px;color:#92681a;">Due date</td><td style="padding:10px 16px;font-size:13px;color:#92681a;text-align:right;font-weight:600;">${new Date(opts.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>` : ''}
+      ${opts.dueDate ? `<tr style="background:#fffbf0;"><td colspan="2" style="padding:10px 16px;font-size:13px;color:#92681a;">${t.dueDate[loc]}</td><td style="padding:10px 16px;font-size:13px;color:#92681a;text-align:right;font-weight:600;">${fmtDate(opts.dueDate, loc)}</td></tr>` : ''}
     </table>
     ${opts.notes ? `<p style="font-size:13px;color:#666;border-left:3px solid #e0e0e0;padding-left:12px;margin:16px 0;">${escapeHtml(opts.notes)}</p>` : ''}
   `
@@ -246,18 +255,21 @@ export function receiptCreatedEmail(opts: {
   dueDate?: string | null
   notes?: string | null
   dashboardUrl?: string
+  locale?: EmailLocale
 }) {
+  const loc = opts.locale ?? 'en'
   const name = opts.clientName.split(' ')[0] || opts.clientName
+  const t = receiptCreatedI18n
   const body = `
-    <h2 style="margin:0 0 8px;font-size:22px;color:#111827;">New payment receipt from HostMasters</h2>
-    <p style="margin:0 0 24px;font-size:15px;color:#555;">Dear ${escapeHtml(name)},</p>
-    <p style="font-size:15px;color:#444;margin:0 0 8px;">Please find your invoice details below.</p>
-    ${receiptTable(opts)}
-    <p style="font-size:14px;color:#555;">You can view your account and invoices at any time through your owner portal.</p>
-    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:24px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">View in portal</a></p>` : ''}
-    <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for your trust.<br>— The HostMasters Team</p>
+    <h2 style="margin:0 0 8px;font-size:22px;color:#111827;">${t.title[loc]}</h2>
+    <p style="margin:0 0 24px;font-size:15px;color:#555;">${dearLabel[loc]} ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#444;margin:0 0 8px;">${t.intro[loc]}</p>
+    ${receiptTable({ ...opts, locale: loc })}
+    <p style="font-size:14px;color:#555;">${t.portalAccess[loc]}</p>
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:24px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">${t.cta[loc]}</a></p>` : ''}
+    <p style="margin:32px 0 0;font-size:14px;color:#777;">${t.thanks[loc]}<br>${teamSignoff[loc]}</p>
   `
-  return baseWrapper(body)
+  return baseWrapper(body, loc)
 }
 
 export function receiptPaidEmail(opts: {
@@ -268,32 +280,35 @@ export function receiptPaidEmail(opts: {
   currency: string
   paidAt?: string
   dashboardUrl?: string
+  locale?: EmailLocale
 }) {
+  const loc = opts.locale ?? 'en'
   const name = opts.clientName.split(' ')[0] || opts.clientName
-  const fmtAmount = new Intl.NumberFormat('en-IE', { style: 'currency', currency: opts.currency || 'EUR' }).format(opts.amount)
+  const t = receiptPaidI18n
+  const fmtAmount = fmtMoney(opts.amount, loc, opts.currency || 'EUR')
   const shortId = opts.invoiceId.slice(-8).toUpperCase()
-  const paidDate = opts.paidAt ? new Date(opts.paidAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  const paidDate = fmtDate(opts.paidAt ?? new Date().toISOString(), loc)
   const body = `
     <div style="text-align:center;padding:8px 0 24px;">
       <div style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:50%;width:56px;height:56px;line-height:56px;font-size:28px;">✓</div>
-      <h2 style="margin:16px 0 4px;font-size:22px;color:#111827;">Payment confirmed</h2>
-      <p style="margin:0;font-size:15px;color:#555;">Thank you, ${escapeHtml(name)}</p>
+      <h2 style="margin:16px 0 4px;font-size:22px;color:#111827;">${t.title[loc]}</h2>
+      <p style="margin:0;font-size:15px;color:#555;">${t.thanksName(loc, escapeHtml(name))}</p>
     </div>
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;margin:0 0 24px;">
       <tr>
         <td style="padding:16px 20px;">
-          <p style="margin:0;font-size:13px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Amount paid</p>
+          <p style="margin:0;font-size:13px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">${t.amountPaid[loc]}</p>
           <p style="margin:4px 0 0;font-size:28px;font-weight:700;color:#111827;">${fmtAmount}</p>
-          <p style="margin:4px 0 0;font-size:12px;color:#555;">Invoice #${shortId} · ${paidDate}</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#555;">${t.invoiceLabel(loc, shortId)} · ${paidDate}</p>
         </td>
       </tr>
     </table>
-    <p style="font-size:14px;color:#555;"><strong>Service:</strong> ${escapeHtml(opts.description)}</p>
-    <p style="font-size:14px;color:#777;margin:24px 0 0;">We appreciate your continued partnership. Your property is in good hands.</p>
-    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View your portal</a></p>` : ''}
-    <p style="margin:32px 0 0;font-size:14px;color:#777;">Warm regards,<br>— The HostMasters Team</p>
+    <p style="font-size:14px;color:#555;"><strong>${t.service[loc]}</strong> ${escapeHtml(opts.description)}</p>
+    <p style="font-size:14px;color:#777;margin:24px 0 0;">${t.appreciation[loc]}</p>
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">${t.cta[loc]}</a></p>` : ''}
+    <p style="margin:32px 0 0;font-size:14px;color:#777;">${t.warmRegards[loc]}<br>${teamSignoff[loc]}</p>
   `
-  return baseWrapper(body)
+  return baseWrapper(body, loc)
 }
 
 export function ownerStatementEmail(opts: {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail, ownerStatementEmail, receiptPaidEmail } from '@/lib/email'
-import { normalizeEmailLocale, ownerStatementI18n } from '@/lib/email-i18n'
+import { normalizeEmailLocale, ownerStatementI18n, receiptPaidI18n } from '@/lib/email-i18n'
 import { notify } from '@/lib/notifications'
 
 const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
@@ -180,7 +180,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         if (receipt) {
           await sendEmail({
             to: owner.email,
-            subject: `Payment confirmed — ${payout.property.name}`,
+            subject: receiptPaidI18n.subject(ownerLocale, payout.property.name),
             html: receiptPaidEmail({
               clientName:  owner.name || owner.email,
               invoiceId:   receipt.id,
@@ -189,6 +189,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
               currency:    'EUR',
               paidAt:      paidAt.toISOString(),
               dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
+              locale:      ownerLocale,
             }),
           }).catch(e => console.error('Invoice email error:', e))
         }

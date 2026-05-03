@@ -354,3 +354,67 @@ export const subscriptionReceiptI18n = {
   cta: { en: 'Go to my portal', pt: 'Ir para o meu portal', es: 'Ir a mi portal', de: 'Zu meinem Portal', nl: 'Naar mijn portaal', fr: 'Aller au portail', sv: 'Till min portal', da: 'Til min portal' } as Record<EmailLocale, string>,
   closing: { en: 'We look forward to another great month.', pt: 'Esperamos outro mês excelente.', es: 'Esperamos otro gran mes.', de: 'Wir freuen uns auf einen weiteren großartigen Monat.', nl: 'Wij kijken uit naar een volgende geweldige maand.', fr: 'Nous attendons avec impatience un autre mois exceptionnel.', sv: 'Vi ser fram emot en till bra månad.', da: 'Vi ser frem til en ny god måned.' } as Record<EmailLocale, string>,
 }
+
+// ─── Receipt (invoice) Created ──────────────────────────────────────────────
+
+export const receiptCreatedI18n = {
+  subject: { en: 'Invoice from HostMasters', pt: 'Factura HostMasters', es: 'Factura HostMasters', de: 'HostMasters-Rechnung', nl: 'Factuur van HostMasters', fr: 'Facture HostMasters', sv: 'Faktura från HostMasters', da: 'Faktura fra HostMasters' } as Record<EmailLocale, string>,
+  title: { en: 'New payment receipt from HostMasters', pt: 'Novo recibo da HostMasters', es: 'Nuevo recibo de HostMasters', de: 'Neuer Zahlungsbeleg von HostMasters', nl: 'Nieuwe factuur van HostMasters', fr: 'Nouveau reçu HostMasters', sv: 'Nytt kvitto från HostMasters', da: 'Ny kvittering fra HostMasters' } as Record<EmailLocale, string>,
+  intro: { en: 'Please find your invoice details below.', pt: 'Aqui estão os detalhes da tua factura.', es: 'Aquí están los detalles de tu factura.', de: 'Bitte finden Sie unten die Details Ihrer Rechnung.', nl: 'Hieronder vindt u de details van uw factuur.', fr: 'Veuillez trouver ci-dessous les détails de votre facture.', sv: 'Här är detaljerna för din faktura.', da: 'Her er detaljerne for din faktura.' } as Record<EmailLocale, string>,
+  invoiceCol: { en: 'Invoice #', pt: 'Factura #', es: 'Factura #', de: 'Rechnung #', nl: 'Factuur #', fr: 'Facture n°', sv: 'Faktura #', da: 'Faktura #' } as Record<EmailLocale, string>,
+  descriptionCol: { en: 'Description', pt: 'Descrição', es: 'Descripción', de: 'Beschreibung', nl: 'Omschrijving', fr: 'Description', sv: 'Beskrivning', da: 'Beskrivelse' } as Record<EmailLocale, string>,
+  amountCol: { en: 'Amount', pt: 'Valor', es: 'Importe', de: 'Betrag', nl: 'Bedrag', fr: 'Montant', sv: 'Belopp', da: 'Beløb' } as Record<EmailLocale, string>,
+  dueDate: { en: 'Due date', pt: 'Data de vencimento', es: 'Fecha de vencimiento', de: 'Fälligkeitsdatum', nl: 'Vervaldatum', fr: 'Date d\'échéance', sv: 'Förfallodatum', da: 'Forfaldsdato' } as Record<EmailLocale, string>,
+  portalAccess: { en: 'You can view your account and invoices at any time through your owner portal.', pt: 'Podes consultar a tua conta e facturas a qualquer momento no portal.', es: 'Puedes ver tu cuenta y facturas en cualquier momento desde el portal.', de: 'Sie können Ihr Konto und Rechnungen jederzeit über Ihr Eigentümerportal einsehen.', nl: 'U kunt uw account en facturen op elk moment in het portaal bekijken.', fr: 'Vous pouvez consulter votre compte et vos factures à tout moment dans le portail.', sv: 'Du kan se ditt konto och fakturor när som helst via portalen.', da: 'Du kan se din konto og fakturaer når som helst via portalen.' } as Record<EmailLocale, string>,
+  cta: { en: 'View in portal', pt: 'Ver no portal', es: 'Ver en el portal', de: 'Im Portal ansehen', nl: 'Bekijken in portaal', fr: 'Voir dans le portail', sv: 'Visa i portalen', da: 'Se i portalen' } as Record<EmailLocale, string>,
+  thanks: { en: 'Thank you for your trust.', pt: 'Obrigado pela tua confiança.', es: 'Gracias por tu confianza.', de: 'Vielen Dank für Ihr Vertrauen.', nl: 'Bedankt voor uw vertrouwen.', fr: 'Merci pour votre confiance.', sv: 'Tack för ditt förtroende.', da: 'Tak for din tillid.' } as Record<EmailLocale, string>,
+}
+
+// ─── Receipt Paid ───────────────────────────────────────────────────────────
+
+export const receiptPaidI18n = {
+  subject: (loc: EmailLocale, propertyOrService: string) => ({
+    en: `Payment confirmed — ${propertyOrService}`,
+    pt: `Pagamento confirmado — ${propertyOrService}`,
+    es: `Pago confirmado — ${propertyOrService}`,
+    de: `Zahlung bestätigt — ${propertyOrService}`,
+    nl: `Betaling bevestigd — ${propertyOrService}`,
+    fr: `Paiement confirmé — ${propertyOrService}`,
+    sv: `Betalning bekräftad — ${propertyOrService}`,
+    da: `Betaling bekræftet — ${propertyOrService}`,
+  }[loc]),
+  title: { en: 'Payment confirmed', pt: 'Pagamento confirmado', es: 'Pago confirmado', de: 'Zahlung bestätigt', nl: 'Betaling bevestigd', fr: 'Paiement confirmé', sv: 'Betalning bekräftad', da: 'Betaling bekræftet' } as Record<EmailLocale, string>,
+  thanksName: (loc: EmailLocale, name: string) => ({
+    en: `Thank you, ${name}`, pt: `Obrigado, ${name}`, es: `Gracias, ${name}`, de: `Vielen Dank, ${name}`, nl: `Bedankt, ${name}`, fr: `Merci, ${name}`, sv: `Tack, ${name}`, da: `Tak, ${name}`,
+  }[loc]),
+  amountPaid: { en: 'Amount paid', pt: 'Valor pago', es: 'Importe pagado', de: 'Bezahlter Betrag', nl: 'Betaald bedrag', fr: 'Montant payé', sv: 'Betalat belopp', da: 'Betalt beløb' } as Record<EmailLocale, string>,
+  invoiceLabel: (loc: EmailLocale, id: string) => ({
+    en: `Invoice #${id}`, pt: `Factura #${id}`, es: `Factura #${id}`, de: `Rechnung #${id}`, nl: `Factuur #${id}`, fr: `Facture n°${id}`, sv: `Faktura #${id}`, da: `Faktura #${id}`,
+  }[loc]),
+  service: { en: 'Service:', pt: 'Serviço:', es: 'Servicio:', de: 'Leistung:', nl: 'Service:', fr: 'Service :', sv: 'Tjänst:', da: 'Service:' } as Record<EmailLocale, string>,
+  appreciation: { en: 'We appreciate your continued partnership. Your property is in good hands.', pt: 'Agradecemos a tua confiança. A tua propriedade está em boas mãos.', es: 'Agradecemos tu confianza. Tu propiedad está en buenas manos.', de: 'Wir schätzen Ihre fortwährende Partnerschaft. Ihre Immobilie ist in guten Händen.', nl: 'We waarderen uw voortdurende samenwerking. Uw woning is in goede handen.', fr: 'Nous apprécions votre confiance continue. Votre bien est entre de bonnes mains.', sv: 'Vi uppskattar ditt fortsatta samarbete. Din fastighet är i goda händer.', da: 'Vi sætter pris på dit fortsatte samarbejde. Din ejendom er i gode hænder.' } as Record<EmailLocale, string>,
+  cta: { en: 'View your portal', pt: 'Ver portal', es: 'Ver portal', de: 'Portal ansehen', nl: 'Portaal bekijken', fr: 'Voir le portail', sv: 'Visa portal', da: 'Se portal' } as Record<EmailLocale, string>,
+  warmRegards: { en: 'Warm regards,', pt: 'Cumprimentos,', es: 'Saludos cordiales,', de: 'Mit freundlichen Grüßen,', nl: 'Met vriendelijke groet,', fr: 'Cordialement,', sv: 'Vänliga hälsningar,', da: 'Med venlig hilsen,' } as Record<EmailLocale, string>,
+}
+
+// ─── Task / Visit Completed ─────────────────────────────────────────────────
+
+export const taskCompletedI18n = {
+  subject: (loc: EmailLocale, propertyName: string) => ({
+    en: `Visit completed at ${propertyName}`,
+    pt: `Visita concluída em ${propertyName}`,
+    es: `Visita completada en ${propertyName}`,
+    de: `Besuch abgeschlossen bei ${propertyName}`,
+    nl: `Bezoek voltooid bij ${propertyName}`,
+    fr: `Visite terminée à ${propertyName}`,
+    sv: `Besök slutfört vid ${propertyName}`,
+    da: `Besøg afsluttet på ${propertyName}`,
+  }[loc]),
+  titlePrefix: { en: 'Visit completed at', pt: 'Visita concluída em', es: 'Visita completada en', de: 'Besuch abgeschlossen bei', nl: 'Bezoek voltooid bij', fr: 'Visite terminée à', sv: 'Besök slutfört vid', da: 'Besøg afsluttet på' } as Record<EmailLocale, string>,
+  status: { en: 'Status:', pt: 'Estado:', es: 'Estado:', de: 'Status:', nl: 'Status:', fr: 'Statut :', sv: 'Status:', da: 'Status:' } as Record<EmailLocale, string>,
+  conditionGood: { en: 'Good condition', pt: 'Boas condições', es: 'Buen estado', de: 'Guter Zustand', nl: 'Goede staat', fr: 'Bon état', sv: 'Gott skick', da: 'God stand' } as Record<EmailLocale, string>,
+  conditionMinor: { en: 'Minor issues observed', pt: 'Pequenos problemas observados', es: 'Problemas menores observados', de: 'Kleine Probleme festgestellt', nl: 'Kleine problemen opgemerkt', fr: 'Problèmes mineurs observés', sv: 'Mindre problem upptäckta', da: 'Mindre problemer observeret' } as Record<EmailLocale, string>,
+  conditionMajor: { en: 'Major issues — follow-up required', pt: 'Problemas maiores — necessita seguimento', es: 'Problemas mayores — requiere seguimiento', de: 'Größere Probleme — Nachverfolgung erforderlich', nl: 'Grote problemen — opvolging nodig', fr: 'Problèmes majeurs — suivi requis', sv: 'Större problem — uppföljning krävs', da: 'Større problemer — opfølgning påkrævet' } as Record<EmailLocale, string>,
+  notesLabel: { en: 'Notes from our team:', pt: 'Notas da nossa equipa:', es: 'Notas de nuestro equipo:', de: 'Hinweise unseres Teams:', nl: 'Opmerkingen van ons team:', fr: 'Notes de notre équipe :', sv: 'Anteckningar från vårt team:', da: 'Bemærkninger fra vores team:' } as Record<EmailLocale, string>,
+  fullReport: { en: 'You can view the full report in your dashboard at any time.', pt: 'Podes ver o relatório completo no painel a qualquer momento.', es: 'Puedes ver el informe completo en tu panel en cualquier momento.', de: 'Den vollständigen Bericht finden Sie jederzeit in Ihrem Dashboard.', nl: 'U kunt het volledige rapport op elk moment in uw dashboard bekijken.', fr: 'Vous pouvez consulter le rapport complet dans votre tableau de bord à tout moment.', sv: 'Du kan se den fullständiga rapporten i din panel när som helst.', da: 'Du kan se den fulde rapport i dit dashboard når som helst.' } as Record<EmailLocale, string>,
+}

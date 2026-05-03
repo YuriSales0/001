@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail, taskCompletedEmail } from '@/lib/email'
+import { normalizeEmailLocale, taskCompletedI18n } from '@/lib/email-i18n'
 import { crewScoreEngine } from '@/lib/crew-score'
 import { updateCrewPropertyRelationship } from '@/lib/crew-property'
 import { notify } from '@/lib/notifications'
@@ -30,7 +31,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       include: {
         property: {
           include: {
-            owner: { select: { id: true, name: true, email: true, managerId: true } },
+            owner: { select: { id: true, name: true, email: true, managerId: true, language: true } },
           },
         },
       },
@@ -261,9 +262,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       }).catch(() => {})
 
       if (existing.property.owner.email) {
+        const ownerLocale = normalizeEmailLocale(existing.property.owner.language)
         sendEmail({
           to: existing.property.owner.email,
-          subject: `Visit completed at ${existing.property.name}`,
+          subject: taskCompletedI18n.subject(ownerLocale, existing.property.name),
           html: taskCompletedEmail({
             propertyName: existing.property.name,
             taskTitle: existing.title,
@@ -271,6 +273,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
             condition: reportPayload?.condition,
             issues: reportPayload?.issues,
             notes: reportPayload?.notes,
+            locale: ownerLocale,
           }),
         }).catch(err => console.error('Task completion email failed:', err))
       }

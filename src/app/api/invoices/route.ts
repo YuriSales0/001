@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail, receiptCreatedEmail } from '@/lib/email'
+import { normalizeEmailLocale, receiptCreatedI18n } from '@/lib/email-i18n'
 
 export const dynamic = 'force-dynamic'
 
@@ -76,14 +77,15 @@ export async function POST(req: NextRequest) {
         dueDate: dueDate ? new Date(dueDate) : null,
         notes: notes || null,
       },
-      include: { client: { select: { name: true, email: true } } },
+      include: { client: { select: { name: true, email: true, language: true } } },
     })
 
     // Send invoice email to client
     if (invoice.client?.email) {
+      const clientLocale = normalizeEmailLocale(invoice.client.language)
       await sendEmail({
         to: invoice.client.email,
-        subject: `Invoice from HostMasters`,
+        subject: receiptCreatedI18n.subject[clientLocale],
         html: receiptCreatedEmail({
           clientName: invoice.client.name || invoice.client.email,
           invoiceId: invoice.id,
@@ -93,6 +95,7 @@ export async function POST(req: NextRequest) {
           dueDate: invoice.dueDate?.toISOString() ?? null,
           notes: invoice.notes,
           dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
+          locale: clientLocale,
         }),
       }).catch(e => console.error('Email send error:', e))
     }
