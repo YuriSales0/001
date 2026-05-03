@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const publicPaths = ['/', '/login', '/register', '/onboarding', '/pricing', '/careers', '/beta', '/partner', '/partner/login'];
+const publicPaths = ['/', '/login', '/register', '/onboarding', '/pricing', '/careers', '/beta', '/partner', '/partner/login', '/forgot-password', '/set-password', '/verify-email'];
 
 // ── In-memory rate limiting (per-instance, resets on deploy) ──────────
 // For production at scale, replace with Redis/Upstash. For pilot this is sufficient.
