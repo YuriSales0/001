@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, monthlyStatementEmail } from '@/lib/email'
 import { commissionRateForPlan } from '@/lib/finance'
+import { normalizeEmailLocale, monthName as monthNameI18n, monthlyStatementI18n } from '@/lib/email-i18n'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300 // 5-minute timeout for batch sends
@@ -31,22 +32,19 @@ export async function GET(request: NextRequest) {
   const monthStart = new Date(year, month - 1, 1)
   const monthEnd   = new Date(year, month, 1)
 
-  const MONTH_NAMES = [
-    '', 'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ]
-  const monthName = MONTH_NAMES[month]
-
   // ── BATCH 1: Properties + owners ──────────────────────────────────────────
   const properties = await prisma.property.findMany({
     where: { status: 'ACTIVE' },
     include: {
-      owner: { select: { id: true, name: true, email: true, subscriptionPlan: true } },
+      owner: { select: { id: true, name: true, email: true, subscriptionPlan: true, language: true } },
     },
   })
 
+  // English month name kept for the response payload (machine-readable)
+  const monthNameEn = monthNameI18n(month, 'en')
+
   if (properties.length === 0) {
-    return NextResponse.json({ month: monthName, year, total: 0, sent: 0, skipped: 0, errors: 0, results: [] })
+    return NextResponse.json({ month: monthNameEn, year, total: 0, sent: 0, skipped: 0, errors: 0, results: [] })
   }
 
   const propertyIds = properties.map(p => p.id)
@@ -122,13 +120,15 @@ export async function GET(request: NextRequest) {
       // Send email
       const ownerEmail = property.owner.email
       if (ownerEmail) {
+        const ownerLocale = normalizeEmailLocale(property.owner.language)
+        const monthLocalized = monthNameI18n(month, ownerLocale)
         await sendEmail({
           to: ownerEmail,
-          subject: `Your HostMasters statement — ${monthName} ${year} · ${property.name}`,
+          subject: monthlyStatementI18n.subject(ownerLocale, monthLocalized, year, property.name),
           html: monthlyStatementEmail({
             ownerName:        property.owner.name ?? 'Owner',
             propertyName:     property.name,
-            month:            monthName,
+            month:            monthLocalized,
             year,
             grossRevenue,
             totalExpenses,
@@ -139,6 +139,7 @@ export async function GET(request: NextRequest) {
             dashboardUrl:     process.env.NEXT_PUBLIC_APP_URL
               ? `${process.env.NEXT_PUBLIC_APP_URL}/client/reports`
               : undefined,
+            locale:           ownerLocale,
           }),
         })
 
@@ -157,7 +158,7 @@ export async function GET(request: NextRequest) {
   }
 
   const summary = {
-    month: monthName,
+    month: monthNameEn,
     year,
     total:   results.length,
     sent:    results.filter(r => r.status === 'sent').length,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail, ownerStatementEmail, receiptPaidEmail } from '@/lib/email'
+import { normalizeEmailLocale, ownerStatementI18n } from '@/lib/email-i18n'
 import { notify } from '@/lib/notifications'
 
 const DASHBOARD_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
@@ -80,7 +81,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
           property: {
             select: {
               name: true,
-              owner: { select: { id: true, name: true, email: true } },
+              owner: { select: { id: true, name: true, email: true, language: true } },
             },
           },
           reservation: {
@@ -152,9 +153,10 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         : (payout as unknown as { description?: string }).description ?? `Manual payout — ${payout.property.name}`
 
       if (owner?.email) {
+        const ownerLocale = normalizeEmailLocale(owner.language)
         await sendEmail({
           to: owner.email,
-          subject: `Owner Statement — ${payout.property.name}`,
+          subject: ownerStatementI18n.subject(ownerLocale, payout.property.name),
           html: ownerStatementEmail({
             ownerName:      owner.name || owner.email,
             propertyName:   payout.property.name,
@@ -170,6 +172,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
             checkOut:       payout.reservation?.checkOut.toISOString() ?? paidAt.toISOString(),
             platform:       payout.platform,
             dashboardUrl:   `${DASHBOARD_URL}/client/payouts`,
+            locale:         ownerLocale,
           }),
         }).catch(e => console.error('Owner statement email error:', e))
 

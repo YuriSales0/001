@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { getStripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, subscriptionReceiptEmail } from '@/lib/email'
+import { normalizeEmailLocale, subscriptionReceiptI18n } from '@/lib/email-i18n'
 import { notify } from '@/lib/notifications'
 import { ensureClientMasterContract } from '@/lib/contracts'
 import Stripe from 'stripe'
@@ -213,9 +214,10 @@ export async function POST(req: NextRequest) {
         })
 
         if (user.email) {
+          const userLocale = normalizeEmailLocale(user.language)
           sendEmail({
             to: user.email,
-            subject: `Thank you — HostMasters ${planName} subscription`,
+            subject: subscriptionReceiptI18n.subject(userLocale, planName),
             html: subscriptionReceiptEmail({
               clientName: user.name || user.email,
               plan: planName,
@@ -225,6 +227,7 @@ export async function POST(req: NextRequest) {
               periodEnd,
               invoiceId: receipt.id,
               dashboardUrl: `${DASHBOARD_URL}/client/payouts`,
+              locale: userLocale,
             }),
           }).catch(e => console.error('Subscription email error:', e))
         }

@@ -1,4 +1,15 @@
 import { Resend } from 'resend'
+import {
+  type EmailLocale,
+  fmtMoney,
+  fmtDate,
+  wrapperFooter,
+  teamSignoff,
+  dearLabel,
+  monthlyStatementI18n,
+  ownerStatementI18n,
+  subscriptionReceiptI18n,
+} from './email-i18n'
 
 export const resend = new Resend(process.env.RESEND_API_KEY || 'placeholder')
 
@@ -127,44 +138,48 @@ export function monthlyStatementEmail(opts: {
   ownerPayout: number
   reservationCount: number
   dashboardUrl?: string
+  locale?: EmailLocale
 }) {
+  const loc = opts.locale ?? 'en'
   const name = opts.ownerName.split(' ')[0] || opts.ownerName
-  const fmt = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(n)
+  const fmt = (n: number) => fmtMoney(n, loc)
+  const t = monthlyStatementI18n
+  const monthYear = `${opts.month} ${opts.year}`
   const body = `
-    <h2 style="margin:0 0 4px;font-size:22px;color:#111827;">Monthly Statement</h2>
+    <h2 style="margin:0 0 4px;font-size:22px;color:#111827;">${t.title[loc]}</h2>
     <p style="margin:0 0 24px;font-size:13px;color:#999;">${escapeHtml(opts.month)} ${opts.year} · ${escapeHtml(opts.propertyName)}</p>
-    <p style="font-size:15px;color:#555;margin:0 0 24px;">Dear ${escapeHtml(name)},<br><br>Here is your financial summary for <strong>${escapeHtml(opts.propertyName)}</strong> in <strong>${escapeHtml(opts.month)} ${opts.year}</strong>.</p>
+    <p style="font-size:15px;color:#555;margin:0 0 24px;">${dearLabel[loc]} ${escapeHtml(name)},<br><br>${t.introHere(loc, escapeHtml(opts.propertyName), escapeHtml(monthYear))}</p>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
       <tr style="background:#f9f9f7;">
-        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Monthly Summary</td>
+        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">${t.summary[loc]}</td>
       </tr>
-      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">Reservations</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;">${opts.reservationCount}</td></tr>
-      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:14px;color:#444;">Gross rental income</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;font-weight:600;">${fmt(opts.grossRevenue)}</td></tr>
-      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">Expenses</td><td style="padding:10px 16px;font-size:14px;color:#c0392b;text-align:right;">− ${fmt(opts.totalExpenses)}</td></tr>
-      <tr style="background:#fff8f0;"><td style="padding:10px 16px;font-size:14px;color:#92681a;">HostMasters commission (${opts.commissionRate}%)</td><td style="padding:10px 16px;font-size:14px;color:#92681a;text-align:right;">− ${fmt(opts.commission)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">${t.reservations[loc]}</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;">${opts.reservationCount}</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:14px;color:#444;">${t.grossRental[loc]}</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;font-weight:600;">${fmt(opts.grossRevenue)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">${t.expenses[loc]}</td><td style="padding:10px 16px;font-size:14px;color:#c0392b;text-align:right;">− ${fmt(opts.totalExpenses)}</td></tr>
+      <tr style="background:#fff8f0;"><td style="padding:10px 16px;font-size:14px;color:#92681a;">${t.hmCommission(loc, opts.commissionRate)}</td><td style="padding:10px 16px;font-size:14px;color:#92681a;text-align:right;">− ${fmt(opts.commission)}</td></tr>
       <tr style="background:#f0fdf4;border-top:2px solid #bbf7d0;">
-        <td style="padding:14px 16px;font-size:15px;font-weight:700;color:#111827;">Net payout to you</td>
+        <td style="padding:14px 16px;font-size:15px;font-weight:700;color:#111827;">${t.netPayout[loc]}</td>
         <td style="padding:14px 16px;font-size:20px;font-weight:700;color:#16a34a;text-align:right;">${fmt(opts.ownerPayout)}</td>
       </tr>
     </table>
 
     ${opts.grossRevenue === 0
-      ? `<p style="font-size:14px;color:#888;text-align:center;padding:16px;background:#fafafa;border-radius:6px;">No reservations recorded for this period.</p>`
+      ? `<p style="font-size:14px;color:#888;text-align:center;padding:16px;background:#fafafa;border-radius:6px;">${t.noReservations[loc]}</p>`
       : ''
     }
 
-    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View full report in portal</a></p>` : ''}
-    <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for trusting us with your property.<br>— The HostMasters Team</p>
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">${t.cta[loc]}</a></p>` : ''}
+    <p style="margin:32px 0 0;font-size:14px;color:#777;">${t.thanks[loc]}<br>${teamSignoff[loc]}</p>
   `
-  return baseWrapper(body)
+  return baseWrapper(body, loc)
 }
 
 // ─── Finance emails ────────────────────────────────────────────────────────────
 
-function baseWrapper(content: string) {
+function baseWrapper(content: string, locale: EmailLocale = 'en') {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${locale}">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f4f4f0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f0;padding:40px 0;">
@@ -184,7 +199,7 @@ function baseWrapper(content: string) {
         <tr>
           <td style="background:#f9f9f7;padding:20px 32px;border-top:1px solid #ececec;">
             <p style="margin:0;font-size:12px;color:#999;">HostMasters · Property Management · Costa Tropical, Spain</p>
-            <p style="margin:4px 0 0;font-size:12px;color:#bbb;">This is an automated message — please do not reply directly to this email.</p>
+            <p style="margin:4px 0 0;font-size:12px;color:#bbb;">${wrapperFooter[locale]}</p>
           </td>
         </tr>
       </table>
@@ -296,48 +311,51 @@ export function ownerStatementEmail(opts: {
   checkOut: string
   platform?: string | null
   dashboardUrl?: string
+  locale?: EmailLocale
 }) {
+  const loc = opts.locale ?? 'en'
   const name = opts.ownerName.split(' ')[0] || opts.ownerName
-  const fmt = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: opts.currency || 'EUR' }).format(n)
-  const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  const t = ownerStatementI18n
+  const fmt = (n: number) => fmtMoney(n, loc, opts.currency || 'EUR')
+  const dt = (s: string) => fmtDate(s, loc)
   const shortId = opts.payoutId.slice(-8).toUpperCase()
   const platformLabel = opts.platform
-    ? ({ AIRBNB: 'Airbnb', BOOKING: 'Booking.com', DIRECT: 'Direct booking', OTHER: 'Other' } as Record<string,string>)[opts.platform] ?? opts.platform
+    ? ({ AIRBNB: 'Airbnb', BOOKING: 'Booking.com', DIRECT: t.platformDirect[loc], OTHER: t.platformOther[loc] } as Record<string,string>)[opts.platform] ?? opts.platform
     : 'N/A'
 
   const body = `
-    <h2 style="margin:0 0 4px;font-size:22px;color:#111827;">Owner Statement</h2>
-    <p style="margin:0 0 24px;font-size:13px;color:#999;">Statement #${shortId} · Issued ${fmtDate(opts.paidAt)}</p>
-    <p style="font-size:15px;color:#555;margin:0 0 24px;">Dear ${escapeHtml(name)},<br><br>Your payout for <strong>${escapeHtml(opts.propertyName)}</strong> has been processed. Please find the breakdown below.</p>
+    <h2 style="margin:0 0 4px;font-size:22px;color:#111827;">${t.title[loc]}</h2>
+    <p style="margin:0 0 24px;font-size:13px;color:#999;">${t.issued(loc, shortId, dt(opts.paidAt))}</p>
+    <p style="font-size:15px;color:#555;margin:0 0 24px;">${dearLabel[loc]} ${escapeHtml(name)},<br><br>${t.intro(loc, escapeHtml(opts.propertyName))}</p>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
       <tr style="background:#f9f9f7;">
-        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Reservation Details</td>
+        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">${t.reservationDetails[loc]}</td>
       </tr>
-      <tr><td style="padding:10px 16px;font-size:13px;color:#777;width:40%;">Property</td><td style="padding:10px 16px;font-size:13px;color:#111;font-weight:600;">${escapeHtml(opts.propertyName)}</td></tr>
-      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">Guest</td><td style="padding:10px 16px;font-size:13px;color:#111;">${escapeHtml(opts.guestName)}</td></tr>
-      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Check-in</td><td style="padding:10px 16px;font-size:13px;color:#111;">${fmtDate(opts.checkIn)}</td></tr>
-      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">Check-out</td><td style="padding:10px 16px;font-size:13px;color:#111;">${fmtDate(opts.checkOut)}</td></tr>
-      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Platform</td><td style="padding:10px 16px;font-size:13px;color:#111;">${escapeHtml(platformLabel)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:13px;color:#777;width:40%;">${t.property[loc]}</td><td style="padding:10px 16px;font-size:13px;color:#111;font-weight:600;">${escapeHtml(opts.propertyName)}</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">${t.guest[loc]}</td><td style="padding:10px 16px;font-size:13px;color:#111;">${escapeHtml(opts.guestName)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">${t.checkIn[loc]}</td><td style="padding:10px 16px;font-size:13px;color:#111;">${dt(opts.checkIn)}</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">${t.checkOut[loc]}</td><td style="padding:10px 16px;font-size:13px;color:#111;">${dt(opts.checkOut)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">${t.platform[loc]}</td><td style="padding:10px 16px;font-size:13px;color:#111;">${escapeHtml(platformLabel)}</td></tr>
     </table>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
       <tr style="background:#f9f9f7;">
-        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Financial Summary</td>
+        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">${t.financialSummary[loc]}</td>
       </tr>
-      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">Gross rental income</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;">${fmt(opts.grossAmount)}</td></tr>
-      <tr style="background:#fff8f0;"><td style="padding:10px 16px;font-size:14px;color:#92681a;">HostMasters commission (${opts.commissionRate}%)</td><td style="padding:10px 16px;font-size:14px;color:#92681a;text-align:right;">− ${fmt(opts.commission)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:14px;color:#444;">${t.grossRental[loc]}</td><td style="padding:10px 16px;font-size:14px;color:#111;text-align:right;">${fmt(opts.grossAmount)}</td></tr>
+      <tr style="background:#fff8f0;"><td style="padding:10px 16px;font-size:14px;color:#92681a;">${t.hmCommission(loc, opts.commissionRate)}</td><td style="padding:10px 16px;font-size:14px;color:#92681a;text-align:right;">− ${fmt(opts.commission)}</td></tr>
       <tr style="background:#f0fdf4;border-top:2px solid #bbf7d0;">
-        <td style="padding:14px 16px;font-size:15px;font-weight:700;color:#111827;">Net payout to you</td>
+        <td style="padding:14px 16px;font-size:15px;font-weight:700;color:#111827;">${t.netPayout[loc]}</td>
         <td style="padding:14px 16px;font-size:20px;font-weight:700;color:#16a34a;text-align:right;">${fmt(opts.netAmount)}</td>
       </tr>
     </table>
 
-    <p style="font-size:13px;color:#777;">Payment was processed on <strong>${fmtDate(opts.paidAt)}</strong>. Funds should appear in your account within 1–3 business days depending on your bank.</p>
-    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">View in portal</a></p>` : ''}
-    <p style="margin:32px 0 0;font-size:14px;color:#777;">Thank you for entrusting us with your property.<br>— The HostMasters Team</p>
+    <p style="font-size:13px;color:#777;">${t.paymentProcessed(loc, dt(opts.paidAt))}</p>
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:11px 22px;border-radius:6px;text-decoration:none;">${t.cta[loc]}</a></p>` : ''}
+    <p style="margin:32px 0 0;font-size:14px;color:#777;">${t.thanks[loc]}<br>${teamSignoff[loc]}</p>
   `
-  return baseWrapper(body)
+  return baseWrapper(body, loc)
 }
 
 export function subscriptionReceiptEmail(opts: {
@@ -349,28 +367,31 @@ export function subscriptionReceiptEmail(opts: {
   periodEnd: string
   invoiceId: string
   dashboardUrl?: string
+  locale?: EmailLocale
 }) {
+  const loc = opts.locale ?? 'en'
   const name = opts.clientName.split(' ')[0] || opts.clientName
-  const fmt = (n: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: opts.currency || 'EUR' }).format(n)
-  const fmtDate = (s: string) => new Date(s).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  const t = subscriptionReceiptI18n
+  const fmt = (n: number) => fmtMoney(n, loc, opts.currency || 'EUR')
+  const dt = (s: string) => fmtDate(s, loc)
   const shortId = opts.invoiceId.slice(-8).toUpperCase()
   const body = `
     <div style="text-align:center;padding:8px 0 24px;">
       <div style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:50%;width:56px;height:56px;line-height:56px;font-size:28px;">✓</div>
-      <h2 style="margin:16px 0 4px;font-size:22px;color:#111827;">Thank you for your subscription</h2>
-      <p style="margin:0;font-size:15px;color:#555;">Payment confirmed, ${escapeHtml(name)}</p>
+      <h2 style="margin:16px 0 4px;font-size:22px;color:#111827;">${t.title[loc]}</h2>
+      <p style="margin:0;font-size:15px;color:#555;">${t.paymentConfirmed(loc, escapeHtml(name))}</p>
     </div>
     <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e8e8e4;border-radius:6px;overflow:hidden;margin:0 0 24px;">
       <tr style="background:#f9f9f7;">
-        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">Invoice #${shortId}</td>
+        <td colspan="2" style="padding:10px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#999;letter-spacing:0.5px;">${t.invoiceLabel(loc, shortId)}</td>
       </tr>
-      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">Plan</td><td style="padding:10px 16px;font-size:13px;font-weight:600;color:#111;">HostMasters ${escapeHtml(opts.plan)}</td></tr>
-      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">Period</td><td style="padding:10px 16px;font-size:13px;color:#111;">${fmtDate(opts.periodStart)} – ${fmtDate(opts.periodEnd)}</td></tr>
-      <tr><td style="padding:10px 16px;font-size:15px;font-weight:700;color:#111827;">Amount paid</td><td style="padding:10px 16px;font-size:18px;font-weight:700;color:#111827;text-align:right;">${fmt(opts.amount)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:13px;color:#777;">${t.plan[loc]}</td><td style="padding:10px 16px;font-size:13px;font-weight:600;color:#111;">HostMasters ${escapeHtml(opts.plan)}</td></tr>
+      <tr style="background:#fafafa;"><td style="padding:10px 16px;font-size:13px;color:#777;">${t.period[loc]}</td><td style="padding:10px 16px;font-size:13px;color:#111;">${dt(opts.periodStart)} – ${dt(opts.periodEnd)}</td></tr>
+      <tr><td style="padding:10px 16px;font-size:15px;font-weight:700;color:#111827;">${t.amountPaid[loc]}</td><td style="padding:10px 16px;font-size:18px;font-weight:700;color:#111827;text-align:right;">${fmt(opts.amount)}</td></tr>
     </table>
-    <p style="font-size:14px;color:#555;">Your property management subscription is active. You have full access to your owner portal, reports, and our management team.</p>
-    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">Go to my portal</a></p>` : ''}
-    <p style="margin:32px 0 0;font-size:14px;color:#777;">We look forward to another great month.<br>— The HostMasters Team</p>
+    <p style="font-size:14px;color:#555;">${t.active[loc]}</p>
+    ${safeUrl(opts.dashboardUrl) ? `<p style="margin:20px 0 0;"><a href="${opts.dashboardUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">${t.cta[loc]}</a></p>` : ''}
+    <p style="margin:32px 0 0;font-size:14px;color:#777;">${t.closing[loc]}<br>${teamSignoff[loc]}</p>
   `
-  return baseWrapper(body)
+  return baseWrapper(body, loc)
 }
