@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail } from '@/lib/email'
 import { randomBytes } from 'crypto'
+import { normalizeEmailLocale, inviteI18n } from '@/lib/email-i18n'
 
 const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -120,17 +121,20 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     },
   }).catch(err => console.error('[recruit/convert] failed to create set-pw token:', err))
 
-  // Send invite email (best-effort — don't fail if email service down)
+  // Send invite email (best-effort — don't fail if email service down).
+  // Use applicant's first declared language as preferred locale; fallback EN.
   const signupUrl = `${APP_URL}/set-password?token=${setPwToken}`
   const firstName = app.name.split(' ')[0]
   const roleLabel = app.role === 'MANAGER' ? 'Manager' : 'Crew'
+  const inviteLocale = normalizeEmailLocale(app.languages?.[0])
+  const t = inviteI18n
 
   try {
     await sendEmail({
       to: app.email,
-      subject: `Welcome to HostMasters — ${roleLabel}`,
+      subject: t.subject(inviteLocale, roleLabel),
       html: `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"></head>
+<html lang="${inviteLocale}"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f4f4f0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f0;padding:40px 0;">
     <tr><td align="center">
@@ -139,16 +143,16 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
           <span style="font-size:20px;font-weight:700;color:#fff;">Host<span style="color:#C9A84C;">Masters</span></span>
         </td></tr>
         <tr><td style="padding:32px;">
-          <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Welcome ${firstName}</h2>
+          <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">${t.greeting(inviteLocale, firstName)}</h2>
           <p style="font-size:15px;color:#555;margin:0 0 24px;">
-            Your ${roleLabel} application has been approved. Create your account to complete your setup.
+            ${t.introRecruit(inviteLocale, roleLabel)}
           </p>
           <p style="margin:0 0 24px;">
             <a href="${signupUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">
-              Set my password →
+              ${t.cta[inviteLocale]}
             </a>
           </p>
-          <p style="font-size:13px;color:#999;">This link is exclusive to you and expires in 24 hours. After setting your password you'll review and sign your service agreement.</p>
+          <p style="font-size:13px;color:#999;">${t.expires24h[inviteLocale]}</p>
         </td></tr>
         <tr><td style="background:#f9f9f7;padding:20px 32px;border-top:1px solid #ececec;">
           <p style="margin:0;font-size:12px;color:#999;">HostMasters · Costa Tropical, Spain</p>

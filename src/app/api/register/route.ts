@@ -4,6 +4,7 @@ import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
 import { verificationEmail } from '@/lib/email-verification'
+import { normalizeEmailLocale, verificationI18n } from '@/lib/email-i18n'
 import { notify } from '@/lib/notifications'
 import { ensureClientMasterContract } from '@/lib/contracts'
 
@@ -62,10 +63,11 @@ export async function POST(req: NextRequest) {
     })
 
     const verifyUrl = `${APP_URL}/verify-email?token=${token}`
+    const userLocale = normalizeEmailLocale(language)
     sendEmail({
       to: normalizedEmail,
-      subject: 'Confirm your HostMasters account',
-      html: verificationEmail({ name: name ?? normalizedEmail, verifyUrl }),
+      subject: verificationI18n.subject[userLocale],
+      html: verificationEmail({ name: name ?? normalizedEmail, verifyUrl, locale: userLocale }),
     }).catch(err => console.error('Verification email failed:', err))
 
     // Notify Manager if client was referred

@@ -8,6 +8,12 @@ import {
   checkoutReminderEmail,
   monthlyReportEmail,
 } from '@/lib/email'
+import {
+  normalizeEmailLocale,
+  newBookingI18n,
+  checkoutReminderI18n,
+  monthlyReportReadyI18n,
+} from '@/lib/email-i18n'
 
 export const dynamic = 'force-dynamic'
 
@@ -113,38 +119,54 @@ export async function POST(request: NextRequest) {
 
     switch (type) {
       case 'new_booking': {
-        const { ownerEmail, guestName, propertyName, checkIn, checkOut } = data
+        const { ownerEmail, guestName, propertyName, checkIn, checkOut, language } = data
         if (!ownerEmail || !guestName || !propertyName || !checkIn || !checkOut) {
           return NextResponse.json({ error: 'Missing data fields for new_booking' }, { status: 400 })
         }
+        // Resolve owner locale: from body.language → DB user.language → 'en'
+        let loc = normalizeEmailLocale(language)
+        if (!language) {
+          const owner = await prisma.user.findUnique({ where: { email: ownerEmail }, select: { language: true } }).catch(() => null)
+          if (owner) loc = normalizeEmailLocale(owner.language)
+        }
         await sendEmail({
           to: ownerEmail,
-          subject: `New Booking: ${propertyName}`,
-          html: newBookingEmail(guestName, propertyName, checkIn, checkOut),
+          subject: newBookingI18n.subject(loc, propertyName),
+          html: newBookingEmail(guestName, propertyName, checkIn, checkOut, loc),
         })
         return NextResponse.json({ message: 'New booking notification sent' })
       }
       case 'checkout_reminder': {
-        const { ownerEmail, guestName, propertyName, checkoutDate } = data
+        const { ownerEmail, guestName, propertyName, checkoutDate, language } = data
         if (!ownerEmail || !guestName || !propertyName || !checkoutDate) {
           return NextResponse.json({ error: 'Missing data fields for checkout_reminder' }, { status: 400 })
         }
+        let loc = normalizeEmailLocale(language)
+        if (!language) {
+          const owner = await prisma.user.findUnique({ where: { email: ownerEmail }, select: { language: true } }).catch(() => null)
+          if (owner) loc = normalizeEmailLocale(owner.language)
+        }
         await sendEmail({
           to: ownerEmail,
-          subject: `Checkout Tomorrow: ${propertyName}`,
-          html: checkoutReminderEmail(guestName, propertyName, checkoutDate),
+          subject: checkoutReminderI18n.subject(loc, propertyName),
+          html: checkoutReminderEmail(guestName, propertyName, checkoutDate, loc),
         })
         return NextResponse.json({ message: 'Checkout reminder sent' })
       }
       case 'monthly_report': {
-        const { ownerEmail, propertyName, month, year } = data
+        const { ownerEmail, propertyName, month, year, language } = data
         if (!ownerEmail || !propertyName || !month || !year) {
           return NextResponse.json({ error: 'Missing data fields for monthly_report' }, { status: 400 })
         }
+        let loc = normalizeEmailLocale(language)
+        if (!language) {
+          const owner = await prisma.user.findUnique({ where: { email: ownerEmail }, select: { language: true } }).catch(() => null)
+          if (owner) loc = normalizeEmailLocale(owner.language)
+        }
         await sendEmail({
           to: ownerEmail,
-          subject: `Monthly Report: ${propertyName} - ${month} ${year}`,
-          html: monthlyReportEmail(propertyName, month, year),
+          subject: monthlyReportReadyI18n.subject(loc, propertyName, month, year),
+          html: monthlyReportEmail(propertyName, month, year, loc),
         })
         return NextResponse.json({ message: 'Monthly report notification sent' })
       }

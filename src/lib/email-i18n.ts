@@ -418,3 +418,114 @@ export const taskCompletedI18n = {
   notesLabel: { en: 'Notes from our team:', pt: 'Notas da nossa equipa:', es: 'Notas de nuestro equipo:', de: 'Hinweise unseres Teams:', nl: 'Opmerkingen van ons team:', fr: 'Notes de notre équipe :', sv: 'Anteckningar från vårt team:', da: 'Bemærkninger fra vores team:' } as Record<EmailLocale, string>,
   fullReport: { en: 'You can view the full report in your dashboard at any time.', pt: 'Podes ver o relatório completo no painel a qualquer momento.', es: 'Puedes ver el informe completo en tu panel en cualquier momento.', de: 'Den vollständigen Bericht finden Sie jederzeit in Ihrem Dashboard.', nl: 'U kunt het volledige rapport op elk moment in uw dashboard bekijken.', fr: 'Vous pouvez consulter le rapport complet dans votre tableau de bord à tout moment.', sv: 'Du kan se den fullständiga rapporten i din panel när som helst.', da: 'Du kan se den fulde rapport i dit dashboard når som helst.' } as Record<EmailLocale, string>,
 }
+
+// ─── Email Verification (registration) ─────────────────────────────────────
+
+export const verificationI18n = {
+  subject: { en: 'Confirm your HostMasters account', pt: 'Confirma a tua conta HostMasters', es: 'Confirma tu cuenta de HostMasters', de: 'Bestätigen Sie Ihr HostMasters-Konto', nl: 'Bevestig uw HostMasters-account', fr: 'Confirmez votre compte HostMasters', sv: 'Bekräfta ditt HostMasters-konto', da: 'Bekræft din HostMasters-konto' } as Record<EmailLocale, string>,
+  title: { en: 'Confirm your email', pt: 'Confirma o teu email', es: 'Confirma tu email', de: 'E-Mail bestätigen', nl: 'Bevestig uw e-mailadres', fr: 'Confirmez votre email', sv: 'Bekräfta din e-post', da: 'Bekræft din e-mail' } as Record<EmailLocale, string>,
+  greeting: (loc: EmailLocale, name: string) => ({
+    en: `Hi ${name}`, pt: `Olá ${name}`, es: `Hola ${name}`, de: `Hallo ${name}`, nl: `Hallo ${name}`, fr: `Bonjour ${name}`, sv: `Hej ${name}`, da: `Hej ${name}`,
+  }[loc]),
+  intro: { en: 'Welcome to HostMasters! Click the button below to confirm your email and activate your account.', pt: 'Bem-vindo à HostMasters! Clica no botão abaixo para confirmar o teu email e activar a conta.', es: '¡Bienvenido a HostMasters! Haz clic en el botón abajo para confirmar tu correo y activar tu cuenta.', de: 'Willkommen bei HostMasters! Klicken Sie unten, um Ihre E-Mail zu bestätigen und Ihr Konto zu aktivieren.', nl: 'Welkom bij HostMasters! Klik op de knop hieronder om uw e-mail te bevestigen en uw account te activeren.', fr: 'Bienvenue chez HostMasters ! Cliquez sur le bouton ci-dessous pour confirmer votre email et activer votre compte.', sv: 'Välkommen till HostMasters! Klicka på knappen nedan för att bekräfta din e-post och aktivera ditt konto.', da: 'Velkommen til HostMasters! Klik på knappen nedenfor for at bekræfte din e-mail og aktivere din konto.' } as Record<EmailLocale, string>,
+  cta: { en: 'Confirm my email', pt: 'Confirmar email', es: 'Confirmar email', de: 'E-Mail bestätigen', nl: 'E-mail bevestigen', fr: 'Confirmer mon email', sv: 'Bekräfta min e-post', da: 'Bekræft min e-mail' } as Record<EmailLocale, string>,
+  pasteFallback: { en: 'Or paste this link into your browser:', pt: 'Ou cola este link no navegador:', es: 'O pega este enlace en tu navegador:', de: 'Oder fügen Sie diesen Link in Ihren Browser ein:', nl: 'Of plak deze link in uw browser:', fr: 'Ou collez ce lien dans votre navigateur :', sv: 'Eller klistra in denna länk i din webbläsare:', da: 'Eller indsæt dette link i din browser:' } as Record<EmailLocale, string>,
+  expires: { en: 'This link expires in 24 hours. If you didn\'t create an account, ignore this email.', pt: 'Este link expira em 24 horas. Se não criaste uma conta, ignora este email.', es: 'Este enlace caduca en 24 horas. Si no creaste una cuenta, ignora este correo.', de: 'Dieser Link ist 24 Stunden gültig. Wenn Sie kein Konto erstellt haben, ignorieren Sie diese E-Mail.', nl: 'Deze link verloopt over 24 uur. Als u geen account heeft aangemaakt, negeer deze e-mail.', fr: 'Ce lien expire dans 24 heures. Si vous n\'avez pas créé de compte, ignorez cet email.', sv: 'Denna länk upphör om 24 timmar. Om du inte skapat ett konto, ignorera detta e-postmeddelande.', da: 'Linket udløber om 24 timer. Hvis du ikke oprettede en konto, kan du ignorere denne e-mail.' } as Record<EmailLocale, string>,
+}
+
+// ─── Recruit / Admin Invite ─────────────────────────────────────────────────
+
+export const inviteI18n = {
+  subject: (loc: EmailLocale, role: string) => ({
+    en: `Welcome to HostMasters — ${role}`,
+    pt: `Bem-vindo à HostMasters — ${role}`,
+    es: `Bienvenido a HostMasters — ${role}`,
+    de: `Willkommen bei HostMasters — ${role}`,
+    nl: `Welkom bij HostMasters — ${role}`,
+    fr: `Bienvenue chez HostMasters — ${role}`,
+    sv: `Välkommen till HostMasters — ${role}`,
+    da: `Velkommen til HostMasters — ${role}`,
+  }[loc]),
+  greeting: (loc: EmailLocale, name: string) => ({
+    en: `Welcome ${name}`, pt: `Bem-vindo ${name}`, es: `Bienvenido ${name}`, de: `Willkommen ${name}`, nl: `Welkom ${name}`, fr: `Bienvenue ${name}`, sv: `Välkommen ${name}`, da: `Velkommen ${name}`,
+  }[loc]),
+  introRecruit: (loc: EmailLocale, role: string) => ({
+    en: `Your ${role} application has been approved. Set your password to complete your setup.`,
+    pt: `A tua candidatura como ${role} foi aprovada. Define a tua palavra-passe para completar o registo.`,
+    es: `Tu solicitud como ${role} ha sido aprobada. Establece tu contraseña para completar tu registro.`,
+    de: `Ihre Bewerbung als ${role} wurde genehmigt. Legen Sie Ihr Passwort fest, um die Einrichtung abzuschließen.`,
+    nl: `Uw aanvraag als ${role} is goedgekeurd. Stel uw wachtwoord in om de installatie te voltooien.`,
+    fr: `Votre candidature en tant que ${role} a été approuvée. Définissez votre mot de passe pour terminer la configuration.`,
+    sv: `Din ansökan som ${role} har godkänts. Ange ditt lösenord för att slutföra registreringen.`,
+    da: `Din ansøgning som ${role} er godkendt. Vælg din adgangskode for at fuldføre opsætningen.`,
+  }[loc]),
+  introAdminInvite: (loc: EmailLocale, role: string) => ({
+    en: `You've been invited to HostMasters as a <strong>${role}</strong>.`,
+    pt: `Foste convidado para a plataforma HostMasters como <strong>${role}</strong>.`,
+    es: `Has sido invitado a la plataforma HostMasters como <strong>${role}</strong>.`,
+    de: `Sie wurden zu HostMasters als <strong>${role}</strong> eingeladen.`,
+    nl: `U bent uitgenodigd voor HostMasters als <strong>${role}</strong>.`,
+    fr: `Vous avez été invité chez HostMasters en tant que <strong>${role}</strong>.`,
+    sv: `Du har bjudits in till HostMasters som <strong>${role}</strong>.`,
+    da: `Du er blevet inviteret til HostMasters som <strong>${role}</strong>.`,
+  }[loc]),
+  cta: { en: 'Set my password →', pt: 'Definir palavra-passe →', es: 'Establecer contraseña →', de: 'Passwort festlegen →', nl: 'Wachtwoord instellen →', fr: 'Définir mon mot de passe →', sv: 'Ange mitt lösenord →', da: 'Vælg adgangskode →' } as Record<EmailLocale, string>,
+  expires24h: { en: 'This link is exclusive to you and expires in 24 hours. After setting your password you\'ll review and sign your service agreement.', pt: 'Este link é exclusivo para ti e expira em 24 horas. Depois de definires a palavra-passe, vais rever e assinar o contrato de serviço.', es: 'Este enlace es exclusivo para ti y caduca en 24 horas. Después de establecer tu contraseña, revisarás y firmarás el contrato de servicio.', de: 'Dieser Link ist exklusiv für Sie und 24 Stunden gültig. Nach dem Festlegen Ihres Passworts werden Sie Ihren Servicevertrag prüfen und unterzeichnen.', nl: 'Deze link is exclusief voor u en verloopt over 24 uur. Na het instellen van uw wachtwoord beoordeelt en ondertekent u uw serviceovereenkomst.', fr: 'Ce lien vous est exclusif et expire dans 24 heures. Après avoir défini votre mot de passe, vous examinerez et signerez votre contrat de service.', sv: 'Den här länken är exklusiv för dig och upphör om 24 timmar. Efter att ha angett ditt lösenord kommer du att granska och underteckna ditt serviceavtal.', da: 'Linket er kun til dig og udløber om 24 timer. Efter at have valgt din adgangskode vil du gennemgå og underskrive din serviceaftale.' } as Record<EmailLocale, string>,
+}
+
+// ─── Legacy Notifications (booking + checkout reminder + monthly report ready) ────
+
+export const newBookingI18n = {
+  subject: (loc: EmailLocale, propertyName: string) => ({
+    en: `New Booking: ${propertyName}`, pt: `Nova reserva: ${propertyName}`, es: `Nueva reserva: ${propertyName}`, de: `Neue Buchung: ${propertyName}`, nl: `Nieuwe boeking: ${propertyName}`, fr: `Nouvelle réservation : ${propertyName}`, sv: `Ny bokning: ${propertyName}`, da: `Ny booking: ${propertyName}`,
+  }[loc]),
+  title: { en: 'New Booking Received', pt: 'Nova reserva recebida', es: 'Nueva reserva recibida', de: 'Neue Buchung erhalten', nl: 'Nieuwe boeking ontvangen', fr: 'Nouvelle réservation reçue', sv: 'Ny bokning mottagen', da: 'Ny booking modtaget' } as Record<EmailLocale, string>,
+  intro: { en: 'A new reservation has been made:', pt: 'Foi feita uma nova reserva:', es: 'Se ha realizado una nueva reserva:', de: 'Eine neue Reservierung wurde vorgenommen:', nl: 'Er is een nieuwe boeking gemaakt:', fr: 'Une nouvelle réservation a été effectuée :', sv: 'En ny bokning har gjorts:', da: 'En ny reservation er foretaget:' } as Record<EmailLocale, string>,
+  property: { en: 'Property:', pt: 'Propriedade:', es: 'Propiedad:', de: 'Immobilie:', nl: 'Woning:', fr: 'Bien :', sv: 'Fastighet:', da: 'Ejendom:' } as Record<EmailLocale, string>,
+  guest: { en: 'Guest:', pt: 'Hóspede:', es: 'Huésped:', de: 'Gast:', nl: 'Gast:', fr: 'Invité :', sv: 'Gäst:', da: 'Gæst:' } as Record<EmailLocale, string>,
+  checkIn: { en: 'Check-in:', pt: 'Check-in:', es: 'Check-in:', de: 'Check-in:', nl: 'Check-in:', fr: 'Arrivée :', sv: 'Incheckning:', da: 'Check-in:' } as Record<EmailLocale, string>,
+  checkOut: { en: 'Check-out:', pt: 'Check-out:', es: 'Check-out:', de: 'Check-out:', nl: 'Check-out:', fr: 'Départ :', sv: 'Utcheckning:', da: 'Check-out:' } as Record<EmailLocale, string>,
+}
+
+export const checkoutReminderI18n = {
+  subject: (loc: EmailLocale, propertyName: string) => ({
+    en: `Checkout Tomorrow: ${propertyName}`, pt: `Check-out amanhã: ${propertyName}`, es: `Check-out mañana: ${propertyName}`, de: `Check-out morgen: ${propertyName}`, nl: `Check-out morgen: ${propertyName}`, fr: `Départ demain : ${propertyName}`, sv: `Utcheckning imorgon: ${propertyName}`, da: `Check-out i morgen: ${propertyName}`,
+  }[loc]),
+  title: { en: 'Checkout Tomorrow', pt: 'Check-out amanhã', es: 'Check-out mañana', de: 'Check-out morgen', nl: 'Check-out morgen', fr: 'Départ demain', sv: 'Utcheckning imorgon', da: 'Check-out i morgen' } as Record<EmailLocale, string>,
+  body: (loc: EmailLocale, guest: string, property: string, date: string) => ({
+    en: `<strong>${guest}</strong> is checking out of <strong>${property}</strong> tomorrow (${date}).`,
+    pt: `<strong>${guest}</strong> faz check-out de <strong>${property}</strong> amanhã (${date}).`,
+    es: `<strong>${guest}</strong> hace check-out de <strong>${property}</strong> mañana (${date}).`,
+    de: `<strong>${guest}</strong> checkt morgen aus <strong>${property}</strong> aus (${date}).`,
+    nl: `<strong>${guest}</strong> checkt morgen uit <strong>${property}</strong> uit (${date}).`,
+    fr: `<strong>${guest}</strong> quitte <strong>${property}</strong> demain (${date}).`,
+    sv: `<strong>${guest}</strong> checkar ut från <strong>${property}</strong> imorgon (${date}).`,
+    da: `<strong>${guest}</strong> tjekker ud af <strong>${property}</strong> i morgen (${date}).`,
+  }[loc]),
+  ensure: { en: 'Please ensure cleaning and inspection tasks are scheduled.', pt: 'Garante que limpeza e inspecção estão agendadas.', es: 'Asegura que la limpieza y la inspección están programadas.', de: 'Bitte stellen Sie sicher, dass Reinigung und Inspektion geplant sind.', nl: 'Zorg ervoor dat schoonmaak en inspectie zijn ingepland.', fr: 'Veuillez vous assurer que le ménage et l\'inspection sont planifiés.', sv: 'Säkerställ att städning och inspektion är schemalagda.', da: 'Sørg for at rengøring og inspektion er planlagt.' } as Record<EmailLocale, string>,
+}
+
+export const monthlyReportReadyI18n = {
+  subject: (loc: EmailLocale, propertyName: string, month: string, year: number) => ({
+    en: `Monthly Report: ${propertyName} - ${month} ${year}`,
+    pt: `Relatório mensal: ${propertyName} - ${month} ${year}`,
+    es: `Informe mensual: ${propertyName} - ${month} ${year}`,
+    de: `Monatsbericht: ${propertyName} - ${month} ${year}`,
+    nl: `Maandrapport: ${propertyName} - ${month} ${year}`,
+    fr: `Rapport mensuel : ${propertyName} - ${month} ${year}`,
+    sv: `Månadsrapport: ${propertyName} - ${month} ${year}`,
+    da: `Månedsrapport: ${propertyName} - ${month} ${year}`,
+  }[loc]),
+  title: { en: 'Monthly Report Available', pt: 'Relatório mensal disponível', es: 'Informe mensual disponible', de: 'Monatsbericht verfügbar', nl: 'Maandrapport beschikbaar', fr: 'Rapport mensuel disponible', sv: 'Månadsrapport tillgänglig', da: 'Månedsrapport tilgængelig' } as Record<EmailLocale, string>,
+  body: (loc: EmailLocale, propertyName: string, month: string, year: number) => ({
+    en: `Your monthly report for <strong>${propertyName}</strong> (${month} ${year}) is now available.`,
+    pt: `O teu relatório mensal de <strong>${propertyName}</strong> (${month} ${year}) está disponível.`,
+    es: `Tu informe mensual para <strong>${propertyName}</strong> (${month} ${year}) ya está disponible.`,
+    de: `Ihr Monatsbericht für <strong>${propertyName}</strong> (${month} ${year}) ist verfügbar.`,
+    nl: `Uw maandrapport voor <strong>${propertyName}</strong> (${month} ${year}) is nu beschikbaar.`,
+    fr: `Votre rapport mensuel pour <strong>${propertyName}</strong> (${month} ${year}) est désormais disponible.`,
+    sv: `Din månadsrapport för <strong>${propertyName}</strong> (${month} ${year}) är nu tillgänglig.`,
+    da: `Din månedsrapport for <strong>${propertyName}</strong> (${month} ${year}) er nu tilgængelig.`,
+  }[loc]),
+  cta: { en: 'Log in to your dashboard to view and download the full report.', pt: 'Entra no painel para ver e descarregar o relatório completo.', es: 'Inicia sesión en tu panel para ver y descargar el informe completo.', de: 'Melden Sie sich in Ihrem Dashboard an, um den vollständigen Bericht zu sehen und herunterzuladen.', nl: 'Log in op uw dashboard om het volledige rapport te bekijken en downloaden.', fr: 'Connectez-vous à votre tableau de bord pour consulter et télécharger le rapport complet.', sv: 'Logga in på din panel för att se och ladda ner den fullständiga rapporten.', da: 'Log ind på dit dashboard for at se og downloade den fulde rapport.' } as Record<EmailLocale, string>,
+}

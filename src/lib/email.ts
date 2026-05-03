@@ -12,6 +12,9 @@ import {
   taskCompletedI18n,
   receiptCreatedI18n,
   receiptPaidI18n,
+  newBookingI18n,
+  checkoutReminderI18n,
+  monthlyReportReadyI18n,
 } from './email-i18n'
 
 export const resend = new Resend(process.env.RESEND_API_KEY || 'placeholder')
@@ -63,29 +66,31 @@ export async function sendEmail({
   return result
 }
 
-export function newBookingEmail(guestName: string, propertyName: string, checkIn: string, checkOut: string) {
+export function newBookingEmail(guestName: string, propertyName: string, checkIn: string, checkOut: string, locale: EmailLocale = 'en') {
+  const t = newBookingI18n
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #1e3a5f;">New Booking Received</h2>
-      <p>A new reservation has been made:</p>
+      <h2 style="color: #1e3a5f;">${t.title[locale]}</h2>
+      <p>${t.intro[locale]}</p>
       <table style="width: 100%; border-collapse: collapse;">
-        <tr><td style="padding: 8px; font-weight: bold;">Property:</td><td style="padding: 8px;">${escapeHtml(propertyName)}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Guest:</td><td style="padding: 8px;">${escapeHtml(guestName)}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Check-in:</td><td style="padding: 8px;">${checkIn}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Check-out:</td><td style="padding: 8px;">${checkOut}</td></tr>
+        <tr><td style="padding: 8px; font-weight: bold;">${t.property[locale]}</td><td style="padding: 8px;">${escapeHtml(propertyName)}</td></tr>
+        <tr><td style="padding: 8px; font-weight: bold;">${t.guest[locale]}</td><td style="padding: 8px;">${escapeHtml(guestName)}</td></tr>
+        <tr><td style="padding: 8px; font-weight: bold;">${t.checkIn[locale]}</td><td style="padding: 8px;">${checkIn}</td></tr>
+        <tr><td style="padding: 8px; font-weight: bold;">${t.checkOut[locale]}</td><td style="padding: 8px;">${checkOut}</td></tr>
       </table>
-      <p style="color: #666; margin-top: 20px;">— Hostmaster Team</p>
+      <p style="color: #666; margin-top: 20px;">${teamSignoff[locale]}</p>
     </div>
   `
 }
 
-export function checkoutReminderEmail(guestName: string, propertyName: string, checkoutDate: string) {
+export function checkoutReminderEmail(guestName: string, propertyName: string, checkoutDate: string, locale: EmailLocale = 'en') {
+  const t = checkoutReminderI18n
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #1e3a5f;">Checkout Tomorrow</h2>
-      <p><strong>${escapeHtml(guestName)}</strong> is checking out of <strong>${escapeHtml(propertyName)}</strong> tomorrow (${checkoutDate}).</p>
-      <p>Please ensure cleaning and inspection tasks are scheduled.</p>
-      <p style="color: #666; margin-top: 20px;">— Hostmaster Team</p>
+      <h2 style="color: #1e3a5f;">${t.title[locale]}</h2>
+      <p>${t.body(locale, escapeHtml(guestName), escapeHtml(propertyName), checkoutDate)}</p>
+      <p>${t.ensure[locale]}</p>
+      <p style="color: #666; margin-top: 20px;">${teamSignoff[locale]}</p>
     </div>
   `
 }
@@ -121,13 +126,14 @@ export function taskCompletedEmail(opts: {
   `
 }
 
-export function monthlyReportEmail(propertyName: string, month: string, year: number) {
+export function monthlyReportEmail(propertyName: string, month: string, year: number, locale: EmailLocale = 'en') {
+  const t = monthlyReportReadyI18n
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #1e3a5f;">Monthly Report Available</h2>
-      <p>Your monthly report for <strong>${escapeHtml(propertyName)}</strong> (${escapeHtml(month)} ${year}) is now available.</p>
-      <p>Log in to your dashboard to view and download the full report.</p>
-      <p style="color: #666; margin-top: 20px;">— Hostmaster Team</p>
+      <h2 style="color: #1e3a5f;">${t.title[locale]}</h2>
+      <p>${t.body(locale, escapeHtml(propertyName), escapeHtml(month), year)}</p>
+      <p>${t.cta[locale]}</p>
+      <p style="color: #666; margin-top: 20px;">${teamSignoff[locale]}</p>
     </div>
   `
 }

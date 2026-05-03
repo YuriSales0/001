@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { requireRole } from '@/lib/session'
 import { sendEmail } from '@/lib/email'
 import { randomBytes } from 'crypto'
+import { normalizeEmailLocale, inviteI18n } from '@/lib/email-i18n'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,6 +57,10 @@ export async function POST(request: NextRequest) {
     name: name ?? null,
     role,
     onboardingCompleted: false,
+  }
+  // Optional language hint from inviter (defaults to 'en' on User model)
+  if (body.language && typeof body.language === 'string') {
+    userData.language = body.language
   }
 
   if (role === 'MANAGER') {
@@ -126,13 +131,16 @@ export async function POST(request: NextRequest) {
   // Generate signup link
   const signupUrl = `${APP_URL}/set-password?token=${setPwToken}`
 
-  // Send invite email
+  // Send invite email (locale: from body.language → fallback 'en')
+  const inviteLocale = normalizeEmailLocale(body.language)
+  const t = inviteI18n
+  const roleLabel = role === 'MANAGER' ? 'Manager' : role === 'CREW' ? 'Crew' : 'Owner'
   try {
     await sendEmail({
       to: email,
-      subject: `Convite HostMasters — ${role === 'MANAGER' ? 'Manager' : role === 'CREW' ? 'Equipa operacional' : 'Proprietário'}`,
+      subject: t.subject(inviteLocale, roleLabel),
       html: `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"></head>
+<html lang="${inviteLocale}"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f4f4f0;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f0;padding:40px 0;">
     <tr><td align="center">
@@ -141,17 +149,16 @@ export async function POST(request: NextRequest) {
           <span style="font-size:20px;font-weight:700;color:#fff;">Host<span style="color:#C9A84C;">Masters</span></span>
         </td></tr>
         <tr><td style="padding:32px;">
-          <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">Bem-vindo à HostMasters</h2>
+          <h2 style="margin:0 0 8px;font-size:20px;color:#111827;">${t.greeting(inviteLocale, name ? name.split(' ')[0] : '')}</h2>
           <p style="font-size:15px;color:#555;margin:0 0 24px;">
-            Olá${name ? ` ${name.split(' ')[0]}` : ''},<br><br>
-            Foste convidado para a plataforma HostMasters como <strong>${role === 'MANAGER' ? 'Manager' : role === 'CREW' ? 'membro da equipa operacional' : 'proprietário'}</strong>.
+            ${t.introAdminInvite(inviteLocale, roleLabel)}
           </p>
           <p style="margin:0 0 24px;">
-            <a href="${signupUrl}" style="display:inline-block;background:#111827;color:#fff;font-weight:600;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">
-              Criar a minha conta
+            <a href="${signupUrl}" style="display:inline-block;background:#C9A84C;color:#111827;font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px;text-decoration:none;">
+              ${t.cta[inviteLocale]}
             </a>
           </p>
-          <p style="font-size:13px;color:#999;">Este link é exclusivo para ti. Ao registar-te, vais completar um setup inicial e ${contract ? 'aceitar o contrato de serviço' : 'configurar o teu perfil'}.</p>
+          <p style="font-size:13px;color:#999;">${t.expires24h[inviteLocale]}</p>
         </td></tr>
         <tr><td style="background:#f9f9f7;padding:20px 32px;border-top:1px solid #ececec;">
           <p style="margin:0;font-size:12px;color:#999;">HostMasters · Costa Tropical, Spain</p>

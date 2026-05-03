@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
 import { verificationEmail } from '@/lib/email-verification'
+import { normalizeEmailLocale, verificationI18n } from '@/lib/email-i18n'
 
 const APP_URL = process.env.NEXTAUTH_URL || 'https://hostmasters.es'
 
@@ -34,10 +35,11 @@ export async function POST(req: NextRequest) {
   })
 
   const verifyUrl = `${APP_URL}/verify-email?token=${token}`
+  const userLocale = normalizeEmailLocale(user.language)
   sendEmail({
     to: normalized,
-    subject: 'Confirm your HostMasters account',
-    html: verificationEmail({ name: user.name ?? normalized, verifyUrl }),
+    subject: verificationI18n.subject[userLocale],
+    html: verificationEmail({ name: user.name ?? normalized, verifyUrl, locale: userLocale }),
   }).catch(err => console.error('Resend verification failed:', err))
 
   return NextResponse.json({ ok: true })
