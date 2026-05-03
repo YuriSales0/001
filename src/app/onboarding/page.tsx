@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
@@ -175,7 +176,7 @@ export default function OnboardingPage() {
               </div>
               <div className="space-y-2">
                 <Label>Nuki API Token</Label>
-                <Input type="password" placeholder="Enter your Nuki API token" />
+                <PasswordInput placeholder="Enter your Nuki API token" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
               </div>
               <Button variant="outline" className="gap-2">
                 <Lock className="h-4 w-4" /> Test Connection

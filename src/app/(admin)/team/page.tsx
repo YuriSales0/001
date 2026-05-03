@@ -5,6 +5,7 @@ import { UserPlus, Trash2, Save, Loader2, Mail, X, Shield } from "lucide-react"
 import { ConfirmDialog } from "@/components/hm/confirm-dialog"
 import { showToast } from "@/components/hm/toast"
 import { useLocale } from "@/i18n/provider"
+import { PasswordInput } from "@/components/ui/password-input"
 
 type Role = 'ADMIN' | 'MANAGER' | 'CREW' | 'CLIENT'
 type Plan = 'BASIC' | 'MID' | 'PREMIUM' | null
@@ -150,7 +151,7 @@ export default function TeamPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           <input type="email" required placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
-          <input type="password" required minLength={6} placeholder="Password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
+          <PasswordInput required minLength={6} placeholder="Password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           <input placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
           <select value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold">
             <option value="MANAGER">Manager (Customer Success)</option>

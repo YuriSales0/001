@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { ArrowRight, Globe, Info, MailCheck } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { LOCALES, type Locale } from "@/i18n"
+import { PasswordInput } from "@/components/ui/password-input"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -176,8 +177,7 @@ export default function RegisterPage() {
                 <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
                   {t("auth.password")} *
                 </label>
-                <input
-                  type="password"
+                <PasswordInput
                   required
                   minLength={6}
                   value={form.password}

@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
 import { showToast } from "@/components/hm/toast"
+import { PasswordInput } from "@/components/ui/password-input"
 
 interface Profile {
   id: string; name: string | null; email: string; phone: string | null
@@ -529,8 +530,7 @@ export default function ClientProfilePage() {
                 ].map(([label, key]) => (
                   <div key={key}>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
-                    <input
-                      type="password"
+                    <PasswordInput
                       value={pw[key as keyof typeof pw]}
                       onChange={e => setPw(p => ({ ...p, [key]: e.target.value }))}
                       className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold focus:border-transparent"

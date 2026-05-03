@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Building2, Percent } from "lucide-react"
+import { PasswordInput } from "@/components/ui/password-input"
 import { useLocale } from "@/i18n/provider"
 
 interface Profile {
@@ -154,7 +155,7 @@ export default function AdminProfilePage() {
           {([[t("profile.currentPassword"), "current"], [t("profile.newPassword"), "next"], [t("profile.confirmNew"), "confirm"]] as [string, string][]).map(([label, key]) => (
             <div key={key}>
               <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
-              <input type="password" value={pw[key as keyof typeof pw]}
+              <PasswordInput value={pw[key as keyof typeof pw]}
                 onChange={e => setPw(p => ({ ...p, [key]: e.target.value }))}
                 className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>

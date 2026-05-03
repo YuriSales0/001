@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import { PasswordInput } from "@/components/ui/password-input"
 
 function SetPasswordForm() {
   const params = useSearchParams()
@@ -77,9 +78,8 @@ function SetPasswordForm() {
         <label htmlFor="pw" className="block text-sm font-semibold mb-1.5" style={{ color: "#0B1E3A" }}>
           Password
         </label>
-        <input
+        <PasswordInput
           id="pw"
-          type="password"
           required
           minLength={8}
           value={password}
@@ -92,9 +92,8 @@ function SetPasswordForm() {
         <label htmlFor="confirm" className="block text-sm font-semibold mb-1.5" style={{ color: "#0B1E3A" }}>
           Confirm password
         </label>
-        <input
+        <PasswordInput
           id="confirm"
-          type="password"
           required
           minLength={8}
           value={confirm}

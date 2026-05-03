@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { ArrowRight, MailCheck } from "lucide-react"
 import { useLocale } from "@/i18n/provider"
+import { PasswordInput } from "@/components/ui/password-input"
 
 export default function LoginPage() {
   const { t } = useLocale()
@@ -116,8 +117,7 @@ export default function LoginPage() {
                 <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
                   {t("auth.password")}
                 </label>
-                <input
-                  type="password"
+                <PasswordInput
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}

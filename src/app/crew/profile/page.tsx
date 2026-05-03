@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Camera, Save, Lock, Wrench, Percent, TrendingUp, Star, Shield, Zap, AlertTriangle, ChevronDown } from "lucide-react"
 import { ProfileContractSection } from "@/components/hm/profile-contract-section"
 import { useLocale } from "@/i18n/provider"
+import { PasswordInput } from "@/components/ui/password-input"
 
 type ScoreData = {
   currentScore: number
@@ -198,7 +199,7 @@ export default function CrewProfilePage() {
           {[[t('profile.currentPassword'), "current"], [t('profile.newPassword'), "next"], [t('profile.confirmNew'), "confirm"]].map(([label, key]) => (
             <div key={key}>
               <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
-              <input type="password" value={pw[key as keyof typeof pw]}
+              <PasswordInput value={pw[key as keyof typeof pw]}
                 onChange={e => setPw(p => ({ ...p, [key]: e.target.value }))}
                 className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-hm-gold" />
             </div>
