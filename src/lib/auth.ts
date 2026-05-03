@@ -19,62 +19,38 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const log = (msg: string, data?: unknown) =>
-          console.log('[AUTH-DEBUG]', msg, data ? JSON.stringify(data) : '')
+        // DEBUG MODE: throw errors with descriptive codes so they appear in URL
+        if (!credentials?.email) throw new Error('DBG_NO_EMAIL')
+        if (!credentials?.password) throw new Error('DBG_NO_PASSWORD')
 
-        log('start', { hasEmail: !!credentials?.email, hasPassword: !!credentials?.password })
-
-        if (!credentials?.email || !credentials?.password) {
-          log('missing-credentials')
-          return null
-        }
         const email = credentials.email.toLowerCase().trim()
-        log('email-normalized', { email })
 
-        // Try DB first
+        if (!prisma) throw new Error('DBG_PRISMA_NULL')
+
+        let user
         try {
-          if (!prisma) {
-            log('prisma-null')
-            return null
-          }
-          log('querying-user')
-          const user = await prisma.user.findUnique({ where: { email } })
-          log('user-result', {
-            found: !!user,
-            hasPassword: !!user?.password,
-            verified: user?.emailVerified !== null,
-            role: user?.role,
-          })
-          if (user?.password) {
-            const ok = await bcrypt.compare(credentials.password, user.password)
-            log('bcrypt-result', { ok })
-            if (!ok) return null
-            if (!user.emailVerified) {
-              log('email-not-verified')
-              throw new Error('EMAIL_NOT_VERIFIED')
-            }
-            log('success')
-            return {
-              id: user.id,
-              name: user.name ?? email,
-              email: user.email,
-              role: user.role as AppRole,
-              language: user.language,
-              isSuperUser: (user as unknown as { isSuperUser?: boolean }).isSuperUser ?? false,
-              isCaptain: (user as unknown as { isCaptain?: boolean }).isCaptain ?? false,
-            }
-          }
-          log('user-no-password')
-        } catch (err) {
-          log('caught-error', { message: err instanceof Error ? err.message : String(err) })
-          if (err instanceof Error && err.message === 'EMAIL_NOT_VERIFIED') {
-            throw err
-          }
-          // fall through to dev fallback on infra errors
+          user = await prisma.user.findUnique({ where: { email } })
+        } catch (e) {
+          throw new Error('DBG_DB_ERROR_' + (e instanceof Error ? e.message.slice(0, 50) : 'unknown'))
         }
 
-        log('returning-null-end')
-        return null
+        if (!user) throw new Error('DBG_USER_NOT_FOUND_' + email)
+        if (!user.password) throw new Error('DBG_NO_PASSWORD_IN_DB')
+
+        const ok = await bcrypt.compare(credentials.password, user.password)
+        if (!ok) throw new Error('DBG_BCRYPT_MISMATCH')
+
+        if (!user.emailVerified) throw new Error('EMAIL_NOT_VERIFIED')
+
+        return {
+          id: user.id,
+          name: user.name ?? email,
+          email: user.email,
+          role: user.role as AppRole,
+          language: user.language,
+          isSuperUser: (user as unknown as { isSuperUser?: boolean }).isSuperUser ?? false,
+          isCaptain: (user as unknown as { isCaptain?: boolean }).isCaptain ?? false,
+        }
       },
     }),
   ],
