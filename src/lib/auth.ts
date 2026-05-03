@@ -19,37 +19,61 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        const log = (msg: string, data?: unknown) =>
+          console.log('[AUTH-DEBUG]', msg, data ? JSON.stringify(data) : '')
+
+        log('start', { hasEmail: !!credentials?.email, hasPassword: !!credentials?.password })
+
+        if (!credentials?.email || !credentials?.password) {
+          log('missing-credentials')
+          return null
+        }
         const email = credentials.email.toLowerCase().trim()
+        log('email-normalized', { email })
 
         // Try DB first
         try {
-          if (prisma) {
-            const user = await prisma.user.findUnique({ where: { email } })
-            if (user?.password) {
-              const ok = await bcrypt.compare(credentials.password, user.password)
-              if (!ok) return null
-              if (!user.emailVerified) {
-                throw new Error('EMAIL_NOT_VERIFIED')
-              }
-              return {
-                id: user.id,
-                name: user.name ?? email,
-                email: user.email,
-                role: user.role as AppRole,
-                language: user.language,
-                isSuperUser: (user as unknown as { isSuperUser?: boolean }).isSuperUser ?? false,
-                isCaptain: (user as unknown as { isCaptain?: boolean }).isCaptain ?? false,
-              }
+          if (!prisma) {
+            log('prisma-null')
+            return null
+          }
+          log('querying-user')
+          const user = await prisma.user.findUnique({ where: { email } })
+          log('user-result', {
+            found: !!user,
+            hasPassword: !!user?.password,
+            verified: user?.emailVerified !== null,
+            role: user?.role,
+          })
+          if (user?.password) {
+            const ok = await bcrypt.compare(credentials.password, user.password)
+            log('bcrypt-result', { ok })
+            if (!ok) return null
+            if (!user.emailVerified) {
+              log('email-not-verified')
+              throw new Error('EMAIL_NOT_VERIFIED')
+            }
+            log('success')
+            return {
+              id: user.id,
+              name: user.name ?? email,
+              email: user.email,
+              role: user.role as AppRole,
+              language: user.language,
+              isSuperUser: (user as unknown as { isSuperUser?: boolean }).isSuperUser ?? false,
+              isCaptain: (user as unknown as { isCaptain?: boolean }).isCaptain ?? false,
             }
           }
+          log('user-no-password')
         } catch (err) {
+          log('caught-error', { message: err instanceof Error ? err.message : String(err) })
           if (err instanceof Error && err.message === 'EMAIL_NOT_VERIFIED') {
             throw err
           }
           // fall through to dev fallback on infra errors
         }
 
+        log('returning-null-end')
         return null
       },
     }),
