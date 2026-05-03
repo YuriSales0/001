@@ -114,9 +114,18 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
-                  {t("auth.password")}
-                </label>
+                <div className="flex items-baseline justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    {t("auth.password")}
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs font-medium transition-colors hover:opacity-80"
+                    style={{ color: "#B08A3E" }}
+                  >
+                    {t("auth.forgotPassword")}
+                  </Link>
+                </div>
                 <PasswordInput
                   required
                   value={password}
