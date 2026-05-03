@@ -339,6 +339,8 @@ model User {
   onboardingCompleted Boolean  @default(false)
   onboardingData      Json?    // wizard answers stored here
   isSuperUser        Boolean   @default(false)
+  twoFactorEnabled   Boolean   @default(false)  // 2FA opt-in flag
+  twoFactorMethod    String?   // "EMAIL" for v1; reserved for SMS/TOTP later
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 

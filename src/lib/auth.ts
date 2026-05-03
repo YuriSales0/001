@@ -17,14 +17,15 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        code: { label: '2FA code', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
         const email = credentials.email.toLowerCase().trim()
+        const code = (credentials.code || '').trim()
 
         try {
           if (prisma) {
-            // Use select to avoid failing on missing schema columns in DB
             const user = await prisma.user.findUnique({
               where: { email },
               select: {
@@ -37,6 +38,7 @@ export const authOptions: NextAuthOptions = {
                 language: true,
                 isSuperUser: true,
                 isCaptain: true,
+                twoFactorEnabled: true,
               },
             })
             if (user?.password) {
@@ -45,6 +47,26 @@ export const authOptions: NextAuthOptions = {
               if (!user.emailVerified) {
                 throw new Error('EMAIL_NOT_VERIFIED')
               }
+
+              // 2FA enforcement: if enabled, code must be valid
+              if (user.twoFactorEnabled) {
+                if (!code) {
+                  throw new Error('TWO_FA_REQUIRED')
+                }
+                const record = await prisma.verificationToken.findUnique({
+                  where: { token: code },
+                })
+                if (!record || record.identifier !== `2fa:${user.id}`) {
+                  throw new Error('TWO_FA_INVALID')
+                }
+                if (record.expires < new Date()) {
+                  await prisma.verificationToken.delete({ where: { token: code } }).catch(() => {})
+                  throw new Error('TWO_FA_EXPIRED')
+                }
+                // Single-use: consume the code on successful match
+                await prisma.verificationToken.delete({ where: { token: code } }).catch(() => {})
+              }
+
               return {
                 id: user.id,
                 name: user.name ?? email,
@@ -57,10 +79,11 @@ export const authOptions: NextAuthOptions = {
             }
           }
         } catch (err) {
-          if (err instanceof Error && err.message === 'EMAIL_NOT_VERIFIED') {
-            throw err
+          if (err instanceof Error) {
+            const propagated = ['EMAIL_NOT_VERIFIED', 'TWO_FA_REQUIRED', 'TWO_FA_INVALID', 'TWO_FA_EXPIRED']
+            if (propagated.includes(err.message)) throw err
           }
-          // fall through to dev fallback on infra errors
+          // fall through on infra errors
         }
 
         return null

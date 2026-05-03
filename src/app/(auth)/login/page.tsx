@@ -14,10 +14,37 @@ export default function LoginPage() {
   const justVerified = params.get("verified") === "1"
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [showResend, setShowResend] = useState(false)
   const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle")
+  const [step, setStep] = useState<"credentials" | "code">("credentials")
+
+  // Submit email + password (and optionally code) to NextAuth
+  const submitToNextAuth = async (codeArg = "") => {
+    const csrfRes = await fetch("/api/auth/csrf", { credentials: "include" })
+    const { csrfToken } = await csrfRes.json()
+
+    const res = await fetch("/api/auth/callback/credentials", {
+      method: "POST",
+      credentials: "include",
+      redirect: "manual",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ csrfToken, email, password, code: codeArg, json: "true" }),
+    })
+
+    if (res.type === "opaqueredirect" || res.ok) {
+      await new Promise(r => setTimeout(r, 100))
+      const sessionRes = await fetch("/api/auth/session", { credentials: "include" })
+      const session = await sessionRes.json()
+      if (session?.user) {
+        window.location.href = "/me"
+        return true
+      }
+    }
+    return false
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,39 +54,41 @@ export default function LoginPage() {
     setResendState("idle")
 
     try {
-      const csrfRes = await fetch("/api/auth/csrf", { credentials: "include" })
-      const { csrfToken } = await csrfRes.json()
-
-      const res = await fetch("/api/auth/callback/credentials", {
-        method: "POST",
-        credentials: "include",
-        redirect: "manual",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ csrfToken, email, password, json: "true" }),
-      })
-
-      if (res.type === "opaqueredirect" || res.ok) {
-        await new Promise(r => setTimeout(r, 100))
-        const sessionRes = await fetch("/api/auth/session", { credentials: "include" })
-        const session = await sessionRes.json()
-        if (session?.user) {
-          window.location.href = "/me"
-          return
-        }
-      }
-
-      // Check if failure might be unverified email
-      const checkRes = await fetch("/api/auth/check-email-status", {
+      // Step 1: validate credentials + check 2FA
+      const initRes = await fetch("/api/auth/login-init", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      }).catch(() => null)
-      const emailStatus = await checkRes?.json().catch(() => null)
+        body: JSON.stringify({ email, password }),
+      })
 
-      if (emailStatus?.unverified) {
-        setError(t("auth.emailNotVerified") || "Your email is not verified yet. Check your inbox or resend the verification link below.")
-        setShowResend(true)
-      } else {
+      if (initRes.status === 429) {
+        setError(t("auth.tooManyAttempts") || "Too many attempts. Please wait a minute and try again.")
+        return
+      }
+
+      if (!initRes.ok) {
+        const data = await initRes.json().catch(() => ({}))
+        if (data.error === 'EMAIL_NOT_VERIFIED') {
+          setError(t("auth.emailNotVerified") || "Your email is not verified yet. Check your inbox or resend the verification link below.")
+          setShowResend(true)
+        } else {
+          setError(t("auth.invalidCredentials"))
+        }
+        return
+      }
+
+      const initData = await initRes.json()
+
+      if (initData.require2FA) {
+        // Move to code-entry step. Email already sent server-side.
+        setStep("code")
+        setError("")
+        return
+      }
+
+      // No 2FA — proceed with NextAuth signin
+      const ok = await submitToNextAuth("")
+      if (!ok) {
         setError(t("auth.invalidCredentials"))
       }
     } catch {
@@ -67,6 +96,28 @@ export default function LoginPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleCodeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError("")
+    try {
+      const ok = await submitToNextAuth(code.trim())
+      if (!ok) {
+        setError(t("auth.invalidCode") || "Invalid or expired code. Please try again.")
+      }
+    } catch {
+      setError(t("common.error"))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const backToCredentials = () => {
+    setStep("credentials")
+    setCode("")
+    setError("")
   }
 
   const resendVerification = async () => {
@@ -94,6 +145,58 @@ export default function LoginPage() {
         {/* Card */}
         <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#142B4D", border: "1px solid rgba(176,138,62,0.15)" }}>
           <div className="p-8">
+            {step === "code" ? (
+              <>
+                <h1 className="text-2xl font-serif font-bold text-white text-center mb-1">
+                  {t("auth.twoFactorTitle") || "Verification code"}
+                </h1>
+                <p className="text-sm text-gray-400 text-center mb-8">
+                  {t("auth.twoFactorSubtitle") || `We sent a 6-digit code to ${email}. It expires in 10 minutes.`}
+                </p>
+                <form onSubmit={handleCodeSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
+                      {t("auth.codeLabel") || "Code"}
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={6}
+                      required
+                      autoFocus
+                      value={code}
+                      onChange={e => setCode(e.target.value.replace(/\D/g, ''))}
+                      className="w-full rounded-lg border px-4 py-3 text-center text-2xl font-mono tracking-[0.4em] transition-colors focus:outline-none"
+                      style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
+                      placeholder="••••••"
+                    />
+                  </div>
+                  {error && (
+                    <p className="text-sm text-red-400 text-center rounded-lg px-3 py-2" style={{ background: "rgba(220,38,38,0.1)" }}>
+                      {error}
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={loading || code.length !== 6}
+                    className="w-full flex items-center justify-center gap-2 rounded-lg py-3.5 text-sm font-semibold transition-all hover:scale-[1.01] disabled:opacity-50"
+                    style={{ background: "#B08A3E", color: "#0B1E3A" }}
+                  >
+                    {loading ? t("auth.signingIn") : (t("auth.verifyCode") || "Verify")}
+                    {!loading && <ArrowRight className="h-4 w-4" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={backToCredentials}
+                    className="w-full text-xs text-gray-400 hover:text-white transition-colors"
+                  >
+                    {t("auth.backToLogin") || "Back to email + password"}
+                  </button>
+                </form>
+              </>
+            ) : (
+              <>
             <h1 className="text-2xl font-serif font-bold text-white text-center mb-1">{t("auth.welcomeBack")}</h1>
             <p className="text-sm text-gray-400 text-center mb-8">{t("auth.loginSubtitle")}</p>
 
@@ -177,6 +280,8 @@ export default function LoginPage() {
                 {!loading && <ArrowRight className="h-4 w-4" />}
               </button>
             </form>
+              </>
+            )}
           </div>
 
           <div className="border-t px-8 py-4 text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
