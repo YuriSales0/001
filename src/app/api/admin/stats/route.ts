@@ -103,10 +103,6 @@ export async function GET() {
     })
   } catch (err) {
     console.error('[admin/stats] error:', err)
-    return NextResponse.json({
-      error: 'stats failed',
-      message: err instanceof Error ? err.message : String(err),
-      stack: err instanceof Error ? err.stack?.split('\n').slice(0, 5) : undefined,
-    }, { status: 500 })
+    return NextResponse.json({ error: 'stats failed' }, { status: 500 })
   }
 }
